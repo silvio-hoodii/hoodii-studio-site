@@ -24,56 +24,99 @@ export const skyFragmentShader = /* glsl */ `
   uniform float uTime;
   varying vec2 vUv;
 
-  // Pseudo-random hash — gives an irregular cityscape light scatter that
-  // doesn't read as a repeating grid pattern.
+  // Pseudo-random hash for procedural skyline generation.
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
   }
 
-  // City-light scatter near the horizon. Cells in a coarse grid; each cell
-  // either has a light or doesn't, based on a hash. Light position within
-  // the cell is also randomized so lights don't sit on a regular line.
-  float buildingLights(vec2 p) {
-    vec2 cellSize = vec2(20.0, 14.0);
-    vec2 cell = floor(p * cellSize);
-    vec2 cellFrac = fract(p * cellSize);
+  // Building skyline: divide the window width into columns of varying widths
+  // (each column is one building). Each column has a hash-based height. Adjacent
+  // columns can be very different heights for a jagged skyline.
+  //
+  // Returns the building height at this x coordinate, in normalized [0, 1] sky
+  // space.
+  float skylineHeight(float x) {
+    // Three overlapping building layers at different scales for parallax feel
+    // — front-most layer dominates, but back layers peek through the gaps.
+    float col1 = floor(x * 11.0);
+    float h1 = 0.06 + hash(vec2(col1, 0.0)) * 0.22;
+
+    float col2 = floor(x * 17.0 + 0.31);
+    float h2 = 0.04 + hash(vec2(col2, 5.0)) * 0.14;
+
+    return max(h1, h2);
+  }
+
+  // Per-column rim glow: brightens the very top edge of each building
+  // silhouette so the skyline reads as buildings against light, not as a
+  // black mask.
+  float topEdgeGlow(vec2 uv, float h) {
+    return smoothstep(0.0, 0.012, h - uv.y) * smoothstep(0.025, 0.0, h - uv.y);
+  }
+
+  // Window lights inside the building silhouette. Grid of small squares;
+  // each cell has a hash deciding if it's lit + which color.
+  vec3 windowLight(vec2 uv, float skylineH) {
+    if (uv.y > skylineH - 0.004) return vec3(0.0);
+    if (uv.y < 0.018) return vec3(0.0); // no windows at street level
+
+    vec2 grid = vec2(58.0, 44.0);
+    vec2 cell = floor(uv * grid);
+    vec2 cellFrac = fract(uv * grid);
+
     float h = hash(cell);
-    if (h < 0.62) return 0.0;
-    vec2 lightPos = vec2(hash(cell + vec2(1.0, 0.0)), hash(cell + vec2(0.0, 3.0)));
-    float d = distance(cellFrac, lightPos);
-    // Brighter, larger dots so they read from camera distance
-    return smoothstep(0.32, 0.08, d) * (0.4 + h * 0.7);
+    if (h < 0.62) return vec3(0.0);
+
+    // Inside the central rectangle of the cell (window shape, not whole cell)
+    float inWindow =
+      step(0.18, cellFrac.x) * step(cellFrac.x, 0.82) *
+      step(0.28, cellFrac.y) * step(cellFrac.y, 0.82);
+    if (inWindow < 0.5) return vec3(0.0);
+
+    // Color: mostly warm interior light, occasional cool monitor-glow
+    vec3 warm = vec3(1.0, 0.74, 0.42);
+    vec3 cool = vec3(0.6, 0.78, 1.0);
+    vec3 color = mix(warm, cool, step(0.88, h));
+
+    // Intensity per-window, ~70-130%
+    float intensity = 0.7 + hash(cell + vec2(13.0, 7.0)) * 0.6;
+    return color * intensity;
   }
 
   void main() {
-    vec3 top = vec3(0.62, 0.7, 0.82);      // cool slate above
-    vec3 mid = vec3(0.78, 0.78, 0.74);     // pale haze midband
-    vec3 horizon = vec3(0.55, 0.45, 0.38); // warm dusk smear at horizon line
-    vec3 ground = vec3(0.04, 0.05, 0.09);  // near-black ground / cityscape
+    vec3 top = vec3(0.46, 0.52, 0.68);     // dusty navy above
+    vec3 mid = vec3(0.85, 0.65, 0.48);     // warm haze midband
+    vec3 horizon = vec3(1.0, 0.55, 0.22);  // sunset orange smear at horizon
+    vec3 silhouette = vec3(0.025, 0.03, 0.06);
 
-    float drift = sin(uTime * 0.015 + vUv.y * 3.2) * 0.025;
+    float drift = sin(uTime * 0.015 + vUv.y * 3.2) * 0.018;
     float y = vUv.y + drift;
 
-    vec3 col;
-    if (y < 0.28) {
-      // Below horizon: dark ground with scattered warm + occasional cool window lights
-      float light = buildingLights(vUv);
-      vec3 lightColor = mix(
-        vec3(1.0, 0.74, 0.42),
-        vec3(0.7, 0.85, 1.0),
-        step(0.5, sin(vUv.x * 23.0))
-      );
-      col = ground + lightColor * light * 1.8;
-    } else if (y < 0.42) {
-      // Horizon band: warm dusk transitioning up to pale mid sky
-      col = mix(horizon, mid, smoothstep(0.28, 0.42, y));
+    // Sky gradient — always computed, blended underneath buildings
+    vec3 sky;
+    if (y < 0.32) {
+      sky = mix(horizon, mid, smoothstep(0.0, 0.32, y));
+    } else if (y < 0.55) {
+      sky = mix(mid, top * 1.1, smoothstep(0.32, 0.55, y));
     } else {
-      // Upper sky: pale mid → cool slate top
-      col = mix(mid, top, smoothstep(0.42, 1.0, y));
+      sky = mix(top * 1.1, top * 0.9, smoothstep(0.55, 1.0, y));
     }
 
-    // Light brightness boost so the window reads as the GodRays source
-    col *= 1.08;
+    // Building silhouette
+    float skyH = skylineHeight(vUv.x);
+    float inBuilding = step(vUv.y, skyH);
+
+    // Composite layers
+    vec3 col = mix(sky, silhouette, inBuilding);
+
+    // Top-edge rim glow (subtle warm halo on roofline against the bright sky)
+    col += vec3(1.0, 0.6, 0.3) * topEdgeGlow(vUv, skyH) * 0.35;
+
+    // Window lights on top
+    col += windowLight(vUv, skyH);
+
+    // Brightness boost so window reads as the GodRays source
+    col *= 1.05;
 
     gl_FragColor = vec4(col, 1.0);
   }
