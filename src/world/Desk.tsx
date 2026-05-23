@@ -4,8 +4,8 @@ import { RoundedBox } from '@react-three/drei'
 // so the camera lands comfortably in front of it during the establishing
 // dolly (Week 3 wires the dolly itself).
 export function Desk() {
-  const topColor = '#a3a8ad'
-  const sideColor = '#3d4044'
+  const topColor = '#7a7e83'
+  const sideColor = '#2a2c2f'
 
   return (
     <group position={[0, 0, -0.4]}>

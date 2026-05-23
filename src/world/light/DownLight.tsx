@@ -9,7 +9,8 @@ export function DownLight() {
   const target = useMemo(() => new THREE.Object3D(), [])
 
   useEffect(() => {
-    target.position.set(-0.05, 0.74, -0.25)
+    // Aim at the desk-top area in front of the lamp (slightly right + forward)
+    target.position.set(0.05, 0.74, -0.2)
     target.updateMatrixWorld()
     if (ref.current) ref.current.target = target
   }, [target])
@@ -19,13 +20,13 @@ export function DownLight() {
       <primitive object={target} />
       <spotLight
         ref={ref}
-        position={[-0.32, 1.18, -0.4]}
-        angle={0.85}
-        penumbra={0.9}
-        intensity={9}
-        color="#ffb573"
-        distance={3.4}
-        decay={1.6}
+        position={[-0.12, 1.42, -0.4]}
+        angle={1.05}
+        penumbra={0.86}
+        intensity={22}
+        color="#ffa860"
+        distance={4.6}
+        decay={1.4}
       />
     </>
   )

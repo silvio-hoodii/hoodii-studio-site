@@ -3,50 +3,64 @@
 // plate fades in) and click (camera dollies, IdentityPanel opens) per the
 // interaction state machine in the design doc.
 //
-// Coordinates relative to desk-top (y = 0.74), sitting on the left side of
-// the desk so it casts a warm pool of light over the working surface.
+// Geometry scaled ~1.7x from first-pass v0 so the lamp reads as the
+// protagonist of the composition rather than a pinpoint. A small warm
+// pointLight at the bulb position edge-lights the post + arm so they
+// silhouette against the cool wall behind.
+
 export function Lamp() {
-  const metalDark = '#4a4e52'
-  const metalArm = '#6a6e72'
+  const metalDark = '#6a6e72'
+  const metalArm = '#8a8e92'
 
   return (
     <group position={[-0.55, 0.74, -0.4]} name="lamp">
       {/* Base — flat cylinder */}
-      <mesh position={[0, 0.025, 0]}>
-        <cylinderGeometry args={[0.07, 0.085, 0.05, 24]} />
-        <meshStandardMaterial color={metalDark} roughness={0.34} metalness={0.82} />
+      <mesh position={[0, 0.04, 0]}>
+        <cylinderGeometry args={[0.11, 0.13, 0.08, 28]} />
+        <meshStandardMaterial color={metalDark} roughness={0.32} metalness={0.85} />
       </mesh>
 
       {/* Vertical post */}
-      <mesh position={[0, 0.19, 0]}>
-        <cylinderGeometry args={[0.012, 0.014, 0.28, 16]} />
-        <meshStandardMaterial color={metalArm} roughness={0.4} metalness={0.75} />
+      <mesh position={[0, 0.32, 0]}>
+        <cylinderGeometry args={[0.018, 0.022, 0.48, 16]} />
+        <meshStandardMaterial color={metalArm} roughness={0.38} metalness={0.78} />
       </mesh>
 
       {/* Bent arm (angled forward toward desk-front) */}
-      <mesh position={[0.11, 0.36, 0]} rotation={[0, 0, -Math.PI / 4]}>
-        <cylinderGeometry args={[0.011, 0.011, 0.24, 16]} />
-        <meshStandardMaterial color={metalArm} roughness={0.4} metalness={0.75} />
+      <mesh position={[0.16, 0.6, 0]} rotation={[0, 0, -Math.PI / 4]}>
+        <cylinderGeometry args={[0.016, 0.016, 0.38, 16]} />
+        <meshStandardMaterial color={metalArm} roughness={0.38} metalness={0.78} />
       </mesh>
 
       {/* Head — truncated cone aimed down-and-forward */}
-      <mesh position={[0.23, 0.42, 0]} rotation={[0, 0, -Math.PI / 2.05]}>
-        <cylinderGeometry args={[0.05, 0.085, 0.1, 24]} />
-        <meshStandardMaterial color={metalDark} roughness={0.34} metalness={0.82} />
+      <mesh position={[0.36, 0.7, 0]} rotation={[0, 0, -Math.PI / 2.05]}>
+        <cylinderGeometry args={[0.07, 0.13, 0.15, 28]} />
+        <meshStandardMaterial color={metalDark} roughness={0.32} metalness={0.85} />
       </mesh>
 
-      {/* Emissive bulb — small warm sphere inside the head opening */}
-      <mesh position={[0.27, 0.4, 0]}>
-        <sphereGeometry args={[0.034, 24, 16]} />
+      {/* Emissive bulb — warm sphere inside the head opening */}
+      <mesh position={[0.43, 0.665, 0]}>
+        <sphereGeometry args={[0.055, 28, 18]} />
         <meshStandardMaterial
-          color="#ffdfb1"
-          emissive="#ffb55b"
-          emissiveIntensity={1.2}
+          color="#ffe2bb"
+          emissive="#ffae50"
+          emissiveIntensity={1.6}
           roughness={0.2}
           metalness={0}
           toneMapped={false}
         />
       </mesh>
+
+      {/* Warm omnidirectional fill from the bulb position — edge-lights the
+          lamp body so the post + arm + head silhouette against the wall.
+          Small distance so it doesn't bleed into the rest of the room. */}
+      <pointLight
+        position={[0.43, 0.665, 0]}
+        intensity={1.1}
+        color="#ff9038"
+        distance={0.85}
+        decay={1.5}
+      />
     </group>
   )
 }
