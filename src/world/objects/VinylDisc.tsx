@@ -11,16 +11,17 @@ type Props = {
   spotify: SpotifyPayload | null
 }
 
-// Vinyl record displayed on edge — like a stylized record standing on the
-// desk, face toward the camera. Spinning flat would lose almost all screen
-// area at this camera angle, so the v1 pose is vertical for legibility.
-// Spin axis is local Z (which aligns with world Z after the +X 90° pose
-// rotation), so the disc rotates face-on like a wheel of fortune.
+// Vinyl record laying flat on the right side of the desk. v3 of this
+// component (operator pick 2026-05-23): flat instead of standing on edge,
+// bigger so it reads as an object from the camera angle. Slow Y-axis spin
+// when Spotify is playing.
 //
-// Label drei <Text> stays put on the face. Idle pulse is via emissive
-// strength + slight scale wobble when Spotify is not playing.
+// Position math: desk top surface is at y=0.76 (Desk RoundedBox is
+// centered at y=0.74 with height 0.04, so top face = 0.76). Disc body
+// thickness 0.016 → centered at y=0.768 puts bottom at 0.76 (resting on
+// desk) and top at 0.776.
 export function VinylDisc({ spotify }: Props) {
-  const spinRef = useRef<THREE.Group>(null)
+  const groupRef = useRef<THREE.Group>(null)
   const reducedMotion = useFocus((s) => s.prefersReducedMotion)
   const setHovered = useFocus((s) => s.setHovered)
 
@@ -29,17 +30,17 @@ export function VinylDisc({ spotify }: Props) {
   const artist = spotify?.artist?.slice(0, 22) ?? null
 
   useFrame((state, delta) => {
-    if (!spinRef.current) return
-    const speed = reducedMotion ? 0.04 : isPlaying ? 0.22 : 0.08
-    spinRef.current.rotation.z += speed * delta
+    if (!groupRef.current) return
+    const playing = Boolean(spotify?.isPlaying)
+    const speed = reducedMotion ? 0.04 : playing ? 0.22 : 0.08
+    groupRef.current.rotation.y += speed * delta
 
-    if (!isPlaying) {
-      // Soft idle pulse — gentle scale breath when offline
-      const amp = reducedMotion ? 0.005 : 0.012
+    if (!playing) {
+      const amp = reducedMotion ? 0.006 : 0.012
       const s = 1 + Math.sin(state.clock.elapsedTime * 1.2) * amp
-      spinRef.current.scale.setScalar(s)
-    } else if (spinRef.current.scale.x !== 1) {
-      spinRef.current.scale.setScalar(1)
+      groupRef.current.scale.setScalar(s)
+    } else if (groupRef.current.scale.x !== 1) {
+      groupRef.current.scale.setScalar(1)
     }
   })
 
@@ -51,8 +52,8 @@ export function VinylDisc({ spotify }: Props) {
 
   return (
     <group
-      position={[0.22, 0.91, -0.45]}
-      rotation={[Math.PI / 2, 0, 0]}
+      ref={groupRef}
+      position={[0.55, 0.768, -0.15]}
       name="vinyl"
       onPointerOver={(e) => {
         e.stopPropagation()
@@ -60,98 +61,80 @@ export function VinylDisc({ spotify }: Props) {
       }}
       onPointerOut={() => setHovered(null)}
     >
-      <group ref={spinRef}>
-        {/* Disc — main cylinder, now standing on edge */}
-        <mesh>
-          <cylinderGeometry args={[0.14, 0.14, 0.014, 64]} />
-          <meshStandardMaterial color="#1c1c20" roughness={0.42} metalness={0.55} />
-        </mesh>
+      {/* Disc — 25cm diameter, flat on desk */}
+      <mesh>
+        <cylinderGeometry args={[0.125, 0.125, 0.016, 64]} />
+        <meshStandardMaterial color="#1c1c20" roughness={0.42} metalness={0.55} />
+      </mesh>
 
-        {/* Subtle outer ring catches highlight from the warm pool */}
-        <mesh position={[0, 0.0075, 0]}>
-          <ringGeometry args={[0.108, 0.138, 64]} />
-          <meshStandardMaterial
-            color="#4a4a52"
-            roughness={0.34}
-            metalness={0.68}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <mesh position={[0, -0.0075, 0]} rotation={[Math.PI, 0, 0]}>
-          <ringGeometry args={[0.108, 0.138, 64]} />
-          <meshStandardMaterial
-            color="#4a4a52"
-            roughness={0.34}
-            metalness={0.68}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
+      {/* Outer ring catches highlight from the warm lamp pool */}
+      <mesh position={[0, 0.009, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.095, 0.123, 64]} />
+        <meshStandardMaterial
+          color="#4a4a52"
+          roughness={0.34}
+          metalness={0.68}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
 
-        {/* Front label — warm emissive amber, brighter when playing */}
-        <mesh position={[0, 0.008, 0]}>
-          <cylinderGeometry args={[0.058, 0.058, 0.001, 32]} />
-          <meshStandardMaterial
-            color={isPlaying ? '#ffc890' : '#a86848'}
-            emissive={isPlaying ? '#ff7028' : '#b04018'}
-            emissiveIntensity={isPlaying ? 0.85 : 0.42}
-            roughness={0.52}
-            toneMapped={false}
-          />
-        </mesh>
-        {/* Back label (mirror, simpler) */}
-        <mesh position={[0, -0.008, 0]} rotation={[Math.PI, 0, 0]}>
-          <cylinderGeometry args={[0.058, 0.058, 0.001, 32]} />
-          <meshStandardMaterial
-            color={isPlaying ? '#ffc890' : '#a86848'}
-            emissive={isPlaying ? '#ff7028' : '#b04018'}
-            emissiveIntensity={isPlaying ? 0.55 : 0.25}
-            roughness={0.52}
-            toneMapped={false}
-          />
-        </mesh>
+      {/* Label disc — warm-amber, always faintly emissive so it reads */}
+      <mesh position={[0, 0.0095, 0]}>
+        <cylinderGeometry args={[0.052, 0.052, 0.001, 32]} />
+        <meshStandardMaterial
+          color={isPlaying ? '#ffc890' : '#a86848'}
+          emissive={isPlaying ? '#ff7028' : '#b04018'}
+          emissiveIntensity={isPlaying ? 0.7 : 0.35}
+          roughness={0.52}
+          toneMapped={false}
+        />
+      </mesh>
 
-        {/* Title text on the face — disc is now in XZ plane, face toward +Y
-            (which in world is +Z after the parent rotation, i.e. toward
-            camera). Text is rotated to lay on the face. */}
-        {title && (
-          <Text
-            position={[0, 0.009, -0.025]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            fontSize={0.011}
-            color="#1a0a02"
-            anchorX="center"
-            anchorY="middle"
-            maxWidth={0.1}
-          >
-            {title}
-          </Text>
-        )}
-        {artist && (
-          <Text
-            position={[0, 0.009, 0.023]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            fontSize={0.0085}
-            color="#28100a"
-            anchorX="center"
-            anchorY="middle"
-            maxWidth={0.1}
-          >
-            {artist}
-          </Text>
-        )}
-        {!title && (
-          <Text
-            position={[0, 0.009, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            fontSize={0.009}
-            color="#3a1810"
-            anchorX="center"
-            anchorY="middle"
-          >
-            offline
-          </Text>
-        )}
-      </group>
+      {/* Center spindle hole */}
+      <mesh position={[0, 0.0105, 0]}>
+        <cylinderGeometry args={[0.004, 0.004, 0.003, 16]} />
+        <meshStandardMaterial color="#000000" />
+      </mesh>
+
+      {/* Title text laid flat on the label */}
+      {title && (
+        <Text
+          position={[0, 0.011, -0.024]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          fontSize={0.0095}
+          color="#1a0a02"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={0.085}
+        >
+          {title}
+        </Text>
+      )}
+      {artist && (
+        <Text
+          position={[0, 0.011, 0.022]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          fontSize={0.008}
+          color="#28100a"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={0.085}
+        >
+          {artist}
+        </Text>
+      )}
+      {!title && (
+        <Text
+          position={[0, 0.011, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          fontSize={0.0085}
+          color="#3a1810"
+          anchorX="center"
+          anchorY="middle"
+        >
+          offline
+        </Text>
+      )}
     </group>
   )
 }

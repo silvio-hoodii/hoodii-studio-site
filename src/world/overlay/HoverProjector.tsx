@@ -15,8 +15,9 @@ import { useFocus } from '../state/useFocus'
 // triggers a camera dolly that invalidates these.
 const HOVER_ANCHORS: Record<string, THREE.Vector3> = {
   lamp: new THREE.Vector3(-0.12, 1.42, -0.4),
-  vinyl: new THREE.Vector3(0.28, 0.78, -0.28),
-  cartridge: new THREE.Vector3(0.58, 0.92, -0.48),
+  laptop: new THREE.Vector3(-0.1, 0.96, -0.18),
+  monitor: new THREE.Vector3(0.4, 1.08, -0.55),
+  vinyl: new THREE.Vector3(0.55, 0.79, -0.15),
 }
 
 const projected = new THREE.Vector3()

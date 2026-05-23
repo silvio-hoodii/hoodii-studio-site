@@ -7,8 +7,9 @@ import type { PsnPayload, SpotifyPayload } from '@/lib/fetchers'
 import { Desk } from './Desk'
 import { DownLight } from './light/DownLight'
 import { WindowLight } from './light/WindowLight'
-import { Cartridge } from './objects/Cartridge'
+import { ExternalMonitor } from './objects/ExternalMonitor'
 import { Lamp } from './objects/Lamp'
+import { Laptop } from './objects/Laptop'
 import { VinylDisc } from './objects/VinylDisc'
 import { HoverProjector } from './overlay/HoverProjector'
 import { Pipeline } from './postfx/Pipeline'
@@ -58,8 +59,9 @@ export function Studio({ initialSpotify, initialPsn }: StudioProps) {
         <Room onSkyMounted={setSkyMesh} />
         <Desk />
         <Lamp />
+        <Laptop />
+        <ExternalMonitor psn={psn} />
         <VinylDisc spotify={spotify} />
-        <Cartridge psn={psn} />
         <DownLight />
         <WindowLight />
         {skyMesh && <Pipeline godRaysMesh={skyMesh} />}
