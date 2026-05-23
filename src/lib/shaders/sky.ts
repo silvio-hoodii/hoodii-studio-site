@@ -21,12 +21,19 @@ export const skyVertexShader = /* glsl */ `
 `
 
 export const skyFragmentShader = /* glsl */ `
+  precision highp float;
+
   uniform float uTime;
   varying vec2 vUv;
 
-  // Pseudo-random hash for procedural skyline generation.
+  // Mobile-safe hash. The classic fract(sin(...) * 43758) approach breaks
+  // on many mobile GPUs because sin() at large inputs has low precision.
+  // This version uses only fract + multiply + dot, which is stable across
+  // desktop, iOS, and Android.
   float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
   }
 
   // Building skyline: divide the window width into columns of varying widths
