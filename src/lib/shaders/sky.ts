@@ -1,17 +1,169 @@
 import * as THREE from 'three'
 
-// Two-stop vertical gradient with a very slow horizontal drift. No sun,
-// no time-of-day binding in v1 — uTime is wired but the visible output is
-// nearly static. Week +1 will replace this with a sky-as-clock shader
-// (per design doc accrete queue) that tracks local time at the operator
-// location.
+// v3 sky: pre-rendered Canvas2D texture, sampled by a trivial shader.
 //
-// SINGLETON UNIFORMS: skyUniforms lives at module scope so useFrame can
-// mutate uTime.value without tripping react-hooks/immutability (which
-// rejects mutation through any React hook return). Safe because the app
-// only ever mounts one Room. If a multi-Room future arrives, refactor to
-// per-instance uniforms with a different mutation path.
+// Why not GLSL anymore: the procedural GLSL approach (hash-based skyline +
+// window lights) silently broke on mobile WebGL — sin-based hashes lose
+// precision, mediump defaults clip colors past 1.0 to white, etc. Operator
+// on a phone saw a "faded white canvas" the entire time the desktop
+// agent-browser was showing a perfect cityscape.
+//
+// By drawing the entire cityscape once in JS via Canvas2D and handing it
+// to Three.js as a CanvasTexture, the shader's only job is to sample a
+// texture. Mobile GPUs can't get sampling wrong the way they can get
+// procedural math wrong. Texture is generated at module init and lives
+// at module scope (same singleton pattern as the uniforms).
 
+const TEX_W = 1024
+const TEX_H = 720
+
+// Deterministic pseudo-random — same skyline on every reload. JS-side so
+// precision is the same on every device.
+function mulberry32(seed: number): () => number {
+  let s = seed >>> 0
+  return function () {
+    s = (s + 0x6d2b79f5) >>> 0
+    let t = s
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function drawCityscape(canvas: HTMLCanvasElement): void {
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  // TS can't narrow ctx through nested closures — capture as non-null local
+  const g = ctx
+
+  // Sky gradient: warm sunset orange at horizon → cool dusty navy above
+  const sky = g.createLinearGradient(0, 0, 0, TEX_H)
+  sky.addColorStop(0.0, '#4d5a82') // dusty navy top
+  sky.addColorStop(0.32, '#8e7a78') // muted mauve mid-upper
+  sky.addColorStop(0.55, '#d68a52') // warm haze
+  sky.addColorStop(0.74, '#ff8030') // sunset orange smear
+  sky.addColorStop(0.82, '#a04020') // warm hot band right above horizon
+  sky.addColorStop(0.86, '#1a1820') // ground/silhouette base
+  sky.addColorStop(1.0, '#0a0c14')
+  g.fillStyle = sky
+  g.fillRect(0, 0, TEX_W, TEX_H)
+
+  // Cityscape — three layers for parallax depth.
+  const rand = mulberry32(1729)
+
+  type Layer = {
+    color: string
+    minW: number
+    maxW: number
+    minH: number
+    maxH: number
+    baseY: number // pixels from bottom of texture
+  }
+
+  // Back layer — small, far, lighter silhouette (atmospheric haze)
+  const backLayer: Layer = {
+    color: '#241e26',
+    minW: 24,
+    maxW: 64,
+    minH: 50,
+    maxH: 110,
+    baseY: 72,
+  }
+  // Mid layer
+  const midLayer: Layer = {
+    color: '#10101a',
+    minW: 36,
+    maxW: 88,
+    minH: 90,
+    maxH: 170,
+    baseY: 40,
+  }
+  // Front layer — biggest, darkest, closest
+  const frontLayer: Layer = {
+    color: '#06080e',
+    minW: 50,
+    maxW: 120,
+    minH: 110,
+    maxH: 220,
+    baseY: 0,
+  }
+
+  function drawLayer(layer: Layer): void {
+    g.fillStyle = layer.color
+    let x = -10
+    while (x < TEX_W + 20) {
+      const w = layer.minW + rand() * (layer.maxW - layer.minW)
+      const h = layer.minH + rand() * (layer.maxH - layer.minH)
+      const y = TEX_H - layer.baseY - h
+      g.fillRect(x, y, w, h)
+
+      // Window lights — small bright rects inside the silhouette,
+      // only in mid + front layers (back layer too far to show windows).
+      if (layer === midLayer || layer === frontLayer) {
+        const winSize = layer === frontLayer ? 4 : 3
+        const winSpacingX = layer === frontLayer ? 12 : 9
+        const winSpacingY = layer === frontLayer ? 14 : 11
+        for (let wy = y + 12; wy < y + h - 6; wy += winSpacingY) {
+          for (let wx = x + 6; wx < x + w - 6; wx += winSpacingX) {
+            // Random gating — most windows unlit
+            const r = rand()
+            if (r < 0.6) continue
+            // Warm interior light vs cool monitor blue
+            const isCool = r > 0.94
+            g.fillStyle = isCool
+              ? `rgba(150, 200, 255, ${0.7 + rand() * 0.3})`
+              : `rgba(255, 200, 110, ${0.7 + rand() * 0.3})`
+            g.fillRect(wx, wy, winSize, winSize)
+          }
+        }
+        g.fillStyle = layer.color
+      }
+
+      x += w - 2 // slight overlap between buildings
+    }
+  }
+
+  drawLayer(backLayer)
+  drawLayer(midLayer)
+  drawLayer(frontLayer)
+
+  // Soft warm bloom along the rooflines of the FRONT layer
+  g.globalCompositeOperation = 'screen'
+  const bloom = g.createLinearGradient(0, TEX_H - 240, 0, TEX_H - 100)
+  bloom.addColorStop(0, 'rgba(0,0,0,0)')
+  bloom.addColorStop(1, 'rgba(255, 130, 60, 0.18)')
+  g.fillStyle = bloom
+  g.fillRect(0, TEX_H - 240, TEX_W, 140)
+  g.globalCompositeOperation = 'source-over'
+}
+
+// Lazy texture creation — first call paints the canvas + builds the
+// CanvasTexture. Subsequent calls return the cached singleton.
+let cachedTexture: THREE.CanvasTexture | null = null
+
+function getSkyTexture(): THREE.CanvasTexture {
+  if (cachedTexture) return cachedTexture
+  if (typeof document === 'undefined') {
+    // SSR fallback — return a 1x1 placeholder that will get replaced on client
+    const placeholder = new THREE.CanvasTexture(new OffscreenCanvas(1, 1) as unknown as HTMLCanvasElement)
+    return placeholder
+  }
+  const canvas = document.createElement('canvas')
+  canvas.width = TEX_W
+  canvas.height = TEX_H
+  drawCityscape(canvas)
+  const tex = new THREE.CanvasTexture(canvas)
+  tex.colorSpace = THREE.SRGBColorSpace
+  tex.anisotropy = 8
+  tex.needsUpdate = true
+  cachedTexture = tex
+  return tex
+}
+
+// Trivial fragment shader: sample texture, slight horizontal drift via
+// uTime for ambient "alive" feel. No procedural math, no hash, no
+// precision-sensitive operations. Renders identically on every WebGL
+// device.
 export const skyVertexShader = /* glsl */ `
   varying vec2 vUv;
   void main() {
@@ -21,122 +173,29 @@ export const skyVertexShader = /* glsl */ `
 `
 
 export const skyFragmentShader = /* glsl */ `
-  precision highp float;
-
+  precision mediump float;
+  uniform sampler2D uSky;
   uniform float uTime;
   varying vec2 vUv;
 
-  // Mobile-safe hash. The classic fract(sin(...) * 43758) approach breaks
-  // on many mobile GPUs because sin() at large inputs has low precision.
-  // This version uses only fract + multiply + dot, which is stable across
-  // desktop, iOS, and Android.
-  float hash(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 45.32);
-    return fract(p.x * p.y);
-  }
-
-  // Building skyline: divide the window width into columns of varying widths
-  // (each column is one building). Each column has a hash-based height. Adjacent
-  // columns can be very different heights for a jagged skyline.
-  //
-  // Returns the building height at this x coordinate, in normalized [0, 1] sky
-  // space.
-  float skylineHeight(float x) {
-    // Three overlapping building layers at different scales for parallax feel
-    // — front-most layer dominates, but back layers peek through the gaps.
-    float col1 = floor(x * 11.0);
-    float h1 = 0.06 + hash(vec2(col1, 0.0)) * 0.22;
-
-    float col2 = floor(x * 17.0 + 0.31);
-    float h2 = 0.04 + hash(vec2(col2, 5.0)) * 0.14;
-
-    return max(h1, h2);
-  }
-
-  // Per-column rim glow: brightens the very top edge of each building
-  // silhouette so the skyline reads as buildings against light, not as a
-  // black mask.
-  float topEdgeGlow(vec2 uv, float h) {
-    return smoothstep(0.0, 0.012, h - uv.y) * smoothstep(0.025, 0.0, h - uv.y);
-  }
-
-  // Window lights inside the building silhouette. Grid of small squares;
-  // each cell has a hash deciding if it's lit + which color.
-  vec3 windowLight(vec2 uv, float skylineH) {
-    if (uv.y > skylineH - 0.004) return vec3(0.0);
-    if (uv.y < 0.018) return vec3(0.0); // no windows at street level
-
-    vec2 grid = vec2(58.0, 44.0);
-    vec2 cell = floor(uv * grid);
-    vec2 cellFrac = fract(uv * grid);
-
-    float h = hash(cell);
-    if (h < 0.62) return vec3(0.0);
-
-    // Inside the central rectangle of the cell (window shape, not whole cell)
-    float inWindow =
-      step(0.18, cellFrac.x) * step(cellFrac.x, 0.82) *
-      step(0.28, cellFrac.y) * step(cellFrac.y, 0.82);
-    if (inWindow < 0.5) return vec3(0.0);
-
-    // Color: mostly warm interior light, occasional cool monitor-glow
-    vec3 warm = vec3(1.0, 0.74, 0.42);
-    vec3 cool = vec3(0.6, 0.78, 1.0);
-    vec3 color = mix(warm, cool, step(0.88, h));
-
-    // Intensity per-window, ~70-130%
-    float intensity = 0.7 + hash(cell + vec2(13.0, 7.0)) * 0.6;
-    return color * intensity;
-  }
-
   void main() {
-    vec3 top = vec3(0.46, 0.52, 0.68);     // dusty navy above
-    vec3 mid = vec3(0.85, 0.65, 0.48);     // warm haze midband
-    vec3 horizon = vec3(1.0, 0.55, 0.22);  // sunset orange smear at horizon
-    vec3 silhouette = vec3(0.025, 0.03, 0.06);
-
-    float drift = sin(uTime * 0.015 + vUv.y * 3.2) * 0.018;
-    float y = vUv.y + drift;
-
-    // Sky gradient — always computed, blended underneath buildings
-    vec3 sky;
-    if (y < 0.32) {
-      sky = mix(horizon, mid, smoothstep(0.0, 0.32, y));
-    } else if (y < 0.55) {
-      sky = mix(mid, top * 1.1, smoothstep(0.32, 0.55, y));
-    } else {
-      sky = mix(top * 1.1, top * 0.9, smoothstep(0.55, 1.0, y));
-    }
-
-    // Building silhouette
-    float skyH = skylineHeight(vUv.x);
-    float inBuilding = step(vUv.y, skyH);
-
-    // Composite layers
-    vec3 col = mix(sky, silhouette, inBuilding);
-
-    // Top-edge rim glow (subtle warm halo on roofline against the bright sky)
-    col += vec3(1.0, 0.6, 0.3) * topEdgeGlow(vUv, skyH) * 0.35;
-
-    // Window lights on top
-    col += windowLight(vUv, skyH);
-
-    // Brightness boost so window reads as the GodRays source
-    col *= 1.05;
-
-    gl_FragColor = vec4(col, 1.0);
+    vec2 uv = vUv;
+    uv.x += sin(uTime * 0.05) * 0.0015;
+    gl_FragColor = texture2D(uSky, uv);
   }
 `
 
-export const skyUniforms = { uTime: { value: 0 } }
+export const skyUniforms = {
+  uTime: { value: 0 },
+  uSky: { value: null as THREE.Texture | null },
+}
 
 export function createSkyMaterial(): THREE.ShaderMaterial {
+  skyUniforms.uSky.value = getSkyTexture()
   return new THREE.ShaderMaterial({
     uniforms: skyUniforms,
     vertexShader: skyVertexShader,
     fragmentShader: skyFragmentShader,
     depthWrite: false,
-    toneMapped: false,
   })
 }
