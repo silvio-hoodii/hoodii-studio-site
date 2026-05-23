@@ -26,6 +26,9 @@ importers:
       next:
         specifier: 16.2.6
         version: 16.2.6(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      postprocessing:
+        specifier: ^6.39.1
+        version: 6.39.1(three@0.184.0)
       psn-api:
         specifier: ^2.18.0
         version: 2.18.0
