@@ -1,3 +1,7 @@
+'use client'
+
+import { useFocus } from '../state/useFocus'
+
 // Procedural lamp — base cylinder + vertical post + bent arm + truncated-cone
 // head + emissive bulb sphere. v1 is static; Week 3 wires hover (engraving
 // plate fades in) and click (camera dollies, IdentityPanel opens) per the
@@ -11,9 +15,18 @@
 export function Lamp() {
   const metalDark = '#6a6e72'
   const metalArm = '#8a8e92'
+  const setHovered = useFocus((s) => s.setHovered)
 
   return (
-    <group position={[-0.55, 0.74, -0.4]} name="lamp">
+    <group
+      position={[-0.55, 0.74, -0.4]}
+      name="lamp"
+      onPointerOver={(e) => {
+        e.stopPropagation()
+        setHovered('lamp', 'OPERATED BY / silvio neyra')
+      }}
+      onPointerOut={() => setHovered(null)}
+    >
       {/* Base — flat cylinder */}
       <mesh position={[0, 0.04, 0]}>
         <cylinderGeometry args={[0.11, 0.13, 0.08, 28]} />
