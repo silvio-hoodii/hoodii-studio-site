@@ -51,7 +51,7 @@ export function VinylDisc({ spotify }: Props) {
 
   return (
     <group
-      position={[0.22, 0.88, -0.45]}
+      position={[0.22, 0.91, -0.45]}
       rotation={[Math.PI / 2, 0, 0]}
       name="vinyl"
       onPointerOver={(e) => {

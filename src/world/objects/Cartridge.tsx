@@ -36,7 +36,7 @@ export function Cartridge({ psn }: Props) {
   return (
     <group
       ref={groupRef}
-      position={[0.58, 0.83, -0.48]}
+      position={[0.58, 0.87, -0.48]}
       name="cartridge"
       onPointerOver={(e) => {
         e.stopPropagation()
