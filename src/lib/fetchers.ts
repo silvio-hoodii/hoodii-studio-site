@@ -17,13 +17,15 @@ export type SpotifyPayload = {
   url?: string
 }
 
+export type PsnGame = {
+  name: string
+  platform: string
+  imageUrl: string | null
+  lastPlayedAt: string | null
+}
+
 export type PsnPayload = {
-  game: {
-    name: string
-    platform: string
-    imageUrl: string | null
-    lastPlayedAt: string | null
-  } | null
+  games: PsnGame[]
 }
 
 const SPOTIFY_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -96,28 +98,27 @@ export async function fetchSpotify(): Promise<SpotifyPayload> {
 
 export async function fetchPsn(): Promise<PsnPayload> {
   const npsso = process.env.PSN_NPSSO ?? process.env.SN_NPSSO
-  if (!npsso) return { game: null }
+  if (!npsso) return { games: [] }
 
   try {
     const accessCode = await exchangeNpssoForAccessCode(npsso)
     const auth = await exchangeAccessCodeForAuthTokens(accessCode)
     const { data } = await getRecentlyPlayedGames(auth, {
-      limit: 1,
+      limit: 5,
       categories: ['ps5_native_game', 'ps4_game'],
     })
-    const game = data.gameLibraryTitlesRetrieve?.games?.[0]
-    if (!game) return { game: null }
+    const games = data.gameLibraryTitlesRetrieve?.games ?? []
 
     return {
-      game: {
+      games: games.map((game) => ({
         name: game.name,
         platform: game.platform,
         imageUrl: game.image?.url ?? null,
         lastPlayedAt: game.lastPlayedDateTime ?? null,
-      },
+      })),
     }
   } catch (error) {
     console.error('PSN fetch failed', error)
-    return { game: null }
+    return { games: [] }
   }
 }

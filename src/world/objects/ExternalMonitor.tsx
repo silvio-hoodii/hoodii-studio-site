@@ -1,7 +1,8 @@
 'use client'
 
 import { RoundedBox, Text } from '@react-three/drei'
-import { useEffect, useState } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { useEffect, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import type { PsnPayload } from '@/lib/fetchers'
 import { useFocus } from '../state/useFocus'
@@ -11,9 +12,9 @@ type Props = {
 }
 
 // External monitor on the back-right of the desk. Stand base + post +
-// bezel + emissive screen. Screen content is the PSN game image when
-// available (loaded via the /api/psn-image proxy to satisfy CORS), or a
-// "PSN: signal lost" state when not.
+// bezel + emissive screen. Screen content cycles through the operator's
+// last 5 PS5 games every 12 seconds with a 600ms cross-fade between
+// slides. "History accumulates" flavor per 2026-05-23 design doc.
 //
 // Position math: desk top at y=0.76. Stand base bottom at y=0.76 (resting
 // on desk). Total height from desk: ~31cm to top of bezel.
@@ -28,19 +29,73 @@ const BEZEL_T = 0.014
 const SCREEN_W = BEZEL_W - 0.018
 const SCREEN_H = BEZEL_H - 0.018
 
+const CYCLE_MS = 12_000
+const FADE_MS = 600
+
+// Two stacked screen planes — one shows the currently-fading-out game,
+// one shows the fading-in game. We swap roles on each cycle tick so we
+// never need to dispose textures mid-fade.
+type Slot = {
+  texture: THREE.Texture | null
+  imageUrl: string | null
+  index: number
+}
+
 export function ExternalMonitor({ psn }: Props) {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null)
+  const games = useMemo(() => psn?.games ?? [], [psn])
   const setHovered = useFocus((s) => s.setHovered)
 
-  const game = psn?.game?.name ?? null
-  const platform = psn?.game?.platform ?? null
-  const imageUrl = psn?.game?.imageUrl ?? null
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [slotA, setSlotA] = useState<Slot>({ texture: null, imageUrl: null, index: 0 })
+  const [slotB, setSlotB] = useState<Slot>({ texture: null, imageUrl: null, index: 0 })
+  // Which slot is currently the "front" (fading out becomes back next cycle)
+  const [frontIsA, setFrontIsA] = useState(true)
+  // Fade state. null = no fade in progress. Otherwise: { start, progress }.
+  // Lifted out of useRef because React 19's react-hooks/refs rule forbids
+  // reading ref.current during render, and these values determine which
+  // slot meshes mount and at what opacity.
+  const [fade, setFade] = useState<{ start: number; progress: number } | null>(null)
 
+  // Clamp at render time instead of setState-in-effect — react-hooks rule
+  // forbids resetting state synchronously inside an effect.
+  const safeIndex = games.length === 0 ? 0 : activeIndex % games.length
+
+  // Cycle tick — advance activeIndex every 12s, but only if there's more
+  // than one game to cycle through.
   useEffect(() => {
-    if (!imageUrl) return
-    const proxyUrl = `/api/psn-image?url=${encodeURIComponent(imageUrl)}`
-    const loader = new THREE.TextureLoader()
+    if (games.length <= 1) return
+    const id = setInterval(() => {
+      setActiveIndex((i) => (i + 1) % games.length)
+    }, CYCLE_MS)
+    return () => clearInterval(id)
+  }, [games.length])
+
+  // When safeIndex changes, load the new texture into the back slot, then
+  // begin the cross-fade. We load eagerly so the fade-in is on the real
+  // image, not a placeholder. setState happens only inside the async
+  // loader callbacks (or a queued microtask for the no-URL branch), since
+  // the react-hooks/set-state-in-effect rule forbids synchronous setState
+  // in effect bodies.
+  useEffect(() => {
+    const game = games[safeIndex]
+    if (!game) return
+    const targetSlotSetter = frontIsA ? setSlotB : setSlotA
+    const url = game.imageUrl
     let cancelled = false
+
+    if (!url) {
+      queueMicrotask(() => {
+        if (cancelled) return
+        targetSlotSetter({ texture: null, imageUrl: null, index: safeIndex })
+        setFade({ start: performance.now(), progress: 0 })
+      })
+      return () => {
+        cancelled = true
+      }
+    }
+
+    const proxyUrl = `/api/psn-image?url=${encodeURIComponent(url)}`
+    const loader = new THREE.TextureLoader()
     loader.load(
       proxyUrl,
       (tex) => {
@@ -50,28 +105,56 @@ export function ExternalMonitor({ psn }: Props) {
         }
         tex.colorSpace = THREE.SRGBColorSpace
         tex.anisotropy = 8
-        // setState inside an async callback is allowed by react-hooks/set-state-in-effect
-        // (the loader callback is the "external system → React" boundary)
-        setTexture(tex)
+        targetSlotSetter({ texture: tex, imageUrl: url, index: safeIndex })
+        setFade({ start: performance.now(), progress: 0 })
       },
       undefined,
       () => {
-        // image failed; keep prior texture if any rather than flicker to fallback
+        if (cancelled) return
+        targetSlotSetter({ texture: null, imageUrl: null, index: safeIndex })
+        setFade({ start: performance.now(), progress: 0 })
       },
     )
     return () => {
       cancelled = true
     }
-  }, [imageUrl])
+    // We intentionally exclude `frontIsA` so swapping fronts mid-fade
+    // doesn't trigger a re-load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [safeIndex, games])
 
-  // Derive "should render image" from the prop so we never display a stale
-  // texture when imageUrl flips to null. Avoids needing to setTexture(null)
-  // synchronously in the effect body (which the lint rule rejects).
-  const showImage = Boolean(imageUrl) && texture !== null
+  // Drive the fade per frame. setFade(...) re-renders the component so the
+  // screen-plane materials pick up new opacity values; when t reaches 1 we
+  // promote the back slot to front and clear the fade.
+  useFrame(() => {
+    if (fade === null) return
+    const elapsed = performance.now() - fade.start
+    const t = Math.min(1, elapsed / FADE_MS)
+    if (t >= 1) {
+      setFade(null)
+      setFrontIsA((v) => !v)
+    } else {
+      setFade({ start: fade.start, progress: t })
+    }
+  })
 
-  const label = game
-    ? `LAST PLAYED / ${game}${platform ? ' · ' + platform : ''}`
+  const frontSlot = frontIsA ? slotA : slotB
+  const backSlot = frontIsA ? slotB : slotA
+  const fadingIn = fade !== null
+  const frontOpacity = fadingIn ? 1 - fade.progress : 1
+  const backOpacity = fadingIn ? fade.progress : 0
+
+  // Active game for hover label — read from games[activeIndex] not from
+  // slot state, since slot state lags behind activeIndex while loading.
+  const active = games[safeIndex]
+  const label = active
+    ? `LAST PLAYED / ${active.name}${active.platform ? ' · ' + active.platform : ''}`
     : 'PSN / SIGNAL LOST'
+
+  // Render fallback (PSN: SIGNAL LOST) when the FRONT slot has no image
+  // AND we're not currently fading in something else. Avoids fallback-text
+  // flickering during a transition between two image slides.
+  const showFallback = frontSlot.imageUrl === null && backSlot.imageUrl === null
 
   return (
     <group
@@ -104,28 +187,53 @@ export function ExternalMonitor({ psn }: Props) {
           <meshStandardMaterial color="#16171a" roughness={0.5} metalness={0.6} />
         </RoundedBox>
 
-        {/* Screen plane proud of the bezel front face */}
-        <mesh position={[0, 0, BEZEL_T / 2 + 0.0008]}>
+        {/* Dark background plane so additive fading reads against black, not
+            against whatever's behind the monitor. */}
+        <mesh position={[0, 0, BEZEL_T / 2 + 0.0006]}>
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
-          {showImage ? (
-            <meshBasicMaterial map={texture} toneMapped={false} />
-          ) : (
-            <meshStandardMaterial
-              color="#10182a"
-              emissive="#1c4880"
-              emissiveIntensity={0.55}
-              roughness={0.5}
-              metalness={0}
-              toneMapped={false}
-            />
-          )}
+          <meshStandardMaterial
+            color="#10182a"
+            emissive="#1c4880"
+            emissiveIntensity={showFallback ? 0.55 : 0.18}
+            roughness={0.5}
+            metalness={0}
+            toneMapped={false}
+          />
         </mesh>
 
-        {/* Fallback "PSN: signal lost" text when image is not available */}
-        {!showImage && (
+        {/* Front slot — fading out (or fully visible when no fade in progress) */}
+        {frontSlot.texture && (
+          <mesh position={[0, 0, BEZEL_T / 2 + 0.0011]}>
+            <planeGeometry args={[SCREEN_W, SCREEN_H]} />
+            <meshBasicMaterial
+              map={frontSlot.texture}
+              toneMapped={false}
+              transparent
+              opacity={frontOpacity}
+              depthWrite={false}
+            />
+          </mesh>
+        )}
+
+        {/* Back slot — fading in */}
+        {backSlot.texture && fadingIn && (
+          <mesh position={[0, 0, BEZEL_T / 2 + 0.0013]}>
+            <planeGeometry args={[SCREEN_W, SCREEN_H]} />
+            <meshBasicMaterial
+              map={backSlot.texture}
+              toneMapped={false}
+              transparent
+              opacity={backOpacity}
+              depthWrite={false}
+            />
+          </mesh>
+        )}
+
+        {/* "PSN: SIGNAL LOST" fallback when no image at all */}
+        {showFallback && (
           <>
             <Text
-              position={[0, 0.022, BEZEL_T / 2 + 0.0014]}
+              position={[0, 0.022, BEZEL_T / 2 + 0.0015]}
               fontSize={0.022}
               color="#e8f4ff"
               anchorX="center"
@@ -137,7 +245,7 @@ export function ExternalMonitor({ psn }: Props) {
               PSN
             </Text>
             <Text
-              position={[0, -0.018, BEZEL_T / 2 + 0.0014]}
+              position={[0, -0.018, BEZEL_T / 2 + 0.0015]}
               fontSize={0.012}
               color="#8ac0d8"
               anchorX="center"

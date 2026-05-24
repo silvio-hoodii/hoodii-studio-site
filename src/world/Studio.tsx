@@ -7,6 +7,7 @@ import type { PsnPayload, SpotifyPayload } from '@/lib/fetchers'
 import { Desk } from './Desk'
 import { DownLight } from './light/DownLight'
 import { WindowLight } from './light/WindowLight'
+import { Dust } from './objects/Dust'
 import { ExternalMonitor } from './objects/ExternalMonitor'
 import { Lamp } from './objects/Lamp'
 import { Laptop } from './objects/Laptop'
@@ -64,6 +65,7 @@ export function Studio({ initialSpotify, initialPsn }: StudioProps) {
         <VinylDisc spotify={spotify} />
         <DownLight />
         <WindowLight />
+        <Dust />
         {skyMesh && <Pipeline godRaysMesh={skyMesh} />}
       </Suspense>
     </Canvas>

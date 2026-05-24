@@ -9,7 +9,7 @@ export async function GET() {
   const payload = await fetchPsn()
   return NextResponse.json(payload, {
     headers: {
-      'Cache-Control': payload.game
+      'Cache-Control': payload.games.length
         ? 'public, s-maxage=300, stale-while-revalidate=600'
         : 'no-store, max-age=0',
     },

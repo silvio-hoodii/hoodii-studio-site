@@ -1,8 +1,13 @@
-import { useFrame } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { createConcreteMaterial } from '@/lib/shaders/concrete'
-import { createSkyMaterial, skyUniforms } from '@/lib/shaders/sky'
+import {
+  applyPhaseBlend,
+  createSkyMaterial,
+  getCalgaryHour,
+  getPhaseBlend,
+  type Phase,
+} from '@/lib/shaders/sky'
 
 // Room dimensions:
 //   x: -3..3  (6 m wide)
@@ -36,8 +41,8 @@ export function Room({ onSkyMounted }: RoomProps) {
   )
 
   // useState lazy init gives a stable ShaderMaterial reference across renders.
-  // uTime is mutated through the module-scope skyUniforms (see sky.ts) so
-  // useFrame doesn't trip react-hooks/immutability.
+  // The crossfade uniforms are mutated through the module-scope skyUniforms
+  // (see sky.ts) so useFrame doesn't trip react-hooks/immutability.
   const [skyMaterial] = useState(createSkyMaterial)
 
   const skyRef = useRef<THREE.Mesh>(null)
@@ -46,9 +51,27 @@ export function Room({ onSkyMounted }: RoomProps) {
     if (skyRef.current) onSkyMounted(skyRef.current)
   }, [onSkyMounted])
 
-  useFrame((state) => {
-    skyUniforms.uTime.value = state.clock.elapsedTime
-  })
+  // Sky-as-clock tick: refresh the (A, B, blend) phase tuple once per
+  // minute from real Calgary local time. setInterval is fine here because
+  // the uniforms are module-scope and the shader reads them every frame
+  // anyway — no React re-render needed.
+  //
+  // Debug: `?phase=dawn|day|dusk|night` URL param overrides the time-based
+  // selection (no tick, fixed phase). Useful for visual review of all four
+  // phases without waiting hours.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const override = params.get('phase') as Phase | null
+    const PHASES: Phase[] = ['dawn', 'day', 'dusk', 'night']
+    if (override && PHASES.includes(override)) {
+      applyPhaseBlend({ a: override, b: override, blend: 0 })
+      return
+    }
+    const tick = () => applyPhaseBlend(getPhaseBlend(getCalgaryHour()))
+    tick()
+    const id = setInterval(tick, 60_000)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <group>
