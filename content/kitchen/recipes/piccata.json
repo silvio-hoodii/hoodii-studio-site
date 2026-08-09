@@ -1,7 +1,7 @@
 {
   "id": "piccata",
   "name": "Pan Sauce: Chicken Piccata",
-  "build": "2026-08-09b",
+  "build": "2026-08-09c",
   "form": "technique",
   "meal": [
     "dinner"
@@ -251,7 +251,11 @@
       "warn": "Two at a time, never all four. Four cold cutlets drop the pan temperature so far that they release water and boil in it instead of searing. A crowded pan is the most common reason home cooking comes out grey and steamed.",
       "_inferred": [
         "equipment"
-      ]
+      ],
+      "doneness": {
+        "kind": "do",
+        "test": "Lift one corner with tongs at 3 minutes. It should be golden brown and release from the pan without sticking. If it grips, it is not ready: put it back down and wait another 30 seconds. Food lets go by itself when the crust has formed."
+      }
     },
     {
       "n": 10,
@@ -264,7 +268,11 @@
       "look": "At 1 cm thick these cook fast, so start checking early. Push the probe in from the side into the thickest part rather than straight down, so the tip sits in the middle of the meat rather than touching the pan.165Â°F is the answer. Colour is not, juices running clear is not, and you own a thermometer now specifically so you never have to guess this again.The plate will collect some juice. Keep it. It goes into the sauce at the end.",
       "_inferred": [
         "equipment"
-      ]
+      ],
+      "doneness": {
+        "kind": "do",
+        "test": "165 F in the thickest part on the thermometer. That is the whole test. Do not judge chicken by colour or by cutting into it."
+      }
     },
     {
       "n": 11,
@@ -281,7 +289,11 @@
       "_inferred": [
         "equipment",
         "heat"
-      ]
+      ],
+      "doneness": {
+        "kind": "look",
+        "test": "A brown stuck-on layer across the base with the oil around it. Brown is right. BLACK is burnt and will make the sauce bitter: if it is black, wipe the pan out and you lose the sauce but save the meal."
+      }
     },
     {
       "n": 12,
@@ -299,7 +311,11 @@
       "_inferred": [
         "uses",
         "equipment"
-      ]
+      ],
+      "doneness": {
+        "kind": "do",
+        "test": "Scrape until the base is clean and every brown patch has lifted into the liquid. Run the spoon across the base: it should feel smooth, not gritty. The liquid goes from pale to brown as the fond dissolves, and that colour change is the sauce being made."
+      }
     },
     {
       "n": 13,
@@ -317,7 +333,11 @@
       "_inferred": [
         "uses",
         "equipment"
-      ]
+      ],
+      "doneness": {
+        "kind": "do",
+        "test": "Reduced by about half, which for this pan means the liquid just covers the base in a thin layer. The real test: drag the spoon across the base and the bare line should stay open for about a second before the liquid closes over it. If it closes instantly, keep going. Three to four minutes is the estimate, the line is the answer."
+      }
     },
     {
       "n": 14,
@@ -333,7 +353,11 @@
       "_inferred": [
         "uses",
         "equipment"
-      ]
+      ],
+      "doneness": {
+        "kind": "look",
+        "test": "Glossy and slightly thickened, coating the back of the spoon. It should look like one sauce, not butter floating on liquid. If you see a greasy separated layer the pan was still too hot: take it further off the heat and swirl, do not stir."
+      }
     },
     {
       "n": 15,
