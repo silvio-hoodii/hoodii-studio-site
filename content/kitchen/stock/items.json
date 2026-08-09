@@ -164,7 +164,7 @@
       "since": "2026-08-04"
     },
     "lemon": {
-      "n": "lemon juice",
+      "n": "lemon juice (ReaLime, bottled)",
       "state": "have",
       "where": "fridge",
       "src": "seed",
@@ -487,6 +487,16 @@
       "where": "pantry",
       "src": "seed",
       "since": "2026-08-06"
+    },
+    "lemon_fresh": {
+      "n": "fresh lemons",
+      "where": "fridge",
+      "state": "none",
+      "buy": {
+        "zone": "Produce",
+        "spec": "2 or 3 loose lemons. Not the plastic squeeze bottle, that is already in the fridge."
+      },
+      "note": "Distinct from the bottle on purpose. In a sauce where lemon is one of three flavours, they are not the same ingredient."
     }
   }
 }

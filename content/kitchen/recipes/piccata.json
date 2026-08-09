@@ -1,7 +1,7 @@
 {
   "id": "piccata",
   "name": "Pan Sauce: Chicken Piccata",
-  "build": "2026-08-09c",
+  "build": "2026-08-09e",
   "form": "technique",
   "meal": [
     "dinner"
@@ -14,7 +14,8 @@
   "serves": {
     "count": 2,
     "unit": "portion",
-    "proteinPerUnit": 60
+    "proteinPerUnit": 57,
+    "proteinMath": "2 chicken breasts at about 250 g raw each, chicken breast being roughly 23 g protein per 100 g raw, gives about 115 g across the dish, so about 57 g per portion. The butter, capers and stock add under a gram between them. CORRECTED from a bare 60 g that showed no arithmetic."
   },
   "ingredients": [
     {
@@ -78,10 +79,16 @@
     {
       "ref": "lemon_juice",
       "stock": "lemon",
-      "display": "lemon juice",
+      "display": "lemon juice, from 1 fresh lemon if you have one",
       "qty": 3,
       "unit": "tbsp",
-      "defining": true
+      "defining": true,
+      "betterWith": {
+        "display": "1 fresh lemon",
+        "stock": "lemon_fresh",
+        "why": "Most of what people taste as \"lemon\" is the aromatic oil in the peel, not the acid. Bottled juice is pasteurised and carries preservatives, so it brings the sourness without the smell. In a sauce made of three things (lemon, capers, butter) that gap is the whole character of the dish, which is why every photo of piccata has lemon slices in it. The bottle makes a good sauce. A fresh lemon makes piccata."
+      },
+      "altText": "No fresh lemon? The ReaLime bottle works and this is still worth cooking. Use the same 3 tbsp, and if it tastes sharp rather than bright at the end, half a tablespoon more butter rounds it off."
     },
     {
       "ref": "capers",
@@ -95,7 +102,21 @@
     {
       "ref": "fresh_parsley",
       "display": "fresh parsley, chopped",
-      "_rawQty": "optional"
+      "_rawQty": "optional",
+      "qty": 2,
+      "unit": "tbsp",
+      "optional": true,
+      "prep": "chopped, a small handful"
+    },
+    {
+      "ref": "lemon_wedges",
+      "stock": "lemon_fresh",
+      "display": "lemon wedges, to serve",
+      "qty": 2,
+      "unit": "wedge",
+      "defining": false,
+      "optional": true,
+      "note": "Added 2026-08-09. The recipe never had these and every picture of the dish does. Skip if there is no fresh lemon."
     }
   ],
   "equipment": [
@@ -121,10 +142,6 @@
         "pan_nonstick_large",
         "stovetop"
       ],
-      "heat": {
-        "surface": "stovetop",
-        "_needsTarget": true
-      },
       "look": "Every pan sauce you will ever make is those four moves in that order. Steak with red wine, pork chops with cider, chicken with mushrooms and cream. Change the meat and change the liquid and the sequence does not move.That is why this is rung 2 of the ladder and not just a recipe. You are not learning piccata. You are learning the thing piccata happens to be made of.Piccata means the sauce is finished with lemon and capers. That is all the word means.",
       "_inferred": [
         "uses",
@@ -220,14 +237,19 @@
       "minutes": 3,
       "heat": {
         "surface": "stovetop",
-        "_needsTarget": true
+        "target": "Flick 3 or 4 drops of water onto the DRY pan. Hissing and vanishing means not ready. A bead that rolls around like mercury means ready. Do this before the oil goes in, never after: water into hot oil spits back at you.",
+        "recheck": "30 sec"
       },
       "look": "Drops that hiss and vanish: not ready. Wait longer.A single bead that rolls around the pan like a ball of mercury: ready. That is the surface hot enough to have tightened up, and it is the difference between a sear that releases on its own and chicken welded to your pan.This is why the stainless pans have gone unused. Cold stainless is microscopically rough and protein grips it. Hot stainless is not.",
       "warn": "Water goes into a dry pan and never into oil. Water hitting hot oil spits back at your face. Test first, oil second, and never the other way round.",
       "_inferred": [
         "equipment",
         "heat"
-      ]
+      ],
+      "doneness": {
+        "kind": "do",
+        "test": "The water bead rolls instead of hissing. That is the only test, and it is what stops food gripping stainless."
+      }
     },
     {
       "n": 8,
@@ -283,7 +305,8 @@
       ],
       "heat": {
         "surface": "stovetop",
-        "_needsTarget": true
+        "target": "Down far enough that the brown layer on the base stops darkening. If anything is still crackling hard, come down further. The garlic goes in next and it burns in well under a minute at searing heat.",
+        "recheck": "straight away, before the garlic goes in"
       },
       "look": "Brown and stuck on is exactly right. It will look, to a beginner, like you have ruined the pan. You have not. In about 60 seconds it is going to lift off completely into the liquid and disappear.Black and powdery is different, and it is the one failure here. That is burnt flour and it will make the sauce bitter. If most of what is in the pan is black rather than brown, tip the oil out, wipe the pan with paper towel, and start the sauce with fresh liquid. You lose flavour and you save dinner.If there is a lot of oil left, pour off all but about 1 tbsp. Too much fat and the sauce will not come together at the end.",
       "_inferred": [
@@ -374,9 +397,14 @@
     },
     {
       "n": 16,
-      "text": "Put the cutlets on plates, pour the sauce over them, and scatter parsley over the top if you have it. Eat now.",
+      "text": "Put the cutlets on plates, pour the sauce over them, and scatter parsley over the top if you have it. Eat now If you have a fresh lemon, put a wedge on each plate.",
       "uses": [
-        "fresh_parsley"
+        "fresh_parsley",
+        {
+          "ref": "lemon_wedges",
+          "amount": 2,
+          "unit": "wedge"
+        }
       ],
       "look": "Do not put the chicken back in the pan to reheat. It is already at 165Â°F and the sauce is hot enough to warm it on the plate. Returning it to the heat overcooks it and dulls the lemon you just added.The parsley is not decoration for its own sake. It is one green thing against a plate that is otherwise beige and yellow, and it makes an enormous difference to how the plate reads. Worth $2.27 next shop.What to put it on: the protein spaghetti in the cupboard is the standard pairing and it soaks up the sauce. Roasted carrots and sweet potato also work.",
       "_inferred": [
@@ -396,22 +424,6 @@
       "_inferred": []
     }
   ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "chickenbreast",
-      "flour",
-      "butter",
-      "oil",
-      "lemon",
-      "capers",
-      "stock",
-      "garlic",
-      "salt"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
   "source": {
     "name": "Classical scaloppine pan-sauce method",
     "url": null,
@@ -448,5 +460,19 @@
       "why": "He has no white wine. The only cooking wine in the kitchen is SHAOXING, which is a Chinese amber rice wine that is sweeter, nuttier and often salted. It would make this taste like a stir-fry, not a lemon sauce. Do not substitute it here. Wine contributes acid and a little fruit; the 3 tbsp of lemon juice already carries the acid, and stock carries the body, which is why the no-wine version is not a compromise.",
       "changes": []
     }
-  ]
+  ],
+  "history": [
+    "Machine-migrated from kitchen.html 2026-08-09, then authored the same day when Silvio decided to cook it.",
+    "Blocked for five days by a note claiming Walmart does not sell capers in a normal jar size. It does: Great Value 90 mL, bought 2026-08-09.",
+    "Lemon: the recipe asked for \"lemon juice\", the ReaLime bottle satisfied it, and three shopping trips passed without anything ever suggesting a fresh lemon. Now states what the dish wants via betterWith.",
+    "Protein corrected from a bare 60 g with no arithmetic to 57 g with the derivation shown.",
+    "Heat targets added to steps 7 and 11, doneness tests to the six steps that decide the dish. Before that it had amounts on 10 of 18 steps and a doneness test on none.",
+    "NEVER COOKED as of 2026-08-09. The method is standard; these quantities are untested."
+  ],
+  "provenance": {
+    "tier": "authored",
+    "cooked": false,
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
+    "sources": []
+  }
 }

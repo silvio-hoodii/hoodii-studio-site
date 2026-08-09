@@ -270,5 +270,11 @@
     "Complaint 2: 'we need a way to keep the measurements available somewhere all the time, by the time I needed to use the cottage cheese, the instruction was put the cottage cheese in and I didn't know how much.' Every step now declares what it uses AND how much, so the app renders the amount inline at every mention instead of only in a list on the first screen.",
     "2026-08-09 removed 'Low means the lowest setting that still cooks. On a 1 to 10 dial, about 3.' The hob is induction, confirmed 2026-08-08, and its burners do not share a dial scale, so that sentence was meaningless here. Replaced with the butter as the observable.",
     "2026-08-09 protein corrected 37 g to 33 g. See serves.proteinMath."
-  ]
+  ],
+  "provenance": {
+    "tier": "authored",
+    "cooked": false,
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
+    "sources": []
+  }
 }

@@ -62,6 +62,9 @@ export function offer(r: Recipe, stock: Stock): Offer {
   const low: string[] = [];
 
   for (const ing of r.ingredients) {
+    // A garnish is not a blocker. Without this, adding "lemon wedges to serve" would knock the whole
+    // dish down to "one swap", which teaches him to ignore the status.
+    if (ing.optional) continue;
     const h = have(ing, stock);
     if (h === 'no') missing.push(ing);
     else if (h === 'frozen') frozen.push(ing.display);

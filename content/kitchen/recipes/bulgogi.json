@@ -382,5 +382,17 @@
       "stockcube"
     ],
     "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  },
+  "provenance": {
+    "tier": "adapted",
+    "cooked": false,
+    "statement": "Transcribed from a named published recipe and adapted for this kitchen. Deviations are listed.",
+    "sources": [
+      {
+        "name": "Aaron and Claire",
+        "url": "https://aaronandclaire.com/beef-bulgogi-and-mushroom-pot-rice/",
+        "note": "Aaron Huh is a professional chef in Seoul with a DK-published cookbook, Simply Korean. Method transcribed, not rewritten."
+      }
+    ]
   }
 }

@@ -276,6 +276,18 @@ function validate(r, file) {
     }
   }
 
+  /* ---- provenance is not optional ----------------------------------------
+   * A recipe that cannot say where it came from is a recipe nobody can trust, and 28 of 29 could
+   * not say on 2026-08-09. `authored` is a legitimate answer; silence is not. */
+  const TIERS = ['sourced', 'adapted', 'authored'];
+  if (!r.provenance || !TIERS.includes(r.provenance.tier)) {
+    fail(id, 'provenance', 'no provenance.tier',
+      `One of ${TIERS.join('|')}. "authored" means an agent wrote it and it must say so in the app.`);
+  } else if (r.provenance.tier !== 'authored' && !(r.provenance.sources || []).length) {
+    fail(id, 'provenance', `tier is "${r.provenance.tier}" but no sources are listed`,
+      'Sourced and adapted both mean a real recipe exists. Name it, or the tier is a claim with nothing behind it.');
+  }
+
   /* ---- protein arithmetic must be shown ---- */
   const p = r.serves?.proteinPerUnit;
   if (p && !r.serves?.proteinMath) {

@@ -7,6 +7,8 @@ import type { Recipe, StepUse } from '@/lib/kitchen/types';
 interface PrepRow {
   ref: string; display: string; qty: number | null; unit: string | null;
   prep: string | null; missing: boolean; altText: string | null;
+  optional?: boolean;
+  betterWith?: { display: string; stock?: string; why: string } | null;
 }
 
 const FRAC: [number, string][] = [
@@ -67,6 +69,30 @@ export default function CookClient({
           <span>{total} steps</span>
         </div>
 
+        {/* Trust, stated before he turns anything on. Not a footnote. */}
+        {recipe.provenance && (
+          <div className={`box ${recipe.provenance.tier === 'authored' ? 'warn' : 'look'}`} style={{ marginTop: 18 }}>
+            <span className="k">
+              {recipe.provenance.tier === 'authored'
+                ? 'No source · treat as a draft'
+                : recipe.provenance.tier === 'adapted' ? 'Adapted from a real recipe' : 'Sourced'}
+            </span>
+            {recipe.provenance.statement}
+            {recipe.provenance.sources.map((s, k) => (
+              <div key={k} style={{ marginTop: 6 }}>
+                {s.url ? <a href={s.url} target="_blank" rel="noreferrer">{s.name ?? s.url}</a> : <b>{s.name}</b>}
+                {s.note ? <> · {s.note}</> : null}
+              </div>
+            ))}
+            {!recipe.provenance.cooked && (
+              <div style={{ marginTop: 6 }}>
+                Nobody has cooked these exact quantities yet. If something is off, that is worth
+                writing in the debrief.
+              </div>
+            )}
+          </div>
+        )}
+
         {notes.length > 0 && (
           <div className="box look" style={{ marginTop: 18 }}>
             <span className="k">Last time</span>
@@ -97,6 +123,19 @@ export default function CookClient({
           <div className="box warn">
             <span className="k">What changes</span>
             {prep.filter((p) => p.missing && p.altText).map((p) => <div key={p.ref}>{p.altText}</div>)}
+          </div>
+        )}
+
+        {/* Cookable as-is, but the dish wants something better. Deliberately not a blocker and
+            deliberately not hidden: three shopping trips went by without this ever being said. */}
+        {prep.some((p) => p.betterWith) && (
+          <div className="box look">
+            <span className="k">Better with</span>
+            {prep.filter((p) => p.betterWith).map((p) => (
+              <div key={p.ref} style={{ marginBottom: 6 }}>
+                <b>{p.betterWith!.display}</b> instead of {p.display.split(',')[0]}. {p.betterWith!.why}
+              </div>
+            ))}
           </div>
         )}
 

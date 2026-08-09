@@ -79,6 +79,20 @@ export default async function KitchenHome() {
 
       <hr className="divider" />
 
+      {/* The honest headline number. Asked 2026-08-09: "Where is this recipe coming from? ... is
+          this something that the agent came up with so I shouldn't trust it?" */}
+      {(() => {
+        const authored = recipes.filter((r) => r.provenance?.tier === 'authored').length;
+        if (!authored) return null;
+        return (
+          <p className="quiet" style={{ marginTop: 18 }}>
+            <b>{authored} of {recipes.length}</b> of these were written by an agent with no published
+            source, and nobody has cooked those quantities. Each recipe says which it is before you
+            start. Fixing that is the next piece of work.
+          </p>
+        );
+      })()}
+
       <p className="count" style={{ marginTop: 22 }}>
         {now.length > 0 ? <><span className="live">{now.length}</span> ready to start</> : 'nothing ready to start'}
       </p>

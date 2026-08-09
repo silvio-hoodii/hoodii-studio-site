@@ -12,6 +12,16 @@ export interface Ingredient {
   defining?: boolean;
   /** Frozen is the correct state for this dish, not a blocker. Frozen fruit in a smoothie. */
   frozenOk?: boolean;
+  /** A garnish or nice-to-have. Never blocks and never downgrades the dish's status. */
+  optional?: boolean;
+  /** What the dish actually WANTS, when what is declared is a workable substitute.
+   *
+   *  The gap this fills, found 2026-08-09: the schema could say "you cannot make this" (`defining`)
+   *  and "you can adapt" (`altText`), but had no way to say "you can make it and it will be worse".
+   *  So piccata asked for "lemon juice", the bottle in the fridge satisfied it, and three Walmart
+   *  trips later nothing had ever suggested buying a fresh lemon. Advisory only: it must never
+   *  block, or every dish becomes a shopping list. */
+  betterWith?: { display: string; stock?: string; why: string };
   altText?: string;
   section?: string;
 }
@@ -65,6 +75,19 @@ export interface Recipe {
   equipment: string[];
   steps: Step[];
   history?: string[];
+  /** How much this recipe can be trusted, and why.
+   *
+   *  Added 2026-08-09 because he asked the question nobody had answered: "Where is this recipe
+   *  coming from? Is this something that the agent came up with so I shouldn't trust it?" The
+   *  answer for 28 of 29 was: an agent wrote it and nobody has cooked it. That has to be visible
+   *  in the app, not buried in a JSON file. */
+  provenance?: {
+    tier: 'sourced' | 'adapted' | 'authored';
+    /** Has anyone actually cooked these exact quantities and had it work. */
+    cooked: boolean;
+    statement: string;
+    sources: { name?: string; url?: string | null; note?: string | null }[];
+  };
 }
 
 export type StockLevel = 'have' | 'low' | 'out' | 'none';

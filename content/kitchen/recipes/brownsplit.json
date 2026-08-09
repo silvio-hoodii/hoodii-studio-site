@@ -234,5 +234,11 @@
       "salt"
     ],
     "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  },
+  "provenance": {
+    "tier": "authored",
+    "cooked": false,
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
+    "sources": []
   }
 }

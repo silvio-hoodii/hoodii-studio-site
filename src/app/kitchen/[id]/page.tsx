@@ -35,6 +35,8 @@ export default async function CookPage({ params }: { params: Promise<{ id: strin
       prep: i.prep ?? null,
       missing: o.missing.some((m) => m.ref === i.ref),
       altText: i.altText ?? null,
+      optional: i.optional ?? false,
+      betterWith: i.betterWith ?? null,
     }));
 
   const gear = [...usedEquip]
