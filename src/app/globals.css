@@ -1,23 +1,109 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Was the 3D studio's reset: dark canvas, `overflow: hidden` so the WebGL room could not be
- * scrolled, and `cursor: none` because a reticle was drawn in the scene instead.
+@custom-variant dark (&:is(.dark *));
+
+/* Tokens.
  *
- * All three were actively harmful once real pages moved in. The overflow rule meant /kitchen
- * shipped on 2026-08-09 unable to scroll AT ALL on a phone: the content was there, measurable in
- * scrollHeight, and completely unreachable with a thumb. Caught the same day by driving a touch
- * drag instead of measuring a number.
+ * shadcn provides the plumbing (CSS variables, primitives, the CLI). The paint below is ours,
+ * because shadcn's own defaults are a recognisable default too: neutral greys, Geist, rounded-lg.
+ *
+ * What this replaced, on 2026-08-09, was worse. Cream #faf6f0 with a terra-cotta accent and serif
+ * headings, which research that same day found listed verbatim as the current AI-generated tell:
+ * "beige and cream backgrounds with rusty orange accents, large serif typefaces". Silvio called it
+ * AI slop on sight and he was right.
+ *
+ * The direction now: monochrome, one signal colour, rules instead of cards, near-zero radius.
+ * Hierarchy comes from size, weight and alignment, not from colour and shadow. The site is an
+ * index of tools, so it should look like an instrument rather than a brochure.
  */
-
-:root {
-  --background: #faf6f0;
-  --foreground: #23201c;
-}
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-mono: var(--font-jetbrains-mono);
+
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-heading: var(--font-plex-sans);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-signal: var(--signal);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  /* Paper, but not cream. A hair off pure white so rules and text sit calmly on it. */
+  --background: oklch(0.993 0.0015 100);
+  --foreground: oklch(0.19 0.004 100);
+
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.19 0.004 100);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.002 100);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.96 0.002 100);
+  --muted-foreground: oklch(0.55 0.004 100);
+  --accent: oklch(0.955 0.002 100);
+  --accent-foreground: var(--foreground);
+
+  --destructive: oklch(0.52 0.19 27);
+  /* The only chromatic colour in the system. Reserved for live state: a number that is true right
+     now. Never decoration. Green because the AI defaults cluster on purple, blue and orange. */
+  --signal: oklch(0.48 0.12 158);
+
+  --border: oklch(0.895 0.003 100);
+  --input: oklch(0.895 0.003 100);
+  --ring: oklch(0.55 0.004 100);
+
+  /* Cards are not the idiom here. Kept small rather than zero so inputs do not look broken. */
+  --radius: 0.25rem;
+}
+
+.dark {
+  --background: oklch(0.16 0.004 100);
+  --foreground: oklch(0.95 0.002 100);
+  --card: oklch(0.20 0.004 100);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.20 0.004 100);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.95 0.002 100);
+  --primary-foreground: oklch(0.16 0.004 100);
+  --secondary: oklch(0.26 0.004 100);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.26 0.004 100);
+  --muted-foreground: oklch(0.66 0.004 100);
+  --accent: oklch(0.26 0.004 100);
+  --accent-foreground: var(--foreground);
+  --destructive: oklch(0.65 0.18 25);
+  --signal: oklch(0.72 0.15 158);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.6 0.004 100);
 }
 
 html,
@@ -25,10 +111,23 @@ body {
   background: var(--background);
   color: var(--foreground);
   margin: 0;
-  /* No overflow rule here on purpose. Pages scroll. */
+  /* No overflow rule here on purpose. Pages scroll.
+     The 3D studio's `overflow: hidden` shipped /kitchen unscrollable on a phone on 2026-08-09. */
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100dvh;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  /* Numbers in an index have to line up in columns. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
 }
