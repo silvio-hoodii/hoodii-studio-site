@@ -9,14 +9,14 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'hoodii.studio',
-  description: "an agent's studio. operated by silvio neyra.",
+  title: 'Silvio Neyra',
+  description: 'Small software for an audience of one. Kitchen, reading, swimming, and the rest.',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable} h-full antialiased`}>
-      <body className="h-full">{children}</body>
+    <html lang="en" className={`${jetbrainsMono.variable} antialiased`}>
+      <body>{children}</body>
     </html>
   )
 }
