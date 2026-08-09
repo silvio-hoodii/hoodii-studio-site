@@ -80,7 +80,13 @@ harmless, and PSN is not surfaced on the hub.
 ## Commits and deploy
 
 - Production deploys from `main`.
-- Verification gate: `pnpm typecheck && pnpm lint && pnpm build`. All three, before any push.
+- Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
+  All four, before any push.
+- **The lockfile check is not optional and `pnpm build` cannot substitute for it.** On 2026-08-09 a
+  dep was removed by editing `package.json` directly instead of running `pnpm remove`. Every local
+  command passed, because `node_modules` was already correct and install never re-ran. Vercel
+  installs with `--frozen-lockfile`, refused the mismatch, and the deploy died in 5 seconds without
+  ever reaching the build. Change a dependency only through `pnpm add` / `pnpm remove`.
 - Lint catches `react-hooks/rules-of-hooks` on plain functions named `use*`. Rename them rather than
   disabling the rule.
 - Dev server: `pnpm dev` (port 3001). **Test on `localhost`, not `127.0.0.1`** — the dev server
