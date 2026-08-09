@@ -41,8 +41,16 @@ that it scrolls.** Drive a real wheel or CDP touch event.
 
 - **Framework.** Next 16 (Turbopack) + React 19 + TS strict, `noUncheckedIndexedAccess` on.
 - **Data.** Neon Postgres via `@neondatabase/serverless` (HTTP, no pooling problem on Vercel).
-- **Styling.** Plain CSS per surface (`hub.css`, `kitchen/kitchen.css`), scoped under a root class.
-  Tailwind 4 is still installed and used lightly in `layout.tsx`.
+- **Styling.** shadcn tokens in `globals.css` are the system. Per-surface CSS (`hub.css`,
+  `kitchen/kitchen.css`) is scoped under a root class and **must consume the tokens, never hardcode
+  a colour.** Fonts are IBM Plex Sans and Mono.
+
+**The palette is a decision, not a default.** Monochrome, one chromatic colour (`--signal`) used
+only for a value that is true right now, radius near zero, rules instead of cards, no shadows or
+gradients. This replaced cream + terra-cotta + serif + rounded cards on 2026-08-09, which research
+that day found named verbatim as the current AI-generated tell and which Silvio called AI slop on
+sight. shadcn's own defaults (neutral grey, Geist, `rounded-lg`) are equally a default: **take the
+plumbing, not the paint.**
 - **Auth.** `src/proxy.ts`, a password plus an httpOnly cookie. Next 16 renamed `middleware` to
   `proxy`; do not recreate `middleware.ts`.
 - **No.** Sanity. i18n. `@hoodii/ui`. Analytics. An auth SaaS (see below).

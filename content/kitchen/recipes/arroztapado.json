@@ -22,14 +22,16 @@
       "stock": "beef",
       "display": "browned beef",
       "qty": 350,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "long_grain_white_rice",
       "stock": "longgrainrice",
       "display": "long grain white rice (NOT the Minute Rice, see step 3)",
       "qty": 1,
-      "unit": "cup"
+      "unit": "cup",
+      "defining": true
     },
     {
       "ref": "water",

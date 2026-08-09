@@ -22,13 +22,15 @@
       "stock": "yogurt",
       "display": "Greek yogurt",
       "qty": 200,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "english_cucumber",
       "display": "English cucumber",
       "qty": 0.5,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     },
     {
       "ref": "garlic_clove",

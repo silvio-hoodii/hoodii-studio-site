@@ -22,7 +22,8 @@
       "stock": "chickenbreast",
       "display": "boneless skinless chicken breasts, thawed (about 250 g each)",
       "qty": 2,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     },
     {
       "ref": "all_purpose_flour",
@@ -76,14 +77,16 @@
       "stock": "lemon",
       "display": "lemon juice",
       "qty": 3,
-      "unit": "tbsp"
+      "unit": "tbsp",
+      "defining": true
     },
     {
       "ref": "capers",
       "stock": "capers",
       "display": "capers, drained",
       "qty": 2,
-      "unit": "tbsp"
+      "unit": "tbsp",
+      "defining": true
     },
     {
       "ref": "fresh_parsley",

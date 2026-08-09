@@ -22,7 +22,8 @@
       "stock": "longgrainrice",
       "display": "cold cooked rice, at least a day old (from the arroz tapado)",
       "qty": 3,
-      "unit": "cups"
+      "unit": "cups",
+      "defining": true
     },
     {
       "ref": "eggs",

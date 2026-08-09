@@ -22,7 +22,8 @@
       "stock": "flour",
       "display": "all-purpose flour (about 400 g)",
       "qty": 3,
-      "unit": "cups"
+      "unit": "cups",
+      "defining": true
     },
     {
       "ref": "instant_yeast",

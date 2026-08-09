@@ -23,7 +23,8 @@
       "display": "frozen tilapia fillets",
       "qty": 2,
       "unit": "each",
-      "frozenOk": true
+      "frozenOk": true,
+      "defining": true
     },
     {
       "ref": "mayonnaise",

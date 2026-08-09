@@ -40,7 +40,8 @@
       "ref": "sliced_beef",
       "display": "sliced beef, one bag from the freezer, cut into bite-size pieces",
       "qty": 500,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "short_grain_rice",

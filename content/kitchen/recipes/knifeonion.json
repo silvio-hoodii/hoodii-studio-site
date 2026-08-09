@@ -22,7 +22,8 @@
       "stock": "onion",
       "display": "red onion (you have one, about 325 g)",
       "qty": 1,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     }
   ],
   "equipment": [

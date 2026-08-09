@@ -22,7 +22,8 @@
       "stock": "flour",
       "display": "all-purpose flour (125 g on the scale)",
       "qty": 1,
-      "unit": "cup"
+      "unit": "cup",
+      "defining": true
     },
     {
       "ref": "large_eggs",

@@ -22,7 +22,8 @@
       "stock": "beef",
       "display": "ground beef. RAW, not browned. See the note on the mixing step",
       "qty": 950,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "egg",

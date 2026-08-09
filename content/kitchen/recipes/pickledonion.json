@@ -22,7 +22,8 @@
       "stock": "onion",
       "display": "red onion, sliced 3 mm thick (about 150 g)",
       "qty": 0.5,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     },
     {
       "ref": "white_vinegar",

@@ -1,259 +1,263 @@
-/* KitchenOS surface.
+/* KitchenOS surface, on the shared token system.
  *
- * Follows KitchenOS/DESIGN.md, which shares nothing with HealthOS/DESIGN.md. That coupling was
- * proposed and rejected 2026-08-01. The gym app is a dark timing instrument read for three seconds
- * between sets. Cooking is prose, followed for twenty minutes, in a bright room, by a beginner.
- * Warm paper, editorial serif for headings, very large instruction text.
+ * Was warm cream + editorial serif + rounded cards. That was the palette research named as the
+ * generated-site tell, and it went with the hub on 2026-08-09.
  *
- * Scoped under .kos so it cannot leak into the 3D world on /.
+ * What did NOT change is the functional brief from KitchenOS/DESIGN.md, because it was never about
+ * style: one step fills the screen, the instruction text is very large, every step carries its own
+ * amounts, and a doneness test is a thing you DO. He is a beginner reading this for twenty minutes
+ * in a bright room with wet hands. Length is not a cost; ambiguity is.
+ *
+ * So: same tokens as the index, same mono-label idiom, but the step text is set big and the
+ * semantic blocks are kept distinguishable by a coloured left rule rather than a pastel fill.
+ * Two colours only, both meaning something: green is "you may proceed", red is "this bites".
  */
 
 .kos {
-  --paper: #faf6f0;
-  --ink: #23201c;
-  --ink-soft: #5c554c;
-  --ink-faint: #8d8479;
-  --rule: #e4dbcd;
-  --card: #fffdfa;
-  --accent: #b5451f;
-  --accent-soft: #f6e7df;
-  --go: #2f6b46;
-  --go-soft: #e6f0e9;
-
-  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--sans);
+  --pad: 20px;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
   min-height: 100dvh;
-  -webkit-font-smoothing: antialiased;
 }
 
 .kos * { box-sizing: border-box; }
 
 .kos .wrap {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 20px 18px 96px;
+  padding: clamp(28px, 7vw, 52px) var(--pad) 112px;
 }
+
+/* ---- labels and headings ---- */
 
 .kos .eyebrow {
-  font-family: var(--sans);
+  font-family: var(--font-mono);
   font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
   font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: block;
+  text-decoration: none;
 }
+.kos a.eyebrow:hover { color: var(--foreground); }
 
 .kos h1 {
-  font-family: var(--serif);
-  font-size: 30px;
-  line-height: 1.15;
-  margin: 6px 0 2px;
-  font-weight: 600;
+  font-size: clamp(24px, 5.5vw, 30px);
+  line-height: 1.18;
   letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
 }
 
 .kos h2 {
-  font-family: var(--serif);
-  font-size: 21px;
-  line-height: 1.2;
-  margin: 0;
+  font-size: 17px;
+  line-height: 1.3;
   font-weight: 600;
+  margin: 0;
 }
 
 .kos .lede {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  margin: 8px 0 0;
-}
-
-/* ---- the answer, which is the whole point of the screen ---- */
-
-.kos .answer {
-  margin: 22px 0 8px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin: 10px 0 0;
+  max-width: 54ch;
 }
 
 .kos .count {
-  font-family: var(--serif);
-  font-size: 17px;
-  color: var(--ink-soft);
-  margin: 0 0 14px;
-}
-
-.kos .card {
-  display: block;
-  background: var(--card);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  padding: 16px 16px 14px;
-  margin-bottom: 12px;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 0.15s ease, transform 0.1s ease;
-}
-.kos .card:active { transform: scale(0.995); }
-.kos .card:hover { border-color: var(--ink-faint); }
-
-.kos .card .meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: baseline;
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--ink-faint);
-}
-.kos .card .meta b { color: var(--ink-soft); font-weight: 600; }
-
-.kos .tag {
-  display: inline-block;
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-.kos .tag.go   { background: var(--go-soft); color: var(--go); }
-.kos .tag.warm { background: var(--accent-soft); color: var(--accent); }
-
-.kos .why {
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  margin: 8px 0 0;
+  color: var(--muted-foreground);
+  margin: 0 0 2px;
 }
 
-.kos .changes {
-  margin: 10px 0 0;
-  padding: 9px 11px;
-  background: var(--accent-soft);
-  border-radius: 9px;
-  font-size: 14px;
-  line-height: 1.45;
-  color: #7d3316;
+.kos .quiet {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
 }
 
 .kos .divider {
   border: 0;
-  border-top: 1px solid var(--rule);
-  margin: 28px 0 18px;
+  border-top: 1px solid var(--foreground);
+  opacity: 0.85;
+  margin: 30px 0 0;
 }
 
-.kos .quiet {
+.kos .live {
+  color: var(--signal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the dish list: rows, not cards ---- */
+
+.kos .dish {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+}
+.kos a.dish:hover h2 { text-decoration: underline; text-underline-offset: 3px; }
+
+.kos .dish .meta {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.kos .dish .meta b { color: var(--foreground); font-weight: 600; }
+
+.kos .dish .arrow {
+  font-family: var(--font-mono);
   font-size: 14px;
-  color: var(--ink-faint);
-  line-height: 1.5;
+  color: var(--muted-foreground);
 }
 
-/* ---- cook mode: one step fills the screen ---- */
+.kos .changes {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  border-left: 2px solid var(--border);
+  padding-left: 11px;
+  margin-top: 6px;
+}
 
+/* ---- cook mode ---- */
+
+.kos .dots {
+  display: flex;
+  gap: 3px;
+  margin: 0 0 16px;
+}
+.kos .dots i {
+  height: 2px;
+  flex: 1;
+  background: var(--border);
+}
+.kos .dots i.on { background: var(--foreground); }
+
+/* The one rule that is not negotiable: one step fills the screen and is readable at arm's length. */
 .kos .step {
-  font-family: var(--serif);
-  font-size: 25px;
-  line-height: 1.38;
-  margin: 0 0 18px;
+  font-size: clamp(21px, 4.6vw, 25px);
+  line-height: 1.42;
+  font-weight: 400;
+  margin: 10px 0 20px;
+  letter-spacing: -0.005em;
 }
 
 .kos .amounts {
-  background: var(--card);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin: 0 0 16px;
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--border);
+  margin: 0 0 18px;
 }
 .kos .amounts .row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
   gap: 14px;
-  padding: 5px 0;
-  font-size: 16px;
-  border-bottom: 1px dashed var(--rule);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
 }
 .kos .amounts .row:last-child { border-bottom: 0; }
-.kos .amounts .qty { font-weight: 700; white-space: nowrap; }
-.kos .amounts .nm { color: var(--ink-soft); text-align: right; }
+.kos .amounts .qty {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.kos .amounts .nm { color: var(--muted-foreground); }
 
+/* Semantic blocks. A left rule and a mono label, never a pastel fill. */
 .kos .box {
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin: 0 0 14px;
-  font-size: 16px;
-  line-height: 1.5;
+  border-left: 2px solid var(--border);
+  padding: 2px 0 2px 13px;
+  margin: 0 0 15px;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--foreground);
 }
 .kos .box .k {
   display: block;
+  font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 700;
+  color: var(--muted-foreground);
   margin-bottom: 5px;
 }
-.kos .box.done { background: var(--go-soft); color: #1f4a30; }
-.kos .box.done .k { color: var(--go); }
-.kos .box.heat { background: #fdf3e3; color: #6d4c14; }
-.kos .box.heat .k { color: #a8741d; }
-.kos .box.warn { background: var(--accent-soft); color: #7d3316; }
-.kos .box.warn .k { color: var(--accent); }
-.kos .box.look { background: #f2f0ec; color: var(--ink-soft); }
-.kos .box.look .k { color: var(--ink-faint); }
+.kos .box.done { border-left-color: var(--signal); }
+.kos .box.done .k { color: var(--signal); }
+/* Heat gets the full-strength rule rather than a colour. It is the thing this project has got wrong
+   most often, so it should read as structural, not as a warning you can wave past. */
+.kos .box.heat { border-left-color: var(--foreground); }
+.kos .box.heat .k { color: var(--foreground); }
+.kos .box.warn { border-left-color: var(--destructive); }
+.kos .box.warn .k { color: var(--destructive); }
+.kos .box.look { color: var(--muted-foreground); }
+
+/* ---- controls ---- */
 
 .kos .nav {
   position: fixed;
   left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to top, var(--paper) 68%, transparent);
-  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
   display: flex;
-  gap: 10px;
-  max-width: 640px;
+  gap: 8px;
+  max-width: 680px;
   margin: 0 auto;
 }
 
 .kos button, .kos .btn {
-  font-family: var(--sans);
-  font-size: 17px;
-  font-weight: 600;
-  padding: 14px 18px;
-  border-radius: 11px;
-  border: 1px solid var(--rule);
-  background: var(--card);
-  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
   cursor: pointer;
   text-decoration: none;
   text-align: center;
 }
+.kos button:hover, .kos .btn:hover { border-color: var(--muted-foreground); }
 .kos button.primary, .kos .btn.primary {
-  background: var(--ink);
-  color: var(--paper);
-  border-color: var(--ink);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
   flex: 1;
 }
-.kos button:disabled { opacity: 0.4; }
-
-.kos .dots {
-  display: flex;
-  gap: 4px;
-  margin: 0 0 18px;
-}
-.kos .dots i {
-  height: 3px;
-  flex: 1;
-  border-radius: 2px;
-  background: var(--rule);
-}
-.kos .dots i.on { background: var(--ink); }
+.kos button:disabled { opacity: 0.4; cursor: default; }
 
 .kos input[type="password"], .kos textarea {
   width: 100%;
-  font-family: var(--sans);
-  font-size: 17px;
-  padding: 13px 14px;
-  border: 1px solid var(--rule);
-  border-radius: 11px;
-  background: var(--card);
-  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  padding: 12px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+.kos textarea:focus, .kos input:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: -1px;
 }

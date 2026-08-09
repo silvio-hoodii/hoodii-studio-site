@@ -22,14 +22,16 @@
       "stock": "peppers",
       "display": "fresh bell peppers",
       "qty": 2,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     },
     {
       "ref": "browned_beef",
       "stock": "beef",
       "display": "browned beef, the other bigger bag",
       "qty": 250,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "cooked_rice",

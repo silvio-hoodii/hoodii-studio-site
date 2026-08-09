@@ -22,7 +22,8 @@
       "stock": "cucumbers",
       "display": "English cucumbers",
       "qty": 2,
-      "unit": "each"
+      "unit": "each",
+      "defining": true
     },
     {
       "ref": "white_vinegar",

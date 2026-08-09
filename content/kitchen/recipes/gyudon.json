@@ -22,7 +22,8 @@
       "stock": "beef",
       "display": "browned beef: the container labelled Gyudon, a quarter of what you browned",
       "qty": 1,
-      "unit": "bag"
+      "unit": "bag",
+      "defining": true
     },
     {
       "ref": "yellow_onions",
