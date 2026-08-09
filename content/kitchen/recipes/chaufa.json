@@ -1,0 +1,238 @@
+{
+  "id": "chaufa",
+  "name": "Arroz Chaufa",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Peruvian fried rice, and the answer to why a Peruvian kitchen owns soy sauce. It runs entirely on the rice left over from the arroz tapado, which has to be cold and a day old for this to work at all. Nothing extra to buy.",
+  "time": {
+    "totalMin": 15,
+    "note": "15 min"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "bowl",
+    "proteinPerUnit": 11
+  },
+  "ingredients": [
+    {
+      "ref": "cold_cooked_rice",
+      "stock": "longgrainrice",
+      "display": "cold cooked rice, at least a day old (from the arroz tapado)",
+      "qty": 3,
+      "unit": "cups"
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "eggs",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "green_onions",
+      "stock": "greenonion",
+      "display": "green onions",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "garlic_cloves",
+      "stock": "garlic",
+      "display": "garlic cloves, chopped fine",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "soy_sauce",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "toasted_sesame_oil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "vegetable_oil",
+      "display": "vegetable oil",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper"
+    },
+    {
+      "ref": "1_cooked_chicken_breast",
+      "display": "1 cooked chicken breast, diced, or leftover beef",
+      "_rawQty": "optional"
+    },
+    {
+      "ref": "1_red_bell_pepper",
+      "display": "1 red bell pepper, diced small",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "bowlset",
+    "spatula",
+    "knife_sharp",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "The rice has to be cold and at least a day old. This is not a preference.",
+      "uses": [
+        "cold_cooked_rice"
+      ],
+      "look": "Fresh rice is full of surface moisture and the grains are soft. Put it in a hot pan and it steams, tears and turns to porridge. There is no technique that saves it.A night in the fridge dries the outside of each grain and firms it up, so the grains stay separate and fry instead of mushing. This is the single thing that decides whether fried rice works.Break up any clumps with your fingers before it goes near the pan. Cold rice compacts into a solid block and a spatula will not separate it once it is hot.",
+      "warn": "Cooked rice should have gone into the fridge within an hour of cooking, not been left out overnight. Rice left at room temperature can grow a bacterium that survives reheating. If it sat out all night, throw it away.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Why this dish is here at all.",
+      "look": "Peru has a whole Chinese-Peruvian cuisine called chifa, from Chinese immigration in the 1800s. Soy sauce is standard in Peruvian home cooking and has its own Peruvian name, sillao.So the soy sauce and sesame oil you bought for the gyudon are not a detour into another cuisine. They open up more of your own.Lomo saltado is the same idea and the better-known one: beef strips seared hard with soy sauce, onion and tomato, served with fries and rice. You have a 1 kg sirloin tip roast in the freezer, which is the right cut for it. That is a future dish, but it is why this pantry earns its shelf space.",
+      "_inferred": []
+    },
+    {
+      "n": 3,
+      "text": "Beat the 3 eggs in a small bowl with a pinch of pepper. Heat 1 tbsp of vegetable oil in the non-stick pan on medium, pour the eggs in, and let them set into a thin flat sheet, about 2 minutes. Slide it onto a board, roll it up, and slice into ribbons.",
+      "uses": [
+        "eggs",
+        "vegetable_oil",
+        "black_pepper",
+        "1_red_bell_pepper"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "bowlset",
+        "knife_sharp",
+        "stovetop"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "You are making a thin omelette, not scrambled eggs. Do not stir it. Let it sit until the top is just set and no longer wet, then it lifts out in one piece.Rolling it like a carpet and cutting across gives you ribbons, which is how chaufa is served. Scrambled egg stirred through works and looks messier.Non-stick pan for this one, then switch to whichever pan for the rice.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Slice the 3 green onions thinly, whites and greens in separate piles. Chop the 2 garlic cloves fine. If you are adding chicken, beef or bell pepper, cut it small now.",
+      "uses": [
+        "green_onions",
+        "garlic_cloves",
+        "black_pepper",
+        "1_cooked_chicken_breast",
+        "1_red_bell_pepper"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Everything gets cut before the pan gets hot. Fried rice takes about 5 minutes start to finish and there is no point in it where you can stop and chop something.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Heat the pan on high with 1 tbsp of vegetable oil until the oil slides like water when you tilt the pan. Add the garlic and the white parts of the green onions and stir for 30 seconds. Add any chicken, beef or pepper and stir for 1 minute.",
+      "uses": [
+        "green_onions",
+        "garlic_cloves",
+        "vegetable_oil",
+        "black_pepper",
+        "1_cooked_chicken_breast",
+        "1_red_bell_pepper"
+      ],
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "minutes": 1,
+      "look": "High heat here, unlike almost everything else in this app. Fried rice wants the pan hot enough to drive moisture off fast, and a cooler pan gives you steamed rice with soy sauce on it.",
+      "warn": "30 seconds on the garlic. On high heat it burns faster than anywhere else in this app, and burnt garlic makes the whole pan bitter.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Add the 3 cups of cold rice. Press it flat with the spatula, leave it 1 minute, then toss and press flat again. Repeat for about 3 minutes total.",
+      "uses": [
+        "cold_cooked_rice"
+      ],
+      "equipment": [
+        "spatula"
+      ],
+      "minutes": 3,
+      "look": "Pressing and leaving it is the technique. Constant stirring keeps the rice moving and it never gets hot enough to fry. Flat against the pan for a minute at a time is what browns it.Done looks like: the grains have separated, some of them have picked up a few toasted brown spots, and the rice moves freely in the pan rather than clumping.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Pour the 3 tbsp of soy sauce around the edge of the pan rather than into the middle. Toss for 1 minute. Turn the heat off, then add the egg ribbons, the green parts of the green onions and the 1 tbsp of sesame oil. Toss once more.",
+      "uses": [
+        "green_onions",
+        "soy_sauce",
+        "toasted_sesame_oil"
+      ],
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "look": "Around the edge, not into the middle. Soy sauce hitting hot bare pan cooks for a second before it reaches the rice, which deepens it. Poured into the middle it just wets the rice.Sesame oil goes in off the heat, always. It is a finishing oil, not a cooking oil. Heat destroys the nutty smell that is the entire reason it is in the dish.",
+      "warn": "Toasted sesame oil is strong. One tablespoon in three cups of rice is right; double it and the dish tastes of nothing else.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Roughly 32 g of protein across 3 bowls, so about 11 g each. With a diced cooked chicken breast stirred in it is about 26 g.",
+      "uses": [
+        "cold_cooked_rice",
+        "1_cooked_chicken_breast"
+      ],
+      "look": "The arithmetic: 19 g from the 3 eggs, 13 g from 3 cups of cooked rice. Adding a 200 g cooked chicken breast puts in another 45 g, which is what takes it from a side dish to a dinner.Eleven grams is low and this is worth saying plainly. Egg-only chaufa is a side, not a main. It is written that way because that version needs nothing thawed and nothing extra bought, so it can never be blocked. If you want it to be dinner, thaw a chicken breast the night before.Eat it the day you make it. Fried rice reheated a second time goes hard and dry, and you are already reheating rice once to make it.",
+      "_inferred": [
+        "uses"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "longgrainrice",
+      "eggs",
+      "soy",
+      "sesameoil",
+      "greenonion",
+      "garlic",
+      "oil"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

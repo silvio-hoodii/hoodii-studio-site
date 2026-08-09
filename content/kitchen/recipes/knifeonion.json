@@ -1,0 +1,157 @@
+{
+  "id": "knifeonion",
+  "name": "Knife Skills: The Onion",
+  "build": "2026-08-09-migrated",
+  "form": "technique",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The first technique, and the one you asked for. Two grips, two cuts, and afterwards most savoury recipes stop being closed to you. You end up with a jar of pickled red onions.",
+  "time": {
+    "totalMin": 20,
+    "note": "20 min"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "onion",
+    "proteinPerUnit": 0
+  },
+  "ingredients": [
+    {
+      "ref": "red_onion",
+      "stock": "onion",
+      "display": "red onion (you have one, about 325 g)",
+      "qty": 1,
+      "unit": "each"
+    }
+  ],
+  "equipment": [
+    "knife_sharp",
+    "cuttingboard",
+    "teatowel",
+    "knifesharpener"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Wet a tea towel, wring it out hard, and lay it flat under your cutting board. Press the board down onto it.",
+      "equipment": [
+        "cuttingboard",
+        "teatowel"
+      ],
+      "look": "Push the board sideways with your hand. It should not move at all. If it slides, the towel is too dry or too bunched up.",
+      "warn": "A board that slides is the most common way people cut themselves at home, and it is a ten-second fix. Do this every single time, not just today.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "The pinch grip. Pinch the blade itself between your thumb and the side of your bent index finger, right where the blade meets the handle. Your other three fingers wrap the handle.",
+      "look": "You are holding metal, not just the handle. That is the whole point and it is the part that feels wrong at first.The way almost everyone starts is all four fingers on the handle with the index finger pointing down the spine of the blade. That grip gives you no control over which way the blade tips.The test: hold the knife out in front of you and try to tilt the blade left and right. With the pinch grip it should feel like the blade is part of your hand. If it wobbles on its own, your hand is too far back. Slide it forward until your thumb and finger are on the blade.",
+      "_inferred": []
+    },
+    {
+      "n": 3,
+      "text": "The claw. Curl the fingertips of your other hand under, so your fingernails point straight down at the board and the flat of your knuckles faces the blade. Tuck your thumb behind your fingers.",
+      "look": "The side of the blade rests against your knuckles and slides along them. Your knuckles are the guide rail. To cut a thinner slice you move your knuckles back a little, not the knife.",
+      "warn": "This is the rule the whole thing rests on: the blade never rises above your knuckles. Keep the tip on the board and lift only the heel. A blade that stays below your knuckles physically cannot reach your fingertips. Everything else about knife safety is detail.",
+      "_inferred": []
+    },
+    {
+      "n": 4,
+      "text": "Before you cut: if the knife feels blunt, give it three pulls through the fine slot of your sharpener. Heel to tip, pull only, never saw back and forth. Rinse the blade after.",
+      "equipment": [
+        "knife_sharp",
+        "knifesharpener"
+      ],
+      "look": "A blunt knife is more dangerous, not less. It skids off the curved side of an onion instead of biting into it, and it skids toward the hand holding the onion.",
+      "warn": "If a knife ever falls off the counter, step back and let it land. Do not reach for it.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Find the two ends of the onion. One end has a whiskery brown disc: that is the root. The other is smooth or has a dry papery point: that is the stem end. Lay the onion on its side and cut straight down through the middle, from the stem end through the root.",
+      "uses": [
+        "red_onion"
+      ],
+      "look": "Both halves should end up with half of that brown root disc still attached.The root is what holds the onion together while you cut it. Every layer is anchored to it. Cut the root off first and the onion collapses into loose rings under your knife. It stays on until the very last step.",
+      "warn": "This is the only cut you make on a rounded surface, so it is the one to slow down for. Hold the onion steady with your claw hand and take it in one confident push rather than sawing.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Peel the papery brown skin off both halves, then put each half flat side down on the board.",
+      "look": "If the skin will not come off cleanly, take the first shiny layer with it. One layer is not worth a two-minute fight.Flat side down is the whole trick, and it is a rule for everything you will ever cut: make a flat side first, then cut on the flat side. A half onion sitting on its cut face cannot roll, cannot rock, and cannot surprise you.",
+      "_inferred": []
+    },
+    {
+      "n": 7,
+      "text": "Take one half, still flat side down, curved back facing up. Turn it so the root end points away from you.Every cut in this step goes straight down, knife tip touching the board, blade travelling from the curved top down to the board and from the edge nearest you toward the root. You are not cutting sideways into the onion at any point.Make one cut like that near the left edge, stopping about 1 cm before the root so it does not cut all the way through. Then move the knife about 5 mm to the right (about the thickness of two stacked coins) and make the same cut again. Keep going, each cut identical to the last, until you reach the other edge.",
+      "uses": [
+        "red_onion"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "\"Parallel\" means every cut points the same way as the one before it -- straight down, toward the root, stopping short of it -- just shifted sideways each time. Picture a loaf of bread sliced but still joined at the bottom crust: that is the shape you are cutting.Claw hand flat on top of the onion, knuckles against the blade.Check it worked: fan the onion gently with your fingers. The cuts should open like the pages of a book while the whole thing stays in one piece, held together at the root.If it fell apart into strips, you cut through the root. Nothing is ruined, it is just harder to hold for the next cut.",
+      "warn": "This is not the flat cut some recipes show, where the knife goes sideways into the middle of the onion parallel to the board. That one reaches fingers and this lesson never uses it. Every cut here points down, never sideways into the onion.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Leave the onion exactly where it is -- same spot, same rotation, root still pointing away from you. Do not turn it.Last step, every cut ran away from you, toward the root. This time every cut runs the other direction: side to side, left edge to right edge, still straight down the same way as before.Start with one cut near the edge closest to you. Then move about 5 mm back toward the root and make the next one, same direction. Keep going, each cut a little closer to the root than the last, until you reach it. Stop there and throw the root away.",
+      "uses": [
+        "red_onion"
+      ],
+      "look": "Why the onion cannot move: the two sets of cuts only make cubes if they actually cross each other. Turn or shift the onion in between and the second set runs alongside the first instead of across it, and you get long strips, not cubes. Not dangerous, just not what you were going for.\"Right angle\" means the two sets of cuts cross like the lines on a tic-tac-toe grid -- one set running front to back, this set running left to right. That grid, plus the onion's own layers, is what turns it into cubes: small pieces fall away from the knife as you go.You can rotate the onion 90&deg; instead of changing your own cutting direction, if that feels more natural. It works out identical -- what matters is the angle between the two sets of cuts relative to the ONION, not relative to you. The one thing that does not change either way: this second set has to cut all the way through, not stop short of the root like the first set did. The first set stopped short to hold the onion together; this set is what actually frees the pieces.Check it worked: compare your pile to a pea. If most pieces are about pea-sized, that is a dice. Even sizing matters more than small sizing, because a mix of big and small means the small pieces burn while the big ones are still raw.",
+      "warn": "You may have seen someone make a third set of cuts, flat and horizontal, into the side of the onion before this. Do not. It is the cut that reaches fingers, and the layers already give you what it would have given you. Skipping it costs you nothing.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Take the second half, flat side down. Cut straight down across it in slices about 3 mm thick, roughly the thickness of one coin, working from one end to the other. Throw the root away.",
+      "look": "These are half-moons, and they are what recipes mean when they say sliced onion. Same claw, same knuckle guide, just thinner spacing.Full rings would mean slicing the onion whole without halving it, which is harder because it rolls, and almost nothing you cook needs them.",
+      "_inferred": []
+    },
+    {
+      "n": 10,
+      "text": "About the crying. Cutting an onion releases a gas that turns into a mild acid on the wet surface of your eye. It is harmless and it stops when you stop cutting.",
+      "uses": [
+        "red_onion"
+      ],
+      "look": "Two things genuinely help. A sharp knife, because it slices cells open rather than crushing its way through and bursting more of them. And 15 minutes in the fridge before you cut, because cold slows the reaction down.Breathing through your mouth helps a little. Bread in your mouth, a candle, goggles and running water are folklore.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 11,
+      "text": "You have about 150 g of dice and 150 g of slices. Put them in separate containers.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "The slices: go straight to Quick Pickled Red Onions, which is on the list, takes 10 minutes and turns them into something that keeps a month.The dice: keep 7 to 10 days sealed in the fridge, or freeze them flat in a bag. Seal them properly, because cut onion is strong enough to flavour the butter and milk sitting next to it.Anywhere on this list that asks for 1/2 cup of frozen onion, this takes its place directly, and it cooks faster because there is no ice to boil off.You have now done the cut that gates most savoury cooking. Next rung on the ladder is the pan sauce.",
+      "_inferred": [
+        "equipment"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "onion"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": "shake",
+  "name": "Berry Protein Shake",
+  "build": "2026-08-09-migrated",
+  "form": "assembly",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "The safety net. When a meal gets skipped, this is what closes the gap without cooking anything.",
+  "time": {
+    "totalMin": 2,
+    "note": "2 min"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "shake",
+    "proteinPerUnit": 32
+  },
+  "ingredients": [
+    {
+      "ref": "whey",
+      "stock": "whey",
+      "display": "whey (33 g scoop, vanilla)",
+      "qty": 1,
+      "unit": "scoop"
+    },
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "milk",
+      "qty": 250,
+      "unit": "ml"
+    },
+    {
+      "ref": "frozen_berries",
+      "stock": "fruit",
+      "display": "frozen berries",
+      "qty": 1,
+      "unit": "handful",
+      "frozenOk": true
+    },
+    {
+      "ref": "1_tsp_cocoa",
+      "display": "1 tsp cocoa, 1 tsp honey",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "blender_bullet",
+    "jars"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put 250 ml of milk in the blender jar first, then 1 scoop of whey, then 1 handful of frozen berries.",
+      "uses": [
+        "whey",
+        "milk",
+        "frozen_berries"
+      ],
+      "equipment": [
+        "blender_bullet",
+        "jars"
+      ],
+      "look": "250 ml is one full cup, or the jar filled to just under half.Liquid first genuinely matters. Powder on the bottom cakes against the blades and leaves a dry lump that never mixes.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Blend 30 seconds.",
+      "look": "Done when there are no visible flecks of powder and the colour is even. Frozen berries make it thick and cold, which is the point, so no ice needed.",
+      "_inferred": []
+    },
+    {
+      "n": 3,
+      "text": "Drink it.",
+      "look": "32 g of protein: 24 g whey, 8 g milk. Takes two minutes and needs no heat, so there is never a good reason to end the day short.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "whey",
+      "milk",
+      "fruit"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

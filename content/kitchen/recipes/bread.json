@@ -1,0 +1,164 @@
+{
+  "id": "bread",
+  "name": "No-Knead Pot Bread",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "project"
+  ],
+  "why": "You asked about bread and you own everything for it: 2.5 kg of flour, instant yeast, and an oven-safe pot with a lid. No kneading and no skill required, only patience.",
+  "time": {
+    "totalMin": 1000,
+    "note": "15 min of work, 14 h of waiting"
+  },
+  "serves": {
+    "count": 12,
+    "unit": "slice",
+    "proteinPerUnit": 4
+  },
+  "ingredients": [
+    {
+      "ref": "all_purpose_flour",
+      "stock": "flour",
+      "display": "all-purpose flour (about 400 g)",
+      "qty": 3,
+      "unit": "cups"
+    },
+    {
+      "ref": "instant_yeast",
+      "stock": "yeast",
+      "display": "instant yeast",
+      "qty": 0.25,
+      "unit": "tsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 1.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "water",
+      "display": "water, room temperature (about 350 ml)",
+      "qty": 1.5,
+      "unit": "cups"
+    }
+  ],
+  "equipment": [
+    "oven",
+    "pot_ovensafe_lid",
+    "pot_medium",
+    "mixingbowl_large",
+    "bowlset",
+    "parchment"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "In a big bowl mix 3 cups flour, 1/4 tsp instant yeast and 1.5 tsp kosher salt with a spoon.",
+      "uses": [
+        "all_purpose_flour",
+        "instant_yeast",
+        "kosher_salt"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "look": "A quarter teaspoon of yeast for a whole loaf looks like a mistake and is not. The dough rises for 12 to 18 hours, so it needs almost none. More yeast here makes it rise too fast and taste of beer.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Add 1.5 cups of room-temperature water and stir until there is no dry flour left. About 30 seconds.",
+      "uses": [
+        "all_purpose_flour",
+        "water"
+      ],
+      "look": "It will look shaggy, sticky and wrong, like a lumpy paste rather than a dough. That is exactly right. Do not knead it, do not add flour to fix it, do not tidy it up. The long rest does the work that kneading would.",
+      "warn": "Cold water slows the rise, hot water kills the yeast. Room temperature, straight from the tap.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Cover the bowl with your second bowl upside down. Leave it on the counter 12 to 18 hours. Overnight is ideal.",
+      "equipment": [
+        "bowlset"
+      ],
+      "minutes": 60,
+      "look": "Done when the surface is covered in bubbles and it has roughly doubled. It should look wet, loose and alive.You have no plastic wrap and do not need any: an inverted bowl traps the moisture perfectly well.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Tip the dough onto a floured counter. Fold it over on itself 4 times, turning a quarter each time, then flip it seam-side down.",
+      "uses": [
+        "all_purpose_flour"
+      ],
+      "look": "Flour your hands first, it is very sticky. This is 30 seconds of work, not kneading. You are just building enough surface tension for it to hold a round shape.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Put it on a sheet of parchment, cover with the bowl again, rest 1 hour. In the last 30 minutes, put the empty pot with its lid on into the oven and heat to 450&deg;F (230&deg;C).",
+      "equipment": [
+        "oven",
+        "pot_medium",
+        "bowlset",
+        "parchment"
+      ],
+      "minutes": 60,
+      "look": "Preheating the empty pot is the whole trick of this method. Dough hitting screaming-hot cast metal springs upward instead of spreading out.",
+      "warn": "That pot and lid come out at 450&deg;F and look exactly like a cold pot. Oven mitts on before you touch anything, and put the lid somewhere it cannot be picked up absent-mindedly.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Take the pot out, lift the lid, and lower the dough in on its parchment. Lid back on. 30 minutes.",
+      "equipment": [
+        "pot_medium",
+        "parchment"
+      ],
+      "minutes": 30,
+      "look": "The parchment is your handle and it stays in with the bread. Never reach into the pot.The lid traps the doughâ€™s own steam, which is what makes a proper crust. This is a home oven imitating a steam-injected bakery oven, and it genuinely works.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Lid off. Another 15 to 20 minutes until deep golden brown.",
+      "minutes": 18,
+      "look": "Go darker than feels comfortable. Pale bread is underbaked bread, and the crust is where the flavour is.Done at 205&deg;F inside on the thermometer. Without it: tip the loaf out and knock the base with a knuckle. A hollow sound means done, a dull thud means it needs longer.",
+      "_inferred": []
+    },
+    {
+      "n": 8,
+      "text": "Cool on a rack, or propped against something, for at least 1 hour before cutting.",
+      "minutes": 60,
+      "look": "The inside is still cooking as it cools. Cut it hot and the crumb collapses into something gummy. This is the hardest step and it is the one people skip.About 4 g of protein per slice. Bread is not a protein food here, it is a vehicle for the roast beef.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "flour",
+      "yeast",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

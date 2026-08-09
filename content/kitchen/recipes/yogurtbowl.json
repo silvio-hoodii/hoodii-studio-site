@@ -1,0 +1,107 @@
+{
+  "id": "yogurtbowl",
+  "name": "Greek Yogurt Bowl",
+  "build": "2026-08-09-migrated",
+  "form": "assembly",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "Breakfast when you do not want to cook and do not want another egg. Three minutes, one bowl, no heat.",
+  "time": {
+    "totalMin": 3,
+    "note": "3 min, no cooking"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "bowl",
+    "proteinPerUnit": 27
+  },
+  "ingredients": [
+    {
+      "ref": "greek_yogurt",
+      "stock": "yogurt",
+      "display": "Greek yogurt (about 3/4 cup)",
+      "qty": 200,
+      "unit": "g"
+    },
+    {
+      "ref": "rolled_oats",
+      "stock": "oats",
+      "display": "rolled oats (about 1/3 cup), raw",
+      "qty": 30,
+      "unit": "g"
+    },
+    {
+      "ref": "frozen_berries_or_mango",
+      "stock": "fruit",
+      "display": "frozen berries or mango",
+      "qty": 1,
+      "unit": "handful",
+      "frozenOk": true
+    },
+    {
+      "ref": "honey",
+      "display": "honey",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "1_tsp_cocoa",
+      "display": "1 tsp cocoa, 1 tbsp peanut butter",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "bowlset"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put 200 g of Greek yogurt in a bowl. That is about three quarters of a cup, or a quarter of the tub.",
+      "uses": [
+        "greek_yogurt"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "look": "Weigh it once on the new scale and look at how far up the bowl it comes. After that you will never need to weigh it again.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Add 1 handful of frozen berries or mango straight from the freezer and stir them through.",
+      "uses": [
+        "frozen_berries_or_mango"
+      ],
+      "look": "They thaw in the yogurt in about 10 minutes and release juice into it, which is the point. If you want it ready now, microwave the fruit alone for 20 seconds first.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Scatter 30 g of raw oats over the top and drizzle 1 tsp of honey.",
+      "uses": [
+        "rolled_oats",
+        "honey"
+      ],
+      "look": "Raw oats straight from the bag, no cooking. They soften slightly in the yogurt and give it something to chew.Roughly 27 g of protein: 19 g from 200 g of yogurt (11 g per 115 g, off the label), ~4 g from the oats, the rest from the fruit and any peanut butter. Add a scoop of whey stirred in and it is 51 g.",
+      "_inferred": [
+        "uses"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "yogurt",
+      "oats",
+      "fruit"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

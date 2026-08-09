@@ -1,0 +1,236 @@
+{
+  "id": "crepes",
+  "name": "Crepes",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "Number one on the list of six you were sent, and the one named as the favourite. You can make it today without buying anything: flour, eggs, milk, butter. Two things decide whether it works. The batter has to be thin, and the pan must not be hot.",
+  "time": {
+    "totalMin": 60,
+    "note": "about 1 hour, 30 min of it waiting"
+  },
+  "serves": {
+    "count": 8,
+    "unit": "crepe",
+    "proteinPerUnit": 5
+  },
+  "ingredients": [
+    {
+      "ref": "all_purpose_flour",
+      "stock": "flour",
+      "display": "all-purpose flour (125 g on the scale)",
+      "qty": 1,
+      "unit": "cup"
+    },
+    {
+      "ref": "large_eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "2_milk",
+      "stock": "milk",
+      "display": "2% milk",
+      "qty": 1.5,
+      "unit": "cups"
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter, melted, plus about 2 tbsp more for the pan",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "white_sugar",
+      "stock": "sugar",
+      "display": "white sugar",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 0.25,
+      "unit": "tsp"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "mixingbowl_large",
+    "bowlset",
+    "spatula",
+    "whisk",
+    "plates",
+    "microwave",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put 1 cup of all-purpose flour, 1 tbsp of white sugar and 1/4 tsp of kosher salt into the large mixing bowl. Stir them together with the whisk for about 10 seconds.",
+      "uses": [
+        "all_purpose_flour",
+        "large_eggs",
+        "white_sugar",
+        "kosher_salt"
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "bowlset",
+        "whisk"
+      ],
+      "look": "One cup of flour is 125 g on your scale if you would rather weigh it, and weighing is the better option. Flour packs down in a cup, so two people scooping what they both call a cup can be 20 g apart, and 20 g is enough to move this batter from thin to thick.The sugar is not there to make these sweet. A tablespoon spread across eight crepes is not something you can taste. It is there because sugar browns, and without it a crepe stays pale and comes out looking undercooked even when it is not.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Push the flour out to the sides of the bowl so there is a hollow in the middle. Crack 2 eggs into the hollow and add 1/2 cup of the milk. Keep the other 1 cup of milk aside for the next step.Whisk starting in the middle, in small circles, pulling in only a little flour at a time from the inside edge of the hollow.",
+      "uses": [
+        "all_purpose_flour",
+        "large_eggs",
+        "2_milk"
+      ],
+      "equipment": [
+        "bowlset",
+        "whisk"
+      ],
+      "look": "You are making a thick paste, somewhere between toothpaste and pancake batter. It should feel heavy and draggy against the whisk. Keep going until there is no dry flour left anywhere and the paste is smooth. About 1 minute.This step is the entire reason crepes go lumpy, or do not. A lump is a bead of dry flour with wet flour set hard around it, and once one forms, stirring will not open it. Thick batter is stiff enough that the whisk wires shear the lumps apart against the side of the bowl. Thin batter just lets them dodge out of the way. So you fight the lumps now, while it is thick, and thin it afterwards.That is also why this is a whisk job and not a fork job. A fork pushes a lump around. The wires cut through it.Why not just use the blender? A blender is the standard no-lump shortcut and it is a fair question. Yours holds about 470 ml and this batter is closer to 620, so it does not fit in one go. Splitting it means stirring dry flour into already-thin batter in the bowl afterwards, which is precisely how lumps form. At this volume the whisk wins.",
+      "warn": "Do not pour all the milk in at once. It is the single most common way to end up with a bowl of lumps that cannot be fixed.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Melt 2 tbsp of butter: 20 to 30 seconds in a cup in the microwave. Let it sit for a minute so it is warm rather than hot.Add the remaining 1 cup of milk to the bowl in about four goes, roughly 1/4 cup at a time, whisking smooth after each one. Then whisk in the melted butter.",
+      "uses": [
+        "2_milk",
+        "butter"
+      ],
+      "equipment": [
+        "microwave",
+        "bowlset",
+        "whisk"
+      ],
+      "look": "The consistency test. Dip the back of a spoon in and lift it out. The batter should coat the spoon in a thin film and run off within about 3 seconds, leaving the spoon nearly clean.Too thick, meaning it sits on the spoon like paint: add milk 1 tbsp at a time, stir, and test again.Too thin is rarer and it is not a disaster. The crepes come out lacy with small holes in them. Add 1 tbsp of flour and whisk hard, and accept a lump or two.Thin cream is the target. Noticeably thicker than milk, far thinner than pancake batter.",
+      "warn": "If the butter is hot rather than warm it cooks the egg where it lands and leaves small yellow threads through the batter. A minute sitting in the cup is enough.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Cover the bowl with a plate and leave it on the counter for 30 minutes. Do not skip this.",
+      "equipment": [
+        "bowlset",
+        "plates"
+      ],
+      "minutes": 30,
+      "look": "Two things happen while it sits, and together they are the difference between a crepe and a rubber disc.The flour finishes absorbing the milk, so the batter thickens slightly and stops separating in the bowl.And the gluten relaxes. Gluten is the stretchy protein network that stirring builds up in any wet flour. Straight after mixing it is tight, which makes the batter springy and the crepe tough and prone to tearing when you flip it. Half an hour is enough for it to go slack.Longer is fine and better. The batter keeps 2 days covered in the fridge, so mixing it the night before is a real option. Stir it before you pour, because the flour settles to the bottom.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Put the large non-stick pan on medium for 2 minutes. Then add about 1/2 tsp of butter and tilt the pan so it spreads across the whole base.",
+      "uses": [
+        "large_eggs",
+        "butter"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "The butter is your thermometer. It should melt in 2 or 3 seconds and foam gently.If it browns and starts smoking the moment it lands, the pan is too hot. Take it off the heat for a minute, wipe it out with a folded paper towel, turn the dial down a notch and start the 2 minutes again.If it just sits there melting slowly with no foam at all, give the pan another minute.You want a thin film of butter, not a pool. If it looks like a puddle, wipe some out with a folded paper towel.Medium, not high, and this is the mistake to expect. A crepe is thin enough to cook through in under a minute, so the heat never needs forcing, and a hot pan sets the batter before you have finished swirling it.",
+      "warn": "The non-stick pan, not either of the stainless ones. This is the one job where zero grip is the entire point.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Lift the pan off the heat. Pour 1/3 cup of batter straight into the middle, then immediately tilt and rotate the pan in a circle so the batter runs out to the edges. Put it back on the heat.",
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "look": "The whole move takes about 3 seconds and it has to be one continuous motion: pour, tilt, rotate, flat.Off the heat is what buys you those 3 seconds. On the burner the batter starts setting while you are still swirling, and you end up with a thick blob in the middle and bare pan at the edges.The finished circle should reach nearly to the edge of the pan and be thin enough that you can see the pan through it in places.If it will not spread that far, the batter is too thick. Go back to the bowl and stir in 1 tbsp of milk.Holes, or a gap at one edge: spoon about 1 tsp of batter into each one in the first few seconds while the top is still wet. After that it will not join up.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Cook it for 45 to 90 seconds without touching it.",
+      "minutes": 1,
+      "look": "Three things tell you it is ready, and you want all three:1. The surface has gone from wet and shiny to matte and dry, with no glossy patches left anywhere.2. The edges have lifted away from the pan on their own and gone slightly dry and papery.3. Slide the spatula under one edge and lift. It comes away cleanly, in one piece.If it drags, sticks or tears, it is not ready. Put it back down and give it another 15 seconds. This is the same rule as searing meat: it releases when it is done.The underside will be pale gold with darker freckles across it, like a map of small islands. It should not be evenly brown. Evenly brown all over means the pan was too hot.",
+      "warn": "The timer is a prompt to go and look, not the answer. Your stove, your pan and how cold the batter is all move it. The three cues above beat the clock every time.",
+      "_inferred": []
+    },
+    {
+      "n": 8,
+      "text": "Slide the spatula fully under the middle of the crepe, lift, and turn it over. Cook the second side for 20 to 30 seconds, then slide it out onto a plate.",
+      "equipment": [
+        "spatula",
+        "plates"
+      ],
+      "look": "The second side cooks in about a third of the time and never colours as evenly. That is normal, and it is why one side of a crepe always looks better than the other. Serve them first side up.Once the edge has lifted you can also grab it with your fingers and flip it toward you, which is easier than it sounds. Leave that until the first one has shown you the crepe is holding together.Do not add butter again for the next one unless it starts sticking. There is enough left in the pan, and buttering every time makes them greasy and blotchy.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Throw the first crepe away, or eat it standing up. Then keep going through the rest of the batter: butter check, pour, swirl, 45 to 90 seconds, flip, 20 to 30 seconds. You should get about 8.",
+      "uses": [
+        "butter"
+      ],
+      "look": "The first one comes out badly in nearly every kitchen and every cookbook says so. The pan has not settled to an even temperature yet and the butter is not spread the way it will be for the rest of them. It is not you.Stack them straight on top of each other on the plate as they come off. They do not stick together, and the stack keeps itself warm.Coming out too dark: drop the dial one notch. Pale and floppy after 90 seconds: raise it one notch. By crepe three you should be doing nothing to the dial at all.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Fill each crepe, then fold it in half and in half again so it makes a quarter circle. Or roll it up like a cigar.",
+      "look": "Everything below is already in your kitchen.Butter, sugar and lemon. The plain French one. 1 tsp of butter spread on the crepe while it is still hot, 1 tsp of white sugar, 1/2 tsp of lemon juice. The heat half melts the sugar. It takes ten seconds and very little beats it.Greek yogurt and berries. 1/2 cup of Greek yogurt, 1/3 cup of frozen berries warmed 30 seconds in the microwave, 1 tsp of honey. This is the one that carries real protein: it puts 11 g into a crepe that otherwise holds 5.Peanut butter and honey. 1 tbsp of peanut butter warmed 10 seconds so it spreads, plus 1 tsp of honey.Chocolate. 1 tbsp of peanut butter, 1 tsp of cocoa and 2 tsp of honey stirred together in a cup. Your cocoa is natural rather than Dutch-processed, so it is sharper and more sour than a jar of chocolate spread, and the honey is doing real work there.Maple syrup on its own over a folded crepe.There are no bananas in the kitchen. Two of these are better with one, so put a few in the trolley next shop.",
+      "_inferred": []
+    },
+    {
+      "n": 11,
+      "text": "Roughly 38 g of protein in the whole batch of 8, so about 5 g per crepe.",
+      "look": "The arithmetic: 13 g from 125 g of flour, 12 g from 1 1/2 cups of 2% milk, 13 g from 2 eggs. The butter carries none.This is a low-protein dish, and that is fine. It is on the list because it is worth putting in front of someone, not because of what it does to a daily total. Fill one with Greek yogurt and it goes to about 16 g. A shake alongside adds 32 g if you want the day to land on target regardless.Keeping them. Cooked crepes hold 3 days sealed in the fridge and 2 months in the freezer with a square of parchment between each one so they come apart. Reheat 20 seconds a side in a dry pan, or 15 seconds in the microwave.Uncooked batter keeps 2 days in the fridge. Stir before pouring, the flour settles.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "flour",
+      "eggs",
+      "milk",
+      "butter",
+      "sugar",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "id": "ccbites",
+  "name": "Cottage Cheese Ice Cream Bites",
+  "build": "2026-08-09-migrated",
+  "form": "macro",
+  "meal": [
+    "dessert"
+  ],
+  "why": "The frozen dessert trick, and a real use for the cottage cheese and berries. Dessert that pushes protein up instead of down.",
+  "time": {
+    "totalMin": 10,
+    "note": "10 min + 2 h freezing"
+  },
+  "serves": {
+    "count": 8,
+    "unit": "bite",
+    "proteinPerUnit": 6
+  },
+  "ingredients": [
+    {
+      "ref": "cottage_cheese",
+      "stock": "cottagecheese",
+      "display": "cottage cheese (half the tub)",
+      "_rawQty": "~375 g"
+    },
+    {
+      "ref": "honey",
+      "stock": "honey",
+      "display": "honey",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "cocoa_powder",
+      "stock": "cocoa",
+      "display": "cocoa powder",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "peanut_butter",
+      "display": "peanut butter, optional",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "frozen_berries",
+      "stock": "fruit",
+      "display": "frozen berries",
+      "qty": 1,
+      "unit": "handful",
+      "frozenOk": true
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "blender_bullet",
+    "parchment",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Blend 375 g of cottage cheese (half the tub), 2 tbsp honey, 1 tbsp cocoa and 1 tbsp peanut butter if using, until completely smooth.",
+      "uses": [
+        "cottage_cheese",
+        "honey",
+        "cocoa_powder",
+        "peanut_butter"
+      ],
+      "look": "Half the 750 g tub is roughly 7 heaped tablespoons. Work in two batches, the jar is small, and fill it no more than two thirds or it will not circulate.Smooth means no visible curds at all. Any lumps left now will freeze into hard grains later.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Stir 1 handful of frozen berries through by hand. Do not blend them in.",
+      "uses": [
+        "frozen_berries"
+      ],
+      "look": "Blending the berries turns the whole thing pink and watery. Stirred through whole, they stay as pockets of fruit.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Line a tray or plate with parchment and drop the mixture on in spoonfuls, roughly the size of a walnut.",
+      "equipment": [
+        "bakingtray",
+        "parchment",
+        "plates"
+      ],
+      "look": "Leave a gap between them. They do not spread much, but they are impossible to separate if they touch once frozen.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Freeze for 2 hours, then move them to a bag or container.",
+      "look": "Firm enough to pick up with your fingers, but they soften fast in a warm room, so eat them straight from the freezer. Keeps about a week.",
+      "warn": "Do not leave them loose on the tray overnight. They pick up freezer smells and dry out at the edges.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "cottagecheese",
+      "honey",
+      "cocoa",
+      "fruit"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

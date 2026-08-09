@@ -1,0 +1,134 @@
+{
+  "id": "roastveg",
+  "name": "Roasted Sweet Potato and Carrots",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "side"
+  ],
+  "why": "The side dish that finally uses the sweet potato and the bag of carrots. Not a protein dish, and it does not pretend to be.",
+  "time": {
+    "totalMin": 35,
+    "note": "35 min"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "portion",
+    "proteinPerUnit": 2
+  },
+  "ingredients": [
+    {
+      "ref": "sweet_potato",
+      "stock": "sweetpotato",
+      "display": "sweet potato, about 500 g",
+      "qty": 1,
+      "unit": "each"
+    },
+    {
+      "ref": "baby_carrots",
+      "stock": "carrots",
+      "display": "baby carrots (about half the bag)",
+      "qty": 2,
+      "unit": "cups"
+    },
+    {
+      "ref": "vegetable_or_olive_oil",
+      "display": "vegetable or olive oil",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "paprika",
+      "display": "paprika",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp"
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "knife_sharp",
+    "parchment",
+    "oven"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Oven to 425&deg;F (220&deg;C). Line a tray with parchment.",
+      "equipment": [
+        "oven",
+        "bakingtray",
+        "parchment"
+      ],
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Cut the sweet potato into chunks about 2 cm across. Leave the skin on.",
+      "uses": [
+        "sweet_potato"
+      ],
+      "look": "Two centimetres is roughly the width of your thumb. Even sizing matters more than the exact size: mixed big and small pieces means burnt small ones and raw big ones.The skin is edible, has fibre in it, and saves you peeling. Just scrub it under the tap first.",
+      "warn": "Raw sweet potato is hard and the knife can slip. Cut a thin slice off one side first so it sits flat on the board instead of rolling.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Tip the sweet potato and 2 cups of baby carrots onto the tray. Add 2 tbsp oil, 1 tsp kosher salt, 1 tsp paprika, 1/2 tsp pepper, and toss with your hands until everything is shiny.",
+      "uses": [
+        "sweet_potato",
+        "baby_carrots",
+        "kosher_salt",
+        "paprika",
+        "black_pepper"
+      ],
+      "equipment": [
+        "bakingtray"
+      ],
+      "look": "Baby carrots go in whole, no cutting. Every piece should have a film of oil on it. Dry patches will not brown, they will just dry out.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Spread into a single layer with gaps. Roast 30 minutes, turning once at 15.",
+      "minutes": 30,
+      "look": "The gaps are the whole trick. Vegetables piled on top of each other release steam and boil each other into mush. If it does not fit in one layer, use a second tray, which you now have.Done when the edges are browned and a fork slides into a sweet potato chunk with no resistance. Pale and soft means it steamed. Browned means it roasted, and browning is the flavour.",
+      "warn": "Do not cover the tray with foil. Covering traps steam and guarantees the mushy version.",
+      "_inferred": []
+    },
+    {
+      "n": 5,
+      "text": "Eat hot. Keeps 4 days in the fridge.",
+      "look": "About 5 g of protein in the whole tray, which is almost none. This is a side to put next to the chicken or the roast, not a meal. Its job is to make a plate of plain protein into dinner.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "sweetpotato",
+      "carrots",
+      "oil"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

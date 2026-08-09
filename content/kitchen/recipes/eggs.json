@@ -1,0 +1,274 @@
+{
+  "id": "eggs",
+  "name": "Scrambled Eggs That Are Not Rubber",
+  "build": "2026-08-09a",
+  "form": "dish",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "Breakfast. Most people cook eggs far too hot, which is why they go dry and squeaky. Low and slow is the whole trick. Drying the frozen peppers properly is most of the clock, so this is not a ten minute dish.",
+  "time": {
+    "activeMin": 18,
+    "totalMin": 18,
+    "note": "15 to 20 min"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "plate",
+    "proteinPerUnit": 33,
+    "proteinMath": "3 large eggs at 6.3 g = 18.9 g, + 13 g from 1/2 cup of 2% cottage cheese, + about 1 g from the pepper, + 0.1 g from the butter = 33 g. CORRECTED 2026-08-09 from the 37 g the app has been showing since 2026-08-02: that figure credited 'the rest from the butter and peppers' with 5 g, and butter has almost no protein in it. Overstated by 4 g, about 12%."
+  },
+  "ingredients": [
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 3,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "cottagecheese",
+      "stock": "cottagecheese",
+      "display": "cottage cheese",
+      "qty": 0.5,
+      "unit": "cup",
+      "prep": "about 4 heaped tablespoons, a mound roughly the size of a tennis ball",
+      "defining": false,
+      "altText": "No cottage cheese? Use 30 g of grated mozzarella. It melts into strands rather than staying in curds, so the result is richer and less creamy, and it still stops the eggs cooking the moment it goes in."
+    },
+    {
+      "ref": "pepper",
+      "stock": "frozenpeppers",
+      "display": "frozen pepper blend",
+      "qty": 1,
+      "unit": "cup",
+      "prep": "straight from the freezer, no thawing",
+      "defining": false,
+      "altText": "One whole fresh bell pepper works instead and is a different job: core it, slice into bite-size pieces, and it needs only 4 to 6 minutes in step 1 instead of 8 to 10, because a fresh pepper holds a fraction of the water a frozen one does.",
+      "frozenOk": true
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter",
+      "qty": 1,
+      "unit": "tbsp",
+      "prep": "a cube about the size of the top joint of your thumb",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 0.25,
+      "unit": "tsp",
+      "prep": "a small mound in your palm, about the size of a pea",
+      "defining": false
+    },
+    {
+      "ref": "pepper_black",
+      "staple": true,
+      "display": "black pepper",
+      "qty": 0.125,
+      "unit": "tsp",
+      "prep": "a few grinds",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "stovetop",
+    "pan_nonstick_large",
+    "spatula",
+    "fork",
+    "bowlset",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put 1 cup of the frozen pepper blend straight into the pan with NO butter and NO oil. Cook it for 8 to 10 minutes. You are not cooking these, you are drying them.",
+      "uses": [
+        {
+          "ref": "pepper",
+          "amount": 1,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 9,
+      "heat": {
+        "surface": "stovetop",
+        "target": "the peppers are steaming visibly the whole time. If they are just sitting there with nothing coming off them, go up until they steam.",
+        "recheck": "2 min"
+      },
+      "doneness": {
+        "kind": "do",
+        "test": "Tilt the pan toward you. If any liquid runs down to the low edge, keep going. When nothing runs, stage one is done. Then keep going until the pepper edges have browned and gone slightly shrivelled."
+      },
+      "look": "They were already cooked before you bought them, because frozen vegetables are boiled briefly at the factory before freezing. That is why they go limp rather than crunchy when they thaw. There is no rawness to cook out and nothing to undercook. The only job is getting the water out, which tells you which way to err: there is no such thing as too cooked here, only too wet.",
+      "warn": "A dry pan does not mean dry peppers. They can look ready and still be holding water inside, which then leaks into the eggs at the end and makes them watery. Browned, shrivelled edges is the real finish line, however long that takes."
+    },
+    {
+      "n": 2,
+      "text": "Tip the peppers onto a plate. Turn the heat down, and take the pan OFF the burner completely for 2 minutes.",
+      "uses": [
+        {
+          "ref": "pepper",
+          "amount": 0,
+          "unit": "cup",
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "plates",
+        "stovetop"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "low enough that when the butter goes in at step 4 it melts lazily and foams gently. If it browns or spits the moment it lands, the pan is still too hot.",
+        "recheck": "the butter itself is the test"
+      },
+      "doneness": {
+        "kind": "do",
+        "test": "Two minutes off the burner, timed. Do not judge this by looking at the pan, it gives you nothing."
+      },
+      "look": "Turning the heat down does almost nothing to a pan that is already hot. The metal holds its heat and takes several minutes to come down on its own, so butter added straight after turning it down lands in a pan that is still at browning temperature. Lifting it off the burner is what actually cools it, and it is the difference between soft eggs and browned ones. Put it back on after the 2 minutes.",
+      "warn": "The heat setting is not the temperature of the pan. Turning it down and carrying straight on is the easiest way to end up with browned, firm eggs while believing the heat was low. If you only remember one thing here, lift the pan off. Also: liquid will pool on the plate under the peppers. When you add them back at step 6, lift them off with a fork rather than tipping the plate in. That puddle is exactly what makes eggs watery."
+    },
+    {
+      "n": 3,
+      "text": "Crack 3 eggs into a bowl and beat them with a fork for about 20 seconds.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 3,
+          "unit": "each"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "fork"
+      ],
+      "look": "Beat until the yolk and white are one uniform yellow with no clear streaks left. Underbeaten eggs cook into separate white and yellow patches."
+    },
+    {
+      "n": 4,
+      "text": "Put the pan back on the heat. Add 1 tbsp of butter, let it melt, then pour the eggs in.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "unit": "each",
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "target": "the butter melts lazily and foams gently. Browning or spitting means too hot: take the pan off for another minute and start this step again.",
+        "recheck": "immediately, the butter tells you"
+      },
+      "doneness": {
+        "kind": "look",
+        "test": "The butter has fully melted and covers the base, and it is foaming rather than browning."
+      }
+    },
+    {
+      "n": 5,
+      "text": "Stir slowly and constantly with the spatula, scraping the bottom. Keep going for 3 to 5 minutes.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "unit": "each",
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "spatula",
+        "stovetop"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "nothing sets hard against the base. If a set layer forms on the bottom faster than you can scrape it, come down.",
+        "recheck": "1 min"
+      },
+      "doneness": {
+        "kind": "look",
+        "test": "Soft curds forming slowly, still glossy and visibly wet. Stop while it looks slightly underdone."
+      },
+      "look": "Nothing happens for the first minute or two. Then it starts to thicken into soft curds. Keep the spatula moving the whole time and keep scraping the base.",
+      "warn": "Do not walk away and do not turn the heat up to speed it up. Heat is what makes eggs rubbery and weeping. Slow is the entire technique."
+    },
+    {
+      "n": 6,
+      "text": "Take the pan off the heat while the eggs still look slightly underdone. Stir in 1/2 cup of cottage cheese and the peppers.",
+      "uses": [
+        {
+          "ref": "cottagecheese",
+          "amount": 0.5,
+          "unit": "cup"
+        },
+        {
+          "ref": "pepper",
+          "amount": 0,
+          "unit": "cup",
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "spatula",
+        "fork"
+      ],
+      "doneness": {
+        "kind": "look",
+        "test": "The eggs are glossy and only just set, a bit wetter than you want to eat them."
+      },
+      "look": "Half a cup of cottage cheese is about 4 heaped tablespoons, or a mound roughly the size of a tennis ball. The pan keeps cooking the eggs for another 30 seconds after it leaves the heat, and the cold cottage cheese stops it exactly where you want it. Lift the peppers off the plate with a fork, do not tip the plate in, and leave any liquid behind."
+    },
+    {
+      "n": 7,
+      "text": "Add 1/4 tsp of salt and a few grinds of black pepper, stir once, eat straight away.",
+      "uses": [
+        {
+          "ref": "salt",
+          "amount": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper_black",
+          "amount": 0.125,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "spatula"
+      ],
+      "look": "A quarter teaspoon is a small mound in your palm, about the size of a pea. Taste it. Eggs almost always want slightly more salt than feels right, so if it tastes flat rather than eggy, add another 1/8 tsp and taste again. About 33 g of protein at this size. Add a shake alongside and breakfast is 65 g."
+    }
+  ],
+  "history": [
+    "2026-08-02 first cook, rated nailed. Two complaints in the debrief, both fixed here.",
+    "Complaint 1: 'I think i need to leave the papers a little bit longer. It got a little bit soggy when re adding the peppers even though for me they look ready.' Step 1 now runs 8 to 10 min for frozen and the doneness test is the tilt test he can actually perform, plus browned shrivelled edges as the real finish line.",
+    "Complaint 2: 'we need a way to keep the measurements available somewhere all the time, by the time I needed to use the cottage cheese, the instruction was put the cottage cheese in and I didn't know how much.' Every step now declares what it uses AND how much, so the app renders the amount inline at every mention instead of only in a list on the first screen.",
+    "2026-08-09 removed 'Low means the lowest setting that still cooks. On a 1 to 10 dial, about 3.' The hob is induction, confirmed 2026-08-08, and its burners do not share a dial scale, so that sentence was meaningless here. Replaced with the butter as the observable.",
+    "2026-08-09 protein corrected 37 g to 33 g. See serves.proteinMath."
+  ]
+}

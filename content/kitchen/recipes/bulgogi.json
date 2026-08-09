@@ -1,0 +1,385 @@
+{
+  "id": "bulgogi",
+  "name": "Beef Bulgogi and Mushroom Pot Rice",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Korean one-pot. Marinated beef and mushrooms finish on top of the rice in the same pot, so the rice takes up everything that runs off the beef. Uses one 500 g bag of the slices you cut and froze. Highest protein of anything this week.",
+  "source": {
+    "name": "Aaron and Claire",
+    "url": "https://aaronandclaire.com/beef-bulgogi-and-mushroom-pot-rice/",
+    "why": "Aaron Huh is a professional chef in Seoul with a DK-published cookbook, Simply Korean. Method transcribed, not rewritten."
+  },
+  "deviations": [
+    {
+      "what": "500 g of beef instead of their 450 g",
+      "why": "that is what one of your freezer bags holds, and it changes nothing else"
+    },
+    {
+      "what": "half a crushed Knorr chicken cube instead of 1/2 tbsp bouillon powder",
+      "why": "same thing in a different shape, and it is what you own"
+    },
+    {
+      "what": "no kimchi to serve alongside",
+      "why": "they suggest it, you have none, and nothing in the dish depends on it"
+    }
+  ],
+  "time": {
+    "totalMin": 75,
+    "note": "75 min, 30 of it the rice soaking"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "serving",
+    "proteinPerUnit": 33
+  },
+  "ingredients": [
+    {
+      "ref": "sliced_beef",
+      "display": "sliced beef, one bag from the freezer, cut into bite-size pieces",
+      "qty": 500,
+      "unit": "g"
+    },
+    {
+      "ref": "short_grain_rice",
+      "stock": "shortgrainrice",
+      "display": "short-grain rice, RINSED AND SOAKED 30 MIN. See step 3",
+      "qty": 2,
+      "unit": "cups"
+    },
+    {
+      "ref": "water",
+      "stock": "shortgrainrice",
+      "display": "water. Only 2, because the rice has already drunk its fill",
+      "qty": 2,
+      "unit": "cups"
+    },
+    {
+      "ref": "shiitake_mushrooms",
+      "stock": "mushrooms",
+      "display": "shiitake mushrooms, 1 tray",
+      "qty": 113,
+      "unit": "g"
+    },
+    {
+      "ref": "white_or_cremini_mushrooms",
+      "stock": "sugar",
+      "display": "white or cremini mushrooms, 1 tray",
+      "qty": 227,
+      "unit": "g"
+    },
+    {
+      "ref": "yellow_onion",
+      "stock": "yellowonion",
+      "display": "yellow onion, sliced",
+      "qty": 0.5,
+      "unit": "each"
+    },
+    {
+      "ref": "green_onions",
+      "stock": "greenonion",
+      "display": "green onions. The WHITE parts go in the pot early, the GREEN parts go on at the end",
+      "qty": 5,
+      "unit": "each"
+    },
+    {
+      "ref": "garlic_cloves",
+      "stock": "garlic",
+      "display": "garlic cloves",
+      "qty": 6,
+      "unit": "each"
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter, about 1 tbsp. Goes in AT THE END, not the start",
+      "qty": 1,
+      "unit": "pat"
+    },
+    {
+      "ref": "vegetable_oil",
+      "display": "vegetable oil, split 2 then 1",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "soy_sauce",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 2,
+      "unit": "tbsp",
+      "section": "the marinade"
+    },
+    {
+      "ref": "oyster_sauce",
+      "stock": "oyster",
+      "display": "oyster sauce",
+      "qty": 2,
+      "unit": "tbsp",
+      "section": "the marinade"
+    },
+    {
+      "ref": "mirin",
+      "stock": "mirin",
+      "display": "mirin",
+      "qty": 2,
+      "unit": "tbsp",
+      "section": "the marinade"
+    },
+    {
+      "ref": "white_sugar",
+      "stock": "sugar",
+      "display": "white sugar",
+      "qty": 1,
+      "unit": "tbsp",
+      "section": "the marinade"
+    },
+    {
+      "ref": "toasted_sesame_oil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 0.5,
+      "unit": "tbsp",
+      "section": "the marinade"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "section": "the marinade"
+    },
+    {
+      "ref": "soy_sauce_2",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 0.5,
+      "unit": "tbsp",
+      "section": "for the rice"
+    },
+    {
+      "ref": "chicken_bouillon",
+      "stock": "stockcube",
+      "display": "chicken bouillon, about half a cube crushed",
+      "qty": 0.5,
+      "unit": "tbsp",
+      "section": "for the rice"
+    }
+  ],
+  "equipment": [
+    "pot_ovensafe_lid",
+    "pot_medium",
+    "pan_nonstick_large",
+    "bowlset",
+    "plates",
+    "knife_sharp",
+    "colander",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "The night before: move the roast from the freezer to the fridge. On the day, take it out when it is still firm in the middle but soft on the outside, and slice the WHOLE kilo as thin as you can, across the grain.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Half-frozen is the trick and it is the only reason this is doable with a home knife. Fully thawed beef is soft and squashes away from the blade, so you get thick ragged pieces. Half-frozen it holds still and you can take slices 2 to 3 mm thick. About 12 hours in the fridge gets you there from solid.Across the grain. Look for the fibres running one way and cut at 90 degrees to them, exactly like the sirloin roast recipe says. Sirloin tip is lean, and sliced the wrong way it is chewy no matter what you do to it.You need 500 g. Weigh it. Lay the other 500 g flat in a freezer bag, press the air out, and put it back in the freezer.",
+      "warn": "Refreezing this is safe, and only because of how it thawed. Meat thawed in a fridge and never allowed to warm up can go back in the freezer. Meat thawed on a counter cannot. So thaw it in the fridge, work quickly, and get the spare half back in the freezer rather than leaving it out while you cook.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Cut the thawed slices into bite-size pieces. Then in a bowl mix the 2 tbsp soy sauce, 2 tbsp oyster sauce, 2 tbsp mirin, 1 tbsp sugar, 1/2 tbsp sesame oil, 1/2 tbsp vegetable oil and a few grinds of black pepper. Add the beef, work it with your hands until every piece is coated, and leave it 20 minutes.",
+      "uses": [
+        "sliced_beef",
+        "vegetable_oil",
+        "soy_sauce",
+        "oyster_sauce",
+        "mirin",
+        "white_sugar",
+        "toasted_sesame_oil",
+        "black_pepper",
+        "soy_sauce_2"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "minutes": 20,
+      "look": "BITE-SIZE means cut the long strips crossways into pieces about two fingers wide, roughly 4 to 5 cm. You are not slicing them any thinner. They are already thin. You are shortening them so each piece is one mouthful.This is the step that was missing the first time and it is why the pot fought you. The original says thinly sliced beef, then says cut it into bite-size pieces. Only the first half made it into the earlier version, so you were left trying to lay 500 g of long strips flat. Short pieces tumble and brown; long strips tangle and steam.This is bulgogi. The word means fire meat, and it refers to the marinade and the searing rather than to any one cut.Twenty minutes is enough because the pieces are thin. It can sit overnight in the fridge instead if that suits you. Use your hands, not a spoon: you want the marinade between the pieces, not sitting on a clump.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Rinse 2 cups of rice until the water runs clear, then cover it with cold water and leave it to SOAK for 30 minutes. While it soaks: slice the mushrooms about 5 mm thick, slice half a yellow onion thin, chop 6 garlic cloves, and slice the 5 green onions with the whites and greens in separate piles.",
+      "uses": [
+        "short_grain_rice",
+        "water",
+        "shiitake_mushrooms",
+        "white_or_cremini_mushrooms",
+        "yellow_onion",
+        "green_onions",
+        "garlic_cloves",
+        "white_sugar"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "minutes": 30,
+      "look": "What soaking actually does. A dry grain of rice is hard all the way through and water has to fight its way to the middle while the outside is already cooking. Half an hour in cold water lets it drink about a fifth of its own weight with no heat involved, so when it hits the pot the middle is already softened and it cooks evenly. That is also why it then needs less water in the pot, not more.Do not wash mushrooms under the tap. They soak up water like a sponge and then steam instead of browning. Wipe them with a damp paper towel.Shiitake stems are woody and unpleasant. Pull the cap off the stem and throw the stems away. Button and cremini stems are fine, just trim the dried end.Two kinds of mushroom is deliberate. Shiitake are meaty and deeply savoury, button and cremini are mild and soak up the sauce. Either alone works; both together is why the dish tastes like more than mushrooms.",
+      "warn": "The soak is not optional and skipping it is what ruined this dish on 5 Aug. Their 2 cups of water is correct ONLY because the rice has already absorbed water while soaking. An earlier version of this recipe deleted the soak and kept the 2 cups, and the rice was still hard after forty minutes.Set a timer. Thirty minutes, cold water, then drain it properly in the colander.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Mix the seasoned water. In a cup or jug, stir 2 cups of water with 1/2 tbsp of soy sauce and half a Knorr chicken cube, crushed. Set it aside. Then drain the soaked rice in the colander and leave it there.",
+      "uses": [
+        "short_grain_rice",
+        "water",
+        "soy_sauce",
+        "oyster_sauce",
+        "soy_sauce_2",
+        "chicken_bouillon"
+      ],
+      "equipment": [
+        "colander"
+      ],
+      "look": "This is where all the salt in the dish comes from, along with the soy and oyster sauce in the marinade. There is no salt in this recipe anywhere, and that is correct rather than an omission. Do not add any.Mixing it in a jug now rather than adding three things to a hot pot later is the same reasoning as the arroz tapado paste: it is one pour instead of three fiddles at a moment when the pot is hot and moving.Drain it properly. Soaked rice carries a lot of loose water and that water is not counted in the 2 cups.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "The pot goes on now and everything happens in it. Heat 2 tbsp of oil in the pot on medium-high. Add the marinated beef, spread it out, and leave it 1 to 2 minutes until the underside is golden brown. Flip and stir-fry 2 more minutes. Then tip it all onto a plate and set it aside.",
+      "uses": [
+        "sliced_beef"
+      ],
+      "equipment": [
+        "pot_medium",
+        "plates",
+        "stovetop"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Golden brown underneath means lift one piece with tongs and look: it should be properly coloured, not grey. There is sugar in the marinade so it browns fast and hard, and a few dark spots are right here.If it does not all fit in one layer, do it in two batches. Crowded beef boils in its own marinade and turns grey and tough. Bite-size pieces fit far better than long strips, which is the whole reason for cutting them.The beef is not finished cooking here and does not need to be. It goes back on top of the rice later and steams the rest of the way.",
+      "warn": "Everything the beef leaves behind in the pot stays there. Do not wash it, do not wipe it. Those browned bits are most of the flavour of the finished dish and the aromatics are about to lift them off the bottom.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Same pot, no washing. Add 1 tbsp of oil, then the 6 chopped garlic cloves, the sliced yellow onion and the white parts of the green onions. Stir for 1 minute.",
+      "uses": [
+        "sliced_beef",
+        "white_or_cremini_mushrooms",
+        "yellow_onion",
+        "green_onions",
+        "garlic_cloves",
+        "white_sugar"
+      ],
+      "equipment": [
+        "pot_medium"
+      ],
+      "minutes": 1,
+      "look": "Done when it smells like food. One minute is genuinely all this needs; garlic burns and turns bitter after about ninety seconds on this heat.The whites are the pale firm ends of the green onions, the part nearest the root. You put those in the piles in step 3. The dark green tops stay back for the very end.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Add all the mushrooms and stir-fry 3 minutes. Then add the drained rice and stir gently for 1 minute, until every grain is shiny with oil.",
+      "uses": [
+        "short_grain_rice",
+        "shiitake_mushrooms",
+        "white_or_cremini_mushrooms"
+      ],
+      "minutes": 4,
+      "look": "Three minutes is what the recipe says and it is shorter than you would cook mushrooms on their own. They are not being browned to finish here, they are being started; they carry on cooking on top of the rice for another fifteen minutes.Stir the rice gently. Soaked grains are soft and break if you go at them hard, and broken grains turn to paste. Fold rather than scrape.Coating each grain in oil before the water goes in keeps them separate in the finished pot. It is the same move as the arroz tapado.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Pour in the seasoned water. Bring it to a real boil with the lid off, stirring now and then so nothing sticks to the bottom.",
+      "uses": [
+        "water"
+      ],
+      "look": "A real boil means bubbles breaking the whole surface, not a few at the edge and not just steam. This takes a couple of minutes.Stirring occasionally here matters because there is rice, sugar and browned bits on the bottom of the pot and all three catch.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Turn the heat down to LOW, but only as low as it can go while still bubbling. Lay the beef back on top of the rice, do not stir it in, put the lid on and simmer 15 minutes. Then turn the heat off, keep the lid on, and leave it 10 more minutes.",
+      "uses": [
+        "sliced_beef",
+        "short_grain_rice",
+        "water"
+      ],
+      "minutes": 25,
+      "look": "Check the bubbling after two minutes and this is the only check that matters. Lift the lid once and look. Bubbles breaking the surface means the dial is right. Steam with no bubbles means it is too low: go up a notch and look again. Then leave the lid alone until the 15 minutes are up.Beef ON TOP, never stirred in. That is the whole idea of a pot rice. Everything that runs off the beef goes down into the rice, so the rice is where the dish ends up rather than a side dish next to it.The 10 minutes off the heat is not optional. The rice at the bottom is wetter than the rice at the top and the residual steam evens it out. Lifting the lid early gives you wet rice underneath and dry rice on top.If you want the crisp browned layer on the bottom that Korean pot rice is prized for, turn the heat to medium for the last 60 seconds before switching off, and listen for a faint crackle.",
+      "warn": "\"Lowest setting\" is the instruction that ruined this on 5 Aug, and it was wrong. On this stove the lowest setting sits BELOW a simmer, so the pot never bubbled, the rice never absorbed anything, and after 40 minutes the water was still standing in the pot with the grains hard. Adding more water made it worse, because water was never the thing that was missing.Rice does not cook in hot water, it cooks in BUBBLING water. The only test that matters is whether you can see bubbles. If you cannot, the dial is too low, whatever number it is on.Measure the water with the same cup you measured the rice with. The ratio is what matters, not the exact size of the cup.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Lift the lid. Add the green parts of the green onions and the pat of butter. Fluff it with a spoon and mix everything through.",
+      "uses": [
+        "yellow_onion",
+        "green_onions",
+        "butter"
+      ],
+      "look": "The butter goes in HERE, at the end, off the heat. An earlier version put it in with the water at the start, which is not what the original does and wastes it: melted into the cooking water it just disappears. Stirred in at the end it coats the grains and you can taste it.Theirs specifies unsalted. Salted is fine in this dish because there is no other salt in it.A little extra sesame oil over the top before you mix is standard and worth it. Kimchi alongside is how they serve it, and you have none, which costs the dish nothing.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 11,
+      "text": "Roughly 131 g of protein across 4 servings, so about 33 g each.",
+      "look": "The arithmetic: 105 g from 500 g of sirloin at 21 g per 100 g, and 26 g from 2 cups of dry rice. The mushrooms and marinade carry a couple of grams between them.This is the highest-protein dish of the week and the only one where the number lands where you would want a dinner to land without adding an egg to it.Keeps 3 to 4 days and reheats better than most rice dishes because it is not dry to begin with. Microwave with a damp paper towel over the bowl.And you still have 500 g of sliced beef in the freezer. It goes straight into a stir-fry with no thawing needed beyond 20 minutes on the counter, which makes the next Aaron and Claire dish a 15-minute job.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "roast",
+      "soy",
+      "oyster",
+      "mirin",
+      "sesameoil",
+      "mushrooms",
+      "greenonion",
+      "yellowonion",
+      "shortgrainrice",
+      "sugar",
+      "garlic",
+      "butter",
+      "stockcube"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

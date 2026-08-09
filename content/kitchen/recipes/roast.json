@@ -1,0 +1,169 @@
+{
+  "id": "roast",
+  "name": "Sirloin Tip Roast",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The one cut here that genuinely needs a thermometer, which you now own. Get it right and it is five dinners of real beef.",
+  "time": {
+    "totalMin": 80,
+    "note": "80 min, mostly waiting"
+  },
+  "serves": {
+    "count": 5,
+    "unit": "serving",
+    "proteinPerUnit": 42
+  },
+  "ingredients": [
+    {
+      "ref": "sirloin_tip_roast",
+      "stock": "roast",
+      "display": "sirloin tip roast, thawed",
+      "qty": 1,
+      "unit": "kg"
+    },
+    {
+      "ref": "vegetable_oil",
+      "display": "vegetable oil",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 2,
+      "unit": "tsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "garlic_powder",
+      "display": "garlic powder",
+      "qty": 1,
+      "unit": "tsp"
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "thermometer",
+    "papertowel",
+    "plates",
+    "oven",
+    "knife_sharp"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "THE NIGHT BEFORE: freezer to fridge, on a plate. A 1 kg roast needs a full 24 hours, so two nights is safer than one.",
+      "uses": [
+        "sirloin_tip_roast"
+      ],
+      "equipment": [
+        "plates"
+      ],
+      "warn": "A roast still frozen in the middle cooks to leather on the outside before the centre is safe. If it is not fully thawed, do something else today.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Take it out of the fridge 45 minutes before cooking and leave it on the counter.",
+      "look": "A fridge-cold centre means the outside overcooks while the middle catches up. Forty-five minutes on the counter is safe for a whole cut of beef, which is not true of ground meat or poultry.",
+      "_inferred": []
+    },
+    {
+      "n": 3,
+      "text": "Oven to 450&deg;F (230&deg;C).",
+      "equipment": [
+        "oven"
+      ],
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Pat it completely dry, rub with 1 tbsp oil, then 2 tsp kosher salt, 1 tsp pepper and 1 tsp garlic powder over every surface.",
+      "uses": [
+        "kosher_salt",
+        "black_pepper",
+        "garlic_powder"
+      ],
+      "look": "Two teaspoons of salt on a kilo of beef sounds like a lot and is correct. Most of it never reaches the middle, it only seasons the crust.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Roast at 450&deg;F for 15 minutes, then without opening the door turn the oven down to 325&deg;F (160&deg;C) and cook 45 to 55 more minutes.",
+      "uses": [
+        "sirloin_tip_roast"
+      ],
+      "equipment": [
+        "oven"
+      ],
+      "minutes": 15,
+      "look": "The 15 hot minutes build the brown crust. The long low stretch cooks the middle gently so it stays pink and tender rather than grey.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Start checking at 45 minutes with the thermometer, in the thickest part.",
+      "equipment": [
+        "thermometer"
+      ],
+      "minutes": 45,
+      "look": "Pull it out at 135&deg;F for medium. It keeps cooking while it rests and will climb to about 145.125&deg;F is rare, 135 medium, 145 medium-well, 155 and up is well done and dry. Sirloin tip is a lean cut with little fat to protect it, so past 145 it turns dry and chewy and there is no undoing it.",
+      "warn": "This is the step the thermometer exists for. There is no reliable visual cue for the inside of a roast, and cutting it open to look is how you lose all the juice.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Rest it 15 minutes before slicing. Cover loosely with foil or an upturned plate.",
+      "equipment": [
+        "plates"
+      ],
+      "minutes": 15,
+      "look": "Non-negotiable on a roast. Cut it straight away and the juice runs onto the board instead of staying in the meat. Fifteen minutes is not optional, it is part of the cooking.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Slice thinly, across the grain, and eat.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Look at the meat: you will see fibres running in one direction. Cut at 90 degrees to them, so each slice has short fibres rather than long ones. Same meat, completely different tenderness. Sliced with the grain, a lean roast is chewy no matter how well you cooked it.Roughly 210 g of protein in the kilo, so about 42 g per serving across 5.Keeps 3 to 4 days. Slices reheat badly, so eat it cold in sandwiches or warm it gently in a pan with 1 tbsp of water.",
+      "_inferred": [
+        "equipment"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "roast",
+      "oil",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

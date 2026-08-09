@@ -1,0 +1,146 @@
+{
+  "id": "quarters",
+  "name": "Roast Chicken Leg Quarters",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The most forgiving meat in the kitchen. Leg meat has fat running through it, so unlike breast it does not dry out if you leave it in too long.",
+  "time": {
+    "totalMin": 55,
+    "note": "55 min, mostly waiting"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "quarter",
+    "proteinPerUnit": 38
+  },
+  "ingredients": [
+    {
+      "ref": "chicken_leg_quarters",
+      "stock": "quarters",
+      "display": "chicken leg quarters, thawed",
+      "qty": 4,
+      "unit": "each"
+    },
+    {
+      "ref": "vegetable_oil",
+      "display": "vegetable oil",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "keg_bbq_chicken_seasoning",
+      "stock": "seasoning",
+      "display": "The Keg BBQ chicken seasoning, or paprika + garlic powder",
+      "qty": 2,
+      "unit": "tsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp"
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "thermometer",
+    "parchment",
+    "papertowel",
+    "plates",
+    "oven"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "THE NIGHT BEFORE: move the quarters from the freezer to the fridge on a plate.",
+      "uses": [
+        "chicken_leg_quarters"
+      ],
+      "equipment": [
+        "plates"
+      ],
+      "look": "They need roughly 12 hours to thaw. A plate underneath catches the liquid that comes out, which you do not want running around a fridge shelf.",
+      "warn": "Never thaw meat on the counter. The outside sits in the bacterial danger zone for hours while the middle is still frozen.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Oven to 425&deg;F (220&deg;C). Line a tray with parchment.",
+      "equipment": [
+        "oven",
+        "bakingtray",
+        "parchment"
+      ],
+      "look": "Hotter than most roasting. Chicken skin needs real heat to render its fat and crisp. At 350 it goes pale and rubbery instead.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Pat every quarter completely dry with paper towel, all over, especially the skin.",
+      "equipment": [
+        "papertowel"
+      ],
+      "look": "Do not rush this. Wet skin steams and stays flabby. Dry skin crisps. This is the single step that decides whether the skin is good.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Rub 1 tbsp of oil over them, then season with 1 tsp kosher salt, 2 tsp of seasoning and 1/2 tsp black pepper, top and bottom.",
+      "uses": [
+        "kosher_salt",
+        "keg_bbq_chicken_seasoning",
+        "black_pepper"
+      ],
+      "look": "Get some under the skin if it lifts easily at the edge. Skin blocks seasoning from reaching the meat, so anything sitting on top only flavours the skin itself.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Skin side up on the tray, spaced apart. Roast 40 to 45 minutes.",
+      "equipment": [
+        "bakingtray"
+      ],
+      "minutes": 42,
+      "look": "Space matters: quarters touching each other steam where they touch. Do not turn them, do not open the oven for the first 30 minutes.Done at 175&deg;F in the thickest part of the thigh, not touching bone. Dark meat wants 175, higher than the 165 for breast, because the connective tissue in a leg needs the extra heat to soften.",
+      "warn": "If the skin is browning too fast at 30 minutes, that is fine, keep going. Dark skin on a leg quarter is flavour, not burning. Trust the thermometer over the colour.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Rest 5 minutes, then eat.",
+      "minutes": 5,
+      "look": "Roughly 38 g of protein per quarter: ~170 g across 4.5 quarters in a 1.5 kg pack, bone-in weight, so the edible meat is less than the pack weight suggests.Leftovers keep 3 to 4 days. Pull the meat off the bones before refrigerating, it takes half the space and you will actually use it.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "quarters",
+      "oil",
+      "seasoning"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

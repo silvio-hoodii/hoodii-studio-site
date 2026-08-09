@@ -1,0 +1,163 @@
+{
+  "id": "pasta",
+  "name": "Protein Pasta with Bolognese",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The weeknight payoff for making the bolognese. Nearly two kilos of protein pasta have been sitting unused.",
+  "time": {
+    "totalMin": 15,
+    "note": "15 min"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "plate",
+    "proteinPerUnit": 63
+  },
+  "ingredients": [
+    {
+      "ref": "protein_pasta",
+      "stock": "pasta",
+      "display": "protein pasta, dry (about 1/4 of a 500 g pack)",
+      "qty": 100,
+      "unit": "g"
+    },
+    {
+      "ref": "frozen_bolognese",
+      "stock": "bolognese",
+      "display": "frozen bolognese, or one from the fridge",
+      "qty": 1,
+      "unit": "bag",
+      "frozenOk": true
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt, for the water",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "grated_parmesan",
+      "display": "grated parmesan, a handful of arugula",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "pot_medium",
+    "colander",
+    "bowlset",
+    "stovetop",
+    "pan_nonstick_large"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "If the bolognese is frozen, move it from the freezer to the fridge the night before. In a hurry, sit the sealed bag in a bowl of cold water for 30 minutes.",
+      "uses": [
+        "frozen_bolognese"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "warn": "Never thaw a sealed bag in hot water, and never in the microwave still in the bag.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Fill a pot with water, add 1 tsp of kosher salt, and bring to a rolling boil on high.",
+      "uses": [
+        "kosher_salt"
+      ],
+      "equipment": [
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 8,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "A rolling boil is big bubbles breaking the whole surface continuously, not a few lazy ones at the edge. Pasta dropped into water that is not properly boiling goes gluey.The salt seasons the pasta itself, which is the only chance you get. Unsalted pasta tastes of nothing no matter how good the sauce is.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Add 100 g of pasta. Stir once so it does not stick, then cook for the time on the pack, usually 10 to 11 minutes.",
+      "uses": [
+        "protein_pasta"
+      ],
+      "minutes": 10,
+      "look": "100 g dry is about a quarter of the pack, or a bundle of spaghetti roughly the diameter of a one-dollar coin.Taste a piece a minute before the pack time. It should be tender with the faintest firmness left in the middle. Protein pasta goes from firm to mushy faster than regular pasta, so check early.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "While it cooks, warm the bolognese in a small pan on medium-low, stirring now and then.",
+      "uses": [
+        "frozen_bolognese"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Add water 1 tbsp at a time if it looks thick, stirring after each one. Frozen sauce always thickens.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Drain the pasta in the colander, tip it into the sauce, and stir for 30 seconds over the heat.",
+      "uses": [
+        "protein_pasta"
+      ],
+      "equipment": [
+        "colander"
+      ],
+      "look": "Finishing the pasta in the pan rather than pouring sauce on top is what makes sauce actually cling to it. Thirty seconds is enough.",
+      "warn": "Careful pouring boiling water. Tip the pot away from you so the steam goes the other way.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Parmesan and a handful of arugula on top if you have them. Eat.",
+      "uses": [
+        "grated_parmesan"
+      ],
+      "look": "Arugula wilts into the heat and is one of the few reliable ways to use it up.Roughly 63 g of protein: 19 g from 100 g of dry Garofalo (off the pack) plus ~44 g in a bolognese portion.",
+      "_inferred": [
+        "uses"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "pasta",
+      "bolognese"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "id": "chicken",
+  "name": "Air Fryer Chicken Breast",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Six dinners of plain protein. Season the two batches differently so the week does not taste identical.",
+  "time": {
+    "totalMin": 35,
+    "note": "35 min"
+  },
+  "serves": {
+    "count": 6,
+    "unit": "portion",
+    "proteinPerUnit": 60
+  },
+  "ingredients": [
+    {
+      "ref": "chicken_breast",
+      "stock": "chickenbreast",
+      "display": "chicken breast (the whole pack, done in 2 batches)",
+      "qty": 1.6,
+      "unit": "kg"
+    },
+    {
+      "ref": "mayonnaise",
+      "stock": "mayo",
+      "display": "mayonnaise",
+      "_rawQty": "~1 tsp each"
+    },
+    {
+      "ref": "cajun_seasoning",
+      "stock": "seasoning",
+      "display": "Cajun seasoning, for batch 1",
+      "qty": 1,
+      "unit": "tsp each"
+    },
+    {
+      "ref": "keg_bbq_chicken_seasoning",
+      "stock": "seasoning",
+      "display": "The Keg BBQ chicken seasoning, for batch 2",
+      "qty": 1,
+      "unit": "tsp each"
+    }
+  ],
+  "equipment": [
+    "airfryer",
+    "knife_sharp",
+    "freezerbag_large",
+    "thermometer",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Take the chicken out of the packaging. You are going to do this in 2 batches, because a crowded air fryer steams the chicken instead of roasting it.",
+      "uses": [
+        "chicken_breast",
+        "keg_bbq_chicken_seasoning"
+      ],
+      "equipment": [
+        "airfryer"
+      ],
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Butterfly any breast thicker than about 3 cm.",
+      "uses": [
+        "chicken_breast"
+      ],
+      "look": "Lay the breast flat. Put your palm on top to hold it steady. Slice horizontally through the middle, parallel to the counter, stopping just before you cut all the way through. Then open it out like a book.",
+      "warn": "This matters more than it sounds. A breast that is 4 cm at one end and 1 cm at the other is either raw in the middle or dry at the tip. There is no cooking time that fixes uneven thickness.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Smear about 1 tsp of mayonnaise over each piece, split between both sides.",
+      "uses": [
+        "mayonnaise"
+      ],
+      "look": "A teaspoon is a blob about the size of a grape. You want a thin sheen that covers the surface, not a coating you can see sitting on top.It sounds strange and it works. Mayonnaise is mostly oil and egg. It stops the surface drying out and it gives the seasoning something to stick to. It does not taste like mayonnaise afterwards.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Season the first batch all over with Cajun seasoning, roughly 1 teaspoon per breast, both sides.",
+      "uses": [
+        "chicken_breast",
+        "cajun_seasoning",
+        "keg_bbq_chicken_seasoning"
+      ],
+      "look": "That will look like more than you expect. Most of it ends up on the outside of a thick piece of meat, so a light dusting tastes like nothing once you cut into it.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Air fryer at 375&deg;F (190&deg;C) for 10 minutes.",
+      "equipment": [
+        "airfryer"
+      ],
+      "minutes": 10,
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Flip each piece and cook 8 to 10 more minutes, then check with the thermometer.",
+      "equipment": [
+        "thermometer"
+      ],
+      "minutes": 9,
+      "look": "Push the probe into the thickest part of the biggest piece, about halfway down, not touching the tray. 165&deg;F (74&deg;C) and it is done. Under that, put it back for 2 minutes and check again.Take it off the moment it reads 165. Every degree past that is moisture leaving the meat.",
+      "warn": "You own a thermometer now, so stop cutting into pieces to look for pink. Cutting lets the juice out of the one piece you were checking, and \"no pink\" happens well before and well after 165, so it never told you much anyway.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Move it to a plate and leave it for 5 minutes before cutting.",
+      "equipment": [
+        "plates"
+      ],
+      "minutes": 5,
+      "look": "Resting lets the juices settle back through the meat. Cut into it immediately and the juice runs out onto the board instead of staying in the chicken.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Repeat the whole thing for batch 2, using The Keg BBQ chicken seasoning instead.",
+      "uses": [
+        "chicken_breast",
+        "cajun_seasoning",
+        "keg_bbq_chicken_seasoning"
+      ],
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Put half in the fridge for the next 3 days, and slice the other half into a freezer bag.",
+      "equipment": [
+        "knife_sharp",
+        "freezerbag_large"
+      ],
+      "look": "Cooked chicken keeps 3 to 4 days refrigerated, no longer. Slicing before freezing means you can pull out one portion instead of chiselling a block apart.",
+      "_inferred": [
+        "equipment"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "chickenbreast",
+      "mayo",
+      "seasoning"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

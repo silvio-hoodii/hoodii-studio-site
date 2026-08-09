@@ -1,0 +1,89 @@
+{
+  "id": "smoothie",
+  "name": "Mango Strawberry Smoothie",
+  "build": "2026-08-09-migrated",
+  "form": "assembly",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "You have 3.5 kg of frozen mango and strawberries and nothing was using them. This is the fastest way through that pile.",
+  "time": {
+    "totalMin": 3,
+    "note": "3 min"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "glass",
+    "proteinPerUnit": 33
+  },
+  "ingredients": [
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "milk",
+      "qty": 250,
+      "unit": "ml"
+    },
+    {
+      "ref": "whey",
+      "stock": "whey",
+      "display": "whey (vanilla)",
+      "qty": 1,
+      "unit": "scoop"
+    },
+    {
+      "ref": "frozen_mango_and_strawberrie",
+      "stock": "fruit",
+      "display": "frozen mango and strawberries, mixed",
+      "qty": 1,
+      "unit": "cup",
+      "frozenOk": true
+    },
+    {
+      "ref": "2_tbsp_greek_yogurt_for_thic",
+      "display": "2 tbsp Greek yogurt for thickness",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "blender_bullet"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Milk in first, then the whey, then the frozen fruit on top.",
+      "uses": [
+        "milk",
+        "whey",
+        "frozen_mango_and_strawberrie"
+      ],
+      "look": "Liquid first, always. Powder on the bottom cakes against the blades into a dry lump that never mixes.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Blend 45 seconds.",
+      "minutes": 1,
+      "look": "Longer than the berry shake, because mango chunks are bigger and denser than berries. Done when there are no visible lumps and it pours rather than plops.If the blender stalls and the fruit just spins above the blades, add 50 ml more milk. Too thick to circulate is the only failure mode here.",
+      "_inferred": []
+    },
+    {
+      "n": 3,
+      "text": "Drink it.",
+      "look": "Roughly 33 g of protein: 24 g whey, 8 g from 250 ml of milk, ~1 g fruit. Two tablespoons of Greek yogurt adds another 2 g and makes it noticeably thicker.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "milk",
+      "whey",
+      "fruit"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

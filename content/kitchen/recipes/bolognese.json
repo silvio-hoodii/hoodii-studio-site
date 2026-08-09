@@ -1,0 +1,251 @@
+{
+  "id": "bolognese",
+  "name": "Big-Batch Bolognese",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Makes 5 portions and freezes perfectly. Turns the protein pasta into instant dinners all week.",
+  "time": {
+    "totalMin": 75,
+    "note": "75 min, mostly waiting"
+  },
+  "serves": {
+    "count": 5,
+    "unit": "portion",
+    "proteinPerUnit": 44
+  },
+  "ingredients": [
+    {
+      "ref": "ground_beef",
+      "stock": "beef",
+      "display": "ground beef",
+      "qty": 1.3,
+      "unit": "kg"
+    },
+    {
+      "ref": "tomato_sauce",
+      "display": "tomato sauce",
+      "qty": 2,
+      "unit": "cans"
+    },
+    {
+      "ref": "frozen_onion",
+      "stock": "frozenveg",
+      "display": "frozen onion",
+      "qty": 1.5,
+      "unit": "cups",
+      "frozenOk": true
+    },
+    {
+      "ref": "frozen_carrot",
+      "stock": "frozenveg",
+      "display": "frozen carrot",
+      "qty": 0.75,
+      "unit": "cup",
+      "frozenOk": true
+    },
+    {
+      "ref": "frozen_celery",
+      "stock": "frozenveg",
+      "display": "frozen celery",
+      "qty": 0.75,
+      "unit": "cup",
+      "frozenOk": true
+    },
+    {
+      "ref": "vegetable_oil",
+      "stock": "frozenveg",
+      "display": "vegetable oil",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "jarred_minced_garlic",
+      "stock": "garlic",
+      "display": "jarred minced garlic",
+      "qty": 1,
+      "unit": "tbsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "italian_seasoning",
+      "display": "Italian seasoning",
+      "qty": 1,
+      "unit": "tbsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "salt",
+      "display": "salt, plus more later",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "crushed_red_pepper",
+      "display": "crushed red pepper, optional",
+      "qty": 0.5,
+      "unit": "tsp",
+      "section": "seasoning"
+    }
+  ],
+  "equipment": [
+    "pot_medium",
+    "woodenspoon",
+    "freezerbag_large",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put your largest pot on the stove, empty and dry, and turn the heat to medium-high. Let it sit for 2 to 3 minutes before anything goes in.",
+      "equipment": [
+        "pot_medium",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "On a dial marked 1 to 10, medium-high is about 7. On a dial marked Lo to Hi, it is just past the middle.Use stainless steel for this, not non-stick. You want the meat to stick a little and leave brown crust on the base. That crust is the flavour of the whole sauce and non-stick cannot make it.How to tell it is hot enough: flick a few drops of water into the empty pot. If they hiss and vanish, it is not ready. When they gather into a bead that rolls around like mercury, it is. Preheating properly is the single thing that stops food welding itself to stainless.",
+      "warn": "Do the water test now, while the pot is dry. Once the oil is in, water spits back at you. Test first, oil second.",
+      "_inferred": [
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Add 1 tablespoon of vegetable oil and wait about 2 minutes.",
+      "uses": [
+        "vegetable_oil"
+      ],
+      "look": "Ready when the oil has thinned out and slides around like water as you tilt the pot, and the surface shimmers slightly, a faint ripple moving across it. Cold oil sits in a thick lazy puddle and does not move much.Do not flick water in to test it. Water hits hot oil and spits back at you.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Add all the ground beef. Break it into 4 or 5 big chunks with a wooden spoon, then do not touch it for 4 minutes.",
+      "uses": [
+        "ground_beef"
+      ],
+      "equipment": [
+        "woodenspoon"
+      ],
+      "minutes": 4,
+      "look": "This is what \"browning\" means, and it is the whole reason this sauce tastes like anything. You are letting the surface of the meat sit against hot metal until it turns deep brown. That browning creates flavour that simply does not exist otherwise.",
+      "warn": "The instinct is to stir constantly. Do not. Stirring keeps the meat cool, it releases water, and then it boils in its own juice and turns grey. Grey meat is safe to eat and tastes of almost nothing. Leave it alone.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Now flip the chunks over and break them into smaller pieces. Cook 4 more minutes, stirring only once or twice.",
+      "minutes": 4,
+      "look": "Done when most of the meat is genuinely brown rather than pink or grey, and there are crusty dark brown bits stuck to the bottom of the pot. Those stuck bits are concentrated flavour. Leave them there, they come off in the next step.",
+      "_inferred": []
+    },
+    {
+      "n": 5,
+      "text": "Add 1.5 cups of frozen onion and 3/4 cup each of frozen carrot and celery, straight from the freezer.",
+      "uses": [
+        "frozen_onion",
+        "frozen_carrot",
+        "frozen_celery"
+      ],
+      "look": "None of these amounts are critical, anywhere close is fine. A cup is roughly a cupped handful if you are eyeballing it.They will hiss and release a lot of water. That is exactly what you want. As the water bubbles it dissolves the brown crust off the bottom of the pot and puts that flavour into the sauce.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Stir and cook for about 5 minutes.",
+      "minutes": 5,
+      "look": "Done when the water the vegetables released has mostly boiled away and the bottom of the pot is clean, with the onion soft and translucent rather than white.",
+      "_inferred": []
+    },
+    {
+      "n": 7,
+      "text": "Add 2 cans of tomato sauce, 1 tbsp jarred garlic, 1 tbsp Italian seasoning, 1 tsp salt, 1/2 tsp black pepper, and the crushed red pepper if you want a little heat. Stir.",
+      "uses": [
+        "tomato_sauce",
+        "jarred_minced_garlic",
+        "italian_seasoning",
+        "salt",
+        "black_pepper",
+        "crushed_red_pepper"
+      ],
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Turn the heat down to low, rest the lid on top slightly off to one side so steam can escape, and leave it for 45 minutes.",
+      "minutes": 45,
+      "look": "A simmer means barely bubbling, roughly one lazy bloop every second or two. If it is bubbling hard and spitting, the heat is too high, turn it down. Nothing bad happens if you ignore it for the whole 45 minutes.",
+      "_inferred": []
+    },
+    {
+      "n": 9,
+      "text": "Optional, around halfway through: stir in 2 or 3 handfuls of the frozen American Blend lettuce.",
+      "uses": [
+        "frozen_onion",
+        "frozen_carrot",
+        "frozen_celery"
+      ],
+      "look": "It vanishes completely into the sauce within about 15 minutes. You will not find it in the finished dish. This is the easiest way to use up a bag that cannot be salad any more.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Turn off the heat. Taste a spoonful, carefully, it is very hot.",
+      "look": "If it tastes like tomato but somehow flat and dull, it needs salt. Add 1/4 tsp, stir, wait a few seconds, taste again. Repeat until it stops tasting flat and starts tasting like sauce. Salt is almost always what an underwhelming sauce is missing.",
+      "_inferred": []
+    },
+    {
+      "n": 11,
+      "text": "Let it cool on the counter for about 30 minutes before bagging it.",
+      "warn": "Do not put a hot pot of sauce into the freezer. It raises the temperature inside and partly thaws everything around it, which is genuinely a food safety problem for the meat stored next to it.",
+      "_inferred": []
+    },
+    {
+      "n": 12,
+      "text": "Divide into 5 ziplock bags. Put 2 in the fridge and lay 3 flat in the freezer.",
+      "equipment": [
+        "freezerbag_large"
+      ],
+      "look": "Freeze them lying flat rather than standing up. Flat bags stack neatly and thaw in a fraction of the time because there is more surface area.",
+      "_inferred": [
+        "equipment"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "frozenveg",
+      "oil",
+      "garlic"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

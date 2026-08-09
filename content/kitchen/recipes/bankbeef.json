@@ -1,0 +1,126 @@
+{
+  "id": "bankbeef",
+  "name": "Slice the Roast and Bank the Beef",
+  "build": "2026-08-09-migrated",
+  "form": "method",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Nothing in your fridge is spoiling tonight, and this is not a cooking job. It is fifteen minutes of actual work that takes the deadline off everything else. One bag of cooked beef is stuck behind an ingredient you do not have, and the roast has gone too soft to slice. Both get solved by moving them, not by cooking them. After this, nothing in the fridge is on a clock except the peppers.",
+  "time": {
+    "totalMin": 50,
+    "note": "50 min, 35 of it waiting"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "session",
+    "proteinPerUnit": 0
+  },
+  "ingredients": [
+    {
+      "ref": "sirloin_tip_roast",
+      "stock": "roast",
+      "display": "the sirloin tip roast, from the fridge",
+      "qty": 1,
+      "unit": "each"
+    }
+  ],
+  "equipment": [
+    "knife_sharp",
+    "cuttingboard",
+    "scale_digital",
+    "bakingtray",
+    "sharpie"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "All three bags of cooked beef stay in the fridge. You are not freezing any of them. This session is only about the roast.",
+      "uses": [
+        "sirloin_tip_roast"
+      ],
+      "look": "Why that is worth saying out loud. The first version of this plan had you freeze the Arroz Tapado bag, because the app was treating the missing cumin as a wall. It is not a wall. A teaspoon more sweet paprika and half a teaspoon more vinegar get you most of the way there, the dish is still a good dish, and that is written into step 1 of Arroz Tapado.So all three bags have a night: Mongolian whenever you want something in twenty minutes, Stuffed Peppers on Thursday because the peppers die Thursday, Arroz Tapado on Friday. Three bags, three dishes, and the last one lands on the last good day.If a night gets away from you, freeze whatever is left on Friday morning rather than now. Cooked beef freezes just as well on day four as on day one, and freezing early costs you a dinner you would rather have eaten.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Put the whole roast in the freezer, uncovered on a tray or still in its packaging, and set a timer for 40 minutes.",
+      "uses": [
+        "sirloin_tip_roast"
+      ],
+      "equipment": [
+        "bakingtray"
+      ],
+      "minutes": 40,
+      "look": "This is not refreezing it. It is stiffening the outside so you can cut it.The recipe wanted this sliced while still half frozen, and it has now been in the fridge about 27 hours, so it is thawed all the way through and soft. A soft roast squashes away from the knife instead of being cut by it, and you end up with thick, ragged, uneven pieces. Thin even slices are the whole point of bulgogi: they cook in about a minute and stay tender.Forty minutes freezes roughly the outer centimetre. That is exactly the layer your knife is working through at any moment, so it is all you need.It is completely safe. Meat thawed in a fridge, which is what this was, can be refrozen. Meat thawed on a counter cannot. Yours was in the fridge the whole time.",
+      "warn": "Do not leave it in overnight. Frozen solid it is harder to cut than soft, not easier, and you would be starting over tomorrow. Set the timer.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "While you wait, there is nothing to do here. Come back when the timer goes.",
+      "look": "If you want to use the time: the arugula is at the end of its life today and the only thing in the app that uses it needs the tilapia thawed, so the honest answer is to eat it as a side salad tonight rather than build a dish around it. Olive oil, a squeeze of lemon, salt. That is a real thing to do with it and it takes two minutes.Otherwise leave it. The next step is fifteen minutes of knife work and it is easier when you are not rushing.",
+      "_inferred": []
+    },
+    {
+      "n": 4,
+      "text": "Take the roast out. Press it with your thumb in the middle of the widest face.",
+      "uses": [
+        "sirloin_tip_roast"
+      ],
+      "look": "Ready: it gives slightly, like pressing the palm of your hand just below the thumb, and there is clear resistance under the surface. The outside feels cold and taut.Not ready: your thumb sinks in easily and it feels like pressing your cheek. Put it back for 15 more minutes and test again.Too far: it does not give at all and feels like pressing the counter. Leave it on the board for 15 minutes and test again. This is recoverable and costs you nothing but time.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Find which way the grain runs, then cut across it into slices about 2 to 3 mm thick. Keep the slices in a pile as you go.",
+      "look": "The grain is the direction of the muscle fibres, and you can see it: fine parallel lines running the length of the meat, like the grain in a plank of wood. You want your knife crossing those lines at right angles, not running alongside them.This is the single thing that decides whether it is tender. Cut with the grain and every slice is a bundle of long fibres you have to chew through. Cut across it and those same fibres are cut into short pieces that fall apart in your mouth. Same animal, same cut, completely different result.2 to 3 mm is about the thickness of a $1 coin. Thinner is better than thicker here. If they come out uneven that is fine and normal, and nobody will be able to tell once it is cooked.Long strokes, and let the knife do it. Draw the blade back towards you through the whole cut rather than pressing down. Pressing is what tears meat.",
+      "warn": "Curl the fingertips of your holding hand under, so your knuckles face the blade and your nails do not. The side of the knife rests against your knuckles and cannot reach your fingertips. This is the grip that makes fast cutting safe, and it is worth using from the first slice rather than the tenth.",
+      "_inferred": []
+    },
+    {
+      "n": 6,
+      "text": "Put the two large freezer bags on the scale and weigh 500 g of slices into each one. Press each bag flat so the slices are in a single layer, push the air out, and seal it.",
+      "equipment": [
+        "scale_digital"
+      ],
+      "look": "The whole kilo is going in the freezer, both halves. That is a change from the original plan, which kept half in the fridge, and the reason is that sliced beef is not a roast: cutting it into 2 mm pieces multiplies its surface area, so it goes off in 1 to 2 days where the whole roast kept 3 to 5. Half in the fridge would just be a new deadline, on top of the two cooked bags you already have to get through this week.Flat is not tidiness, it is the point. A flat bag of slices freezes through in under an hour and thaws in about 20 minutes under cold water, or goes into a hot pan nearly straight from the freezer. A lump thaws in half a day and you are back to planning ahead.Exact grams do not matter. If one bag is 520 g and the other 480 g, both are one dinner.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Label both bags Bulgogi, sliced, 5 Aug and put them in the freezer.",
+      "equipment": [
+        "sharpie"
+      ],
+      "look": "Three months, and sliced beef loses less in the freezer than most things because there is no bone and no liquid to separate out.Two bags rather than one because Beef Bulgogi and Mushroom Pot Rice uses 500 g. One bag is one dinner, which means you never thaw more than you are about to cook, which is the whole reason for splitting it now while it is already in your hands.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Done. Fifteen minutes of work and nothing in your kitchen is wasting.",
+      "look": "In the freezer: two bags of sliced raw beef, one dinner each, 3 months.Still in the fridge, all three bags of cooked beef, all good until Friday:Mongolian Ground Beef, 20 min, the 200 g bag. The fastest thing in the app and the obvious answer on a night you do not want to cook. Tonight if you are hungry.Stuffed Peppers, 55 min, a 250 g bag. Thursday, because your two red peppers are done Thursday and this is the only dish that eats them.Arroz Tapado, 70 min, the last 250 g bag. Friday. No cumin and you are making it anyway; step 1 tells you the two things to add instead.Three bags, three dinners, three days. Nothing gets thrown out and nothing gets frozen just because one jar did not turn up.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "roast"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

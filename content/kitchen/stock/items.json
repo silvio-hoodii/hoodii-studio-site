@@ -1,0 +1,492 @@
+{
+  "_": "Generated once by migrate-stock.mjs from the HAVE / USEFIRST / SHOP / ING_NAME tables that used to live in kitchen.html. From here this file is the SEED and stock/events.jsonl is what actually moves. Do not hand-edit a state: append an event instead, or the next fold will overwrite you.",
+  "seeded": "2026-08-05T02:20:51.749Z",
+  "states": {
+    "have": "in the kitchen and usable now",
+    "low": "usable now, but running out",
+    "out": "had it, finished it",
+    "none": "never owned it",
+    "frozen": "owned, in the freezer, not edible tonight without a thaw"
+  },
+  "items": {
+    "eggs": {
+      "n": "eggs",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "butter": {
+      "n": "butter",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "milk": {
+      "n": "milk",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "whey": {
+      "n": "whey",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "oats": {
+      "n": "oats",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "honey": {
+      "n": "honey",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "cocoa": {
+      "n": "cocoa",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "peanutbutter": {
+      "n": "peanut butter",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "mayo": {
+      "n": "mayo",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "oil": {
+      "n": "cooking oil",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "vinegar": {
+      "n": "vinegar",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "salt": {
+      "n": "salt",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "seasoning": {
+      "n": "spice rack",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "garlic": {
+      "n": "garlic",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "flour": {
+      "n": "flour",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "yeast": {
+      "n": "yeast",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "sugar": {
+      "n": "white sugar",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "pasta": {
+      "n": "pasta",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "rice": {
+      "n": "instant rice",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "lentils": {
+      "n": "lentils",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "jars": {
+      "n": "mason jars",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "onion": {
+      "n": "a red onion",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "lemon": {
+      "n": "lemon juice",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "capers": {
+      "n": "capers",
+      "state": "none",
+      "where": "fridge",
+      "buy": {
+        "price": null,
+        "zone": "Pantry and canned goods",
+        "walk": "Middle aisles. Olives, pickles and canned vegetables usually share a run",
+        "hunt": true,
+        "n": "Capers, 1 small jar (NOT AT WALMART)",
+        "s": "CONFIRMED 2026-08-04: Walmart does not carry these in a normal jar size, so it was never possible to add them to the order. Piccata stays blocked until they come from somewhere else. Try an Italian deli, a Superstore or Co-op, or any Latin grocer. A 90 to 100 mL jar keeps months in the fridge once opened. Do not put this back on a Walmart list, it is not there"
+      },
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "stock": {
+      "n": "chicken stock",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "longgrainrice": {
+      "n": "long grain rice",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "cumin": {
+      "n": "cumin",
+      "state": "none",
+      "where": "pantry",
+      "buy": {
+        "price": 2.27,
+        "zone": "Spices and baking",
+        "walk": "Baking aisle, near the flour and sugar",
+        "n": "Ground cumin",
+        "s": "WALMART MARKED THIS UNAVAILABLE on the Aug 4 delivery, so it is the one thing from that order you do not have. Every Peruvian source for the arroz tapado uses it and your spice rack has nothing that stands in for it. The dish still works without it, just flatter, and the app tells you how to compensate. $2.27, and any grocery or corner store has it, so do not wait for another Walmart order"
+      },
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "smokedpaprika": {
+      "n": "smoked paprika",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "tomatopaste": {
+      "n": "tomato paste",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "raisins": {
+      "n": "raisins",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "olives": {
+      "n": "black olives",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "soy": {
+      "n": "soy sauce",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "mirin": {
+      "n": "mirin",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "sesameoil": {
+      "n": "sesame oil",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "greenonion": {
+      "n": "green onions",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "yellowonion": {
+      "n": "yellow onions",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "oyster": {
+      "n": "oyster sauce",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "cornstarch": {
+      "n": "cornstarch",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "shaoxing": {
+      "n": "Shaoxing wine",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "ginger": {
+      "n": "fresh ginger",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "mushrooms": {
+      "n": "mushrooms",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "yogurt": {
+      "n": "Greek yogurt",
+      "state": "have",
+      "where": "fridge",
+      "label": "Greek yogurt, 750 g",
+      "by": "2026-08-16",
+      "note": "Completely untouched since Aug 1. Not urgent, but it is the single biggest unused thing in the fridge and four jars of overnight oats would take 680 g of it.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "mozzarella": {
+      "n": "mozzarella",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "fruit": {
+      "n": "frozen fruit",
+      "state": "have",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "frozenveg": {
+      "n": "frozen vegetables",
+      "state": "have",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "peppers": {
+      "n": "fresh peppers",
+      "state": "have",
+      "where": "fridge",
+      "label": "Red bell peppers, 2",
+      "by": "2026-08-06",
+      "note": "Off the clearance rack, so they were already partway through their life when they arrived. Treat them as days, not the usual fortnight.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "frozenpeppers": {
+      "n": "frozen peppers",
+      "state": "have",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "cucumbers": {
+      "n": "cucumbers",
+      "state": "have",
+      "where": "fridge",
+      "label": "English cucumbers, 2",
+      "by": "2026-08-16",
+      "note": "Pickling turns these into something that lasts a month instead of a fortnight.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "carrots": {
+      "n": "carrots",
+      "state": "have",
+      "where": "fridge",
+      "label": "Baby carrots, 454 g",
+      "by": "2026-08-23",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "sweetpotato": {
+      "n": "sweet potato",
+      "state": "have",
+      "where": "pantry",
+      "label": "Sweet potato, 1 kg",
+      "by": "2026-08-23",
+      "note": "Keep it out of the fridge, somewhere cool and dark. Cold turns its starch to sugar and gives it a hard core that never softens.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "arugula": {
+      "n": "arugula",
+      "state": "have",
+      "where": "fridge",
+      "label": "Arugula, about 120 g",
+      "by": "2026-08-05",
+      "note": "The most perishable thing in the kitchen. Bagged greens turn to slime rather than going obviously off, so there is no warning.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "beef": {
+      "n": "ground beef",
+      "state": "have",
+      "where": "fridge",
+      "label": "Browned beef, 3 bags (700 g)",
+      "by": "2026-08-08",
+      "note": "Cooked and bagged the evening of Aug 4: 250 g, 250 g and 200 g. Browned beef gets 3 to 4 days in the fridge against 1 to 2 raw. Anything you will not cook by Friday goes in the freezer, where it keeps 3 months.",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "groundchickenfrozen": {
+      "n": "frozen ground chicken",
+      "state": "frozen",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "tilapia": {
+      "n": "tilapia",
+      "state": "frozen",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "parmesan": {
+      "n": "parmesan",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "cottagecheese": {
+      "n": "cottage cheese",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "bolognese": {
+      "n": "bolognese sauce",
+      "state": "out",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04",
+      "made": "Big-Batch Bolognese"
+    },
+    "chickenbreast": {
+      "n": "chicken breast",
+      "state": "frozen",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "quarters": {
+      "n": "leg quarters",
+      "state": "frozen",
+      "where": "freezer",
+      "src": "seed",
+      "since": "2026-08-04"
+    },
+    "roast": {
+      "n": "sirloin tip roast",
+      "state": "have",
+      "where": "fridge",
+      "src": "seed",
+      "since": "2026-08-04",
+      "label": "Sirloin tip roast, 1 kg",
+      "for": "bulgogi"
+    },
+    "shortgrainrice": {
+      "n": "short-grain rice",
+      "state": "none",
+      "where": "pantry",
+      "buy": {
+        "n": "Short-grain / sushi rice, 1 bag",
+        "price": 5.77,
+        "zone": "Pantry and canned goods",
+        "walk": "Rice and pasta aisle. Often shelved with international foods",
+        "s": "What Korean pot rice is actually made with. Bulgogi and Mushroom Pot Rice works properly with this and only approximately without it. Price seen on walmart.ca 2026-08-04, range was $5.77 to $18.97, so buy the cheap end. Any bag labelled sushi rice, calrose or short-grain is the right thing."
+      },
+      "src": "seed",
+      "since": "2026-08-06"
+    },
+    "stockcube": {
+      "n": "chicken stock cubes",
+      "state": "have",
+      "where": "pantry",
+      "src": "seed",
+      "since": "2026-08-06"
+    }
+  }
+}

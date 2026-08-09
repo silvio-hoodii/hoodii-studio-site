@@ -1,0 +1,136 @@
+{
+  "id": "tzatziki",
+  "name": "Tzatziki",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "side"
+  ],
+  "why": "A cold garlic and cucumber sauce that turns plain roast chicken into a meal. Uses two things you have too much of.",
+  "time": {
+    "totalMin": 10,
+    "note": "10 min, no cooking"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "batch",
+    "proteinPerUnit": 11
+  },
+  "ingredients": [
+    {
+      "ref": "greek_yogurt",
+      "stock": "yogurt",
+      "display": "Greek yogurt",
+      "qty": 200,
+      "unit": "g"
+    },
+    {
+      "ref": "english_cucumber",
+      "display": "English cucumber",
+      "qty": 0.5,
+      "unit": "each"
+    },
+    {
+      "ref": "garlic_clove",
+      "stock": "garlic",
+      "display": "garlic clove",
+      "qty": 1,
+      "unit": "each"
+    },
+    {
+      "ref": "lemon_juice",
+      "display": "lemon juice",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "1_tbsp_olive_oil",
+      "display": "1 tbsp olive oil",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "slicer_multiblade",
+    "bowlset",
+    "papertowel",
+    "knife_sharp"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Grate half a cucumber using the grating blade on your slicer.",
+      "uses": [
+        "english_cucumber"
+      ],
+      "equipment": [
+        "slicer_multiblade"
+      ],
+      "look": "Skin on is fine and adds colour. You want shreds, not slices.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Squeeze the water out of the grated cucumber. Put it in a fistful of paper towel and wring it hard over the sink.",
+      "uses": [
+        "english_cucumber"
+      ],
+      "equipment": [
+        "slicer_multiblade",
+        "papertowel"
+      ],
+      "look": "You will be surprised how much comes out, easily a few tablespoons. Keep squeezing until it stops dripping.",
+      "warn": "This is the entire difference between tzatziki and a watery mess. Cucumber is about 96% water and all of it ends up in the yogurt if you skip this. Do not skip it.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Grate or finely chop 1 garlic clove and mix everything: 200 g yogurt, the squeezed cucumber, the garlic, 1 tbsp lemon juice, 1/2 tsp kosher salt.",
+      "uses": [
+        "greek_yogurt",
+        "english_cucumber",
+        "garlic_clove",
+        "lemon_juice",
+        "kosher_salt",
+        "1_tbsp_olive_oil"
+      ],
+      "equipment": [
+        "slicer_multiblade",
+        "knife_sharp"
+      ],
+      "look": "One clove is enough. Raw garlic gets stronger as it sits, so what tastes mild now will be assertive tomorrow.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Chill 30 minutes before eating if you can. Keeps 4 days.",
+      "minutes": 30,
+      "look": "It tastes flat straight after mixing and comes together as it sits.About 11 g of protein in the batch, but that is not the point. It is a sauce, and it makes the leg quarters and the roast into something you actually want to eat again on day three.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "yogurt",
+      "cucumbers",
+      "garlic"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

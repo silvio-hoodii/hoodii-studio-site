@@ -1,0 +1,249 @@
+{
+  "id": "stuffedpeppers",
+  "name": "Stuffed Peppers",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "One 250 g bag of the browned beef, and the two bell peppers that have to be used this week. Nothing else on the list eats a fresh pepper as the main event.",
+  "time": {
+    "totalMin": 55,
+    "note": "55 min"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "half",
+    "proteinPerUnit": 18
+  },
+  "ingredients": [
+    {
+      "ref": "fresh_bell_peppers",
+      "stock": "peppers",
+      "display": "fresh bell peppers",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "browned_beef",
+      "stock": "beef",
+      "display": "browned beef, the other bigger bag",
+      "qty": 250,
+      "unit": "g"
+    },
+    {
+      "ref": "cooked_rice",
+      "stock": "rice",
+      "display": "cooked rice (Minute Rice, about 1/3 cup dry)",
+      "qty": 0.75,
+      "unit": "cup"
+    },
+    {
+      "ref": "frozen_onion",
+      "display": "frozen onion",
+      "qty": 0.5,
+      "unit": "cup",
+      "frozenOk": true
+    },
+    {
+      "ref": "tomato_sauce",
+      "display": "tomato sauce",
+      "qty": 0.3333333333333333,
+      "unit": "can"
+    },
+    {
+      "ref": "mozzarella",
+      "display": "mozzarella, grated",
+      "qty": 40,
+      "unit": "g"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "italian_seasoning",
+      "display": "Italian seasoning",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "garlic_powder",
+      "display": "garlic powder",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp",
+      "section": "seasoning"
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "pan_nonstick_large",
+    "parchment",
+    "oven",
+    "stovetop",
+    "slicer_multiblade"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Check the beef first: look, touch, smell. Grey on the outer surface, a tacky film on your finger, or a sour or ammonia smell means bin it.",
+      "uses": [
+        "browned_beef"
+      ],
+      "look": "Brown in the middle of the pack is normal, that is only lack of air. It is the outer surface, the tackiness and the smell that decide.If you already ran this check for the meatballs today, you are done. Move on.",
+      "warn": "Any one of the three failing is enough. Cooking does not rescue meat that has turned.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Oven to 375&deg;F (190&deg;C). Make 3/4 cup of rice per the packet and set it aside.",
+      "uses": [
+        "cooked_rice"
+      ],
+      "equipment": [
+        "oven"
+      ],
+      "minutes": 10,
+      "look": "Minute Rice takes about 10 minutes and can sit happily while you do everything else. A third of a cup of dry rice makes roughly three quarters of a cup cooked.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Cut the 2 peppers in half lengthwise, through the stem. Pull out the white core and all the seeds.",
+      "uses": [
+        "fresh_bell_peppers",
+        "black_pepper"
+      ],
+      "look": "Lengthwise, not across, so each half is a boat that sits flat and holds filling. Cutting through the stem keeps the halves rigid.Run a finger round the inside and flick out any seeds you missed. They are not harmful, they are just bitter.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Pan on medium-high, preheated dry, then 1 tbsp oil. Add the whole bag of browned beef and break it into chunks. Do not touch it for 4 minutes.",
+      "uses": [
+        "browned_beef"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Use a stainless pan and let it stick a little. Those brown bits are flavour, and they come off into the tomato sauce in a moment.Water beads and rolls like mercury in the dry pan when it is hot enough. Test before the oil goes in, never after.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Break it up smaller, add the 1/2 cup of frozen onion, and cook 4 more minutes until no pink is left.",
+      "uses": [
+        "frozen_onion"
+      ],
+      "minutes": 4,
+      "look": "The onion releases water that lifts the brown crust off the pan base. That is exactly what you want.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Turn off the heat. Stir in the cooked rice, 1/3 can of tomato sauce, 1 tsp kosher salt, 1 tsp Italian seasoning, 1 tsp garlic powder and 1/2 tsp black pepper.",
+      "uses": [
+        "cooked_rice",
+        "tomato_sauce",
+        "kosher_salt",
+        "italian_seasoning",
+        "garlic_powder",
+        "black_pepper"
+      ],
+      "look": "It should look like a thick, scoopable filling, not a sauce. If it is sloppy, cook it a minute longer with the heat back on: wet filling makes soggy peppers.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Sit the 4 pepper halves cut side up on a parchment-lined tray and pack the filling in, mounding it slightly.",
+      "uses": [
+        "black_pepper"
+      ],
+      "equipment": [
+        "bakingtray",
+        "parchment"
+      ],
+      "look": "Pack it down so there are no air pockets. Mounded is fine, it shrinks a little as it bakes.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Cover the tray with foil, or upside down with a second tray, and bake 30 minutes.",
+      "equipment": [
+        "bakingtray"
+      ],
+      "minutes": 30,
+      "look": "Covering traps steam, and steam is what actually softens the pepper. Uncovered from the start, the filling dries out long before the pepper is tender.You have three trays now, so an inverted second tray works if you have no foil.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Uncover, scatter the 40 g of grated mozzarella over the tops, and bake 10 more minutes.",
+      "uses": [
+        "mozzarella"
+      ],
+      "equipment": [
+        "slicer_multiblade"
+      ],
+      "minutes": 10,
+      "look": "Done when a knife slides into the side of a pepper with no resistance and the cheese is melted with brown patches. A pepper that still fights the knife needs another 5 minutes covered.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Eat two halves. Keeps 3 to 4 days.",
+      "look": "About 18 g of protein per half: ~60 g from the beef and ~9 g from the mozzarella across 4 halves, plus a little from the rice. Two halves is a 36 g dinner.These reheat better than they freeze. A frozen and thawed pepper goes watery, so keep them in the fridge and eat them this week.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "peppers",
+      "rice"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

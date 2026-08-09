@@ -1,0 +1,238 @@
+{
+  "id": "brownsplit",
+  "name": "Brown the Beef and Split It",
+  "build": "2026-08-09-migrated",
+  "form": "method",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The only job that cannot wait. The 1.3 kg is past the raw window so it has to be cooked today, but nothing says it has to become dinner today. Brown it, split it four ways, and the clock stops: browned beef keeps 3 to 4 days in the fridge and 3 months frozen. Arroz Tapado, Stuffed Peppers, Gyudon and Mongolian Ground Beef all start from what this produces. Everything here is already in your kitchen.",
+  "time": {
+    "totalMin": 55,
+    "note": "55 min, 20 of it waiting"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "batch",
+    "proteinPerUnit": 0
+  },
+  "ingredients": [
+    {
+      "ref": "ground_beef",
+      "stock": "beef",
+      "display": "ground beef, the whole pack",
+      "qty": 1.3,
+      "unit": "kg"
+    },
+    {
+      "ref": "vegetable_or_olive_oil",
+      "display": "vegetable or olive oil",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 2,
+      "unit": "tsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 1,
+      "unit": "tsp"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "pan_stainless_large",
+    "bakingtray",
+    "spatula",
+    "woodenspoon",
+    "plates",
+    "scale_digital",
+    "papertowel",
+    "jars",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Check the beef before you commit 40 minutes to it. Open the pack and do three things: look, touch, smell.",
+      "uses": [
+        "ground_beef"
+      ],
+      "look": "1. Look. Grey or brown in the middle of the pack is completely normal, it is just air not reaching it. Grey or brown across the whole outer surface, where it was bright red, is the warning sign.2. Touch. Draw a clean finger across the surface. Damp is fine. Tacky or slimy is not, and this is the clearest single signal of the three.3. Smell. Put your nose close. Fresh beef smells of almost nothing, faintly metallic or slightly sweet. Sour, or sharp like ammonia, means it is gone.Any one of the three failing is enough. Bin it. Cooking does not rescue meat that has turned: heat kills the bacteria but not everything they have already left behind.",
+      "warn": "There is an absorbent pad under the meat in the tray. Pull it out and throw it away before anything goes in the pan. It is easy to miss under 1.3 kg of mince and it is not food.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Set up before you turn on any heat. Write the four labels on the freezer bags now: Arroz Tapado, Stuffed Peppers, Gyudon, Mongolian, and today's date on each. Leave room for a weight, and do not write one yet. You will weigh the beef after it is cooked and add the number then. Put the baking sheet on the counter. Put the empty jar next to the stove.",
+      "uses": [
+        "ground_beef",
+        "black_pepper"
+      ],
+      "equipment": [
+        "bakingtray",
+        "scale_digital",
+        "jars"
+      ],
+      "look": "Labelling now, not later, is deliberate. At the end you will be tired, the beef will be cooling, and four identical bags of brown mince are genuinely impossible to tell apart by Thursday. Writing on an empty bag takes ten seconds; writing on a full one is awkward and the marker skips.The bag sizes: your medium bags (17.7 x 18.8 cm) are the right ones. They hold 350 g comfortably and lay flat, which matters for the two going in the freezer.If you have no marker, put a strip of paper with the name inside a folded corner of each bag where you can read it through the plastic, or use four different containers you can tell apart and write it down.The jar is for the fat. Medium ground beef gives up a lot of it and it must not go down the sink: it solidifies in the pipe as it cools and that is a real plumbing bill. Pour it in the jar, let it set, and bin the jar.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Your rough timeline, so you can pace it. Total is about 55 minutes, and 20 of those are the beef cooling while you do nothing.",
+      "uses": [
+        "ground_beef"
+      ],
+      "look": "0:00 Pan on the heat, empty and dry0:04 First half of the beef in0:18 First half out onto the plate0:20 Second half in0:34 Everything spread thin on the baking sheet to cool0:52 Weigh, bag, label0:55 Two in the fridge, two in the freezerIf you are short on time, the part you can shorten is the cooling, but not below about 15 minutes. Everything else is fixed by the beef, not by you.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Put the large stainless pan on the burner, empty and dry, on medium-high for 3 minutes. On a dial numbered 1 to 10, medium-high is about 7.",
+      "equipment": [
+        "pan_stainless_large",
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Test it before the oil goes in: flick a few drops of water off your fingers into the pan. Drops that hiss and vanish instantly mean it is not ready yet. A single bead that rolls around the surface like a ball of mercury means it is.That is why the stainless pans have gone unused for so long. Cold stainless is microscopically rough and meat grips it. Hot stainless has expanded and tightened, and food releases on its own.Now add 1 tbsp of oil and swirl it to coat the base. It is ready when it slides like water as you tilt the pan.",
+      "warn": "Water goes into a DRY pan and never into oil. Water hitting hot oil spits back at your face. Test first, oil second, in that order and never reversed.",
+      "_inferred": [
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Add half the beef, about 650 g. Break it into four or five lumps as it goes in, press them flat with the spoon, and then do not touch it for 4 minutes.",
+      "uses": [
+        "ground_beef"
+      ],
+      "minutes": 4,
+      "look": "Half at a time is the single most important decision in this recipe. All 1.3 kg at once cannot sit in one layer, so it releases water faster than the pan can boil it off, and the beef ends up simmering in its own juice. That is how mince comes out uniformly grey.Eyeball the half or put the pack on the scale. It does not need to be exact.Four minutes untouched is where the brown actually happens. Every time you stir, you move cool wet meat onto the hot surface and drop the pan temperature. Leaving it alone lets one face sit against hot metal long enough to form a crust.It will spit. Stand slightly back and to the side rather than directly over it.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Now break it apart with the wooden spoon and keep cooking on medium-high for 6 to 8 more minutes. Add 1 tsp of salt and 1/2 tsp of pepper.",
+      "uses": [
+        "kosher_salt",
+        "black_pepper"
+      ],
+      "equipment": [
+        "woodenspoon"
+      ],
+      "minutes": 8,
+      "look": "Press down and drag with the edge of the spoon rather than stirring in circles. You are chopping the lumps apart, not mixing them.There are two stages here and stopping at the first one is the mistake everyone makes.Stage 1, the pool. The beef floods the pan with grey liquid and it sounds like something boiling, which it is. Nothing is browning yet and nothing can. Water caps the temperature at 100C and browning needs about 150C. Keep the heat up and wait it out. This is 4 to 6 minutes.Stage 2, the fry. The liquid finally goes and the sound changes to something sharper and busier, more like a fry than a boil. Now browning starts. Give it another 3 to 4 minutes here and stir less, letting it sit against the pan between stirs.Done looks like: a good share of the beef carries genuinely dark brown patches rather than being an even grey, and when you tilt the pan no liquid runs to the low edge. Fat running is fine and expected. Watery grey liquid is not.",
+      "warn": "Do not turn the heat down because it is spitting. Lower heat here means the pool never boils off, and you get grey steamed mince, which is exactly what this whole exercise exists to avoid.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Tip the first batch onto the large plate. If there is a pool of fat left in the pan, pour it into the jar. Wipe the pan with a wad of paper towel held in the spoon, add the second 1 tbsp of oil, and let it come back up to heat for 1 minute.",
+      "equipment": [
+        "pan_nonstick_large",
+        "papertowel",
+        "jars",
+        "plates"
+      ],
+      "minutes": 1,
+      "look": "Wipe, do not wash. The pan is hot, running water into it can warp the base, and you want it hot and dry for the second batch anyway.Hold the paper towel with the spoon or tongs rather than your fingers. The pan is around 200C.Any dark brown flecks stuck to the base are flavour and can stay. Only black powdery bits need to come out.",
+      "warn": "Never pour fat down the sink. It is liquid in the pan and solid at room temperature, so it sets inside the pipe. Into the jar, let it harden, then bin the jar.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Cook the second half exactly the same way: in as lumps, flat, 4 minutes untouched, then break up and go 6 to 8 minutes through both stages. Season with the remaining 1 tsp of salt and 1/2 tsp of pepper.",
+      "uses": [
+        "kosher_salt",
+        "black_pepper"
+      ],
+      "minutes": 12,
+      "look": "Same cues as before: pool first, then the sound changes, then the browning.The second batch usually goes faster, because the pan starts hot instead of cold.When it is done, tip the first batch back in and stir the two together for 30 seconds so the seasoning is even across all of it.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Spread all of the beef out thin across one of your rimmed baking trays, right to the edges, in as close to a single layer as you can get. Leave it on the counter 15 to 20 minutes.",
+      "uses": [
+        "ground_beef"
+      ],
+      "minutes": 18,
+      "look": "Which tray: either of the two KitchenAid 9x13 rimmed sheets, or the original. Any of the three works and it does not need lining. Rimmed matters, because there is still some fat moving around in there.This is the step that makes the whole thing fit in an hour. A mound of hot beef holds heat in the middle for the better part of an hour, because only the outside touches air. Spread across a tray it is almost all surface and it drops to fridge-safe in about 15 minutes.This is the standard way to cool any cooked food quickly and it is worth remembering well beyond tonight.Ready when: the back of your hand held just above it feels warm rather than hot, and there is no steam coming off. It does not need to be cold.Nothing to do for these 18 minutes. Wash the pan while you wait: hot water and a bit of soap while it is still warm, and the browned-on bits come away easily.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Weigh ALL of it first, then divide that number by four. That is your portion, and it is the same for all four bags. Press each bag flat and push the air out before sealing.",
+      "equipment": [
+        "scale_digital"
+      ],
+      "look": "Do not use a gram figure from anywhere else, including an older version of this step. Cooked ground beef weighs far less than raw, so any number derived from the 1.3 kg on the package is wrong.Expect somewhere between 700 and 1000 g off a 1.3 kg pack. USDA yield tables put ground beef at 20 to 35% loss browned and drained, and this recipe pushes the high end deliberately: it tells you to cook until no liquid runs, and to pour fat into the jar twice. Both drive off more weight.So one quarter is likely to land somewhere around 175 to 250 g a bag. Whatever your scale says, divided by four, is right.The protein did not go anywhere. Water and fat left; protein did not. All 221 g of it from the 1.3 kg is still in that smaller pile, which just makes the cooked beef denser: about 26 g of protein per 100 g instead of 17. Every dish still hits the protein figure it claims.Put a bag on the scale, press tare so it reads 0 with the bag on, then spoon beef in. If you are 20 g out on any of them it changes nothing.Flat matters for the two going in the freezer. A flat slab thaws in about 20 minutes in cold water; a lump takes hours.",
+      "warn": "Already bagged two at 300 g and run short? That is this mistake, not yours. Tip everything back into one bowl, weigh it, divide by four, and re-bag. Nothing is harmed by being handled twice while it is cool.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 11,
+      "text": "Fridge: Arroz Tapado and Stuffed Peppers. Freezer: Gyudon and Mongolian. Do this before you go anywhere.",
+      "uses": [
+        "black_pepper"
+      ],
+      "look": "Why that split. Stuffed Peppers is on a clock because your two bell peppers are done by Thursday, and Arroz Tapado is the one you most want to cook, so those two stay in the fridge and get eaten inside 3 to 4 days.Gyudon and Mongolian both need things from the Walmart order and neither is urgent, so they freeze. 3 months, and they lose nothing.This is not fussiness about labels. 1.3 kg of beef is roughly 12 servings of finished food and the fridge only buys you 3 or 4 days, so some of it was always going to be frozen. Deciding which now beats finding out on Saturday.",
+      "warn": "Everything is in the fridge or freezer before you leave the house, not when you get back. Cooked meat has a 2 hour limit at room temperature and that clock started when it came off the heat. If you are running late, skip the weighing, put it all in the fridge in one container, and split it when you get home.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 12,
+      "text": "Done. The beef is safe and the pressure is off. Two last things, both about 30 seconds.",
+      "uses": [
+        "ground_beef"
+      ],
+      "look": "1. The sirloin roast. If you want Beef Bulgogi and Mushroom Pot Rice, it should be in the fridge now, not the freezer. It needs about 12 hours, and you slice it while it is still firm in the middle, so check on it tomorrow rather than letting it thaw completely.2. The Walmart order. The only cold things on the list are the cottage cheese and the parmesan. If it is being left at the door while you are out, either drop those two from the order or switch to pickup. Everything else on it is fine sitting for a few hours.When you come back, in whatever order suits you:Stuffed Peppers needs nothing bought and clears the peppers. Arroz Tapado, Gyudon and Mongolian all need the order to have landed. Each of the four tells you at its browning step to skip it, because you just did it here.Nothing to log tonight. The protein counts when you eat one of the four, not now, so it is not counted twice.",
+      "_inferred": [
+        "uses"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "oil",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

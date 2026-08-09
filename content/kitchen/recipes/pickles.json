@@ -1,0 +1,195 @@
+{
+  "id": "pickles",
+  "name": "Quick Refrigerator Pickles",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "side"
+  ],
+  "why": "You asked about pickling and you already own everything. No canning, no boiling jars, no risk. These live in the fridge and you eat them within a month.",
+  "time": {
+    "totalMin": 15,
+    "note": "15 min + 24 h waiting"
+  },
+  "serves": {
+    "count": 2,
+    "unit": "jar",
+    "proteinPerUnit": 0
+  },
+  "ingredients": [
+    {
+      "ref": "english_cucumbers",
+      "stock": "cucumbers",
+      "display": "English cucumbers",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "white_vinegar",
+      "stock": "vinegar",
+      "display": "white vinegar",
+      "qty": 1,
+      "unit": "cup"
+    },
+    {
+      "ref": "water",
+      "display": "water",
+      "qty": 1,
+      "unit": "cup"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "white_sugar",
+      "display": "white sugar",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "garlic_cloves",
+      "stock": "garlic",
+      "display": "garlic cloves",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "black_peppercorns",
+      "display": "black peppercorns, or 1/2 tsp ground pepper",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "1_tsp_crushed_red_pepper",
+      "display": "1 tsp crushed red pepper",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "pot_small",
+    "pot_medium",
+    "knife_sharp",
+    "jars",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Wash 2 jars in hot soapy water and rinse. That is the whole sterilising step.",
+      "uses": [
+        "water"
+      ],
+      "equipment": [
+        "jars"
+      ],
+      "look": "These are refrigerator pickles, not canned ones. They are never sealed and never stored at room temperature, so the boiling-water canning process that makes preserving intimidating simply does not apply.",
+      "warn": "The flip side of that: these must live in the fridge from the moment they are made, and they keep about a month. They are not shelf stable and must never be treated as if they are.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Slice the cucumbers into rounds about 5 mm thick, or into spears if you prefer.",
+      "uses": [
+        "english_cucumbers"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Five millimetres is about the thickness of two stacked coins. Thinner slices go limp, thicker ones stay crunchy but take longer to taste of anything. Your multi-blade slicer does this in seconds and more evenly than a knife.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Peel 3 garlic cloves and crush each one flat under the side of your knife.",
+      "uses": [
+        "garlic_cloves"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Lay the flat of the blade over the clove and press down with your palm until it cracks. The skin then slips off on its own. Crushed rather than chopped: you want the flavour, not garlic pieces in every mouthful.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Put 1 cup vinegar, 1 cup water, 1 tbsp kosher salt and 1 tbsp sugar in a small pot. Heat on medium, stirring, just until the salt and sugar dissolve. Do not boil.",
+      "uses": [
+        "white_vinegar",
+        "water",
+        "kosher_salt",
+        "white_sugar"
+      ],
+      "equipment": [
+        "pot_small",
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "This is the brine. It will look cloudy at first and go clear once everything dissolves, which takes about 2 minutes. That clearing is the signal, not the temperature.The sugar is not there to make them sweet, it balances the sharpness of the vinegar. A tablespoon across two jars is not enough to taste as sweetness.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Pack the cucumber slices into the jars with the garlic, peppercorns and the crushed red pepper if using. Pack them in tightly.",
+      "uses": [
+        "garlic_cloves",
+        "black_peppercorns",
+        "1_tsp_crushed_red_pepper"
+      ],
+      "equipment": [
+        "jars"
+      ],
+      "look": "Tight packing keeps the slices under the brine. Anything floating above the liquid does not pickle and will spoil first.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Pour the warm brine over until everything is completely covered. Let it cool on the counter for about 30 minutes, then lid it and refrigerate.",
+      "minutes": 30,
+      "look": "Cooling before the lid goes on stops condensation collecting under the lid.",
+      "_inferred": []
+    },
+    {
+      "n": 7,
+      "text": "Wait 24 hours before eating. Best after 3 days. Keeps about a month in the fridge.",
+      "look": "They are edible after a few hours but taste like cucumber in vinegar. The flavour needs a day to get into the middle of each slice.Zero protein. This is a crunchy, sharp thing to put next to rich food, and it turns two cucumbers that would otherwise go soft into something that lasts a month.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "cucumbers",
+      "vinegar",
+      "salt",
+      "garlic",
+      "jars"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

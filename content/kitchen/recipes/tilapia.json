@@ -1,0 +1,141 @@
+{
+  "id": "tilapia",
+  "name": "Air Fryer Tilapia",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The fastest real dinner in this kitchen. Frozen fish, straight from the bag, no thawing and no pan to wash.",
+  "time": {
+    "totalMin": 20,
+    "note": "20 min"
+  },
+  "serves": {
+    "count": 2,
+    "unit": "fillet",
+    "proteinPerUnit": 22
+  },
+  "ingredients": [
+    {
+      "ref": "frozen_tilapia_fillets",
+      "stock": "tilapia",
+      "display": "frozen tilapia fillets",
+      "qty": 2,
+      "unit": "each",
+      "frozenOk": true
+    },
+    {
+      "ref": "mayonnaise",
+      "stock": "mayo",
+      "display": "mayonnaise",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "cajun_seasoning",
+      "stock": "seasoning",
+      "display": "Cajun seasoning, or paprika + garlic powder",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 0.25,
+      "unit": "tsp"
+    },
+    {
+      "ref": "lemon",
+      "display": "lemon, or 1 tbsp bottled lemon juice",
+      "qty": 0.5,
+      "unit": "each"
+    },
+    {
+      "ref": "handful_of_arugula",
+      "stock": "seasoning",
+      "display": "a handful of arugula, 1 fresh bell pepper",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "airfryer",
+    "papertowel"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Take 2 fillets straight from the freezer and run them under cold tap water for about 30 seconds to rinse off the frost. Pat them dry with paper towel.",
+      "uses": [
+        "frozen_tilapia_fillets"
+      ],
+      "equipment": [
+        "papertowel"
+      ],
+      "look": "You are not thawing them, only removing the ice glaze that would steam them. They will still be hard and frozen in the middle. That is correct.",
+      "warn": "Cold water only. Warm water starts cooking the outside while the middle is still frozen, which gives you a rubbery edge.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Smear about 1/2 tablespoon of mayonnaise on each fillet, both sides.",
+      "uses": [
+        "mayonnaise"
+      ],
+      "look": "A blob the size of a grape per fillet. Same trick as the chicken: mayonnaise is oil and egg, it stops the surface drying and gives seasoning something to grip. It does not taste like mayonnaise afterwards.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Season both sides with 1 tsp of Cajun seasoning and 1/4 tsp of kosher salt spread across the two fillets.",
+      "uses": [
+        "frozen_tilapia_fillets",
+        "cajun_seasoning",
+        "kosher_salt"
+      ],
+      "look": "Tilapia is a very mild fish. Underseasoned it tastes of almost nothing, so this will look like more seasoning than you expect and it is not.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Air fryer, 400&deg;F, 12 minutes. No flipping.",
+      "equipment": [
+        "airfryer"
+      ],
+      "minutes": 12,
+      "look": "Lay them flat with a gap between them. Crowding steams fish instead of roasting it.Done when the flesh flakes. Press the thickest part with a fork and twist gently: cooked fish separates into distinct white flakes, raw fish stays as one springy piece and looks slightly translucent. If it resists, give it 2 more minutes.With the thermometer: 145&deg;F in the thickest part.",
+      "warn": "Fish goes from done to dry faster than any meat here. Start checking at 10 minutes. There is no recovering an overcooked fillet.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Squeeze half a lemon over the top, or a tablespoon of the bottled juice, and eat.",
+      "uses": [
+        "lemon"
+      ],
+      "look": "Acid is not optional on a mild white fish, it is what makes it taste like something. Serve on a handful of arugula with a sliced bell pepper if you want to use those up.Roughly 44 g of protein: 22 g per 125 g fillet, off the bag.",
+      "_inferred": [
+        "uses"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "tilapia",
+      "mayo",
+      "seasoning"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

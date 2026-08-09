@@ -1,0 +1,243 @@
+{
+  "id": "gyudon",
+  "name": "Ground Beef Gyudon",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "NOT THIS WEEK: the 1.3 kg of beef made three bags, not four, and the other three dishes have them. Everything else for this is bought and the mirin keeps a year, so it is first in line the next time you buy mince. Japanese beef and onion rice bowl, and the easiest real dish in the app: a simmer, nothing to time, nothing to get wrong with heat.",
+  "time": {
+    "totalMin": 20,
+    "note": "20 min"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "bowl",
+    "proteinPerUnit": 25
+  },
+  "ingredients": [
+    {
+      "ref": "browned_beef_the_container_l",
+      "stock": "beef",
+      "display": "browned beef: the container labelled Gyudon, a quarter of what you browned",
+      "qty": 1,
+      "unit": "bag"
+    },
+    {
+      "ref": "yellow_onions",
+      "stock": "yellowonion",
+      "display": "yellow onions",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "green_onions",
+      "stock": "greenonion",
+      "display": "green onions",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "soy_sauce",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "mirin",
+      "stock": "mirin",
+      "display": "mirin",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "white_sugar",
+      "stock": "sugar",
+      "display": "white sugar",
+      "qty": 1.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "water",
+      "display": "water",
+      "qty": 0.75,
+      "unit": "cup"
+    },
+    {
+      "ref": "chicken_bouillon",
+      "display": "chicken bouillon, about half a cube crushed (optional)",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "oil",
+      "stock": "oil",
+      "display": "oil",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "cooked_rice",
+      "stock": "longgrainrice",
+      "display": "cooked rice, about 1 cup per bowl"
+    },
+    {
+      "ref": "eggs_to_fry_on_top",
+      "display": "eggs to fry on top (optional)",
+      "qty": 3,
+      "unit": "each"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "pot_large",
+    "pot_medium",
+    "knife_sharp",
+    "stovetop",
+    "bowlset"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "About the dashi. Every other gyudon recipe calls for dashi powder, a Japanese soup base made from dried fish and seaweed. Walmart has it listed and out of stock, so this version leaves it out.",
+      "uses": [
+        "browned_beef_the_container_l"
+      ],
+      "look": "What you lose is a savoury sea note underneath everything. What you keep is the actual structure of the dish, which is soy sauce, mirin, sugar and onions cooked down together.The optional chicken bouillon is doing a similar job from a different direction: adding savoury depth. Half a crushed cube is enough.You are not making a compromised gyudon so much as a plain one. This is worth knowing so you do not read another recipe later and assume something went wrong here.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Cut the 2 onions in half through the root, lay each half flat side down, and slice into half-moons about 5 mm thick. Slice the 3 green onions thinly, keeping the white parts and the green parts in separate piles.",
+      "uses": [
+        "yellow_onions",
+        "green_onions",
+        "white_sugar"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "You have SWEET onions, not yellow. Walmart substituted them on the Aug 4 order. They are milder and hold more sugar and water, so they collapse faster and go sweeter: good for this dish, and it means going easy on the sugar in the sauce. Taste before adding the last of it.Flat side down first, same rule as the knife lesson. A half onion on its cut face cannot roll.Two onions to one bag of beef looks like far too much onion. It is not. Gyudon is as much an onion dish as a beef dish, and they cook down to about a third of this volume.The white parts of the green onion go in during cooking and taste like mild onion. The green parts go on at the end raw and taste fresh and sharp. They are genuinely two ingredients from one plant.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "In a cup, stir together the 3 tbsp soy sauce, 3 tbsp mirin, 1 1/2 tsp sugar, 3/4 cup water and the crushed bouillon if you are using it.",
+      "uses": [
+        "soy_sauce",
+        "mirin",
+        "white_sugar",
+        "water",
+        "chicken_bouillon"
+      ],
+      "look": "Mirin is a sweet Japanese rice wine used only for cooking. It brings sweetness and a slight gloss, and it is why gyudon sauce looks shiny rather than flat.Mixing it in a cup first rather than adding five things to a hot pot is the same setup rule as the piccata. It costs nothing and it removes the whole category of things going wrong while you hunt for the sugar.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Already browned the beef? Skip the browning and go to the next step.Otherwise: heat 1 tbsp of oil in the pot on medium-high, add the whole bag of browned beef, leave it 2 minutes, then break it up and cook 3 more minutes.",
+      "uses": [
+        "browned_beef_the_container_l"
+      ],
+      "equipment": [
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "This is the one dish of the three where pre-browned beef costs you almost nothing, because the beef spends the next five minutes simmering in liquid anyway. Any crust you built would soften regardless.If there is a lot of fat in the pot, spoon most of it out. Gyudon sauce should be glossy, not greasy.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Add the sliced yellow onions and the white parts of the green onions. Cook on medium for 5 minutes, stirring now and then.",
+      "uses": [
+        "yellow_onions",
+        "green_onions",
+        "white_sugar"
+      ],
+      "minutes": 5,
+      "look": "Done looks like: the onions have collapsed to about a third of their starting volume, gone from opaque white to soft and slightly see-through, and lost their sharp raw smell.They do not need to brown. Soft is the whole goal.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Pour in the sauce from the cup, scraping the bottom of the pot as you go. Bring it to a boil, then turn to medium-low, cover, and simmer 5 minutes.",
+      "uses": [
+        "soy_sauce"
+      ],
+      "equipment": [
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Scraping the base matters for the same reason it did in the piccata: the brown film stuck to the bottom is flavour, and the liquid lifts it off.Done looks like: the onions are completely soft and the liquid has reduced to a shallow layer around the beef rather than covering it. You want it wet, not soupy. There should be enough to spoon over the rice.If it looks dry, add 2 tbsp of water. If it is swimming, take the lid off and give it 2 more minutes.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Put 1 cup of hot rice in each bowl and spoon the beef and onions over it, with 1 or 2 tbsp of the liquid. Scatter the green parts of the green onions on top.",
+      "uses": [
+        "browned_beef_the_container_l",
+        "yellow_onions",
+        "green_onions",
+        "cooked_rice"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "look": "The spoonful of liquid over the rice is the point of the dish, not a garnish. Plain rice underneath sauced beef is a different and worse thing.A fried egg on top is standard and adds about 6 g of protein. A runny yolk broken into the rice is the version most people picture.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Roughly 75 g of protein across 3 bowls, so about 25 g each, or 31 g with a fried egg.",
+      "look": "The arithmetic: 55 g from a quarter of the 1.3 kg pack (325 g raw at 17 g per 100 g, unchanged by cooking), and 20 g from the rice across the three bowls. The sauce carries none.Keeps 3 to 4 days in the fridge, and it is genuinely better on day two once the onions have sat in the sauce. Store the beef and the rice separately and reheat the beef in a pan with 1 tbsp of water.Freezes well for 3 months, which makes this the best of the three to push out into next week if you end up with too much food.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "soy",
+      "mirin",
+      "yellowonion",
+      "greenonion",
+      "longgrainrice",
+      "sugar",
+      "oil"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

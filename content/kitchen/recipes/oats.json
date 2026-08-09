@@ -1,0 +1,143 @@
+{
+  "id": "oats",
+  "name": "Overnight Oats",
+  "build": "2026-08-09-migrated",
+  "form": "assembly",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "Breakfast for the whole week with zero heat and zero pans. The fastest dent in the oat pile.",
+  "time": {
+    "totalMin": 8,
+    "note": "8 min, no cooking"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "jar",
+    "proteinPerUnit": 52
+  },
+  "ingredients": [
+    {
+      "ref": "oats",
+      "stock": "oats",
+      "display": "oats (about 3/4 cup)",
+      "qty": 60,
+      "unit": "g",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "greek_yogurt",
+      "stock": "yogurt",
+      "display": "Greek yogurt (about 2/3 cup)",
+      "qty": 170,
+      "unit": "g",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "milk (about 1/2 cup)",
+      "qty": 120,
+      "unit": "ml",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "whey_protein",
+      "stock": "whey",
+      "display": "whey protein",
+      "qty": 1,
+      "unit": "scoop",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "cocoa_powder",
+      "display": "cocoa powder",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "honey",
+      "display": "honey",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "per jar, make 4"
+    },
+    {
+      "ref": "frozen_berries",
+      "stock": "fruit",
+      "display": "frozen berries",
+      "qty": 1,
+      "unit": "handful",
+      "section": "per jar, make 4",
+      "frozenOk": true
+    }
+  ],
+  "equipment": [],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Line up 4 cups or glasses on the counter.",
+      "_inferred": []
+    },
+    {
+      "n": 2,
+      "text": "Into each one put 60 g of oats, about three quarters of a cup.",
+      "uses": [
+        "oats"
+      ],
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Add 170 g Greek yogurt, 120 ml milk, 1 scoop of whey, 1 tsp cocoa and 1 tsp honey to each.",
+      "uses": [
+        "greek_yogurt",
+        "milk",
+        "whey_protein",
+        "cocoa_powder",
+        "honey"
+      ],
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Stir each one thoroughly.",
+      "look": "Scrape right down to the bottom. Dry oats hiding underneath will still be dry and crunchy in the morning. It should look like thick porridge batter, and it thickens considerably overnight.",
+      "warn": "Whey powder clumps if you just tip it on top and stir once. Break up any lumps against the side of the cup with the back of the spoon.",
+      "_inferred": []
+    },
+    {
+      "n": 5,
+      "text": "Drop a small handful of frozen berries on top of each.",
+      "uses": [
+        "frozen_berries"
+      ],
+      "look": "Straight from the freezer. They thaw overnight in the fridge and bleed a little colour into the top, which is the point.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Cover them and put them in the fridge. Eat cold, straight from the cup, any time in the next 4 days.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "oats",
+      "yogurt",
+      "milk",
+      "whey",
+      "fruit"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

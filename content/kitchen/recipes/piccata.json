@@ -1,0 +1,384 @@
+{
+  "id": "piccata",
+  "name": "Pan Sauce: Chicken Piccata",
+  "build": "2026-08-09-migrated",
+  "form": "technique",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Rung 2 of the ladder, and the single highest-leverage technique on it. A pan sauce is four moves that take 90 seconds, and once you own them you can build a sauce out of any pan you just cooked meat in, forever. This one happens to also be on the list of six you were sent.",
+  "time": {
+    "totalMin": 35,
+    "note": "35 min, after an overnight thaw"
+  },
+  "serves": {
+    "count": 2,
+    "unit": "portion",
+    "proteinPerUnit": 60
+  },
+  "ingredients": [
+    {
+      "ref": "boneless_skinless_chicken_br",
+      "stock": "chickenbreast",
+      "display": "boneless skinless chicken breasts, thawed (about 250 g each)",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "all_purpose_flour",
+      "stock": "flour",
+      "display": "all-purpose flour, for coating",
+      "qty": 0.3333333333333333,
+      "unit": "cup"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "olive_oil",
+      "display": "olive oil",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter, cold, cut into 6 cubes",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "garlic_cloves",
+      "stock": "garlic",
+      "display": "garlic cloves, chopped small",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "chicken_stock",
+      "stock": "chickenbreast",
+      "display": "chicken stock (or dry white wine, or water. See below)",
+      "qty": 0.75,
+      "unit": "cup"
+    },
+    {
+      "ref": "lemon_juice",
+      "stock": "lemon",
+      "display": "lemon juice",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "capers",
+      "stock": "capers",
+      "display": "capers, drained",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "fresh_parsley",
+      "display": "fresh parsley, chopped",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "pan_stainless_large",
+    "bowlset",
+    "spatula",
+    "thermometer",
+    "plates",
+    "stovetop",
+    "knife_sharp",
+    "papertowel",
+    "woodenspoon"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Read this before you turn anything on. A pan sauce is four moves, and every step after this one is one of them.1. Sear the meat, which leaves brown stuff stuck to the pan.2. Deglaze: pour in liquid, which dissolves that brown stuff.3. Reduce: boil it down so the flavour concentrates.4. Mount: swirl in cold butter off the heat, which makes it glossy and thick.",
+      "uses": [
+        "butter"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Every pan sauce you will ever make is those four moves in that order. Steak with red wine, pork chops with cider, chicken with mushrooms and cream. Change the meat and change the liquid and the sequence does not move.That is why this is rung 2 of the ladder and not just a recipe. You are not learning piccata. You are learning the thing piccata happens to be made of.Piccata means the sauce is finished with lemon and capers. That is all the word means.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Line everything up next to the stove before you start. Measure the 3/4 cup of stock into a cup. Measure the 3 tbsp of lemon juice. Drain the 2 tbsp of capers. Chop the 2 garlic cloves. Cut the 3 tbsp of butter into 6 cubes and put them back in the fridge.",
+      "uses": [
+        "butter",
+        "garlic_cloves",
+        "chicken_stock",
+        "lemon_juice",
+        "capers"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "This is the step people skip and it is the one that decides whether the sauce works.The whole sauce happens in about 90 seconds. Once the liquid hits that hot pan you have no time to go and find the lemon, and anything left in the pan while you hunt for it is burning. Every beginner pan sauce that comes out bitter went that way.The professional name for this is mise en place, French for putting in place, and it means everything measured and within arm's reach before any heat goes on.The butter goes back in the fridge because it has to be cold when it goes in at the end. Step 13 explains why, and it is not a fussy detail.",
+      "warn": "Do not start cooking until all six things are sitting next to the stove. This step is the recipe, not the preamble.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Use the large STAINLESS pan. Not the non-stick one.",
+      "equipment": [
+        "pan_nonstick_large",
+        "pan_stainless_large"
+      ],
+      "look": "The brown layer that sticks to the pan when meat sears is called fond, from the French for base or bottom. It is not burnt and it is not a mess. It is the concentrated version of everything the meat gave up, and dissolving it back into liquid is where the entire flavour of a pan sauce comes from.A non-stick pan cannot make fond. That is the whole point of a non-stick pan. Nothing grips, so nothing browns onto the surface, so there is nothing to dissolve and the sauce comes out tasting like hot lemon water.You own two stainless pans and they have been sitting unused because things stick to them. Here that is the feature you are cooking for.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Put a breast flat on the board, lay your hand flat on top of it, and slice it horizontally all the way through so you end up with two thin flat pieces. Do the same with the second one. You now have 4 cutlets.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "This is called butterflying, and it is rung 1 doing real work: flat hand on top, blade parallel to the board, cut in one slow pass rather than sawing.Why bother: a chicken breast is thick at one end and thin at the other, so by the time the fat end reaches 165Â°F the thin end is dry and stringy. Splitting it gives you four pieces of even thickness that all finish at the same moment.Aim for about 1 cm thick, roughly the width of your little finger. If a piece is still uneven, put it in a freezer bag and press it flatter with the flat bottom of a small pot. A few firm presses, not hammering.",
+      "warn": "The hand on top is flat and pressing DOWN, with fingers spread and well away from the edge you are cutting into. This is the one cut where the claw does not apply, because the blade is travelling sideways rather than down.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Pat all 4 cutlets completely dry with paper towel. Season both sides with the 1 tsp of kosher salt and 1/2 tsp of black pepper, split across all four pieces.",
+      "uses": [
+        "kosher_salt",
+        "black_pepper"
+      ],
+      "equipment": [
+        "papertowel"
+      ],
+      "look": "Dry is not optional. Wet meat steams instead of searing, steamed meat does not brown, and no browning means no fond, which means no sauce. Blot until the paper towel comes away without a damp patch.A quarter teaspoon of salt per cutlet is roughly a small mound in your palm the size of a pea, and you are doing both sides.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Put the 1/3 cup of flour in a wide shallow bowl. Press each cutlet into it, turn it over, press again, then lift it and shake it hard so the loose flour falls off. Lay them on a plate.",
+      "uses": [
+        "all_purpose_flour"
+      ],
+      "equipment": [
+        "bowlset",
+        "plates"
+      ],
+      "look": "This is dredging: a thin dry coating, not a batter. You want a barely visible dusting that looks like the chicken has been powdered, not a white crust.It does two jobs at once. Flour browns faster and darker than meat does, so you get more fond in less time. And the flour that comes off into the pan thickens the sauce later, which is why piccata sauce is glossy rather than watery. There is no other thickener in this recipe.Do this immediately before cooking, not in advance. Flour sitting on wet meat turns to paste.",
+      "warn": "Shake the excess off properly. Flour left clinging in clumps burns black in the pan long before the chicken is done, and burnt flour makes the sauce bitter with no way back.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Put the stainless pan on medium-high, empty and dry, for 2 to 3 minutes. Then flick a few drops of water in from your fingers.",
+      "equipment": [
+        "pan_stainless_large",
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Drops that hiss and vanish: not ready. Wait longer.A single bead that rolls around the pan like a ball of mercury: ready. That is the surface hot enough to have tightened up, and it is the difference between a sear that releases on its own and chicken welded to your pan.This is why the stainless pans have gone unused. Cold stainless is microscopically rough and protein grips it. Hot stainless is not.",
+      "warn": "Water goes into a dry pan and never into oil. Water hitting hot oil spits back at your face. Test first, oil second, and never the other way round.",
+      "_inferred": [
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Add the 2 tbsp of olive oil and swirl it to coat the base. Wait about 30 seconds.",
+      "uses": [
+        "olive_oil"
+      ],
+      "look": "Ready when the oil slides like water when you tilt the pan and the surface has a faint shimmer or ripple to it.If it is smoking, it has gone too far. Take the pan off the heat for 30 seconds, turn the dial down one notch, and put it back.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Lay 2 cutlets in the pan, away from you so nothing splashes toward your hand. Leave a gap between them. Cook 3 to 4 minutes and do not move them, poke them, or lift them to check.",
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "minutes": 4,
+      "look": "The meat tells you when it is ready. Try to lift a corner with the tongs. If it resists or drags, it is not done, so put it down and wait 30 more seconds. When the crust has formed it releases from the pan on its own with no effort.Prying at a piece that is not ready tears the crust off and leaves it stuck to the pan, which is exactly the browning you were trying to build.The cooked side should be golden brown with darker patches, about the colour of a well-toasted piece of bread. Pale means the pan was not hot enough.",
+      "warn": "Two at a time, never all four. Four cold cutlets drop the pan temperature so far that they release water and boil in it instead of searing. A crowded pan is the most common reason home cooking comes out grey and steamed.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Turn them over and cook 2 to 3 minutes more. Then check the thickest part with the thermometer: you want 165Â°F. Move them to a clean plate. Cook the other 2 cutlets the same way and add them to the plate.",
+      "equipment": [
+        "thermometer",
+        "plates"
+      ],
+      "minutes": 3,
+      "look": "At 1 cm thick these cook fast, so start checking early. Push the probe in from the side into the thickest part rather than straight down, so the tip sits in the middle of the meat rather than touching the pan.165Â°F is the answer. Colour is not, juices running clear is not, and you own a thermometer now specifically so you never have to guess this again.The plate will collect some juice. Keep it. It goes into the sauce at the end.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 11,
+      "text": "Look in the pan. There should be a brown, stuck-on layer across the base, with the oil around it. That is the fond, and it is the sauce. Turn the heat down to medium.",
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Brown and stuck on is exactly right. It will look, to a beginner, like you have ruined the pan. You have not. In about 60 seconds it is going to lift off completely into the liquid and disappear.Black and powdery is different, and it is the one failure here. That is burnt flour and it will make the sauce bitter. If most of what is in the pan is black rather than brown, tip the oil out, wipe the pan with paper towel, and start the sauce with fresh liquid. You lose flavour and you save dinner.If there is a lot of oil left, pour off all but about 1 tbsp. Too much fat and the sauce will not come together at the end.",
+      "_inferred": [
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 12,
+      "text": "Add the chopped garlic to the pan and stir it constantly for 30 seconds. Then pour in the 3/4 cup of stock and immediately start scraping the base of the pan with a wooden spoon.",
+      "uses": [
+        "garlic_cloves",
+        "chicken_stock"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "woodenspoon"
+      ],
+      "look": "This is deglazing, and it is the move worth remembering out of this entire recipe. Glace is the stuck-on layer, de-glaze is taking it off. Liquid plus scraping dissolves it, and everything that was welded to your pan goes into the sauce.The pan will hiss loudly and throw up a cloud of steam. That is correct and it is not a problem.Scrape everywhere, including the edges, until the base of the pan is clean metal again and the liquid has gone brown. It takes about 30 seconds and it is oddly satisfying.Any liquid works: stock, wine, cider, even water. The scraping is the technique, not the ingredient.",
+      "warn": "30 seconds on the garlic, not more. Chopped garlic in a hot pan goes from fragrant to bitter and black faster than almost anything else in cooking. The liquid arriving is what stops it, so have the cup already in your hand.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 13,
+      "text": "Add the 3 tbsp of lemon juice and any juice that has collected on the chicken plate. Let it bubble for 3 to 4 minutes.",
+      "uses": [
+        "boneless_skinless_chicken_br",
+        "chicken_stock",
+        "lemon_juice"
+      ],
+      "equipment": [
+        "plates"
+      ],
+      "minutes": 4,
+      "look": "This is reducing: boiling liquid away so what is left tastes more strongly of itself. Nothing is being added, water is being removed.The test: drag the spoon across the base of the pan. When the line it leaves stays open for about a second before the sauce runs back in, you are there. Early on it closes instantly.By eye it should have gone from about 1 cup down to about 1/2 cup, and it will coat the back of the spoon instead of running straight off. The flour from the dredge does most of that thickening.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 14,
+      "text": "Take the pan off the heat completely. Add the cold butter cubes two at a time and swirl the pan in circles until each pair disappears before adding the next.",
+      "uses": [
+        "butter"
+      ],
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "look": "This is mounting, and it is what separates a sauce from a puddle of brown liquid. The sauce goes glossy, slightly thicker, and turns a paler golden colour as it happens. It is very obvious when it works.Off the heat and cold butter are both load-bearing. Butter is fat and water held together, and it only stays combined into a sauce below a simmer. Boiling it splits it, and you get an oily layer floating on a thin one. Cold butter melts slowly enough to blend in; soft butter melts too fast and splits.Swirl the pan rather than stirring. It mixes more gently.",
+      "warn": "If it does split and goes oily, take it off the heat, add 1 tbsp of cold water and swirl hard. That rescues it most of the time.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 15,
+      "text": "Stir in the 2 tbsp of drained capers. Taste it. If it tastes flat, add 1/4 tsp of salt. If it tastes too sharp, add another 1/2 tbsp of butter.",
+      "uses": [
+        "kosher_salt",
+        "butter",
+        "capers"
+      ],
+      "look": "Capers are pickled flower buds. They are salty and sour and they are the thing that makes this piccata rather than lemon chicken, which is why they were worth a trip to the shop. Drain them, do not rinse them.They go in at the end on purpose. Boiling them turns them soft and washes the sharpness out, and sharpness is their whole job.The capers bring their own salt, which is why you taste after they go in and not before.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 16,
+      "text": "Put the cutlets on plates, pour the sauce over them, and scatter parsley over the top if you have it. Eat now.",
+      "uses": [
+        "fresh_parsley"
+      ],
+      "look": "Do not put the chicken back in the pan to reheat. It is already at 165Â°F and the sauce is hot enough to warm it on the plate. Returning it to the heat overcooks it and dulls the lemon you just added.The parsley is not decoration for its own sake. It is one green thing against a plate that is otherwise beige and yellow, and it makes an enormous difference to how the plate reads. Worth $2.27 next shop.What to put it on: the protein spaghetti in the cupboard is the standard pairing and it soaks up the sauce. Roasted carrots and sweet potato also work.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 17,
+      "text": "Roughly 120 g of protein across the two portions, so about 60 g each.",
+      "look": "The arithmetic: 2 breasts at about 250 g raw each is 500 g of chicken at 22.5 g per 100 g, giving 113 g, plus a few grams from the flour coating. The butter and the sauce carry none.This is the one dish on that list of six that carries real protein, and it is close to a third of a day in a single plate.Leftovers: 3 to 4 days in the fridge. Keep the sauce in a separate container and warm it gently in a pan rather than the microwave, which splits it. The chicken is better sliced cold into a salad than reheated.",
+      "_inferred": []
+    },
+    {
+      "n": 18,
+      "text": "What you just learned, and where else it goes.",
+      "look": "Sear, deglaze, reduce, mount. Four moves, and you now own them.The same four steps, different ingredients:Steak. Sear the sirloin, deglaze with stock, reduce, mount with butter. Add black pepper and cream for peppercorn sauce.Pork or chicken with mushrooms. Sear the meat, cook sliced mushrooms in the same pan, deglaze, reduce, mount. Mushrooms make more fond than almost anything.Any roast. The brown layer in the tray after the sirloin roast is fond. Put the tray on the stove, deglaze it, and that is gravy. It is the same technique, which is a thing nobody tells you.The one rule that transfers: if you cooked meat in a pan and there is brown stuck to the base, you are two minutes and one cup of liquid away from a sauce. Never wash that pan straight away.Rung 3 on the ladder is breading, which is dredging with two more layers on it. You have already done the first one today.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "chickenbreast",
+      "flour",
+      "butter",
+      "oil",
+      "lemon",
+      "capers",
+      "stock",
+      "garlic",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

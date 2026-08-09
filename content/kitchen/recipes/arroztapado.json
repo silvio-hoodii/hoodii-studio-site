@@ -1,0 +1,419 @@
+{
+  "id": "arroztapado",
+  "name": "Arroz Tapado",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "Peruvian, and the first dish here you already know the taste of. Rice, a seasoned beef filling, rice again, pressed in a mug and turned out onto the plate. Built from what Walmart carries, which means the ajÃ­ panca is stood in for. Step 1 is honest about what that costs.",
+  "time": {
+    "totalMin": 70,
+    "note": "55 min"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "portion",
+    "proteinPerUnit": 46
+  },
+  "ingredients": [
+    {
+      "ref": "browned_beef",
+      "stock": "beef",
+      "display": "browned beef",
+      "qty": 350,
+      "unit": "g"
+    },
+    {
+      "ref": "long_grain_white_rice",
+      "stock": "longgrainrice",
+      "display": "long grain white rice (NOT the Minute Rice, see step 3)",
+      "qty": 1,
+      "unit": "cup"
+    },
+    {
+      "ref": "water",
+      "stock": "longgrainrice",
+      "display": "water, for the rice",
+      "qty": 1.5,
+      "unit": "cups"
+    },
+    {
+      "ref": "small_red_onion",
+      "stock": "onion",
+      "display": "small red onion, finely diced",
+      "qty": 1,
+      "unit": "each"
+    },
+    {
+      "ref": "garlic_cloves_total_2_for_th",
+      "stock": "garlic",
+      "display": "garlic cloves total: 2 for the rice, 2 for the filling",
+      "qty": 4,
+      "unit": "each"
+    },
+    {
+      "ref": "tomato_paste",
+      "stock": "tomatopaste",
+      "display": "tomato paste",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "smoked_paprika",
+      "stock": "smokedpaprika",
+      "display": "smoked paprika",
+      "qty": 0.75,
+      "unit": "tsp"
+    },
+    {
+      "ref": "sweet_paprika",
+      "stock": "smokedpaprika",
+      "display": "sweet paprika (the one you already own)",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "white_vinegar",
+      "display": "white vinegar",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "ground_cumin",
+      "stock": "beef",
+      "display": "ground cumin",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "italian_seasoning",
+      "display": "Italian seasoning (standing in for dried oregano)",
+      "qty": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "raisins",
+      "stock": "raisins",
+      "display": "raisins",
+      "qty": 0.25,
+      "unit": "cup"
+    },
+    {
+      "ref": "black_olives",
+      "stock": "olives",
+      "display": "black olives, sliced",
+      "qty": 0.3333333333333333,
+      "unit": "cup"
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "eggs, for hard-boiling",
+      "qty": 2,
+      "unit": "each"
+    },
+    {
+      "ref": "oil",
+      "stock": "longgrainrice",
+      "display": "oil, split between the rice and the filling",
+      "qty": 3,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "olives",
+      "display": "kosher salt, black pepper"
+    }
+  ],
+  "equipment": [
+    "pot_ovensafe_lid",
+    "pot_small",
+    "pot_medium",
+    "pan_stainless_large",
+    "pan_nonstick_large",
+    "bowlset",
+    "plates",
+    "stovetop",
+    "colander",
+    "knife_sharp"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Read this first. You know what this dish is supposed to taste like and I do not.Every Peruvian recipe for this uses ajÃ­ panca paste. Walmart does not sell it, in any form, under any brand. This version stands it in with smoked paprika, tomato paste, your sweet paprika and vinegar.",
+      "uses": [
+        "tomato_paste",
+        "smoked_paprika",
+        "sweet_paprika",
+        "white_vinegar"
+      ],
+      "look": "What the stand-in gets right. AjÃ­ panca is mild rather than hot, deep red, smoky, slightly sweet and slightly acidic. Smoked paprika carries the smoke, tomato paste carries the body and the colour, sweet paprika lets you add red without adding more smoke, and the vinegar carries the acidity.Why the gap is narrower than it sounds. The other thing panca brings is a dried-fruit sweetness. This dish already has half a cup of raisins in it, so that note is covered by an ingredient that was going in anyway. The stand-in only has to do four jobs, not five.What it will not get right. Panca has a specific smoky depth that comes from a chili dried slowly rather than a spice jar, and nothing on a Walmart shelf reproduces it. This will read as a good beef picadillo. It will not read as the thing you grew up with, and you will notice immediately.The upgrade, whenever you want it: a 445 g jar of Inca's Food or DoÃ±a Isabel ajÃ­ panca is about $9 to $14, keeps months in the fridge, and turns this into the real version. Then you drop the smoked paprika and the tomato paste entirely and use 3 tbsp of panca paste in their place.",
+      "warn": "Do not judge my seasoning amounts against the recipe. Judge them against your memory, and change them. You are the only person in this system who has eaten the real thing.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Start the eggs, they need the longest to cool. Put 2 eggs in the small pot, cover with cold water by about 2 cm, and bring to a boil on high. The moment it boils, start a timer for 9 minutes. Then drain and sit them in cold water.",
+      "uses": [
+        "long_grain_white_rice",
+        "water",
+        "small_red_onion",
+        "eggs"
+      ],
+      "equipment": [
+        "pot_small",
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 9,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "Nine minutes from the boil gives a fully set yolk with no grey ring around it. The cold water stops them cooking and makes the shells come off cleanly.Peel them once they are cool enough to hold, and leave them whole for now. Step 12 decides whether they get sliced or chopped.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "The rice. Rinse it in the colander under cold water until the water running off is clear, about 30 seconds. Heat 2 tbsp of oil in the pot on medium, add 2 chopped garlic cloves, stir for 30 seconds, then add the drained rice and stir it around for 1 minute.",
+      "uses": [
+        "long_grain_white_rice",
+        "water",
+        "garlic_cloves_total_2_for_th"
+      ],
+      "equipment": [
+        "pot_medium",
+        "colander",
+        "stovetop"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "This is why you bought proper rice. The Minute Rice in your cupboard is already cooked and then dried, so it cannot be toasted in oil and it cannot absorb a garlic flavour. It would sit under the filling as padding. Peruvian rice is a component with its own taste, and this minute of toasting is where that taste comes from.Rinsing washes off loose surface starch, which is what makes rice claggy. You want separate grains that still press together under thumb pressure.After a minute of toasting the grains look slightly chalky and smell nutty.All of this rice goes into tonight's dish. Nothing is being banked for Arroz Chaufa this time. If you want that later, cook it as its own batch on its own day -- fried rice needs cold, day-old rice anyway, so a deliberate batch works better than a scavenged half.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Add 1 1/2 cups of water and 3/4 tsp of kosher salt, lid off. Turn the heat to high and watch the pot, not the clock, until you get a real rolling boil: the whole surface constantly bubbling and moving, not just a few bubbles rising at the edge here and there. Only once it is truly boiling, turn the heat down and put the lid on. Leave it 18 minutes.",
+      "uses": [
+        "water",
+        "kosher_salt"
+      ],
+      "equipment": [
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 18,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "After that one check, do not lift the lid again. Every look lets out the steam that is doing the cooking, and it adds several minutes each time.At 18 minutes take it off the heat and leave the lid on for another 5 minutes. Then lift the lid and drag a fork through it to separate the grains.Done looks like: no water left in the bottom, and a grain squashed between finger and thumb is soft the whole way through with no hard white dot in the middle. A hard dot in an otherwise-cooked pot is normal and small: add 2 tbsp more water, lid back on, another 3 minutes on a gentle simmer, no need to start over.Foaming or almost boiling over means the heat was too high, not too low -- turn it down further next time you see it, same test as above.Or skip the heat-watching entirely: toast the rice and garlic here exactly as written, then tip it straight into the rice cooker with the same 1 1/2 cups of water and press it down to cook. The thermostat handles the part that keeps going wrong on the stove, and none of the flavour is lost since it already got built in during the toasting step.",
+      "warn": "Ignore the numbers on your dial. Your stove is induction, and the scale is not the same on every burner -- some run 1 to 120, some 1 to 10, some are just low/medium/high, so \"one or two notches\" or \"the lowest setting\" cannot mean the same thing twice. This step no longer uses either.Instead: turn it down until the pot is at a gentle, steady simmer -- small bubbles breaking the surface every second or two, not a violent rolling boil, not silence. Lift the lid ONCE, two minutes after you turn it down, and look. Nothing moving: turn it up a little. Still boiling hard, or foaming and climbing toward the rim: turn it down further. That one look costs a minute. Guessing costs the dish.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "While the rice cooks, make the stand-in paste. In a cup, stir together the 1 tbsp of tomato paste, 3/4 tsp of smoked paprika, 1 tsp of sweet paprika, 1 tsp of ground cumin, 1/2 tsp of Italian seasoning and 1 tsp of white vinegar.",
+      "uses": [
+        "long_grain_white_rice",
+        "garlic_cloves_total_2_for_th",
+        "tomato_paste",
+        "smoked_paprika",
+        "sweet_paprika",
+        "white_vinegar",
+        "ground_cumin",
+        "italian_seasoning"
+      ],
+      "look": "It should come together as a thick dark red paste, about the consistency of ketchup. If it will not stir smooth, add 1 tsp of water.Doing this in a cup rather than adding six things to a hot pan one at a time is deliberate. It is the same idea as the piccata setup step: the pan moves fast and a spice jar you are still unscrewing is a burnt pan.",
+      "warn": "3/4 tsp of smoked paprika is a deliberately cautious amount. Smoked paprika is much louder than ajÃ­ panca and the usual failure is a dish that tastes of barbecue rather than Peru. You can add more at step 10, once you can taste it. You cannot take it out.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Dice the red onion small, about 5 mm. Chop the remaining 3 garlic cloves.",
+      "uses": [
+        "small_red_onion",
+        "garlic_cloves_total_2_for_th"
+      ],
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "This is the onion dice from the knife lesson, and this is what it was for. Root end away, parallel cuts stopping short of the root, then across.If you already did the lesson and have 150 g of diced onion in a container in the fridge, use that and skip the knife entirely. That was the point of dicing half of it.Small matters here. The onion has to disappear into the filling rather than turn up as recognisable pieces.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Already have this beef browned and ready? Skip straight to the next step.Otherwise: heat the large stainless pan on medium-high with 1 tbsp of oil, add the whole bag of browned beef, let it sit without touching it for 4 minutes, then break it apart and keep going for 8 to 10 minutes.",
+      "uses": [
+        "browned_beef"
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 10,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "This is what \"brown the beef\" means, and it is the phrase that started this whole project, so here it is properly.You are not trying to turn the meat grey. Grey is what happens when meat steams in its own liquid. You are trying to get actual brown crust on some of it, because browning creates flavours that were not in the raw meat at all and no amount of later seasoning replaces them.The 4 minutes of not touching it is where the brown happens. Stirring straight away drops the pan temperature and the beef releases water and boils.Two stages, and stage one is not the finish. First the beef releases a pool of grey liquid. Keep going on medium-high until that liquid has boiled off completely and you can hear the sound change to a proper fry. Only then does browning start.Done looks like: a good share of the beef has dark brown patches, not uniform grey, and there is no liquid running when you tilt the pan.",
+      "warn": "Pre-browned beef is cold, so it will drop the pan temperature when it goes in later. That is fine here because everything after this is a simmer rather than a sear.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Push the beef to one side of the pan. Add the diced onion to the empty side with a little more oil if it looks dry, and cook 5 minutes. Add the chopped garlic and stir everything together for 1 minute.",
+      "uses": [
+        "browned_beef",
+        "small_red_onion",
+        "garlic_cloves_total_2_for_th"
+      ],
+      "equipment": [
+        "pan_nonstick_large"
+      ],
+      "minutes": 5,
+      "look": "Done looks like: the onion has gone from opaque white to soft and slightly see-through, and it has shrunk to about half the volume you started with. No browning needed here.Cooking the onion in the beef fat rather than fresh oil is not laziness. That fat has the browning you just spent ten minutes making.",
+      "warn": "Garlic gets 1 minute and no more. It burns and turns bitter faster than anything else in the pan.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 9,
+      "text": "Add the whole cup of paste you mixed at step 5 and stir it through everything for 2 minutes. Then add 1/4 cup of water, the 1/4 cup of raisins and the 1/3 cup of sliced olives. Turn to medium-low and simmer 10 minutes.",
+      "uses": [
+        "water",
+        "tomato_paste",
+        "raisins",
+        "black_olives"
+      ],
+      "minutes": 10,
+      "look": "The 2 minutes of stirring the paste in dry matters. Tomato paste and ground spices both taste raw and dusty until they hit hot oil, which is where they turn deep and round. Two minutes in the fat before any water goes in is the whole difference.The colour deepens from bright red to a darker brick red as it happens. That colour change is the signal.Done looks like: thick and glossy, not soupy. Drag the spoon across the pan and the line should hold for a second. If it is still wet, keep going. Filling that is too loose will make the rice collapse when you turn the mug over.The raisins swell and go soft. They are not a garnish, they are the sweetness the whole dish is built around.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 10,
+      "text": "Taste it now. Add 1/2 tsp of kosher salt and 1/4 tsp of black pepper, stir, and taste again.",
+      "uses": [
+        "black_olives",
+        "kosher_salt"
+      ],
+      "look": "Less salt than you might expect, because the beef was already salted when it was browned and the olives bring their own. Taste before adding more.Three specific tests, each with an answer:Tastes like tomato and beef, no smoke behind it? Add another 1/2 tsp of smoked paprika, simmer 2 minutes, taste again. Repeat once at most.Tastes flat and heavy, nothing lifting it? Add another 1 tsp of white vinegar. Acid is almost always what a rich brown dish is missing.Tastes like barbecue sauce? You have gone too far on the smoked paprika. Add 1 tbsp of tomato paste and 1/4 cup of water to dilute it back.This is the step where your memory outranks the recipe. Keep going until it tastes like the thing you are aiming at, not until you have followed the instructions.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 11,
+      "text": "Slice 1 hard-boiled egg into rounds and set the rounds aside for the layering. Chop the other one and stir it through the filling.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Both ways are traditional and the sources split about evenly, so this does both. The chopped one disappears into the filling and makes it richer. The rounds sit visibly in the middle of each portion, which is what a plate of arroz tapado is supposed to look like when you cut into it.One egg slices into about 5 rounds, which is more than enough for 3 portions.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 12,
+      "text": "Assemble one portion at a time. Wipe a mug or small bowl with a little oil. Press in a layer of rice about 2 cm deep, firmly, with the back of a spoon. Add a layer of filling and a slice of egg. Top with another 2 cm of rice and press it down hard.",
+      "uses": [
+        "long_grain_white_rice",
+        "small_red_onion",
+        "garlic_cloves_total_2_for_th"
+      ],
+      "equipment": [
+        "bowlset",
+        "knife_sharp"
+      ],
+      "look": "Press harder than feels reasonable. This is the step that decides whether it turns out as a clean dome or a landslide, and under-pressing is the only real way to fail here.Oil in the mug first is what lets it release. Skip it and the rice sticks to the sides.Aim for roughly equal thickness on both rice layers, with the filling as the middle third.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 13,
+      "text": "Put a plate upside down on top of the mug. Hold both together, turn the whole thing over in one movement, then lift the mug straight up.",
+      "equipment": [
+        "plates"
+      ],
+      "look": "It should come away as a clean cylinder with the filling as a visible dark band through the middle.If it sticks: put the mug back down still inverted, tap the top firmly a few times, and lift again. Do not shake it.If it slumps: the filling was too wet or the rice was not pressed hard enough. It still tastes exactly the same. Press harder on the next one and simmer the filling a little longer.One mug at a time, plated as you go. Nine portions in a row is fine, the filling and rice both stay warm in their pans.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 14,
+      "text": "Optional, and both are traditional. A fried egg on top makes it a lo pobre. Fried plantain alongside is the other standard partner: peel, slice on a diagonal about 1 cm thick, fry in oil 2 minutes a side until golden.",
+      "equipment": [
+        "knife_sharp"
+      ],
+      "look": "Plantains are $1.15 each at Walmart, sold as singles. Buy them yellow with black patches for sweet, or fully yellow for firmer and starchier.The fried egg adds about 6 g of protein and is the cheapest thing you can do to this plate.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 15,
+      "text": "Roughly 137 g of protein across 3 portions, so about 46 g each.",
+      "look": "The arithmetic: 111 g from a 350 g bag of browned beef (about 31.6 g of protein per 100 g cooked, the same figure used everywhere else this batch of beef appears), 13 g from the 1 cup of rice, 13 g from the 2 eggs. The olives, raisins and paste carry none worth counting.Three portions, same count as a smaller bag would make. The rice sets how many mugs you press, not the beef, so a bigger bag just means a heartier filling layer in each one.Keeping it. Filling and rice both hold 3 to 4 days in the fridge, stored separately rather than assembled. Assemble a fresh mug each time, it takes a minute. The filling also freezes well for 3 months; cooked rice does not, it goes crumbly.",
+      "_inferred": []
+    },
+    {
+      "n": 16,
+      "text": "Tell me what was wrong with it. Use the note button on this step.",
+      "look": "This is the first dish in here you have a real reference for. Everywhere else the written cue is the authority and you are checking yourself against it. Here it is the other way round: you know the target and this recipe is the guess.Most useful things to say: whether the smoked paprika read as smoke or as barbecue, whether it needed more acid, whether the filling was too wet to mould, and how far off the whole thing landed from what you were expecting.Any of those goes straight back into the recipe. The seasoning here is the part I am least confident about and the part you are most qualified to correct.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "longgrainrice",
+      "onion",
+      "garlic",
+      "cumin",
+      "smokedpaprika",
+      "tomatopaste",
+      "raisins",
+      "olives",
+      "eggs",
+      "oil",
+      "salt"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

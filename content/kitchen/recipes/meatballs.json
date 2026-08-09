@@ -1,0 +1,205 @@
+{
+  "id": "meatballs",
+  "name": "Baked Meatballs",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "950 g of ground beef baked as 24 freezable units. Better than a sauce because you pull out four at a time instead of thawing a whole portion. NOT part of the current beef plan: this needs RAW mince, and the pack bought Aug 1 is committed elsewhere. Here for the next time you buy beef.",
+  "time": {
+    "totalMin": 40,
+    "note": "40 min"
+  },
+  "serves": {
+    "count": 24,
+    "unit": "meatball",
+    "proteinPerUnit": 7.5
+  },
+  "ingredients": [
+    {
+      "ref": "ground_beef",
+      "stock": "beef",
+      "display": "ground beef. RAW, not browned. See the note on the mixing step",
+      "qty": 950,
+      "unit": "g"
+    },
+    {
+      "ref": "egg",
+      "stock": "eggs",
+      "display": "egg",
+      "qty": 1,
+      "unit": "each"
+    },
+    {
+      "ref": "rolled_oats",
+      "stock": "oats",
+      "display": "rolled oats",
+      "qty": 0.5,
+      "unit": "cup"
+    },
+    {
+      "ref": "milk",
+      "display": "milk",
+      "qty": 0.25,
+      "unit": "cup"
+    },
+    {
+      "ref": "grated_parmesan",
+      "display": "grated parmesan (about 2 tbsp), optional",
+      "qty": 15,
+      "unit": "g"
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "italian_seasoning",
+      "stock": "seasoning",
+      "display": "Italian seasoning",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "garlic_powder",
+      "display": "garlic powder",
+      "qty": 1,
+      "unit": "tsp",
+      "section": "seasoning"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp",
+      "section": "seasoning"
+    }
+  ],
+  "equipment": [
+    "bakingtray",
+    "mixingbowl_large",
+    "bowlset",
+    "parchment",
+    "oven"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Before the oven goes on, check the beef. Open the pack and run three checks: look, touch, smell.",
+      "uses": [
+        "ground_beef"
+      ],
+      "equipment": [
+        "oven"
+      ],
+      "look": "1. Look. Brown or grey in the middle of the pack is normal and fine. That is only air not reaching it. Brown or grey on the outer surface is the signal.2. Touch. Press a clean finger into the surface and lift it straight off. Fresh beef is wet, but your finger comes away clean. A tacky film that strings slightly, or leaves your finger feeling coated, is bacterial slime.3. Smell. Right up close. Fresh raw beef smells of almost nothing, faintly like metal or blood. Sour, tangy, or sharp like ammonia is the fail.",
+      "warn": "Touch or smell failing on its own is enough. Bin it. Cooking does not rescue meat that has turned. 160&deg;F kills the bacteria, but some of what they leave behind survives heat, and it will taste bad regardless.Raw ground meat gets 1 to 2 days in a fridge. Past that the clock stops deciding and these three checks do. If it passes, cook it now, and do not put any of it back in the fridge raw for tomorrow.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Oven to 400&deg;F (200&deg;C). Line a tray with parchment.",
+      "equipment": [
+        "oven",
+        "bakingtray",
+        "parchment"
+      ],
+      "look": "If you are also making the stuffed peppers today, do the meatballs FIRST. They are 20 minutes against the peppersâ€™ 40, and you only have one oven.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Put 1/2 cup of rolled oats and 1/4 cup of milk in the mixing bowl, stir, and leave for 5 minutes.",
+      "uses": [
+        "rolled_oats",
+        "milk"
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "bowlset"
+      ],
+      "minutes": 5,
+      "look": "This is the one step that decides whether the meatballs are juicy or dry, and it looks like it does nothing.Oats soaked in milk make a paste that holds water inside the meat while it cooks. Without it the beef squeezes its own moisture out and you get dense little pellets. Bread crumbs are the usual ingredient here and you have none, but oats do the same job and you have 4.5 kg of them.Done when the oats have gone soft and swollen and there is no loose milk left.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Add the 950 g of RAW beef, 1 egg, 15 g of parmesan, 1 tsp kosher salt, 1 tsp Italian seasoning, 1 tsp garlic powder and 1/2 tsp black pepper to the same bowl.",
+      "uses": [
+        "ground_beef",
+        "grated_parmesan",
+        "kosher_salt",
+        "italian_seasoning",
+        "garlic_powder",
+        "black_pepper"
+      ],
+      "equipment": [
+        "bowlset"
+      ],
+      "look": "Raw matters and it is worth knowing why. Meatballs are bound and rolled, and browned mince has already set into crumbles that no egg will glue back into a ball. The same goes for burgers and meatloaf. Browning is a one-way door for anything you form by hand.So this dish has to be decided before the pan gets hot, not after.950 g is about three quarters of a 1.3 kg pack. Weigh it on the scale.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Mix with your bare hands for about 45 seconds, until it is uniform.",
+      "warn": "Stop at a minute. Mixing ground meat for too long makes the protein tighten and the meatballs turn bouncy and rubbery. This is the same rule as the pizza crust and it is the mistake that ruins both.",
+      "_inferred": []
+    },
+    {
+      "n": 6,
+      "text": "Roll into balls about the size of a golf ball, roughly 40 g each. You should get around 24. Space them out on the tray.",
+      "equipment": [
+        "bakingtray"
+      ],
+      "look": "Wet your hands under the tap first and the meat stops sticking to you.Even sizing matters more than exact size: a tray of mixed big and small means some are raw when others are dry. Gaps between them let the heat get all the way round, and touching meatballs steam where they touch.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Bake 18 to 20 minutes. No turning.",
+      "minutes": 19,
+      "look": "Done at 160&deg;F in the middle of the biggest one. Ground beef needs 160, higher than a whole cut, because grinding spreads any surface bacteria all through the meat.Without the thermometer: cut one in half. No pink in the centre and the juices run clear.",
+      "_inferred": []
+    },
+    {
+      "n": 8,
+      "text": "Eat some now. Cool the rest completely, then freeze them spread out on a tray for an hour before bagging.",
+      "equipment": [
+        "bakingtray"
+      ],
+      "look": "Freezing them loose first means they stay separate and you can take out four. Bagged warm and straight away, they fuse into one lump and you have to thaw all twenty.About 7.5 g of protein each: ~162 g from the beef across 24 balls, plus the egg, parmesan and oats. Four meatballs is 30 g.Keeps 3 to 4 days in the fridge, 3 months frozen.",
+      "_inferred": [
+        "equipment"
+      ]
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "eggs",
+      "oats",
+      "seasoning"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

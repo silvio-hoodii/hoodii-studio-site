@@ -1,0 +1,291 @@
+{
+  "id": "mongolian",
+  "name": "Mongolian Ground Beef",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The loud one. Sticky sweet-savoury sauce, a serious amount of green onion and garlic, chili at whatever level you want. Chinese-American takeout, over rice. Everything happens in about six minutes once the pan is hot, so it is all in the prep.",
+  "time": {
+    "totalMin": 20,
+    "note": "20 min"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "bowl",
+    "proteinPerUnit": 24
+  },
+  "ingredients": [
+    {
+      "ref": "browned_beef",
+      "stock": "beef",
+      "display": "browned beef, the smaller bag",
+      "qty": 200,
+      "unit": "g"
+    },
+    {
+      "ref": "green_onions",
+      "stock": "greenonion",
+      "display": "green onions",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "garlic_cloves",
+      "display": "garlic cloves, chopped fine",
+      "qty": 3,
+      "unit": "each"
+    },
+    {
+      "ref": "fresh_ginger",
+      "stock": "ginger",
+      "display": "fresh ginger, grated",
+      "qty": 1.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "crushed_red_pepper",
+      "display": "crushed red pepper, or crushed jalapeno. See step 2",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "vegetable_oil",
+      "display": "vegetable oil",
+      "qty": 2,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "toasted_sesame_oil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "cooked_rice",
+      "stock": "longgrainrice",
+      "display": "cooked rice, about 1 cup per bowl"
+    },
+    {
+      "ref": "soy_sauce",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 2,
+      "unit": "tbsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "white_sugar",
+      "stock": "sugar",
+      "display": "white sugar",
+      "qty": 1,
+      "unit": "tbsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "oyster_sauce",
+      "stock": "oyster",
+      "display": "oyster sauce",
+      "qty": 2,
+      "unit": "tsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "honey",
+      "display": "honey",
+      "qty": 2,
+      "unit": "tsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "shaoxing_wine",
+      "stock": "shaoxing",
+      "display": "Shaoxing wine",
+      "qty": 1,
+      "unit": "tbsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "chicken_bouillon",
+      "display": "chicken bouillon, a crushed pinch of a cube",
+      "qty": 0.5,
+      "unit": "tsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "dark_soy_sauce",
+      "stock": "soy",
+      "display": "dark soy sauce, optional, for colour only",
+      "qty": 0.25,
+      "unit": "tsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "water",
+      "display": "water",
+      "qty": 3,
+      "unit": "tbsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "cornstarch",
+      "stock": "cornstarch",
+      "display": "cornstarch",
+      "qty": 2,
+      "unit": "tsp",
+      "section": "the sauce, all into one cup"
+    },
+    {
+      "ref": "black_pepper",
+      "display": "black pepper",
+      "section": "the sauce, all into one cup"
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "pan_stainless_large",
+    "slicer_multiblade",
+    "knife_sharp",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Everything into the cup first, and everything chopped, before any heat. Stir the whole sauce list together until the cornstarch has completely disappeared.",
+      "uses": [
+        "soy_sauce",
+        "oyster_sauce",
+        "dark_soy_sauce",
+        "cornstarch"
+      ],
+      "look": "The cornstarch is what makes this dish what it is. It is a thickener: in cold liquid it just sits there, but the moment it hits a boiling pan it swells and turns thin sauce into the glossy coating that clings to the beef. Without it you get seasoned beef sitting in a puddle.It must be fully dissolved while the liquid is cold. Cornstarch added to hot liquid seizes into lumps instantly and there is no fixing it. Stir until you cannot see any white settled at the bottom of the cup, then stir it again right before it goes in, because it settles out within a minute.The whole cooking time here is about 6 minutes and the sauce goes in at minute 5. There is no moment to stop and measure.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "The chili, and how hard to push it. The original uses 5 whole dried chilies. Walmart does not sell those, so you are using 1 tsp of crushed red pepper from your cupboard.",
+      "uses": [
+        "crushed_red_pepper",
+        "black_pepper"
+      ],
+      "look": "1 tsp against the 200 g bag is a genuine kick, roughly where the original sits, and it is what you asked for.Crushed jalapeno instead is milder and more grassy. Use 2 tsp of it for about the same heat.Want it hotter: go to 1 1/2 tsp, or add 1 tsp of your sriracha to the sauce cup as well, which brings heat plus a little vinegar.The chili goes in with the garlic and ginger, in oil, not into the sauce. Chili flakes bloomed in hot oil taste round and warm. Stirred into liquid at the end they taste raw and scratchy. That is a real difference and it is worth doing in the right order.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Slice the 3 green onions thinly, keeping whites and greens in separate piles. Chop the 3 garlic cloves fine. Peel a piece of ginger about 3 cm long, roughly the size of your thumb, with the edge of a spoon, and grate 1 1/2 tsp from it.",
+      "uses": [
+        "green_onions",
+        "garlic_cloves",
+        "fresh_ginger",
+        "white_sugar"
+      ],
+      "equipment": [
+        "slicer_multiblade",
+        "knife_sharp"
+      ],
+      "look": "You have about 400 g of ginger, far more than the 1 1/2 tsp this needs, because it is sold by weight and the Aug 4 order weighed in at 0.400 kg. Freeze the rest whole in a bag. Frozen ginger grates straight from the freezer without peeling and keeps for months; loose in the fridge it goes soft and mouldy in about three weeks.A spoon peels ginger better than a knife. Scrape the edge against the skin and it comes away in strips, following the lumps instead of cutting the good part off with them.Grate it on the fine side of your multi-blade slicer. Ginger is fibrous, so if you get long stringy bits, you are grating along the fibres: turn the piece 90 degrees.The green onion is not a garnish in this dish. Three onions to one bag of beef sounds like a lot and is correct. The whites cook in and the greens go on raw at the end.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Already browned the beef? Skip to the next step.Otherwise heat 1 tbsp of oil on medium-high, add the 200 g bag of browned beef, leave it 2 minutes, break it up, and cook 3 more minutes until no liquid runs when you tilt the pan.",
+      "uses": [
+        "browned_beef"
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "If there is a lot of fat in the pan, spoon most of it out. The sauce has to cling to the beef, and it cannot do that through a layer of grease.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Push the beef to one side. Add 1 tbsp of oil to the clear side, then the garlic, ginger and 1 tsp of crushed red pepper. Stir them in the oil for 30 seconds, then mix everything together.",
+      "uses": [
+        "browned_beef",
+        "garlic_cloves",
+        "fresh_ginger",
+        "crushed_red_pepper",
+        "black_pepper"
+      ],
+      "look": "You want the garlic just turning pale gold and the whole kitchen to smell of it. That is the chili and the ginger giving up their flavour into the oil, which then coats everything.",
+      "warn": "30 seconds, and stand there watching. Garlic, ginger and chili flakes all burn fast, and burnt chili is genuinely acrid in a way burnt garlic is not. If it starts to darken past gold, pour the sauce in early. The liquid stops it instantly.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 6,
+      "text": "Add the whites of the green onions, stir 30 seconds. Stir the sauce cup again, pour it in, and stir constantly for 1 to 2 minutes.",
+      "uses": [
+        "green_onions",
+        "soy_sauce",
+        "white_sugar",
+        "oyster_sauce",
+        "dark_soy_sauce"
+      ],
+      "minutes": 2,
+      "look": "Watch the change, it is fast and obvious. The sauce goes in thin and cloudy, comes to a bubble, and then within about 30 seconds turns clear, dark and glossy and starts clinging to the beef instead of pooling under it. That is the cornstarch doing its job.Done looks like: drag the spoon through and the pan floor stays visible for a second. Almost no loose liquid left, and every piece of beef is coated and shiny.If it goes too thick and turns gluey, add 1 tbsp of water and stir. If it stays thin after 2 minutes, the cornstarch settled in the cup and you poured mostly water: mix 1 tsp of cornstarch into 1 tbsp of cold water and stir that in.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 7,
+      "text": "Turn the heat off. Stir in the 1 tsp of sesame oil and most of the green parts of the onions. Serve over rice with the rest of the greens on top.",
+      "uses": [
+        "green_onions",
+        "toasted_sesame_oil",
+        "cooked_rice"
+      ],
+      "look": "Sesame oil off the heat, always. It is a finishing oil. Cooking it destroys the nutty smell that is the whole reason it is there.A fried egg on top is not traditional here but it works and adds 6 g of protein.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 8,
+      "text": "Roughly 73 g of protein across 3 bowls, so about 24 g each.",
+      "look": "The arithmetic: 63 g from the 200 g bag of browned beef (about 31.6 g of protein per 100 g cooked), and 10 g from the rice across three bowls. The sauce carries none worth counting.24 g is on the low side for a dinner against a 165 g day, and the reason is honest: this is a big sticky sauce on a small amount of beef over a lot of rice. A fried egg takes it to 30 g. Two bowls is 48 g.Keeps 3 to 4 days. Reheat in a pan rather than the microwave: the cornstarch sauce goes watery when microwaved and comes back together over heat.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "beef",
+      "soy",
+      "oyster",
+      "cornstarch",
+      "shaoxing",
+      "ginger",
+      "greenonion",
+      "longgrainrice",
+      "sugar",
+      "oil",
+      "sesameoil"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}

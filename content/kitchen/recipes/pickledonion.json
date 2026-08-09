@@ -1,0 +1,159 @@
+{
+  "id": "pickledonion",
+  "name": "Quick Pickled Red Onions",
+  "build": "2026-08-09-migrated",
+  "form": "dish",
+  "meal": [
+    "side"
+  ],
+  "why": "What the slicing half of the knife lesson turns into. The sharp pink thing that goes on top of rich food. Ready in half an hour, keeps a month, and it uses the red onion nothing else was eating.",
+  "time": {
+    "totalMin": 10,
+    "note": "10 min + 30 min waiting"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "jar",
+    "proteinPerUnit": 0
+  },
+  "ingredients": [
+    {
+      "ref": "red_onion",
+      "stock": "onion",
+      "display": "red onion, sliced 3 mm thick (about 150 g)",
+      "qty": 0.5,
+      "unit": "each"
+    },
+    {
+      "ref": "white_vinegar",
+      "stock": "sugar",
+      "display": "white vinegar",
+      "qty": 0.5,
+      "unit": "cup"
+    },
+    {
+      "ref": "water",
+      "display": "water",
+      "qty": 0.5,
+      "unit": "cup"
+    },
+    {
+      "ref": "white_sugar",
+      "stock": "sugar",
+      "display": "white sugar",
+      "qty": 1,
+      "unit": "tbsp"
+    },
+    {
+      "ref": "kosher_salt",
+      "stock": "salt",
+      "display": "kosher salt",
+      "qty": 1.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "1_garlic_clove",
+      "display": "1 garlic clove, crushed flat",
+      "_rawQty": "optional"
+    },
+    {
+      "ref": "1_tsp_black_peppercorns",
+      "display": "1 tsp black peppercorns",
+      "_rawQty": "optional"
+    }
+  ],
+  "equipment": [
+    "pot_small",
+    "pot_medium",
+    "jars",
+    "stovetop"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Wash a jar in hot soapy water and rinse it. Pack the sliced onion in, pressing it down as you go.",
+      "uses": [
+        "red_onion",
+        "water"
+      ],
+      "equipment": [
+        "jars"
+      ],
+      "look": "Press until the jar looks overfull. The slices collapse the moment hot brine hits them, so a jar that looks packed now will be about three quarters full in a minute.",
+      "warn": "These are refrigerator pickles. They are never sealed and never stored at room temperature, so none of the boiling-water canning process applies. The flip side: they live in the fridge from the moment they are made.",
+      "_inferred": [
+        "uses",
+        "equipment"
+      ]
+    },
+    {
+      "n": 2,
+      "text": "Put 1/2 cup white vinegar, 1/2 cup water, 1 tbsp sugar and 1 1/2 tsp kosher salt in a small pot. Heat on medium, stirring, just until the salt and sugar dissolve. Do not let it boil.",
+      "uses": [
+        "white_vinegar",
+        "water",
+        "white_sugar",
+        "kosher_salt"
+      ],
+      "equipment": [
+        "pot_small",
+        "pot_medium",
+        "stovetop"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "_needsTarget": true
+      },
+      "look": "It looks cloudy at first and goes clear once everything has dissolved, which takes about 2 minutes. The clearing is the signal, not the temperature and not the clock.The sugar is not there to make them sweet. It balances the sharpness of the vinegar, and a tablespoon in a jar this size will not read as sweetness.",
+      "_inferred": [
+        "uses",
+        "equipment",
+        "heat"
+      ]
+    },
+    {
+      "n": 3,
+      "text": "Pour the hot brine over the onions until they are completely covered. Add the garlic and peppercorns now if you are using them. Push anything that floats back under with a spoon.",
+      "uses": [
+        "red_onion",
+        "1_garlic_clove",
+        "1_tsp_black_peppercorns"
+      ],
+      "warn": "Anything sitting above the liquid does not pickle and is the first thing to spoil. Everything under the brine.",
+      "_inferred": [
+        "uses"
+      ]
+    },
+    {
+      "n": 4,
+      "text": "Leave the jar on the counter for 30 minutes, then put the lid on and refrigerate.",
+      "equipment": [
+        "jars"
+      ],
+      "minutes": 30,
+      "look": "They turn bright pink within about 10 minutes. That is the onion's own pigment reacting to the acid, and it is how you know the brine is working. Nothing was added to colour them.Letting them cool before the lid goes on stops condensation collecting under it.",
+      "_inferred": [
+        "equipment"
+      ]
+    },
+    {
+      "n": 5,
+      "text": "Eat them after 30 minutes. Better tomorrow. They keep about a month in the fridge.",
+      "look": "These go on top of rich, fatty, soft things and cut through them: the meatballs, the stuffed peppers, eggs, a roast beef sandwich, tacos.Sharp and crunchy against soft and rich is one of the few flavour rules worth memorising, and it is most of what a garnish is actually for.Zero protein. Nothing to log.",
+      "_inferred": []
+    }
+  ],
+  "_migration": {
+    "from": "kitchen.html DISHES array",
+    "at": "2026-08-09",
+    "legacyNeeds": [
+      "onion",
+      "vinegar",
+      "salt",
+      "sugar",
+      "jars"
+    ],
+    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
+  }
+}
