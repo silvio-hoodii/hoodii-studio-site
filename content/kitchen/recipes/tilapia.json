@@ -54,9 +54,11 @@
     },
     {
       "ref": "handful_of_arugula",
-      "stock": "seasoning",
+      "stock": "arugula",
       "display": "a handful of arugula, 1 fresh bell pepper",
-      "_rawQty": "optional"
+      "_rawQty": "optional",
+      "defining": false,
+      "note": "Optional garnish. Was linked to the spice rack."
     }
   ],
   "equipment": [

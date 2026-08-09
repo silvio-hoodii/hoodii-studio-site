@@ -1,7 +1,7 @@
 {
   "id": "piccata",
   "name": "Pan Sauce: Chicken Piccata",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-09b",
   "form": "technique",
   "meal": [
     "dinner"
@@ -49,7 +49,9 @@
       "ref": "olive_oil",
       "display": "olive oil",
       "qty": 2,
-      "unit": "tbsp"
+      "unit": "tbsp",
+      "stock": "oil",
+      "note": "Had no stock link at all, so it was invisible to the can-I-cook check."
     },
     {
       "ref": "butter",
@@ -67,10 +69,11 @@
     },
     {
       "ref": "chicken_stock",
-      "stock": "chickenbreast",
+      "stock": "stock",
       "display": "chicken stock (or dry white wine, or water. See below)",
       "qty": 0.75,
-      "unit": "cup"
+      "unit": "cup",
+      "note": "Was linked to chickenbreast. \"chicken stock\" fuzzy-matched to \"chicken breast\" during the 2026-08-09 migration, so the app reported the stock as frozen and told him to thaw it."
     },
     {
       "ref": "lemon_juice",
@@ -86,7 +89,8 @@
       "display": "capers, drained",
       "qty": 2,
       "unit": "tbsp",
-      "defining": true
+      "defining": true,
+      "note": "BOUGHT 2026-08-09, Great Value 90 mL jar. The previous note here claimed \"CONFIRMED 2026-08-04: Walmart does not carry these in a normal jar size\" and blocked the dish for five days. Great Value is the Walmart house brand, so that was simply wrong. 2 tbsp is about a third of this jar."
     },
     {
       "ref": "fresh_parsley",
@@ -383,5 +387,42 @@
       "salt"
     ],
     "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  }
+  },
+  "source": {
+    "name": "Classical scaloppine pan-sauce method",
+    "url": null,
+    "why": "HONEST PROVENANCE, written 2026-08-09. This recipe has no single source and it is wrong to invent one. The METHOD is the standard four-move pan sauce taught everywhere for scaloppine: dredge and sear, deglaze, reduce, finish off the heat with cold butter (monter au beurre), capers and lemon last. That part is not anyone’s invention. The QUANTITIES and the beginner-level step text were authored in this kitchen and have never been cooked, so treat this run as the first test of them."
+  },
+  "variants": [
+    {
+      "id": "classic",
+      "name": "As written: butter-mounted sauce",
+      "default": true,
+      "what": "Cutlets, and the sauce finished by swirling cold butter into it off the heat.",
+      "why": "Gives the glossy, light sauce that piccata is known for. It is also the version that teaches you the technique, which transfers to every other pan sauce you will ever make.",
+      "changes": []
+    },
+    {
+      "id": "friend",
+      "name": "Your friend’s version: flour-thickened, over pasta",
+      "what": "Bite-size chicken instead of cutlets, cayenne in the coating, and the sauce thickened with a flour-and-water slurry rather than butter. Served over pasta.",
+      "why": "More forgiving, because a slurry cannot split the way a butter emulsion can, and it makes more sauce. It is a gravy rather than a pan sauce, so it is a different dish in the mouth. You now have two boxes of spaghetti, so this is the version that uses them.",
+      "changes": [
+        "Cut the chicken into bite-size pieces instead of butterflying into cutlets.",
+        "Add 1/4 tsp cayenne to the flour before coating.",
+        "Brown in butter rather than olive oil.",
+        "After reducing, whisk 2 tbsp flour into 1/4 cup cold water until no lumps, then stir that in and simmer until it thickens.",
+        "Skip the cold-butter finish entirely, it does nothing once there is a slurry in the pan.",
+        "Serve over spaghetti."
+      ],
+      "sourceNote": "Sent by a friend of Silvio, 2026-08-09, transcribed verbatim into notes. Not from a published source, so the quantities are theirs and unverified."
+    },
+    {
+      "id": "nowine",
+      "name": "The wine question, already handled",
+      "what": "Recipes he has read call for 1 cup of dry white wine. This recipe uses 3/4 cup of chicken stock instead.",
+      "why": "He has no white wine. The only cooking wine in the kitchen is SHAOXING, which is a Chinese amber rice wine that is sweeter, nuttier and often salted. It would make this taste like a stir-fry, not a lemon sauce. Do not substitute it here. Wine contributes acid and a little fruit; the 3 tbsp of lemon juice already carries the acid, and stock carries the body, which is why the no-wine version is not a compromise.",
+      "changes": []
+    }
+  ]
 }

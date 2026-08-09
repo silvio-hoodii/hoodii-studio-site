@@ -103,14 +103,31 @@ export default async function KitchenHome() {
       {blocked.length > 0 && (
         <>
           <p className="count" style={{ marginTop: 30 }}>Off the list</p>
-          <p className="quiet">
-            {blocked
-              .map((c) => `${c.recipe.name} (no ${c.offer.missing.filter((m) => m.defining).map((m) => head(m.display)).join(', ')})`)
-              .join(' · ')}
-            . Named after something you do not have. They come back when you buy it.
+          <p className="quiet" style={{ marginBottom: 8 }}>
+            Named after something you do not have. Still openable, they are just not being offered.
           </p>
+          {/* Off the list must never mean unreachable. Raised 2026-08-09: "now that it's off, I
+              can't even check what the recipe was." Not offering a dish is a ranking decision;
+              hiding it is a navigation bug. */}
+          <ul className="plainlist">
+            {blocked.map((c) => (
+              <li key={c.recipe.id}>
+                <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                <span> no {c.offer.missing.filter((m) => m.defining).map((m) => head(m.display)).join(', ')}</span>
+              </li>
+            ))}
+          </ul>
         </>
       )}
+
+      {/* Everything, alphabetical. The index above answers "what should I cook"; this answers
+          "where is that one dish", which is a different question and was unanswerable. */}
+      <p className="count" style={{ marginTop: 30 }}>Everything, A to Z</p>
+      <ul className="plainlist az">
+        {[...recipes].sort((a, b) => a.name.localeCompare(b.name)).map((r) => (
+          <li key={r.id}><Link href={`/kitchen/${r.id}`}>{r.name}</Link></li>
+        ))}
+      </ul>
     </div>
   );
 }

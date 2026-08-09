@@ -56,10 +56,11 @@
     },
     {
       "ref": "vegetable_oil",
-      "stock": "frozenveg",
+      "stock": "oil",
       "display": "vegetable oil",
       "qty": 1,
-      "unit": "tbsp"
+      "unit": "tbsp",
+      "note": "Was linked to frozenveg. \"vegetable oil\" fuzzy-matched to \"frozen vegetables\"."
     },
     {
       "ref": "jarred_minced_garlic",
