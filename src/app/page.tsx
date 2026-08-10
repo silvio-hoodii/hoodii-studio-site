@@ -1,6 +1,7 @@
 import { fetchSpotify } from '@/lib/fetchers';
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer } from '@/lib/kitchen/recipes';
+import { computeNextUp } from '@/lib/gym/cycle';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,21 @@ async function kitchenRow(): Promise<Row> {
   }
 }
 
+async function gymRow(): Promise<Row> {
+  try {
+    const nextUp = await computeNextUp(new Date().toISOString().slice(0, 10));
+    return {
+      label: 'Gym',
+      line: <>Next up <span className="live tnum">{nextUp.nextDay}</span></>,
+      sub: nextUp.streak > 0 ? `${nextUp.streak}-day streak` : 'logged between sets',
+      href: '/gym',
+    };
+  } catch {
+    // A database hiccup must not take the front door down with it.
+    return { label: 'Gym', line: 'Upper/lower split, logged between sets', href: '/gym' };
+  }
+}
+
 const STATIC_ROWS: Row[] = [
   {
     label: 'Reading',
@@ -75,10 +91,10 @@ const STATIC_ROWS: Row[] = [
     external: true,
   },
   {
-    label: 'Gym',
-    line: 'Upper/lower split, logged between sets',
-    sub: 'still on the laptop, not moved yet',
-    off: true,
+    label: 'Theories',
+    line: 'Confidently stupid theories, rated until the good ones surface',
+    href: 'https://theoryos-review.vercel.app',
+    external: true,
   },
   {
     label: 'French',
@@ -115,8 +131,8 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [spotify, kitchen] = await Promise.all([fetchSpotify(), kitchenRow()]);
-  const rows = [kitchen, ...STATIC_ROWS];
+  const [spotify, kitchen, gym] = await Promise.all([fetchSpotify(), kitchenRow(), gymRow()]);
+  const rows = [kitchen, gym, ...STATIC_ROWS];
 
   return (
     <div className="idx">

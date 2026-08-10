@@ -1,0 +1,263 @@
+/* Gym surface, on the shared token system — same idiom as .kos (kitchen.css): monochrome, mono
+ * labels, rules instead of cards, --signal reserved for a value that is true right now. */
+
+.gym {
+  --pad: 20px;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100dvh;
+}
+.gym * { box-sizing: border-box; }
+
+.gym .wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 52px) var(--pad) 140px;
+}
+
+.gym .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: block;
+  text-decoration: none;
+}
+.gym a.eyebrow:hover { color: var(--foreground); }
+
+.gym h1 {
+  font-size: clamp(22px, 5vw, 27px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+.gym h2 { font-size: 17px; line-height: 1.3; font-weight: 600; margin: 0; }
+.gym .lede { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); margin: 10px 0 0; max-width: 54ch; }
+
+.gym .count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0 0 2px;
+}
+.gym .quiet { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; color: var(--muted-foreground); }
+.gym .live { color: var(--signal); font-weight: 600; font-variant-numeric: tabular-nums; }
+.gym .tnum { font-variant-numeric: tabular-nums; }
+
+.gym .divider { border: 0; border-top: 1px solid var(--foreground); opacity: 0.85; margin: 22px 0 0; }
+
+/* ---- day tabs ---- */
+.gym .tabs { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
+.gym .tab {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.gym .tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+
+/* ---- budget selector ---- */
+.gym .budgets { display: flex; gap: 6px; margin-top: 14px; }
+.gym .budgets button {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+}
+.gym .budgets button.on { border-color: var(--foreground); background: var(--secondary); }
+
+/* ---- progress ---- */
+.gym .progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-top: 16px;
+}
+
+/* ---- blocks + exercises ---- */
+.gym .block { margin-top: 30px; }
+.gym .block-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 10px;
+}
+.gym .block-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+
+.gym .ex { padding: 16px 0; border-top: 1px solid var(--border); }
+.gym .ex:first-child { border-top: 0; }
+.gym .ex-name { font-size: 16.5px; font-weight: 600; margin: 0 0 3px; }
+.gym .ex-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin-bottom: 8px; }
+.gym .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
+.gym .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
+
+.gym .ex-suggest {
+  border-left: 2px solid var(--signal);
+  padding-left: 11px;
+  margin: 10px 0;
+  font-size: 14.5px;
+}
+.gym .ex-suggest-why { display: block; color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
+
+/* ---- set rows ---- */
+.gym .sets { margin-top: 10px; }
+.gym .set-row { display: grid; grid-template-columns: 1.5rem 1fr 1fr 2.4rem; gap: 8px; align-items: center; padding: 6px 0; }
+.gym .set-row .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); }
+.gym .set-row input[type='number'], .gym .set-row input[type='text'] {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+.gym .set-row input:focus { outline: none; border-color: var(--foreground); }
+.gym .set-row .done-toggle {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--background);
+  cursor: pointer;
+}
+.gym .set-row .done-toggle.on { background: var(--signal); border-color: var(--signal); }
+
+/* ---- swap picker ---- */
+.gym .swap-toggle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gym .swap-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.gym .swap-opt {
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: var(--background);
+  cursor: pointer;
+}
+.gym .swap-opt:hover { border-color: var(--foreground); }
+.gym .swap-opt-name { font-weight: 600; font-size: 14.5px; }
+.gym .swap-opt-cue { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
+.gym .swapped-note { font-family: var(--font-mono); font-size: 12px; color: var(--signal); margin-top: 4px; }
+
+/* ---- rest timer bar. Sticky rather than fixed-overlay, same reasoning as .kos .rail. ---- */
+.gym .timer-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  background: var(--card);
+  border-top: 1px solid var(--foreground);
+  padding: 14px var(--pad) calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.gym .timer-bar.hidden { display: none; }
+.gym .timer-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
+.gym .timer-time { font-family: var(--font-mono); font-size: 30px; font-variant-numeric: tabular-nums; }
+.gym .timer-time.go { color: var(--signal); }
+
+/* ---- warmup / cooldown / RIR ---- */
+.gym details.collapse { border-top: 1px solid var(--border); padding: 12px 0; }
+.gym details.collapse summary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.gym .warm-item { padding: 10px 0; border-top: 1px solid var(--border); }
+.gym .warm-item:first-child { border-top: 0; }
+.gym .warm-item .name { font-weight: 600; font-size: 14.5px; }
+.gym .warm-item .cue { font-size: 13.5px; color: var(--muted-foreground); margin-top: 2px; }
+
+/* ---- controls ---- */
+.gym .nav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 8px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.gym button, .gym .btn {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+.gym button:hover, .gym .btn:hover { border-color: var(--muted-foreground); }
+.gym button.primary, .gym .btn.primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  flex: 1;
+}
+.gym button:disabled { opacity: 0.4; cursor: default; }
+
+.gym input[type='password'] {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.gym .not-here {
+  border-left: 2px solid var(--border);
+  padding-left: 13px;
+  font-size: 14.5px;
+  color: var(--muted-foreground);
+  margin-top: 20px;
+}

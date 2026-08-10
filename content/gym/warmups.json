@@ -1,0 +1,64 @@
+{
+  "lower": [
+    {
+      "name": "Clamshell x15/side (LEFT first)",
+      "search": "clamshell exercise glute",
+      "cue": "On your side, knees bent 90, short band above the knees, feet together. Open the top knee without rolling the hips back. Do the LEFT side first and give it one extra set. This switches on the glute that goes quiet."
+    },
+    {
+      "name": "Frog Pump x20",
+      "search": "frog pump glute exercise",
+      "cue": "On your back, heels together, knees wide, feet close to your butt. Drive through the heels and squeeze the glutes hard. This position forces the glutes to lead instead of the hamstrings."
+    },
+    {
+      "name": "Single-Leg Glute Bridge x10/side (LEFT first)",
+      "search": "single leg glute bridge form",
+      "media": "single-leg-glute-bridge",
+      "cue": "Foot a hand-length from your butt, toes up, drive through the heel. Tuck the pelvis so the lower back is flat BEFORE you lift. Squeeze the glute, 3 second hold at the top. If you feel the hamstring, pull the heel closer."
+    },
+    {
+      "name": "Deep Squat Hold x30s",
+      "search": "deep squat hold mobility",
+      "cue": "Sit into a deep squat, hold a rack or post for balance, heels down, knees pushed out. Use the stance width that lets you sit comfortably. Relax and breathe."
+    },
+    {
+      "name": "Wall Ankle Rocker x5/side",
+      "search": "wall ankle rocker mobility drill",
+      "cue": "Toes a few inches from the wall, heel stays DOWN, drive the knee forward over the second toe toward the wall."
+    }
+  ],
+  "upper": [
+    {
+      "name": "Band Pull-Apart x15",
+      "search": "band pull apart form",
+      "media": "band-pull-apart",
+      "cue": "Band at chest height, arms straight, pull it apart to your chest and squeeze the shoulder blades. Wakes up the upper back."
+    },
+    {
+      "name": "Wall Slides x10",
+      "search": "wall slide shoulder exercise",
+      "cue": "Back to the wall, arms in a goal-post, slide them up keeping wrists and elbows on the wall. Opens the shoulders for pressing and the swim catch."
+    },
+    {
+      "name": "Band Straight-Arm Pulldown x15",
+      "search": "straight arm pulldown band",
+      "media": "band-straight-arm-pulldown",
+      "cue": "Band anchored high, arms straight, pull down to your thighs and feel the lats. This is the same motion as your freestyle catch."
+    },
+    {
+      "name": "Arm Circles + Thoracic Rotation x8/side",
+      "search": "thoracic rotation warm up",
+      "cue": "Big slow arm circles, then on all fours rotate one arm up to the ceiling, following your hand with your eyes."
+    },
+    {
+      "name": "Wrist Circles + Rocks x10 each way",
+      "search": "wrist warm up handstand prep",
+      "cue": "Circle the wrists both ways, then on all fours with hands flat and fingers spread, rock your weight forward over the fingers and back. Non-negotiable before any handstand work — your wrists carry your whole bodyweight up there."
+    },
+    {
+      "name": "Palm Pulses x10",
+      "search": "handstand wrist conditioning palm pulse",
+      "cue": "Still on all fours, press through the fingertips and knuckles to lift the heel of the palm slightly off the floor, then lower. Builds the forearm strength that protects the wrists."
+    }
+  ]
+}

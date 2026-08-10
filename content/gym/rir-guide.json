@@ -1,0 +1,19 @@
+[
+  {
+    "rir": "3",
+    "desc": "Could definitely do 3 more. Weight feels moderate, bar moves fast."
+  },
+  {
+    "rir": "2",
+    "desc": "Could do 2 more. Getting hard but you're confident. Bar starts slowing down."
+  },
+  {
+    "rir": "1",
+    "desc": "MAYBE 1 more but it would be ugly. Last rep was a grind, bar moved slow.",
+    "highlight": true
+  },
+  {
+    "rir": "0",
+    "desc": "That was the absolute last rep. Form broke down. DON'T train here regularly."
+  }
+]

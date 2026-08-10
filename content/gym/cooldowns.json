@@ -1,0 +1,27 @@
+{
+  "couch": {
+    "name": "Couch Stretch — 1 min/side",
+    "search": "couch stretch hip flexor",
+    "cue": "Kneel facing AWAY from a wall or bench. Place one foot up behind you against the wall (top of foot or toes on wall). Other foot flat on floor in front, knee at ~90°. Squeeze the glute of the back leg and push your hips forward until you feel a deep stretch in the hip flexor and quad. Keep torso upright — don't lean forward. TOO INTENSE? Move front foot further from wall."
+  },
+  "pigeon": {
+    "name": "Pigeon Pose — 1 min/side",
+    "search": "pigeon pose stretch how to beginner",
+    "cue": "From hands and knees, bring one knee forward and place it behind the same-side wrist. Extend the other leg straight behind you. Lower your hips toward the floor. Front shin can be angled (doesn't need to be parallel to chest). You should feel it deep in the glute and outer hip of the front leg. TOO INTENSE? Keep more weight on your hands, don't sink as deep. Use a mat."
+  },
+  "hip90": {
+    "name": "Hip 90/90 Hold — 1 min/side",
+    "search": "hip 90 90 stretch hold",
+    "cue": "Same position as warmup but now HOLD instead of switching. Sit with both knees at 90°, lean back on hands if needed. Hold each side for 1 full minute. Breathe deeply and try to relax into it. Over time, try to sit taller."
+  },
+  "thoracic": {
+    "name": "Thoracic Extension on Foam Roller — 1 min",
+    "search": "thoracic extension foam roller",
+    "cue": "Lie on your back with a foam roller across your MID-BACK (NOT lower back). Hands behind your head to support your neck. Let your upper back extend over the roller — feel the chest open up. Slowly roll up and down between mid and upper back. Pause on tight spots and let gravity stretch you. This opens your thoracic spine for squat and overhead positions."
+  },
+  "ankle": {
+    "name": "Wall Ankle Dorsiflexion — 30s x3/side",
+    "search": "wall ankle dorsiflexion stretch hold",
+    "cue": "Same setup as warmup wall ankle rocker, but now HOLD at end range for 30 seconds instead of rocking. Push knee to wall, hold. 3 holds per side. Move foot back if you can touch wall easily."
+  }
+}

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --port 3001",
     "validate:recipes": "node content/kitchen/validate.mjs",
-    "build": "node content/kitchen/validate.mjs --strict && next build",
+    "validate:gym": "node content/gym/validate.mjs",
+    "build": "node content/kitchen/validate.mjs --strict && node content/gym/validate.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

@@ -1,0 +1,901 @@
+{
+  "days": {
+    "monday": {
+      "name": "Monday",
+      "title": "Lower A — Squat",
+      "desc": "Squat strength + glute work",
+      "time": "60-70 min",
+      "warmup": "lower",
+      "cooldown": [
+        "pigeon",
+        "couch"
+      ],
+      "blocks": [
+        {
+          "type": "main",
+          "label": "Power Primer",
+          "tag": "(do these FIRST, fresh)",
+          "exercises": [
+            {
+              "id": "box-jump",
+              "name": "Box Jump",
+              "sets": 3,
+              "reps": "4",
+              "rest": "90s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Jump onto a box, land soft and quiet with bent knees. STEP down, do not jump down. Quality over height. Builds the fast, explosive quality.",
+              "alts": [
+                {
+                  "id": "broad-jump",
+                  "name": "Broad Jump",
+                  "cue": "Jump forward for distance, land soft and balanced. Reset each rep."
+                },
+                {
+                  "id": "pogo-hops",
+                  "name": "Pogo Hops",
+                  "cue": "Small fast bounces off the balls of your feet, stiff ankles, minimal knee bend. 3x15."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "main",
+          "label": "Main Lift",
+          "tag": "(rack area)",
+          "exercises": [
+            {
+              "id": "bb-back-squat",
+              "name": "BB Back Squat",
+              "sets": 4,
+              "reps": "5",
+              "rest": "3 min",
+              "log": true,
+              "cue": "The lift we progress, moderate and clean. Use a slightly wider stance with toes out so you hit parallel comfortably. Breathe in, brace, hip crease below the knee, knees track over the second toe, exhale up. Re-brace before EACH rep.",
+              "alts": [
+                {
+                  "id": "smith-squat",
+                  "name": "Smith Squat",
+                  "cue": "Fixed bar path. Feet slightly forward of the bar. Same bracing and depth."
+                },
+                {
+                  "id": "heavy-goblet-squat",
+                  "name": "Heavy Goblet Squat",
+                  "cue": "Heaviest DB at the chest. The front load is the counterbalance, so you sit deeper and more upright."
+                },
+                {
+                  "id": "front-squat",
+                  "name": "Front Squat",
+                  "cue": "Bar on front delts, elbows high, torso vertical. Front-loaded so depth comes easier."
+                }
+              ]
+            },
+            {
+              "id": "single-leg-glute-bridge",
+              "name": "Single-Leg Glute Bridge",
+              "sets": 2,
+              "reps": "12/leg",
+              "rest": "60s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Between squat sets. LEFT first, give it one extra set. Heel close, toes up, pelvis tucked, drive the heel, 2 second squeeze. Feel the glute, not the hamstring.",
+              "alts": [
+                {
+                  "id": "frog-pump",
+                  "name": "Frog Pump",
+                  "cue": "Heels together, knees wide, feet close. Squeeze glutes. 2x20."
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "cue": "Short band above knees, seated or standing, push knees out against the band. 2x20."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Unilateral",
+          "tag": "(DB / bench area)",
+          "exercises": [
+            {
+              "id": "bulgarian-split-squat",
+              "name": "Bulgarian Split Squat",
+              "sets": 3,
+              "reps": "8/leg",
+              "rest": "2 min",
+              "log": true,
+              "cue": "DBs at sides, rear foot on the bench laces-down. Front shin stays vertical at the bottom. Drive through the FRONT heel, do not push off the back foot. Torso upright.",
+              "alts": [
+                {
+                  "id": "db-step-up",
+                  "name": "DB Step-up",
+                  "cue": "Bench at knee height, drive through the top heel, do not push off the trailing foot. 8/leg."
+                },
+                {
+                  "id": "reverse-lunge",
+                  "name": "Reverse Lunge",
+                  "cue": "Step backward, same depth, easier on the knee than a forward lunge. DBs at sides."
+                }
+              ]
+            },
+            {
+              "id": "band-pallof",
+              "name": "Band Pallof Press",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Band anchored at chest height on a rack post, stand sideways, both hands on the band at your chest. Press straight out and resist the twist, hold 2 seconds. No machine needed.",
+              "alts": [
+                {
+                  "id": "dead-bug",
+                  "name": "Dead Bug",
+                  "cue": "Back glued to the floor, opposite arm and leg reach out slow. 3x10/side."
+                },
+                {
+                  "id": "side-plank",
+                  "name": "Side Plank",
+                  "cue": "Hold a straight line from head to feet, hips up. 3x30s/side."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pair",
+          "label": "Glute + Calf",
+          "tag": "(back-ext station)",
+          "exercises": [
+            {
+              "id": "glute-back-extension",
+              "name": "Glute-Biased Back Extension",
+              "sets": 3,
+              "reps": "10",
+              "rest": "90s",
+              "log": true,
+              "cue": "On the 45 degree back-extension. Round the upper back slightly and tuck the pelvis so the GLUTES drive, not the lower back. Hug a plate to your chest for load. Squeeze at the top.",
+              "alts": [
+                {
+                  "id": "smith-hip-thrust",
+                  "name": "Smith Hip Thrust",
+                  "cue": "Back on a bench, bar across the hips with a pad. Squeeze the glutes hard at the top, 1 second pause."
+                }
+              ]
+            },
+            {
+              "id": "standing-calf-raise",
+              "name": "Standing Calf Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "log": true,
+              "cue": "Full stretch at the bottom, pause and squeeze at the top. Also helps protect your ankles for running.",
+              "alts": [
+                {
+                  "id": "seated-calf-raise",
+                  "name": "Seated Calf Raise",
+                  "cue": "Same idea seated, hits the lower calf. Full range."
+                },
+                {
+                  "id": "single-leg-calf-raise",
+                  "name": "Single-Leg Calf Raise",
+                  "cue": "One leg, hold a DB, full range. Great for run prep."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "tuesday": {
+      "name": "Tuesday",
+      "title": "Upper A — Press",
+      "desc": "Handstand skill + pressing",
+      "time": "60-70 min",
+      "warmup": "upper",
+      "cooldown": [
+        "thoracic"
+      ],
+      "blocks": [
+        {
+          "type": "main",
+          "label": "Handstand Skill",
+          "tag": "(ladder — FIRST, fresh, never to failure)",
+          "exercises": [
+            {
+              "id": "pike-hold",
+              "name": "Step 1 — Pike Hold",
+              "sets": 3,
+              "reps": "20",
+              "rest": "60s",
+              "timed": true,
+              "log": true,
+              "cue": "Feet on a bench or box, hands on the floor, walk the hands back until your hips stack over your shoulders. Arms locked, push the floor away, look at your hands. Hold and breathe, come down before the arms shake. GATE: 3 sets of 20s in one session → wall walk-ups.",
+              "alts": [
+                {
+                  "id": "wall-walkup",
+                  "name": "Step 2 — Wall Walk-Up",
+                  "sets": 3,
+                  "reps": "4",
+                  "rest": "90s",
+                  "bodyweight": true,
+                  "timed": false,
+                  "log": true,
+                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL — never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep — that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
+                },
+                {
+                  "id": "ctw-wall-hold",
+                  "name": "Step 3 — Chest-to-Wall Hold",
+                  "sets": 3,
+                  "reps": "15",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall — upside down, you finish chest toward the wall. Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
+                },
+                {
+                  "id": "toe-pull-tap",
+                  "name": "Step 4 — Toe Pulls",
+                  "sets": 5,
+                  "reps": "3",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "From the chest-to-wall hold, shift your hips over your hands and pull your toes off the wall. Log your longest free balance in seconds each set. GATE: 5 sets with a 3s free balance → kick-ups on open floor."
+                },
+                {
+                  "id": "kickup-freestanding",
+                  "name": "Step 5 — Kick-Up (open floor)",
+                  "sets": 5,
+                  "reps": "5",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder — goal is a calm 10s."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "main",
+          "label": "Main Press",
+          "tag": "(bench area)",
+          "exercises": [
+            {
+              "id": "db-bench-press",
+              "name": "DB Bench Press",
+              "sets": 4,
+              "reps": "6",
+              "rest": "2 min",
+              "log": true,
+              "cue": "Breathe in, brace, lower with a deep stretch at the bottom, 1 second pause, press up and exhale. Feet flat, shoulder blades pinched.",
+              "alts": [
+                {
+                  "id": "bench-press",
+                  "name": "BB Bench Press",
+                  "cue": "Barbell version. Same setup, bar to chest with a pause."
+                },
+                {
+                  "id": "machine-chest-press",
+                  "name": "Machine Chest Press",
+                  "cue": "Seat so the handles are at chest level. Same press motion."
+                }
+              ]
+            },
+            {
+              "id": "dead-bug",
+              "name": "Dead Bug",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "On your back, lower back GLUED to the floor, ribs down. Opposite arm and leg reach out slow, then back. Stop if the back arches.",
+              "alts": [
+                {
+                  "id": "plank-shoulder-taps",
+                  "name": "Plank w/ Shoulder Taps",
+                  "cue": "Plank, tap opposite shoulder without letting the hips rotate. 3x30s."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Overhead",
+          "tag": "(DB area)",
+          "exercises": [
+            {
+              "id": "db-overhead-press",
+              "name": "DB Overhead Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "log": true,
+              "cue": "Seated or standing, brace, full range, exhale as you press. Do not lean back.",
+              "alts": [
+                {
+                  "id": "bb-ohp",
+                  "name": "BB Overhead Press",
+                  "cue": "Barbell from the front rack, brace hard, press overhead, clear your head."
+                }
+              ]
+            },
+            {
+              "id": "band-face-pull",
+              "name": "Band Face Pull",
+              "sets": 3,
+              "reps": "15",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Band at face height on a rack post, pull to your forehead with elbows high and rotate the hands outward at the end. Shoulder health for the pool.",
+              "alts": [
+                {
+                  "id": "rear-delt-fly",
+                  "name": "Rear Delt DB Fly",
+                  "cue": "Bent over, light DBs, fly the arms out, squeeze the shoulder blades."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Horizontal Pull",
+          "tag": "(DB / bench)",
+          "exercises": [
+            {
+              "id": "db-row-alt",
+              "name": "DB Single-Arm Row",
+              "sets": 3,
+              "reps": "10",
+              "rest": "90s",
+              "log": true,
+              "cue": "One knee and hand on the bench, row the DB to your hip, drive the elbow back. Moderate, the pool covers most of your pulling.",
+              "alts": [
+                {
+                  "id": "chest-supported-row",
+                  "name": "Chest-Supported Row",
+                  "cue": "Chest on an incline bench, row DBs, no momentum."
+                },
+                {
+                  "id": "seated-cable-row",
+                  "name": "Seated Cable Row",
+                  "cue": "Tall chest, pull to the stomach, squeeze the back."
+                }
+              ]
+            },
+            {
+              "id": "hollow-hold",
+              "name": "Hollow Body Hold",
+              "sets": 3,
+              "reps": "20",
+              "rest": "45s",
+              "timed": true,
+              "log": true,
+              "cue": "Lower back PRESSED into the floor, ribs down, arms overhead and legs off the ground in a shallow banana. This is the exact shape of a straight handstand — own it on the floor first. Too hard? Bend the knees or keep arms at your sides.",
+              "alts": [
+                {
+                  "id": "side-plank",
+                  "name": "Side Plank",
+                  "cue": "Straight line head to feet, hips lifted and held. Switch sides. 3x30s."
+                },
+                {
+                  "id": "band-pallof",
+                  "name": "Band Pallof Press",
+                  "cue": "Band sideways at chest, press out and resist the twist. 3x10/side."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pair",
+          "label": "Arms + Rotator",
+          "tag": "(cable / DB)",
+          "exercises": [
+            {
+              "id": "tricep-pushdown",
+              "name": "Tricep Pushdown",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "log": true,
+              "cue": "Elbows pinned to the sides, push down to full lockout, control the way up.",
+              "alts": [
+                {
+                  "id": "db-skullcrusher",
+                  "name": "DB Skullcrusher",
+                  "cue": "On a bench, lower DBs beside the head, extend up. Light."
+                }
+              ]
+            },
+            {
+              "id": "band-external-rotation",
+              "name": "Band External Rotation",
+              "sets": 3,
+              "reps": "15/side",
+              "rest": "30s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Elbow pinned to your side at 90 degrees, rotate the forearm outward against a light band. Rotator-cuff health before all that swimming.",
+              "alts": [
+                {
+                  "id": "cable-external-rotation",
+                  "name": "Cable External Rotation",
+                  "cue": "Cable at elbow height, same outward rotation, light."
+                },
+                {
+                  "id": "band-pull-apart",
+                  "name": "Band Pull-Apart",
+                  "cue": "Arms straight, pull the band apart to the chest, squeeze. 3x15."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "thursday": {
+      "name": "Thursday",
+      "title": "Lower B — Hinge",
+      "desc": "Hinge strength + glute med",
+      "time": "60-70 min",
+      "warmup": "lower",
+      "cooldown": [
+        "pigeon",
+        "couch"
+      ],
+      "blocks": [
+        {
+          "type": "main",
+          "label": "Power Primer",
+          "tag": "(do these FIRST, fresh)",
+          "exercises": [
+            {
+              "id": "broad-jump",
+              "name": "Broad Jump",
+              "sets": 3,
+              "reps": "3",
+              "rest": "90s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Jump forward for distance, land soft and balanced, reset each rep. Builds explosive hip drive.",
+              "alts": [
+                {
+                  "id": "box-jump",
+                  "name": "Box Jump",
+                  "cue": "Onto a box, land soft, STEP down. Quality over height."
+                },
+                {
+                  "id": "pogo-hops",
+                  "name": "Pogo Hops",
+                  "cue": "Small fast stiff-ankle bounces. 3x15."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "main",
+          "label": "Main Hinge",
+          "tag": "(rack area)",
+          "exercises": [
+            {
+              "id": "romanian-deadlift",
+              "name": "Romanian Deadlift",
+              "sets": 3,
+              "reps": "6",
+              "rest": "2 min",
+              "log": true,
+              "cue": "Breathe in, brace. Bar close to the legs, knees soft. Push the hips BACK until you feel the hamstrings stretch, then snap the hips forward and squeeze the glutes. Exhale at the top.",
+              "alts": [
+                {
+                  "id": "db-rdl",
+                  "name": "DB Romanian Deadlift",
+                  "cue": "DBs in front, same hip hinge. Good when the bar is taken."
+                },
+                {
+                  "id": "back-extension",
+                  "name": "Back Extension",
+                  "cue": "45 degree station, hinge and squeeze the glutes at the top, hug a plate."
+                }
+              ]
+            },
+            {
+              "id": "single-leg-glute-bridge",
+              "name": "Single-Leg Glute Bridge",
+              "sets": 2,
+              "reps": "12/leg",
+              "rest": "60s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "LEFT first, one extra set. Heel close, toes up, pelvis tucked, drive the heel, 2 second squeeze. Glute, not hamstring.",
+              "alts": [
+                {
+                  "id": "frog-pump",
+                  "name": "Frog Pump",
+                  "cue": "Heels together, knees wide, feet close, squeeze glutes. 2x20."
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "cue": "Band above the knees, push the knees out. 2x20."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Unilateral Lunge",
+          "tag": "(DB area)",
+          "exercises": [
+            {
+              "id": "reverse-lunge",
+              "name": "Reverse Lunge",
+              "sets": 3,
+              "reps": "8/leg",
+              "rest": "90s",
+              "log": true,
+              "cue": "Step straight back, drop the back knee toward the floor, drive through the FRONT heel to stand. DBs at sides, torso tall.",
+              "alts": [
+                {
+                  "id": "walking-lunge",
+                  "name": "Walking Lunge",
+                  "cue": "Step forward into each lunge, drive through the front heel. 8/leg."
+                },
+                {
+                  "id": "db-step-up",
+                  "name": "DB Step-up",
+                  "cue": "Bench at knee height, drive through the top heel. 8/leg."
+                }
+              ]
+            },
+            {
+              "id": "banded-lateral-walk",
+              "name": "Banded Lateral Walk",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Short band above the knees or ankles, half-squat, step sideways keeping tension, do not let the knees cave. Hits the side glute (glute med) that keeps your knees and hips stable.",
+              "alts": [
+                {
+                  "id": "clamshell",
+                  "name": "Clamshell",
+                  "cue": "On your side, band above the knees, open the top knee, no hip roll. 3x15/side, LEFT first."
+                },
+                {
+                  "id": "monster-walk",
+                  "name": "Monster Walk",
+                  "cue": "Band above the knees, walk forward and back in a half-squat keeping tension."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pair",
+          "label": "Single-Leg Hinge + Core",
+          "tag": "(DB area)",
+          "exercises": [
+            {
+              "id": "single-leg-rdl",
+              "name": "Single-Leg RDL",
+              "sets": 3,
+              "reps": "8/leg",
+              "rest": "90s",
+              "log": true,
+              "cue": "DB in the opposite hand, hinge at the hip, back leg extends behind you, flat back, feel the hamstring and glute, stand and squeeze. Slow for balance.",
+              "alts": [
+                {
+                  "id": "b-stance-rdl",
+                  "name": "B-Stance RDL",
+                  "cue": "Back toe lightly down for balance, most weight on the front leg. Easier to balance than full single-leg."
+                },
+                {
+                  "id": "db-rdl",
+                  "name": "DB Romanian Deadlift",
+                  "cue": "Both legs, DBs in front, same hinge."
+                }
+              ]
+            },
+            {
+              "id": "dead-bug",
+              "name": "Dead Bug",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Back flat, opposite arm and leg reach out slow, then back.",
+              "alts": [
+                {
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "cue": "On your back, lower back pressed down, arms and legs off the floor in a shallow banana. 3x20s."
+                },
+                {
+                  "id": "side-plank",
+                  "name": "Side Plank",
+                  "cue": "Hold a straight line from head to feet, hips up. 3x30s/side."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "friday": {
+      "name": "Friday",
+      "title": "Upper B — Pull",
+      "desc": "Handstand skill + pulling + swim catch",
+      "time": "60-70 min",
+      "warmup": "upper",
+      "cooldown": [
+        "thoracic"
+      ],
+      "blocks": [
+        {
+          "type": "main",
+          "label": "Handstand Skill",
+          "tag": "(ladder — FIRST, fresh, never to failure)",
+          "exercises": [
+            {
+              "id": "pike-hold",
+              "name": "Step 1 — Pike Hold",
+              "sets": 3,
+              "reps": "20",
+              "rest": "60s",
+              "timed": true,
+              "log": true,
+              "cue": "Feet on a bench or box, hands on the floor, walk the hands back until your hips stack over your shoulders. Arms locked, push the floor away, look at your hands. Hold and breathe, come down before the arms shake. GATE: 3 sets of 20s in one session → wall walk-ups.",
+              "alts": [
+                {
+                  "id": "wall-walkup",
+                  "name": "Step 2 — Wall Walk-Up",
+                  "sets": 3,
+                  "reps": "4",
+                  "rest": "90s",
+                  "bodyweight": true,
+                  "timed": false,
+                  "log": true,
+                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL — never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep — that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
+                },
+                {
+                  "id": "ctw-wall-hold",
+                  "name": "Step 3 — Chest-to-Wall Hold",
+                  "sets": 3,
+                  "reps": "15",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall — upside down, you finish chest toward the wall. Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
+                },
+                {
+                  "id": "toe-pull-tap",
+                  "name": "Step 4 — Toe Pulls",
+                  "sets": 5,
+                  "reps": "3",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "From the chest-to-wall hold, shift your hips over your hands and pull your toes off the wall. Log your longest free balance in seconds each set. GATE: 5 sets with a 3s free balance → kick-ups on open floor."
+                },
+                {
+                  "id": "kickup-freestanding",
+                  "name": "Step 5 — Kick-Up (open floor)",
+                  "sets": 5,
+                  "reps": "5",
+                  "rest": "90s",
+                  "timed": true,
+                  "log": true,
+                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder — goal is a calm 10s."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "main",
+          "label": "Main Pull",
+          "tag": "(pulldown area)",
+          "exercises": [
+            {
+              "id": "lat-pulldown",
+              "name": "Lat Pulldown",
+              "sets": 4,
+              "reps": "8",
+              "rest": "2 min",
+              "log": true,
+              "cue": "Pull the elbows down to the ribs, bar to the upper chest, full lat stretch at the top. Working toward real pull-ups.",
+              "alts": [
+                {
+                  "id": "assisted-pullup",
+                  "name": "Assisted Pull-up",
+                  "cue": "Enough counterweight for 8-10 clean reps, full range."
+                },
+                {
+                  "id": "pullup",
+                  "name": "Pull-up",
+                  "cue": "Dead hang to chin over the bar, control down. As many clean reps as you can."
+                }
+              ]
+            },
+            {
+              "id": "dead-bug",
+              "name": "Dead Bug",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Back glued to the floor, ribs down, opposite arm and leg reach out slow.",
+              "alts": [
+                {
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "cue": "Lower back pressed down, arms and legs off the floor in a shallow banana. 3x20s."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Swim Catch",
+          "tag": "(cable area)",
+          "exercises": [
+            {
+              "id": "straight-arm-pulldown",
+              "name": "Straight-Arm Pulldown",
+              "sets": 3,
+              "reps": "12",
+              "rest": "90s",
+              "log": true,
+              "cue": "Cable high, straight bar or rope, arms straight, pull down to the thighs and squeeze the lats. This is your freestyle catch, trained directly. Lighter than a lat pulldown.",
+              "alts": [
+                {
+                  "id": "band-straight-arm-pulldown",
+                  "name": "Band Straight-Arm Pulldown",
+                  "cue": "Band anchored high, arms straight, pull to the thighs. Same motion if cables are busy."
+                },
+                {
+                  "id": "db-pullover",
+                  "name": "DB Pullover",
+                  "cue": "On a bench, one DB over the chest, lower behind the head with straight-ish arms, pull back over. Feel the lats."
+                }
+              ]
+            },
+            {
+              "id": "band-pull-apart",
+              "name": "Band Pull-Apart",
+              "sets": 3,
+              "reps": "15",
+              "rest": "45s",
+              "bodyweight": true,
+              "log": true,
+              "cue": "Arms straight at chest height, pull the band apart, squeeze the shoulder blades. Upper-back and posture for streamline.",
+              "alts": [
+                {
+                  "id": "rear-delt-fly",
+                  "name": "Rear Delt DB Fly",
+                  "cue": "Bent over, light DBs, fly the arms out, squeeze."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "superset",
+          "label": "Horizontal Pull",
+          "tag": "(rack / bench)",
+          "exercises": [
+            {
+              "id": "bb-row",
+              "name": "BB Row",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "log": true,
+              "cue": "Chest roughly parallel to the floor, drive the elbows back, no shrugging or jerking.",
+              "alts": [
+                {
+                  "id": "db-row-alt",
+                  "name": "DB Single-Arm Row",
+                  "cue": "Knee and hand on a bench, row to the hip."
+                },
+                {
+                  "id": "chest-supported-row",
+                  "name": "Chest-Supported Row",
+                  "cue": "Chest on an incline bench, row, no momentum."
+                },
+                {
+                  "id": "inverted-row",
+                  "name": "Inverted Row",
+                  "cue": "Smith bar at hip height, body straight, pull the chest to the bar."
+                }
+              ]
+            },
+            {
+              "id": "plank-shoulder-taps",
+              "name": "Plank w/ Shoulder Taps",
+              "sets": 3,
+              "reps": "30",
+              "rest": "30s",
+              "timed": true,
+              "log": true,
+              "cue": "Plank on hands, tap the opposite shoulder slowly without letting the hips rotate.",
+              "alts": [
+                {
+                  "id": "side-plank",
+                  "name": "Side Plank",
+                  "cue": "Straight line, hips up, hold each side. 3x30s."
+                },
+                {
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "cue": "Lower back pressed down, arms and legs off the floor in a shallow banana. 3x20s."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pair",
+          "label": "Biceps + Carry",
+          "tag": "(DB area)",
+          "exercises": [
+            {
+              "id": "bicep-curl",
+              "name": "Bicep Curl",
+              "sets": 3,
+              "reps": "10",
+              "rest": "45s",
+              "log": true,
+              "cue": "Elbows still, curl with control, no swinging. Squeeze at the top.",
+              "alts": [
+                {
+                  "id": "hammer-curl",
+                  "name": "Hammer Curl",
+                  "cue": "Neutral grip, thumbs up, controlled. Hits the forearm too."
+                }
+              ]
+            },
+            {
+              "id": "farmer-carry",
+              "name": "Farmer Carry",
+              "sets": 3,
+              "reps": "40",
+              "rest": "60s",
+              "timed": true,
+              "log": true,
+              "cue": "A heavy DB in each hand, stand tall, brace, walk for the seconds shown. Grip, core, and posture all at once.",
+              "alts": [
+                {
+                  "id": "suitcase-carry",
+                  "name": "Suitcase Carry",
+                  "cue": "One DB only, do not let your torso tip. Switch sides. Anti-side-bend core."
+                },
+                {
+                  "id": "db-hold",
+                  "name": "DB Static Hold",
+                  "cue": "Heavy DBs held at the sides, stand tall and brace for the seconds shown. If space is tight."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
