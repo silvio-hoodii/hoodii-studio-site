@@ -120,10 +120,11 @@ harmless, and PSN is not surfaced on the hub.
 
 ## Domain status
 
-`hoodii.studio` is **still served by `hoodii-platform-hoodii-site`**, the old monorepo app. This repo
-is live at `hoodii-studio-site.vercel.app`. The flip is a pending decision, not a technical blocker;
-when it happens, `/kitchen` moves off the vercel.app URL for free and
-`hoodii-platform/apps/hoodii-site/` gets archived.
+`hoodii.studio` serves this repo as of 2026-08-10. `hoodii-platform/apps/hoodii-site/` (the old
+monorepo app, 2D portfolio) is retired and should be archived, not edited. This repo is also public
+on GitHub as of 2026-08-10 (`silvio-hoodii/hoodii-studio-site`) — git history was scanned clean of
+secrets first; keep it that way: dependency/API keys go in `.env.local` (gitignored) or Vercel env
+vars, never inline.
 
 ## Posture rules (load-bearing)
 

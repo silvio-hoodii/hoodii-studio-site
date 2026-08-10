@@ -136,6 +136,8 @@ export default async function Home() {
 
       <div className="foot">
         <a href="https://github.com/silvio-hoodii" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://linkedin.com/in/silvio-neyra-rivas" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="mailto:silvio@hoodii.studio">Email</a>
         <a href="https://brixelcorp.com" target="_blank" rel="noreferrer">Brixel</a>
         {spotify.isPlaying && spotify.title && (
           <span className="np">
