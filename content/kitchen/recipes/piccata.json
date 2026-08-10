@@ -570,8 +570,8 @@
   ],
   "provenance": {
     "tier": "adapted",
-    "cooked": false,
-    "statement": "Quantities cross-checked against six published recipes, and where they disagreed the middle was taken. The method is the standard four-move pan sauce, not anyone's invention. The step text was written here for a beginner, so the teaching is ours and the numbers are theirs. Nobody has cooked this exact combination.",
+    "cooked": true,
+    "statement": "COOKED 2026-08-09 AND IT WENT WRONG. The second batch of chicken burnt because no step says what the heat should be once the pan is already hot, and the burnt flour went into the sauce. Quantities were cross-checked against six published recipes and every step was read as rendered, and neither of those caught it. Being rewritten to follow one published recipe word for word. Do not cook this version.",
     "sources": [
       {
         "name": "RecipeTin Eats, A better Chicken Piccata (Nagi Maehashi)",
@@ -604,6 +604,7 @@
         "note": "4.4 stars from 706 reviews. The famous version, and the outlier: it breads the chicken with egg and breadcrumbs, finishes in the oven, and uses NO capers. Kept in the comparison precisely because it disagrees."
       }
     ],
-    "readAt": "2026-08-09i"
+    "readAt": "2026-08-09i",
+    "cookedResult": "failed"
   }
 }

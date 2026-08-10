@@ -103,6 +103,13 @@ export interface Recipe {
      *  someone reads it again. "I checked it" has been promised and broken eight times in this
      *  project. This is the same claim as a fact git can check. */
     readAt?: string;
+    /** What happened the last time it was actually cooked. `readAt` says the screens are legible;
+     *  this says the instructions worked at a stove, and they are not the same claim.
+     *
+     *  Piccata proved that on 2026-08-09: it passed a six-source quantity check, passed a full
+     *  rendered read, and then burnt the second batch because no step said what the heat should be
+     *  once the pan was already hot. A dish that failed is not offered, whatever else it passes. */
+    cookedResult?: 'worked' | 'failed';
   };
 }
 

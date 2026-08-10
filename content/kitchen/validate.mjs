@@ -296,6 +296,40 @@ function validate(r, file) {
    * passed every other rule in this file, shipped, and had eleven defects in the rendered output,
    * two of which would have ruined the dish. A validator that only reads JSON cannot see the word
    * "the" appearing five times in a table, because that word is nowhere in the JSON. */
+  /* ---- sourcing. See schema/SOURCING.md, decided 2026-08-09. ----------------
+   * Tier `sourced` means the steps are one published recipe's own sentences, and an agent has only
+   * annotated them. These three rules are what make that a mechanical claim rather than a promise:
+   * a translation can be diffed against its original, and an invention cannot hide in one. */
+  if (r.provenance?.tier === 'sourced') {
+    const primary = (r.provenance.sources || []).filter((s) => s.primary);
+    if (primary.length !== 1) {
+      fail(id, 'sourcing', `tier is "sourced" but ${primary.length} sources are marked primary`,
+        'Exactly one. Following six recipes at once is how an agent ends up writing a seventh.');
+    } else if (!primary[0].url) {
+      fail(id, 'sourcing', 'the primary source has no url', 'It has to be checkable against the original.');
+    }
+
+    for (const s of r.steps) {
+      const src = (s.sourceText || '').trim();
+      if (!src) {
+        fail(id, 'sourcing', `step ${s.n} has no sourceText`,
+          'The published sentence this step came from, verbatim. Without it nothing can tell an annotation from an invention.');
+        continue;
+      }
+      /* Numbers are where cooking instructions live and die: times, temperatures, amounts. Any that
+       * appear in what he reads must be traceable to the source. This is the check that would have
+       * caught a step-10 heat instruction being made up, and its absence being invented around. */
+      const nums = (t) => new Set((String(t).match(/\d+(?:[.,/]\d+)?/g) || []));
+      const inSource = nums(src);
+      for (const n of nums(s.text)) {
+        if (!inSource.has(n)) {
+          fail(id, 'sourcing', `step ${s.n} says "${n}" and the source text does not`,
+            'A time, temperature or amount that is not in the source is an invention. Quote the source or drop the number.');
+        }
+      }
+    }
+  }
+
   if (r.provenance?.readAt && r.provenance.readAt !== r.build) {
     fail(id, 'read', `readAt is "${r.provenance.readAt}" but build is "${r.build}"`,
       'The recipe changed after it was last read. Render every step (node content/kitchen/render.mjs '

@@ -1,0 +1,87 @@
+---
+decided: 2026-08-09
+status: binding. Supersedes the authoring model in RECIPE-SCHEMA.md.
+---
+
+# Agents do not write cooking steps any more
+
+Decided by Silvio on the evening of 2026-08-09, after the first dish ever cooked from this app
+burnt, having passed every check the project had.
+
+## What happened, because the reasoning matters more than the rule
+
+Chicken Piccata was, by the standards this project had built over three months:
+
+- **Sourced.** Every quantity cross-checked against six published recipes with about 1,440 ratings
+  behind them, taking the middle where they disagreed.
+- **Read.** Every one of its eighteen steps read as the app renders them, not as JSON. That pass
+  found eleven defects and fixed them.
+- **Validated.** Clean against a validator with rules for heat observables, performable doneness
+  tests, ingredient closure in both directions, split arithmetic, rice ratios and provenance.
+
+It burnt anyway. The four things that went wrong:
+
+| What failed | Where the recipe was silent |
+|---|---|
+| Second batch of chicken went black | Step 10 said "cook the other 2 cutlets the same way" and nothing about heat. The pan is far hotter by then and loose flour is already cooking in it |
+| Burnt patches went into the sauce | The blackening was not visible until after deglazing |
+| He expected a yellow sauce at the reduce step | Nothing said the sauce is brown until the butter mounts |
+| Rebuilt sauce would not thicken | Nothing tied the dredge flour to the thickening, at the moment it mattered |
+
+**None of these is a wrong number.** Every one is a gap between the numbers. And every one came
+from a sentence an agent wrote. Not a single failure came from a figure a published source gave.
+
+That is the finding. Checking generated instructions harder does not work, because the defects are
+in what the instructions leave out, and a check cannot see an absence it was never told to look for.
+
+## The rule
+
+**A recipe follows ONE published recipe, verbatim.** Its words, its order, its times, its
+temperatures, its amounts.
+
+An agent may add only the layer a printed page genuinely cannot provide:
+
+- whether he has the ingredient, from his actual stock
+- what a word means, in place ("dredge", "fond", "mount")
+- what a piece of equipment is, and which one of his it means
+- protein computed from his scale
+- a timer
+- a doneness test **only where the source gives one**
+
+An agent may **never**:
+
+- write an instruction the source does not have
+- change a time, a temperature, an amount, or the order of steps
+- omit a step the source has
+- introduce a number that does not appear in the source
+
+The source sentence is the instruction. Our writing is annotation attached to it, and it is
+rendered as visibly different from the instruction so he always knows which is which.
+
+## Why this is not just the old rule again
+
+Every previous fix here was a rule asking an agent to be more careful, and there have been eight of
+them. This one changes what the agent is *for*. It is no longer an author who must be checked; it
+is a translator, and a translation can be diffed against its original. `sourceText` on every step
+makes "did you invent this" a mechanical question for the first time.
+
+## What this costs, stated honestly
+
+The teaching voice in the current recipes is genuinely good and some of it will not survive
+attachment to someone else's sentences. That is the trade: the current voice produced a burnt
+dinner, and a plain instruction that works beats a beautiful one that does not.
+
+Dishes with no good published source do not get made, rather than getting invented.
+
+## Enforcement
+
+`validate.mjs`, on any recipe whose `provenance.tier` is `sourced`:
+
+1. exactly one primary source, with a URL
+2. every step carries non-empty `sourceText`
+3. every number in a step's rendered instruction appears in that step's `sourceText`
+4. `provenance.readAt` still required, and still invalidated by any edit
+5. `provenance.cookedResult: "failed"` removes a dish from the offered list regardless of anything
+   else it passes
+
+Rules 1 to 3 are the new ones and they are what make this different from a promise.

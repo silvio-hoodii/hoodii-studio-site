@@ -69,7 +69,9 @@ export default async function KitchenHome() {
    * that is right. The rest stay reachable at the bottom, because not offering a dish is a ranking
    * decision and hiding it is a navigation bug. */
   const isRead = (c: Cookable) =>
-    !!c.recipe.provenance?.readAt && c.recipe.provenance.readAt === c.recipe.build;
+    !!c.recipe.provenance?.readAt
+    && c.recipe.provenance.readAt === c.recipe.build
+    && c.recipe.provenance.cookedResult !== 'failed';
 
   const read = all.filter(isRead);
   const unread = all.filter((c) => !isRead(c));
@@ -93,11 +95,13 @@ export default async function KitchenHome() {
       {/* The honest headline number. Asked 2026-08-09: "Where is this recipe coming from? ... is
           this something that the agent came up with so I shouldn't trust it?" */}
       <p className="quiet" style={{ marginTop: 18 }}>
-        <b>{read.length} of {recipes.length}</b> of these have had every step read the way the app
-        actually renders it. That check found eleven defects in the first recipe it was run on, two
-        of which would have ruined the dish, so the other {unread.length} are listed at the bottom
-        and are not being offered. A recipe rejoins this list when it has been read, and it loses
-        its place again the moment it is edited.
+        <b>{read.length} of {recipes.length}</b> of these are being offered. A recipe is offered
+        once every step has been read the way this app renders it, and once it has been cooked
+        without going wrong. Piccata passed a six-source check on its numbers and a full read of its
+        screens on 2026-08-09, then burnt its second batch at the stove because no step said what
+        the heat should be once the pan was already hot. Passing a check is not the same as working.
+        Recipes are being rewritten to follow one published recipe word for word instead of being
+        written here, which is where every failure so far has come from.
       </p>
 
       <p className="count" style={{ marginTop: 22 }}>

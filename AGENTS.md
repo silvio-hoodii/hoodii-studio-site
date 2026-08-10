@@ -71,6 +71,23 @@ gates the whole deployment behind a Vercel login, which would kill the public ha
 **Recipes are data, and `pnpm build` runs `content/kitchen/validate.mjs --strict`.** A broken recipe
 cannot deploy. Read `content/kitchen/schema/RECIPE-SCHEMA.md` before touching a recipe.
 
+**You do not write cooking steps. Read `content/kitchen/schema/SOURCING.md` first.** Decided
+2026-08-09 after the first dish ever cooked from this app burnt, having passed a six-source check on
+its numbers, a full read of every rendered step, and a clean validator run. All four failures were
+gaps *between* the numbers, and every one came from a sentence an agent wrote. None came from a
+figure a source gave. A recipe now follows ONE published recipe verbatim and agents add only what a
+printed page cannot: stock, definitions, equipment, timers, protein. `validate.mjs` enforces a
+single primary source, `sourceText` on every step, and refuses any number in a step that is not in
+that step's source text.
+
+Two other gates worth knowing before you edit anything under `content/kitchen/`:
+
+- `provenance.readAt` is the build at which every step was read AS RENDERED. Change one word and the
+  stamp goes stale, strict validation exits 1, and the deploy dies. Use `node
+  content/kitchen/render.mjs <id>` to read one in seconds, which is the reason nobody ever did.
+- `provenance.cookedResult: "failed"` drops a dish from the offered list whatever else it passes.
+  Piccata is currently `failed` and is being rewritten from a source.
+
 ## Illustrations
 
 Drawn as inline SVG in `src/app/page.tsx`, not imported. **No human is in the asset loop** and no
