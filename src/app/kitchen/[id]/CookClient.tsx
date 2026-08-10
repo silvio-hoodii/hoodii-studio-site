@@ -189,11 +189,26 @@ export default function CookClient({
   /* ---------------- one step, one screen ---------------- */
   const s = recipe.steps[i];
   if (!s) return null;
-  const uses = (s.uses ?? [])
+  /* The amounts table for THIS step. It is a table of NUMBERS, so a reference with no number does
+   * not belong in it.
+   *
+   * `amount: 0` means the step handles something without consuming a share of it: stirring eggs
+   * already in the pan, tipping back peppers set aside earlier, or measuring things out before any
+   * heat goes on. Those rows used to render the word "the" in the quantity column, which on
+   * 2026-08-09 produced a step 2 reading "the butter / the garlic / the chicken stock / the lemon
+   * juice / the capers" and he asked, correctly, what the point of saying "the" five times was.
+   *
+   * They are dropped instead. Closure still holds, because closure is the validator's job and it
+   * reads the data. The step text always names the thing anyway. */
+  const rows = (s.uses ?? [])
     .map(asUse)
     .flatMap((u) => {
       const p = byRef[u.ref];
-      return p ? [{ use: u, p }] : [];
+      if (!p || u.amount === 0) return [];
+      const qty =
+        u.amount != null ? amount(u.amount, u.unit ?? p.unit) : amount(p.qty, p.unit);
+      if (!qty) return [];
+      return [{ ref: u.ref, qty, display: p.display }];
     });
 
   const timerId = `${recipe.id}:${i + 1}`;
@@ -245,23 +260,14 @@ export default function CookClient({
       {/* The amounts for THIS step, on THIS screen. The 2026-08-02 debrief: "by the time I needed
           to use the cottage cheese, the instruction was put the cottage cheese in and I didn't
           know how much". */}
-      {uses.length > 0 && (
+      {rows.length > 0 && (
         <div className="amounts">
-          {uses.map(({ use, p }) => {
-            // amount 0 means the step handles the thing without consuming a share of it: tipping
-            // cooked peppers onto a plate, stirring eggs already in the pan. Showing the full
-            // quantity there would read as "add another cup".
-            const q =
-              use.amount === 0 ? ''
-              : use.amount != null ? amount(use.amount, use.unit ?? p.unit)
-              : amount(p.qty, p.unit);
-            return (
-              <div className="row" key={use.ref}>
-                <span className="qty">{q || 'the'}</span>
-                <span className="nm">{p.display}</span>
-              </div>
-            );
-          })}
+          {rows.map((r) => (
+            <div className="row" key={r.ref}>
+              <span className="qty">{r.qty}</span>
+              <span className="nm">{r.display}</span>
+            </div>
+          ))}
         </div>
       )}
 

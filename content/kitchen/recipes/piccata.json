@@ -1,7 +1,7 @@
 {
   "id": "piccata",
   "name": "Pan Sauce: Chicken Piccata",
-  "build": "2026-08-09f",
+  "build": "2026-08-09g",
   "form": "technique",
   "meal": [
     "dinner"
@@ -71,10 +71,10 @@
     {
       "ref": "garlic_cloves",
       "stock": "garlic",
-      "display": "garlic cloves, smashed flat, not chopped",
+      "display": "garlic cloves",
       "qty": 2,
       "unit": "each",
-      "prep": "press the flat side of the knife down on each clove until it cracks open",
+      "prep": "smashed flat with the side of the knife, not chopped",
       "defining": false
     },
     {
@@ -99,32 +99,31 @@
     {
       "ref": "capers",
       "stock": "capers",
-      "display": "capers, drained and rinsed",
+      "display": "capers",
       "qty": 3,
       "unit": "tbsp",
       "defining": true,
-      "prep": "tip into the strainer, rinse under cold water for 5 seconds, shake dry",
+      "prep": "drained, then rinsed under cold water for 5 seconds",
       "note": "Raised from 2 tbsp to 3, the median of the five sources that use capers at all. The sixth, Ina Garten, uses none. You add 2 first and taste before the third goes in, because you have never eaten a caper and this is the one flavour in the dish you cannot take back out."
     },
     {
       "ref": "fresh_parsley",
       "stock": "parsley",
-      "display": "fresh parsley, chopped",
+      "display": "fresh parsley",
       "qty": 2,
       "unit": "tbsp",
       "optional": true,
       "defining": false,
-      "prep": "a small handful"
+      "prep": "chopped, a small handful"
     },
     {
       "ref": "lemon_wedges",
       "stock": "lemon_fresh",
       "display": "lemon wedges, to serve",
       "qty": 2,
-      "unit": "wedge",
+      "unit": "wedges",
       "defining": false,
-      "optional": true,
-      "prep": "cut a second lemon into wedges"
+      "optional": true
     }
   ],
   "equipment": [
@@ -147,44 +146,17 @@
     {
       "n": 1,
       "text": "Read this before you turn anything on. A pan sauce is four moves, and every step after this one is one of them. 1. Sear the meat, which leaves brown stuff stuck to the pan. 2. Deglaze: pour in liquid, which dissolves that brown stuff. 3. Reduce: boil it down so the flavour concentrates. 4. Mount: swirl in cold butter off the heat, which makes it glossy and thick.",
-      "uses": [
-        {
-          "ref": "butter",
-          "amount": 0,
-          "optional": true
-        }
-      ],
       "look": "Every pan sauce you will ever make is those four moves in that order. Steak with red wine, pork chops with cider, chicken with mushrooms and cream. Change the meat and change the liquid and the sequence does not move. That is why this is rung 2 of the ladder and not just a recipe. You are not learning piccata. You are learning the thing piccata happens to be made of. Piccata means the sauce is finished with lemon and capers. That is all the word means."
     },
     {
       "n": 2,
-      "text": "Line everything up next to the stove before you start. Measure 1/2 cup of stock into a cup. Squeeze 1 lemon and measure 3 tbsp of juice. Tip 3 tbsp of capers into the strainer, rinse them under cold water for 5 seconds and shake them dry. Smash 2 garlic cloves. Cut the 3 tbsp of butter into 6 cubes and put them back in the fridge.",
+      "text": "Line everything up next to the stove before you start, measured, in the amounts below. Squeeze the lemon. Tip the capers into the strainer, rinse them under cold water for 5 seconds and shake them dry. Smash the garlic cloves. Cut the butter into 6 cubes and put them back in the fridge.",
       "uses": [
-        {
-          "ref": "butter",
-          "amount": 0,
-          "optional": true
-        },
-        {
-          "ref": "garlic_cloves",
-          "amount": 0,
-          "optional": true
-        },
-        {
-          "ref": "chicken_stock",
-          "amount": 0,
-          "optional": true
-        },
-        {
-          "ref": "lemon_juice",
-          "amount": 0,
-          "optional": true
-        },
-        {
-          "ref": "capers",
-          "amount": 0,
-          "optional": true
-        }
+        "chicken_stock",
+        "lemon_juice",
+        "capers",
+        "garlic_cloves",
+        "butter"
       ],
       "equipment": [
         "knife_sharp",
@@ -194,7 +166,7 @@
         "measuringspoons"
       ],
       "look": "This is the step people skip and it is the one that decides whether the sauce works. The whole sauce happens in about 90 seconds. Once the liquid hits that hot pan you have no time to go and find the lemon, and anything left in the pan while you hunt for it is burning. Every beginner pan sauce that comes out bitter went that way. The professional name for this is mise en place, French for putting in place, and it means everything measured and within arm's reach before any heat goes on. Smashing the garlic rather than chopping it: press the flat side of the knife down on the clove until it cracks and the skin loosens. Big broken pieces cannot burn in the 30 seconds that chopped garlic can, and this is how Bon Appetit does it. The butter goes back in the fridge because it has to be cold when it goes in at the end. Step 15 explains why, and it is not a fussy detail. Rinsing the capers: four of the six recipes rinse or rinse and drain. Straight from the jar they carry enough brine to oversalt a sauce this small.",
-      "warn": "Do not start cooking until all five things are sitting next to the stove. This step is the recipe, not the preamble."
+      "warn": "Do not start cooking until all 5 things below are measured and sitting next to the stove. This step is the recipe, not the preamble."
     },
     {
       "n": 3,
@@ -206,7 +178,7 @@
     },
     {
       "n": 4,
-      "text": "Weigh the two breasts together and write the number down, you need it at the end. Then put one flat on the board, lay your hand flat on top of it, and slice it horizontally all the way through so you end up with two thin flat pieces. Do the same with the second one. You now have 4 cutlets.",
+      "text": "Weigh the two breasts together. Multiply that by 0.225 and halve it: that is the protein on each plate, and at 500 g it is 56 g. Now put one breast flat on the board, lay your hand flat on top, and slice it horizontally all the way through into two thin flat pieces. Do the same with the second. You now have 4 cutlets.",
       "uses": [
         {
           "ref": "boneless_skinless_chicken_br",
@@ -261,7 +233,7 @@
     },
     {
       "n": 7,
-      "text": "Put the stainless pan on the hob, empty and dry, for 2 to 3 minutes. Then flick a few drops of water in from your fingers.",
+      "text": "Put the stainless pan on the hob over medium-high heat, empty and dry, for 2 to 3 minutes. Then flick a few drops of water in from your fingers.",
       "equipment": [
         "pan_stainless_large",
         "stovetop"
@@ -471,7 +443,7 @@
     },
     {
       "n": 16,
-      "text": "Stir in 2 tbsp of the capers and taste it. If you want it sharper and saltier, add the last tablespoon. If it tastes flat, add 1/4 tsp of salt. If it tastes too sharp, add another 1/2 tbsp of butter.",
+      "text": "Stir in 2 of the 3 tbsp of capers and taste it. Add the third if you want it sharper and saltier. If it tastes flat, add 1/4 tsp of salt. If it tastes too sharp, add another 1/2 tbsp of butter.",
       "uses": [
         {
           "ref": "capers",
@@ -507,7 +479,7 @@
         {
           "ref": "lemon_wedges",
           "amount": 2,
-          "unit": "wedge"
+          "unit": "wedges"
         }
       ],
       "equipment": [
@@ -517,12 +489,7 @@
     },
     {
       "n": 18,
-      "text": "The protein: take the weight you wrote down in step 4, multiply it by 0.225, and divide by 2. At 500 g that is 56 g per plate.",
-      "look": "Raw boneless skinless chicken breast runs about 22.5 g of protein per 100 g, which is where the 0.225 comes from. Nothing else on the plate carries a meaningful amount: the flour that sticks is about 1 g across the whole dish, and butter, stock, lemon and capers are none. This is why you weighed rather than trusted the 250 g estimate on the ingredient list. Two breasts out of that pack can differ by 70 g between them, which is 16 g of protein, which is enough to matter. Leftovers: 3 to 4 days in the fridge. Keep the sauce in a separate container and warm it gently in a pan rather than the microwave, which splits it. The chicken is better sliced cold into a salad than reheated."
-    },
-    {
-      "n": 19,
-      "text": "What you just learned, and where else it goes.",
+      "text": "Sear, deglaze, reduce, mount. Four moves, and you now own them. The same four steps build a sauce out of any pan you have just cooked meat in: steak with stock, pork with cider, chicken with mushrooms and cream. The rule that transfers is that if there is brown stuck to the base of a pan, you are two minutes and one cup of liquid away from a sauce. Never wash that pan straight away.",
       "look": "Sear, deglaze, reduce, mount. Four moves, and you now own them. The same four steps, different ingredients. Steak: sear the sirloin, deglaze with stock, reduce, mount with butter. Add black pepper and cream for peppercorn sauce. Pork or chicken with mushrooms: sear the meat, cook sliced mushrooms in the same pan, deglaze, reduce, mount. Mushrooms make more fond than almost anything. Any roast: the brown layer in the tray after the sirloin roast is fond. Put the tray on the stove, deglaze it, and that is gravy. It is the same technique, which is a thing nobody tells you. The one rule that transfers: if you cooked meat in a pan and there is brown stuck to the base, you are two minutes and one cup of liquid away from a sauce. Never wash that pan straight away. Rung 3 on the ladder is breading, which is dredging with two more layers on it. You have already done the first one today."
     }
   ],
@@ -598,7 +565,8 @@
     "Lemon: the recipe asked for lemon juice, the ReaLime bottle satisfied it, and three shopping trips passed without anything ever suggesting a fresh lemon. A 908 g bag was bought 2026-08-09 and the fresh lemon is now the ingredient rather than an upgrade.",
     "2026-08-09 evening, build f: re-grounded against six published recipes rather than agent judgement. Six quantity and method changes and two outright bugs, all listed under deviations. Provenance moved from authored to adapted.",
     "Two bugs found in that pass that no validator could catch: six steps carried the non-stick pan as data while step 3 says to use stainless, and two steps called for tongs this kitchen does not own.",
-    "STILL NEVER COOKED. The numbers now come from published recipes with about 1,440 ratings behind them, but nobody has cooked THIS combination of them."
+    "STILL NEVER COOKED. The numbers now come from published recipes with about 1,440 ratings behind them, but nobody has cooked THIS combination of them.",
+    "2026-08-09 build g: the first time anyone read all nineteen rendered steps instead of the JSON. Eleven defects, including a step 7 with no heat setting at all and a step 16 whose table and text disagreed about the capers. Six of the eleven were one renderer line turning `amount: 0` into the word \"the\"."
   ],
   "provenance": {
     "tier": "adapted",
