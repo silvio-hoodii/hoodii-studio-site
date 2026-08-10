@@ -1,8 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import type { Recipe, StepUse } from '@/lib/kitchen/types';
+import {
+  subscribe, readTimers, serverTimers, startTimer, clearTimer, remaining,
+} from '@/lib/kitchen/timers';
+import { TimerButton } from '../TimerRail';
 
 interface PrepRow {
   ref: string; display: string; qty: number | null; unit: string | null;
@@ -44,10 +49,24 @@ export default function CookClient({
   notes: { at: string; note: string; rating: string | null; step: number | null; kind: string | null }[];
 }) {
   // -1 is the prep screen. Steps are 0-indexed from there.
-  const [i, setI] = useState(-1);
+  const params = useSearchParams();
+  const deep = Number(params.get('step'));
+  const [i, setI] = useState(Number.isFinite(deep) && deep > 0 ? deep - 1 : -1);
   const [done, setDone] = useState(false);
   const total = recipe.steps.length;
   const byRef = useMemo(() => Object.fromEntries(prep.map((p) => [p.ref, p])), [prep]);
+
+  // Arriving from a timer chip: same route, new ?step=, so this component is reused rather than
+  // remounted and the initial state above never runs again. Adjusted during render rather than in
+  // an effect, which is React's own answer for state derived from a prop and avoids the extra
+  // committed render that setting it from useEffect would cost.
+  const [seenDeep, setSeenDeep] = useState(deep);
+  if (deep !== seenDeep) {
+    setSeenDeep(deep);
+    if (Number.isFinite(deep) && deep > 0) setI(deep - 1);
+  }
+
+  const timers = useSyncExternalStore(subscribe, readTimers, serverTimers);
 
   if (done) {
     return <Debrief recipe={recipe} consumable={consumable} />;
@@ -92,6 +111,21 @@ export default function CookClient({
             )}
           </div>
         )}
+
+        {/* Where this recipe departs from the sources it cites, and why. Without it "adapted" is
+            just a nicer-sounding word for "an agent wrote it": the tier says a real recipe exists
+            and this is the part that shows what was actually done with it. */}
+        {recipe.deviations?.length ? (
+          <details className="devs">
+            <summary>What was changed from the sources, and why ({recipe.deviations.length})</summary>
+            {recipe.deviations.map((d, k) => (
+              <div className="dev" key={k}>
+                <b>{d.what}</b>
+                <span>{d.why}</span>
+              </div>
+            ))}
+          </details>
+        ) : null}
 
         {notes.length > 0 && (
           <div className="box look" style={{ marginTop: 18 }}>
@@ -162,14 +196,51 @@ export default function CookClient({
       return p ? [{ use: u, p }] : [];
     });
 
+  const timerId = `${recipe.id}:${i + 1}`;
+  const mine = timers.find((t) => t.id === timerId);
+
   return (
     <div className="wrap">
+      {/* Tappable. "I have to click until I get back" was a real complaint on 2026-08-09, and the
+          progress bar was already sitting there being decorative. */}
       <div className="dots">
-        {recipe.steps.map((_, k) => <i key={k} className={k <= i ? 'on' : ''} />)}
+        {recipe.steps.map((_, k) => (
+          <button
+            key={k}
+            className={k <= i ? 'on' : ''}
+            aria-label={`Go to step ${k + 1}`}
+            onClick={() => setI(k)}
+          />
+        ))}
       </div>
       <div className="eyebrow">Step {i + 1} of {total}{s.minutes ? ` · about ${s.minutes} min` : ''}</div>
 
       <p className="step">{s.text}</p>
+
+      {/* Any step with a duration can be put on the clock. The countdown then lives in the rail at
+          the top of every kitchen screen and carries this step's own text and doneness test with
+          it, so finding out whether it is ready never means walking back through the recipe. */}
+      {s.minutes ? (
+        <TimerButton
+          minutes={s.minutes}
+          running={!!mine}
+          left={mine ? remaining(mine) : 0}
+          onClear={() => clearTimer(timerId)}
+          onStart={() =>
+            startTimer({
+              recipeId: recipe.id,
+              recipeName: recipe.name,
+              step: i + 1,
+              stepOf: total,
+              label: s.timerLabel ?? `${recipe.name.split(':').pop()!.trim()}, step ${i + 1}`,
+              seconds: s.minutes! * 60,
+              text: s.text,
+              doneness: s.doneness?.test,
+              heat: s.heat?.target,
+            })
+          }
+        />
+      ) : null}
 
       {/* The amounts for THIS step, on THIS screen. The 2026-08-02 debrief: "by the time I needed
           to use the cottage cheese, the instruction was put the cottage cheese in and I didn't
@@ -212,6 +283,10 @@ export default function CookClient({
       {s.warn && <div className="box warn"><span className="k">Careful</span>{s.warn}</div>}
       {s.look && <div className="box look"><span className="k">Why</span>{s.look}</div>}
 
+      {/* Keyed on the step so moving on gives a clean control. A note half-typed about step 6 must
+          never arrive attached to step 7. */}
+      <StepNote key={i} dish={recipe.name} step={i + 1} stepOf={total} stepText={s.text} />
+
       <div className="nav">
         <button onClick={() => setI(i - 1)}>←</button>
         {i < total - 1 ? (
@@ -219,6 +294,83 @@ export default function CookClient({
         ) : (
           <button className="primary" onClick={() => setDone(true)}>Done cooking</button>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- a note written at the stove ----------------
+ *
+ * The API route for this has existed since the rebuild and nothing has ever called it, so the
+ * rebuild silently dropped a control the old kitchen.html had. Every useful correction this project
+ * has ever made came through it: "wasn't mentioned that i would need the whites of the green
+ * onions", "what baking sheet this wasn't on the list wtf". Those arrive mid-step or not at all,
+ * because by the debrief screen the detail is gone. */
+function StepNote({ dish, step, stepOf, stepText }: {
+  dish: string; step: number; stepOf: number; stepText: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [kind, setKind] = useState<'broke' | 'confusing' | 'question'>('confusing');
+  const [note, setNote] = useState('');
+  const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  if (sent) {
+    return <p className="quiet" style={{ marginBottom: 15 }}>Noted against step {step}. It will be waiting next time you open this dish.</p>;
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        style={{ fontSize: 14, padding: '8px 12px', marginBottom: 15 }}
+      >Something is wrong with this step</button>
+    );
+  }
+
+  return (
+    <div className="box warn" style={{ marginBottom: 15 }}>
+      <span className="k">About step {step}</span>
+      <div style={{ display: 'flex', gap: 6, margin: '2px 0 10px', flexWrap: 'wrap' }}>
+        {([
+          ['broke', 'It went wrong'],
+          ['confusing', 'Unclear'],
+          ['question', 'I have a question'],
+        ] as const).map(([v, label]) => (
+          <button
+            key={v}
+            className={kind === v ? 'primary' : ''}
+            style={{ fontSize: 14, padding: '8px 12px', flex: '0 1 auto' }}
+            onClick={() => setKind(v)}
+          >{label}</button>
+        ))}
+      </div>
+      <textarea
+        rows={3}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Say it however it comes out. Nobody else reads this."
+      />
+      <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+        <button onClick={() => setOpen(false)} style={{ fontSize: 15 }}>Cancel</button>
+        <button
+          className="primary"
+          disabled={busy || !note.trim()}
+          style={{ fontSize: 15 }}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              await fetch('/kitchen/api/note', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dish, note, step, stepOf, kind, stepText }),
+              });
+              setSent(true);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >{busy ? 'Saving…' : 'Send'}</button>
       </div>
     </div>
   );

@@ -49,6 +49,10 @@ export interface Step {
   uses?: (string | StepUse)[];
   equipment?: string[];
   minutes?: number;
+  /** Short name for this step's countdown once it is pinned to the rail, where it sits next to
+   *  timers from other recipes. "chicken, side 1" reads at a glance; "Pan Sauce: Chicken Piccata,
+   *  step 9" does not. Optional: without it the rail falls back to the dish name and step number. */
+  timerLabel?: string;
   heat?: Heat | null;
   doneness?: { kind?: string; test: string };
   look?: string;

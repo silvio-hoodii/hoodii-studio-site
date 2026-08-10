@@ -174,14 +174,7 @@
       "n": "capers",
       "state": "none",
       "where": "fridge",
-      "buy": {
-        "price": null,
-        "zone": "Pantry and canned goods",
-        "walk": "Middle aisles. Olives, pickles and canned vegetables usually share a run",
-        "hunt": true,
-        "n": "Capers, 1 small jar (NOT AT WALMART)",
-        "s": "CONFIRMED 2026-08-04: Walmart does not carry these in a normal jar size, so it was never possible to add them to the order. Piccata stays blocked until they come from somewhere else. Try an Italian deli, a Superstore or Co-op, or any Latin grocer. A 90 to 100 mL jar keeps months in the fridge once opened. Do not put this back on a Walmart list, it is not there"
-      },
+      "note": "Great Value 90 mL jar, Walmart house brand, bought 2026-08-09. The buy block that used to sit here said Walmart does not carry capers in a normal jar size and kept piccata blocked for five days. It was simply false. Keep the jar in the fridge once opened, where it lasts months under its own brine.",
       "src": "seed",
       "since": "2026-08-04"
     },
@@ -492,11 +485,37 @@
       "n": "fresh lemons",
       "where": "fridge",
       "state": "none",
-      "buy": {
-        "zone": "Produce",
-        "spec": "2 or 3 loose lemons. Not the plastic squeeze bottle, that is already in the fridge."
-      },
-      "note": "Distinct from the bottle on purpose. In a sauce where lemon is one of three flavours, they are not the same ingredient."
+      "note": "Distinct from the bottle on purpose. In a sauce where lemon is one of three flavours, they are not the same ingredient. Bought 2026-08-09 as a 908 g bag."
+    },
+    "parsley": {
+      "n": "fresh parsley",
+      "where": "fridge",
+      "state": "none",
+      "note": "Bought 2026-08-04 for Chicken Piccata and reported going mushy on 2026-08-08. Events for it were already in the database with no catalogue row here, which meant the validator could not resolve any recipe that reached for it. Added 2026-08-09."
+    },
+    "turkeydeli": {
+      "n": "sliced turkey breast",
+      "where": "fridge",
+      "state": "none",
+      "note": "Deli slices, already cooked. High in sodium per the label, so anything built on it needs less added salt."
+    },
+    "chickendeli": {
+      "n": "sliced chicken breast (deli)",
+      "where": "fridge",
+      "state": "none",
+      "note": "Fully cooked deli slices. Deliberately a separate id from `chickenbreast`, which is raw and frozen. A recipe that reaches for one must never resolve to the other."
+    },
+    "pineapple": {
+      "n": "frozen pineapple",
+      "where": "freezer",
+      "state": "none",
+      "note": "Frozen chunks. Raw pineapple carries bromelain, an enzyme that breaks protein down, so it curdles dairy if left to sit and it will not set in gelatin. Fine in a shake drunk straight away."
+    },
+    "montereyjack": {
+      "n": "Monterey Jack cheese",
+      "where": "fridge",
+      "state": "none",
+      "note": "Semi-soft, melts smoothly, jalapeno already in it. Where mozzarella stretches, this one flows, so it suits a quesadilla or eggs rather than a pizza."
     }
   }
 }

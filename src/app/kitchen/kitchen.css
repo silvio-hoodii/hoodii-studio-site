@@ -171,17 +171,30 @@
 
 /* ---- cook mode ---- */
 
+/* Tappable, so getting back to a step is one press and not fourteen. The hit area is padded well
+   past the 2px line it draws, because this is operated with a thumb and wet hands. */
 .kos .dots {
   display: flex;
   gap: 3px;
   margin: 0 0 16px;
 }
-.kos .dots i {
+.kos .dots button {
   height: 2px;
   flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   background: var(--border);
+  position: relative;
 }
-.kos .dots i.on { background: var(--foreground); }
+.kos .dots button::after {
+  content: '';
+  position: absolute;
+  inset: -13px 0;
+}
+.kos .dots button.on { background: var(--foreground); }
+.kos .dots button:hover { border-color: transparent; }
 
 /* The one rule that is not negotiable: one step fills the screen and is readable at arm's length. */
 .kos .step {
@@ -278,6 +291,132 @@
   flex: 1;
 }
 .kos button:disabled { opacity: 0.4; cursor: default; }
+
+/* Collapsed by default. It answers a question he only asks once per recipe, and it must not stand
+   between him and the ingredient list. */
+.kos .devs {
+  border-left: 2px solid var(--border);
+  padding-left: 13px;
+  margin: 0 0 15px;
+}
+.kos .devs summary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.kos .devs summary:hover { color: var(--foreground); }
+.kos .devs .dev { margin-top: 11px; font-size: 15px; line-height: 1.55; }
+.kos .devs .dev b { display: block; font-weight: 600; }
+.kos .devs .dev span { color: var(--muted-foreground); }
+
+/* ---- timers ----
+ *
+ * Sticky rather than fixed, and a sibling of .wrap rather than an overlay, so it takes its own room
+ * in the flow and can never sit on top of a step instruction. It only exists when something is
+ * actually running, which is why the layout shift it causes is information rather than jitter.
+ */
+
+.kos .rail {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--background);
+  border-bottom: 1px solid var(--foreground);
+  padding: 8px var(--pad) 9px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.kos .rail-chips {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.kos .rail-chips::-webkit-scrollbar { display: none; }
+
+.kos .rail .chip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  text-align: left;
+  line-height: 1.25;
+}
+.kos .rail .chip .chip-t {
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.kos .rail .chip .chip-l {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kos .rail .chip.open { border-color: var(--foreground); }
+
+/* Finished. The one place --signal is allowed: a value that is true right now. */
+.kos .rail .chip.ready {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--background);
+}
+.kos .rail .chip.ready .chip-l { color: var(--background); opacity: 0.85; }
+
+.kos .rail-open {
+  border-top: 1px solid var(--border);
+  margin-top: 9px;
+  padding-top: 11px;
+}
+.kos .rail-where {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+/* Deliberately smaller than .step: this is a reminder of something happening elsewhere, not the
+   instruction he is following right now, and it must not compete with it. */
+.kos .rail-text {
+  font-size: 16px;
+  line-height: 1.45;
+  margin: 7px 0 12px;
+}
+.kos .rail-acts { display: flex; gap: 8px; }
+.kos .rail-acts button, .kos .rail-acts .btn { font-size: 15px; padding: 10px 14px; }
+
+.kos .timer-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+.kos .timer-start { font-size: 15px; padding: 11px 16px; }
+.kos .timer-hint {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.kos .timer-live {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.kos .timer-live.ready { color: var(--signal); }
 
 .kos input[type="password"], .kos textarea {
   width: 100%;
