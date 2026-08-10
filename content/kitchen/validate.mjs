@@ -288,6 +288,20 @@ function validate(r, file) {
       'Sourced and adapted both mean a real recipe exists. Name it, or the tier is a claim with nothing behind it.');
   }
 
+  /* ---- the read gate -------------------------------------------------------
+   * `provenance.readAt` says which build had every step read AS RENDERED. Edit the recipe without
+   * re-reading it and the stamp goes stale, this fails, and the app stops offering the dish.
+   *
+   * This is the only rule here that is not about the data. It exists because on 2026-08-09 a recipe
+   * passed every other rule in this file, shipped, and had eleven defects in the rendered output,
+   * two of which would have ruined the dish. A validator that only reads JSON cannot see the word
+   * "the" appearing five times in a table, because that word is nowhere in the JSON. */
+  if (r.provenance?.readAt && r.provenance.readAt !== r.build) {
+    fail(id, 'read', `readAt is "${r.provenance.readAt}" but build is "${r.build}"`,
+      'The recipe changed after it was last read. Render every step (node content/kitchen/render.mjs '
+      + `${id}, or walk the real screens), read them, fix what that finds, then set readAt to the new build.`);
+  }
+
   /* ---- protein arithmetic must be shown ---- */
   const p = r.serves?.proteinPerUnit;
   if (p && !r.serves?.proteinMath) {

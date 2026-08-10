@@ -91,6 +91,18 @@ export interface Recipe {
     cooked: boolean;
     statement: string;
     sources: { name?: string; url?: string | null; note?: string | null }[];
+    /** The `build` at which every one of this recipe's steps was read AS THE APP RENDERS THEM.
+     *
+     *  Added 2026-08-09 after a recipe passed the validator, passed four screenshots, passed a
+     *  grep, shipped, and had eleven defects in it, including a step with no heat setting and a
+     *  step whose table and text disagreed. Every check this project owns reads the JSON, and
+     *  every one of those eleven was invisible there and obvious on screen.
+     *
+     *  It is a build string rather than a date on purpose: change one word of a step and the stamp
+     *  no longer matches, `validate.mjs` fails the build, and the recipe stops being offered until
+     *  someone reads it again. "I checked it" has been promised and broken eight times in this
+     *  project. This is the same claim as a fact git can check. */
+    readAt?: string;
   };
 }
 

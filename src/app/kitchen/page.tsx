@@ -62,8 +62,19 @@ export default async function KitchenHome() {
     };
   });
 
-  const offered = rank(all);
-  const blocked = all.filter((c) => c.offer.status === 'blocked');
+  /* A recipe is only OFFERED once every one of its steps has been read as the app renders them, at
+   * its current build. Decided 2026-08-09 after the app spent the day offering 29 dishes of which
+   * zero had ever been cooked from it successfully, and every single one he opened had a defect in
+   * the first few seconds. A list of 29 things that might be wrong is worth less than a list of one
+   * that is right. The rest stay reachable at the bottom, because not offering a dish is a ranking
+   * decision and hiding it is a navigation bug. */
+  const isRead = (c: Cookable) =>
+    !!c.recipe.provenance?.readAt && c.recipe.provenance.readAt === c.recipe.build;
+
+  const read = all.filter(isRead);
+  const unread = all.filter((c) => !isRead(c));
+  const offered = rank(read);
+  const blocked = read.filter((c) => c.offer.status === 'blocked');
   const now = offered.filter((c) => c.offer.status === 'ready');
   const later = offered.filter((c) => c.offer.status !== 'ready');
   const soon = expiringSoon(stock, 7, 3);
@@ -81,17 +92,13 @@ export default async function KitchenHome() {
 
       {/* The honest headline number. Asked 2026-08-09: "Where is this recipe coming from? ... is
           this something that the agent came up with so I shouldn't trust it?" */}
-      {(() => {
-        const authored = recipes.filter((r) => r.provenance?.tier === 'authored').length;
-        if (!authored) return null;
-        return (
-          <p className="quiet" style={{ marginTop: 18 }}>
-            <b>{authored} of {recipes.length}</b> of these were written by an agent with no published
-            source, and nobody has cooked those quantities. Each recipe says which it is before you
-            start. Fixing that is the next piece of work.
-          </p>
-        );
-      })()}
+      <p className="quiet" style={{ marginTop: 18 }}>
+        <b>{read.length} of {recipes.length}</b> of these have had every step read the way the app
+        actually renders it. That check found eleven defects in the first recipe it was run on, two
+        of which would have ruined the dish, so the other {unread.length} are listed at the bottom
+        and are not being offered. A recipe rejoins this list when it has been read, and it loses
+        its place again the moment it is edited.
+      </p>
 
       <p className="count" style={{ marginTop: 22 }}>
         {now.length > 0 ? <><span className="live">{now.length}</span> ready to start</> : 'nothing ready to start'}
@@ -134,14 +141,27 @@ export default async function KitchenHome() {
         </>
       )}
 
-      {/* Everything, alphabetical. The index above answers "what should I cook"; this answers
-          "where is that one dish", which is a different question and was unanswerable. */}
-      <p className="count" style={{ marginTop: 30 }}>Everything, A to Z</p>
-      <ul className="plainlist az">
-        {[...recipes].sort((a, b) => a.name.localeCompare(b.name)).map((r) => (
-          <li key={r.id}><Link href={`/kitchen/${r.id}`}>{r.name}</Link></li>
-        ))}
-      </ul>
+      {/* Not offered, still reachable. Raised 2026-08-09: "now that it's off, I can't even check
+          what the recipe was." */}
+      {unread.length > 0 && (
+        <>
+          <p className="count" style={{ marginTop: 30 }}>Not checked yet</p>
+          <p className="quiet" style={{ marginBottom: 8 }}>
+            Nobody has read these the way you would read them. Open them if you like, but expect
+            them to be wrong somewhere, because the one recipe that has been checked was wrong in
+            eleven places.
+          </p>
+          <ul className="plainlist az">
+            {[...unread]
+              .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
+              .map((c) => (
+                <li key={c.recipe.id}>
+                  <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 }

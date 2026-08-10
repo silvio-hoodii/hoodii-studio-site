@@ -1,7 +1,7 @@
 {
   "id": "piccata",
   "name": "Pan Sauce: Chicken Piccata",
-  "build": "2026-08-09g",
+  "build": "2026-08-09i",
   "form": "technique",
   "meal": [
     "dinner"
@@ -166,7 +166,7 @@
         "measuringspoons"
       ],
       "look": "This is the step people skip and it is the one that decides whether the sauce works. The whole sauce happens in about 90 seconds. Once the liquid hits that hot pan you have no time to go and find the lemon, and anything left in the pan while you hunt for it is burning. Every beginner pan sauce that comes out bitter went that way. The professional name for this is mise en place, French for putting in place, and it means everything measured and within arm's reach before any heat goes on. Smashing the garlic rather than chopping it: press the flat side of the knife down on the clove until it cracks and the skin loosens. Big broken pieces cannot burn in the 30 seconds that chopped garlic can, and this is how Bon Appetit does it. The butter goes back in the fridge because it has to be cold when it goes in at the end. Step 15 explains why, and it is not a fussy detail. Rinsing the capers: four of the six recipes rinse or rinse and drain. Straight from the jar they carry enough brine to oversalt a sauce this small.",
-      "warn": "Do not start cooking until all 5 things below are measured and sitting next to the stove. This step is the recipe, not the preamble."
+      "warn": "Do not start cooking until all 5 things above are measured and sitting next to the stove. This step is the recipe, not the preamble."
     },
     {
       "n": 3,
@@ -603,6 +603,7 @@
         "url": "https://www.foodnetwork.com/recipes/ina-garten/chicken-piccata-recipe-1952866",
         "note": "4.4 stars from 706 reviews. The famous version, and the outlier: it breads the chicken with egg and breadcrumbs, finishes in the oven, and uses NO capers. Kept in the comparison precisely because it disagrees."
       }
-    ]
+    ],
+    "readAt": "2026-08-09i"
   }
 }
