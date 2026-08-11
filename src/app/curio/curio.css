@@ -1,0 +1,193 @@
+/* /curio, the Daily Curio archive.
+ *
+ * Same system as the index: tokens only, no hardcoded colour, rules instead of cards, near-zero
+ * radius, one --signal used only for a count that is true right now. This page is mostly prose,
+ * so the one addition is a real reading measure on the bodies. Everything else the hub does with
+ * a mono label column, this does with a mono date column.
+ */
+
+.curio {
+  --gap: clamp(28px, 6vw, 44px);
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(32px, 8vw, 64px) 20px 64px;
+}
+
+.curio .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.curio .back,
+.curio .where {
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 3.4vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+}
+
+.curio .where {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+}
+
+.curio .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.curio .blurb {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  max-width: 52ch;
+  margin: 14px 0 0;
+}
+
+.curio .stat {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  margin-top: 16px;
+}
+
+.curio .dot { margin: 0 8px; opacity: 0.5; }
+
+.curio .live {
+  color: var(--signal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.curio .tnum { font-variant-numeric: tabular-nums; }
+
+.curio .sec {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: var(--gap) 0 12px;
+}
+
+.curio .sec + .digests,
+.curio .sec + .ledger { border-top: 1px solid var(--foreground); }
+
+/* ---- the mornings ---- */
+
+.curio .digest {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.curio .dday {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  padding-top: 3px;
+}
+
+.curio .opener {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  margin: 0 0 16px;
+  max-width: 60ch;
+}
+
+.curio .item + .item { margin-top: 20px; }
+
+.curio .item h3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 6px;
+}
+
+.curio .item p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 62ch;
+}
+
+.curio .src,
+.curio .la a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.curio .src { display: inline-block; margin-top: 8px; }
+.curio .src:hover,
+.curio .la a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+
+/* ---- the one-line ledger ---- */
+
+.curio .lrow {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.curio .lq {
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.curio .la {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+  max-width: 64ch;
+}
+
+/* The flavour tag is a rule-bordered word, not a filled pill. Pills are the card of typography. */
+.curio .flav {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  margin-left: 4px;
+  white-space: nowrap;
+  vertical-align: 2px;
+}
+
+/* `myth` is the only flavour that carries a claim about the world being wrong, so it is the only
+ * one that earns the signal colour. */
+.curio .flav-myth { color: var(--signal); border-color: var(--signal); }
+
+.curio .foot {
+  margin-top: var(--gap);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.curio .foot a {
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.curio .foot a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+
+@media (max-width: 460px) {
+  .curio .digest { grid-template-columns: 1fr; gap: 8px; }
+}

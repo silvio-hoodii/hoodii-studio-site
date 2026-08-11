@@ -4,6 +4,7 @@ import { allRecipes, offer } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
+import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -114,6 +115,22 @@ async function frenchRow(): Promise<Row> {
   } catch {
     // A database hiccup must not take the front door down with it.
     return { label: 'French', line: 'Review queue built from three physical books', href: '/french' };
+  }
+}
+
+async function curioRow(): Promise<Row> {
+  try {
+    const s = await getCurioSummary();
+    if (!s.items) throw new Error('nothing synced');
+    return {
+      label: 'Curio',
+      line: <><span className="live tnum">{s.items}</span> things I looked up properly</>,
+      sub: s.latestQuestion ?? `${s.digests} mornings`,
+      href: '/curio',
+    };
+  } catch {
+    // A database hiccup must not take the front door down with it.
+    return { label: 'Curio', line: 'Questions I wondered about, answered and kept', href: '/curio' };
   }
 }
 
@@ -239,10 +256,10 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [spotify, kitchen, gym, health, french] = await Promise.all([
-    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(),
+  const [spotify, kitchen, gym, health, french, curio] = await Promise.all([
+    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(),
   ]);
-  const rows = [kitchen, gym, health, french, ...STATIC_ROWS];
+  const rows = [kitchen, gym, health, french, curio, ...STATIC_ROWS];
 
   return (
     <div className="idx">
