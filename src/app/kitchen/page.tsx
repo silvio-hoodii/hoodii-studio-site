@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
+import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, rank, type Cookable } from '@/lib/kitchen/recipes';
 import { lastCookedMap } from '@/lib/kitchen/cook';
 
@@ -80,6 +80,11 @@ export default async function KitchenHome() {
   const now = offered.filter((c) => c.offer.status === 'ready');
   const later = offered.filter((c) => c.offer.status !== 'ready');
   const soon = expiringSoon(stock, 7, 3);
+  /* Everything with a genuinely known amount, most recently touched first. `qty !== null` is the
+   * whole filter: unknown stays unknown and simply does not appear. */
+  const counted = Object.values(stock.items)
+    .filter((i) => i.qty !== null && i.qty > 0)
+    .sort((a, b) => (b.since ?? '').localeCompare(a.since ?? ''));
 
   return (
     <div className="wrap">
@@ -120,8 +125,38 @@ export default async function KitchenHome() {
         <>
           <p className="count" style={{ marginTop: 30 }}>Use these first</p>
           <p className="quiet">
-            {soon.map((i) => `${short(i.n)}, ${i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}`).join(' · ')}
+            {/* The amount comes from `amountText`, which reads the qty column, never the `label`
+                string. Where nothing has been weighed it is simply omitted rather than filled in
+                with the last thing anyone typed. */}
+            {soon.map((i) => {
+              const amt = amountText(i);
+              return `${short(i.n)}${amt ? `, ${amt}` : ''}, ${i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}`;
+            }).join(' · ')}
           </p>
+        </>
+      )}
+
+      {/* How much is left, which nothing in this app could answer until 2026-08-11.
+        *
+        * Only items with a REAL measured amount appear. That is the point: the list is short because
+        * few things have been weighed, and a short honest list beats a long list padded with the
+        * last number someone typed into a label. Anything unweighed is simply absent rather than
+        * guessed at. */}
+      {counted.length > 0 && (
+        <>
+          <p className="count" style={{ marginTop: 30 }}>How much is left</p>
+          <p className="quiet" style={{ marginBottom: 8 }}>
+            Only what has actually been counted or weighed. Everything else in the kitchen is here
+            without a number, because nobody measured it and a guess in this list is what made the
+            old one wrong.
+          </p>
+          <ul className="plainlist">
+            {counted.map((i) => (
+              <li key={i.id}>
+                {short(i.n)} <span className="quiet">{amountText(i)}</span>
+              </li>
+            ))}
+          </ul>
         </>
       )}
 

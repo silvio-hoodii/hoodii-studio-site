@@ -125,6 +125,16 @@ export interface StockItem {
   by?: string | null;
   note?: string | null;
   made?: string;
+  /** How much is left, and in what unit. `null` means genuinely unknown and MUST stay unknown:
+   *  nobody weighs a bag of frozen onions, and the failure this replaces was a system that filled
+   *  an unknown with the last number someone typed. An unknown amount is not a zero and it is not
+   *  the previous amount. */
+  qty: number | null;
+  unit: string | null;
+  /** The individual bags or packs, e.g. [350, 250]. Both the COUNT and the TOTAL are derived from
+   *  this, which is the whole point: "2 bags" and "600 g" cannot disagree when they are two views
+   *  of one array instead of two hand-typed numbers. */
+  portions: number[] | null;
   /** Derived, never stored. Frozen is a location plus stock, not a third way of having something. */
   state: StockLevel | 'frozen';
   usableNow: boolean;

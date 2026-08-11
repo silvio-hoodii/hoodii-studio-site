@@ -210,12 +210,37 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const warmupList = warmups[day.warmup] || [];
   const cooldownList = day.cooldown.map((k) => cooldowns[k]).filter(Boolean) as CooldownItem[];
 
+  /* The program runs on a rolling cycle, not the calendar: computeNextUp() picks the next day from
+   * what was actually logged. So the tabs said "Monday / Tuesday / Thursday / Friday" while the app
+   * selected "Thursday" on a Tuesday, which is two true things that read as a contradiction.
+   *
+   * The split name is DERIVED from the day's own title rather than added as a second field, because
+   * a hand-kept short name is exactly the kind of duplicate string that drifts from what it labels.
+   * "Lower B — Hinge" becomes "Lower B". */
+  function splitName(d: Day): string {
+    const head = d.title.split(/\s[—–-]\s/)[0]?.trim();
+    return head || d.name;
+  }
+
+  /* How to actually run a block, derived from its type. Nothing in the UI distinguished a superset
+   * from a straight block, so two exercises sharing one rest window looked identical to two done
+   * in sequence. The data always knew (validate.mjs enforces exactly 2 per superset/pair); the
+   * screen just never said it. */
+  function howToRun(block: { type: string; exercises: unknown[] }): string | null {
+    if (block.exercises.length < 2) return null;
+    if (block.type === 'superset' || block.type === 'pair') {
+      return 'Superset: alternate the two, rest once after both.';
+    }
+    if (block.type === 'main') return 'Do the second between sets of the first.';
+    return null;
+  }
+
   return (
     <>
       <div className="tabs">
         {DAY_ORDER.map((k) => (
           <button key={k} className={`tab${k === activeDay ? ' on' : ''}`} onClick={() => setActiveDay(k)}>
-            {program.days[k].name}
+            {splitName(program.days[k])}
           </button>
         ))}
       </div>
@@ -236,8 +261,11 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ' — consider a rest day' : ''}</span>}
       </div>
 
+      {/* Open by default. Collapsed, these read as missing: you are holding a phone in a gym, not
+        * browsing, and a closed disclosure is a thing you do not know is there. Reported lost on
+        * 2026-08-11 when both were present the whole time. */}
       {warmupList.length > 0 && (
-        <details className="collapse" style={{ marginTop: 18 }}>
+        <details className="collapse" style={{ marginTop: 18 }} open>
           <summary>Warmup ({warmupList.length} min)</summary>
           {warmupList.map((w) => (
             <div className="warm-item" key={w.name}>
@@ -249,8 +277,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       )}
 
       {blocks.map((block, bi) => (
-        <div className="block" key={bi}>
+        <div className={`block${block.type === 'superset' || block.type === 'pair' ? ' tied' : ''}`} key={bi}>
           <div className="block-label">{block.label} <span className="tag">{block.tag}</span></div>
+          {howToRun(block) && <div className="block-how">{howToRun(block)}</div>}
           {block.exercises.map((ex) => {
             const swap = swaps[ex.id];
             const eff = effOf(ex);
@@ -332,7 +361,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       ))}
 
       {cooldownList.length > 0 && (
-        <details className="collapse" style={{ marginTop: 24 }}>
+        <details className="collapse" style={{ marginTop: 24 }} open>
           <summary>Cooldown</summary>
           {cooldownList.map((c) => (
             <div className="warm-item" key={c.name}>

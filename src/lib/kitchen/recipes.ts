@@ -2,7 +2,7 @@ import 'server-only';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { cache } from 'react';
-import type { Recipe, Stock, Ingredient, Offer, StepUse } from './types';
+import type { Recipe, Stock, Ingredient, Offer, StepUse, StockItem } from './types';
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'recipes');
 
@@ -35,6 +35,35 @@ export const asUse = (u: string | StepUse): StepUse => (typeof u === 'string' ? 
  * Staples are the slow half of the three-speeds model: presence is binary and lives in KITCHEN.md,
  * not in event-sourced stock. An ingredient with no stock link is likewise assumed present, because
  * asserting an absence we never checked is how a real whisk got designed around for a week. */
+/* Units this app can actually compare, normalised to a base. Anything not in here (a "bag", a
+ * "bunch", a "clove") is deliberately NOT convertible: guessing that a bag is 500 g is exactly the
+ * invented precision the stock rules forbid, so an unmatched pair falls back to a presence check. */
+const UNIT_BASE: Record<string, { base: string; factor: number }> = {
+  g: { base: 'g', factor: 1 },
+  kg: { base: 'g', factor: 1000 },
+  ml: { base: 'ml', factor: 1 },
+  l: { base: 'ml', factor: 1000 },
+  count: { base: 'count', factor: 1 },
+};
+
+function toBase(qty: number, unit: string | null | undefined) {
+  const u = UNIT_BASE[(unit ?? '').toLowerCase().trim()];
+  return u ? { base: u.base, value: qty * u.factor } : null;
+}
+
+/** Is there ENOUGH, not merely SOME.
+ *
+ *  Returns null when the question cannot be answered honestly: no amount on the recipe, no amount in
+ *  stock, or two units that cannot be converted without inventing a conversion. Null means "fall
+ *  back to presence", never "assume enough" and never "assume not enough". */
+function enoughFor(ing: Ingredient, it: StockItem): boolean | null {
+  if (ing.qty == null || it.qty == null) return null;
+  const need = toBase(ing.qty, ing.unit);
+  const has = toBase(it.qty, it.unit);
+  if (!need || !has || need.base !== has.base) return null;
+  return has.value >= need.value;
+}
+
 function have(ing: Ingredient, stock: Stock): 'yes' | 'frozen' | 'no' {
   if (ing.staple || !ing.stock) return 'yes';
   const it = stock.items[ing.stock];
@@ -45,6 +74,20 @@ function have(ing: Ingredient, stock: Stock): 'yes' | 'frozen' | 'no' {
     // could make a protein shake.
     return ing.frozenOk ? 'yes' : 'frozen';
   }
+
+  /* Amounts decide when both sides know one.
+   *
+   * Until 2026-08-11 this line was the whole test, and it asked "is this ingredient present at
+   * all?" — so a dish needing 500 g of beef counted as READY against 50 g. That is the "it says X
+   * recipes when really there is none" complaint: the number was never dishonest, it just answered
+   * a different question than the one being asked of it.
+   *
+   * Where either side does not know its amount, nothing changes: presence still decides, exactly as
+   * before. This tightens the answer where there is data and never manufactures one where there is
+   * not. */
+  const enough = enoughFor(ing, it);
+  if (enough === false) return 'no';
+
   return it.level === 'have' || it.level === 'low' ? 'yes' : 'no';
 }
 

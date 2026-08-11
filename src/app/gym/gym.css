@@ -108,6 +108,20 @@
 }
 .gym .block-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
 
+/* How to run the block. The label alone said WHERE ("rack area") and never HOW, so a superset and
+ * two straight exercises rendered identically. Sentence case on purpose: it is an instruction to
+ * follow mid-set, not another mono heading to skim past. */
+.gym .block-how {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted-foreground);
+  margin: -4px 0 10px;
+}
+
+/* A superset is one unit of work, so its exercises get a rule down the side tying them together.
+ * Cheaper and quieter than a card, and it survives the monochrome palette. */
+.gym .block.tied { border-left: 2px solid var(--border); padding-left: 13px; }
+
 .gym .ex { padding: 16px 0; border-top: 1px solid var(--border); }
 .gym .ex:first-child { border-top: 0; }
 .gym .ex-name { font-size: 16.5px; font-weight: 600; margin: 0 0 3px; }
