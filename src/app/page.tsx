@@ -142,17 +142,19 @@ const STATIC_ROWS: Row[] = [
     external: true,
   },
   {
+    /* This said "Sessions, drills, and what to work on in the water", which is not what the app is
+     * or has ever been. It is a lane-swim schedule finder: 18 Calgary pools, "Open right now" and
+     * "Starting soon". Nobody caught it because the row read plausibly, which is the whole problem
+     * with a description that is written rather than derived. Corrected 2026-08-11 by reading the
+     * deployed page. Tracking his own swims is a different job and lives in /health. */
     label: 'Swim',
-    line: 'Sessions, drills, and what to work on in the water',
+    line: 'Which Calgary pools have lane swim open right now',
     href: 'https://swim.hoodii.studio',
     external: true,
   },
-  {
-    label: 'Theories',
-    line: 'Confidently stupid theories, rated until the good ones surface',
-    href: 'https://theoryos-review.vercel.app',
-    external: true,
-  },
+  /* Theories was here, pointing at theoryos-review.vercel.app, which renders nothing but its own
+   * title. A link to an empty page is worse than no link and breaks the honest-states rule below.
+   * The app still exists and is untouched; it is just not advertised until it has content. */
 ];
 
 /* Work that other people use.
