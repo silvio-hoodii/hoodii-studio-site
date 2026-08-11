@@ -62,11 +62,35 @@ gates the whole deployment behind a Vercel login, which would kill the public ha
 
 ## Surfaces
 
-| Route | What | Gated |
+Every PAGE is public. Only WRITES need the cookie, per the reasoning in `src/proxy.ts`. This table
+said `/kitchen` was gated and listed none of the five routes added after it, which is the same drift
+that let a hub row describe the wrong app for months: a hand-maintained list of what exists will
+always lose to the thing that exists.
+
+| Route | What | Writes gated |
 |---|---|---|
-| `/` | The hub index | public |
+| `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
-| `/kitchen/login` | The gate | public |
+| `/gym` | Lifting log. `content/gym/` + `gym_*` tables | yes |
+| `/health` | Body composition, read-only from `healthos.db` | n/a |
+| `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
+| `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
+| `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
+| `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
+| `/kitchen/login`, `/gym/login`, `/health/login`, `/french/login` | The gate, one cookie for all | public |
+
+**`/music` has a failure mode none of the others have.** Its history is unrecoverable: Spotify
+returns the last 50 plays and nothing else, so anything the cron misses is gone from everywhere, not
+just from here. `vercel.json` therefore runs `/api/music/sync` three times a day (Hobby permits 100
+cron jobs at once-per-day each, so three entries 8 hours apart is legal and free). The route
+requires `CRON_SECRET` and refuses to run without it rather than sitting on the internet as an open
+endpoint that makes four Spotify calls per hit.
+
+**The refresh token dies silently every 180 days** while the Spotify app is in Development mode, and
+`fetchSpotify()` in `src/lib/fetchers.ts` returns `{ isPlaying: false }` for both a dead token and a
+quiet evening. That is why `src/lib/music/spotify.ts` exists as a separate client that **throws**,
+why every run writes a `music_sync` row, and why `/music` and the hub row both shout when the last
+successful run is over 36 hours old. Do not add a catch that returns a default to that file.
 
 **Recipes are data, and `pnpm build` runs `content/kitchen/validate.mjs --strict`.** A broken recipe
 cannot deploy. Read `content/kitchen/schema/RECIPE-SCHEMA.md` before touching a recipe.

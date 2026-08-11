@@ -5,6 +5,7 @@ import { computeNextUp } from '@/lib/gym/cycle';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
+import { getSummary as getMusicSummary } from '@/lib/music/db';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -134,6 +135,38 @@ async function curioRow(): Promise<Row> {
   }
 }
 
+async function musicRow(): Promise<Row> {
+  try {
+    const s = await getMusicSummary();
+
+    /* A broken collector outranks any number this row could show. Plays are perishable: while the
+     * refresh token is dead, listening is being lost permanently rather than merely not displayed,
+     * so the row says so instead of quietly rendering a count that has stopped moving. */
+    if (s.liveness.stale) {
+      return {
+        label: 'Music',
+        line: 'The collector has stopped, so plays are being lost',
+        sub: s.liveness.lastOkAt
+          ? `last good run ${s.liveness.lastOkAt.slice(0, 10)}`
+          : 'it has never completed a run',
+        href: '/music',
+      };
+    }
+    if (s.plays === 0) {
+      return { label: 'Music', line: 'Nothing collected yet', sub: 'the first scheduled run fills it in', href: '/music' };
+    }
+    return {
+      label: 'Music',
+      line: <><span className="live tnum">{s.plays}</span> plays kept that Spotify would have dropped</>,
+      sub: `${s.artists} artists since ${s.since?.slice(0, 10) ?? 'recently'}`,
+      href: '/music',
+    };
+  } catch {
+    // A database hiccup must not take the front door down with it.
+    return { label: 'Music', line: 'What I listen to, and a history Spotify does not keep', href: '/music' };
+  }
+}
+
 const STATIC_ROWS: Row[] = [
   {
     label: 'Reading',
@@ -258,10 +291,10 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [spotify, kitchen, gym, health, french, curio] = await Promise.all([
-    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(),
+  const [spotify, kitchen, gym, health, french, curio, music] = await Promise.all([
+    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(),
   ]);
-  const rows = [kitchen, gym, health, french, curio, ...STATIC_ROWS];
+  const rows = [kitchen, gym, health, french, curio, music, ...STATIC_ROWS];
 
   return (
     <div className="idx">

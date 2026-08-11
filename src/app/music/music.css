@@ -1,0 +1,257 @@
+/* /music.
+ *
+ * Same system as the hub and /curio: tokens only, never a hardcoded colour, rules instead of
+ * cards, near-zero radius, --signal reserved for a value that is true right now.
+ *
+ * No album art, deliberately. Spotify hands back a cover URL for every track and it is stored in
+ * music_play, so this is reversible in an afternoon. But a grid of full-colour covers is the one
+ * thing that would visibly break a monochrome system built on purpose, and it would make this the
+ * only page on the site that looks like every other music page. The data is kept; the decision is
+ * to not render it.
+ *
+ * Three-column charts collapse to one column on a phone. That is the only breakpoint here.
+ */
+
+.music {
+  --gap: clamp(28px, 6vw, 44px);
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(32px, 8vw, 64px) 20px 64px;
+}
+
+.music .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.music .back,
+.music .where {
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 3.4vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+}
+
+.music .where {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+}
+
+.music .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.music .blurb {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  max-width: 56ch;
+  margin: 14px 0 0;
+}
+
+.music .stat {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  margin-top: 16px;
+}
+
+.music .dot { margin: 0 8px; opacity: 0.5; }
+.music .tnum { font-variant-numeric: tabular-nums; }
+
+.music .live {
+  color: var(--signal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the collector alarm ----
+ * A left rule in the signal colour, not a filled banner. Loud by placement, not by decoration. */
+
+.music .alarm {
+  margin-top: 20px;
+  padding: 12px 0 12px 14px;
+  border-left: 2px solid var(--signal);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
+.music .alarm strong { color: var(--foreground); font-weight: 600; }
+
+.music .alarm .why {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  opacity: 0.85;
+  word-break: break-word;
+}
+
+/* ---- now playing ---- */
+
+.music .np {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  margin-top: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.music .npdot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  align-self: center;
+}
+
+.music .nplabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.music .nplabel.quiet { color: var(--muted-foreground); }
+
+.music .nptrack { font-size: 16px; font-weight: 600; }
+.music .nptrack a { color: inherit; text-decoration: none; }
+.music .nptrack a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.music .npartist { font-size: 14px; color: var(--muted-foreground); }
+
+/* ---- section headings ---- */
+
+.music .sec {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: var(--gap) 0 12px;
+}
+
+/* The qualifier that keeps "most played" from reading as "top of all time". It is part of the
+ * heading rather than a footnote because a footnote is a thing you can miss. */
+.music .sec .qual {
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  opacity: 0.8;
+}
+
+.music .sec + .ranges,
+.music .sec + .plays { border-top: 1px solid var(--foreground); padding-top: 18px; }
+
+/* ---- charts ---- */
+
+.music .ranges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px 22px;
+}
+
+.music .ranges.two { grid-template-columns: repeat(2, 1fr); }
+
+.music .rlabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.music .chart { list-style: none; margin: 0; padding: 0; }
+
+.music .chart li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0 8px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.music .rank {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  padding-top: 2px;
+}
+
+.music .cname { font-weight: 500; }
+.music .cname a { color: inherit; text-decoration: none; }
+.music .cname a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.music .cdetail {
+  grid-column: 2;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-top: 1px;
+}
+
+.music .empty {
+  font-size: 13.5px;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+/* ---- the collected history ---- */
+
+.music .play {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.music .pwhen {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  padding-top: 2px;
+}
+
+.music .ptrack { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
+.music .ptrack a { color: inherit; text-decoration: none; }
+.music .ptrack a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.music .pmeta {
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+
+.music .foot {
+  margin-top: var(--gap);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.music .foot a {
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.music .foot a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+
+@media (max-width: 640px) {
+  .music .ranges,
+  .music .ranges.two { grid-template-columns: 1fr; gap: 22px; }
+  .music .play { grid-template-columns: 4.6rem 1fr; gap: 0 12px; }
+}
