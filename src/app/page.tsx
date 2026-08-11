@@ -169,8 +169,16 @@ async function musicRow(): Promise<Row> {
 
 const STATIC_ROWS: Row[] = [
   {
+    /* This said "The shelf, the queue, and whether a book is worth keeping". The deployed app has
+     * no shelf and no queue on it: it serves finish packs, which are self-graded recall cards plus
+     * a debrief for a book you have finished, and one spoiler-gated companion for a book in
+     * progress. Caught 2026-08-11 by reading the deployed page, which is the same way the Swim row
+     * was caught two days earlier and the same underlying defect: a description written by hand
+     * rather than derived will drift and still read plausibly. Both rows stay hand-written until
+     * these apps become real routes, so both stay suspect. */
     label: 'Reading',
-    line: 'The shelf, the queue, and whether a book is worth keeping',
+    line: 'Recall cards and a debrief for books I have finished, so I can tell whether any of it stuck',
+    sub: 'plus a companion for whatever I am reading now, gated so it cannot spoil ahead',
     href: 'https://readingos.vercel.app',
     external: true,
   },
