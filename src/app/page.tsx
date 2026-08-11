@@ -156,16 +156,20 @@ const WORK: Row[] = [
     label: 'The Moment',
     line: 'Storefront, checkout and admin for a bakery here in Calgary',
     sub: <><span className="live tnum">154</span> real orders have gone through it</>,
-    href: 'https://themoment.ca',
+    /* themomentyyc.com, NOT themoment.ca. The .ca is an unrelated business and it is wrong in
+     * several repo files, which is how it kept getting shipped. Confirmed 2026-08-11 by reading the
+     * title: .ca returns "The Moment | Discover Insight Today". A 200 is not a confirmation. */
+    href: 'https://themomentyyc.com',
     external: true,
   },
   {
     label: 'Versatile',
     /* "eight worksheets the staff actually fill in" was the first draft and it is exactly the claim
      * the evidence ledger forbids: adoption is not something we have measured, only deployment. */
-    line: 'Operations hub for a Calgary accounting firm. A tax season mapped into five phases and sixteen steps, plus eight process templates',
-    sub: 'live in production, behind the firm’s own login',
-    plain: true,
+    line: 'Marketing site and the internal operations hub for a Calgary accounting firm. A tax season mapped into five phases and sixteen steps, plus eight process templates',
+    sub: 'the site is public, the hub sits behind the firm’s own login',
+    href: 'https://versatilecpa.ca',
+    external: true,
   },
   {
     label: 'Brixel',
@@ -275,7 +279,8 @@ export default async function Home() {
         <a href="https://github.com/silvio-hoodii" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://linkedin.com/in/silvio-neyra-rivas" target="_blank" rel="noreferrer">LinkedIn</a>
         <a href="mailto:silvio@hoodii.studio">Email</a>
-        <a href="https://brixelcorp.com" target="_blank" rel="noreferrer">Brixel</a>
+        {/* Brixel was here and should not have been. This row is how to reach me; a company is not
+         * a contact method, and it already has its own line under In production. */}
         {spotify.isPlaying && spotify.title && (
           <span className="np">
             <span className="eq" aria-hidden="true"><i /><i /><i /></span>
