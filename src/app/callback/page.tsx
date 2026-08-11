@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import './callback.css';
 
 export const dynamic = 'force-dynamic';
@@ -64,7 +65,7 @@ export default async function CallbackPage({
       )}
 
       <p className="back">
-        <a href="/">Back to the index</a>
+        <Link href="/">Back to the index</Link>
       </p>
     </div>
   );
