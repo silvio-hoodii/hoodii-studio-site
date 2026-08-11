@@ -131,6 +131,30 @@
 .idx .row.off .label { color: var(--muted-foreground); }
 .idx .row.off .arrow { opacity: 0.35; }
 
+/* `plain` is a real thing with no public URL, not a degraded one. It keeps full contrast and only
+ * loses the arrow, because the arrow is a promise that something happens when you click. */
+.idx .row.plain .arrow { opacity: 0.3; }
+
+/* ---- sections ----
+ *
+ * A heading, not a card lid. Same mono/uppercase/tracking as the label column so it reads as part
+ * of the same table rather than as a new component, and the rule under it is the same hairline the
+ * rows already use. The apps get no heading on purpose: they are the page, and naming them
+ * "Projects" would be the exact generic move this design exists to avoid.
+ */
+
+.idx .sec {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: var(--gap) 0 12px;
+}
+
+.idx .sec + .rows { border-top: 1px solid var(--foreground); opacity: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   .idx .arrow { transition: none; }
 }

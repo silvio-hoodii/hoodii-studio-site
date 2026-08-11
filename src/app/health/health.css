@@ -1,0 +1,199 @@
+/* Health surface, same idiom as .gym / .kos: monochrome, mono labels, rules instead of cards,
+ * --signal reserved for a value that is true right now. Charts follow that same rule: the
+ * historical line is ink (foreground), the latest/current point is --signal — the chart-level
+ * application of the same convention .gym .live already uses for a live number. */
+
+.health {
+  --pad: 20px;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100dvh;
+}
+.health * { box-sizing: border-box; }
+
+.health .wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 52px) var(--pad) 80px;
+}
+
+.health .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: block;
+  text-decoration: none;
+}
+.health a.eyebrow:hover { color: var(--foreground); }
+
+.health h1 {
+  font-size: clamp(22px, 5vw, 27px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+.health h2 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+.health .lede { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); margin: 10px 0 0; max-width: 54ch; }
+.health .tnum { font-variant-numeric: tabular-nums; }
+.health .live { color: var(--signal); font-weight: 600; }
+
+.health .divider { border: 0; border-top: 1px solid var(--foreground); opacity: 0.85; margin: 0; }
+
+.health button.primary, .health .btn.primary {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+.health input[type='password'] {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+.health .changes { font-size: 13px; color: var(--destructive); }
+
+/* ---- section ---- */
+.health .section { margin-top: 40px; }
+.health .section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* ---- stat row ---- */
+.health .stats { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 18px; }
+.health .stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 3px;
+}
+.health .stat-value { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.health .stat-value .unit { font-size: 13px; font-weight: 500; color: var(--muted-foreground); margin-left: 2px; }
+.health .stat-delta { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
+.health .stat-delta.down { color: var(--signal); }
+
+.health .empty {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  border-left: 2px solid var(--border);
+  padding-left: 13px;
+}
+
+/* ---- charts ---- */
+.health .chart-wrap { position: relative; width: 100%; }
+.health .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.health .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.health .chart-axis { stroke: var(--border); stroke-width: 1; }
+.health .chart-axis-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--muted-foreground);
+}
+.health .chart-endpoint { fill: var(--signal); stroke: var(--background); stroke-width: 2; }
+.health .chart-endpoint-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--signal);
+}
+.health .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
+.health .chart-crosshair.on { opacity: 0.6; }
+.health .chart-hit { fill: transparent; cursor: crosshair; }
+
+.health .chart-bar { fill: var(--muted-foreground); }
+.health .chart-bar:hover, .health .chart-bar.hot { fill: var(--foreground); }
+
+.health .tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  opacity: 0;
+  transition: opacity 80ms ease;
+  z-index: 5;
+}
+.health .tooltip.on { opacity: 1; }
+.health .tooltip .t-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-bottom: 2px;
+}
+.health .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---- adherence strip ---- */
+.health .strip { display: flex; gap: 4px; flex-wrap: wrap; }
+.health .strip-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  position: relative;
+  cursor: default;
+}
+.health .strip-cell.trained { background: var(--muted-foreground); border-color: var(--muted-foreground); }
+.health .strip-cell.logged::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--background);
+}
+.health .strip-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.health .strip-legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.health .strip-legend .swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--border); background: var(--background); position: relative; }
+.health .strip-legend .swatch.trained { background: var(--muted-foreground); border-color: var(--muted-foreground); }
+.health .strip-legend .swatch.logged::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--background); }
+
+.health .not-here {
+  border-left: 2px solid var(--border);
+  padding-left: 13px;
+  font-size: 14.5px;
+  color: var(--muted-foreground);
+  margin-top: 20px;
+}

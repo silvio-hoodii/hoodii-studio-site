@@ -1,0 +1,212 @@
+/* French surface, same idiom as .gym / .health / .kos: monochrome, rules instead of cards,
+ * --signal reserved for a value that is true right now (due count, streak, a correct/easy recall),
+ * --destructive reserved for the one thing that needs to read as "wrong" (the Again rating, a
+ * failed login). Ported from LanguageOS/site/french.html, which had its own standalone blue/green
+ * palette (--accent, --good) — collapsed onto the shared two-chromatic-color system per
+ * hoodii-studio-site/AGENTS.md ("must consume the tokens, never hardcode a colour"). Content and
+ * interaction ported as-is; only the paint changed. */
+
+.french {
+  --pad: 20px;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100dvh;
+}
+.french * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+.french .wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 52px) var(--pad) 60px;
+}
+
+.french .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  display: block;
+  text-decoration: none;
+}
+.french a.eyebrow:hover { color: var(--foreground); }
+
+.french h1 {
+  font-size: clamp(26px, 6vw, 32px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+.french h2 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+.french .lede { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); margin: 10px 0 0; max-width: 54ch; }
+.french .tnum { font-variant-numeric: tabular-nums; }
+.french .live { color: var(--signal); font-weight: 600; }
+.french .changes { font-size: 13px; color: var(--destructive); }
+
+/* ---- exam strip ---- */
+.french .exam-strip {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  border-bottom: 1px solid var(--foreground);
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+  opacity: 0.85;
+}
+.french .exam-strip .d { font-family: var(--font-mono); font-size: 13.5px; color: var(--muted-foreground); }
+.french .exam-strip .d b { color: var(--signal); font-weight: 600; }
+.french .exam-strip button {
+  margin-left: auto;
+  font: inherit;
+  font-size: 13px;
+  background: none;
+  border: none;
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.french .exam-strip button:hover { color: var(--foreground); }
+
+/* ---- section ---- */
+.french .section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+.french .section:first-of-type { margin-top: 26px; }
+
+/* ---- today counts + review cta ---- */
+.french .counts { display: flex; gap: 28px; margin-bottom: 18px; }
+.french .counts div { line-height: 1.15; }
+.french .counts b { font-family: var(--font-mono); font-size: 34px; font-weight: 500; display: block; font-variant-numeric: tabular-nums; }
+.french .counts .c-due b { color: var(--signal); }
+.french .counts span { font-size: 12px; color: var(--muted-foreground); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.french button.primary, .french .btn.primary {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 15px;
+  min-height: 52px;
+  cursor: pointer;
+}
+.french button.primary[disabled] { background: none; color: var(--muted-foreground); border-color: var(--border); font-weight: 400; cursor: default; }
+.french button.ghost {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: var(--radius);
+  padding: 13px;
+  min-height: 48px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.french button.ghost:hover { border-color: var(--foreground); }
+
+/* ---- book section / chapter log form ---- */
+.french .lastch { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+.french .lastch em { font-style: normal; color: var(--muted-foreground); font-weight: 400; font-size: 14px; }
+.french .empty { color: var(--muted-foreground); font-size: 14.5px; margin: 0 0 14px; }
+.french label.f { display: block; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); margin: 12px 0 5px; }
+.french input.f, .french select.f {
+  width: 100%;
+  font: inherit;
+  font-size: 15.5px;
+  padding: 11px 12px;
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+.french input.f:focus, .french select.f:focus { outline: none; border-color: var(--foreground); }
+.french .row2 { display: flex; gap: 10px; }
+.french .row2 > * { flex: 1; }
+
+/* ---- activity strip ---- */
+.french .act { display: flex; gap: 2px; margin-top: 4px; overflow: hidden; }
+.french .act i { flex: 1; height: 22px; border-radius: 2px; background: var(--muted); min-width: 2px; }
+.french .act i.a1 { background: color-mix(in oklch, var(--signal) 30%, var(--muted)); }
+.french .act i.a2 { background: color-mix(in oklch, var(--signal) 55%, var(--muted)); }
+.french .act i.a3 { background: color-mix(in oklch, var(--signal) 78%, var(--muted)); }
+.french .act i.a4 { background: var(--signal); }
+
+/* ---- review overlay ---- */
+.french .rev { position: fixed; inset: 0; background: var(--background); z-index: 30; display: none; flex-direction: column; padding: calc(16px + env(safe-area-inset-top)) var(--pad) calc(20px + env(safe-area-inset-bottom)); }
+.french .rev.on { display: flex; }
+.french .rev-top { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.french .rev-top .prog { font-family: var(--font-mono); font-size: 13px; color: var(--muted-foreground); }
+.french .rev-top .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--signal); font-weight: 600; }
+.french .rev-top button { margin-left: auto; font: inherit; font-size: 14px; background: none; border: none; color: var(--muted-foreground); cursor: pointer; padding: 8px; }
+.french .rev-top button:hover { color: var(--foreground); }
+.french .face { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; cursor: pointer; max-width: 560px; width: 100%; margin: 0 auto; }
+.french .fr { font-size: clamp(28px, 8vw, 38px); font-weight: 600; letter-spacing: -0.01em; }
+.french .en { font-size: 21px; color: var(--muted-foreground); }
+.french .es { font-size: 15px; color: var(--muted-foreground); font-style: italic; }
+.french .note { font-size: 14.5px; color: var(--foreground); max-width: 420px; border-left: 2px solid var(--destructive); padding-left: 11px; text-align: left; }
+.french .src { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); letter-spacing: 0.04em; }
+.french .hint { font-size: 14px; color: var(--muted-foreground); }
+
+.french .rate { display: none; gap: 7px; }
+.french .rate.on { display: flex; }
+.french .rate button {
+  flex: 1;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 4px;
+  min-height: 60px;
+  cursor: pointer;
+  color: var(--foreground);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+.french .rate button i { font-style: normal; font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); }
+.french .rate button.r1 { border-color: var(--destructive); color: var(--destructive); }
+.french .rate button.r4 { border-color: var(--signal); color: var(--signal); }
+
+.french .done { text-align: center; padding: 40px 0; }
+.french .done .big { font-size: 26px; font-weight: 600; margin-bottom: 8px; }
+.french .done p { color: var(--muted-foreground); font-size: 15px; }
+
+.french .toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 26px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 14.5px;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  pointer-events: none;
+}
+.french .toast.on { opacity: 1; }
