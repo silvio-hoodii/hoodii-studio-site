@@ -311,6 +311,39 @@ export default function CookClient({
   );
 }
 
+/* Why a save can fail at all, and why it must never fail quietly.
+ *
+ * Found 2026-08-11, mid-cook. He typed three notes on the live site, pressed Send, was told they
+ * were saved, and none of them existed. Both write buttons did `await fetch(...)` and then
+ * `setSent(true)` unconditionally. `fetch` only rejects on a network error, never on an HTTP status,
+ * so the 401 from `proxy.ts` resolved happily and the UI reported success.
+ *
+ * The 401 itself is the other half. Every page went public on 2026-08-11, so nothing ever prompts a
+ * login, so on any device that has not manually visited /kitchen/login every write fails. He had no
+ * way to know a login existed: "There's no login so what do you mean there's no login here?"
+ *
+ * His text is deliberately NOT cleared on failure, and the reason to keep the gate rather than open
+ * the POST is in proxy.ts: these are append-only logs everything else derives from. */
+function SaveFailed({ err }: { err: string }) {
+  return (
+    <div className="box warn" style={{ marginTop: 10 }}>
+      <span className="k">This did not save</span>
+      {err === 'locked' ? (
+        <div>
+          This device has never been signed in, and writing needs it.{' '}
+          <Link href="/kitchen/login" target="_blank">Sign in once</Link> and it stays signed in for
+          a year. Your text is still here, so nothing is lost: sign in in the new tab, come back, and
+          press Send again.
+        </div>
+      ) : err === 'offline' ? (
+        <div>The request never reached the server. Your text is still here. Try Send again.</div>
+      ) : (
+        <div>The server refused it ({err}). Your text is still here. Try Send again.</div>
+      )}
+    </div>
+  );
+}
+
 /* ---------------- a note written at the stove ----------------
  *
  * The API route for this has existed since the rebuild and nothing has ever called it, so the
@@ -326,6 +359,7 @@ function StepNote({ dish, step, stepOf, stepText }: {
   const [note, setNote] = useState('');
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   if (sent) {
     return <p className="quiet" style={{ marginBottom: 15 }}>Noted against step {step}. It will be waiting next time you open this dish.</p>;
@@ -363,6 +397,7 @@ function StepNote({ dish, step, stepOf, stepText }: {
         onChange={(e) => setNote(e.target.value)}
         placeholder="Say it however it comes out. Nobody else reads this."
       />
+      {err && <SaveFailed err={err} />}
       <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
         <button onClick={() => setOpen(false)} style={{ fontSize: 15 }}>Cancel</button>
         <button
@@ -371,13 +406,17 @@ function StepNote({ dish, step, stepOf, stepText }: {
           style={{ fontSize: 15 }}
           onClick={async () => {
             setBusy(true);
+            setErr(null);
             try {
-              await fetch('/kitchen/api/note', {
+              const res = await fetch('/kitchen/api/note', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ dish, note, step, stepOf, kind, stepText }),
               });
+              if (!res.ok) { setErr(res.status === 401 ? 'locked' : `failed ${res.status}`); return; }
               setSent(true);
+            } catch {
+              setErr('offline');
             } finally {
               setBusy(false);
             }
@@ -401,16 +440,23 @@ function Debrief({
   const [ranOut, setRanOut] = useState<string[]>([]);
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   async function send() {
     setBusy(true);
+    setErr(null);
     try {
-      await fetch('/kitchen/api/finish', {
+      const res = await fetch('/kitchen/api/finish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dish: recipe.id, dishName: recipe.name, rating, note, ranOut }),
       });
+      // Same silent-success bug as StepNote had. A debrief is the most expensive thing to lose,
+      // because by the time anyone notices, the cook is over and the detail is gone.
+      if (!res.ok) { setErr(res.status === 401 ? 'locked' : `failed ${res.status}`); return; }
       setSent(true);
+    } catch {
+      setErr('offline');
     } finally {
       setBusy(false);
     }
@@ -477,6 +523,8 @@ function Debrief({
         onChange={(e) => setNote(e.target.value)}
         placeholder="Crust stuck. 22 min was too long. Needed more salt."
       />
+
+      {err && <SaveFailed err={err} />}
 
       <div className="nav">
         <button className="primary" disabled={busy} onClick={send}>
