@@ -125,6 +125,12 @@ export interface Recipe {
      *  rendered read, and then burnt the second batch because no step said what the heat should be
      *  once the pan was already hot. A dish that failed is not offered, whatever else it passes. */
     cookedResult?: 'worked' | 'failed';
+    /** What actually happened at the stove, in one paragraph.
+     *
+     *  Exists because 'worked' | 'failed' cannot express the 2026-08-11 outcome: the food was fine
+     *  and five of the instructions were wrong. Rating the food would have hidden that; rating it
+     *  failed would have libelled a recipe he ate. */
+    cookedNote?: string;
     /** Hash of the RENDERED text at the moment someone read it, from render.mjs.
      *
      *  `readAt` compares one hand-typed string (`readAt`) to another (`build`), so two edits satisfy

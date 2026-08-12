@@ -442,7 +442,7 @@
   ],
   "provenance": {
     "tier": "adapted",
-    "cooked": false,
+    "cooked": true,
     "readAt": "2026-08-11j",
     "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
     "sources": [
@@ -453,6 +453,8 @@
         "note": "Beef and mushrooms stir-fried over rice (Soegogi-beoseot-deopbap). Rated 5/5 from 281 votes, tagged non spicy. Posted 2019-04-28, last updated 2026-05-18. Fetched 2026-08-11; the site returns 403 to a plain fetch and 200 to a browser user-agent."
       }
     ],
-    "readHash": "86acfa7f"
+    "readHash": "86acfa7f",
+    "cookedResult": "worked",
+    "cookedNote": "Cooked 2026-08-11 and eaten. The FOOD was fine; five ANNOTATIONS were wrong, all of them agent sentences rather than figures from the source, and all five are listed under deviations. cookedResult is \"worked\" because the dish worked. The recipe is still not offered, because it is tier adapted and adapted is no longer offered. See cook_log row 20 for the full debrief."
   }
 }

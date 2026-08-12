@@ -1,6 +1,46 @@
 ---
 decided: 2026-08-09
+amended: 2026-08-11, and the amendment is the important part
 status: binding. Supersedes the authoring model in RECIPE-SCHEMA.md.
+---
+
+# 2026-08-11 amendment: this file was right and it did not work
+
+Everything below has been binding since 2026-08-09. On 2026-08-11 **five separate instructions
+reached the stove that this file forbids**, inside a recipe written specifically to honour it. All
+five were agent sentences. Not one was a figure a source gave, exactly as predicted below.
+
+| # | The invention | What he hit |
+|---|---|---|
+| 1 | Her skillet swapped for a pot | Held the water her wide pan drives off. Watery sauce |
+| 2 | "Mostly brown" as the doneness test, where she says 80 percent **cooked** | Chased a crust that cannot form in a wet pot |
+| 3 | A note calling the pot's browned bits "most of the flavour" | **She never mentions fond** |
+| 4 | Rice converted to US cups because a listing implied no measuring cup | Four scales for one measurement |
+| 5 | "Coats the back of the spoon and holds the line" | That is nappe. Hers is "just a little sticky". **He passed her test and failed ours** |
+
+His verdict: *"there's no one single recipe that I have been able to do... are we just spending tokens
+for nothing?"*
+
+**The lesson is not that this file needs stricter wording.** It is that a rule which asks an agent to
+remember is not a rule. So the tier is now load-bearing rather than descriptive, and `validate.mjs`
+enforces it:
+
+- **Any entry in `deviations` disqualifies `sourced`.** No classification, no size threshold, no
+  judgement about whether a change is small enough. That judgement produced all five defects above.
+- **Only `sourced` is offered.** `adapted` is reachable and honestly labelled with its change count,
+  and is never recommended.
+- **`provenance.readHash`** is a hash of the rendered text. `readAt` compared two hand-typed strings,
+  so two edits satisfied it. A hash cannot be typed into agreement.
+
+The offered catalogue went to **0 of 30** the moment this landed. That is the correct number.
+
+**What this means in practice, and it is a product change rather than a restriction:** the job is no
+longer to adapt a recipe to this kitchen. It is to **find a published recipe this kitchen already
+satisfies exactly**. If none exists, either something gets bought or no dish is offered. Searching for
+a dish and then bending it is the motion that has failed five times.
+
+See `.agents/ENGINEERING.md` for the four laws this sits under.
+
 ---
 
 # Agents do not write cooking steps any more
