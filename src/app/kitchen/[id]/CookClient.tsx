@@ -324,22 +324,66 @@ export default function CookClient({
  *
  * His text is deliberately NOT cleared on failure, and the reason to keep the gate rather than open
  * the POST is in proxy.ts: these are append-only logs everything else derives from. */
-function SaveFailed({ err }: { err: string }) {
+function SaveFailed({ err, onRetry }: { err: string; onRetry: () => void | Promise<void> }) {
+  const [pw, setPw] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [wrong, setWrong] = useState(false);
+
+  async function unlock() {
+    setBusy(true);
+    setWrong(false);
+    try {
+      const res = await fetch('/kitchen/api/unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pw }),
+      });
+      if (!res.ok) { setWrong(true); return; }
+      // Cookie is set. Send the thing he already typed, so unlocking and saving are one action.
+      await onRetry();
+    } catch {
+      setWrong(true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (err !== 'locked') {
+    return (
+      <div className="box warn" style={{ marginTop: 10 }}>
+        <span className="k">This did not save</span>
+        {err === 'offline'
+          ? <div>The request never reached the server. Your text is still here. Try Send again.</div>
+          : <div>The server refused it ({err}). Your text is still here. Try Send again.</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="box warn" style={{ marginTop: 10 }}>
-      <span className="k">This did not save</span>
-      {err === 'locked' ? (
-        <div>
-          This device has never been signed in, and writing needs it.{' '}
-          <Link href="/kitchen/login" target="_blank">Sign in once</Link> and it stays signed in for
-          a year. Your text is still here, so nothing is lost: sign in in the new tab, come back, and
-          press Send again.
-        </div>
-      ) : err === 'offline' ? (
-        <div>The request never reached the server. Your text is still here. Try Send again.</div>
-      ) : (
-        <div>The server refused it ({err}). Your text is still here. Try Send again.</div>
-      )}
+      <span className="k">This device cannot save yet</span>
+      <div>
+        Reading is open to anyone. Changing your logs is not, because everything else is worked out
+        from them. Unlock this device once and it stays unlocked for a year. Your text is still here.
+      </div>
+      <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+        <input
+          type="password"
+          value={pw}
+          autoComplete="current-password"
+          placeholder="Password"
+          onChange={(e) => setPw(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter' && pw && !busy) void unlock(); }}
+          style={{ flex: '1 1 160px' }}
+        />
+        <button className="primary" disabled={busy || !pw} onClick={() => void unlock()} style={{ fontSize: 15 }}>
+          {busy ? 'Unlocking…' : 'Unlock and save'}
+        </button>
+      </div>
+      {wrong && <p className="changes" style={{ marginTop: 10 }}>Not that one. Nothing was lost, try again.</p>}
+      <p className="quiet" style={{ marginTop: 10 }}>
+        Or do it on <Link href="/kitchen/login" target="_blank">the login page</Link> and come back.
+      </p>
     </div>
   );
 }
@@ -360,6 +404,25 @@ function StepNote({ dish, step, stepOf, stepText }: {
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  /* Lifted out of the button's onClick so the inline unlock can call the exact same save. */
+  async function save() {
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch('/kitchen/api/note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dish, note, step, stepOf, kind, stepText }),
+      });
+      if (!res.ok) { setErr(res.status === 401 ? 'locked' : `failed ${res.status}`); return; }
+      setSent(true);
+    } catch {
+      setErr('offline');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   if (sent) {
     return <p className="quiet" style={{ marginBottom: 15 }}>Noted against step {step}. It will be waiting next time you open this dish.</p>;
@@ -397,30 +460,14 @@ function StepNote({ dish, step, stepOf, stepText }: {
         onChange={(e) => setNote(e.target.value)}
         placeholder="Say it however it comes out. Nobody else reads this."
       />
-      {err && <SaveFailed err={err} />}
+      {err && <SaveFailed err={err} onRetry={save} />}
       <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
         <button onClick={() => setOpen(false)} style={{ fontSize: 15 }}>Cancel</button>
         <button
           className="primary"
           disabled={busy || !note.trim()}
           style={{ fontSize: 15 }}
-          onClick={async () => {
-            setBusy(true);
-            setErr(null);
-            try {
-              const res = await fetch('/kitchen/api/note', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dish, note, step, stepOf, kind, stepText }),
-              });
-              if (!res.ok) { setErr(res.status === 401 ? 'locked' : `failed ${res.status}`); return; }
-              setSent(true);
-            } catch {
-              setErr('offline');
-            } finally {
-              setBusy(false);
-            }
-          }}
+          onClick={() => void save()}
         >{busy ? 'Saving…' : 'Send'}</button>
       </div>
     </div>
@@ -524,7 +571,7 @@ function Debrief({
         placeholder="Crust stuck. 22 min was too long. Needed more salt."
       />
 
-      {err && <SaveFailed err={err} />}
+      {err && <SaveFailed err={err} onRetry={send} />}
 
       <div className="nav">
         <button className="primary" disabled={busy} onClick={send}>

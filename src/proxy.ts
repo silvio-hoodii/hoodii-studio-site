@@ -43,6 +43,11 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const authed = req.cookies.get('kos')?.value === process.env.KITCHEN_SESSION_SECRET;
 
+  /* The unlock route is how a device BECOMES authorised, so it cannot require being authorised.
+   * Added 2026-08-11 with the inline unlock: /kitchen/login still exists, but a write that fails
+   * mid-cook now offers the password field in place rather than sending him off to find a page. */
+  if (pathname === '/kitchen/api/unlock') return NextResponse.next();
+
   // Writes to the event logs / set log / card store.
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api') || pathname.startsWith('/french/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
