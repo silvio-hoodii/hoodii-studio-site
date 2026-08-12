@@ -103,6 +103,10 @@ export function offer(r: Recipe, stock: Stock): Offer {
   const missing: Ingredient[] = [];
   const frozen: string[] = [];
   const low: string[] = [];
+  // The generic thaw line assumes a block of meat and an overnight fridge. Where an ingredient knows
+  // its own thaw, that wins: telling him a 20-minute counter thaw is "tomorrow" reads as "not today"
+  // and cancels a dinner he could have cooked.
+  let thawText: string | undefined;
 
   for (const ing of r.ingredients) {
     // A garnish is not a blocker. Without this, adding "lemon wedges to serve" would knock the whole
@@ -110,13 +114,15 @@ export function offer(r: Recipe, stock: Stock): Offer {
     if (ing.optional) continue;
     const h = have(ing, stock);
     if (h === 'no') missing.push(ing);
-    else if (h === 'frozen') frozen.push(ing.display);
-    else if (ing.stock && stock.items[ing.stock]?.level === 'low') low.push(ing.display);
+    else if (h === 'frozen') {
+      frozen.push(ing.display);
+      if (!thawText && ing.thawText) thawText = ing.thawText;
+    } else if (ing.stock && stock.items[ing.stock]?.level === 'low') low.push(ing.display);
   }
 
   if (missing.some((m) => m.defining)) return { status: 'blocked', missing, frozen, low };
   if (missing.length) return { status: 'adapt', missing, frozen, low };
-  if (frozen.length) return { status: 'thaw', missing: [], frozen, low };
+  if (frozen.length) return { status: 'thaw', missing: [], frozen, low, thawText };
   return { status: 'ready', missing: [], frozen, low };
 }
 

@@ -1,0 +1,444 @@
+{
+  "id": "beefmushroomrice",
+  "name": "Beef and Mushrooms Over Rice",
+  "build": "2026-08-11d",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The bowl you asked for: rice, protein, vegetables, and the pickles alongside. It uses the last bag of sliced sirloin and BOTH trays of mushrooms, which came in on Aug 8 and are the things in the fridge closest to a clock. Korean home cooking calls this deopbap, which just means something on the rice. No Korean chili needed and none used, so nothing here waits on a shop. Maangchi's own opening line is that you do not need any special Korean ingredients for it.",
+  "source": {
+    "name": "Maangchi",
+    "url": "https://www.maangchi.com/recipe/soegogi-beoseot-deopbap",
+    "why": "Maangchi is the reference English-language source for Korean home cooking. This recipe is rated 5/5 from 281 votes and is tagged non spicy. Her sentences are kept as the instructions; everything we added is annotation."
+  },
+  "deviations": [
+    {
+      "what": "Scaled x4, and 500 g of beef instead of the 454 g that x4 would give",
+      "why": "500 g is what one freezer bag holds, same rounding the bulgogi recipe already declared. x4 makes 8 of her servings; you eat it as 4 portions, which is a portioning choice and not a change to the recipe"
+    },
+    {
+      "what": "Cornstarch instead of her potato starch",
+      "why": "Straight 1:1 as a thickener and it is what you own. Potato starch sets slightly glossier and thins faster if boiled hard, which is why the simmer stays gentle"
+    },
+    {
+      "what": "One tray of FRESH shiitake instead of her 3 dried shiitake",
+      "why": "You have fresh, bought Aug 8, and they need using. This removes her several-hour soak, which exists only because hers are dried. Fresh shiitake are milder than dried, so the dish is less deeply savoury than hers. That is a real difference, not a wash"
+    },
+    {
+      "what": "Cremini instead of her enoki",
+      "why": "Cremini is what is in the fridge. Meaty and sliceable where enoki are stringy and stay in strands. Same job in the pan, different bite"
+    },
+    {
+      "what": "Sirloin tip instead of her ribeye, plus vegetable oil",
+      "why": "HER call, not ours. Her recipe note reads: If you use lean beef, you may have to add about 1 tablespoon of vegetable oil while stir-frying the beef to give it the juiciness we need. Sirloin tip is lean, so the oil is in"
+    },
+    {
+      "what": "A large POT instead of her large skillet",
+      "why": "x4 is about 2.3 kg of food and 4 cups of liquid. That will not fit a skillet and would slop over the side. The method does not depend on the pan being shallow"
+    },
+    {
+      "what": "Broth topped up with crushed Knorr cube and water",
+      "why": "The carton was part-used on the piccata. She writes chicken broth (or beef broth or vegetable stock), so she is already flexible on it, and bulgogi.json declared this same cube swap"
+    },
+    {
+      "what": "Her green chili pepper left out",
+      "why": "She marks it optional in her own ingredient list"
+    },
+    {
+      "what": "Cucumber pickles and pickled red onion instead of kimchi",
+      "why": "She calls kimchi the one side dish you need. It is a side, not part of the dish, and nothing in the pot depends on it. You have two pickled things in the fridge that sit in exactly that slot"
+    },
+    {
+      "what": "No egg",
+      "why": "There is no egg in her recipe and we are not adding a step for one. Fry one on the side if you want it"
+    },
+    {
+      "what": "No simmer time and no reheat time given",
+      "why": "Her recipe gives neither. Rather than invent a number, both steps are governed by the doneness test instead"
+    }
+  ],
+  "time": {
+    "activeMin": 30,
+    "totalMin": 60,
+    "note": "The beef thaws and the rice cooks WHILE you slice, so this is about 35 min of waiting that overlaps 20 min of knife work, then 8 min in the pot"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 36,
+    "proteinMath": "105 g from 500 g sirloin tip at 21 g per 100 g raw, the same figure the bulgogi recipe uses. Plus 26 g from 2 dry cups of long grain rice. Plus roughly 10 g from 340 g of mushrooms at about 3 g per 100 g, which is an ESTIMATE off standard values and not a label read. Plus about 3 g between the oyster sauce and the broth. Total about 144 g, divided by 4 portions, is 36 g each."
+  },
+  "ingredients": [
+    {
+      "ref": "beef",
+      "stock": "roast",
+      "display": "sliced beef, the last bag from the freezer",
+      "qty": 500,
+      "unit": "g",
+      "prep": "thawed on the counter, then cut into bite-size strips",
+      "thawText": "About 20 min on the counter is all it needs: it is 2 to 3 mm slices frozen flat, not a block. You can cook this today.",
+      "defining": true
+    },
+    {
+      "ref": "rice",
+      "stock": "longgrainrice",
+      "display": "long grain white rice",
+      "qty": 2,
+      "unit": "cups",
+      "prep": "rinsed until the water runs clear",
+      "defining": true
+    },
+    {
+      "ref": "shiitake",
+      "stock": "mushrooms",
+      "display": "fresh shiitake mushrooms",
+      "qty": 113,
+      "unit": "g",
+      "prep": "caps pulled off the stems, stems thrown away, caps sliced thinly",
+      "defining": false
+    },
+    {
+      "ref": "cremini",
+      "stock": "mushrooms",
+      "display": "cremini mushrooms",
+      "qty": 227,
+      "unit": "g",
+      "prep": "dried end trimmed, sliced thinly",
+      "defining": false
+    },
+    {
+      "ref": "onion",
+      "stock": "yellowonion",
+      "display": "sweet onion",
+      "qty": 300,
+      "unit": "g",
+      "prep": "about three quarters of one large one, sliced thinly",
+      "defining": false
+    },
+    {
+      "ref": "carrot",
+      "stock": "carrots",
+      "display": "baby carrots",
+      "qty": 227,
+      "unit": "g",
+      "prep": "sliced thinly into coins",
+      "defining": false
+    },
+    {
+      "ref": "onion_whites",
+      "stock": "greenonion",
+      "display": "green onions, WHITE parts of all 4 stalks",
+      "qty": 4,
+      "unit": "each",
+      "prep": "cut into 2 inch lengths, kept in their own pile",
+      "defining": false
+    },
+    {
+      "ref": "onion_greens",
+      "stock": "greenonion",
+      "display": "green onions, GREEN parts of those same 4 stalks, for the top",
+      "qty": 4,
+      "unit": "each",
+      "prep": "chopped, kept in their own pile",
+      "defining": false
+    },
+    {
+      "ref": "garlic",
+      "stock": "garlic",
+      "display": "garlic cloves",
+      "qty": 4,
+      "unit": "each",
+      "prep": "minced",
+      "defining": false
+    },
+    {
+      "ref": "broth",
+      "stock": "stock",
+      "display": "chicken broth",
+      "qty": 4,
+      "unit": "cups",
+      "prep": "carton topped up with crushed Knorr cube and water to reach the full amount",
+      "defining": false
+    },
+    {
+      "ref": "cornstarch",
+      "stock": "cornstarch",
+      "display": "cornstarch",
+      "qty": 8,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "oyster",
+      "stock": "oyster",
+      "display": "oyster sauce",
+      "qty": 4,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "sesameoil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 8,
+      "unit": "tsp",
+      "prep": "HALF goes in the pot and HALF over the top at the end",
+      "defining": false
+    },
+    {
+      "ref": "oil",
+      "staple": true,
+      "display": "vegetable oil",
+      "qty": 4,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "staple": true,
+      "display": "kosher salt",
+      "qty": 2,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "pepper",
+      "staple": true,
+      "display": "ground black pepper",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "ricecooker",
+    "pot_large",
+    "stovetop",
+    "knife_sharp",
+    "cuttingboard",
+    "bowlset",
+    "strainer",
+    "measuringcups",
+    "measuringspoons",
+    "scale_digital",
+    "woodenspoon",
+    "papertowel",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Take the bag of sliced beef out of the freezer and leave it on the counter while you do everything else. It is already sliced thin and frozen flat, so it does not need long.",
+      "sourceText": "4 ounces ribeye, thinly sliced into bite size strips",
+      "uses": [
+        "beef"
+      ],
+      "look": "About twenty minutes on the counter is all this bag needs, because it is a thin flat sheet rather than a block. That is the figure the bulgogi recipe already established for this exact bag. There is deliberately no timer on this step: the rice and the slicing together take longer than the thaw, so by the time you reach the pot it will be ready. You are not trying to get it warm, only bendy enough to cut.",
+      "warn": "This bag was thawed in the fridge and refrozen once already, which is safe. It is now being thawed on the COUNTER, so it cannot go back in the freezer again. Whatever you do not cook tonight gets eaten in the next 3 to 4 days from the fridge."
+    },
+    {
+      "n": 2,
+      "text": "Rinse the rice until the water runs clear, put it in the rice cooker, fill to the water line marked for that much rice, and press the lever down. Leave it alone. It clicks itself up to warm when it is done.",
+      "sourceText": "2 bowls of white fluffy rice",
+      "uses": [
+        "rice"
+      ],
+      "equipment": [
+        "ricecooker",
+        "strainer",
+        "measuringcups"
+      ],
+      "minutes": 35,
+      "look": "Use the fine mesh strainer, not the colander. Rice grains fall straight through a colander's holes.RINSE UNTIL CLEAR means run cold water over it, swirl it with your fingers, tip the cloudy water off, and repeat until the water coming off is see-through rather than milky. Usually three or four goes. That loose surface starch is what makes rice gluey.The cooker is the reason the rice is not a risk tonight. It is a thermostat switch, not a dial, so there is no setting to misjudge. That is exactly what went wrong on 5 Aug and again on 8 Aug, both times on the hob.Use the water line inside the pot rather than a measured amount of water. Those markings are the manufacturer's ratio for that pot, and they are more trustworthy than any number typed here.Start this before you pick up the knife. It runs unattended while you slice.",
+      "warn": "The cup capacity of this cooker has never been confirmed, only the box was photographed. 2 dry cups makes roughly 6 cups cooked. If that comes anywhere near the MAX line inside the pot, cook 1 1/2 cups instead and leave a note in the app, because rice boiling over a thermostat cooker makes a real mess."
+    },
+    {
+      "n": 3,
+      "text": "Combine the chicken broth and cornstarch in a bowl and mix well. Set aside.",
+      "sourceText": "Combine the chicken broth and potato starch in a bowl and mix well. Set aside.",
+      "uses": [
+        "broth",
+        "cornstarch"
+      ],
+      "equipment": [
+        "bowlset",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "look": "The broth carton was part-used on the piccata, so pour out whatever is left into a measuring cup and READ IT before topping it up. Make up the difference with water and crushed Knorr cube, roughly one cube per cup of water you are adding. Maangchi writes chicken broth (or beef broth or vegetable stock), so she is already relaxed about which broth this is.MIX WELL means stir until you cannot see white streaks or lumps sitting on the bottom. Cornstarch clumps the instant it hits hot liquid, which is why it goes into COLD broth now rather than into the pot later. This is the only thing in the recipe that thickens the sauce.",
+      "warn": "It settles back out while it stands. Give it another stir right before it goes in the pot, or the thickening ends up in the last spoonful instead of spread through."
+    },
+    {
+      "n": 4,
+      "text": "Slice everything now, before the pot goes on, because once it does the whole dish is done in eight minutes. Mushrooms sliced thinly, the carrot sliced thinly, the onion sliced thinly, and the green onions with the white parts cut into 2 inch lengths and the green parts chopped into a separate pile. Mince the garlic.",
+      "sourceText": "3 dried shiitake mushrooms, soaked in cold water for several hours until soft, sliced thinly / 2 to 3 ounces enoki mushrooms (about 1/2 package), trim off the woody base of the stalks / 1 small carrot (about 2 ounces), cut it 2 inch long crosswise and slice thinly / 1 spicy green chili pepper (optional), chopped if using / 2 green onions, divide white and green. Cut white part into 2 inch long and chopped green part for garnish / 1 small onion (about 2 to 3 ounces), sliced thinly / 1 garlic clove, minced",
+      "uses": [
+        "shiitake",
+        "cremini",
+        "carrot",
+        "onion",
+        "onion_whites",
+        "onion_greens",
+        "garlic"
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "bowlset",
+        "scale_digital",
+        "papertowel"
+      ],
+      "minutes": 20,
+      "look": "SLICED THINLY here means about the thickness of a coin, 2 to 3 mm. Everything in this dish cooks for four minutes total, so anything thicker stays raw in the middle.Do not wash the mushrooms under the tap. They drink water like a sponge and then steam instead of browning. Wipe them with a damp paper towel.Shiitake stems are woody and unpleasant to eat. Pull the cap off the stem and throw the stems away. Cremini stems are fine, just trim the dried end.THE WHITES AND GREENS GO IN AT DIFFERENT TIMES, which is why they get separate piles. The whites are the pale firm ends nearest the root and they cook with the vegetables. The dark green tops go on raw at the very end. This was the exact omission you flagged in the bulgogi cook log, so it is spelled out here.MINCE means chop as fine as you can get it, small enough that no piece is still recognisable as a slice.Your onions are SWEET onions, not yellow. They hold more sugar and water, so they collapse faster and taste sweeter than the onion she used. Nothing to change, just do not be surprised when they soften quickly.",
+      "warn": "Weigh the mushrooms, carrot and onion on the scale rather than guessing. The whole reason this dish is worth cooking tonight is that both mushroom trays get used, and eyeballing it is how half a tray gets left in the fridge to go off."
+    },
+    {
+      "n": 5,
+      "text": "Heat the large pot over high heat. Drizzle the sesame oil and the vegetable oil into the pot and add the beef, garlic, kosher salt, and ground black pepper. Stir with a wooden spoon for about 2 minutes until 80 percent of the beef is cooked.",
+      "sourceText": "Heat a large skillet over high heat. Drizzle 1 teaspoon of the sesame oil into the skillet and add the beef, garlic, kosher salt, and ground black pepper. Stir with a wooden spoon for about 2 minutes until 80 percent of the beef is cooked. If you use lean beef, you may have to add about 1 tablespoon of vegetable oil while stir-frying the beef to give it the juiciness we need.",
+      "uses": [
+        "beef",
+        {
+          "ref": "sesameoil",
+          "amount": 4,
+          "unit": "tsp"
+        },
+        "oil",
+        "garlic",
+        "salt",
+        "pepper"
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Hot before anything goes in. Flick a few drops of water onto the empty dry pot: if they skitter into beads that roll around like mercury it is ready, if they disappear with a hiss it is not. Then the oil, then the food.",
+        "recheck": "Right after the beef goes in. If you hear nothing at all the pot is too cool. Bring it up until you can hear a steady crackle."
+      },
+      "doneness": {
+        "test": "Lift one piece out with the spoon and look at the cut face. Mostly brown with a thin band of pink still showing through the middle is the 80 percent she means. Brown all the way through has gone too far, because it cooks again in the sauce.",
+        "kind": "look"
+      },
+      "look": "HALF the sesame oil goes in here. The other half goes over the top at the end, which is how she splits it too.The water test is safe on a DRY pot and dangerous once oil is in, because water hitting hot oil spits back at you. Test first, then oil.The vegetable oil is here on Maangchi's own instruction, not ours: her note says lean beef needs about a tablespoon of it for juiciness, and sirloin tip is lean.Everything the beef leaves stuck to the bottom of the pot stays there. Do not wipe it out. The broth lifts it off two steps from now and that is most of the flavour of the finished dish.",
+      "warn": "Salt and pepper go in NOW, with the beef, and there is no more salt anywhere else in this dish except what the oyster sauce and the broth carry. That is correct and not an omission. Do not add any at the end."
+    },
+    {
+      "n": 6,
+      "text": "Add mushrooms, onion, carrot and the white parts of the green onions, and stir for about 2 minutes until the onion is semi-translucent.",
+      "sourceText": "Add mushrooms, onion, carrot, and green chili pepper (if using) and stir for about 2 minutes until the onion is semi-translucent. 2 green onions, divide white and green. Cut white part into 2 inch long and chopped green part for garnish",
+      "uses": [
+        "shiitake",
+        "cremini",
+        "onion",
+        "carrot",
+        "onion_whites"
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "woodenspoon"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Leave it where it was for the beef. The pot should still be crackling with the vegetables in it, neither silent nor spitting.",
+        "recheck": "After 30 seconds. Cold vegetables drop the temperature, so if the crackle stops, bring it up until it comes back."
+      },
+      "doneness": {
+        "test": "Fish out one slice of onion and hold it up. SEMI-TRANSLUCENT means the thickest part has gone from solid white to slightly see-through, while the slice still holds its shape and does not flop over the spoon.",
+        "kind": "look"
+      },
+      "look": "It will look like far too much for the pot when it all goes in, and it drops by about half in two minutes. Mushrooms are mostly water and they let it go fast.Two minutes is shorter than you would cook mushrooms on their own, and that is right. They keep cooking in the sauce for the rest of the recipe.The WHITES of the green onions go in here. The chopped greens stay on the board until the very last step.",
+      "warn": "Her green chili pepper is marked optional in her own ingredient list and is not in this version, so there is no chilli heat in this dish at all. If you want heat, the crushed jalapeno or the sriracha go on at the table, not in the pot."
+    },
+    {
+      "n": 7,
+      "text": "Stir in the oyster sauce and the chicken broth and cornstarch mixture. Stir everything until it is soft and smooth. Reduce the heat to low and let it simmer.",
+      "sourceText": "Stir in the oyster sauce and the chicken broth/potato starch mixture. Stir everything until it's soft and smooth. Reduce the heat to low and let it simmer.",
+      "uses": [
+        "oyster",
+        "broth",
+        "cornstarch"
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "target": "Turned down until the surface is barely moving, with a bubble breaking here and there rather than all over. Not still, and not rolling.",
+        "recheck": "Two minutes after you turn it down. If the surface has gone completely flat and still, bring it back up until you can see the occasional bubble."
+      },
+      "doneness": {
+        "test": "Drag the spoon across the bottom and lift it out. The sauce should coat the back of the spoon and hold the line where the spoon passed for a second before it closes over. If it runs off clear and leaves no line, give it another minute.",
+        "kind": "look"
+      },
+      "look": "Stir the broth mixture again before it goes in. Cornstarch settles to the bottom while it stands.SOFT AND SMOOTH is her phrase, and it means no lumps of cornstarch and no floury streaks, just an even glossy sauce. It thickens within about a minute of coming up to heat.There is no time on this step because she does not give one. The spoon test is what tells you, not a clock.Keep the simmer gentle. Cornstarch loses its thickening power if it is boiled hard, which is one place where it behaves differently from her potato starch.",
+      "warn": "This is where the pot gets full. There are 4 cups of liquid going into an already full pot, which is exactly why this is the large pot and not a skillet. Pour it in gradually rather than all at once if it looks close to the rim."
+    },
+    {
+      "n": 8,
+      "text": "Put the warm rice on plates, dividing it into four portions. Heat the sauce back up over high heat until it is bubbling, then spoon it over the top of the rice.",
+      "sourceText": "Put the warm rice on a large platter, or divide your rice into 2 portions on 2 plates. Heat up the sauce over high heat until it's bubbling and then it over top of the rice.",
+      "uses": [
+        "rice"
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "plates"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "target": "Back up until bubbles are breaking across the whole surface, not just around the edge.",
+        "recheck": "After one minute. It comes up fast from a simmer."
+      },
+      "doneness": {
+        "test": "Bubbles breaking across the whole surface of the pot rather than only at the rim.",
+        "kind": "look"
+      },
+      "look": "She is emphatic about serving this BUBBLING HOT, and the reason is mechanical rather than fussy: the sauce is what loosens the rice enough to mix, and a lukewarm thickened sauce sits on top in a lump instead of running through it.Four portions rather than her two, because this is the quadrupled batch. Rice down first, sauce over the top, and do not stir it together in the pot."
+    },
+    {
+      "n": 9,
+      "text": "Sprinkle with the chopped green onion, drizzle the rest of the toasted sesame oil over the top, and serve right away.",
+      "sourceText": "Sprinkle with the chopped green onion, drizzle 1 teaspoon toasted sesame oil, and serve right away with kimchi.",
+      "uses": [
+        "onion_greens",
+        {
+          "ref": "sesameoil",
+          "amount": 4,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "measuringspoons",
+        "plates"
+      ],
+      "look": "The second half of the sesame oil goes on RAW, off the heat. Toasted sesame oil is a finishing oil: cooked it goes flat and slightly bitter, drizzled on at the end it is the thing that makes the bowl smell like a restaurant.She serves this with kimchi and calls it the only side dish you need. You have no kimchi, and it costs the dish nothing. Your cucumber pickles in their own brine and the pickled red onion sit in exactly that slot, and both have been ready since Aug 9.The leafy greens are not in this dish and should not be. Spring mix wilted into a hot bowl turns bitter and collapses to nothing. Put a handful in a bowl raw with the honey Dijon or the balsamic, add pickles and pickled onion, and eat it alongside. That needs no recipe.",
+      "warn": "Keeps 3 to 4 days in the fridge and reheats well, because it is a saucy dish to begin with. Microwave with a damp paper towel over the bowl. The 3 to 4 days is a hard limit and it starts tonight."
+    }
+  ],
+  "provenance": {
+    "tier": "adapted",
+    "cooked": false,
+    "readAt": "2026-08-11d",
+    "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
+    "sources": [
+      {
+        "name": "Maangchi",
+        "url": "https://www.maangchi.com/recipe/soegogi-beoseot-deopbap",
+        "primary": true,
+        "note": "Beef and mushrooms stir-fried over rice (Soegogi-beoseot-deopbap). Rated 5/5 from 281 votes, tagged non spicy. Posted 2019-04-28, last updated 2026-05-18. Fetched 2026-08-11; the site returns 403 to a plain fetch and 200 to a browser user-agent."
+      }
+    ]
+  }
+}

@@ -39,8 +39,8 @@ function Dish({ c }: { c: Cookable }) {
       )}
       {o.status === 'thaw' && (
         <p className="changes">
-          {o.frozen.join(', ')} {o.frozen.length > 1 ? 'are' : 'is'} still frozen. Move to the fridge
-          tonight and this is tomorrow.
+          {o.frozen.join(', ')} {o.frozen.length > 1 ? 'are' : 'is'} still frozen.{' '}
+          {o.thawText ?? 'Move to the fridge tonight and this is tomorrow.'}
         </p>
       )}
     </Link>

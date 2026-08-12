@@ -12,6 +12,13 @@ export interface Ingredient {
   defining?: boolean;
   /** Frozen is the correct state for this dish, not a blocker. Frozen fruit in a smoothie. */
   frozenOk?: boolean;
+  /** How long THIS frozen thing actually takes, when the generic overnight-fridge line is wrong.
+   *
+   *  Found 2026-08-11: the home screen told him a 500 g bag of 2-to-3 mm slices frozen FLAT to
+   *  "move to the fridge tonight and this is tomorrow". It needs 20 minutes on the counter. The
+   *  generic copy assumes a block of meat, and being wrong in that direction costs a dinner rather
+   *  than a nicety, because it reads as "you cannot cook this today" when he can. */
+  thawText?: string;
   /** A garnish or nice-to-have. Never blocks and never downgrades the dish's status. */
   optional?: boolean;
   /** What the dish actually WANTS, when what is declared is a workable substitute.
@@ -155,5 +162,5 @@ export interface Stock {
 export type Offer =
   | { status: 'ready'; missing: []; frozen: string[]; low: string[] }
   | { status: 'adapt'; missing: Ingredient[]; frozen: string[]; low: string[] }
-  | { status: 'thaw'; missing: []; frozen: string[]; low: string[] }
+  | { status: 'thaw'; missing: []; frozen: string[]; low: string[]; thawText?: string }
   | { status: 'blocked'; missing: Ingredient[]; frozen: string[]; low: string[] };
