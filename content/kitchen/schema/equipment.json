@@ -32,11 +32,13 @@
       "name": "rice cooker",
       "class": "heat",
       "present": true,
-      "model": "Oster ORIC-00BK6C-GB24",
+      "model": "Oster 2209798",
       "acquired": "2026-08-08",
-      "notes": "Simple thermostat switch, not digital. Press the lever down to cook, it clicks itself up to warm when the pot passes boiling. No dial to misjudge.",
+      "capacity": "6 cups COOKED, 3 cups uncooked. Confirmed 2026-08-11 from the product listing (ASIN B0D1LS87XD), whose own title reads \"6 Cup Cooked (3 Cup Uncooked)\". 300 W, tempered glass lid, so it can be watched without lifting.",
+      "hardRule": "Its cups are RICE COOKER cups of 180 ml, three quarters of a US cup, and the water lines in the inner pot are calibrated to those, which Oster's help pages confirm. Always give rice in US cups AND name the line to fill to, because the two scales differ by a third and that is the same class of error as the 2-cups-water-to-2-cups-long-grain mistake that gave hard rice on 2026-08-05. 1 1/2 US cups = 360 ml = 2 cooker cups = the 2 line.",
+      "notes": "Simple thermostat switch, not digital. Press the lever down to cook, it clicks itself up to warm when the pot passes boiling. No dial to misjudge. Included components per the listing are ONLY an inner pot and a rice paddle, so do not write an instruction that depends on the little measuring cup existing.",
       "supersedes": "stovetop rice",
-      "unknown": "Cup capacity not confirmed. Only the box cover was photographed."
+      "history": "The model number here read ORIC-00BK6C-GB24 until 2026-08-11. That came off the box cover, was never the model number, and no search on it returned this appliance."
     },
 
     "bakingtray": {

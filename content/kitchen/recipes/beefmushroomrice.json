@@ -1,7 +1,7 @@
 {
   "id": "beefmushroomrice",
   "name": "Beef and Mushrooms Over Rice",
-  "build": "2026-08-11d",
+  "build": "2026-08-11f",
   "form": "dish",
   "meal": [
     "dinner"
@@ -38,8 +38,8 @@
       "why": "x4 is about 2.3 kg of food and 4 cups of liquid. That will not fit a skillet and would slop over the side. The method does not depend on the pan being shallow"
     },
     {
-      "what": "Broth topped up with crushed Knorr cube and water",
-      "why": "The carton was part-used on the piccata. She writes chicken broth (or beef broth or vegetable stock), so she is already flexible on it, and bulgogi.json declared this same cube swap"
+      "what": "600 ml of real stock plus 350 ml of water and cube, to reach her 4 cups",
+      "why": "Measured 2026-08-11: 600 ml is what the carton had left after the piccata. She writes chicken broth (or beef broth or vegetable stock), so she is already flexible on it, and bulgogi.json declared this same cube swap"
     },
     {
       "what": "Her green chili pepper left out",
@@ -66,8 +66,8 @@
   "serves": {
     "count": 4,
     "unit": "portion",
-    "proteinPerUnit": 36,
-    "proteinMath": "105 g from 500 g sirloin tip at 21 g per 100 g raw, the same figure the bulgogi recipe uses. Plus 26 g from 2 dry cups of long grain rice. Plus roughly 10 g from 340 g of mushrooms at about 3 g per 100 g, which is an ESTIMATE off standard values and not a label read. Plus about 3 g between the oyster sauce and the broth. Total about 144 g, divided by 4 portions, is 36 g each."
+    "proteinPerUnit": 34,
+    "proteinMath": "105 g from 500 g sirloin tip at 21 g per 100 g raw, the same figure the bulgogi recipe uses. Plus 19.5 g from 1 1/2 dry cups of long grain rice, at the 13 g per dry cup that recipe also uses. Plus roughly 10 g from 340 g of mushrooms at about 3 g per 100 g, which is an ESTIMATE off standard values and not a label read. Plus about 3 g between the oyster sauce and the broth. Total about 137 g, divided by 4 portions, is 34 g each. This dropped from 36 g when the rice went from 2 dry cups to 1 1/2, which is the honest consequence of measuring the cooker properly rather than a number being revised for its own sake."
   },
   "ingredients": [
     {
@@ -84,9 +84,9 @@
       "ref": "rice",
       "stock": "longgrainrice",
       "display": "long grain white rice",
-      "qty": 2,
+      "qty": 1.5,
       "unit": "cups",
-      "prep": "rinsed until the water runs clear",
+      "prep": "1 1/2 US cups, which is 360 ml. Rinsed until the water runs clear",
       "defining": true
     },
     {
@@ -158,7 +158,7 @@
       "display": "chicken broth",
       "qty": 4,
       "unit": "cups",
-      "prep": "carton topped up with crushed Knorr cube and water to reach the full amount",
+      "prep": "600 ml of real stock, confirmed 2026-08-11, plus 350 ml water and cube to reach 4 cups",
       "defining": false
     },
     {
@@ -239,7 +239,7 @@
     },
     {
       "n": 2,
-      "text": "Rinse the rice until the water runs clear, put it in the rice cooker, fill to the water line marked for that much rice, and press the lever down. Leave it alone. It clicks itself up to warm when it is done.",
+      "text": "Rinse the rice until the water runs clear, put it in the rice cooker, fill the water to the line marked 2 inside the pot, and press the lever down. Leave it alone. It clicks itself up to warm when it is done.",
       "sourceText": "2 bowls of white fluffy rice",
       "uses": [
         "rice"
@@ -250,8 +250,8 @@
         "measuringcups"
       ],
       "minutes": 35,
-      "look": "Use the fine mesh strainer, not the colander. Rice grains fall straight through a colander's holes.RINSE UNTIL CLEAR means run cold water over it, swirl it with your fingers, tip the cloudy water off, and repeat until the water coming off is see-through rather than milky. Usually three or four goes. That loose surface starch is what makes rice gluey.The cooker is the reason the rice is not a risk tonight. It is a thermostat switch, not a dial, so there is no setting to misjudge. That is exactly what went wrong on 5 Aug and again on 8 Aug, both times on the hob.Use the water line inside the pot rather than a measured amount of water. Those markings are the manufacturer's ratio for that pot, and they are more trustworthy than any number typed here.Start this before you pick up the knife. It runs unattended while you slice.",
-      "warn": "The cup capacity of this cooker has never been confirmed, only the box was photographed. 2 dry cups makes roughly 6 cups cooked. If that comes anywhere near the MAX line inside the pot, cook 1 1/2 cups instead and leave a note in the app, because rice boiling over a thermostat cooker makes a real mess."
+      "look": "1 1/2 US CUPS OF DRY RICE, then fill water to the 2 line inside the pot. That is the whole instruction.Why it is not 2 cups: a rice cooker cup is 180 ml, three quarters of a US cup, and the lines inside the pot are calibrated to THAT cup, which Oster's own help pages confirm. 1 1/2 US cups is 360 ml, which is exactly 2 cooker cups, so the 2 line is the correct line whichever cup you measured with. Putting in 2 US cups and filling to the 2 line would give too much rice for the water, the same class of error as the 2-cups-water-to-2-cups-long-grain mistake that gave hard rice on 5 Aug.The listing for this cooker lists only an inner pot and a rice paddle as included, so there may be no little measuring cup in the box at all. That is why the amount above is in US cups, which you definitely own.The lid is tempered glass, so you can watch it without lifting the lid and letting the steam out.Use the fine mesh strainer, not the colander. Rice grains fall straight through a colander's holes.RINSE UNTIL CLEAR means run cold water over it, swirl it with your fingers, tip the cloudy water off, and repeat until the water coming off is see-through rather than milky. Usually three or four goes. That loose surface starch is what makes rice gluey.The cooker is the reason the rice is not a risk tonight. It is a thermostat switch, not a dial, so there is no setting to misjudge. That is what went wrong on 5 Aug and again on 8 Aug, both times on the hob.Start this before you pick up the knife. It runs unattended while you slice.",
+      "warn": "Capacity CONFIRMED 2026-08-11 off the listing, model 2209798: 6 cups COOKED, 3 cups uncooked in cooker cups. 1 1/2 US cups is 2 of those, so this sits at two thirds of maximum and cannot boil over. Do not push it to 3 just because it fits."
     },
     {
       "n": 3,
@@ -266,7 +266,7 @@
         "measuringcups",
         "measuringspoons"
       ],
-      "look": "The broth carton was part-used on the piccata, so pour out whatever is left into a measuring cup and READ IT before topping it up. Make up the difference with water and crushed Knorr cube, roughly one cube per cup of water you are adding. Maangchi writes chicken broth (or beef broth or vegetable stock), so she is already relaxed about which broth this is.MIX WELL means stir until you cannot see white streaks or lumps sitting on the bottom. Cornstarch clumps the instant it hits hot liquid, which is why it goes into COLD broth now rather than into the pot later. This is the only thing in the recipe that thickens the sauce.",
+      "look": "MEASURED 2026-08-11: there is 600 ml of real stock left, the rest having gone on the piccata. The dish wants 4 cups, which is 950 ml, so add 350 ml of water and enough crushed Knorr cube for THAT 350 ml only, not for the whole 4 cups.Read the water-per-cube figure off the cube box rather than guessing at it. If the box is unclear, use HALF a cube. There is already 2 tsp of kosher salt and 4 tbsp of oyster sauce going into this, and under-salted can be fixed at the table while over-salted cannot, so err low.Maangchi writes chicken broth (or beef broth or vegetable stock), so she is already relaxed about which broth this is.MIX WELL means stir until you cannot see white streaks or lumps sitting on the bottom. Cornstarch clumps the instant it hits hot liquid, which is why it goes into COLD broth now rather than into the pot later. This is the only thing in the recipe that thickens the sauce.",
       "warn": "It settles back out while it stands. Give it another stir right before it goes in the pot, or the thickening ends up in the last spoonful instead of spread through."
     },
     {
@@ -430,7 +430,7 @@
   "provenance": {
     "tier": "adapted",
     "cooked": false,
-    "readAt": "2026-08-11d",
+    "readAt": "2026-08-11f",
     "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
     "sources": [
       {
