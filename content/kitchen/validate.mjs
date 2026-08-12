@@ -14,6 +14,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, basename } from 'node:path';
+import { renderHash } from './render.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RECIPES = join(HERE, 'recipes');
@@ -300,6 +301,37 @@ function validate(r, file) {
    * Tier `sourced` means the steps are one published recipe's own sentences, and an agent has only
    * annotated them. These three rules are what make that a mechanical claim rather than a promise:
    * a translation can be diffed against its original, and an invention cannot hide in one. */
+  /* ---- verbatim only. Decided by Silvio 2026-08-11, and this is Law 1 of
+   * ~/.agents/ENGINEERING.md made mechanical: eliminate the class, do not validate instances.
+   *
+   * Five defects reached him from ONE recipe in one evening. Every single one was an agent sentence
+   * rather than a figure a source gave: a pot swapped for her skillet (retained the water her wide
+   * pan drives off), "mostly brown" where she says 80 percent COOKED, a fond note about a dish that
+   * has no fond, rice converted into US cups the appliance does not use, and a nappe sauce test where
+   * she asks for "just a little sticky". His verdict: "there's no one single recipe that I have been
+   * able to do... are we just spending tokens for nothing?"
+   *
+   * Prose already forbade all of this. SOURCING.md has been binding since 2026-08-09 and every one of
+   * those five violated it. So the tier is now load-bearing instead of descriptive:
+   *
+   *   ANY deviation at all disqualifies `sourced`. No classification, no size threshold, no
+   *   judgement call to argue into. One entry in `deviations` and the tier must be `adapted`.
+   *
+   * And only `sourced` is offered (see isRead in kitchen/page.tsx). The catalogue gets very small.
+   * It was already 1 of 30, and honest-and-tiny beats broad-and-broken. */
+  const devs = Array.isArray(r.deviations) ? r.deviations.length : 0;
+  if (r.provenance?.tier === 'sourced' && devs > 0) {
+    fail(id, 'verbatim', `tier is "sourced" but ${devs} deviation(s) are declared`,
+      'Verbatim means verbatim: her scale, her vessel, her ingredients, her heat. Any deviation makes '
+      + 'this `adapted`, and adapted is not offered. Either cook it exactly as published or do not '
+      + 'offer the dish. Deciding a deviation is small enough is the judgement that produced five '
+      + 'defects in one evening.');
+  }
+  if (r.provenance?.tier === 'adapted' && devs === 0) {
+    warn(id, 'verbatim', 'tier is "adapted" but no deviations are declared',
+      'If nothing was changed it is `sourced` and can be offered. If something was, list it.');
+  }
+
   if (r.provenance?.tier === 'sourced') {
     const primary = (r.provenance.sources || []).filter((s) => s.primary);
     if (primary.length !== 1) {
@@ -334,6 +366,21 @@ function validate(r, file) {
     fail(id, 'read', `readAt is "${r.provenance.readAt}" but build is "${r.build}"`,
       'The recipe changed after it was last read. Render every step (node content/kitchen/render.mjs '
       + `${id}, or walk the real screens), read them, fix what that finds, then set readAt to the new build.`);
+  }
+
+  /* `readAt` compares one hand-typed string to another, so two edits satisfy it. `readHash` is a hash
+   * of the RENDERED text and cannot be satisfied by hand. Law 3: report outcomes, not intent.
+   * Warn rather than fail while recipes are being migrated onto it; promote to fail once all offered
+   * recipes carry one. */
+  if (r.provenance?.readHash) {
+    const actual = renderHash(r);
+    if (actual !== r.provenance.readHash) {
+      fail(id, 'read', `readHash is "${r.provenance.readHash}" but the rendered text hashes to "${actual}"`,
+        `The words he would read have changed since anyone checked them. Run: node content/kitchen/render.mjs ${id}`);
+    }
+  } else if (r.provenance?.tier === 'sourced') {
+    warn(id, 'read', 'offered recipe has no provenance.readHash',
+      `readAt alone is two hand-typed strings agreeing. Run: node content/kitchen/render.mjs ${id}`);
   }
 
   /* ---- protein arithmetic must be shown ---- */

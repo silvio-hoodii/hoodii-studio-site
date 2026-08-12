@@ -125,6 +125,14 @@ export interface Recipe {
      *  rendered read, and then burnt the second batch because no step said what the heat should be
      *  once the pan was already hot. A dish that failed is not offered, whatever else it passes. */
     cookedResult?: 'worked' | 'failed';
+    /** Hash of the RENDERED text at the moment someone read it, from render.mjs.
+     *
+     *  `readAt` compares one hand-typed string (`readAt`) to another (`build`), so two edits satisfy
+     *  it, and on 2026-08-11 that gate was satisfied repeatedly while five invented instructions
+     *  reached the stove. This cannot be satisfied by hand: change one word in any step and the hash
+     *  moves and `pnpm build` exits 1. It does not prove a human read anything; it proves the words
+     *  have not changed since whoever stamped it looked, which is all `readAt` ever claimed. */
+    readHash?: string;
   };
 }
 

@@ -85,13 +85,28 @@ export default async function KitchenHome() {
    * the first few seconds. A list of 29 things that might be wrong is worth less than a list of one
    * that is right. The rest stay reachable at the bottom, because not offering a dish is a ranking
    * decision and hiding it is a navigation bug. */
+  /* VERBATIM ONLY, decided 2026-08-11. Law 1 of .agents/ENGINEERING.md.
+   *
+   * `adapted` is no longer offered, whatever else it passes. Five defects reached him from one
+   * adapted recipe in a single evening and every one was an agent sentence, not a figure from a
+   * source: a vessel swap, an invented browning target, an invented fond note, a unit conversion the
+   * appliance does not use, and a sauce test three times thicker than the source asks for.
+   *
+   * The transformation half of what this app adds has caused every failure across five cooks. The
+   * annotation half (technique words in place, real stock, protein arithmetic, timers, doneness where
+   * the source gives one) has caused none. So the renderer stays and the transformations go. */
+  const isVerbatim = (c: Cookable) => c.recipe.provenance?.tier === 'sourced';
   const isRead = (c: Cookable) =>
     !!c.recipe.provenance?.readAt
     && c.recipe.provenance.readAt === c.recipe.build
-    && c.recipe.provenance.cookedResult !== 'failed';
+    && c.recipe.provenance.cookedResult !== 'failed'
+    && isVerbatim(c);
 
   const read = all.filter(isRead);
-  const unread = all.filter((c) => !isRead(c));
+  /* Adapted recipes are NOT hidden. Not offering a dish is a ranking decision; hiding it is a
+   * navigation bug, raised 2026-08-09: "now that it's off, I can't even check what the recipe was." */
+  const adapted = all.filter((c) => !isRead(c) && c.recipe.provenance?.tier === 'adapted');
+  const unread = all.filter((c) => !isRead(c) && c.recipe.provenance?.tier !== 'adapted');
   const offered = rank(read);
   const blocked = read.filter((c) => c.offer.status === 'blocked');
   const now = offered.filter((c) => c.offer.status === 'ready');
@@ -211,6 +226,32 @@ export default async function KitchenHome() {
         </>
       )}
 
+      {/* Changed from a published recipe, therefore not offered. This section exists so the reason is
+          on the screen rather than in a git commit. */}
+      {adapted.length > 0 && (
+        <>
+          <p className="count" style={{ marginTop: 30 }}>Changed from the original, so not offered</p>
+          <p className="quiet" style={{ marginBottom: 8 }}>
+            These were scaled, or had an ingredient swapped, or got a different pan than the recipe
+            says. That layer is where every problem has come from: one of these produced five wrong
+            instructions in a single evening, and not one of them was a number the original gave. They
+            are still here to read and still cookable. They are just not being recommended.
+          </p>
+          <ul className="plainlist az">
+            {[...adapted]
+              .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
+              .map((c) => (
+                <li key={c.recipe.id}>
+                  <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                  {c.recipe.deviations?.length
+                    ? <span> {c.recipe.deviations.length} changes</span>
+                    : null}
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
+
       {/* Not offered, still reachable. Raised 2026-08-09: "now that it's off, I can't even check
           what the recipe was." */}
       {unread.length > 0 && (
@@ -240,13 +281,15 @@ export default async function KitchenHome() {
           roughly 200 words about its own trustworthiness and one dish. A footnote is a footnote. */}
       <hr className="divider" style={{ marginTop: 34 }} />
       <p className="quiet">
-        <b>{read.length} of {recipes.length}</b> recipes are being offered. A recipe is offered once
-        every step has been read the way this app renders it, and once it has been cooked without
-        going wrong. Piccata passed a six-source check on its numbers and a full read of its screens
-        on 2026-08-09, then burnt its second batch at the stove because no step said what the heat
-        should be once the pan was already hot. Passing a check is not the same as working. Recipes
-        now follow one published recipe word for word instead of being written here, which is where
-        every failure so far has come from.
+        <b>{read.length} of {recipes.length}</b> recipes are being offered, and the bar changed on
+        2026-08-11. A recipe is now offered only if it follows one published recipe with nothing
+        altered: its scale, its pan, its ingredients, its heat. Changing any of that is where every
+        failure has come from. Piccata burnt after passing a six-source check on its numbers. A Korean
+        beef bowl produced five wrong instructions in one evening, and not one of them was a figure a
+        source gave: they were a pan swapped for a pot, a browning target the dish cannot reach, a
+        note about fond in a dish that has none, a unit the rice cooker does not use, and a sauce
+        asked to be three times thicker than the original wants. Passing a check was never the same as
+        working, so the checking was replaced with having less to check.
       </p>
     </div>
   );

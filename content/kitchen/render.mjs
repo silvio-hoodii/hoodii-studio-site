@@ -23,7 +23,7 @@
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -132,9 +132,48 @@ function print(r, { look = false } = {}) {
   console.log('\n' + '='.repeat(W));
 }
 
-const id = process.argv.find((a) => !a.includes('node') && !a.endsWith('.mjs') && !a.startsWith('-'));
-if (id) {
-  print(JSON.parse(readFileSync(join(HERE, 'recipes', `${id}.json`), 'utf8')), {
-    look: process.argv.includes('--why'),
+/* ---- the read stamp, made mechanical ------------------------------------------------------------
+ *
+ * `provenance.readAt` claims every step was read AS RENDERED at a given build. Until 2026-08-11 it
+ * was a string an agent typed, checked only against `build`, which is ALSO a string an agent typed.
+ * So the gate could be satisfied by editing two strings, and it was, repeatedly, on the same evening
+ * five invented instructions reached the stove.
+ *
+ * `readHash` fixes half of that honestly. It is a hash of the rendered text, so it cannot be
+ * satisfied by hand: change one word anywhere in any step and the hash moves and the build fails.
+ *
+ * Be precise about what it does and does not prove. It does NOT prove a human read anything. It
+ * proves the text has not changed since whoever stamped it looked. That is exactly what `readAt`
+ * always claimed and never enforced. Law 3 of .agents/ENGINEERING.md: report outcomes, not intent.
+ */
+export function renderHash(r) {
+  const { prep, steps } = renderRecipe(r);
+  const blob = JSON.stringify({
+    name: r.name,
+    prep: prep.map((p) => [p.qty, p.name]),
+    steps: steps.map((s) => [s.text, s.rows.map((x) => [x.qty, x.name]), s.heat, s.recheck, s.doneness, s.warn, s.look]),
   });
+  // djb2. Zero dependencies, same posture as the rest of this pipeline, and collision risk is
+  // irrelevant here: this guards against edits, not against an adversary.
+  let h = 5381;
+  for (let i = 0; i < blob.length; i++) h = ((h << 5) + h + blob.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+
+/* Only act as a CLI when this file IS the entry point. Without this guard, importing `renderHash`
+ * into validate.mjs made `node validate.mjs beefmushroomrice` print a whole rendered recipe and a
+ * "set provenance.readHash to this" instruction in the middle of validator output, because the block
+ * below reads process.argv regardless of who loaded the module. Caught 2026-08-11 the moment the
+ * import landed. */
+const isEntry = process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+const id = process.argv.find((a) => !a.includes('node') && !a.endsWith('.mjs') && !a.startsWith('-'));
+if (isEntry && id) {
+  const recipe = JSON.parse(readFileSync(join(HERE, 'recipes', `${id}.json`), 'utf8'));
+  if (process.argv.includes('--hash')) {
+    console.log(renderHash(recipe));
+  } else {
+    print(recipe, { look: process.argv.includes('--why') });
+    console.log(`\nrendered-text hash: ${renderHash(recipe)}`);
+    console.log('Read every step above, fix what that finds, then set provenance.readHash to this.');
+  }
 }
