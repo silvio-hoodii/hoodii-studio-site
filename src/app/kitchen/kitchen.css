@@ -127,6 +127,16 @@
   color: var(--muted-foreground);
 }
 
+/* What the food actually is, under the name. Added 2026-08-11: the card carried a name, a time, a
+   protein figure and a step count, and none of those tell you there is beef and rice in it. */
+.kos .dish .gist {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--foreground);
+  margin-top: 2px;
+}
+
 .kos .changes {
   grid-column: 1 / -1;
   font-size: 14px;
