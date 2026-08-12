@@ -12,6 +12,7 @@ import { TimerButton } from '../TimerRail';
 interface PrepRow {
   ref: string; display: string; qty: number | null; unit: string | null;
   prep: string | null; missing: boolean; altText: string | null;
+  insteadOf?: string | null;
   optional?: boolean;
   betterWith?: { display: string; stock?: string; why: string } | null;
 }
@@ -147,6 +148,11 @@ export default function CookClient({
               <span className="nm">
                 {p.display}
                 {p.prep ? <span style={{ color: 'var(--ink-faint)' }}>, {p.prep}</span> : null}
+                {/* Why an unfamiliar thing is on the list, said here rather than only inside the
+                    collapsed deviations block. See Ingredient.insteadOf. */}
+                {p.insteadOf ? (
+                  <span style={{ color: 'var(--ink-faint)' }}> · stands in for {p.insteadOf}</span>
+                ) : null}
                 {p.missing ? <b style={{ color: 'var(--accent)' }}> · you do not have this</b> : null}
               </span>
             </div>

@@ -29,6 +29,14 @@ export interface Ingredient {
    *  trips later nothing had ever suggested buying a fresh lemon. Advisory only: it must never
    *  block, or every dish becomes a shopping list. */
   betterWith?: { display: string; stock?: string; why: string };
+  /** What this ingredient is STANDING IN FOR in the source recipe, said on the row itself.
+   *
+   *  Added 2026-08-11. Mid-cook he read "cornstarch" on the prep list and asked why it was there,
+   *  because he associates it with nothing in this dish. The answer, that it replaces Maangchi's
+   *  potato starch, existed, but only inside a collapsed "What was changed from the sources, and
+   *  why (11)". The prep list is loud about what he does NOT have and silent about everything else,
+   *  so an unfamiliar ingredient reads as an error rather than as a substitution. */
+  insteadOf?: string;
   altText?: string;
   section?: string;
 }

@@ -1,7 +1,7 @@
 {
   "id": "beefmushroomrice",
   "name": "Beef and Mushrooms Over Rice",
-  "build": "2026-08-11g",
+  "build": "2026-08-11h",
   "form": "dish",
   "meal": [
     "dinner"
@@ -78,7 +78,8 @@
       "unit": "g",
       "prep": "thawed on the counter, then cut into bite-size strips",
       "thawText": "About 20 min on the counter is all it needs: it is 2 to 3 mm slices frozen flat, not a block. You can cook this today.",
-      "defining": true
+      "defining": true,
+      "insteadOf": "her ribeye, and being lean is why the vegetable oil is in"
     },
     {
       "ref": "rice",
@@ -96,7 +97,8 @@
       "qty": 113,
       "unit": "g",
       "prep": "caps pulled off the stems, stems thrown away, caps sliced thinly",
-      "defining": false
+      "defining": false,
+      "insteadOf": "her 3 dried shiitake, which is why there is no soaking step"
     },
     {
       "ref": "cremini",
@@ -105,7 +107,8 @@
       "qty": 227,
       "unit": "g",
       "prep": "dried end trimmed, sliced thinly",
-      "defining": false
+      "defining": false,
+      "insteadOf": "her enoki mushrooms"
     },
     {
       "ref": "onion",
@@ -159,7 +162,8 @@
       "qty": 4,
       "unit": "cups",
       "prep": "600 ml of real stock, confirmed 2026-08-11, plus 350 ml water and cube to reach 4 cups",
-      "defining": false
+      "defining": false,
+      "insteadOf": "part of her 1 cup of chicken broth, made up with water and cube"
     },
     {
       "ref": "cornstarch",
@@ -167,7 +171,8 @@
       "display": "cornstarch",
       "qty": 8,
       "unit": "tsp",
-      "defining": false
+      "defining": false,
+      "insteadOf": "her potato starch"
     },
     {
       "ref": "oyster",
@@ -430,7 +435,7 @@
   "provenance": {
     "tier": "adapted",
     "cooked": false,
-    "readAt": "2026-08-11g",
+    "readAt": "2026-08-11h",
     "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
     "sources": [
       {
