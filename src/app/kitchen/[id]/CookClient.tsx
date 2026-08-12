@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import type { Recipe, StepUse } from '@/lib/kitchen/types';
@@ -40,6 +40,65 @@ function amount(qty: number | null | undefined, unit: string | null | undefined)
 
 const asUse = (u: string | StepUse): StepUse => (typeof u === 'string' ? { ref: u } : u);
 
+/* Law 2 of .agents/ENGINEERING.md: pin the version at the point of use.
+ *
+ * The incident, 2026-08-11. He cooked from build 11f while 11g, 11h and 11i were deployed over the
+ * top of it, twice after I had promised not to touch it. His words: "We should have a law where
+ * everything that we discuss is the same versions."
+ *
+ * True pinning would mean serving the build he started on, which needs every historical build kept
+ * and is not worth the storage for one cook. This does the achievable and more useful half: it
+ * remembers which build he started this dish on and SAYS SO when the words change underneath him.
+ * A silent change is the dangerous one, because he then follows instructions neither of us can name.
+ *
+ * `sessionStorage` on purpose. It survives a reload and a timer-chip navigation, and it clears when
+ * the tab closes, which is the right lifetime for "am I still cooking this".
+ *
+ * Named useBuildWatch rather than checkBuild because lint enforces rules-of-hooks on use* names and
+ * this genuinely is one. */
+const noopSubscribe = () => () => {};
+
+function useBuildWatch(id: string, build: string): string | null {
+  const key = `kos.cook.${id}`;
+
+  /* Read through useSyncExternalStore rather than setState-in-an-effect, which lint correctly
+   * rejects: that pattern renders once with the wrong answer and then again with the right one. This
+   * is the same API the timer rail in this file already uses, and it is React's designed answer for
+   * reading external mutable state during render. sessionStorage fires no events, so subscribe is a
+   * no-op; the snapshot is a primitive so it compares by value and cannot loop. */
+  const startedOn = useSyncExternalStore(
+    noopSubscribe,
+    () => {
+      try { return sessionStorage.getItem(key); } catch { return null; }
+    },
+    () => null,
+  );
+
+  // Writing is a side effect and sets no state, so it belongs here and lint is happy.
+  useEffect(() => {
+    try {
+      if (!sessionStorage.getItem(key)) sessionStorage.setItem(key, build);
+    } catch {
+      // Private mode or storage disabled. A missing warning beats a crash mid-cook.
+    }
+  }, [key, build]);
+
+  return startedOn && startedOn !== build ? startedOn : null;
+}
+
+function BuildChanged({ from, to }: { from: string; to: string }) {
+  return (
+    <div className="box warn" style={{ marginTop: 10 }}>
+      <span className="k">These instructions changed while you were cooking</span>
+      <div>
+        You started this on <b>{from}</b> and you are now reading <b>{to}</b>. Something was edited
+        underneath you, so a step may not say what it said when you read it. If a number looks
+        different from the one you were working to, the one on screen is the current one.
+      </div>
+    </div>
+  );
+}
+
 export default function CookClient({
   recipe, prep, gear, consumable, notes,
 }: {
@@ -68,6 +127,7 @@ export default function CookClient({
   }
 
   const timers = useSyncExternalStore(subscribe, readTimers, serverTimers);
+  const buildDrift = useBuildWatch(recipe.id, recipe.build);
 
   if (done) {
     return <Debrief recipe={recipe} consumable={consumable} />;
@@ -184,6 +244,11 @@ export default function CookClient({
         <p className="quiet" style={{ marginTop: 8, fontStyle: 'italic' }}>
           Both lists above are built from what the steps actually use, so nothing can be missing from them.
         </p>
+        {/* The version, on screen, so a conversation about a step can name which text it means. Law 2:
+            "We should have a law where everything that we discuss is the same versions." */}
+        <p className="quiet" style={{ marginTop: 4, fontFamily: 'var(--font-mono)', fontSize: 12 }}>
+          build {recipe.build}
+        </p>
 
         <div className="nav">
           <button className="primary" onClick={() => setI(0)}>Start cooking →</button>
@@ -235,6 +300,7 @@ export default function CookClient({
         ))}
       </div>
       <div className="eyebrow">Step {i + 1} of {total}{s.minutes ? ` · about ${s.minutes} min` : ''}</div>
+      {buildDrift && <BuildChanged from={buildDrift} to={recipe.build} />}
 
       <p className="step">{s.text}</p>
 
