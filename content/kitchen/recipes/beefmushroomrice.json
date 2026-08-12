@@ -1,7 +1,7 @@
 {
   "id": "beefmushroomrice",
   "name": "Beef and Mushrooms Over Rice",
-  "build": "2026-08-11i",
+  "build": "2026-08-11j",
   "form": "dish",
   "meal": [
     "dinner"
@@ -60,6 +60,10 @@
     {
       "what": "An invented browning target and an invented fond note, both REMOVED 2026-08-11",
       "why": "The doneness test said \"mostly brown\" and a note claimed the bits stuck to the pot were most of the flavour. Her recipe says 80 percent COOKED and never mentions fond. He cooked it and reported the beef going watery and refusing to brown, which was this annotation setting a target the dish does not have. Recorded rather than quietly deleted"
+    },
+    {
+      "what": "A nappe sauce test, REMOVED 2026-08-11",
+      "why": "Step 7 asked for a sauce that coats a spoon and holds the line, which is gravy weight. Maangchi describes just a little sticky and shiny and juicy. He cooked it exactly as written and his sauce was correct by her standard and wrong by ours. Fifth invented annotation in this one recipe, and like the other four it was an agent sentence rather than a figure from the source"
     }
   ],
   "time": {
@@ -387,10 +391,10 @@
         "recheck": "Two minutes after you turn it down. If the surface has gone completely flat and still, bring it back up until you can see the occasional bubble."
       },
       "doneness": {
-        "test": "Drag the spoon across the bottom and lift it out. The sauce should coat the back of the spoon and hold the line where the spoon passed for a second before it closes over. If it runs off clear and leaves no line, give it another minute.",
+        "test": "Her test, in her words: it should look SHINY, and a little sticky rather than like broth. Lift the spoon out and watch it drip. Drips that fall in slow fat drops and leave the spoon looking glazed is right. Drips that run off thin and fast and leave the spoon clean means give it another minute at a bubble.",
         "kind": "look"
       },
-      "look": "Stir the broth mixture again before it goes in. Cornstarch settles to the bottom while it stands.SOFT AND SMOOTH is her phrase, and it means no lumps of cornstarch and no floury streaks, just an even glossy sauce. It thickens within about a minute of coming up to heat.There is no time on this step because she does not give one. The spoon test is what tells you, not a clock.Keep the simmer gentle. Cornstarch loses its thickening power if it is boiled hard, which is one place where it behaves differently from her potato starch.",
+      "look": "Stir the broth mixture again before it goes in. Cornstarch settles to the bottom while it stands.SOFT AND SMOOTH is her phrase and it means no lumps and no floury streaks, just an even glossy sauce.THIS SAUCE IS MEANT TO BE LIGHT, NOT GRAVY. Her own words are that she uses just a little bit of starch to make it just a little sticky, so that over the rice it looks shiny and juicy. An earlier build of this step asked for a sauce that coats the back of a spoon and holds the line where the spoon passed. That is a much thicker sauce than she describes and it was invented here, not taken from her. On 2026-08-11 he followed the recipe exactly, reported \"there is a little bit of viscosity, I guess, but still watering\", and was passing her test while failing ours.Cornstarch does nothing until it is near boiling, so if it looks like plain broth the pot is not hot enough yet rather than short of starch. That is also why step 8 brings it back to a full bubble.If you want it thicker than hers: 1 tbsp of cornstarch stirred smooth into 2 tbsp of COLD water, in while it bubbles, then wait 60 seconds. Repeat once if you want more. Small doses, because thickening cannot be undone.",
       "warn": "This is where the pot gets full. There are 4 cups of liquid going into an already full pot, which is exactly why this is the large pot and not a skillet. Pour it in gradually rather than all at once if it looks close to the rim."
     },
     {
@@ -439,7 +443,7 @@
   "provenance": {
     "tier": "adapted",
     "cooked": false,
-    "readAt": "2026-08-11i",
+    "readAt": "2026-08-11j",
     "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
     "sources": [
       {
