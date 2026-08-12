@@ -1,7 +1,7 @@
 {
   "id": "beefmushroomrice",
   "name": "Beef and Mushrooms Over Rice",
-  "build": "2026-08-11h",
+  "build": "2026-08-11i",
   "form": "dish",
   "meal": [
     "dinner"
@@ -56,6 +56,10 @@
     {
       "what": "No simmer time and no reheat time given",
       "why": "Her recipe gives neither. Rather than invent a number, both steps are governed by the doneness test instead"
+    },
+    {
+      "what": "An invented browning target and an invented fond note, both REMOVED 2026-08-11",
+      "why": "The doneness test said \"mostly brown\" and a note claimed the bits stuck to the pot were most of the flavour. Her recipe says 80 percent COOKED and never mentions fond. He cooked it and reported the beef going watery and refusing to brown, which was this annotation setting a target the dish does not have. Recorded rather than quietly deleted"
     }
   ],
   "time": {
@@ -323,14 +327,14 @@
       "minutes": 2,
       "heat": {
         "surface": "stovetop",
-        "target": "Hot before anything goes in. Flick a few drops of water onto the empty dry pot: if they skitter into beads that roll around like mercury it is ready, if they disappear with a hiss it is not. Then the oil, then the food.",
-        "recheck": "Right after the beef goes in. If you hear nothing at all the pot is too cool. Bring it up until you can hear a steady crackle."
+        "target": "Hot before anything goes in, and hot enough that you can hear a steady crackle within a few seconds of the beef hitting it. If it goes in silently the pot is too cool.",
+        "recheck": "After 30 seconds. Bring it up until you can hear it."
       },
       "doneness": {
-        "test": "Lift one piece out with the spoon and look at the cut face. Mostly brown with a thin band of pink still showing through the middle is the 80 percent she means. Brown all the way through has gone too far, because it cooks again in the sauce.",
+        "test": "Lift one piece out with the spoon and look at the cut face. She asks for 80 percent COOKED, not browned: the outside has gone from red or pink to grey-brown, with a little pink still left in the middle. That is the whole test. It finishes cooking in the sauce.",
         "kind": "look"
       },
-      "look": "HALF the sesame oil goes in here. The other half goes over the top at the end, which is how she splits it too.The water test is safe on a DRY pot and dangerous once oil is in, because water hitting hot oil spits back at you. Test first, then oil.The vegetable oil is here on Maangchi's own instruction, not ours: her note says lean beef needs about a tablespoon of it for juiciness, and sirloin tip is lean.Everything the beef leaves stuck to the bottom of the pot stays there. Do not wipe it out. The broth lifts it off two steps from now and that is most of the flavour of the finished dish.",
+      "look": "HALF the sesame oil goes in here. The other half goes over the top at the end, which is how she splits it too.THIS DISH DOES NOT BROWN THE BEEF AND CANNOT. Her sentence says 80 percent COOKED. There is no searing step anywhere in this recipe: beef for 2 minutes, then vegetables, then broth, then a simmer. Grey-brown beef sitting in liquid is correct and is what you should expect to see. Do not chase a crust.An earlier build of this step said \"mostly brown\" and claimed the browned bits left in the pot were most of the flavour of the dish. Both were invented here. Maangchi never mentions fond, and he correctly reported on 2026-08-11 that the beef went watery and would not go brown. It was the annotation that was wrong, not the cooking.The vegetable oil is here on Maangchi's own instruction: her note says lean beef needs about a tablespoon of it for juiciness, and sirloin tip is lean.",
       "warn": "Salt and pepper go in NOW, with the beef, and there is no more salt anywhere else in this dish except what the oyster sauce and the broth carry. That is correct and not an omission. Do not add any at the end."
     },
     {
@@ -435,7 +439,7 @@
   "provenance": {
     "tier": "adapted",
     "cooked": false,
-    "readAt": "2026-08-11h",
+    "readAt": "2026-08-11i",
     "statement": "Every instruction is Maangchi's own sentence, kept in her order with her times. `sourceText` on each step is the published text it came from, so any step can be diffed against the original even though the adapted tier does not require it. Amounts are scaled x4 and four ingredients are substituted, both listed in full under deviations, and that scaling and substitution is what makes this adapted rather than sourced.",
     "sources": [
       {
