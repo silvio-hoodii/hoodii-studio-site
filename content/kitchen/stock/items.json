@@ -267,7 +267,8 @@
       "state": "have",
       "where": "pantry",
       "src": "seed",
-      "since": "2026-08-04"
+      "since": "2026-08-04",
+      "note": "Yellow, confirmed by Silvio 2026-08-12. This row was briefly renamed to \"sweet onions\" on the strength of the 2026-08-04 receipt note recording a Walmart substitution; he corrected it the same day. A substitution logged at order time describes that order, not a standing fact about the pantry. White onions are a separate item."
     },
     "oyster": {
       "n": "oyster sauce",
@@ -522,6 +523,36 @@
       "where": "fridge",
       "state": "none",
       "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days."
+    },
+    "chickenwings": {
+      "n": "chicken wings",
+      "where": "freezer",
+      "state": "none",
+      "note": "Drumette and winglet, bone-in. Freeze-by on the label is Aug 21."
+    },
+    "chickenthighs": {
+      "n": "chicken thighs",
+      "where": "freezer",
+      "state": "none",
+      "note": "Bone-in skin-on. At $7.63/kg this is the cheapest protein per dollar in the kitchen. Freeze-by Aug 21. Deliberately separate from chickenbreast and from the deli slices: a recipe wanting thighs must never resolve to breast, which cooks differently and dries out."
+    },
+    "basil": {
+      "n": "fresh basil",
+      "where": "fridge",
+      "state": "none",
+      "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
+    },
+    "tomatoes_grape": {
+      "n": "grape tomatoes",
+      "where": "pantry",
+      "state": "none",
+      "note": "1.5 lb / 680 g, clearance. The first FRESH tomato in this kitchen. Distinct from tinned chopped tomatoes, from tomato sauce and from tomato paste, all of which behave differently in a sauce. Keep on the counter: the fridge kills the flavour and makes the texture mealy."
+    },
+    "whiteonion": {
+      "n": "white onions",
+      "where": "pantry",
+      "state": "none",
+      "note": "Two, bought 2026-08-12. NOT the same as the sweet onions under `yellowonion`, and the difference matters: white is sharper and cleaner, sweet holds more sugar and water and collapses faster. Recipes asking specifically for white onion can now be satisfied exactly instead of substituted."
     }
   }
 }
