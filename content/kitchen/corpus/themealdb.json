@@ -34344,5 +34344,8 @@
     }
    ]
   }
- ]
+ ],
+ "attribution": "Recipe data and imagery: TheMealDB (https://www.themealdb.com/)",
+ "terms": "Test key \"1\" is permitted for development and educational use per themealdb.com/api.php. This is a private single-user app, not an appstore release. Their AGENTS.md requires the attribution string above wherever results are displayed, and asks that stated measures and instructions be preserved with nothing substituted silently and no cooking temperatures or storage limits inferred. That is SOURCING.md almost word for word, written by the data provider.",
+ "whyNotSpoonacular": "Checked 2026-08-12 and rejected on TERMS, not on price. Spoonacular permits caching for a maximum of 1 hour and allows only recipe id, title and image to be stored indefinitely: ingredients and instructions may not be persisted. A local corpus of ingredient lists scored against a pantry is exactly what that forbids, so no engineering could get around it. Free tier is 50 points/day, and they also prohibit building an application meant to provide the same experience as theirs."
 }
