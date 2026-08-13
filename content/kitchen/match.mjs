@@ -104,11 +104,18 @@ const VETOES = ALIASES._vetoes || {};
  * that he had the right rice when he does not. A false "you have this" is worse than a false "you are
  * missing this", because the first silently produces the wrong dish and the second only costs a shop.
  * So a qualifier in the text can disqualify an item outright, whatever the alias table says. */
-export function matchToItem(name) {
+export function matchToItem(name, raw = name) {
   if (!name) return null;
+  const rawLc = String(raw).toLowerCase();
   for (const r of INDEX) {
     const veto = VETOES[r.itemId];
-    if (veto && veto.some((v) => name.includes(parseIngredient(v) || v))) continue;
+    /* Vetoes test the RAW line, never the parsed name. Their entire job is to catch qualifiers that
+     * parseIngredient deliberately strips: "ground", "pickled", "canned", "short-grain". Testing them
+     * against the parsed name was self-defeating and produced a spectacular bug, found 2026-08-12 by
+     * counting unrecognised ingredients across 625 recipes: `ginger`'s veto list contains "ground
+     * ginger", which parses down to "ginger", which then vetoed ginger against itself. Ginger came
+     * back UNRECOGNISED 48 times in a kitchen that has had fresh ginger since August 4. */
+    if (veto && veto.some((v) => rawLc.includes(v))) continue;
     // Whole-phrase containment. Word-boundary guarded so `oil` does not match `boiling`.
     const re = new RegExp(`(?:^|\\s)${r.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`);
     if (re.test(name)) return r.itemId;
@@ -117,11 +124,20 @@ export function matchToItem(name) {
 }
 
 /** availableIds: Set of stock ids usable now (level have/low). */
+const SUBS = ALIASES._substitutes || {};
+
+/** A requirement he can meet with a different product he owns. Reported separately from `have`. */
+function substituteFor(requirement, availableIds) {
+  const s = SUBS[requirement];
+  if (!s || !availableIds.has(s.have)) return null;
+  return { via: s.have, note: s.note };
+}
+
 export function scoreRecipe(ingredientLines, availableIds) {
-  const have = [], missing = [], unknown = [], staples = [], optional = [];
+  const have = [], haveVia = [], missing = [], unknown = [], staples = [], optional = [];
   for (const line of ingredientLines) {
     const name = parseIngredient(line);
-    const hit = matchToItem(name);
+    const hit = matchToItem(name, line);
     // A garnish the source itself calls optional must never block a dish or count against it.
     if (isOptionalLine(line) && !(hit && !hit.startsWith('__') && availableIds.has(hit))) {
       optional.push({ line, name, item: hit && !hit.startsWith('__') ? hit : null });
@@ -129,17 +145,29 @@ export function scoreRecipe(ingredientLines, availableIds) {
     }
     if (hit === '__STAPLE__') { staples.push({ line, name }); continue; }
     if (hit === null) { unknown.push({ line, name }); continue; }
-    if (hit.startsWith('__GAP__')) {
-      missing.push({ line, name, item: hit.slice(7), reason: ALIASES._knownGaps[hit.slice(7)] });
-      continue;
-    }
+
+    const req = hit.startsWith('__GAP__') ? hit.slice(7) : hit;
+    const sub = substituteFor(req, availableIds);
+    if (sub) { haveVia.push({ line, name, item: req, ...sub }); continue; }
+
+    if (hit.startsWith('__GAP__')) { missing.push({ line, name, item: req, reason: ALIASES._knownGaps[req] }); continue; }
     if (availableIds.has(hit)) have.push({ line, name, item: hit });
     else missing.push({ line, name, item: hit });
   }
+
+  /* An unrecognised ingredient must never be silently ignored, because that is what produced a
+   * fictional "285 dishes ready" on 2026-08-12 with Singapore Noodles WITH SHRIMP in the list. It is
+   * still not counted as MISSING, since we do not know he lacks it. It downgrades confidence instead,
+   * and the count is surfaced so the gap can be closed rather than hidden. */
+  const verdict = missing.length > 0
+    ? `missing-${missing.length}`
+    : unknown.length === 0 ? 'ready'
+      : unknown.length <= 2 ? 'probably-ready' : 'unclear';
+
   return {
-    have, missing, unknown, staples, optional,
-    counted: have.length + missing.length,
-    verdict: missing.length === 0 ? (unknown.length ? 'probably-ready' : 'ready') : `missing-${missing.length}`,
+    have, haveVia, missing, unknown, staples, optional,
+    counted: have.length + haveVia.length + missing.length,
+    verdict,
   };
 }
 

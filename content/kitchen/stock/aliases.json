@@ -212,7 +212,10 @@
       "flat leaf parsley",
       "curly parsley",
       "italian parsley",
-      "chopped parsley"
+      "chopped parsley",
+      "dill",
+      "fresh dill",
+      "dill weed"
     ],
     "ginger": [
       "fresh ginger",
@@ -340,7 +343,12 @@
       "frozen peas and carrots",
       "butternut squash",
       "frozen celery",
-      "celery"
+      "celery",
+      "sweetcorn",
+      "corn kernels",
+      "frozen sweetcorn",
+      "garden peas",
+      "petit pois"
     ],
     "frozenpeppers": [
       "frozen peppers",
@@ -372,7 +380,12 @@
     "lemon": [
       "lemon juice",
       "bottled lemon juice",
-      "lime juice"
+      "lime juice",
+      "lime juice",
+      "juice lime",
+      "juice of a lime",
+      "zest and juice lime",
+      "realime"
     ],
     "milk": [
       "milk",
@@ -423,7 +436,12 @@
     "montereyjack": [
       "monterey jack",
       "pepper jack",
-      "jack cheese"
+      "jack cheese",
+      "cheddar",
+      "cheddar cheese",
+      "grated cheese",
+      "shredded cheese",
+      "cheese"
     ],
     "longgrainrice": [
       "long grain rice",
@@ -554,6 +572,25 @@
       "whey protein",
       "protein powder",
       "vanilla protein powder"
+    ],
+    "limes": [
+      "lime",
+      "limes",
+      "fresh lime",
+      "lime wedges",
+      "zest lime",
+      "lime zest"
+    ],
+    "seasoning": [
+      "mixed herbs",
+      "dried mixed herbs",
+      "herbes de provence",
+      "chinese five spice",
+      "five spice",
+      "chilli powder",
+      "chili powder",
+      "cayenne pepper",
+      "white pepper"
     ]
   },
   "_knownGaps": {
@@ -570,7 +607,35 @@
     "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
     "sesame seeds": "Toasted sesame seeds, wanted as a garnish by most Korean recipes.",
     "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
-    "short grain rice": "Not owned. Long grain works but changes the dish: in a donburi the sauce is meant to soak a sticky layer of rice under the topping, and long grain stays separate so the sauce runs to the bottom of the bowl. About $5.77 and it unlocks every donburi plus the Beef Bulgogi pot rice already written."
+    "short grain rice": "Not owned. Long grain works but changes the dish: in a donburi the sauce is meant to soak a sticky layer of rice under the topping, and long grain stays separate so the sauce runs to the bottom of the bowl. About $5.77 and it unlocks every donburi plus the Beef Bulgogi pot rice already written.",
+    "potatoes": "No regular potatoes. The sweet potato is not a substitute in anything roasted or mashed: different sugar, different texture, and it collapses.",
+    "fresh coriander": "Also sold as cilantro. None in the kitchen. Parsley looks similar and tastes nothing like it, so it is not a swap.",
+    "fresh chilli": "No fresh chillies of any colour, scotch bonnet and thai chilli included. The crushed red pepper and crushed jalapeno bring heat but not the fresh fruity flavour.",
+    "fish sauce": "No fish sauce. Soy sauce is saltier and not funky, so it changes a Thai or Vietnamese dish substantially.",
+    "fresh mint": "No mint.",
+    "coconut milk": "No coconut milk. Nothing here substitutes for it in a curry.",
+    "pork": "No pork of any cut, including chops, belly, shoulder and mince.",
+    "chorizo": "No chorizo. Also covers most cured sausage.",
+    "shallots": "No shallots. Onion is the usual stand-in, but shallots are milder and sweeter.",
+    "cabbage": "No cabbage, white or red. The frozen salad mix is not the same thing cooked.",
+    "leek": "No leeks.",
+    "mustard": "No prepared mustard or mustard powder. The honey Dijon vinaigrette is a dressing, not a substitute.",
+    "bread": "No bread, baguette, pita or breadcrumbs. There IS flour and yeast, so bread is a project rather than an ingredient.",
+    "fresh rosemary": "No rosemary, fresh or dried.",
+    "prawns": "No prawns, shrimp, squid or salmon. Tilapia is the only fish and it is frozen.",
+    "green beans": "No green beans.",
+    "lamb": "No lamb.",
+    "aubergine": "No aubergine or courgette, also sold as eggplant and zucchini.",
+    "chives": "No chives. Green onion tops are the closest thing already in the fridge.",
+    "worcestershire sauce": "No Worcestershire sauce.",
+    "feta": "No feta. Parmesan, mozzarella and Monterey Jack are the three cheeses here and none behaves like feta.",
+    "spinach": "No spinach, fresh or frozen.",
+    "warm spices": "No cinnamon, nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala or curry powder. The rack has paprika, smoked paprika, cumin, garlic powder, onion powder, Italian seasoning, Cajun and chilli flakes, and that is all of it.",
+    "bean sprouts": "No bean sprouts.",
+    "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
+    "beetroot": "No beetroot.",
+    "ham": "No ham or bacon.",
+    "lemongrass": "No lemongrass."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -766,6 +831,263 @@
       "calrose",
       "japanese rice",
       "medium grain rice"
+    ],
+    "potatoes": [
+      "potato",
+      "potatoes",
+      "new potatoes",
+      "baby potatoes",
+      "maris piper",
+      "russet potatoes",
+      "mashed potato",
+      "floury potatoes"
+    ],
+    "fresh coriander": [
+      "coriander",
+      "fresh coriander",
+      "cilantro",
+      "fresh cilantro",
+      "coriander leaves",
+      "coriander seeds",
+      "ground coriander"
+    ],
+    "fresh chilli": [
+      "red chilli",
+      "green chilli",
+      "chilli",
+      "chili",
+      "red chili",
+      "green chili",
+      "scotch bonnet",
+      "birds eye chilli",
+      "jalapeno",
+      "serrano",
+      "thai chilli",
+      "fresh chilli",
+      "chilli pepper"
+    ],
+    "fish sauce": [
+      "fish sauce",
+      "nam pla",
+      "nuoc mam"
+    ],
+    "fresh mint": [
+      "mint",
+      "fresh mint",
+      "mint leaves"
+    ],
+    "coconut milk": [
+      "coconut milk",
+      "coconut cream",
+      "creamed coconut",
+      "desiccated coconut",
+      "coconut"
+    ],
+    "pork": [
+      "pork",
+      "pork chops",
+      "pork belly",
+      "pork shoulder",
+      "pork mince",
+      "minced pork",
+      "ground pork",
+      "pork loin",
+      "pork ribs",
+      "sausages",
+      "sausage meat",
+      "sausage"
+    ],
+    "chorizo": [
+      "chorizo",
+      "salami",
+      "pepperoni",
+      "cured sausage"
+    ],
+    "shallots": [
+      "shallot",
+      "shallots",
+      "echalion"
+    ],
+    "cabbage": [
+      "cabbage",
+      "white cabbage",
+      "red cabbage",
+      "savoy cabbage",
+      "napa cabbage",
+      "chinese cabbage",
+      "sauerkraut"
+    ],
+    "leek": [
+      "leek",
+      "leeks"
+    ],
+    "mustard": [
+      "mustard",
+      "dijon mustard",
+      "wholegrain mustard",
+      "english mustard",
+      "mustard powder",
+      "mustard seeds",
+      "dijon"
+    ],
+    "bread": [
+      "bread",
+      "baguette",
+      "pita bread",
+      "pitta bread",
+      "breadcrumbs",
+      "panko breadcrumbs",
+      "white bread",
+      "sourdough",
+      "brioche",
+      "bread rolls",
+      "burger buns",
+      "tortillas",
+      "naan",
+      "flatbread"
+    ],
+    "fresh rosemary": [
+      "rosemary",
+      "fresh rosemary",
+      "dried rosemary"
+    ],
+    "prawns": [
+      "prawns",
+      "king prawns",
+      "shrimp",
+      "raw prawns",
+      "squid",
+      "calamari",
+      "salmon",
+      "salmon fillet",
+      "cod",
+      "haddock",
+      "tuna",
+      "mussels",
+      "scallops",
+      "crab",
+      "anchovies"
+    ],
+    "green beans": [
+      "green beans",
+      "french beans",
+      "runner beans",
+      "string beans"
+    ],
+    "lamb": [
+      "lamb",
+      "lamb mince",
+      "minced lamb",
+      "lamb shoulder",
+      "lamb chops",
+      "leg of lamb",
+      "mutton",
+      "goat"
+    ],
+    "aubergine": [
+      "aubergine",
+      "eggplant",
+      "courgette",
+      "courgettes",
+      "zucchini"
+    ],
+    "chives": [
+      "chives",
+      "fresh chives"
+    ],
+    "worcestershire sauce": [
+      "worcestershire sauce",
+      "worcester sauce"
+    ],
+    "feta": [
+      "feta",
+      "feta cheese",
+      "goats cheese",
+      "goat cheese",
+      "ricotta",
+      "mascarpone",
+      "cream cheese",
+      "halloumi",
+      "gruyere",
+      "emmental",
+      "brie",
+      "blue cheese"
+    ],
+    "spinach": [
+      "spinach",
+      "baby spinach",
+      "frozen spinach",
+      "kale",
+      "swiss chard"
+    ],
+    "warm spices": [
+      "cinnamon",
+      "cinnamon stick",
+      "ground cinnamon",
+      "nutmeg",
+      "allspice",
+      "cardamom",
+      "cloves",
+      "turmeric",
+      "saffron",
+      "garam masala",
+      "curry powder",
+      "star anise",
+      "fennel seeds",
+      "caraway",
+      "juniper",
+      "ras el hanout",
+      "harissa",
+      "sumac"
+    ],
+    "bean sprouts": [
+      "bean sprouts",
+      "beansprouts"
+    ],
+    "peanuts": [
+      "peanuts",
+      "roasted peanuts",
+      "crushed peanuts",
+      "cashews",
+      "almonds",
+      "pine nuts",
+      "walnuts",
+      "pistachios",
+      "hazelnuts",
+      "tahini"
+    ],
+    "beetroot": [
+      "beetroot",
+      "beets"
+    ],
+    "ham": [
+      "ham",
+      "bacon",
+      "gammon",
+      "prosciutto",
+      "parma ham",
+      "lardons",
+      "smoked bacon",
+      "streaky bacon"
+    ],
+    "lemongrass": [
+      "lemongrass",
+      "lemon grass"
     ]
+  },
+  "_substitutes": {
+    "_": "requiredItem -> {have: an itemId he owns, note: what to do and the honest cost}. Reported as HAVE VIA, never as a plain have, because it is a different product doing the same job.",
+    "stock": {
+      "have": "stockcube",
+      "note": "One Knorr cube per 2 cups of water, per the box. For cooking purposes this IS stock. It is saltier than fresh and has no body from bones, so go easy on other salt in the dish."
+    },
+    "tinned tomatoes": {
+      "have": "tomatoes_grape",
+      "note": "680 g of fresh grape tomatoes, bought 08-12 on clearance. Halve them and cook them down about 10 minutes longer than a tin needs, since they carry more water and no acid correction. Brighter and less deep than tinned."
+    },
+    "sesame seeds": {
+      "have": "sesameoil",
+      "note": "No seeds, but the toasted sesame oil carries the same flavour. A few drops at the end instead of a sprinkle. You lose the crunch, which is most of the point of a garnish, so this is a poor swap for texture and a fine one for taste."
+    }
   }
 }
