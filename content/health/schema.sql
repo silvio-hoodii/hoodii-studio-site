@@ -25,7 +25,7 @@ create table if not exists health_body_comp (
 
 -- Watch-detected exercise sessions. This is the attendance record (every session the watch saw),
 -- distinct from gym_set (the load record: only sessions actually logged in the app). The gap
--- between them is "trained but unlogged" — CURRENT.md already surfaces it, the dashboard mirrors it.
+-- between them is "trained but unlogged": CURRENT.md already surfaces it, the dashboard mirrors it.
 create table if not exists health_watch_session (
   date        text    not null,
   start_time  text    not null,
@@ -37,7 +37,7 @@ create table if not exists health_watch_session (
 );
 create index if not exists health_watch_session_date on health_watch_session (kind, date);
 
--- Session-level swim history (not per-lap — swim-laps.json has ~18.8k individual lengths, which is
+-- Session-level swim history (not per-lap: swim-laps.json has ~18.8k individual lengths, which is
 -- more granularity than any v1 chart needs; can migrate later if a per-lap view gets built).
 create table if not exists health_swim_session (
   uuid              text primary key,

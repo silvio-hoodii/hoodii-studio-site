@@ -4,7 +4,7 @@ import type { AdherenceDay, BodyCompPoint, BodyCompSummary, SwimSummary, TrendDe
 
 // Same underlying Neon database as Kitchen/Gym (health_ prefix keeps the tables apart), see
 // content/health/schema.sql. Falls back through the same chain gym/db.ts uses in case
-// HEALTH_DATABASE_URL isn't set on Vercel yet — there is no actual separate database.
+// HEALTH_DATABASE_URL isn't set on Vercel yet: there is no actual separate database.
 const DATABASE_URL =
   process.env.HEALTH_DATABASE_URL || process.env.GYM_DATABASE_URL || process.env.KITCHEN_DATABASE_URL;
 if (!DATABASE_URL) {
@@ -57,7 +57,7 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   const smoothedKg = recentKg.length ? median(recentKg) : latest.kg;
 
   const trendAt = async (days: number): Promise<TrendDelta | null> => {
-    // latest.date may not be today (measurement lag) — the lookback is relative to latest.date, not now.
+    // latest.date may not be today (measurement lag): the lookback is relative to latest.date, not now.
     const target = new Date(Date.parse(latest.date) - days * 86400000).toISOString().slice(0, 10);
     const priorRows = await sql`
       select date, kg from health_body_comp
@@ -106,7 +106,7 @@ export async function getSwimSummary(days = 90): Promise<SwimSummary> {
 
 /** Per-day lifting attendance for the last N days: watch-detected ("trained") vs logged in the gym
  *  app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than
- *  duplicating that state — the "trained but unlogged" gap is exactly what CURRENT.md already
+ *  duplicating that state: the "trained but unlogged" gap is exactly what CURRENT.md already
  *  surfaces, computed the same way: attendance from the watch, load from the app. */
 export async function getLiftingAdherence(days = 30): Promise<AdherenceDay[]> {
   const cutoff = isoDaysAgo(days);

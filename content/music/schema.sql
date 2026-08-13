@@ -59,7 +59,7 @@ create index if not exists music_top_recent_idx on music_top (captured_on desc, 
 --
 -- This table is the liveness check, and it exists because of a specific silent failure. The
 -- refresh token expires every 180 days while the Spotify app sits in Development mode, and
--- fetchSpotify() in src/lib/fetchers.ts catches everything and returns { isPlaying: false } —
+-- fetchSpotify() in src/lib/fetchers.ts catches everything and returns { isPlaying: false },
 -- which is exactly what a working call returns when nothing is playing. A dead integration and a
 -- quiet evening are indistinguishable from the outside.
 --

@@ -2,7 +2,7 @@
  * --signal reserved for a value that is true right now (due count, streak, a correct/easy recall),
  * --destructive reserved for the one thing that needs to read as "wrong" (the Again rating, a
  * failed login). Ported from LanguageOS/site/french.html, which had its own standalone blue/green
- * palette (--accent, --good) — collapsed onto the shared two-chromatic-color system per
+ * palette (--accent, --good), collapsed onto the shared two-chromatic-color system per
  * hoodii-studio-site/AGENTS.md ("must consume the tokens, never hardcode a colour"). Content and
  * interaction ported as-is; only the paint changed. */
 

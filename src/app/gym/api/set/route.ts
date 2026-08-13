@@ -4,7 +4,7 @@ import { upsertSet } from '@/lib/gym/db';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/** Autosave for one set. Fired on every field change from the client, same as gym.html's postSet —
+/** Autosave for one set. Fired on every field change from the client, same as gym.html's postSet:
  *  the client queues on failure and retries, this route just has to be idempotent (it is, via the
  *  ON CONFLICT upsert in db.ts). */
 export async function POST(req: Request) {

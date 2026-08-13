@@ -57,7 +57,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   // setInterval on a locked phone just means the NEXT tick recomputes correctly from Date.now(),
   // instead of a counter having silently stalled. `remaining` is real state, set only from inside
   // effects/callbacks (never computed from Date.now() during render, which React 19 flags as
-  // impure) — startTimer and the tick effect are the only writers. ----
+  // impure): startTimer and the tick effect are the only writers. ----
   const [remaining, setRemaining] = useState(0);
   const vibratedRef = useRef(false);
 
@@ -216,9 +216,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    *
    * The split name is DERIVED from the day's own title rather than added as a second field, because
    * a hand-kept short name is exactly the kind of duplicate string that drifts from what it labels.
-   * "Lower B — Hinge" becomes "Lower B". */
+   * "Lower B: Hinge" becomes "Lower B". */
   function splitName(d: Day): string {
-    const head = d.title.split(/\s[—–-]\s/)[0]?.trim();
+    const head = d.title.split(/:\s/)[0]?.trim();
     return head || d.name;
   }
 
@@ -258,7 +258,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
       <div className="progress-row">
         <span>{totals.done}/{totals.total} sets</span>
-        {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ' — consider a rest day' : ''}</span>}
+        {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ', consider a rest day' : ''}</span>}
       </div>
 
       {/* Open by default. Collapsed, these read as missing: you are holding a phone in a gym, not

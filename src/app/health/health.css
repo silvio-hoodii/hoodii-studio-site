@@ -1,6 +1,6 @@
 /* Health surface, same idiom as .gym / .kos: monochrome, mono labels, rules instead of cards,
  * --signal reserved for a value that is true right now. Charts follow that same rule: the
- * historical line is ink (foreground), the latest/current point is --signal — the chart-level
+ * historical line is ink (foreground), the latest/current point is --signal: the chart-level
  * application of the same convention .gym .live already uses for a live number. */
 
 .health {

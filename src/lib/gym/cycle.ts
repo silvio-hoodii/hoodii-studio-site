@@ -3,7 +3,7 @@ import { getLastTrainingRow, getTrainingDates } from './db';
 import { DAY_ORDER } from './program-shared';
 import type { DayKey } from './types';
 
-// A gap longer than this (days) is a layoff, not a normal weekend rest — restart the cycle at
+// A gap longer than this (days) is a layoff, not a normal weekend rest: restart the cycle at
 // Lower A instead of continuing from the stale last day. Ported from HealthOS server.mjs.
 const LAYOFF_RESET_DAYS = 7;
 
@@ -21,11 +21,11 @@ export interface NextUp {
   restNudge: boolean;
 }
 
-/** Rolling "what's next" — dropped weekday-locking, train any day, rest = days you didn't.
+/** Rolling "what's next": dropped weekday-locking, train any day, rest = days you didn't.
  *
  * Deliberately NOT porting the watch-augmented layoff detection from HealthOS server.mjs (it reads
  * a `watch_sessions` table fed by a separate Samsung Health import pipeline that isn't part of this
- * migration). This reads the app's own log only, same as the app did before that addition — the gap
+ * migration). This reads the app's own log only, same as the app did before that addition: the gap
  * it closed was "trained but didn't open the app to log it", which stays a real but smaller
  * inaccuracy until/unless the watch import gets ported too. */
 export async function computeNextUp(today: string): Promise<NextUp> {

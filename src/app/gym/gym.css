@@ -1,4 +1,4 @@
-/* Gym surface, on the shared token system — same idiom as .kos (kitchen.css): monochrome, mono
+/* Gym surface, on the shared token system: same idiom as .kos (kitchen.css): monochrome, mono
  * labels, rules instead of cards, --signal reserved for a value that is true right now. */
 
 .gym {

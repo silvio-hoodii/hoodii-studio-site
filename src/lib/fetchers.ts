@@ -1,6 +1,6 @@
 // Shared Spotify + PSN fetchers. Both the public API routes
 // (src/app/api/{spotify,psn}/route.ts) AND the RSC root page
-// (src/app/page.tsx) call these — same code path, same response shape,
+// (src/app/page.tsx) call these: same code path, same response shape,
 // so the initial server-rendered snapshot can hand off cleanly to the
 // 60s client-side polling in useDataSources.
 

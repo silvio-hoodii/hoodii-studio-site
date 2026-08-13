@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-// Reuses the same cookie/secret as /kitchen ('kos', KITCHEN_SESSION_SECRET) on purpose — one login
+// Reuses the same cookie/secret as /kitchen ('kos', KITCHEN_SESSION_SECRET) on purpose: one login
 // for the whole hub, not a second password to remember. See src/proxy.ts.
 async function signIn(formData: FormData) {
   'use server';

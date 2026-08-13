@@ -2,7 +2,7 @@
   "days": {
     "monday": {
       "name": "Monday",
-      "title": "Lower A — Squat",
+      "title": "Lower A: Squat",
       "desc": "Squat strength + glute work",
       "time": "60-70 min",
       "warmup": "lower",
@@ -193,7 +193,7 @@
     },
     "tuesday": {
       "name": "Tuesday",
-      "title": "Upper A — Press",
+      "title": "Upper A: Press",
       "desc": "Handstand skill + pressing",
       "time": "60-70 min",
       "warmup": "upper",
@@ -204,11 +204,11 @@
         {
           "type": "main",
           "label": "Handstand Skill",
-          "tag": "(ladder — FIRST, fresh, never to failure)",
+          "tag": "(ladder, FIRST, fresh, never to failure)",
           "exercises": [
             {
               "id": "pike-hold",
-              "name": "Step 1 — Pike Hold",
+              "name": "Step 1: Pike Hold",
               "sets": 3,
               "reps": "20",
               "rest": "60s",
@@ -218,28 +218,28 @@
               "alts": [
                 {
                   "id": "wall-walkup",
-                  "name": "Step 2 — Wall Walk-Up",
+                  "name": "Step 2: Wall Walk-Up",
                   "sets": 3,
                   "reps": "4",
                   "rest": "90s",
                   "bodyweight": true,
                   "timed": false,
                   "log": true,
-                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL — never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep — that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
+                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL: never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep: that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
                 },
                 {
                   "id": "ctw-wall-hold",
-                  "name": "Step 3 — Chest-to-Wall Hold",
+                  "name": "Step 3: Chest-to-Wall Hold",
                   "sets": 3,
                   "reps": "15",
                   "rest": "90s",
                   "timed": true,
                   "log": true,
-                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall — upside down, you finish chest toward the wall. Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
+                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall (upside down, you finish chest toward the wall). Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
                 },
                 {
                   "id": "toe-pull-tap",
-                  "name": "Step 4 — Toe Pulls",
+                  "name": "Step 4: Toe Pulls",
                   "sets": 5,
                   "reps": "3",
                   "rest": "90s",
@@ -249,13 +249,13 @@
                 },
                 {
                   "id": "kickup-freestanding",
-                  "name": "Step 5 — Kick-Up (open floor)",
+                  "name": "Step 5: Kick-Up (open floor)",
                   "sets": 5,
                   "reps": "5",
                   "rest": "90s",
                   "timed": true,
                   "log": true,
-                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder — goal is a calm 10s."
+                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder: goal is a calm 10s."
                 }
               ]
             }
@@ -380,7 +380,7 @@
               "rest": "45s",
               "timed": true,
               "log": true,
-              "cue": "Lower back PRESSED into the floor, ribs down, arms overhead and legs off the ground in a shallow banana. This is the exact shape of a straight handstand — own it on the floor first. Too hard? Bend the knees or keep arms at your sides.",
+              "cue": "Lower back PRESSED into the floor, ribs down, arms overhead and legs off the ground in a shallow banana. This is the exact shape of a straight handstand: own it on the floor first. Too hard? Bend the knees or keep arms at your sides.",
               "alts": [
                 {
                   "id": "side-plank",
@@ -445,7 +445,7 @@
     },
     "thursday": {
       "name": "Thursday",
-      "title": "Lower B — Hinge",
+      "title": "Lower B: Hinge",
       "desc": "Hinge strength + glute med",
       "time": "60-70 min",
       "warmup": "lower",
@@ -637,7 +637,7 @@
     },
     "friday": {
       "name": "Friday",
-      "title": "Upper B — Pull",
+      "title": "Upper B: Pull",
       "desc": "Handstand skill + pulling + swim catch",
       "time": "60-70 min",
       "warmup": "upper",
@@ -648,11 +648,11 @@
         {
           "type": "main",
           "label": "Handstand Skill",
-          "tag": "(ladder — FIRST, fresh, never to failure)",
+          "tag": "(ladder, FIRST, fresh, never to failure)",
           "exercises": [
             {
               "id": "pike-hold",
-              "name": "Step 1 — Pike Hold",
+              "name": "Step 1: Pike Hold",
               "sets": 3,
               "reps": "20",
               "rest": "60s",
@@ -662,28 +662,28 @@
               "alts": [
                 {
                   "id": "wall-walkup",
-                  "name": "Step 2 — Wall Walk-Up",
+                  "name": "Step 2: Wall Walk-Up",
                   "sets": 3,
                   "reps": "4",
                   "rest": "90s",
                   "bodyweight": true,
                   "timed": false,
                   "log": true,
-                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL — never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep — that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
+                  "cue": "Push-up position with feet at the base of the wall, facing AWAY from it. Walk feet up the wall and hands in ONE HAND-LENGTH at a time, then walk down WITH CONTROL: never collapse out. 3-5 slow reps per set. LOG the hand-lengths in on your best rep: that number climbing is your progress. GATE: all 3 sets reaching 5+ in one session → the full chest-to-wall hold."
                 },
                 {
                   "id": "ctw-wall-hold",
-                  "name": "Step 3 — Chest-to-Wall Hold",
+                  "name": "Step 3: Chest-to-Wall Hold",
                   "sets": 3,
                   "reps": "15",
                   "rest": "90s",
                   "timed": true,
                   "log": true,
-                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall — upside down, you finish chest toward the wall. Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
+                  "cue": "Same entry as the walk-up: push-up position with feet at the wall, facing away. Walk feet up and hands in until only your chest is a hand-width from the wall (upside down, you finish chest toward the wall). Push TALL through the shoulders, squeeze the glutes, ribs in, look between your hands. Walk down BEFORE the arms shake. GATE: 3 holds of 30s with calm breathing → toe pulls."
                 },
                 {
                   "id": "toe-pull-tap",
-                  "name": "Step 4 — Toe Pulls",
+                  "name": "Step 4: Toe Pulls",
                   "sets": 5,
                   "reps": "3",
                   "rest": "90s",
@@ -693,13 +693,13 @@
                 },
                 {
                   "id": "kickup-freestanding",
-                  "name": "Step 5 — Kick-Up (open floor)",
+                  "name": "Step 5: Kick-Up (open floor)",
                   "sets": 5,
                   "reps": "5",
                   "rest": "90s",
                   "timed": true,
                   "log": true,
-                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder — goal is a calm 10s."
+                  "cue": "Learn the cartwheel bail-out FIRST. Kick up to a freestanding handstand away from the wall, log your longest hold in seconds. Top of the ladder: goal is a calm 10s."
                 }
               ]
             }

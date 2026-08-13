@@ -1,4 +1,4 @@
-/** Pure program helpers — no filesystem access, safe to import from client components too.
+/** Pure program helpers, no filesystem access, safe to import from client components too.
  *  Split out of program.ts (which is 'server-only' because it reads content/gym/*.json off disk)
  *  so GymClient.tsx can share the exact same budget/plate-math/swap logic instead of reimplementing
  *  a second copy that could drift from what the server actually computed. */
@@ -22,7 +22,7 @@ export function restSeconds(rest: string | undefined): number {
   return m[2]!.toLowerCase() === 'min' ? Math.round(parseFloat(m[1]!) * 60) : parseFloat(m[1]!);
 }
 
-// WORK_SEC is fitted from real session timing data, not guessed — see HealthOS/gym.html's own
+// WORK_SEC is fitted from real session timing data, not guessed: see HealthOS/gym.html's own
 // comment pointing at server/fit-session-time.mjs. Kept as the same constant, not re-derived.
 const WORK_SEC = 150;
 const FIXED_MIN = 10; // warmup + cooldown
@@ -44,7 +44,7 @@ function exPriority(block: { type: string; label: string }, idx: number): number
   return 3;
 }
 
-/** Which exercise ids survive a time budget. Priority 1 (the main lift) is unconditional — a short
+/** Which exercise ids survive a time budget. Priority 1 (the main lift) is unconditional: a short
  *  session that skips it is worse than no session. Then fill by priority, program order, and STOP at
  *  the first thing that doesn't fit (never let a cheap accessory displace something more important
  *  just for being short). Ported verbatim from HealthOS/gym.html's budgetKeep(). */

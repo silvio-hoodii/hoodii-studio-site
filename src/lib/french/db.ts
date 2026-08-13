@@ -14,7 +14,7 @@ if (!DATABASE_URL) {
 export const sql = neon(DATABASE_URL);
 
 // New cards introduced per day. The old build put 1,359 unseen cards in front of him on day one
-// and he never came back. This cap is the fix — a hard ceiling, not a suggestion. See DESIGN.md rule 6.
+// and he never came back. This cap is the fix: a hard ceiling, not a suggestion. See DESIGN.md rule 6.
 export const NEW_PER_DAY = 12;
 // Review queue ceiling for one sitting, sized for the stated 20-30 min/day budget.
 export const MAX_QUEUE = 40;
@@ -66,8 +66,8 @@ async function bumpDay(delta: { reviewed?: number; added?: number; book_work?: n
 }
 
 /**
- * Insert cards from one book section. Existing cards keep their FSRS state — re-ingesting a page
- * must never reset scheduling progress. This is the ONLY card intake — see DESIGN.md rule 1.
+ * Insert cards from one book section. Existing cards keep their FSRS state: re-ingesting a page
+ * must never reset scheduling progress. This is the ONLY card intake, see DESIGN.md rule 1.
  */
 export async function addCards(
   cards: NewCardInput[],
@@ -104,7 +104,7 @@ export interface QueueCard extends CardRow {
 
 /**
  * The queue for right now: cards genuinely due, then up to NEW_PER_DAY unseen cards. Due always
- * comes first — new material never buries the review debt.
+ * comes first: new material never buries the review debt.
  */
 export async function getQueue(limit = MAX_QUEUE): Promise<QueueCard[]> {
   const now = new Date().toISOString();
@@ -235,7 +235,7 @@ export interface FrenchSummary {
 }
 
 /**
- * Honest counts only. No readiness percentage, no projected CLB score — there is no defensible way
+ * Honest counts only. No readiness percentage, no projected CLB score: there is no defensible way
  * to compute either from card data, and a fake number is worse than no number. See DESIGN.md rule 5.
  */
 export async function getSummary(): Promise<FrenchSummary> {

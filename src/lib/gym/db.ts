@@ -1,7 +1,7 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
 
-// Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables — see
+// Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables, see
 // content/gym/schema.sql. GYM_DATABASE_URL is the self-documenting name for this module, but the
 // Vercel CLI env write silently stored an empty value on 2026-08-10 (see
 // reference_vercel_env_write_broken_use_dashboard_or_token memory) so this falls back to the var
@@ -57,7 +57,7 @@ export async function upsertSession(opts: { date: string; day?: string | null; d
   `;
 }
 
-/** Upsert one set. Re-logging the same (date, exercise, set) updates in place — never duplicates.
+/** Upsert one set. Re-logging the same (date, exercise, set) updates in place, never duplicates.
  *  Direct port of HealthOS db.mjs upsertSet / the ON CONFLICT shape, same reasoning: only a real
  *  value change should look "dirty" to anything downstream that watches for changes. */
 export async function upsertSet(s: SetInput) {
@@ -112,7 +112,7 @@ async function setsForExDate(exerciseId: string, date: string): Promise<SetRow[]
   return rows as unknown as SetRow[];
 }
 
-/** Last N training dates for an exercise (newest first) with sets — powers the stall-detection window. */
+/** Last N training dates for an exercise (newest first) with sets, powers the stall-detection window. */
 export async function getRecentSessions(exerciseId: string, beforeDate: string, n = 3): Promise<SessionSets[]> {
   const rows = await sql`
     select distinct date from gym_set
@@ -155,7 +155,7 @@ export async function getLastTrainingRow(): Promise<{ date: string; day: string 
   return (rows[0] as { date: string; day: string | null } | undefined) ?? null;
 }
 
-/** Distinct training dates, newest first — powers the consecutive-day streak. */
+/** Distinct training dates, newest first, powers the consecutive-day streak. */
 export async function getTrainingDates(limit = 30): Promise<string[]> {
   const rows = await sql`
     select distinct date from gym_set where done = true and reps is not null and reps > 0

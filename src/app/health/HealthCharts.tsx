@@ -10,7 +10,7 @@ import { useRef, useState } from 'react';
  *
  * Color: this site is monochrome with one chromatic color (--signal) reserved for "a value that is
  * true right now" (see .gym .live in gym.css). Charts extend that same convention rather than
- * introducing a categorical palette — the historical line/bars are ink (foreground/muted), and the
+ * introducing a categorical palette: the historical line/bars are ink (foreground/muted), and the
  * one point that IS true right now (today's weight, the most recent swim, today's strip cell) is
  * the only thing in signal. Every chart here is single-series, so no legend box is needed (a legend
  * only earns its place at 2+ series per the skill's mark spec).

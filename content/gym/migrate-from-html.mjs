@@ -28,7 +28,7 @@ if (!scriptMatch) throw new Error('No <script> block found in gym.html');
 const src = scriptMatch[1];
 
 /** Extracts `const NAME = <value>;` by walking to the statement-terminating `;` at bracket
- *  depth 0 — works for array/object literals AND expressions like `Object.assign(...)`. */
+ *  depth 0: works for array/object literals AND expressions like `Object.assign(...)`. */
 function extractConst(name, from = 0) {
   const marker = `const ${name} = `;
   const start = src.indexOf(marker, from);
@@ -47,9 +47,9 @@ function extractConst(name, from = 0) {
 
 // Evaluate every extracted const in ONE shared vm context, in source order, so later consts that
 // reference earlier ones (HS_SLOT references HS_STEPS, DAYS references WARMUP_LOWER/CD/HS_SLOT)
-// resolve correctly — same trick used to verify the zone-pruning edits earlier this session.
+// resolve correctly, same trick used to verify the zone-pruning edits earlier this session.
 const NAMES = ['WARMUP_LOWER', 'WARMUP_UPPER', 'CD', 'RIR_GUIDE', 'HS_STEPS', 'HS_SLOT', 'DAYS'];
-// HS_SLOT is needed to resolve DAYS but is not written to its own file — DAYS embeds it verbatim
+// HS_SLOT is needed to resolve DAYS but is not written to its own file: DAYS embeds it verbatim
 // in the Tuesday/Friday Handstand Skill blocks.
 let prefix = '';
 for (const name of NAMES) {
@@ -75,7 +75,7 @@ write('handstand-ladder.json', { steps: sandbox.HS_STEPS });
 // gym.html assigns `warmup: WARMUP_LOWER` and `cooldown: [CD.pigeon, ...]` by reference, so a plain
 // JSON.stringify of DAYS embeds a full duplicate copy of that content under every day that uses it.
 // Normalize to key references (matching PROGRAM-SCHEMA.md) so the cue text lives in exactly one
-// place — the same "one source, derive the rest" discipline as everything else in this migration.
+// place: the same "one source, derive the rest" discipline as everything else in this migration.
 const deepEq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 for (const day of Object.values(sandbox.DAYS)) {
   if (deepEq(day.warmup, sandbox.WARMUP_LOWER)) day.warmup = 'lower';

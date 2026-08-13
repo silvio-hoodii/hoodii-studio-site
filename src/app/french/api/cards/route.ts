@@ -4,7 +4,7 @@ import { addCards } from '@/lib/french/db';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// The ONLY card intake — see LanguageOS/DESIGN.md rule 1. This route does not and must not decide
+// The ONLY card intake: see LanguageOS/DESIGN.md rule 1. This route does not and must not decide
 // what counts as a legitimate card; that discipline lives in the caller (scripts/ingest-page.mjs's
 // anti-fabrication prompt, or an agent reading a photographed page in-session). Never call this with
 // a generated/seeded deck.

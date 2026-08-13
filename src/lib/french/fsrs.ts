@@ -1,5 +1,5 @@
 // FSRS-5 scheduler. Verbatim port of LanguageOS/server/fsrs.mjs, which was itself ported
-// verbatim from the shelved Next.js build's lib/srs.ts and correct — the old system died of
+// verbatim from the shelved Next.js build's lib/srs.ts and correct: the old system died of
 // deployment bugs, not scheduling bugs. Do not change these weights or the formulas; if the
 // scheduling ever needs to change, that is a deliberate decision made with real review data, not a
 // drive-by edit here.

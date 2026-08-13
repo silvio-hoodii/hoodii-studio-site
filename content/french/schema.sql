@@ -1,7 +1,7 @@
 -- LanguageOS (French) state, same Neon Postgres project as Gym/Kitchen/Health
 -- (french_ prefix keeps the tables apart, no separate database).
 --
--- Direct port of LanguageOS/server/db.mjs's schema — same columns, same keys, same
+-- Direct port of LanguageOS/server/db.mjs's schema: same columns, same keys, same
 -- FSRS fields. See LanguageOS/DESIGN.md rule 4 (updated 2026-08-11) for why this
 -- exists as a second copy alongside the original node:sqlite version rather than a
 -- cutover. LanguageOS/data/french.db was empty (0 cards) at migration time.

@@ -5,7 +5,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /** Marks a session finished. HealthOS's version also triggered a Notion mirror; Notion mirroring was
- *  retired 2026-07-14 (NOTION_ENABLED=false in server.mjs) so that half is not ported — this route is
+ *  retired 2026-07-14 (NOTION_ENABLED=false in server.mjs) so that half is not ported: this route is
  *  just the state transition. */
 export async function POST(req: Request) {
   try {

@@ -12,7 +12,7 @@ export const runtime = 'nodejs';
  * Vercel attaches `Authorization: Bearer $CRON_SECRET` to cron invocations whenever that env var is
  * set. We REQUIRE it rather than treating it as optional hardening: without it this is a public URL
  * that makes four Spotify calls per hit, which is a free rate-limit exhaustion for anyone who finds
- * it. Refusing loudly when the secret is missing is better than a quietly open endpoint — an
+ * it. Refusing loudly when the secret is missing is better than a quietly open endpoint: an
  * unauthenticated 500 in the Vercel log is visible, an open door is not.
  */
 export async function GET(req: NextRequest) {

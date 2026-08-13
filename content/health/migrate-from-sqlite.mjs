@@ -45,7 +45,7 @@ for (const r of bodyComp) {
   bcWritten++;
 }
 
-// --- watch_sessions (strength + swimming only — the two kinds the dashboard reads) -------------
+// --- watch_sessions (strength + swimming only: the two kinds the dashboard reads) -------------
 const watchSessions = db.prepare(`
   select date, start_time, kind, minutes, calories, avg_hr from watch_sessions
   where kind in ('strength', 'swimming')

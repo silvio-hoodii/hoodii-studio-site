@@ -1,6 +1,6 @@
 /** Double-progression engine. Pure functions, no I/O.
  *
- * Direct port of HealthOS server/progression.mjs — the algorithm itself is unchanged, only the
+ * Direct port of HealthOS server/progression.mjs: the algorithm itself is unchanged, only the
  * language. See that file's own comments (kept below) for the reasoning; this is not a redesign.
  *
  * Rep range = [targetReps, targetReps + RANGE_WIDTH].
@@ -78,7 +78,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
 
   const sets = last && Array.isArray(last.sets) ? last.sets.filter((s) => (s.reps ?? 0) > 0) : [];
   if (sets.length === 0) {
-    return { weight: null, reps: bottom, reason: 'First time — log your working weight.' };
+    return { weight: null, reps: bottom, reason: 'First time: log your working weight.' };
   }
 
   // Long logging gap: probe one step above the old baseline instead of assuming continuity.
@@ -87,15 +87,15 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     if (gap > GAP_DAYS) {
       if (type === 'timed') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
-        return { weight: null, reps: best + 2, reason: `Last log ${gap}d ago — probe: old best +2s, see where you are.` };
+        return { weight: null, reps: best + 2, reason: `Last log ${gap}d ago, probe: old best +2s, see where you are.` };
       }
       if (type === 'bodyweight') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
-        return { weight: null, reps: best + 1, reason: `Last log ${gap}d ago — probe: old best +1 rep, see where you are.` };
+        return { weight: null, reps: best + 1, reason: `Last log ${gap}d ago, probe: old best +1 rep, see where you are.` };
       }
       const ww = workingWeight(sets) ?? 0;
       const next = roundLoad(ww + increment, increment);
-      return { weight: next, reps: bottom, reason: `Last log ${gap}d ago — probe: old weight +${increment} lb, adjust live.` };
+      return { weight: next, reps: bottom, reason: `Last log ${gap}d ago, probe: old weight +${increment} lb, adjust live.` };
     }
   }
 
@@ -104,9 +104,9 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     const repsList = sets.map((s) => s.reps ?? 0);
     const minReps = Math.min(...repsList);
     if (minReps >= top) {
-      return { weight: null, reps: top, reason: `Hit ${repsList.join('/')} — add load or progress the movement.` };
+      return { weight: null, reps: top, reason: `Hit ${repsList.join('/')}: add load or progress the movement.` };
     }
-    return { weight: null, reps: Math.min(minReps + 1, top), reason: `Got ${repsList.join('/')} — add a rep where you can.` };
+    return { weight: null, reps: Math.min(minReps + 1, top), reason: `Got ${repsList.join('/')}: add a rep where you can.` };
   }
 
   // ---- weighted: double progression on the working weight ----
@@ -132,14 +132,14 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       && last3[0]!.min! <= last3[1]!.min! && last3[1]!.min! <= last3[2]!.min!;
     if (sameW && noProgress && last3[0]!.min! < top && last3[0]!.w != null) {
       const dl = roundLoad(last3[0]!.w! * 0.9, increment);
-      return { weight: dl, reps: bottom, reason: `Stalled 3 sessions at ${last3[0]!.w} — deload to ${dl}, build back up.` };
+      return { weight: dl, reps: bottom, reason: `Stalled 3 sessions at ${last3[0]!.w}: deload to ${dl}, build back up.` };
     }
   }
 
   if (minReps >= top && ww != null) {
     const next = roundLoad(ww + increment, increment);
-    return { weight: next, reps: bottom, reason: `Hit ${wd} at ${ww} — +${increment} lb.` };
+    return { weight: next, reps: bottom, reason: `Hit ${wd} at ${ww}: +${increment} lb.` };
   }
   const goal = minReps < bottom ? bottom : top;
-  return { weight: ww, reps: goal, reason: `Got ${wd} at ${ww} — hold, build to ${goal}.` };
+  return { weight: ww, reps: goal, reason: `Got ${wd} at ${ww}: hold, build to ${goal}.` };
 }

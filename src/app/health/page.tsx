@@ -5,7 +5,7 @@ import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
 export const dynamic = 'force-dynamic';
 
 function msToPace(ms: number | null): string {
-  if (!ms) return '—';
+  if (!ms) return 'N/A';
   const totalSec = Math.round(ms / 1000);
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
@@ -36,7 +36,7 @@ export default async function HealthPage() {
       <h1>Health</h1>
       <p className="lede">
         Weight, swim history, and lifting attendance, pulled from the Samsung Health export pipeline
-        that already runs on the laptop. Read-only — nothing here is loggable, and healthos.db stays
+        that already runs on the laptop. Read-only: nothing here is loggable, and healthos.db stays
         the source of truth.
       </p>
 
@@ -101,7 +101,7 @@ export default async function HealthPage() {
       <div className="section">
         <div className="section-head"><h2>Lifting attendance, last 30 days</h2></div>
         <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
-          Attendance is read from the watch, which records every session — the gym app only sees
+          Attendance is read from the watch, which records every session: the gym app only sees
           sessions logged there. <span className="live tnum">{trainedCount}</span> trained,{' '}
           <span className="tnum">{loggedCount}</span> also logged
           {trainedCount > loggedCount ? `, ${trainedCount - loggedCount} trained but unlogged` : ''}.

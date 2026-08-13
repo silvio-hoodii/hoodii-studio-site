@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * One-time migration of real training history from HealthOS/healthos.db (node:sqlite) into the
- * gym_session / gym_set Postgres tables. Nothing is re-derived or reset — every logged set, exactly
+ * gym_session / gym_set Postgres tables. Nothing is re-derived or reset: every logged set, exactly
  * as typed, moves over. This is the step that makes the migration safe to actually use: the laptop
  * app can keep running until this has been verified, and cutting over does not cost him his log.
  *

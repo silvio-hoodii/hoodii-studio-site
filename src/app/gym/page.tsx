@@ -19,7 +19,7 @@ export default async function GymHome() {
       <Link href="/" className="eyebrow">← Silvio Neyra</Link>
       <h1>Gym</h1>
       <p className="lede">
-        Upper/lower split, logged between sets. Moved off the laptop 2026-08-10 — full training
+        Upper/lower split, logged between sets. Moved off the laptop 2026-08-10: full training
         history carried over, nothing reset.
       </p>
       <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} />
