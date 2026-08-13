@@ -656,7 +656,12 @@
   align-items: center;
   min-height: 44px;
   text-decoration: none;
-  color: var(--muted);
+  /* --muted-foreground, NOT --muted. `--muted` is oklch(0.96), a near-white BACKGROUND token, and
+     putting it in a color slot rendered the three inactive nav links as pale grey on off-white:
+     legible on a laptop at arm's length and effectively invisible on a phone in a kitchen. Caught by
+     screenshotting at 390px, which is the only way this class of bug shows up. --muted-foreground is
+     oklch(0.55), which is the token actually designed for secondary text. */
+  color: var(--muted-foreground);
 }
 .kos .kosnav a:hover { color: var(--foreground); }
 /* The current page is stated, not hidden, so the strip keeps the same shape everywhere. */
