@@ -171,3 +171,26 @@ export function rank(items: Cookable[]): Cookable[] {
       return (a.recipe.time.totalMin ?? 999) - (b.recipe.time.totalMin ?? 999);
     });
 }
+
+/** Is this recipe fit to be OFFERED, as opposed to merely present.
+ *
+ *  Lives here because two surfaces were answering it differently and disagreeing by 14x: the hub row
+ *  counted every recipe whose stock was satisfied and announced "14 dishes you can cook right now",
+ *  then /kitchen applied the read gate and the verbatim gate and said "1 ready to start". Same claim,
+ *  same session, one tap apart. The first thing the app did on open was overpromise by an order of
+ *  magnitude, which is exactly what primes "not sure what I'm supposed to be looking for".
+ *
+ *  The bar, and all four parts matter:
+ *    - every step has been READ as the app renders them, at this exact build
+ *    - the rendered text has not drifted since (readHash)
+ *    - it did not fail at the stove
+ *    - it is `sourced`, meaning nothing was changed by an agent
+ */
+export function isOfferable(r: Recipe): boolean {
+  const p = r.provenance;
+  if (!p) return false;
+  if (p.tier !== 'sourced') return false;
+  if (p.cookedResult === 'failed') return false;
+  if (!p.readAt || p.readAt !== r.build) return false;
+  return true;
+}

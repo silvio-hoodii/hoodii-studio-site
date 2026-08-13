@@ -563,3 +563,50 @@
   opacity: 0.65;
   margin-left: 3px;
 }
+
+/* ---- touch ergonomics ----
+   KitchenOS/DESIGN.md sets 56px minimum on the cook surface and says a mis-tap that jumps three steps
+   is worse here than in any other app, because his hands are wet and there is a pan on. Measured
+   before this block: note buttons 33px, filter chips 35px, progress dots 19x28px. */
+
+.kos { touch-action: manipulation; }          /* kills the 300ms double-tap-zoom delay */
+.kos { -webkit-tap-highlight-color: transparent; }
+
+.kos button,
+.kos .btn,
+.kos .chip {
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.kos button:active,
+.kos .btn:active,
+.kos .chip:active { opacity: 0.65; }          /* replaces the tap highlight we just removed */
+
+/* The dots jump the recipe with no undo, so they get the most generous target on the screen. */
+.kos .dots button { min-height: 2px; min-width: 26px; }
+.kos .dots button::after { inset: -22px -1px; }
+
+/* Focus has to be visible on a 2px-tall borderless dot, where the UA ring is not usable. */
+.kos a:focus-visible,
+.kos button:focus-visible,
+.kos .chip:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* The step screen needed a way out. Was: no exit at all, so the only route back to the kitchen was
+   pressing the back arrow once per step. */
+.kos .steptop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* --border measured 1.34:1 against the background, well under the 3:1 non-text floor, which made
+   every secondary button outline and every unfilled progress dot effectively invisible. */
+.kos { --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background)); }
+.kos button, .kos .btn, .kos .chip { border-color: var(--border-strong); }
+.kos .dots button { background: var(--border-strong); }

@@ -61,14 +61,18 @@ export function isOptionalLine(raw) {
 }
 
 /** Turn a published ingredient line into a bare ingredient name, or '' if nothing survives. */
-export function parseIngredient(raw, keepAfterComma = false) {
-  let s = String(raw).toLowerCase();
+export function parseIngredient(raw, opts = {}) {
+  const { keepAfterComma = false, keepOr = false } = typeof opts === 'boolean' ? { keepAfterComma: opts } : opts;
+  /* Strip diacritics rather than delete them. The final `[^a-z\s]` sweep was destroying accented
+   * letters, so "100g creme fraiche" arrived as "cr me fra che" and never matched anything: 29
+   * mentions for that one and 24 for jalapeno. Decomposing first keeps the letters. */
+  let s = String(raw).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   s = s.replace(/&frac\d+;|&[a-z]+;/g, ' ');       // html entities from scraped pages
   s = s.replace(/\([^)]*\)/g, ' ');                 // "(about 2 to 3 ounces)"
   s = s.replace(/\[[^\]]*\]/g, ' ');
   if (!keepAfterComma) s = s.split(/,/)[0];         // prep after the first comma
-  s = s.split(/\bor\b/)[0];                         // "parmesan or pecorino" -> first named
+  if (!keepOr) s = s.split(/\bor\b/)[0];            // "parmesan or pecorino" -> first named
   /* Trailing noise. This matters more since staples became whole-name matches: any leftover word means
    * "extra-virgin olive oil plus extra" no longer equals "olive oil" and a pantry staple reads as an
    * unknown. Stripped anywhere, not just at the end, because these clauses turn up mid-line too. */
@@ -215,12 +219,38 @@ export function scoreRecipe(ingredientLines, availableIds) {
     /* Try the full line too. "200g bag frozen, shelled cooked prawn defrosted" reduces to just "bag"
      * once everything after the comma is dropped, which lost the prawns entirely and let a prawn pasta
      * look cookable. Prefer whichever parse actually resolves, and prefer a real answer over silence. */
+    /* Four ways to read one line, tried in order of how much they trust the punctuation. Published
+     * ingredient lines are prose, and each of these fallbacks exists because a specific real line was
+     * being lost:
+     *   1. the plain parse
+     *   2. keep text after the first comma  ("200g bag frozen, shelled cooked prawn" was just "bag")
+     *   3. keep text after "or"            ("vegetable or sunflower oil" was just "vegetable", 40x)
+     *   4. split an "and" compound         ("salt and pepper to taste", 48x)
+     * First one that resolves wins, and a resolved answer always beats silence. */
     let hit = matchToItem(name, line);
     let shown = name;
     if (hit === null) {
-      const full = parseIngredient(line, true);
-      const alt = matchToItem(full, line);
-      if (alt !== null) { hit = alt; shown = full; }
+      for (const cand of [
+        parseIngredient(line, { keepAfterComma: true }),
+        parseIngredient(line, { keepOr: true }),
+        parseIngredient(line, { keepAfterComma: true, keepOr: true }),
+      ]) {
+        const alt = matchToItem(cand, line);
+        if (alt !== null) { hit = alt; shown = cand; break; }
+      }
+    }
+    /* Split compounds and alternatives into parts and try each. Needed because staples match the
+     * WHOLE name: "vegetable or sunflower oil" can never equal "sunflower oil", so the keepOr parse
+     * alone did not rescue those 40 mentions. Splitting does. Same for "salt and pepper", 48. */
+    if (hit === null) {
+      const parts = parseIngredient(line, { keepAfterComma: true, keepOr: true })
+        .split(/ and | or |, /)
+        .map((x) => x.trim())
+        .filter((x) => x.length > 2);
+      for (const part of parts) {
+        const alt = matchToItem(part, line);
+        if (alt !== null) { hit = alt; shown = part; break; }
+      }
     }
     // A garnish the source itself calls optional must never block a dish or count against it.
     if (isOptionalLine(line) && !(hit && !hit.startsWith('__') && availableIds.has(hit))) {

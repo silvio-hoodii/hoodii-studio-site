@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
-import { allRecipes, offer, rank, type Cookable } from '@/lib/kitchen/recipes';
+import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
 import { lastCookedMap } from '@/lib/kitchen/cook';
+import { corpusCount } from '@/lib/kitchen/corpus';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,7 @@ export default async function KitchenHome() {
   const stock = await deriveStock();
   const recipes = await allRecipes();
   const cooked = await lastCookedMap();
+  const browsable = await corpusCount();
 
   const all: Cookable[] = recipes.map((r) => {
     const last = cooked[r.name];
@@ -95,12 +97,9 @@ export default async function KitchenHome() {
    * The transformation half of what this app adds has caused every failure across five cooks. The
    * annotation half (technique words in place, real stock, protein arithmetic, timers, doneness where
    * the source gives one) has caused none. So the renderer stays and the transformations go. */
-  const isVerbatim = (c: Cookable) => c.recipe.provenance?.tier === 'sourced';
-  const isRead = (c: Cookable) =>
-    !!c.recipe.provenance?.readAt
-    && c.recipe.provenance.readAt === c.recipe.build
-    && c.recipe.provenance.cookedResult !== 'failed'
-    && isVerbatim(c);
+  /* One definition of offerable, shared with the hub row. See isOfferable() in lib/kitchen/recipes.ts:
+   * these two surfaces used to disagree by 14x because each had its own idea of "ready". */
+  const isRead = (c: Cookable) => isOfferable(c.recipe);
 
   const read = all.filter(isRead);
   /* Adapted recipes are NOT hidden. Not offering a dish is a ranking decision; hiding it is a
@@ -131,13 +130,16 @@ export default async function KitchenHome() {
         to cook two things at once.
       </p>
 
-      {/* A page nobody can navigate to is a hidden page. The offered list above is 1 recipe that has
-          been read and gated; this is 625 that have not, which is a completely different promise and
-          has to read as one. */}
-      <p className="quiet" style={{ marginTop: 14 }}>
-        <Link href="/kitchen/find">Browse what else you could make →</Link>{' '}
-        625 published dishes scored against the fridge, with photos. A menu to pick from, not recipes:
-        nothing there has been read or cooked.
+      {/* The door to the menu. It used to sit in `.quiet`, the smallest type on the page, and it
+          hardcoded "625" when the real figure was already 2,586. A page offering one dish was burying
+          the way to thousands in its smallest font and misreporting the count on the way. Counted now,
+          never typed. */}
+      <p className="lede" style={{ marginTop: 14 }}>
+        <Link href="/kitchen/find"><b>Browse {browsable.toLocaleString()} dishes you could make →</b></Link>
+      </p>
+      <p className="quiet" style={{ marginTop: 4 }}>
+        Scored against the fridge, with photos. A menu to pick from, not recipes: nothing there has
+        been read or cooked.
       </p>
 
       <hr className="divider" />
@@ -179,41 +181,32 @@ export default async function KitchenHome() {
       {soon.length > 0 && (
         <>
           <p className="count" style={{ marginTop: 30 }}>Use these first</p>
-          <p className="quiet">
-            {/* The amount comes from `amountText`, which reads the qty column, never the `label`
-                string. Where nothing has been weighed it is simply omitted rather than filled in
-                with the last thing anyone typed. */}
+          {/* Each one is a LINK now. It used to be plain text: he was told three things were dying
+              today and given nothing to tap, while /kitchen/find had a group of dishes that eat exactly
+              those items one tap away. DESIGN.md's rule is never to say what is wrong without saying
+              what to do about it, and this panel was breaking it. */}
+          <ul className="plainlist">
             {soon.map((i) => {
               const amt = amountText(i);
-              return `${short(i.n)}${amt ? `, ${amt}` : ''}, ${i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}`;
-            }).join(' · ')}
-          </p>
-        </>
-      )}
-
-      {/* How much is left, which nothing in this app could answer until 2026-08-11.
-        *
-        * Only items with a REAL measured amount appear. That is the point: the list is short because
-        * few things have been weighed, and a short honest list beats a long list padded with the
-        * last number someone typed into a label. Anything unweighed is simply absent rather than
-        * guessed at. */}
-      {counted.length > 0 && (
-        <>
-          <p className="count" style={{ marginTop: 30 }}>How much is left</p>
-          <p className="quiet" style={{ marginBottom: 8 }}>
-            Only what has actually been counted or weighed. Everything else in the kitchen is here
-            without a number, because nobody measured it and a guess in this list is what made the
-            old one wrong.
-          </p>
-          <ul className="plainlist">
-            {counted.map((i) => (
-              <li key={i.id}>
-                {short(i.n)} <span className="quiet">{amountText(i)}</span>
-              </li>
-            ))}
+              return (
+                <li key={i.id}>
+                  <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}&max=1`}>
+                    {short(i.n)}{amt ? `, ${amt}` : ''}
+                  </Link>
+                  <span>{i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}</span>
+                </li>
+              );
+            })}
           </ul>
         </>
       )}
+
+      {/* "How much is left" was here and is gone, 2026-08-13. KitchenOS/DESIGN.md rules it out by
+          name: "A list of everything in the kitchen is a second STOCK.md, it goes stale, it becomes
+          wallpaper, and then nobody reads the one row that mattered." It also printed `ground beef, 1
+          bag` directly above `ground beef, raw, 4536 g`, which reads as a broken app rather than as two
+          different foods. Amounts belong on the ingredient row of a prep screen, where the number
+          changes a decision. `counted` is still computed above for whoever wants it back. */}
 
       {blocked.length > 0 && (
         <>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { Recipe, StepUse } from '@/lib/kitchen/types';
 import {
   subscribe, readTimers, serverTimers, startTimer, clearTimer, remaining,
@@ -110,8 +110,25 @@ export default function CookClient({
 }) {
   // -1 is the prep screen. Steps are 0-indexed from there.
   const params = useSearchParams();
+  const router = useRouter();
   const deep = Number(params.get('step'));
   const [i, setI] = useState(Number.isFinite(deep) && deep > 0 ? deep - 1 : -1);
+
+  /* THE STEP LIVES IN THE URL.
+   *
+   * KitchenOS/DESIGN.md states it as a rule: refresh must not lose your place. The rebuild lost it, so
+   * a reload mid-cook, or the tab being evicted while he prepped something, dropped him back on the
+   * prep screen with a pan already on. Browser Back also left the recipe entirely from step 14, because
+   * no history entry had ever been pushed.
+   *
+   * `replace` rather than `push`, so fourteen steps do not become fourteen entries to escape through,
+   * and `scroll: false` because the page already scrolls itself on a step change. useState stays as the
+   * render source; this only mirrors it somewhere durable. */
+  const goStep = (next: number) => {
+    setI(next);
+    const q = next < 0 ? '' : `?step=${next + 1}`;
+    router.replace(`/kitchen/${recipe.id}${q}`, { scroll: false });
+  };
   const [done, setDone] = useState(false);
   const total = recipe.steps.length;
   const byRef = useMemo(() => Object.fromEntries(prep.map((p) => [p.ref, p])), [prep]);
@@ -204,7 +221,7 @@ export default function CookClient({
         <div className="amounts">
           {prep.map((p) => (
             <div className="row" key={p.ref}>
-              <span className="qty">{amount(p.qty, p.unit) || '—'}</span>
+              <span className="qty">{amount(p.qty, p.unit)}</span>
               <span className="nm">
                 {p.display}
                 {p.prep ? <span style={{ color: 'var(--ink-faint)' }}>, {p.prep}</span> : null}
@@ -251,7 +268,7 @@ export default function CookClient({
         </p>
 
         <div className="nav">
-          <button className="primary" onClick={() => setI(0)}>Start cooking →</button>
+          <button className="primary" onClick={() => goStep(0)}>Start cooking →</button>
         </div>
       </div>
     );
@@ -295,11 +312,14 @@ export default function CookClient({
             key={k}
             className={k <= i ? 'on' : ''}
             aria-label={`Go to step ${k + 1}`}
-            onClick={() => setI(k)}
+            onClick={() => goStep(k)}
           />
         ))}
       </div>
-      <div className="eyebrow">Step {i + 1} of {total}{s.minutes ? ` · about ${s.minutes} min` : ''}</div>
+      <div className="steptop">
+        <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
+        <span className="eyebrow">Step {i + 1} of {total}{s.minutes ? ` · about ${s.minutes} min` : ''}</span>
+      </div>
       {buildDrift && <BuildChanged from={buildDrift} to={recipe.build} />}
 
       <p className="step">{s.text}</p>
@@ -366,9 +386,9 @@ export default function CookClient({
       <StepNote key={i} dish={recipe.name} step={i + 1} stepOf={total} stepText={s.text} />
 
       <div className="nav">
-        <button onClick={() => setI(i - 1)}>←</button>
+        <button aria-label="Previous step" onClick={() => goStep(i - 1)}>←</button>
         {i < total - 1 ? (
-          <button className="primary" onClick={() => setI(i + 1)}>Next</button>
+          <button className="primary" onClick={() => goStep(i + 1)}>Next</button>
         ) : (
           <button className="primary" onClick={() => setDone(true)}>Done cooking</button>
         )}

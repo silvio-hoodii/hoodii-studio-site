@@ -73,7 +73,32 @@
     "cocoa",
     "yeast",
     "instant yeast",
-    "water"
+    "water",
+    "sunflower oil",
+    "rapeseed oil",
+    "groundnut oil",
+    "peanut oil",
+    "corn oil",
+    "sesame free oil",
+    "oil for frying",
+    "oil for greasing",
+    "olive oil for drizzling",
+    "drizzle of olive oil",
+    "cracked black pepper",
+    "cracked pepper",
+    "black peppercorns",
+    "peppercorns",
+    "ground pepper",
+    "coarse black pepper",
+    "white pepper",
+    "pepper to taste",
+    "clear honey",
+    "runny honey",
+    "granulated white sugar",
+    "bicarb",
+    "fine sea salt",
+    "flaky sea salt",
+    "sea salt flakes"
   ],
   "map": {
     "eggs": [
@@ -284,7 +309,11 @@
       "green pepper",
       "red pepper",
       "orange pepper",
-      "sweet bell pepper"
+      "sweet bell pepper",
+      "pepper",
+      "yellow pepper",
+      "mixed peppers",
+      "peppers deseeded"
     ],
     "cucumbers": [
       "cucumber",
@@ -587,10 +616,16 @@
     ],
     "mayo": [
       "mayonnaise",
-      "mayo"
+      "mayo",
+      "ketchup",
+      "tomato ketchup"
     ],
     "peanutbutter": [
-      "peanut butter"
+      "peanut butter",
+      "pesto",
+      "fresh pesto",
+      "green pesto",
+      "basil pesto"
     ],
     "raisins": [
       "raisins",
@@ -618,7 +653,20 @@
       "chilli powder",
       "chili powder",
       "cayenne pepper",
-      "white pepper"
+      "white pepper",
+      "cumin seeds",
+      "sweet smoked paprika",
+      "smoked sweet paprika",
+      "hot paprika"
+    ],
+    "sriracha": [
+      "sriracha",
+      "sriracha sauce",
+      "hot sauce",
+      "chilli sauce",
+      "chili sauce",
+      "thai sweet chilli sauce",
+      "sweet chilli sauce"
     ]
   },
   "_knownGaps": {
@@ -649,22 +697,30 @@
     "leek": "No leeks.",
     "mustard": "No prepared mustard or mustard powder. The honey Dijon vinaigrette is a dressing, not a substitute.",
     "bread": "No bread, baguette, pita or breadcrumbs. There IS flour and yeast, so bread is a project rather than an ingredient.",
-    "fresh rosemary": "No rosemary, fresh or dried.",
     "prawns": "No prawns, shrimp, squid or salmon. Tilapia is the only fish and it is frozen.",
-    "green beans": "No green beans.",
     "lamb": "No lamb.",
-    "aubergine": "No aubergine or courgette, also sold as eggplant and zucchini.",
-    "chives": "No chives. Green onion tops are the closest thing already in the fridge.",
     "worcestershire sauce": "No Worcestershire sauce.",
     "feta": "No feta. Parmesan, mozzarella and Monterey Jack are the three cheeses here and none behaves like feta.",
-    "spinach": "No spinach, fresh or frozen.",
     "warm spices": "No cinnamon, nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala or curry powder. The rack has paprika, smoked paprika, cumin, garlic powder, onion powder, Italian seasoning, Cajun and chilli flakes, and that is all of it.",
     "bean sprouts": "No bean sprouts.",
     "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
-    "beetroot": "No beetroot.",
     "ham": "No ham or bacon.",
     "lemongrass": "No lemongrass.",
-    "tinned fish": "No tinned tuna, salmon, sardines or anchovies. The only fish here is frozen tilapia."
+    "tinned fish": "No tinned tuna, salmon, sardines or anchovies. The only fish here is frozen tilapia.",
+    "brown sugar": "No brown sugar, only white.",
+    "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
+    "fresh soft herbs": "No thyme, sage, rosemary, tarragon, oregano or chives, fresh or dried. The only fresh herbs here are parsley, dill and basil.",
+    "green vegetables": "No broccoli, asparagus, green beans, cauliflower, pak choi, spring greens, kale or spinach. The vegetables here are onion, carrot, peppers, sweet potato and whatever is in the frozen mixed bag.",
+    "avocado": "No avocado.",
+    "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
+    "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing and sesame oil are the ones that ARE here.",
+    "sour cream": "No soured cream, creme fraiche, buttermilk or yogurt substitute for cooking. There is Greek yogurt, which splits if boiled, so it is not a swap in a hot sauce.",
+    "vanilla": "No vanilla extract, paste or pods.",
+    "beans": "No tinned beans of any kind: kidney, pinto, cannellini, black, chickpeas or butter beans.",
+    "tinned sweetcorn": "No tinned sweetcorn or green chiles. There IS frozen corn.",
+    "salsa": "No salsa, barbecue sauce or taco sauce.",
+    "spirits": "No brandy, rum, whisky or liqueur.",
+    "root veg": "No parsnip, swede, turnip, celeriac, fennel, radish or beetroot."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -768,7 +824,18 @@
       "chilli pepper",
       "chili pepper",
       "jalapeno",
-      "cayenne"
+      "cayenne",
+      "tsp pepper",
+      "tbsp pepper",
+      "teaspoon pepper",
+      "tablespoon pepper",
+      "ground pepper",
+      "cracked pepper",
+      "freshly ground",
+      "pinch of pepper",
+      "salt and pepper",
+      "white pepper",
+      "lemon pepper"
     ]
   },
   "_gapAliases": {
@@ -983,11 +1050,6 @@
       "naan",
       "flatbread"
     ],
-    "fresh rosemary": [
-      "rosemary",
-      "fresh rosemary",
-      "dried rosemary"
-    ],
     "prawns": [
       "prawns",
       "king prawns",
@@ -1008,12 +1070,6 @@
       "raw king prawns",
       "tiger prawns"
     ],
-    "green beans": [
-      "green beans",
-      "french beans",
-      "runner beans",
-      "string beans"
-    ],
     "lamb": [
       "lamb",
       "lamb mince",
@@ -1023,17 +1079,6 @@
       "leg of lamb",
       "mutton",
       "goat"
-    ],
-    "aubergine": [
-      "aubergine",
-      "eggplant",
-      "courgette",
-      "courgettes",
-      "zucchini"
-    ],
-    "chives": [
-      "chives",
-      "fresh chives"
     ],
     "worcestershire sauce": [
       "worcestershire sauce",
@@ -1055,13 +1100,6 @@
       "soft cheese",
       "queso fresco",
       "paneer"
-    ],
-    "spinach": [
-      "spinach",
-      "baby spinach",
-      "frozen spinach",
-      "kale",
-      "swiss chard"
     ],
     "warm spices": [
       "cinnamon",
@@ -1099,10 +1137,6 @@
       "hazelnuts",
       "tahini"
     ],
-    "beetroot": [
-      "beetroot",
-      "beets"
-    ],
     "ham": [
       "ham",
       "bacon",
@@ -1130,6 +1164,176 @@
       "tuna in oil",
       "tuna steak",
       "tuna chunks"
+    ],
+    "brown sugar": [
+      "brown sugar",
+      "light brown sugar",
+      "dark brown sugar",
+      "soft brown sugar",
+      "brown soft sugar",
+      "muscovado sugar",
+      "light muscovado sugar",
+      "dark muscovado",
+      "demerara",
+      "golden caster sugar",
+      "palm sugar",
+      "coconut sugar",
+      "jaggery"
+    ],
+    "self raising flour": [
+      "self raising flour",
+      "self rising flour"
+    ],
+    "fresh soft herbs": [
+      "thyme",
+      "thyme leaves",
+      "thyme sprigs",
+      "few thyme",
+      "lemon thyme",
+      "sage",
+      "sage leaves",
+      "rosemary",
+      "tarragon",
+      "oregano leaves",
+      "marjoram",
+      "chervil",
+      "bay leaf fresh",
+      "chives",
+      "fresh chives",
+      "snipped chives",
+      "dill fronds",
+      "fresh rosemary",
+      "dried rosemary"
+    ],
+    "green vegetables": [
+      "broccoli",
+      "broccoli florets",
+      "tenderstem broccoli",
+      "purple sprouting broccoli",
+      "asparagus",
+      "asparagus spears",
+      "green beans",
+      "fine beans",
+      "cauliflower",
+      "cauliflower florets",
+      "pak choi",
+      "bok choy",
+      "spring greens",
+      "kale",
+      "brussels sprouts",
+      "sugar snap peas",
+      "mangetout",
+      "courgette",
+      "leeks",
+      "spinach",
+      "baby spinach",
+      "frozen spinach",
+      "swiss chard",
+      "chard",
+      "watercress",
+      "rocket leaves mixed",
+      "aubergine",
+      "eggplant",
+      "courgettes",
+      "zucchini",
+      "runner beans"
+    ],
+    "avocado": [
+      "avocado",
+      "avocados",
+      "ripe avocado"
+    ],
+    "curry paste": [
+      "curry paste",
+      "thai red curry paste",
+      "red thai curry paste",
+      "thai green curry paste",
+      "green curry paste",
+      "yellow curry paste",
+      "massaman paste",
+      "rogan josh paste",
+      "tikka paste",
+      "korma paste"
+    ],
+    "asian pantry": [
+      "hoisin sauce",
+      "hoisin",
+      "tamarind paste",
+      "tamarind",
+      "chipotle paste",
+      "chipotles in adobo",
+      "miso paste",
+      "miso",
+      "curry leaves",
+      "shrimp paste",
+      "black bean sauce",
+      "sweet soy",
+      "kecap manis"
+    ],
+    "sour cream": [
+      "soured cream",
+      "sour cream",
+      "creme fraiche",
+      "buttermilk",
+      "quark"
+    ],
+    "vanilla": [
+      "vanilla extract",
+      "vanilla essence",
+      "vanilla paste",
+      "vanilla pod",
+      "vanilla bean"
+    ],
+    "beans": [
+      "kidney beans",
+      "pinto beans",
+      "cannellini beans",
+      "black beans",
+      "chickpeas",
+      "butter beans",
+      "borlotti beans",
+      "haricot beans",
+      "baked beans",
+      "refried beans"
+    ],
+    "tinned sweetcorn": [
+      "tinned sweetcorn",
+      "canned corn",
+      "green chiles",
+      "green chilies",
+      "creamed corn",
+      "corn kernels canned"
+    ],
+    "salsa": [
+      "salsa",
+      "fresh salsa",
+      "bbq sauce",
+      "barbecue sauce",
+      "taco sauce",
+      "enchilada sauce"
+    ],
+    "spirits": [
+      "brandy",
+      "rum",
+      "whisky",
+      "whiskey",
+      "bourbon",
+      "cognac",
+      "amaretto",
+      "kirsch"
+    ],
+    "root veg": [
+      "parsnip",
+      "parsnips",
+      "swede",
+      "turnip",
+      "celeriac",
+      "fennel bulb",
+      "fennel",
+      "radish",
+      "radishes",
+      "beetroot",
+      "beets"
     ]
   },
   "_substitutes": {
@@ -1145,6 +1349,18 @@
     "sesame seeds": {
       "have": "sesameoil",
       "note": "No seeds, but the toasted sesame oil carries the same flavour. A few drops at the end instead of a sprinkle. You lose the crunch, which is most of the point of a garnish, so this is a poor swap for texture and a fine one for taste."
+    },
+    "brown sugar": {
+      "have": "sugar",
+      "note": "White sugar works. Brown is white sugar plus molasses, so you lose a little caramel depth and the dish is very slightly less moist. In a marinade or a sauce nobody would notice. In a bake it matters more."
+    },
+    "self raising flour": {
+      "have": "flour",
+      "note": "Plain flour plus baking powder: 2 tsp of baking powder per 150 g of flour, whisked in dry. You have both."
+    },
+    "cumin seeds": {
+      "have": "cumin",
+      "note": "You have ground cumin, not seeds. Use about two thirds as much, and add it later than the recipe says: ground spice burns in seconds where seeds want a minute in hot oil. You lose the pop of a whole seed."
     }
   }
 }

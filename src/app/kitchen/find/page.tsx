@@ -37,9 +37,14 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
       {/* Plain img, not next/image, on purpose: 625 external photos through Vercel's optimiser would
           burn the Hobby transform allowance for a page nobody but him opens. TheMealDB's /preview
           derivative is already grid-sized. */}
-      {t
-        ? <img className="mealthumb" src={t} alt="" loading="lazy" width={80} height={80} />
-        : <div className="mealthumb" aria-hidden="true" />}
+      {/* The photo is part of the link, because tapping a picture and getting nothing is worse than
+          having no picture. alt carries the dish name: he chooses by the photo, so when one 404s the
+          name has to survive in its place. */}
+      <a href={c.meal.source!} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+        {t
+          ? <img className="mealthumb" src={t} alt={c.meal.name} loading="lazy" width={56} height={56} />
+          : <div className="mealthumb" />}
+      </a>
       <div className="mealbody">
         <div className="mealtop">
           <a href={c.meal.source!} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>

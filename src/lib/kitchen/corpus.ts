@@ -149,15 +149,15 @@ export async function findCandidates(filters: Filters = {}) {
     .filter(([id]) => available.has(id))
     .map(([id, count]) => ({ id, name: nameOf(stock, id), count }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 18);
+    .slice(0, 8);
 
   const cuisineCount = new Map<string, number>();
   for (const c of all) if (c.meal.area) cuisineCount.set(c.meal.area, (cuisineCount.get(c.meal.area) ?? 0) + 1);
   const cuisineFacets = [...cuisineCount.entries()]
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
-    .filter((f) => f.count >= 3)
-    .slice(0, 20);
+    .filter((f) => f.count >= 8)
+    .slice(0, 8);
 
   /* THE FILTER. He has 2,586 dishes and said: "some of these dishes seem to be extremely niche or
    * really random country cuisine. I wouldn't know how to filter those out." */
@@ -167,7 +167,16 @@ export async function findCandidates(filters: Filters = {}) {
     if (filters.uses && !c.usesIds.includes(filters.uses)) return false;
     if (filters.cuisine && c.meal.area !== filters.cuisine) return false;
     if (q) {
-      const hay = `${c.meal.name} ${c.meal.area ?? ''} ${c.meal.category ?? ''} ${(c.meal.keywords ?? []).join(' ')}`.toLowerCase();
+      /* Ingredients are in the haystack because "cumin" or "sweet potato" is what he would type, and a
+       * name-only search returned nothing for hundreds of dishes that use them while the page was
+       * telling him to narrow it with the search box. */
+      const hay = [
+        c.meal.name,
+        c.meal.area ?? '',
+        c.meal.category ?? '',
+        (c.meal.keywords ?? []).join(' '),
+        c.meal.ingredients.map((i) => i.name).join(' '),
+      ].join(' ').toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -225,5 +234,21 @@ export async function findCandidates(filters: Filters = {}) {
   };
 }
 
-/** TheMealDB serves a smaller derivative at /preview, which is what a grid wants. */
-export const thumb = (image: string | null) => (image ? `${image}/preview` : null);
+/** TheMealDB serves a smaller derivative at /preview. NOBODY ELSE DOES.
+ *
+ *  This appended /preview to every image regardless of host, so 60 of the 114 thumbnails on the live
+ *  page were 404s: budgetbytes, tasteofhome and bbcgoodfood all just 404. The photo is the thing he
+ *  said he would choose by ("maybe from the picture and the name"), so half the menu was blank boxes.
+ *  BBC Good Food happened to survive only because its URLs carry a query string, which /preview landed
+ *  harmlessly inside. */
+export const thumb = (image: string | null) => {
+  if (!image) return null;
+  return /(^|\.)themealdb\.com\//.test(image) ? `${image}/preview` : image;
+};
+
+/** How many dishes are browsable, without scoring any of them.
+ *
+ *  Exists because /kitchen hardcoded "625 published dishes" in the one link to the menu, and the real
+ *  figure was 2,586 by then. A number typed into a sentence is a number that goes stale, which is the
+ *  same lesson the stock rules already learned the hard way. */
+export const corpusCount = async (): Promise<number> => (await loadCorpus()).meals.length;

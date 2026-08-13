@@ -1,6 +1,6 @@
 import { fetchSpotify } from '@/lib/fetchers';
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
-import { allRecipes, offer } from '@/lib/kitchen/recipes';
+import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
@@ -38,7 +38,11 @@ interface Row {
 async function kitchenRow(): Promise<Row> {
   try {
     const [stock, recipes] = await Promise.all([deriveStock(), allRecipes()]);
-    const ready = recipes.filter((r) => offer(r, stock).status === 'ready').length;
+    /* isOfferable is shared with /kitchen. This line used to be `offer(r, stock).status === 'ready'`,
+     * which ignored the read gate and the verbatim gate, so the front door announced "14 dishes you can
+     * cook right now" and the page one tap away said "1 ready to start". The first thing the app did on
+     * open was overpromise by 14x. */
+    const ready = recipes.filter((r) => isOfferable(r) && offer(r, stock).status === 'ready').length;
     const soon = expiringSoon(stock, 5, 2);
 
     // Stock display names carry the shop's branding, e.g. "spring mix salad (Your Fresh Market)".

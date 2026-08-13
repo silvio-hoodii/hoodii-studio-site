@@ -45,8 +45,8 @@ export function FilterBar({
           type="search"
           name="q"
           defaultValue={filters.q ?? ''}
-          placeholder="Search 2,586 dishes by name"
-          aria-label="Search dishes by name"
+          placeholder={`Search ${total.toLocaleString()} dishes by name or ingredient`}
+          aria-label="Search dishes by name or ingredient"
           enterKeyHint="search"
         />
         {/* Carried through so searching does not silently discard the other filters. */}
@@ -59,13 +59,13 @@ export function FilterBar({
       <div className="chiprow" role="group" aria-label="How much is missing">
         <span className="chiplabel">Show</span>
         <Link className={`chip ${filters.max === 0 ? 'on' : ''}`} href={href(filters, { max: filters.max === 0 ? undefined : 0 })}>
-          cook now
+          nothing missing
         </Link>
         <Link className={`chip ${filters.max === 1 ? 'on' : ''}`} href={href(filters, { max: filters.max === 1 ? undefined : 1 })}>
-          1 thing short
+          up to 1 missing
         </Link>
         <Link className={`chip ${filters.max === 2 ? 'on' : ''}`} href={href(filters, { max: filters.max === 2 ? undefined : 2 })}>
-          2 short
+          up to 2 missing
         </Link>
       </div>
 
