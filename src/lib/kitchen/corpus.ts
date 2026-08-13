@@ -224,7 +224,7 @@ export async function findCandidates(filters: Filters = {}) {
       for (const c of all) {
         if (c.score.missing.length !== 1) continue;
         const m = c.score.missing[0]!;
-        const k = m.item ?? m.name;
+        const k = m.item ?? m.shown;
         const cur = n.get(k) ?? { count: 0, reason: m.reason };
         n.set(k, { count: cur.count + 1, reason: cur.reason ?? m.reason });
       }

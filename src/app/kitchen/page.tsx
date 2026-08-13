@@ -141,6 +141,9 @@ export default async function KitchenHome() {
         Scored against the fridge, with photos. A menu to pick from, not recipes: nothing there has
         been read or cooked.
       </p>
+      <p className="lede" style={{ marginTop: 10 }}>
+        <Link href="/kitchen/want"><b>Or say what you feel like and see what it needs →</b></Link>
+      </p>
 
       <hr className="divider" />
 

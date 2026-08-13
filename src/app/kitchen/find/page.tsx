@@ -31,7 +31,7 @@ function Verdict({ c }: { c: Candidate }) {
 
 function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
   const t = thumb(c.meal.image);
-  const missing = c.score.missing.map((m) => (m.item ? label(m.item) : m.name));
+  const missing = c.score.missing.map((m) => (m.item ? label(m.item) : m.shown));
   return (
     <li className="mealrow">
       {/* Plain img, not next/image, on purpose: 625 external photos through Vercel's optimiser would
@@ -40,14 +40,17 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
       {/* The photo is part of the link, because tapping a picture and getting nothing is worse than
           having no picture. alt carries the dish name: he chooses by the photo, so when one 404s the
           name has to survive in its place. */}
-      <a href={c.meal.source!} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+      <Link href={`/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`} tabIndex={-1} aria-hidden="true">
         {t
           ? <img className="mealthumb" src={t} alt={c.meal.name} loading="lazy" width={56} height={56} />
           : <div className="mealthumb" />}
-      </a>
+      </Link>
       <div className="mealbody">
         <div className="mealtop">
-          <a href={c.meal.source!} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>
+          {/* Leads INTO the app, not out of it. Until now the only interactive thing on a row was a
+              link to the publisher, so "pick one and it gets turned into a card" had no gesture behind
+              it anywhere on the page. The original recipe is still one tap further on. */}
+          <Link href={`/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`}><b>{c.meal.name}</b></Link>
           <Verdict c={c} />
         </div>
         <div className="mealmeta">{[c.meal.area, c.meal.category].filter(Boolean).join(' · ')}</div>
@@ -62,7 +65,7 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
             something and not saying it. */}
         {c.score.unknown.length > 0 && (
           <div className="mealmeta">
-            not sure about {c.score.unknown.map((u) => u.name || u.line.trim()).join(', ')}
+            not sure about {c.score.unknown.map((u) => u.shown || u.line.trim()).join(', ')}
           </div>
         )}
         {c.score.haveVia.length > 0 && (

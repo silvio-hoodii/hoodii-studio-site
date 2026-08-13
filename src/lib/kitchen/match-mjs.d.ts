@@ -8,8 +8,12 @@
  */
 declare module '*/match.mjs' {
   export interface MatchHit {
+    /** The published ingredient line, verbatim. */
     line: string;
-    name: string;
+    /** The parsed name that actually resolved. Named `shown` rather than `name` because up to four
+     *  different parses of one line are tried, and this is the one that matched: rendering the raw
+     *  line instead leaked scraped noise like "divided ($0.02)" onto the menu. */
+    shown: string;
     item?: string;
     reason?: string;
     via?: string;
@@ -34,6 +38,11 @@ declare module '*/match.mjs' {
     yield?: unknown;
     image?: string;
     totalTime?: string;
+    /** recipeCuisine and recipeCategory from JSON-LD. Not captured on the first ingest, which is why
+     *  2,215 of 2,626 dishes had no cuisine and the cuisine filter covered 13% of the corpus. */
+    cuisine?: string | null;
+    category?: string | null;
+    keywords?: string[];
     ingredients: string[];
     rating?: number | null;
     ratingCount?: number | null;

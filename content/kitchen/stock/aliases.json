@@ -141,10 +141,6 @@
       "thinly sliced beef",
       "beef sirloin",
       "sirloin tip",
-      "sirloin steak",
-      "thinly sliced ribeye",
-      "ribeye",
-      "flank steak",
       "beef strips",
       "stir-fry beef",
       "shabu shabu beef"
@@ -720,7 +716,8 @@
     "tinned sweetcorn": "No tinned sweetcorn or green chiles. There IS frozen corn.",
     "salsa": "No salsa, barbecue sauce or taco sauce.",
     "spirits": "No brandy, rum, whisky or liqueur.",
-    "root veg": "No parsnip, swede, turnip, celeriac, fennel, radish or beetroot."
+    "root veg": "No parsnip, swede, turnip, celeriac, fennel, radish or beetroot.",
+    "steak": "No steak cuts. The beef here is 4.5 kg of raw mince in the freezer plus one bag of browned mince. Mince is not a swap for a steak in anything where the cut is the point, and the sliced sirloin from the August roast is finished."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -1334,6 +1331,27 @@
       "radishes",
       "beetroot",
       "beets"
+    ],
+    "steak": [
+      "fillet steak",
+      "rump steak",
+      "sirloin steak",
+      "ribeye steak",
+      "steak",
+      "beef steak",
+      "frying steak",
+      "braising steak",
+      "stewing beef",
+      "beef chuck",
+      "short rib",
+      "brisket",
+      "beef joint",
+      "rolled brisket",
+      "minute steak",
+      "flank steak",
+      "skirt steak",
+      "beef fillet",
+      "tenderloin"
     ]
   },
   "_substitutes": {
