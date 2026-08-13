@@ -13,6 +13,7 @@ export interface CorpusMeal {
   source: string | null;
   youtube: string | null;
   tags: string[];
+  keywords?: string[];
   ingredients: { name: string; measure: string }[];
   /** Set by corpus-verify.mjs: does the source URL actually carry a JSON-LD recipe. */
   sourceOk?: boolean;
@@ -24,6 +25,17 @@ export interface Candidate {
   score: Score;
   /** Stock ids this dish would consume that are on a clock, soonest first. */
   usesExpiring: { id: string; name: string; daysLeft: number }[];
+  /** Every stock id this dish would draw on. Powers the "uses" filter, which is more useful to him
+   *  than cuisine: the real question is "what can I make with the chicken thighs", not "show me
+   *  Italian". Derived from the match, so it needs no tagging and cannot drift from the scoring. */
+  usesIds: string[];
+}
+
+export interface Filters {
+  q?: string;
+  uses?: string;
+  cuisine?: string;
+  max?: number;
 }
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
@@ -97,7 +109,7 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
   return (n ?? id).replace(/\s*\([^)]*\)/g, '').trim();
 }
 
-export async function findCandidates() {
+export async function findCandidates(filters: Filters = {}) {
   const [{ meals, providers, hiddenNoSource, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
     await Promise.all([loadCorpus(), deriveStock()]);
   const available = usableIds(stock);
@@ -121,13 +133,64 @@ export async function findCandidates() {
       .sort((a, b) => a.daysLeft - b.daysLeft);
     // Resolve substitute ids to words here, once, so no surface has to know about item ids.
     for (const v of score.haveVia) if (v.via) v.via = nameOf(stock, v.via);
-    return { meal, score, usesExpiring };
+    const usesIds = [...new Set(hits.map((h) => h.item).filter((x): x is string => !!x))];
+    return { meal, score, usesExpiring, usesIds };
   });
 
   const byName = (a: Candidate, b: Candidate) => a.meal.name.localeCompare(b.meal.name);
   const cookable = (c: Candidate) => c.score.missing.length === 0;
 
+  /* FACETS, counted over everything BEFORE filtering, so a chip never claims a count the filter then
+   * contradicts. `uses` is limited to things he actually has: offering "filter by pork" when there is
+   * no pork in the kitchen is the app wasting his time. */
+  const usesCount = new Map<string, number>();
+  for (const c of all) for (const id of c.usesIds) usesCount.set(id, (usesCount.get(id) ?? 0) + 1);
+  const usesFacets = [...usesCount.entries()]
+    .filter(([id]) => available.has(id))
+    .map(([id, count]) => ({ id, name: nameOf(stock, id), count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 18);
+
+  const cuisineCount = new Map<string, number>();
+  for (const c of all) if (c.meal.area) cuisineCount.set(c.meal.area, (cuisineCount.get(c.meal.area) ?? 0) + 1);
+  const cuisineFacets = [...cuisineCount.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .filter((f) => f.count >= 3)
+    .slice(0, 20);
+
+  /* THE FILTER. He has 2,586 dishes and said: "some of these dishes seem to be extremely niche or
+   * really random country cuisine. I wouldn't know how to filter those out." */
+  const q = (filters.q ?? '').trim().toLowerCase();
+  const filtered = all.filter((c) => {
+    if (filters.max !== undefined && c.score.missing.length > filters.max) return false;
+    if (filters.uses && !c.usesIds.includes(filters.uses)) return false;
+    if (filters.cuisine && c.meal.area !== filters.cuisine) return false;
+    if (q) {
+      const hay = `${c.meal.name} ${c.meal.area ?? ''} ${c.meal.category ?? ''} ${(c.meal.keywords ?? []).join(' ')}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const isFiltered = Boolean(q || filters.uses || filters.cuisine || filters.max !== undefined);
+
+  /* Ranked flat list for the filtered view. Fewest missing first, then whatever rescues food soonest,
+   * then confidence, then name. A single ordered list beats five sections once a filter is applied,
+   * because the whole point of filtering is that the result is short enough to read. */
+  const rank = (a: Candidate, b: Candidate) =>
+    a.score.missing.length - b.score.missing.length
+    || (b.usesExpiring.length > 0 ? 1 : 0) - (a.usesExpiring.length > 0 ? 1 : 0)
+    || a.score.unknown.length - b.score.unknown.length
+    || byName(a, b);
+
   return {
+    isFiltered,
+    filters,
+    usesFacets,
+    cuisineFacets,
+    matched: filtered.length,
+    results: [...filtered].sort(rank),
     providers,
     total: meals.length,
     hiddenNoSource,

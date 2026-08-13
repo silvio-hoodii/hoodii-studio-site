@@ -268,11 +268,22 @@ export function extractRecipe(html) {
     for (const o of items) {
       if (!o || typeof o !== 'object') continue;
       if (!String(o['@type'] || '').includes('Recipe')) continue;
+      /* recipeCuisine and recipeCategory were not captured on the first ingest, which is why 2,215 of
+       * 2,626 dishes had no cuisine and could not be filtered. They are right there in the markup:
+       * BBC Good Food's lasagne carries recipeCuisine "Italian" and recipeCategory "Dinner". He asked
+       * to filter out "random Turkish cuisine or Nigerian, whatever", and this is the field that
+       * answers it. Missing it cost a second crawl of pages already fetched once. */
+      const str = (v) => (Array.isArray(v) ? v[0] : v);
       out.push({
         name: o.name,
         yield: o.recipeYield,
         image: typeof o.image === 'string' ? o.image : (o.image?.url || o.image?.[0]?.url || o.image?.[0]),
         totalTime: o.totalTime,
+        cuisine: str(o.recipeCuisine) ? String(str(o.recipeCuisine)).trim() : null,
+        category: str(o.recipeCategory) ? String(str(o.recipeCategory)).trim() : null,
+        keywords: typeof o.keywords === 'string'
+          ? o.keywords.split(',').map((k) => k.trim()).filter(Boolean).slice(0, 12)
+          : (Array.isArray(o.keywords) ? o.keywords.map(String).slice(0, 12) : []),
         ingredients: (o.recipeIngredient || []).map((x) => String(x)),
         rating: o.aggregateRating?.ratingValue ?? null,
         ratingCount: o.aggregateRating?.ratingCount ?? o.aggregateRating?.reviewCount ?? null,

@@ -180,8 +180,9 @@ await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
         meals.push({
           id: `${site}:${u.split('/').filter(Boolean).pop()}`,
           name: r.name ?? u,
-          category: null,
-          area: null,
+          category: r.category ?? null,
+          area: r.cuisine ?? null,
+          keywords: r.keywords ?? [],
           image: r.image ?? null,
           source: u,
           youtube: null,

@@ -502,3 +502,64 @@
   .kos .mealrow { grid-template-columns: 44px 1fr; gap: 10px; }
   .kos .mealthumb { width: 44px; height: 44px; }
 }
+
+/* ---- filters ----
+   Links and one GET form, no client JS. Every filter is a URL so it works before hydration, survives
+   a reload mid-cook, and can be bookmarked. Chips are sized for a thumb, not a mouse. */
+
+.kos .filters { margin-top: 16px; }
+
+.kos .searchrow { display: flex; gap: 8px; }
+.kos .searchrow input[type="search"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;               /* 16px or iOS zooms the whole page on focus */
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: 2px;
+}
+.kos .searchrow button { flex: 0 0 auto; }
+
+.kos .chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.kos .chiplabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-right: 2px;
+}
+
+.kos .chip {
+  display: inline-block;
+  padding: 8px 11px;             /* >=40px tall with the font below: thumb-sized */
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 14px;
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--foreground);
+  background: var(--background);
+}
+.kos .chip:hover { border-color: var(--foreground); }
+.kos .chip.on {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+.kos .chip i {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.65;
+  margin-left: 3px;
+}

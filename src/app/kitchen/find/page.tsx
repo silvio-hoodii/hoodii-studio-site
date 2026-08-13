@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { findCandidates, thumb, type Candidate } from '@/lib/kitchen/corpus';
+import { FilterBar } from './FilterBar';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,16 +83,27 @@ function Group({
       </ul>
       {list.length > limit && (
         <p className="quiet" style={{ marginTop: 8 }}>
-          and {list.length - limit} more, not shown. Ask for a cuisine or an ingredient and I will
-          narrow it rather than making you scroll.
+          and {list.length - limit} more. Narrow it with the search box or a chip above rather than
+          scrolling.
         </p>
       )}
     </>
   );
 }
 
-export default async function Find() {
-  const d = await findCandidates();
+export default async function Find({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; uses?: string; cuisine?: string; max?: string }>;
+}) {
+  const sp = await searchParams;
+  const maxRaw = sp.max === undefined ? undefined : Number(sp.max);
+  const d = await findCandidates({
+    q: sp.q,
+    uses: sp.uses,
+    cuisine: sp.cuisine,
+    max: Number.isFinite(maxRaw) ? maxRaw : undefined,
+  });
 
   return (
     <div className="wrap">
@@ -112,38 +124,65 @@ export default async function Find() {
         A link offered as a recipe has to be one.
       </p>
 
+      <FilterBar
+        filters={d.filters}
+        usesFacets={d.usesFacets}
+        cuisineFacets={d.cuisineFacets}
+        matched={d.matched}
+        total={d.total}
+      />
+
       <hr className="divider" />
 
-      <Group
-        title="Cook one of these and nothing goes to waste"
-        note="Cookable now, and each one uses something already on a clock. Soonest first."
-        list={d.rescue}
-        label={d.nameOf}
-      />
+      {/* FILTERED: one ranked list. The point of filtering is that the answer is now short enough to
+          read straight through, so five sections would just put scrolling back. */}
+      {d.isFiltered ? (
+        d.results.length === 0 ? (
+          <p className="count" style={{ marginTop: 22 }}>nothing matches those filters</p>
+        ) : (
+          <Group
+            title="Matches"
+            note="Fewest things missing first, and anything that saves food about to go off is lifted."
+            list={d.results}
+            limit={60}
+            label={d.nameOf}
+          />
+        )
+      ) : (
+        <>
+          <Group
+            title="Cook one of these and nothing goes to waste"
+            note="Cookable now, and each one uses something already on a clock. Soonest first."
+            list={d.rescue}
+            limit={12}
+            label={d.nameOf}
+          />
 
-      <Group
-        title="Ready"
-        note="Every ingredient recognised and in the kitchen."
-        list={d.ready}
-        label={d.nameOf}
-      />
+          <Group
+            title="Ready"
+            note="Every ingredient recognised and in the kitchen."
+            list={d.ready}
+            limit={12}
+            label={d.nameOf}
+          />
 
-      <Group
-        title="Probably ready"
-        note="Nothing known to be missing, but one or two ingredients are not in the kitchen's vocabulary yet, so this is a maybe rather than a yes."
-        list={d.probably}
-        label={d.nameOf}
-      />
+          <Group
+            title="Probably ready"
+            note="Nothing known to be missing, but one or two ingredients are not in the kitchen's vocabulary yet, so this is a maybe rather than a yes."
+            list={d.probably}
+            limit={8}
+            label={d.nameOf}
+          />
 
-      <Group
-        title="One thing short"
-        note="Everything else is here. What is missing is named, and some of it you may decide you can skip or swap."
-        list={d.missingOne}
-        limit={30}
-        label={d.nameOf}
-      />
-
-      <Group title="Two things short" list={d.missingTwo} limit={12} label={d.nameOf} />
+          <Group
+            title="One thing short"
+            note="Everything else is here. What is missing is named, and some of it you may decide you can skip or swap."
+            list={d.missingOne}
+            limit={12}
+            label={d.nameOf}
+          />
+        </>
+      )}
 
       {d.unlocks.length > 0 && (
         <>
