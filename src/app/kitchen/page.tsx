@@ -144,6 +144,9 @@ export default async function KitchenHome() {
       <p className="lede" style={{ marginTop: 10 }}>
         <Link href="/kitchen/want"><b>Or say what you feel like and see what it needs →</b></Link>
       </p>
+      <p className="quiet" style={{ marginTop: 8 }}>
+        <Link href="/kitchen/shop">What is worth buying, and what is sitting here unused →</Link>
+      </p>
 
       <hr className="divider" />
 

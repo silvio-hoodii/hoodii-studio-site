@@ -224,10 +224,7 @@
       "flat leaf parsley",
       "curly parsley",
       "italian parsley",
-      "chopped parsley",
-      "dill",
-      "fresh dill",
-      "dill weed"
+      "chopped parsley"
     ],
     "ginger": [
       "fresh ginger",
@@ -655,6 +652,57 @@
     "ketchup": [
       "ketchup",
       "tomato ketchup"
+    ],
+    "saladmix": [
+      "salad leaves",
+      "mixed salad leaves",
+      "mixed leaves",
+      "salad",
+      "green salad",
+      "mixed greens",
+      "baby leaves",
+      "lettuce",
+      "iceberg lettuce",
+      "lettuce leaves",
+      "romaine",
+      "little gem",
+      "salad to serve"
+    ],
+    "dill": [
+      "dill",
+      "fresh dill",
+      "dill weed",
+      "dill fronds",
+      "chopped dill"
+    ],
+    "spaghetti": [
+      "spaghetti",
+      "dried spaghetti",
+      "spaghettini",
+      "linguine",
+      "bucatini"
+    ],
+    "rotini": [
+      "rotini",
+      "fusilli",
+      "penne",
+      "rigatoni",
+      "farfalle",
+      "conchiglie",
+      "macaroni",
+      "shells"
+    ],
+    "cucumberpickles": [
+      "pickles",
+      "dill pickles",
+      "gherkins",
+      "pickled cucumber",
+      "cornichons"
+    ],
+    "pickledonion": [
+      "pickled onion",
+      "pickled red onion",
+      "pickled onions"
     ]
   },
   "_knownGaps": {
@@ -1073,6 +1121,12 @@
       "cod",
       "haddock",
       "such as"
+    ],
+    "dill": [
+      "dill pickle",
+      "dill relish",
+      "pickle juice",
+      "dried dill"
     ]
   },
   "_gapAliases": {

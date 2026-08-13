@@ -60,7 +60,7 @@ async function kitchenRow(): Promise<Row> {
       line:
         ready > 0 ? (
           <>
-            <span className="live tnum">{ready}</span> dishes you can cook right now
+            <span className="live tnum">{ready}</span> dish{ready === 1 ? '' : 'es'} you can cook right now
           </>
         ) : (
           'nothing ready without a shop'
