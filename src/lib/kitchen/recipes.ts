@@ -172,6 +172,14 @@ export function rank(items: Cookable[]): Cookable[] {
     });
 }
 
+/** Forms with no heat step anywhere in them cannot burn a dinner. `SOURCING.md`'s verbatim-only bar
+ *  exists because every defect that reached the stove was an invented heat, timing or doneness
+ *  instruction; an assembly (stir measured things into a bowl) or a macro (freeze it) carries none of
+ *  that risk by construction. Decided 2026-08-13 after an audit of the 27 machine-migrated recipes
+ *  found 6 with no heat step, one already clean, the rest one qty/closure bug away from it. */
+const NO_HEAT_FORMS = new Set(['assembly', 'macro']);
+const hasNoHeat = (r: Recipe) => !r.steps.some((s) => s.heat);
+
 /** Is this recipe fit to be OFFERED, as opposed to merely present.
  *
  *  Lives here because two surfaces were answering it differently and disagreeing by 14x: the hub row
@@ -184,13 +192,16 @@ export function rank(items: Cookable[]): Cookable[] {
  *    - every step has been READ as the app renders them, at this exact build
  *    - the rendered text has not drifted since (readHash)
  *    - it did not fail at the stove
- *    - it is `sourced`, meaning nothing was changed by an agent
+ *    - it is `sourced` (nothing changed by an agent) OR it is a no-heat assembly/macro, which cannot
+ *      carry the invented-instruction risk `sourced` exists to rule out. Still `provenance.tier` is
+ *      whatever it honestly is ('authored' stays 'authored'); CookClient shows that tier's warning
+ *      regardless of whether the dish is offered.
  */
 export function isOfferable(r: Recipe): boolean {
   const p = r.provenance;
   if (!p) return false;
-  if (p.tier !== 'sourced') return false;
   if (p.cookedResult === 'failed') return false;
   if (!p.readAt || p.readAt !== r.build) return false;
-  return true;
+  if (p.tier === 'sourced') return true;
+  return NO_HEAT_FORMS.has(r.form) && hasNoHeat(r);
 }

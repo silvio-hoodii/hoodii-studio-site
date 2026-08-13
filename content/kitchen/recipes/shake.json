@@ -1,7 +1,7 @@
 {
   "id": "shake",
   "name": "Berry Protein Shake",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-13-noheat",
   "form": "assembly",
   "meal": [
     "breakfast"
@@ -14,7 +14,8 @@
   "serves": {
     "count": 1,
     "unit": "shake",
-    "proteinPerUnit": 32
+    "proteinPerUnit": 32,
+    "proteinMath": "24 g from 1 scoop of whey (the label figure used across every shake in this app) plus 8 g from 250 ml of milk (2%, roughly 3.2 g per 100 ml). Total 32 g. The frozen berries and the optional cocoa and honey add under a gram between them and are not counted in the headline number."
   },
   "ingredients": [
     {
@@ -22,14 +23,16 @@
       "stock": "whey",
       "display": "whey (33 g scoop, vanilla)",
       "qty": 1,
-      "unit": "scoop"
+      "unit": "scoop",
+      "defining": true
     },
     {
       "ref": "milk",
       "stock": "milk",
       "display": "milk",
       "qty": 250,
-      "unit": "ml"
+      "unit": "ml",
+      "defining": true
     },
     {
       "ref": "frozen_berries",
@@ -37,12 +40,26 @@
       "display": "frozen berries",
       "qty": 1,
       "unit": "handful",
-      "frozenOk": true
+      "frozenOk": true,
+      "defining": false
     },
     {
-      "ref": "1_tsp_cocoa",
-      "display": "1 tsp cocoa, 1 tsp honey",
-      "_rawQty": "optional"
+      "ref": "cocoa_powder",
+      "stock": "cocoa",
+      "display": "cocoa powder, optional",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false,
+      "optional": true
+    },
+    {
+      "ref": "honey",
+      "stock": "honey",
+      "display": "honey, optional",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false,
+      "optional": true
     }
   ],
   "equipment": [
@@ -52,17 +69,19 @@
   "steps": [
     {
       "n": 1,
-      "text": "Put 250 ml of milk in the blender jar first, then 1 scoop of whey, then 1 handful of frozen berries.",
+      "text": "Put 250 ml of milk in the blender jar first, then 1 scoop of whey, then 1 handful of frozen berries. If you want it, add 1 tsp of cocoa powder and 1 tsp of honey now too.",
       "uses": [
         "whey",
         "milk",
-        "frozen_berries"
+        "frozen_berries",
+        { "ref": "cocoa_powder", "optional": true },
+        { "ref": "honey", "optional": true }
       ],
       "equipment": [
         "blender_bullet",
         "jars"
       ],
-      "look": "250 ml is one full cup, or the jar filled to just under half.Liquid first genuinely matters. Powder on the bottom cakes against the blades and leaves a dry lump that never mixes.",
+      "look": "250 ml is one full cup, or the jar filled to just under half. Liquid first genuinely matters. Powder on the bottom cakes against the blades and leaves a dry lump that never mixes.",
       "_inferred": [
         "uses",
         "equipment"
@@ -81,20 +100,12 @@
       "_inferred": []
     }
   ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "whey",
-      "milk",
-      "fruit"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
   "provenance": {
     "tier": "authored",
     "cooked": false,
-    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
+    "sources": [],
+    "readAt": "2026-08-13-noheat",
+    "readHash": "e2972ba6"
   }
 }

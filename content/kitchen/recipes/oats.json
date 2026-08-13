@@ -1,7 +1,7 @@
 {
   "id": "oats",
   "name": "Overnight Oats",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-13-noheat",
   "form": "assembly",
   "meal": [
     "breakfast"
@@ -14,7 +14,8 @@
   "serves": {
     "count": 4,
     "unit": "jar",
-    "proteinPerUnit": 52
+    "proteinPerUnit": 53,
+    "proteinMath": "Per jar: about 8 g from 60 g of dry oats (roughly 13 g protein per 100 g, a standard rolled-oats figure). About 16 g from 170 g of Greek yogurt (11 g per 115 g, the label figure used everywhere else in this app). About 4 g from 120 ml of milk (2%, roughly 3.2 g per 100 ml, the same ratio the shake and smoothie use). Plus a whole scoop of whey at 24 g. The cocoa, honey and frozen berries add roughly 1 g between them. Total about 53 g a jar."
   },
   "ingredients": [
     {
@@ -23,7 +24,8 @@
       "display": "oats (about 3/4 cup)",
       "qty": 60,
       "unit": "g",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": true
     },
     {
       "ref": "greek_yogurt",
@@ -31,7 +33,8 @@
       "display": "Greek yogurt (about 2/3 cup)",
       "qty": 170,
       "unit": "g",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": true
     },
     {
       "ref": "milk",
@@ -39,7 +42,8 @@
       "display": "milk (about 1/2 cup)",
       "qty": 120,
       "unit": "ml",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": true
     },
     {
       "ref": "whey_protein",
@@ -47,21 +51,26 @@
       "display": "whey protein",
       "qty": 1,
       "unit": "scoop",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": true
     },
     {
       "ref": "cocoa_powder",
+      "stock": "cocoa",
       "display": "cocoa powder",
       "qty": 1,
       "unit": "tsp",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": false
     },
     {
       "ref": "honey",
+      "stock": "honey",
       "display": "honey",
       "qty": 1,
       "unit": "tsp",
-      "section": "per jar, make 4"
+      "section": "per jar, make 4",
+      "defining": false
     },
     {
       "ref": "frozen_berries",
@@ -70,7 +79,8 @@
       "qty": 1,
       "unit": "handful",
       "section": "per jar, make 4",
-      "frozenOk": true
+      "frozenOk": true,
+      "defining": false
     }
   ],
   "equipment": [],
@@ -128,22 +138,12 @@
       "_inferred": []
     }
   ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "oats",
-      "yogurt",
-      "milk",
-      "whey",
-      "fruit"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
   "provenance": {
     "tier": "authored",
     "cooked": false,
-    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
+    "sources": [],
+    "readAt": "2026-08-13-noheat",
+    "readHash": "29906d93"
   }
 }

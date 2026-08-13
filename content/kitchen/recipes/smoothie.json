@@ -1,7 +1,7 @@
 {
   "id": "smoothie",
   "name": "Mango Strawberry Smoothie",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-13-noheat",
   "form": "assembly",
   "meal": [
     "breakfast"
@@ -14,7 +14,8 @@
   "serves": {
     "count": 1,
     "unit": "glass",
-    "proteinPerUnit": 33
+    "proteinPerUnit": 33,
+    "proteinMath": "24 g from 1 scoop of whey plus 8 g from 250 ml of milk (2%, roughly 3.2 g per 100 ml) plus about 1 g from the frozen mango and strawberries. Total 33 g. The optional 2 tbsp of Greek yogurt for thickness adds about 2 g more (11 g per 115 g, the same Greek yogurt figure used across this app) if you use it, and is not counted in the headline number."
   },
   "ingredients": [
     {
@@ -22,14 +23,16 @@
       "stock": "milk",
       "display": "milk",
       "qty": 250,
-      "unit": "ml"
+      "unit": "ml",
+      "defining": true
     },
     {
       "ref": "whey",
       "stock": "whey",
       "display": "whey (vanilla)",
       "qty": 1,
-      "unit": "scoop"
+      "unit": "scoop",
+      "defining": true
     },
     {
       "ref": "frozen_mango_and_strawberrie",
@@ -37,12 +40,17 @@
       "display": "frozen mango and strawberries, mixed",
       "qty": 1,
       "unit": "cup",
-      "frozenOk": true
+      "frozenOk": true,
+      "defining": false
     },
     {
-      "ref": "2_tbsp_greek_yogurt_for_thic",
-      "display": "2 tbsp Greek yogurt for thickness",
-      "_rawQty": "optional"
+      "ref": "greek_yogurt",
+      "stock": "yogurt",
+      "display": "Greek yogurt, optional, for thickness",
+      "qty": 2,
+      "unit": "tbsp",
+      "defining": false,
+      "optional": true
     }
   ],
   "equipment": [
@@ -51,11 +59,15 @@
   "steps": [
     {
       "n": 1,
-      "text": "Milk in first, then the whey, then the frozen fruit on top.",
+      "text": "Milk in first, then the whey, then the frozen fruit on top. If you want it thicker, add 2 tbsp of Greek yogurt now too.",
       "uses": [
         "milk",
         "whey",
-        "frozen_mango_and_strawberrie"
+        "frozen_mango_and_strawberrie",
+        { "ref": "greek_yogurt", "optional": true }
+      ],
+      "equipment": [
+        "blender_bullet"
       ],
       "look": "Liquid first, always. Powder on the bottom cakes against the blades into a dry lump that never mixes.",
       "_inferred": [
@@ -65,8 +77,10 @@
     {
       "n": 2,
       "text": "Blend 45 seconds.",
-      "minutes": 1,
-      "look": "Longer than the berry shake, because mango chunks are bigger and denser than berries. Done when there are no visible lumps and it pours rather than plops.If the blender stalls and the fruit just spins above the blades, add 50 ml more milk. Too thick to circulate is the only failure mode here.",
+      "equipment": [
+        "blender_bullet"
+      ],
+      "look": "Longer than the berry shake, because mango chunks are bigger and denser than berries. Done when there are no visible lumps and it pours rather than plops. If the blender stalls and the fruit just spins above the blades, add 50 ml more milk. Too thick to circulate is the only failure mode here.",
       "_inferred": []
     },
     {
@@ -76,20 +90,12 @@
       "_inferred": []
     }
   ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "milk",
-      "whey",
-      "fruit"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
   "provenance": {
     "tier": "authored",
     "cooked": false,
-    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
+    "sources": [],
+    "readAt": "2026-08-13-noheat",
+    "readHash": "d6e419f8"
   }
 }

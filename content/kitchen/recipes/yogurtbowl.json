@@ -1,7 +1,7 @@
 {
   "id": "yogurtbowl",
   "name": "Greek Yogurt Bowl",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-13-noheat",
   "form": "assembly",
   "meal": [
     "breakfast"
@@ -14,7 +14,8 @@
   "serves": {
     "count": 1,
     "unit": "bowl",
-    "proteinPerUnit": 27
+    "proteinPerUnit": 23,
+    "proteinMath": "19 g from 200 g of Greek yogurt (11 g per 115 g, off the label). About 4 g from 30 g of raw oats (roughly 13 g protein per 100 g, a standard rolled-oats figure). Honey and the frozen fruit add well under a gram. Total about 23 g. The optional 1 tsp of cocoa and 1 tbsp of peanut butter add roughly 5 g more if you use them, and a scoop of whey stirred in on top of that makes it 51 g."
   },
   "ingredients": [
     {
@@ -22,14 +23,16 @@
       "stock": "yogurt",
       "display": "Greek yogurt (about 3/4 cup)",
       "qty": 200,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "rolled_oats",
       "stock": "oats",
       "display": "rolled oats (about 1/3 cup), raw",
       "qty": 30,
-      "unit": "g"
+      "unit": "g",
+      "defining": true
     },
     {
       "ref": "frozen_berries_or_mango",
@@ -37,18 +40,34 @@
       "display": "frozen berries or mango",
       "qty": 1,
       "unit": "handful",
-      "frozenOk": true
+      "frozenOk": true,
+      "defining": false
     },
     {
       "ref": "honey",
+      "stock": "honey",
       "display": "honey",
       "qty": 1,
-      "unit": "tsp"
+      "unit": "tsp",
+      "defining": false
     },
     {
-      "ref": "1_tsp_cocoa",
-      "display": "1 tsp cocoa, 1 tbsp peanut butter",
-      "_rawQty": "optional"
+      "ref": "cocoa_powder",
+      "stock": "cocoa",
+      "display": "cocoa powder, optional",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false,
+      "optional": true
+    },
+    {
+      "ref": "peanut_butter",
+      "stock": "peanutbutter",
+      "display": "peanut butter, optional",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": false,
+      "optional": true
     }
   ],
   "equipment": [
@@ -83,31 +102,25 @@
     },
     {
       "n": 3,
-      "text": "Scatter 30 g of raw oats over the top and drizzle 1 tsp of honey.",
+      "text": "Scatter 30 g of raw oats over the top and drizzle 1 tsp of honey. If you want it, stir in 1 tsp of cocoa powder and 1 tbsp of peanut butter too.",
       "uses": [
         "rolled_oats",
-        "honey"
+        "honey",
+        { "ref": "cocoa_powder", "optional": true },
+        { "ref": "peanut_butter", "optional": true }
       ],
-      "look": "Raw oats straight from the bag, no cooking. They soften slightly in the yogurt and give it something to chew.Roughly 27 g of protein: 19 g from 200 g of yogurt (11 g per 115 g, off the label), ~4 g from the oats, the rest from the fruit and any peanut butter. Add a scoop of whey stirred in and it is 51 g.",
+      "look": "Raw oats straight from the bag, no cooking. They soften slightly in the yogurt and give it something to chew. About 23 g of protein as written: 19 g from 200 g of yogurt (11 g per 115 g, off the label), about 4 g from the oats. The cocoa and peanut butter add roughly 5 g more if you use them. Stir a scoop of whey in on top of that and it is 51 g.",
       "_inferred": [
         "uses"
       ]
     }
   ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "yogurt",
-      "oats",
-      "fruit"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
   "provenance": {
     "tier": "authored",
     "cooked": false,
-    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
+    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
+    "sources": [],
+    "readAt": "2026-08-13-noheat",
+    "readHash": "704678c1"
   }
 }
