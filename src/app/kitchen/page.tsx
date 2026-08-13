@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import KitchenNav from './KitchenNav';
 import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
 import { lastCookedMap } from '@/lib/kitchen/cook';
@@ -141,7 +142,8 @@ export default async function KitchenHome() {
 
   return (
     <div className="wrap">
-      <Link href="/" className="eyebrow">← Silvio Neyra</Link>
+      <Link href="/" className="eyebrow">&#8592; Silvio Neyra</Link>
+      <KitchenNav here="home" />
       <h1>What you can cook right now</h1>
       <p className="lede">
         From what is actually in this kitchen. Nothing here needs a shop first, and nothing asks you

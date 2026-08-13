@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import KitchenNav from '../KitchenNav';
 import { wantByName, wantByUrl, nameOfItem, type WantHit } from '@/lib/kitchen/want';
 import { thumb } from '@/lib/kitchen/corpus';
 
@@ -96,7 +97,7 @@ export default async function Want({
 
   return (
     <div className="wrap">
-      <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
+      <KitchenNav here="want" />
       <h1>What would I need?</h1>
       <p className="lede">
         Name a dish you want, or paste the address of any recipe page. It gets read and checked against

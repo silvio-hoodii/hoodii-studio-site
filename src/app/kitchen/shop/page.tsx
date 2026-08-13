@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import KitchenNav from '../KitchenNav';
 import { shoppingView } from '@/lib/kitchen/shop';
 
 /* Same fix as the hub: everything already expired rendered as "use today", including a roast eight days
@@ -28,7 +29,7 @@ export default async function Shop() {
 
   return (
     <div className="wrap">
-      <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
+      <KitchenNav here="shop" />
       <h1>Worth buying, and worth using up</h1>
       <p className="lede">
         {d.cookableNow} of {d.total} dishes need nothing bought at all. What follows is what a single
@@ -37,9 +38,9 @@ export default async function Shop() {
 
       <hr className="divider" />
 
-      <p className="count" style={{ marginTop: 22 }}>
+      <h2 className="count" style={{ marginTop: 22 }}>
         Already here, and nothing is using it <span className="quiet">{d.idle.length}</span>
-      </p>
+      </h2>
       <p className="quiet" style={{ marginBottom: 8 }}>
         Not one of these appears in any dish that is cookable now or one thing short. This list comes
         before the buying list on purpose: a shopping list that only ever adds is how a kitchen fills
@@ -67,13 +68,15 @@ export default async function Shop() {
 
       {d.unreachable.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>
-            No recipe can even see these <span className="quiet">{d.unreachable.length}</span>
-          </p>
+          <h2 className="count" style={{ marginTop: 30 }}>
+            No recipe asks for these <span className="quiet">{d.unreachable.length}</span>
+          </h2>
           <p className="quiet" style={{ marginBottom: 8 }}>
-            These are in the kitchen but no ingredient name maps to them, so no dish can ever match
-            them however long they sit there. That is a hole in this app&apos;s vocabulary, not food
-            going to waste, and the fix is ours rather than yours.
+            Not one of the {d.total.toLocaleString()} dishes names these, so no amount of cooking will
+            move them off this list. Some of that is honest (nothing asks for whey protein) and some is
+            us (already-browned beef is not a thing a published ingredient list ever calls for, even
+            though it is exactly what saves you a step). Either way it is ours to solve, not a thing
+            you are neglecting.
           </p>
           <ul className="plainlist">
             {d.unreachable.map((i) => (
@@ -92,7 +95,7 @@ export default async function Shop() {
 
       <hr className="divider" style={{ marginTop: 30 }} />
 
-      <p className="count" style={{ marginTop: 22 }}>Buy one thing, unlock this many</p>
+      <h2 className="count" style={{ marginTop: 22 }}>Buy one thing, unlock this many</h2>
       <p className="quiet" style={{ marginBottom: 8 }}>
         Counted only over dishes that are short of nothing else, so the number means it rather than
         meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live

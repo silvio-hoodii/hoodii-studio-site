@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import KitchenNav from '../KitchenNav';
 import { findCandidates, thumb, type Candidate } from '@/lib/kitchen/corpus';
 import { FilterBar } from './FilterBar';
 
@@ -38,11 +39,14 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
           burn the Hobby transform allowance for a page nobody but him opens. TheMealDB's /preview
           derivative is already grid-sized. */}
       {/* The photo is part of the link, because tapping a picture and getting nothing is worse than
-          having no picture. alt carries the dish name: he chooses by the photo, so when one 404s the
-          name has to survive in its place. */}
+          having no picture. It is hidden from assistive tech because the dish NAME immediately after it
+          is the same destination, and announcing both makes every row read twice.
+          alt="" rather than the dish name: with aria-hidden on the wrapper the name was announced
+          nowhere at all, so it was carrying a promise it could not keep. The visible fallback when an
+          image 404s is the empty tile plus the name in the row, which is what he actually sees. */}
       <Link href={`/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`} tabIndex={-1} aria-hidden="true">
         {t
-          ? <img className="mealthumb" src={t} alt={c.meal.name} loading="lazy" width={56} height={56} />
+          ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
           : <div className="mealthumb" />}
       </Link>
       <div className="mealbody">
@@ -84,7 +88,7 @@ function Group({
   if (!list.length) return null;
   return (
     <>
-      <p className="count" style={{ marginTop: 30 }}>{title} <span className="quiet">{list.length}</span></p>
+      <h2 className="count" style={{ marginTop: 30 }}>{title} <span className="quiet">{list.length}</span></h2>
       {note && <p className="quiet" style={{ marginBottom: 10 }}>{note}</p>}
       <ul className="meallist">
         {list.slice(0, limit).map((c) => <Card key={c.meal.id} c={c} label={label} />)}
@@ -115,7 +119,7 @@ export default async function Find({
 
   return (
     <div className="wrap">
-      <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
+      <KitchenNav here="find" />
       <h1>What could I make</h1>
       <p className="lede">
         {d.total} dishes checked against what is actually in the kitchen. A menu to pick from, not a
@@ -150,7 +154,7 @@ export default async function Find({
           read straight through, so five sections would just put scrolling back. */}
       {d.isFiltered ? (
         d.results.length === 0 ? (
-          <p className="count" style={{ marginTop: 22 }}>nothing matches those filters</p>
+          <h2 className="count" style={{ marginTop: 22 }}>nothing matches those filters</h2>
         ) : (
           <Group
             title="Matches"
@@ -218,7 +222,7 @@ export default async function Find({
 
       {d.unlocks.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>One purchase, most dishes</p>
+          <h2 className="count" style={{ marginTop: 30 }}>One purchase, most dishes</h2>
           <p className="quiet" style={{ marginBottom: 8 }}>
             Counted only over dishes missing nothing but this, so the number means it.
           </p>
