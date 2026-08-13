@@ -78,14 +78,31 @@ export function parseIngredient(raw, opts = {}) {
    * unknown. Stripped anywhere, not just at the end, because these clauses turn up mid-line too. */
   s = s.replace(/\bplus\b.*$/g, ' ');
   s = s.replace(/\b(?:to taste|as needed|to serve|for (?:serving|garnish|the pan|dusting|frying|greasing)|optional|divided|defrosted|thawed|at room temperature|roughly|approx)\b/g, ' ');
-  s = s.replace(/\b(?:extra virgin|extravirgin|virgin|light|dark|low sodium|reduced sodium|free range|organic|unsalted|salted|semi skimmed|whole|full fat|reduced fat|skimmed)\b/g, ' ');
+  s = s.replace(/\b(?:extra virgin|extravirgin|virgin|light|dark|low sodium|reduced sodium|free range|organic|unsalted|salted|semi skimmed|full fat|reduced fat|skimmed)\b/g, ' ');
   s = s.replace(/[¼-¾⅐-⅞]/g, ' ');  // vetted fractions
   s = s.replace(/\d+\s*\/\s*\d+/g, ' ');            // 1/2
   s = s.replace(/\d+(?:[.,]\d+)?/g, ' ');           // remaining numbers
   s = s.replace(/[-–—]/g, ' ');
   s = s.replace(UNITS_RE, ' ');
   s = s.replace(SIZES_RE, ' ');
-  s = s.replace(/\b(?:fresh|freshly|ground|chopped|minced|sliced|grated|shredded|diced|crushed|beaten|peeled|trimmed|rinsed|drained|cooked|raw|dried|frozen|of|the|a|an|about|approximately|good|quality|ripe|hot|cold|warm|boneless|skinless|bone in|skin on|thinly|roughly|finely)\b/g, ' ');
+  /* PREP words go. PRODUCT-IDENTITY words STAY.
+   *
+   * This list used to strip ground, minced, sliced, cooked, raw, dried, frozen and fresh, and that was
+   * the single worst bug in this file. Those words ARE the product. An audit of all 2,586 dishes found
+   * 91 of 139 "ready" dishes contained something he does not have, and nearly every case traced here:
+   *
+   *   "ground chicken"  -> "chicken"  so a 2.25 kg WHOLE CHICKEN matched one bag of frozen mince, and
+   *                                   the app offered eight roast dinners on the strength of it
+   *   "cooked ground beef" -> "beef"  so "4 lbs boneless beef rump roast" matched 700 g of browned mince
+   *   "sliced turkey"   -> "turkey"   so "1 lb ground turkey" matched deli slices
+   *   "frozen berries"  -> "berries"  so mango chutney matched the frozen fruit
+   *   "cooked pasta"    -> "pasta"    so "8 oz pasta (uncooked)" matched the fridge leftovers
+   *   fresh vs dried                  so "1 tsp dried basil" matched a 28 g packet of fresh basil
+   *
+   * Keeping words is SAFE, because item matching is containment: "onion sliced" still contains "onion".
+   * Only the stripping destroyed information, and it destroyed exactly the information that tells two
+   * products apart. */
+  s = s.replace(/\b(?:freshly|chopped|grated|shredded|diced|crushed|beaten|peeled|trimmed|rinsed|deseeded|halved|quartered|of|the|a|an|about|approximately|good|quality|ripe|thinly|roughly|finely)\b/g, ' ');
   s = s.replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
   return s;
 }
@@ -164,7 +181,13 @@ function candidates(name) {
 const VETOES = ALIASES._vetoes || {};
 /* Lowercased once. `veto.some(...)` ran on every row of every ingredient. */
 const VETO_LC = Object.fromEntries(
-  Object.entries(VETOES).map(([k, v]) => [k, (Array.isArray(v) ? v : []).map((x) => String(x).toLowerCase())]),
+  Object.entries(VETOES).map(([k, v]) => [
+    k,
+    (Array.isArray(v) ? v : []).map((x) => {
+      const t = String(x).toLowerCase();
+      return { t, re: new RegExp(`(?:^|[^a-z])${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[^a-z]|$)`) };
+    }),
+  ]),
 );
 
 /** '__STAPLE__' | '__GAP__<name>' | '<itemId>' | null
@@ -185,7 +208,9 @@ export function matchToItem(name, raw = name) {
      * counting unrecognised ingredients across 625 recipes: `ginger`'s veto list contains "ground
      * ginger", which parses down to "ginger", which then vetoed ginger against itself. Ginger came
      * back UNRECOGNISED 48 times in a kitchen that has had fresh ginger since August 4. */
-    if (veto && veto.some((v) => rawLc.includes(v))) continue;
+    /* Word-boundary aware. A plain substring test made the `cooked` veto fire inside "uncooked",
+     * which pushed 78 dry-pasta lines onto the fridge leftovers. */
+    if (veto && veto.some((v) => v.re.test(rawLc))) continue;
     /* Staples must match the WHOLE name; items and gaps match a phrase inside it. Found 2026-08-13:
      * the `water` staple swallowed "145g tuna in spring water, drained", so a tuna pasta reported
      * READY in a kitchen with no tuna. The two claims are genuinely different. A staple claim is
@@ -280,7 +305,10 @@ export function scoreRecipe(ingredientLines, availableIds) {
 
   return {
     have, haveVia, missing, unknown, staples, optional,
-    counted: have.length + haveVia.length + missing.length,
+    /* Deduped by item id. One dish can reach the same id on several lines, and counting each line
+     * inflated "N of M tracked ingredients" on 743 of 2,586 dishes: one reported `seasoning` twice out
+     * of a total of four. */
+    counted: new Set([...have, ...haveVia, ...missing].map((h) => h.item ?? h.shown)).size,
     verdict,
   };
 }
@@ -383,10 +411,10 @@ if (isEntry) {
       console.log('\nHAVE');
       for (const h of score.have) console.log(`  ok ${h.item.padEnd(18)} <- "${h.line.trim()}"`);
     }
-    if (score.staples.length) console.log(`\nSTAPLES assumed present: ${score.staples.map((s) => s.name).join(', ')}`);
+    if (score.staples.length) console.log(`\nSTAPLES assumed present: ${score.staples.map((s) => s.shown).join(', ')}`);
     if (score.unknown.length) {
       console.log('\nUNKNOWN, meaning aliases.json has a gap. NOT counted as missing.');
-      for (const u of score.unknown) console.log(`  ? "${u.line.trim()}"  parsed as "${u.name}"`);
+      for (const u of score.unknown) console.log(`  ? "${u.line.trim()}"  parsed as "${u.shown}"`);
     }
     console.log('');
   }

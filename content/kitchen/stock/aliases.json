@@ -53,20 +53,12 @@
     "cumin",
     "ground cumin",
     "italian seasoning",
-    "dried oregano",
-    "oregano",
-    "dried basil",
-    "dried thyme",
-    "thyme",
     "cajun seasoning",
     "red pepper flakes",
     "crushed red pepper",
     "chili flakes",
     "chilli flakes",
     "pepper flakes",
-    "cayenne",
-    "bay leaf",
-    "bay leaves",
     "honey",
     "maple syrup",
     "cocoa powder",
@@ -541,10 +533,6 @@
       "old-fashioned oats",
       "porridge oats"
     ],
-    "flour": [
-      "breadcrumbs",
-      "panko"
-    ],
     "soy": [
       "soy sauce",
       "light soy sauce",
@@ -612,16 +600,10 @@
     ],
     "mayo": [
       "mayonnaise",
-      "mayo",
-      "ketchup",
-      "tomato ketchup"
+      "mayo"
     ],
     "peanutbutter": [
-      "peanut butter",
-      "pesto",
-      "fresh pesto",
-      "green pesto",
-      "basil pesto"
+      "peanut butter"
     ],
     "raisins": [
       "raisins",
@@ -641,19 +623,18 @@
       "lime zest"
     ],
     "seasoning": [
-      "mixed herbs",
-      "dried mixed herbs",
-      "herbes de provence",
-      "chinese five spice",
-      "five spice",
-      "chilli powder",
-      "chili powder",
-      "cayenne pepper",
-      "white pepper",
-      "cumin seeds",
+      "italian seasoning",
+      "italian seasoning blend",
+      "cajun seasoning",
+      "smoked paprika",
       "sweet smoked paprika",
-      "smoked sweet paprika",
-      "hot paprika"
+      "paprika",
+      "garlic powder",
+      "garlic salt",
+      "onion powder",
+      "crushed red pepper",
+      "red pepper flakes",
+      "crushed jalapeno"
     ],
     "sriracha": [
       "sriracha",
@@ -663,6 +644,17 @@
       "chili sauce",
       "thai sweet chilli sauce",
       "sweet chilli sauce"
+    ],
+    "pesto": [
+      "pesto",
+      "fresh pesto",
+      "green pesto",
+      "basil pesto",
+      "pesto from a jar"
+    ],
+    "ketchup": [
+      "ketchup",
+      "tomato ketchup"
     ]
   },
   "_knownGaps": {
@@ -705,7 +697,7 @@
     "tinned fish": "No tinned tuna, salmon, sardines or anchovies. The only fish here is frozen tilapia.",
     "brown sugar": "No brown sugar, only white.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
-    "fresh soft herbs": "No thyme, sage, rosemary, tarragon, oregano or chives, fresh or dried. The only fresh herbs here are parsley, dill and basil.",
+    "fresh soft herbs": "No thyme, sage, rosemary, tarragon, oregano, bay or chives, fresh OR dried, and no mixed-herb blend. The only herbs here are fresh parsley, fresh dill, fresh basil and the Italian seasoning blend. This row and the staples list used to disagree, and the staple was winning.",
     "green vegetables": "No broccoli, asparagus, green beans, cauliflower, pak choi, spring greens, kale or spinach. The vegetables here are onion, carrot, peppers, sweet potato and whatever is in the frozen mixed bag.",
     "avocado": "No avocado.",
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
@@ -717,7 +709,12 @@
     "salsa": "No salsa, barbecue sauce or taco sauce.",
     "spirits": "No brandy, rum, whisky or liqueur.",
     "root veg": "No parsnip, swede, turnip, celeriac, fennel, radish or beetroot.",
-    "steak": "No steak cuts. The beef here is 4.5 kg of raw mince in the freezer plus one bag of browned mince. Mince is not a swap for a steak in anything where the cut is the point, and the sliced sirloin from the August roast is finished."
+    "steak": "No steak cuts. The beef here is 4.5 kg of raw mince in the freezer plus one bag of browned mince. Mince is not a swap for a steak in anything where the cut is the point, and the sliced sirloin from the August roast is finished.",
+    "other spices": "Not on the rack: chilli powder, cayenne, five spice, white pepper, mustard powder, all-purpose or taco or steak seasoning. The rack is paprika, smoked paprika, cumin, garlic powder, garlic salt, onion powder, Italian seasoning, Cajun, crushed red pepper and crushed jalapeno, and that is all.",
+    "whole chicken": "No whole chicken or bone-in chicken pieces beyond the thighs and wings in the freezer. The frozen ground chicken is mince and is not a roast.",
+    "poultry mince": "No ground turkey. The only poultry mince here is frozen ground chicken.",
+    "condiments and jams": "No chutney, jam, marmalade, molasses, hoisin-style sweet sauces or barbecue sauce. Ketchup, mayonnaise, pesto, sriracha, relish and the two vinaigrettes ARE here.",
+    "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -727,11 +724,22 @@
       "sushi",
       "calrose",
       "arborio",
+      "risotto",
+      "paella",
       "medium grain",
       "glutinous",
       "sticky rice",
       "brown rice",
-      "wild rice"
+      "wild rice",
+      "rice flour",
+      "rice noodle",
+      "rice paper",
+      "rice vinegar",
+      "rice wine",
+      "cauliflower rice",
+      "basmati and wild",
+      "risotto rice",
+      "paella rice"
     ],
     "rice": [
       "short grain",
@@ -752,16 +760,36 @@
       "pickled"
     ],
     "tomatoes_grape": [
+      "can",
+      "cans",
       "canned",
+      "tin",
+      "tins",
       "tinned",
+      "chopped tomato",
       "chopped tomatoes",
+      "crushed tomato",
       "crushed tomatoes",
+      "diced tomato",
+      "diced tomatoes",
+      "stewed",
+      "fire roasted",
+      "petite",
+      "whole peeled",
       "passata",
-      "tomato paste",
-      "tomato puree",
-      "tomato sauce",
+      "puree",
+      "pureed",
       "sun dried",
-      "sun-dried"
+      "sundried",
+      "sun-dried",
+      "paste",
+      "ketchup",
+      "salsa",
+      "soup",
+      "juice",
+      "chutney",
+      "relish",
+      "sauce"
     ],
     "parmesan": [
       "cream cheese",
@@ -774,25 +802,36 @@
       "soy milk",
       "condensed",
       "evaporated",
-      "buttermilk"
+      "buttermilk",
+      "milk chocolate"
     ],
     "butter": [
       "peanut butter",
       "almond butter",
+      "cashew butter",
       "nut butter",
       "buttermilk",
-      "butternut"
+      "butternut",
+      "butter bean",
+      "shortcrust",
+      "pastry",
+      "butter cracker",
+      "clarified"
     ],
     "stock": [
       "stock cube",
       "bouillon"
     ],
     "pasta": [
-      "cooked",
       "leftover",
       "pasta sauce",
       "pasta bake sauce",
-      "fresh pasta"
+      "pasta water",
+      "pasta machine",
+      "spaghetti squash",
+      "taco shell",
+      "lasagne sheet",
+      "lasagna sheet"
     ],
     "beef-raw": [
       "cooked",
@@ -801,18 +840,43 @@
       "roast",
       "steak",
       "broth",
-      "stock"
+      "stock",
+      "joint",
+      "shin",
+      "rib",
+      "brisket",
+      "stewing",
+      "vegan",
+      "venison",
+      "turkey",
+      "pork",
+      "lamb",
+      "chicken",
+      "suet",
+      "bone",
+      "consomme"
     ],
     "garlic": [
       "garlic powder",
       "garlic salt",
-      "black garlic"
+      "black garlic",
+      "granule",
+      "garlic sauce",
+      "garlic butter",
+      "garlic bread",
+      "garlic infused",
+      "garlic herb",
+      "philadelphia"
     ],
     "ginger": [
       "pickled ginger",
       "ground ginger",
+      "ginger powder",
       "gingerbread",
-      "ginger ale"
+      "ginger ale",
+      "stem ginger",
+      "ginger syrup",
+      "pink ginger"
     ],
     "peppers": [
       "black pepper",
@@ -832,7 +896,183 @@
       "pinch of pepper",
       "salt and pepper",
       "white pepper",
-      "lemon pepper"
+      "lemon pepper",
+      "red pepper powder",
+      "jarred",
+      "roasted red"
+    ],
+    "groundchickenfrozen": [
+      "whole chicken",
+      "chicken stock",
+      "chicken broth",
+      "chicken soup",
+      "chicken liver",
+      "chicken sausage",
+      "chicken ramen",
+      "chicken piece",
+      "chicken thigh",
+      "chicken breast",
+      "chicken wing",
+      "chicken leg",
+      "broiler",
+      "fryer",
+      "chicken cube",
+      "roast chicken"
+    ],
+    "beef": [
+      "roast",
+      "joint",
+      "steak",
+      "shin",
+      "rib",
+      "brisket",
+      "stewing",
+      "suet",
+      "bone",
+      "stock",
+      "broth",
+      "consomme",
+      "gravy",
+      "cube",
+      "raw",
+      "mince",
+      "ground"
+    ],
+    "turkeydeli": [
+      "ground turkey",
+      "turkey mince",
+      "minced turkey",
+      "turkey stock",
+      "turkey broth",
+      "whole turkey",
+      "turkey ham"
+    ],
+    "frozenveg": [
+      "celery salt",
+      "split pea",
+      "fresh corn",
+      "ears",
+      "corn tortilla",
+      "tortilla",
+      "corn chip",
+      "corn flake",
+      "corn oil",
+      "corn flour",
+      "cornmeal",
+      "creamed",
+      "canned corn",
+      "sweetcorn canned",
+      "cornstarch",
+      "corn starch",
+      "fresh peas",
+      "chickpea",
+      "butternut squash about"
+    ],
+    "frozenpeppers": [
+      "jar",
+      "jarred",
+      "roasted red pepper",
+      "padron",
+      "poblano",
+      "chipotle",
+      "jalapeno",
+      "salt and pepper",
+      "black pepper",
+      "peppercorn"
+    ],
+    "fruit": [
+      "chutney",
+      "jam",
+      "dried",
+      "palm",
+      "kiwi",
+      "fresh mango",
+      "ripe mango",
+      "canned",
+      "juice",
+      "fruit oil"
+    ],
+    "parsley": [
+      "dill pickle",
+      "dill relish",
+      "pickle juice",
+      "dried parsley"
+    ],
+    "spaghetti_cooked": [
+      "uncooked",
+      "dry",
+      "dried",
+      "jar",
+      "sauce",
+      "alphabet"
+    ],
+    "basil": [
+      "dried basil",
+      "basil pesto",
+      "thai basil"
+    ],
+    "limes": [
+      "lime leaf",
+      "lime leaves",
+      "kaffir",
+      "makrut",
+      "lime peel"
+    ],
+    "eggs": [
+      "egg noodle",
+      "egg roll",
+      "egg plant",
+      "eggplant",
+      "egg wash for"
+    ],
+    "lentils": [
+      "red lentil",
+      "puy",
+      "split lentil",
+      "dried lentil"
+    ],
+    "chickenbreast": [
+      "cooked chicken",
+      "shredded cooked",
+      "deli",
+      "ground chicken",
+      "chicken mince"
+    ],
+    "olives": [
+      "green olive",
+      "pimiento",
+      "stuffed olive"
+    ],
+    "pineapple": [
+      "jam",
+      "juice",
+      "canned",
+      "can "
+    ],
+    "lemon_fresh": [
+      "lemon pepper",
+      "lemon thyme",
+      "preserved lemon",
+      "lemon grass",
+      "lemongrass"
+    ],
+    "tomatopaste": [
+      "sundried tomato paste",
+      "sun dried tomato paste",
+      "sun-dried"
+    ],
+    "montereyjack": [
+      "cheddar",
+      "colby",
+      "cheese soup",
+      "cream cheese"
+    ],
+    "tilapia": [
+      "pollock",
+      "hake",
+      "cod",
+      "haddock",
+      "such as"
     ]
   },
   "_gapAliases": {
@@ -875,7 +1115,10 @@
       "crushed tomatoes",
       "passata",
       "diced tomatoes",
-      "san marzano"
+      "san marzano",
+      "tinned tomatos",
+      "tinned tomato",
+      "canned tomato"
     ],
     "kidney beans": [
       "kidney beans",
@@ -909,7 +1152,8 @@
     "sesame seeds": [
       "sesame seeds",
       "toasted sesame seeds",
-      "white sesame seeds"
+      "white sesame seeds",
+      "sesame seed"
     ],
     "pickled ginger": [
       "pickled ginger",
@@ -1007,7 +1251,9 @@
     "shallots": [
       "shallot",
       "shallots",
-      "echalion"
+      "echalion",
+      "challot",
+      "challots"
     ],
     "cabbage": [
       "cabbage",
@@ -1045,7 +1291,16 @@
       "burger buns",
       "tortillas",
       "naan",
-      "flatbread"
+      "flatbread",
+      "breadcrumb",
+      "fresh breadcrumbs",
+      "panko",
+      "dried breadcrumbs",
+      "white breadcrumbs",
+      "hamburger buns",
+      "buns",
+      "english muffins",
+      "brioche buns"
     ],
     "prawns": [
       "prawns",
@@ -1132,7 +1387,13 @@
       "walnuts",
       "pistachios",
       "hazelnuts",
-      "tahini"
+      "tahini",
+      "pine nut",
+      "roasted peanut",
+      "cashew nut",
+      "pecan",
+      "walnut",
+      "almond"
     ],
     "ham": [
       "ham",
@@ -1200,7 +1461,18 @@
       "snipped chives",
       "dill fronds",
       "fresh rosemary",
-      "dried rosemary"
+      "dried rosemary",
+      "dried oregano",
+      "oregano",
+      "dried thyme",
+      "dried basil",
+      "bay leaf",
+      "bay leaves",
+      "dried mixed herbs",
+      "mixed herbs",
+      "herbes de provence",
+      "dried sage",
+      "dried tarragon"
     ],
     "green vegetables": [
       "broccoli",
@@ -1233,7 +1505,11 @@
       "eggplant",
       "courgettes",
       "zucchini",
-      "runner beans"
+      "runner beans",
+      "green bean",
+      "sugar snap pea",
+      "broccoli floret",
+      "asparagus spear"
     ],
     "avocado": [
       "avocado",
@@ -1291,7 +1567,11 @@
       "borlotti beans",
       "haricot beans",
       "baked beans",
-      "refried beans"
+      "refried beans",
+      "chickpea",
+      "red lentil",
+      "split pea",
+      "puy lentil"
     ],
     "tinned sweetcorn": [
       "tinned sweetcorn",
@@ -1351,7 +1631,75 @@
       "flank steak",
       "skirt steak",
       "beef fillet",
-      "tenderloin"
+      "tenderloin",
+      "rump roast",
+      "beef rump",
+      "shoulder roast",
+      "beef roast",
+      "beef shin",
+      "beef short rib",
+      "stewing steak",
+      "beef bones",
+      "beef suet",
+      "beef consomme"
+    ],
+    "other spices": [
+      "chilli powder",
+      "chili powder",
+      "cayenne pepper",
+      "cayenne",
+      "chinese five spice",
+      "five spice",
+      "white pepper",
+      "mustard powder",
+      "all purpose seasoning",
+      "taco seasoning",
+      "steak seasoning",
+      "poultry seasoning",
+      "old bay",
+      "jerk seasoning",
+      "lemon pepper seasoning"
+    ],
+    "whole chicken": [
+      "whole chicken",
+      "free range chicken",
+      "chicken pieces",
+      "broiler fryer chicken",
+      "roasting chicken",
+      "spatchcock"
+    ],
+    "poultry mince": [
+      "ground turkey",
+      "turkey mince",
+      "minced turkey"
+    ],
+    "condiments and jams": [
+      "mango chutney",
+      "chutney",
+      "jam",
+      "marmalade",
+      "molasses",
+      "apricot jam",
+      "pineapple jam",
+      "cranberry sauce",
+      "maple butter"
+    ],
+    "other rice and grains": [
+      "risotto rice",
+      "arborio rice",
+      "paella rice",
+      "sushi rice",
+      "short grain rice",
+      "brown rice",
+      "wild rice",
+      "quinoa",
+      "couscous",
+      "bulgur wheat",
+      "cornmeal",
+      "polenta",
+      "pearl barley",
+      "rice flour",
+      "glutinous rice"
     ]
   },
   "_substitutes": {

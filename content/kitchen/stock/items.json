@@ -553,6 +553,34 @@
       "where": "pantry",
       "state": "none",
       "note": "Two, bought 2026-08-12. NOT the same as the sweet onions under `yellowonion`, and the difference matters: white is sharper and cleaner, sweet holds more sugar and water and collapses faster. Recipes asking specifically for white onion can now be satisfied exactly instead of substituted."
+    },
+    "sriracha": {
+      "n": "sriracha",
+      "where": "fridge",
+      "state": "have",
+      "src": "KITCHEN.md",
+      "note": "Listed under fridge condiments in KITCHEN.md. Had an alias set but NO catalogue row, so it could never be in stock and 190 recipe lines reported a shortage of something he owns."
+    },
+    "pesto": {
+      "n": "pesto",
+      "where": "fridge",
+      "state": "have",
+      "src": "KITCHEN.md",
+      "note": "KITCHEN.md: \"Pesto | a little\". Was aliased to peanutbutter, so the app named the wrong jar."
+    },
+    "ketchup": {
+      "n": "ketchup (no sugar added)",
+      "where": "fridge",
+      "state": "have",
+      "src": "KITCHEN.md",
+      "note": "KITCHEN.md fridge condiments. Was aliased to mayo."
+    },
+    "relish": {
+      "n": "relish",
+      "where": "fridge",
+      "state": "have",
+      "src": "KITCHEN.md",
+      "note": "KITCHEN.md fridge condiments."
     }
   }
 }
