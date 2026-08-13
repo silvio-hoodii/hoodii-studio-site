@@ -39,7 +39,7 @@ export default async function Shop() {
       <hr className="divider" />
 
       <h2 className="count" style={{ marginTop: 22 }}>
-        Already here, and nothing is using it <span className="quiet">{d.idle.length}</span>
+        Already here, nothing uses it <span className="quiet">{d.idle.length}</span>
       </h2>
       <p className="quiet" style={{ marginBottom: 8 }}>
         Not one of these appears in any dish that is cookable now or one thing short. This list comes
