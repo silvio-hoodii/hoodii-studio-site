@@ -198,7 +198,7 @@ export default async function Find({
           <p className="quiet" style={{ marginBottom: 8 }}>
             Counted only over dishes missing nothing but this, so the number means it.
           </p>
-          <ul className="plainlist">
+          <ul className="plainlist stack">
             {d.unlocks.map((u) => (
               <li key={u.item}>
                 <b>{u.count}</b> dishes need only {d.nameOf(u.item)}

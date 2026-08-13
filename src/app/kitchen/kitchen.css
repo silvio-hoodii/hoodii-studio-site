@@ -610,3 +610,21 @@
 .kos { --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background)); }
 .kos button, .kos .btn, .kos .chip { border-color: var(--border-strong); }
 .kos .dots button { background: var(--border-strong); }
+
+/* ---- plainlist on a phone ----
+   Found 2026-08-13 by screenshotting at 390px, which is what he actually reads on. `.plainlist li` is
+   a flex row with the label left and a value right, and where the label is a sentence rather than a
+   word ("12 dishes need only fresh coriander" plus a reason) the two columns fight and the left one
+   wraps to ONE WORD PER LINE. Unreadable, and invisible from the markup or from curl.
+
+   Rows whose left side is a sentence get `.stack`, which drops the side-by-side entirely below 560px. */
+@media (max-width: 560px) {
+  .kos .plainlist.stack li {
+    display: block;
+  }
+  .kos .plainlist.stack li span {
+    display: block;
+    text-align: left;
+    margin-top: 3px;
+  }
+}
