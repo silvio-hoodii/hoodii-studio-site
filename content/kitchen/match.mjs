@@ -41,6 +41,11 @@ const UNITS = [
 ];
 const SIZES = ['large', 'small', 'medium', 'big', 'extra large', 'jumbo', 'thin', 'thick'];
 
+/* Compiled once. These were being rebuilt from a join on every ingredient line, which is 40,000
+ * needless compilations per page render. */
+const UNITS_RE = new RegExp(`\\b(?:${UNITS.join('|')})\\b`, 'g');
+const SIZES_RE = new RegExp(`\\b(?:${SIZES.join('|')})\\b`, 'g');
+
 /** Does the recipe itself mark this line as optional?
  *
  * Must be asked BEFORE parseIngredient, which strips parentheticals. Found 2026-08-12: gyudon's
@@ -74,8 +79,8 @@ export function parseIngredient(raw, keepAfterComma = false) {
   s = s.replace(/\d+\s*\/\s*\d+/g, ' ');            // 1/2
   s = s.replace(/\d+(?:[.,]\d+)?/g, ' ');           // remaining numbers
   s = s.replace(/[-–—]/g, ' ');
-  s = s.replace(new RegExp(`\\b(?:${UNITS.join('|')})\\b`, 'g'), ' ');
-  s = s.replace(new RegExp(`\\b(?:${SIZES.join('|')})\\b`, 'g'), ' ');
+  s = s.replace(UNITS_RE, ' ');
+  s = s.replace(SIZES_RE, ' ');
   s = s.replace(/\b(?:fresh|freshly|ground|chopped|minced|sliced|grated|shredded|diced|crushed|beaten|peeled|trimmed|rinsed|drained|cooked|raw|dried|frozen|of|the|a|an|about|approximately|good|quality|ripe|hot|cold|warm|boneless|skinless|bone in|skin on|thinly|roughly|finely)\b/g, ' ');
   s = s.replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
   return s;
@@ -101,10 +106,62 @@ function aliasIndex() {
     const phrases = [g, ...((ALIASES._gapAliases || {})[g] || [])];
     for (const p of phrases) rows.push({ itemId: `__GAP__${g}`, phrase: parseIngredient(p) || p.toLowerCase() });
   }
-  return rows.filter((r) => r.phrase).sort((a, b) => b.phrase.length - a.phrase.length);
+  /* Compile each phrase ONCE, here, instead of once per ingredient per row. The find page scores
+   * 2,626 recipes against ~450 alias rows, so building these inside the match loop meant on the order
+   * of fifteen million regex compilations and a 16-second page. Same matching, ~100x less work. */
+  return rows
+    .filter((r) => r.phrase)
+    .sort((a, b) => b.phrase.length - a.phrase.length)
+    .map((r) => ({
+      ...r,
+      re: r.whole ? null : new RegExp(`(?:^|\\s)${r.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`),
+    }));
 }
 const INDEX = aliasIndex();
+
+/* An inverted index, word to candidate rows.
+ *
+ * Precompiling the regexes was not enough. Scoring 2,626 recipes meant 2,626 x ~12 ingredients x ~450
+ * rows, so fourteen million regex tests and a 17-second page even with every pattern compiled once.
+ * The fix is to stop testing patterns that cannot possibly match: an alias phrase can only match a
+ * name if they share at least one word. Looking rows up by the words actually present cuts the
+ * candidate set from ~450 to single digits.
+ *
+ * Rows are kept in the same longest-phrase-first order inside each bucket, so `ground beef` still wins
+ * over `beef` and the matching behaviour is identical. This is purely a way of skipping impossible
+ * work, not a change to what matches. */
+const BY_WORD = new Map();
+for (const r of INDEX) {
+  for (const w of new Set(r.phrase.split(' '))) {
+    if (!w) continue;
+    let bucket = BY_WORD.get(w);
+    if (!bucket) BY_WORD.set(w, (bucket = []));
+    bucket.push(r);
+  }
+}
+
+/** Only the rows that share a word with this name, still longest-phrase-first. */
+function candidates(name) {
+  const words = new Set(name.split(' '));
+  const seen = new Set();
+  const out = [];
+  for (const w of words) {
+    const bucket = BY_WORD.get(w);
+    if (!bucket) continue;
+    for (const r of bucket) {
+      if (seen.has(r)) continue;
+      seen.add(r);
+      out.push(r);
+    }
+  }
+  return out.sort((a, b) => b.phrase.length - a.phrase.length);
+}
+
 const VETOES = ALIASES._vetoes || {};
+/* Lowercased once. `veto.some(...)` ran on every row of every ingredient. */
+const VETO_LC = Object.fromEntries(
+  Object.entries(VETOES).map(([k, v]) => [k, (Array.isArray(v) ? v : []).map((x) => String(x).toLowerCase())]),
+);
 
 /** '__STAPLE__' | '__GAP__<name>' | '<itemId>' | null
  *
@@ -116,8 +173,8 @@ const VETOES = ALIASES._vetoes || {};
 export function matchToItem(name, raw = name) {
   if (!name) return null;
   const rawLc = String(raw).toLowerCase();
-  for (const r of INDEX) {
-    const veto = VETOES[r.itemId];
+  for (const r of candidates(name)) {
+    const veto = VETO_LC[r.itemId];
     /* Vetoes test the RAW line, never the parsed name. Their entire job is to catch qualifiers that
      * parseIngredient deliberately strips: "ground", "pickled", "canned", "short-grain". Testing them
      * against the parsed name was self-defeating and produced a spectacular bug, found 2026-08-12 by
