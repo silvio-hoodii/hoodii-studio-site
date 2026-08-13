@@ -474,7 +474,34 @@
       "linguine",
       "macaroni",
       "dried pasta",
-      "spaghettini"
+      "spaghettini",
+      "farfalle",
+      "conchiglie",
+      "orzo",
+      "tagliatelle",
+      "pappardelle",
+      "fettuccine",
+      "bucatini",
+      "rigatoni",
+      "ziti",
+      "gnocchi",
+      "vermicelli",
+      "angel hair",
+      "lasagne sheets",
+      "lasagna noodles",
+      "lasagne",
+      "egg noodles",
+      "noodles",
+      "soba noodles",
+      "udon noodles",
+      "rice noodles",
+      "couscous",
+      "orecchiette",
+      "cavatappi",
+      "shells",
+      "elbow macaroni",
+      "pasta shapes",
+      "dried spaghetti"
     ],
     "spaghetti_cooked": [
       "cooked spaghetti",
@@ -636,7 +663,8 @@
     "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
     "beetroot": "No beetroot.",
     "ham": "No ham or bacon.",
-    "lemongrass": "No lemongrass."
+    "lemongrass": "No lemongrass.",
+    "tinned fish": "No tinned tuna, salmon, sardines or anchovies. The only fish here is frozen tilapia."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -709,7 +737,9 @@
     "pasta": [
       "cooked",
       "leftover",
-      "pasta sauce"
+      "pasta sauce",
+      "pasta bake sauce",
+      "fresh pasta"
     ],
     "beef-raw": [
       "cooked",
@@ -963,11 +993,9 @@
       "salmon fillet",
       "cod",
       "haddock",
-      "tuna",
       "mussels",
       "scallops",
-      "crab",
-      "anchovies"
+      "crab"
     ],
     "green beans": [
       "green beans",
@@ -1077,6 +1105,16 @@
     "lemongrass": [
       "lemongrass",
       "lemon grass"
+    ],
+    "tinned fish": [
+      "tuna",
+      "tinned tuna",
+      "canned tuna",
+      "sardines",
+      "anchovies",
+      "anchovy fillets",
+      "tinned salmon",
+      "mackerel"
     ]
   },
   "_substitutes": {

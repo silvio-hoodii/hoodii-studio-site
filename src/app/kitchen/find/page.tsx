@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic';
 function Verdict({ c }: { c: Candidate }) {
   const n = c.score.missing.length;
   if (n === 0 && c.score.verdict === 'ready') return <span className="v ok">ready</span>;
-  if (n === 0) return <span className="v">{c.score.unknown.length} unsure</span>;
+  if (n === 0) return <span className="v">{c.score.unknown.length} unsure</span>;   // named below
   return <span className="v">need {n}</span>;
 }
 
@@ -41,21 +41,24 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
         : <div className="mealthumb" aria-hidden="true" />}
       <div className="mealbody">
         <div className="mealtop">
-          {c.meal.source
-            ? <a href={c.meal.source} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>
-            : <b>{c.meal.name}</b>}
+          <a href={c.meal.source!} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>
           <Verdict c={c} />
         </div>
-        <div className="mealmeta">
-          {[c.meal.area, c.meal.category].filter(Boolean).join(' · ')}
-          {!c.meal.source && <> · no original recipe linked, so this one cannot become a card</>}
-        </div>
+        <div className="mealmeta">{[c.meal.area, c.meal.category].filter(Boolean).join(' · ')}</div>
         {c.usesExpiring.length > 0 && (
           <div className="mealuses">
             uses {c.usesExpiring.map((u) => `${u.name} (${u.daysLeft <= 0 ? 'today' : `${u.daysLeft} d`})`).join(', ')}
           </div>
         )}
         {missing.length > 0 && <div className="mealmiss">no {missing.join(', ')}</div>}
+        {/* Naming the unsure ingredients, not just counting them. He asked directly: "there's no way
+            for me to know what it's missing when you say unsure". A bare count is the app knowing
+            something and not saying it. */}
+        {c.score.unknown.length > 0 && (
+          <div className="mealmeta">
+            not sure about {c.score.unknown.map((u) => u.name || u.line.trim()).join(', ')}
+          </div>
+        )}
         {c.score.haveVia.length > 0 && (
           <div className="mealvia">
             {c.score.haveVia.map((v) => `${v.item} via your ${v.via}`).join(' · ')}
@@ -95,9 +98,14 @@ export default async function Find() {
       <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
       <h1>What could I make</h1>
       <p className="lede">
-        {d.total} dishes checked against what is actually in the kitchen. This is a menu to pick from,
-        not a set of recipes: nothing here has been read or cooked, and every name links to the
-        original published recipe. Pick one and it gets turned into a proper card first.
+        {d.total} dishes checked against what is actually in the kitchen. A menu to pick from, not a
+        set of recipes: nothing here has been read or cooked, and every name links to the original
+        published recipe. Pick one and it gets turned into a proper card first.
+      </p>
+      <p className="quiet" style={{ marginTop: 10 }}>
+        {d.hiddenNoSource} of {d.totalKnown} known dishes are hidden because their link does not lead
+        to a real recipe, checked one by one on {d.sourceCheckedAt}. Most are pages that no longer
+        exist or sites that block us. A link offered as a recipe has to be one.
       </p>
 
       <hr className="divider" />

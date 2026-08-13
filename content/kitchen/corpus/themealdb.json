@@ -42,7 +42,10 @@
      "name": "Potatoes",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53085",
@@ -98,7 +101,10 @@
      "name": "Red Pepper",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53483",
@@ -182,7 +188,10 @@
      "name": "Lime",
      "measure": "Juice of 1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53527",
@@ -202,7 +211,10 @@
      "name": "Achiote Seeds",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 2,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53262",
@@ -234,7 +246,10 @@
      "name": "Sunflower Oil",
      "measure": "3  tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53373",
@@ -302,7 +317,10 @@
      "name": "Soy Sauce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53158",
@@ -346,7 +364,10 @@
      "name": "Basil Leaves",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53525",
@@ -394,7 +415,10 @@
      "name": "Cilantro",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53169",
@@ -426,7 +450,10 @@
      "name": "Red Wine Vinegar",
      "measure": "1 ½ tbsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53284",
@@ -482,7 +509,10 @@
      "name": "Olive Oil",
      "measure": "6 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53282",
@@ -538,7 +568,10 @@
      "name": "Lemon Juice",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53288",
@@ -578,7 +611,10 @@
      "name": "Plum Tomatoes",
      "measure": "1 Diced"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53281",
@@ -622,7 +658,10 @@
      "name": "Water",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53529",
@@ -666,7 +705,10 @@
      "name": "Milk",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53495",
@@ -726,7 +768,10 @@
      "name": "Lime",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53430",
@@ -770,7 +815,10 @@
      "name": "Black Pepper",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53389",
@@ -822,7 +870,10 @@
      "name": "Sesame Seed",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53439",
@@ -846,7 +897,10 @@
      "name": "Warm Water",
      "measure": "1 1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53334",
@@ -890,7 +944,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53329",
@@ -950,7 +1007,10 @@
      "name": "Extra Virgin Olive Oil",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53156",
@@ -1022,7 +1082,10 @@
      "name": "Lemon Juice",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53147",
@@ -1074,7 +1137,10 @@
      "name": "Squid",
      "measure": "3 Medium"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53133",
@@ -1102,7 +1168,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53278",
@@ -1150,7 +1219,10 @@
      "name": "Extra Virgin Olive Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53267",
@@ -1194,7 +1266,10 @@
      "name": "Lemon",
      "measure": "Juice of 1/2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53099",
@@ -1226,7 +1301,10 @@
      "name": "Soured cream and chive dip",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53107",
@@ -1274,7 +1352,10 @@
      "name": "Tortillas",
      "measure": "200g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53050",
@@ -1338,7 +1419,10 @@
      "name": "Water",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53094",
@@ -1390,7 +1474,10 @@
      "name": "Parsley",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53481",
@@ -1454,7 +1541,10 @@
      "name": "Rice",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53496",
@@ -1514,7 +1604,10 @@
      "name": "Cilantro Leaves",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52807",
@@ -1566,7 +1659,10 @@
      "name": "salt",
      "measure": "as required"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53456",
@@ -1602,7 +1698,10 @@
      "name": "Warm Water",
      "measure": "2 1/2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53460",
@@ -1658,7 +1757,10 @@
      "name": "Almond Essence",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53559",
@@ -1718,7 +1820,10 @@
      "name": "Water",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52959",
@@ -1764,7 +1869,10 @@
      "name": "Black Olives",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53548",
@@ -1812,7 +1920,10 @@
      "name": "Cilantro",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53440",
@@ -1868,7 +1979,10 @@
      "name": "Egg",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53239",
@@ -1912,7 +2026,10 @@
      "name": "Prawns",
      "measure": "200g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53451",
@@ -1972,7 +2089,10 @@
      "name": "Lime",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53457",
@@ -2036,7 +2156,10 @@
      "name": "Beef",
      "measure": "2 Lbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53242",
@@ -2088,7 +2211,10 @@
      "name": "Egg",
      "measure": "1 beaten"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53103",
@@ -2136,7 +2262,10 @@
      "name": "Coriander",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52995",
@@ -2232,7 +2361,10 @@
      "name": "English Mustard",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53366",
@@ -2300,7 +2432,10 @@
      "name": "Water",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52874",
@@ -2375,7 +2510,10 @@
      "name": "Pepper",
      "measure": "pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52878",
@@ -2449,7 +2587,10 @@
      "name": "Eggs",
      "measure": "To Glaze"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53071",
@@ -2517,7 +2658,10 @@
      "name": "Garlic",
      "measure": "4 cloves"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52997",
@@ -2633,7 +2777,10 @@
      "name": "Cardamom",
      "measure": "4"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52812",
@@ -2691,7 +2838,10 @@
      "name": "Potatoes",
      "measure": "4 Mashed"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53070",
@@ -2759,7 +2909,10 @@
      "name": "Olive Oil",
      "measure": "3 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52873",
@@ -2850,7 +3003,10 @@
      "name": "Water",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 24,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53317",
@@ -2934,7 +3090,10 @@
      "name": "Chimichurri sauce",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52952",
@@ -3014,7 +3173,10 @@
      "name": "Soy Sauce",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53421",
@@ -3090,7 +3252,10 @@
      "name": "Lime juice",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53359",
@@ -3213,7 +3378,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53238",
@@ -3293,7 +3461,10 @@
      "name": "Lime",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53469",
@@ -3357,7 +3528,10 @@
      "name": "Thyme",
      "measure": "4 sprigs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53053",
@@ -3417,7 +3591,10 @@
      "name": "Challots",
      "measure": "5"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 20,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52834",
@@ -3473,7 +3650,10 @@
      "name": "Parsley",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52824",
@@ -3519,7 +3699,10 @@
      "name": "sunflower oil",
      "measure": "drizzle (for cooking)"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52803",
@@ -3566,7 +3749,10 @@
      "name": "Egg Yolks",
      "measure": "2 Beaten"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53307",
@@ -3598,7 +3784,10 @@
      "name": "Sea Salt",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53313",
@@ -3658,7 +3847,10 @@
      "name": "Lemon",
      "measure": "Zest of 1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53078",
@@ -3700,7 +3892,10 @@
      "name": "Dill",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53463",
@@ -3792,7 +3987,10 @@
      "name": "Beer",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53468",
@@ -3852,7 +4050,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53466",
@@ -3924,7 +4125,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53453",
@@ -3984,7 +4188,10 @@
      "name": "Cilantro",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53013",
@@ -4052,7 +4259,10 @@
      "name": "Paprika",
      "measure": "1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53018",
@@ -4144,7 +4354,10 @@
      "name": "Worcestershire Sauce",
      "measure": "1 dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53300",
@@ -4220,7 +4433,10 @@
      "name": "Tomato Puree",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53069",
@@ -4264,7 +4480,10 @@
      "name": "Salt",
      "measure": "1 pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52979",
@@ -4328,7 +4547,10 @@
      "name": "Breadcrumbs",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53482",
@@ -4380,7 +4602,10 @@
      "name": "Bay Leaf",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53546",
@@ -4456,7 +4681,10 @@
      "name": "Lime",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53536",
@@ -4512,7 +4740,10 @@
      "name": "Water",
      "measure": "5 Cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53080",
@@ -4554,7 +4785,10 @@
      "name": "Egg",
      "measure": "1 Seperated"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53401",
@@ -4594,7 +4828,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53438",
@@ -4622,7 +4859,10 @@
      "name": "Cornstarch",
      "measure": "5 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53311",
@@ -4698,7 +4938,10 @@
      "name": "Crusty Bread",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52914",
@@ -4732,7 +4975,10 @@
      "name": "Vegetable Stock",
      "measure": "425g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53036",
@@ -4788,7 +5034,10 @@
      "name": "Egg",
      "measure": "6"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52826",
@@ -4868,7 +5117,10 @@
      "name": "Borlotti Beans",
      "measure": "2 x 400g tins"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53305",
@@ -4924,7 +5176,10 @@
      "name": "Clear Honey",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53476",
@@ -4964,7 +5219,10 @@
      "name": "Parmesan",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53076",
@@ -5040,7 +5298,10 @@
      "name": "Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53458",
@@ -5108,7 +5369,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53562",
@@ -5140,7 +5404,10 @@
      "name": "Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52965",
@@ -5191,7 +5458,10 @@
      "name": "Allspice",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52913",
@@ -5243,7 +5513,10 @@
      "name": "Prosciutto",
      "measure": "8 slices"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52842",
@@ -5294,7 +5567,10 @@
      "name": "Stilton Cheese",
      "measure": "140g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52940",
@@ -5360,7 +5636,10 @@
      "name": "Vegetable Oil",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53126",
@@ -5416,7 +5695,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53190",
@@ -5456,7 +5738,10 @@
      "name": "Chives",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53492",
@@ -5504,7 +5789,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53060",
@@ -5543,7 +5831,10 @@
      "name": "Pepper",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53077",
@@ -5601,7 +5892,10 @@
      "name": "Dill",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53488",
@@ -5673,7 +5967,10 @@
      "name": "Parsley",
      "measure": "2 tbs chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53256",
@@ -5709,7 +6006,10 @@
      "name": "Garlic",
      "measure": "2 cloves minced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52819",
@@ -5772,7 +6072,10 @@
      "name": "garlic",
      "measure": "1 clove finely chopped"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53361",
@@ -5824,7 +6127,10 @@
      "name": "Black Pepper",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52939",
@@ -5878,7 +6184,10 @@
      "name": "Vegetable Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53428",
@@ -5918,7 +6227,10 @@
      "name": "Water",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53418",
@@ -5962,7 +6274,10 @@
      "name": "Chilli",
      "measure": "Sprinkling"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53141",
@@ -6010,7 +6325,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53576",
@@ -6066,7 +6384,10 @@
      "name": "Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53564",
@@ -6094,7 +6415,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53330",
@@ -6138,7 +6462,10 @@
      "name": "Mozzarella",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53507",
@@ -6194,7 +6521,10 @@
      "name": "Eggs",
      "measure": "3"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53510",
@@ -6254,7 +6584,10 @@
      "name": "Olive Oil",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53055",
@@ -6316,7 +6649,10 @@
      "name": "Pepper",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52969",
@@ -6372,7 +6708,10 @@
      "name": "Eggs",
      "measure": "4"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53310",
@@ -6408,7 +6747,10 @@
      "name": "Poppy Seeds",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53290",
@@ -6452,7 +6794,10 @@
      "name": "Unsalted Butter",
      "measure": "1 1/2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53442",
@@ -6500,7 +6845,10 @@
      "name": "Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53016",
@@ -6568,7 +6916,10 @@
      "name": "Sesame Seed Burger Buns",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53161",
@@ -6628,7 +6979,10 @@
      "name": "Parsley",
      "measure": "2 tbs chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52846",
@@ -6684,7 +7038,10 @@
      "name": "Butter",
      "measure": "1 knob"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52796",
@@ -6848,7 +7205,10 @@
      "name": "Potatoes",
      "measure": "1/2 lb"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52934",
@@ -6938,7 +7298,10 @@
      "name": "Pepper",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52956",
@@ -6986,7 +7349,10 @@
      "name": "Coriander",
      "measure": "2 oz"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52850",
@@ -7038,7 +7404,10 @@
      "name": "Coriander",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52765",
@@ -7135,7 +7504,10 @@
      "name": "parsley",
      "measure": "garnish chopped"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53367",
@@ -7203,7 +7575,10 @@
      "name": "Sesame Seed Oil",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52875",
@@ -7286,7 +7661,10 @@
      "name": "Free-range Egg, Beaten",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52795",
@@ -7422,7 +7800,10 @@
      "name": "Cilantro",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52831",
@@ -7470,7 +7851,10 @@
      "name": "Lemon",
      "measure": "1/3 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53455",
@@ -7518,7 +7902,10 @@
      "name": "Sherry",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53565",
@@ -7554,7 +7941,10 @@
      "name": "Cornstarch",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53358",
@@ -7666,7 +8056,10 @@
      "name": "Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52879",
@@ -7749,7 +8142,10 @@
      "name": "Gruyere cheese",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53011",
@@ -7805,7 +8201,10 @@
      "name": "Lemon",
      "measure": "Juice of 1/2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53549",
@@ -7861,7 +8260,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53218",
@@ -7931,7 +8333,10 @@
      "name": "Lemon Juice",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 26,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53261",
@@ -7967,7 +8372,10 @@
      "name": "Honey",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53186",
@@ -8019,7 +8427,10 @@
      "name": "Parsley",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52870",
@@ -8085,7 +8496,10 @@
      "name": "Coriander",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53166",
@@ -8149,7 +8563,10 @@
      "name": "Spinach",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53516",
@@ -8185,7 +8602,10 @@
      "name": "Melted Butter",
      "measure": "3  tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53514",
@@ -8261,7 +8681,10 @@
      "name": "Eggs",
      "measure": "2 Beaten"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53513",
@@ -8297,7 +8720,10 @@
      "name": "Canola Oil",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53265",
@@ -8337,7 +8763,10 @@
      "name": "Lamb Loin Chops",
      "measure": "8"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52839",
@@ -8401,7 +8830,10 @@
      "name": "Caster Sugar",
      "measure": "2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53365",
@@ -8493,7 +8925,10 @@
      "name": "Rice",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53372",
@@ -8545,7 +8980,10 @@
      "name": "Jasmine Rice",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53319",
@@ -8637,7 +9075,10 @@
      "name": "Chimichurri sauce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53063",
@@ -8689,7 +9130,10 @@
      "name": "Pepper",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53289",
@@ -8773,7 +9217,10 @@
      "name": "Potatoes",
      "measure": "1 Diced"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53136",
@@ -8797,7 +9244,10 @@
      "name": "Chimichurri sauce",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53168",
@@ -8839,7 +9289,10 @@
      "name": "Crusty Bread",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53157",
@@ -8879,7 +9332,10 @@
      "name": "Parsley",
      "measure": "2 tbsp chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53185",
@@ -8915,7 +9371,10 @@
      "name": "Chorizo",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53159",
@@ -8953,7 +9412,10 @@
      "name": "Cheddar Cheese",
      "measure": "25g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53283",
@@ -9013,7 +9475,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53528",
@@ -9065,7 +9530,10 @@
      "name": "Black Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52840",
@@ -9121,7 +9589,10 @@
      "name": "Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53154",
@@ -9173,7 +9644,10 @@
      "name": "Crusty Bread",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53555",
@@ -9233,7 +9707,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53343",
@@ -9305,7 +9782,10 @@
      "name": "Egg",
      "measure": "1 beaten"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53446",
@@ -9349,7 +9829,10 @@
      "name": "Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53037",
@@ -9401,7 +9884,10 @@
      "name": "Chicken Stock",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53561",
@@ -9449,7 +9935,10 @@
      "name": "Codfish Bulljaw",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53523",
@@ -9501,7 +9990,10 @@
      "name": "Milk",
      "measure": "5 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53526",
@@ -9585,7 +10077,10 @@
      "name": "Milk",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53505",
@@ -9653,7 +10148,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53512",
@@ -9725,7 +10223,10 @@
      "name": "Water",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52832",
@@ -9809,7 +10310,10 @@
      "name": "butter",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52977",
@@ -9875,7 +10379,10 @@
      "name": "Sea Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53431",
@@ -9935,7 +10442,10 @@
      "name": "Parsley",
      "measure": "10g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52998",
@@ -10021,7 +10531,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53096",
@@ -10061,7 +10574,10 @@
      "name": "Freshly Chopped Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53490",
@@ -10101,7 +10617,10 @@
      "name": "Lemon Juice",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52779",
@@ -10165,7 +10684,10 @@
      "name": "Basil",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53480",
@@ -10209,7 +10731,10 @@
      "name": "Mayonnaise",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53532",
@@ -10261,7 +10786,10 @@
      "name": "Heavy Cream",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53530",
@@ -10321,7 +10849,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52841",
@@ -10387,7 +10918,10 @@
      "name": "Whole Milk",
      "measure": "400ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53072",
@@ -10427,7 +10961,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53419",
@@ -10475,7 +11012,10 @@
      "name": "Spring Onions",
      "measure": "3"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52999",
@@ -10523,7 +11063,10 @@
      "name": "Pepper",
      "measure": ""
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53058",
@@ -10567,7 +11110,10 @@
      "name": "Chorizo",
      "measure": "1/2 kg chopped"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53056",
@@ -10631,7 +11177,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52830",
@@ -10699,7 +11248,10 @@
      "name": "Milk",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53547",
@@ -10771,7 +11323,10 @@
      "name": "Dill Pickles",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 17,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53309",
@@ -10811,7 +11366,10 @@
      "name": "Dill",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53098",
@@ -10883,7 +11441,10 @@
      "name": "Parmesan Cheese",
      "measure": "25g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53473",
@@ -10923,7 +11484,10 @@
      "name": "Water",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52785",
@@ -11003,7 +11567,10 @@
      "name": "Garam Masala",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53556",
@@ -11051,7 +11618,10 @@
      "name": "Rye Flour",
      "measure": "2 1/2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53411",
@@ -11111,7 +11681,10 @@
      "name": "Boiling Water",
      "measure": "2 Litres"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53563",
@@ -11151,7 +11724,10 @@
      "name": "Flour",
      "measure": "Dusting"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53567",
@@ -11191,7 +11767,10 @@
      "name": "Vegetable Oil",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53193",
@@ -11247,7 +11826,10 @@
      "name": "Sugar",
      "measure": "1 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52907",
@@ -11283,7 +11865,10 @@
      "name": "White Wine",
      "measure": "100ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53379",
@@ -11331,7 +11916,10 @@
      "name": "Icing Sugar",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53143",
@@ -11391,7 +11979,10 @@
      "name": "Parsley",
      "measure": "1 Handfull"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53486",
@@ -11455,7 +12046,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52955",
@@ -11511,7 +12105,10 @@
      "name": "Spring Onions",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53370",
@@ -11591,7 +12188,10 @@
      "name": "Jasmine Rice",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53073",
@@ -11643,7 +12243,10 @@
      "name": "Bay Leaf",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53031",
@@ -11715,7 +12318,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53134",
@@ -11775,7 +12381,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53518",
@@ -11815,7 +12424,10 @@
      "name": "Swiss Cheese",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52895",
@@ -11857,7 +12469,10 @@
      "name": "Bread",
      "measure": "1 Slice"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52944",
@@ -11942,7 +12557,10 @@
      "name": "Pepper",
      "measure": "pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53557",
@@ -11982,7 +12600,10 @@
      "name": "Cassava",
      "measure": "1 1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53254",
@@ -12046,7 +12667,10 @@
      "name": "Extra Virgin Olive Oil",
      "measure": "60 ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53139",
@@ -12078,7 +12702,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53266",
@@ -12122,7 +12749,10 @@
      "name": "Egg",
      "measure": "1 beaten"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53091",
@@ -12186,7 +12816,10 @@
      "name": "Harissa Spice",
      "measure": "3 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53123",
@@ -12222,7 +12855,10 @@
      "name": "Flour",
      "measure": "5 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53188",
@@ -12294,7 +12930,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53092",
@@ -12326,7 +12965,10 @@
      "name": "Cilantro",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52919",
@@ -12369,7 +13011,10 @@
      "name": "Parmesan Cheese",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53030",
@@ -12401,7 +13046,10 @@
      "name": "Olive Oil",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53064",
@@ -12437,7 +13085,10 @@
      "name": "Black Pepper",
      "measure": ""
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52835",
@@ -12477,7 +13128,10 @@
      "name": "Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53043",
@@ -12537,7 +13191,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52802",
@@ -12664,7 +13321,10 @@
      "name": "Salmon",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52918",
@@ -12752,7 +13412,10 @@
      "name": "Bread",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53122",
@@ -12814,7 +13477,10 @@
      "name": "Chives",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52906",
@@ -12880,7 +13546,10 @@
      "name": "Water",
      "measure": "2 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53464",
@@ -12948,7 +13617,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53413",
@@ -13008,7 +13680,10 @@
      "name": "Olive Oil",
      "measure": "3  tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52815",
@@ -13100,7 +13775,10 @@
      "name": "Gruyère",
      "measure": "4 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52996",
@@ -13214,7 +13892,10 @@
      "name": "Gruyère",
      "measure": "140g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53061",
@@ -13244,7 +13925,10 @@
      "name": "Salt",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53178",
@@ -13284,7 +13968,10 @@
      "name": "Lemon",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53509",
@@ -13320,7 +14007,10 @@
      "name": "Oil",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53553",
@@ -13372,7 +14062,10 @@
      "name": "Butter",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53465",
@@ -13416,7 +14109,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52957",
@@ -13499,7 +14195,10 @@
      "name": "Cumin",
      "measure": "Sprinking"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52896",
@@ -13550,7 +14249,10 @@
      "name": "Baked Beans",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53541",
@@ -13598,7 +14300,10 @@
      "name": "Pepper",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53144",
@@ -13630,7 +14335,10 @@
      "name": "Parsley",
      "measure": "1 tablespoon chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52764",
@@ -13709,7 +14417,10 @@
      "name": "Parsley",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52951",
@@ -13801,7 +14512,10 @@
      "name": "Ginger",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53012",
@@ -13853,7 +14567,10 @@
      "name": "Chopped Parsley",
      "measure": "2 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53021",
@@ -13905,7 +14622,10 @@
      "name": "Tomato Puree",
      "measure": "3 cans"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53274",
@@ -13953,7 +14673,10 @@
      "name": "Mint",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53272",
@@ -13985,7 +14708,10 @@
      "name": "Olive Oil",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53255",
@@ -14049,7 +14775,10 @@
      "name": "Coriander",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53478",
@@ -14085,7 +14814,10 @@
      "name": "Lime",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53074",
@@ -14121,7 +14853,10 @@
      "name": "Onions",
      "measure": "4 Sticks"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52829",
@@ -14203,7 +14938,10 @@
      "name": "Butter",
      "measure": "4 tablespoons (55 grams)"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53041",
@@ -14243,7 +14981,10 @@
      "name": "Red Chilli",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53450",
@@ -14267,7 +15008,10 @@
      "name": "Water",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53397",
@@ -14311,7 +15055,10 @@
      "name": "Rose water",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53179",
@@ -14367,7 +15114,10 @@
      "name": "Nutmeg",
      "measure": "Grated"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53035",
@@ -14415,7 +15165,10 @@
      "name": "Eggs",
      "measure": "4"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53340",
@@ -14471,7 +15224,10 @@
      "name": "Black Pepper",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52967",
@@ -14505,7 +15261,10 @@
      "name": "Milk",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 500",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52993",
@@ -14667,7 +15426,10 @@
      "name": "Spring Onions",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53258",
@@ -14723,7 +15485,10 @@
      "name": "Pita Bread",
      "measure": "4 large"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53269",
@@ -14755,7 +15520,10 @@
      "name": "Lemon",
      "measure": "Juice of half"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53552",
@@ -14803,7 +15571,10 @@
      "name": "Egg",
      "measure": "For brushing"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53253",
@@ -14867,7 +15638,10 @@
      "name": "Mint",
      "measure": "2 tbs chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52781",
@@ -14934,7 +15708,10 @@
      "name": "chicken stock",
      "measure": "450ml"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53436",
@@ -14970,7 +15747,10 @@
      "name": "Cucumber",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52938",
@@ -15065,7 +15845,10 @@
      "name": "Water",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53353",
@@ -15097,7 +15880,10 @@
      "name": "Water",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53363",
@@ -15141,7 +15927,10 @@
      "name": "Sweetened Condensed Milk",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53345",
@@ -15209,7 +15998,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53354",
@@ -15277,7 +16069,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53362",
@@ -15345,7 +16140,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53355",
@@ -15389,7 +16187,10 @@
      "name": "Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53356",
@@ -15421,7 +16222,10 @@
      "name": "Oil",
      "measure": "1 1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53352",
@@ -15481,7 +16285,10 @@
      "name": "Thyme",
      "measure": "2 sprigs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53349",
@@ -15537,7 +16344,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53357",
@@ -15589,7 +16399,10 @@
      "name": "Scotch Bonnet",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53364",
@@ -15653,7 +16466,10 @@
      "name": "Black Pepper",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53145",
@@ -15701,7 +16517,10 @@
      "name": "Vegetable Oil",
      "measure": "1 L"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53033",
@@ -15729,7 +16548,10 @@
      "name": "Spring Onions",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53034",
@@ -15781,7 +16603,10 @@
      "name": "Chives",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52937",
@@ -15876,7 +16701,10 @@
      "name": "Kidney Beans",
      "measure": "800g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 21,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53335",
@@ -15920,7 +16748,10 @@
      "name": "Black Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53220",
@@ -15980,7 +16811,10 @@
      "name": "Black Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53398",
@@ -16032,7 +16866,10 @@
      "name": "Yogurt",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52971",
@@ -16080,7 +16917,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52769",
@@ -16174,7 +17014,10 @@
      "name": "Butter",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53445",
@@ -16226,7 +17069,10 @@
      "name": "Butter",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52820",
@@ -16305,7 +17151,10 @@
      "name": "garam masala",
      "measure": "1 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52887",
@@ -16361,7 +17210,10 @@
      "name": "Rice",
      "measure": "300g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53449",
@@ -16429,7 +17281,10 @@
      "name": "Water",
      "measure": "3  tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52974",
@@ -16473,7 +17328,10 @@
      "name": "Lemon",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52813",
@@ -16556,7 +17414,10 @@
      "name": "marjoram",
      "measure": "1/2 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53112",
@@ -16624,7 +17485,10 @@
      "name": "Cilantro",
      "measure": "Leaves"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53494",
@@ -16664,7 +17528,10 @@
      "name": "Sesame Seed",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53502",
@@ -16716,7 +17583,10 @@
      "name": "Fish Sauce",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53286",
@@ -16780,7 +17650,10 @@
      "name": "Water",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52868",
@@ -16838,7 +17711,10 @@
      "name": "Basmati Rice",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53257",
@@ -16894,7 +17770,10 @@
      "name": "Yogurt",
      "measure": "Small pack"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53027",
@@ -16938,7 +17817,10 @@
      "name": "Vegetable Oil",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 20,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53434",
@@ -16986,7 +17868,10 @@
      "name": "Egg",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53408",
@@ -17018,7 +17903,10 @@
      "name": "Olive Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52978",
@@ -17056,7 +17944,10 @@
      "name": "Red Chilli Flakes",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52945",
@@ -17120,7 +18011,10 @@
      "name": "Peanuts",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52946",
@@ -17182,7 +18076,10 @@
      "name": "Ginger",
      "measure": "to taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53412",
@@ -17238,7 +18135,10 @@
      "name": "Boiling Water",
      "measure": "1 L"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53407",
@@ -17270,7 +18170,10 @@
      "name": "Olive Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52821",
@@ -17325,7 +18228,10 @@
      "name": "coriander",
      "measure": "½ small pack"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53277",
@@ -17385,7 +18291,10 @@
      "name": "Pita Bread",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53009",
@@ -17425,7 +18334,10 @@
      "name": "Pita Bread",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52877",
@@ -17475,7 +18387,10 @@
      "name": "Eggs",
      "measure": "To Glaze"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52805",
@@ -17570,7 +18485,10 @@
      "name": "Biryani masala",
      "measure": "1 tbsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53083",
@@ -17626,7 +18544,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52808",
@@ -17698,7 +18619,10 @@
      "name": "Coriander",
      "measure": "Garnish chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52843",
@@ -17770,7 +18694,10 @@
      "name": "Parsley",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52782",
@@ -17860,7 +18787,10 @@
      "name": "tomatoes",
      "measure": "2 medium"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53010",
@@ -17916,7 +18846,10 @@
      "name": "Mint",
      "measure": "2 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52884",
@@ -17968,7 +18901,10 @@
      "name": "Potatoes",
      "measure": "900g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53427",
@@ -18048,7 +18984,10 @@
      "name": "Lettuce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 23,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53426",
@@ -18076,7 +19015,10 @@
      "name": "Salt",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52987",
@@ -18198,7 +19140,10 @@
      "name": "Basil Leaves",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52973",
@@ -18252,7 +19197,10 @@
      "name": "Lime",
      "measure": "1/2"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53437",
@@ -18304,7 +19252,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53211",
@@ -18368,7 +19319,10 @@
      "name": "Lime",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53467",
@@ -18424,7 +19378,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "recipe with no ingredients",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53146",
@@ -18480,7 +19437,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52947",
@@ -18560,7 +19520,10 @@
      "name": "Cornstarch",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53461",
@@ -18624,7 +19587,10 @@
      "name": "Cheddar Cheese",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53504",
@@ -18676,7 +19642,10 @@
      "name": "Vanilla",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53472",
@@ -18708,7 +19677,10 @@
      "name": "Salt",
      "measure": "1 1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53433",
@@ -18748,7 +19720,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53538",
@@ -18796,7 +19771,10 @@
      "name": "Black Pepper",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53402",
@@ -18848,7 +19826,10 @@
      "name": "Coriander",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52827",
@@ -18914,7 +19895,10 @@
      "name": "Jasmine Rice",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53400",
@@ -18974,7 +19958,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53140",
@@ -19014,7 +20001,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52865",
@@ -19077,7 +20067,10 @@
      "name": "Naan Bread",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52968",
@@ -19198,7 +20191,10 @@
      "name": "Egg Yolks",
      "measure": "Beaten"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 17,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53423",
@@ -19266,7 +20262,10 @@
      "name": "Palm Sugar",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52777",
@@ -19317,7 +20316,10 @@
      "name": "pepper",
      "measure": "to taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53048",
@@ -19389,7 +20391,10 @@
      "name": "Egg",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53086",
@@ -19417,7 +20422,10 @@
      "name": "Pork",
      "measure": "1 Handfull"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53135",
@@ -19457,7 +20465,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52876",
@@ -19512,7 +20523,10 @@
      "name": "Egg Yolks",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53560",
@@ -19552,7 +20566,10 @@
      "name": "Egg",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53109",
@@ -19616,7 +20633,10 @@
      "name": "Chopped Chive",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53336",
@@ -19664,7 +20684,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52927",
@@ -19744,7 +20767,10 @@
      "name": "Red Pepper Flakes",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 20,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53047",
@@ -19790,7 +20816,10 @@
      "name": "Lemon Juice",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53006",
@@ -19834,7 +20863,10 @@
      "name": "Potatoes",
      "measure": "350g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53029",
@@ -19874,7 +20906,10 @@
      "name": "Olive Oil",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53403",
@@ -19902,7 +20937,10 @@
      "name": "Cardamom",
      "measure": "60g"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52864",
@@ -19965,7 +21003,10 @@
      "name": "Truffle Oil",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53059",
@@ -20020,7 +21061,10 @@
      "name": "Parsley",
      "measure": "Top"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53038",
@@ -20056,7 +21100,10 @@
      "name": "Spring Onions",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53223",
@@ -20128,7 +21175,10 @@
      "name": "Sugar",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53377",
@@ -20184,7 +21234,10 @@
      "name": "Pepper",
      "measure": "1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53051",
@@ -20268,7 +21321,10 @@
      "name": "Tamarind Paste",
      "measure": "1/3 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53497",
@@ -20328,7 +21384,10 @@
      "name": "Red Chilli",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53245",
@@ -20392,7 +21451,10 @@
      "name": "Ginger",
      "measure": "Knob"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53117",
@@ -20468,7 +21530,10 @@
      "name": "Black Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53121",
@@ -20520,7 +21585,10 @@
      "name": "Heavy Cream",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53500",
@@ -20556,7 +21624,10 @@
      "name": "Mung Bean Paste",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53422",
@@ -20616,7 +21687,10 @@
      "name": "Coconut Cream",
      "measure": "3 Cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53501",
@@ -20680,7 +21754,10 @@
      "name": "Cucumber",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52851",
@@ -20728,7 +21805,10 @@
      "name": "Greek Yogurt",
      "measure": "200g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53331",
@@ -20780,7 +21860,10 @@
      "name": "Strawberries",
      "measure": "3"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53554",
@@ -20828,7 +21911,10 @@
      "name": "Sea Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52810",
@@ -20912,7 +21998,10 @@
      "name": "Lemon Zest",
      "measure": "1 teaspoon grated"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52943",
@@ -20980,7 +22069,10 @@
      "name": "Water",
      "measure": "2 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53487",
@@ -21028,7 +22120,10 @@
      "name": "Red Pepper Flakes",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53417",
@@ -21060,7 +22155,10 @@
      "name": "Sea Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52774",
@@ -21186,7 +22284,10 @@
      "name": "sweet chilli sauce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53150",
@@ -21206,7 +22307,10 @@
      "name": "Padron peppers",
      "measure": "500g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 2,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53151",
@@ -21274,7 +22378,10 @@
      "name": "Lemon Zest",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53152",
@@ -21334,7 +22441,10 @@
      "name": "Hake",
      "measure": "6"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53192",
@@ -21426,7 +22536,10 @@
      "name": "Peanuts",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 22,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53534",
@@ -21494,7 +22607,10 @@
      "name": "Mozzarella",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53573",
@@ -21538,7 +22654,10 @@
      "name": "Garlic",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53429",
@@ -21566,7 +22685,10 @@
      "name": "Salt",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53520",
@@ -21642,7 +22764,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53517",
@@ -21714,7 +22839,10 @@
      "name": "Black Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53017",
@@ -21774,7 +22902,10 @@
      "name": "Pepper",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53172",
@@ -21830,7 +22961,10 @@
      "name": "Olive Oil",
      "measure": "2 tbsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52930",
@@ -21885,7 +23019,10 @@
      "name": "Pepper",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53471",
@@ -21917,7 +23054,10 @@
      "name": "Milk",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53539",
@@ -21965,7 +23105,10 @@
      "name": "Water",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53019",
@@ -22021,7 +23164,10 @@
      "name": "Baking Powder",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52837",
@@ -22069,7 +23215,10 @@
      "name": "Parmesan",
      "measure": "Shaved"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53039",
@@ -22149,7 +23298,10 @@
      "name": "Cumin Seeds",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53160",
@@ -22209,7 +23361,10 @@
      "name": "Parsley",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53014",
@@ -22265,7 +23420,10 @@
      "name": "Black Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53566",
@@ -22293,7 +23451,10 @@
      "name": "Parsley",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53299",
@@ -22341,7 +23502,10 @@
      "name": "Breadcrumbs",
      "measure": "75g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53162",
@@ -22421,7 +23585,10 @@
      "name": "Almonds",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 17,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53540",
@@ -22477,7 +23644,10 @@
      "name": "Chicken Stock",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53297",
@@ -22529,7 +23699,10 @@
      "name": "Feta",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53301",
@@ -22589,7 +23762,10 @@
      "name": "Sour Cream",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52847",
@@ -22665,7 +23841,10 @@
      "name": "Broccoli",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53306",
@@ -22737,7 +23916,10 @@
      "name": "Sour Cream",
      "measure": "300g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53521",
@@ -22785,7 +23967,10 @@
      "name": "Banana Pepper",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53044",
@@ -22833,7 +24018,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53045",
@@ -22909,7 +24097,10 @@
      "name": "Baguette",
      "measure": "1 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 17,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53042",
@@ -22977,7 +24168,10 @@
      "name": "Caster Sugar",
      "measure": "1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52780",
@@ -23029,7 +24223,10 @@
      "name": "Peas",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53489",
@@ -23121,7 +24318,10 @@
      "name": "Ground Nutmeg",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 21,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53081",
@@ -23175,7 +24375,10 @@
      "name": "Mayonnaise",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53280",
@@ -23227,7 +24430,10 @@
      "name": "Chicken",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52804",
@@ -23259,7 +24465,10 @@
      "name": "Cheese Curds",
      "measure": "2 cups"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53499",
@@ -23315,7 +24524,10 @@
      "name": "Cilantro",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52922",
@@ -23380,7 +24592,10 @@
      "name": "Prawns",
      "measure": "8"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53244",
@@ -23452,7 +24667,10 @@
      "name": "Flour",
      "measure": "Sprinkling"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53200",
@@ -23528,7 +24746,10 @@
      "name": "Lime",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53174",
@@ -23584,7 +24805,10 @@
      "name": "Tiger Prawns",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53410",
@@ -23628,7 +24852,10 @@
      "name": "Olive Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52921",
@@ -23694,7 +24921,10 @@
      "name": "Parmesan",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53230",
@@ -23746,7 +24976,10 @@
      "name": "Sugar",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53173",
@@ -23782,7 +25015,10 @@
      "name": "Lime",
      "measure": "Juice of 1/2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53108",
@@ -23818,7 +25054,10 @@
      "name": "sweet chilli sauce",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53383",
@@ -23904,7 +25143,10 @@
      "name": "Black Pepper",
      "measure": "1tbsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53124",
@@ -23972,7 +25214,10 @@
      "name": "Nutmeg",
      "measure": "1 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52908",
@@ -24027,7 +25272,10 @@
      "name": "Sugar",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52809",
@@ -24098,7 +25346,10 @@
      "name": "Oil",
      "measure": "for frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53204",
@@ -24138,7 +25389,10 @@
      "name": "Lime",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53115",
@@ -24174,7 +25428,10 @@
      "name": "Bay Leaves",
      "measure": "4"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52941",
@@ -24249,7 +25506,10 @@
      "name": "Coconut Milk",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52811",
@@ -24319,7 +25579,10 @@
      "name": "Parmesan",
      "measure": "½ cup freshly grated"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53506",
@@ -24355,7 +25618,10 @@
      "name": "Salt",
      "measure": "1/2 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53227",
@@ -24427,7 +25693,10 @@
      "name": "Spring Onions",
      "measure": "2 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52783",
@@ -24509,7 +25778,10 @@
      "name": "basil leaves",
      "measure": "50g torn"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53273",
@@ -24565,7 +25837,10 @@
      "name": "Rocket",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52942",
@@ -24640,7 +25915,10 @@
      "name": "Black Pepper",
      "measure": "pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 404",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53268",
@@ -24700,7 +25978,10 @@
      "name": "Coriander",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52816",
@@ -24776,7 +26057,10 @@
      "name": "Parsley",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53118",
@@ -24816,7 +26100,10 @@
      "name": "Butter",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53545",
@@ -24900,7 +26187,10 @@
      "name": "Cilantro",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53315",
@@ -24952,7 +26242,10 @@
      "name": "Kabanos Sausages",
      "measure": "8"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53020",
@@ -25018,7 +26311,10 @@
      "name": "Salt",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 17,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53052",
@@ -25062,7 +26358,10 @@
      "name": "Mayonnaise",
      "measure": "Top"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53388",
@@ -25114,7 +26413,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53308",
@@ -25150,7 +26452,10 @@
      "name": "Caraway Seed",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52960",
@@ -25201,7 +26506,10 @@
      "name": "Olive Oil",
      "measure": "3 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52962",
@@ -25252,7 +26560,10 @@
      "name": "Unsalted Butter",
      "measure": "125g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53234",
@@ -25304,7 +26615,10 @@
      "name": "Coriander",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53248",
@@ -25344,7 +26658,10 @@
      "name": "Salmon",
      "measure": "300g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52823",
@@ -25402,7 +26719,10 @@
      "name": "Parmesan",
      "measure": "50g shavings"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53233",
@@ -25470,7 +26790,10 @@
      "name": "Fish Sauce",
      "measure": "2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53511",
@@ -25526,7 +26849,10 @@
      "name": "Garlic",
      "measure": "2 cloves"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53171",
@@ -25566,7 +26892,10 @@
      "name": "Salt Cod",
      "measure": "300g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52936",
@@ -25644,7 +26973,10 @@
      "name": "Olive Oil",
      "measure": "for frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53498",
@@ -25712,7 +27044,10 @@
      "name": "Lime",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53503",
@@ -25772,7 +27107,10 @@
      "name": "Chilli",
      "measure": "1 sliced"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53443",
@@ -25828,7 +27166,10 @@
      "name": "Soy Sauce",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53577",
@@ -25868,7 +27209,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53296",
@@ -25928,7 +27272,10 @@
      "name": "Sour Cream",
      "measure": "60 ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53314",
@@ -25988,7 +27335,10 @@
      "name": "Sour Cream",
      "measure": "60 ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53247",
@@ -26028,7 +27378,10 @@
      "name": "Soy Sauce",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52836",
@@ -26096,7 +27449,10 @@
      "name": "Parsley",
      "measure": "Topping"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53167",
@@ -26140,7 +27496,10 @@
      "name": "Frozen Seafood mix",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53378",
@@ -26180,7 +27539,10 @@
      "name": "Sesame Seed",
      "measure": "2 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53470",
@@ -26216,7 +27578,10 @@
      "name": "Water",
      "measure": "1 Litre"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53215",
@@ -26252,7 +27617,10 @@
      "name": "Salt",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52963",
@@ -26304,7 +27672,10 @@
      "name": "Feta",
      "measure": "Spinkling"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53219",
@@ -26366,7 +27737,10 @@
      "name": "Black Pepper",
      "measure": "1/2 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53028",
@@ -26438,7 +27812,10 @@
      "name": "Pita Bread",
      "measure": "6"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 18,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53226",
@@ -26474,7 +27851,10 @@
      "name": "Water",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53217",
@@ -26534,7 +27914,10 @@
      "name": "Ground Clove",
      "measure": "1/4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53491",
@@ -26578,7 +27961,10 @@
      "name": "Parsley",
      "measure": "2 tbs chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52953",
@@ -26658,7 +28044,10 @@
      "name": "Soy Sauce",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53375",
@@ -26718,7 +28107,10 @@
      "name": "Sesame Seed Oil",
      "measure": "2 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53374",
@@ -26782,7 +28174,10 @@
      "name": "Cilantro",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53371",
@@ -26826,7 +28221,10 @@
      "name": "Soy Sauce",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53369",
@@ -26858,7 +28256,10 @@
      "name": "Sesame Seed",
      "measure": "2 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53484",
@@ -26894,7 +28295,10 @@
      "name": "Parsley",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53368",
@@ -26978,7 +28382,10 @@
      "name": "Cilantro Leaves",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52994",
@@ -27066,7 +28473,10 @@
      "name": "Bay Leaf",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53432",
@@ -27138,7 +28548,10 @@
      "name": "Black Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53260",
@@ -27182,7 +28595,10 @@
      "name": "Garlic",
      "measure": "3 Cloves Crushed"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53302",
@@ -27222,7 +28638,10 @@
      "name": "Dry White Wine",
      "measure": "500ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53259",
@@ -27254,7 +28673,10 @@
      "name": "Dill",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52964",
@@ -27318,7 +28740,10 @@
      "name": "Lemon",
      "measure": "1 chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53264",
@@ -27362,7 +28787,10 @@
      "name": "Smoky Aïoli",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52784",
@@ -27452,7 +28880,10 @@
      "name": "Apple Cider Vinegar",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53479",
@@ -27496,7 +28927,10 @@
      "name": "Sugar",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52981",
@@ -27555,7 +28989,10 @@
      "name": "Sausages",
      "measure": "1 pound"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52992",
@@ -27651,7 +29088,10 @@
      "name": "Black Pepper",
      "measure": "As required"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52770",
@@ -27750,7 +29190,10 @@
      "name": "Parmesan Cheese",
      "measure": "50g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53181",
@@ -27802,7 +29245,10 @@
      "name": "Spinach",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53164",
@@ -27842,7 +29288,10 @@
      "name": "Olive Oil",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53155",
@@ -27890,7 +29339,10 @@
      "name": "Green Olives",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53183",
@@ -27970,7 +29422,10 @@
      "name": "Extra Virgin Olive Oil",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53184",
@@ -28018,7 +29473,10 @@
      "name": "Prawns",
      "measure": "200g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53182",
@@ -28074,7 +29532,10 @@
      "name": "Parsley",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53176",
@@ -28114,7 +29575,10 @@
      "name": "Serrano Ham",
      "measure": "5 Slices"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52872",
@@ -28169,7 +29633,10 @@
      "name": "Olive Oil",
      "measure": "drizzle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53175",
@@ -28237,7 +29704,10 @@
      "name": "Rosemary",
      "measure": "1/2 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53105",
@@ -28293,7 +29763,10 @@
      "name": "Bay Leaves",
      "measure": "2"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53142",
@@ -28337,7 +29810,10 @@
      "name": "Egg",
      "measure": "8"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52771",
@@ -28499,7 +29975,10 @@
      "name": "Peanuts",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52849",
@@ -28571,7 +30050,10 @@
      "name": "Cannellini Beans",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52925",
@@ -28618,7 +30100,10 @@
      "name": "Bread",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53040",
@@ -28670,7 +30155,10 @@
      "name": "White Wine Vinegar",
      "measure": "1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52866",
@@ -28705,7 +30193,10 @@
      "name": "Sage",
      "measure": "Small bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53102",
@@ -28753,7 +30244,10 @@
      "name": "Lemon",
      "measure": "Juice/zest of one"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52980",
@@ -28808,7 +30302,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53229",
@@ -28872,7 +30369,10 @@
      "name": "Fish Sauce",
      "measure": "1/2 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52881",
@@ -28934,7 +30434,10 @@
      "name": "Worcestershire Sauce",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52935",
@@ -29016,7 +30519,10 @@
      "name": "Pepper",
      "measure": "to taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53110",
@@ -29052,7 +30558,10 @@
      "name": "Dijon Mustard",
      "measure": "1 tbsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53201",
@@ -29100,7 +30609,10 @@
      "name": "Basil Leaves",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52817",
@@ -29146,7 +30658,10 @@
      "name": "Parsley",
      "measure": "½ cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53067",
@@ -29282,7 +30797,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53008",
@@ -29346,7 +30864,10 @@
      "name": "Mint",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53558",
@@ -29366,7 +30887,10 @@
      "name": "Vegetable Oil",
      "measure": "3 Cups"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 2,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53113",
@@ -29398,7 +30922,10 @@
      "name": "Double Cream",
      "measure": "1 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52911",
@@ -29450,7 +30977,10 @@
      "name": "Parmesan",
      "measure": "40g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53065",
@@ -29490,7 +31020,10 @@
      "name": "Cucumber",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53376",
@@ -29554,7 +31087,10 @@
      "name": "Ginger",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52949",
@@ -29608,7 +31144,10 @@
      "name": "Coriander",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53275",
@@ -29652,7 +31191,10 @@
      "name": "Honey",
      "measure": "2 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53089",
@@ -29688,7 +31230,10 @@
      "name": "Yeast",
      "measure": "1 1/2 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53095",
@@ -29740,7 +31285,10 @@
      "name": "Pine Nuts",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53093",
@@ -29780,7 +31328,10 @@
      "name": "Pepper",
      "measure": "Dash"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52950",
@@ -29872,7 +31423,10 @@
      "name": "Soy Sauce",
      "measure": "1 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "fetch failed",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53447",
@@ -29924,7 +31478,10 @@
      "name": "Salt",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52869",
@@ -29978,7 +31535,10 @@
      "name": "Lentils",
      "measure": "250g pack"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53287",
@@ -30062,7 +31622,10 @@
      "name": "Prunes",
      "measure": "1/4 cup"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53026",
@@ -30110,7 +31673,10 @@
      "name": "Vegetable Oil",
      "measure": "As required"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52806",
@@ -30173,7 +31739,10 @@
      "name": "turmeric",
      "measure": "¼ tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53312",
@@ -30225,7 +31794,10 @@
      "name": "Celery",
      "measure": "2 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53246",
@@ -30277,7 +31849,10 @@
      "name": "Brown Sugar",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53404",
@@ -30349,7 +31924,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53405",
@@ -30409,7 +31987,10 @@
      "name": "Olive Oil",
      "measure": "Splash"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53448",
@@ -30445,7 +32026,10 @@
      "name": "Poppy Seeds",
      "measure": "1 tsp"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52772",
@@ -30528,7 +32112,10 @@
      "name": "Basil Leaves",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53206",
@@ -30584,7 +32171,10 @@
      "name": "Red Chilli",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53208",
@@ -30648,7 +32238,10 @@
      "name": "Coriander",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53195",
@@ -30706,7 +32299,10 @@
      "name": "Spring Onions",
      "measure": "1 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53212",
@@ -30742,7 +32338,10 @@
      "name": "Chicken drumsticks",
      "measure": "8"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53198",
@@ -30802,7 +32401,10 @@
      "name": "Hotsauce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53214",
@@ -30872,7 +32474,10 @@
      "name": "Basil",
      "measure": "Bunch"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52814",
@@ -30935,7 +32540,10 @@
      "name": "Rice",
      "measure": "Boiled"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53197",
@@ -30995,7 +32603,10 @@
      "name": "Jasmine Rice",
      "measure": "Steamed"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53205",
@@ -31039,7 +32650,10 @@
      "name": "Coriander",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 8,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53210",
@@ -31098,7 +32712,10 @@
      "name": "Red Chilli",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53203",
@@ -31170,7 +32787,10 @@
      "name": "Red Chilli",
      "measure": "1 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53213",
@@ -31218,7 +32838,10 @@
      "name": "Coriander Leaves",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53202",
@@ -31258,7 +32881,10 @@
      "name": "Soy Sauce",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52882",
@@ -31331,7 +32957,10 @@
      "name": "Eggs",
      "measure": "6"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52912",
@@ -31393,7 +33022,10 @@
      "name": "Spinach",
      "measure": "to serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53444",
@@ -31457,7 +33089,10 @@
      "name": "Parsley",
      "measure": "Garnish"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52822",
@@ -31497,7 +33132,10 @@
      "name": "cherry tomatoes",
      "measure": "200g"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53240",
@@ -31553,7 +33191,10 @@
      "name": "Cashew Nuts",
      "measure": "25g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53207",
@@ -31617,7 +33258,10 @@
      "name": "Rice",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53196",
@@ -31667,7 +33311,10 @@
      "name": "Lime juice",
      "measure": "4 tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53194",
@@ -31737,7 +33384,10 @@
      "name": "Coriander",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53032",
@@ -31785,7 +33435,10 @@
      "name": "Caster Sugar",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53415",
@@ -31837,7 +33490,10 @@
      "name": "Honey",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 403",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53165",
@@ -31885,7 +33541,10 @@
      "name": "Creme Fraiche",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53318",
@@ -31933,7 +33592,10 @@
      "name": "Dried Oregano",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53075",
@@ -31961,7 +33623,10 @@
      "name": "Olive Oil",
      "measure": "4 tsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52926",
@@ -32022,7 +33687,10 @@
      "name": "Egg",
      "measure": "To Glaze"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53057",
@@ -32084,7 +33752,10 @@
      "name": "Vegetable Oil",
      "measure": "2 tbs"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53416",
@@ -32124,7 +33795,10 @@
      "name": "Pepper",
      "measure": "To taste"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 6,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52975",
@@ -32180,7 +33854,10 @@
      "name": "Apricot Jam",
      "measure": "4 tbs"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52852",
@@ -32228,7 +33905,10 @@
      "name": "Tuna",
      "measure": "400g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52972",
@@ -32294,7 +33974,10 @@
      "name": "Pepper",
      "measure": "Pinch"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "http 402",
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53249",
@@ -32354,7 +34037,10 @@
      "name": "Golden Caster Sugar",
      "measure": "1/2 teaspoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52845",
@@ -32412,7 +34098,10 @@
      "name": "Parsley",
      "measure": "2 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53251",
@@ -32480,7 +34169,10 @@
      "name": "Red Onions",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53263",
@@ -32528,7 +34220,10 @@
      "name": "Mint",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53252",
@@ -32560,7 +34255,10 @@
      "name": "Chicken Stock",
      "measure": "600ml"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 5,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53270",
@@ -32608,7 +34306,10 @@
      "name": "Lemon",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53114",
@@ -32628,7 +34329,10 @@
      "name": "White Cornmeal",
      "measure": "1 1/2 cups"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 2,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53250",
@@ -32676,7 +34380,10 @@
      "name": "Hotsauce",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52794",
@@ -32952,7 +34659,10 @@
      "name": "Lentils",
      "measure": "250g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52867",
@@ -32982,7 +34692,10 @@
      "name": "Mixed Grain",
      "measure": "1 Packet"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53222",
@@ -33038,7 +34751,10 @@
      "name": "Toast",
      "measure": "2 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52838",
@@ -33110,7 +34826,10 @@
      "name": "Parmesan Cheese",
      "measure": "Grated"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53325",
@@ -33138,7 +34857,10 @@
      "name": "Vegetable Oil",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53327",
@@ -33206,7 +34928,10 @@
      "name": "Water",
      "measure": "1/2 cup"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53326",
@@ -33286,7 +35011,10 @@
      "name": "Cilantro",
      "measure": "Chopped"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 15,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53328",
@@ -33354,7 +35082,10 @@
      "name": "Olive Oil",
      "measure": "1 tablespoon"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53332",
@@ -33418,7 +35149,10 @@
      "name": "Vegetable Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 13,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53228",
@@ -33466,7 +35200,10 @@
      "name": "Rice",
      "measure": "Steamed"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 9,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53232",
@@ -33530,7 +35267,10 @@
      "name": "Sesame Seed Oil",
      "measure": "1 ½ tbsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52828",
@@ -33594,7 +35334,10 @@
      "name": "Peanuts",
      "measure": "Crushed"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 19,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53231",
@@ -33678,7 +35421,10 @@
      "name": "Basil Leaves",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53237",
@@ -33762,7 +35508,10 @@
      "name": "Mint",
      "measure": "Handful"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 16,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53243",
@@ -33818,7 +35567,10 @@
      "name": "Courgettes",
      "measure": "1"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53241",
@@ -33882,7 +35634,10 @@
      "name": "Red Chilli",
      "measure": "1 sliced"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53235",
@@ -33938,7 +35693,10 @@
      "name": "Pak Choi",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 11,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53236",
@@ -33994,7 +35752,10 @@
      "name": "Jasmine Rice",
      "measure": "To serve"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53106",
@@ -34046,7 +35807,10 @@
      "name": "Rocket",
      "measure": "100g"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52948",
@@ -34104,7 +35868,10 @@
      "name": "Water",
      "measure": "Bottle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 12,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "52871",
@@ -34158,7 +35925,10 @@
      "name": "Worcestershire Sauce",
      "measure": "1 tblsp"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 10,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53225",
@@ -34198,7 +35968,10 @@
      "name": "Liquid Cheese",
      "measure": "3  tablespoons"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 7,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53097",
@@ -34226,7 +35999,10 @@
      "name": "Sunflower Oil",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 4,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53294",
@@ -34294,7 +36070,10 @@
      "name": "Tomato Ketchup",
      "measure": "Drizzle"
     }
-   ]
+   ],
+   "sourceOk": true,
+   "sourceIngredientCount": 14,
+   "sourceCheckedAt": "2026-08-13"
   },
   {
    "id": "53189",
@@ -34342,10 +36121,15 @@
      "name": "Oil",
      "measure": "For frying"
     }
-   ]
+   ],
+   "sourceOk": false,
+   "sourceFail": "no JSON-LD recipe on the page",
+   "sourceCheckedAt": "2026-08-13"
   }
  ],
  "attribution": "Recipe data and imagery: TheMealDB (https://www.themealdb.com/)",
  "terms": "Test key \"1\" is permitted for development and educational use per themealdb.com/api.php. This is a private single-user app, not an appstore release. Their AGENTS.md requires the attribution string above wherever results are displayed, and asks that stated measures and instructions be preserved with nothing substituted silently and no cooking temperatures or storage limits inferred. That is SOURCING.md almost word for word, written by the data provider.",
- "whyNotSpoonacular": "Checked 2026-08-12 and rejected on TERMS, not on price. Spoonacular permits caching for a maximum of 1 hour and allows only recipe id, title and image to be stored indefinitely: ingredients and instructions may not be persisted. A local corpus of ingredient lists scored against a pantry is exactly what that forbids, so no engineering could get around it. Free tier is 50 points/day, and they also prohibit building an application meant to provide the same experience as theirs."
+ "whyNotSpoonacular": "Checked 2026-08-12 and rejected on TERMS, not on price. Spoonacular permits caching for a maximum of 1 hour and allows only recipe id, title and image to be stored indefinitely: ingredients and instructions may not be persisted. A local corpus of ingredient lists scored against a pantry is exactly what that forbids, so no engineering could get around it. Free tier is 50 points/day, and they also prohibit building an application meant to provide the same experience as theirs.",
+ "sourceCheckedAt": "2026-08-13",
+ "sourceOkCount": 411
 }

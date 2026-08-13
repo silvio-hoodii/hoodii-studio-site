@@ -14,6 +14,9 @@ export interface CorpusMeal {
   youtube: string | null;
   tags: string[];
   ingredients: { name: string; measure: string }[];
+  /** Set by corpus-verify.mjs: does the source URL actually carry a JSON-LD recipe. */
+  sourceOk?: boolean;
+  sourceFail?: string;
 }
 
 export interface Candidate {
@@ -25,9 +28,23 @@ export interface Candidate {
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
 
-async function loadCorpus(): Promise<{ meals: CorpusMeal[]; attribution: string }> {
+async function loadCorpus() {
   const raw = JSON.parse(await readFile(join(DIR, 'themealdb.json'), 'utf8'));
-  return { meals: raw.meals as CorpusMeal[], attribution: raw.attribution as string };
+  const all = raw.meals as CorpusMeal[];
+  /* Only dishes whose source URL was VERIFIED to carry a real recipe. He clicked "Pollo en Salsa" and
+   * landed on a Costa Rican site's category index, because that is what TheMealDB has stored for it.
+   * corpus-verify.mjs fetched all 594 sources and found 183 that cannot yield a recipe: 86 pages with
+   * no recipe markup at all, 62 HTTP 402s from the Dotdash sites (allrecipes, simplyrecipes,
+   * thespruceeats) blocking bots, and the rest dead or 404. Offering those is offering a link we
+   * cannot stand behind, and it is also offering a dish that could never become a cook card. */
+  const usable = all.filter((m) => m.sourceOk === true);
+  return {
+    meals: usable,
+    attribution: raw.attribution as string,
+    hiddenNoSource: all.length - usable.length,
+    totalKnown: all.length,
+    sourceCheckedAt: raw.sourceCheckedAt as string | null,
+  };
 }
 
 /** Stock ids usable right now. Frozen counts: it needs a thaw, not a shop. */
@@ -47,7 +64,8 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
 }
 
 export async function findCandidates() {
-  const [{ meals, attribution }, stock] = await Promise.all([loadCorpus(), deriveStock()]);
+  const [{ meals, attribution, hiddenNoSource, totalKnown, sourceCheckedAt }, stock] =
+    await Promise.all([loadCorpus(), deriveStock()]);
   const available = usableIds(stock);
 
   /* Dishes that would eat something already on a clock. This is the single most valuable ranking in
@@ -78,6 +96,9 @@ export async function findCandidates() {
   return {
     attribution,
     total: meals.length,
+    hiddenNoSource,
+    totalKnown,
+    sourceCheckedAt,
     nameOf: (id: string) => nameOf(stock, id),
     /* Cookable AND saves something. Sorted by urgency, then by how much it uses up. */
     rescue: all
