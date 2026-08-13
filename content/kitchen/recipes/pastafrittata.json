@@ -1,0 +1,280 @@
+{
+  "id": "pastafrittata",
+  "name": "Leftover Pasta Frittata",
+  "build": "2026-08-12a",
+  "form": "dish",
+  "meal": [
+    "lunch",
+    "dinner"
+  ],
+  "why": "Cold plain spaghetti, eggs and parmesan turned into one pan-sized omelette. It is the first recipe in this app taken from a published source with NOTHING changed: her scale, her pan, her ingredients, her heat. It also eats the cooked spaghetti that has been sitting in the fridge since around Aug 10, which is at the edge of its window.",
+  "source": {
+    "name": "Leite's Culinaria",
+    "url": "https://leitesculinaria.com/98925/recipes-leftover-pasta-frittata.html",
+    "why": "A long-running, properly edited American food site. Rated 4.69 out of 5 from 22 ratings. Chosen over five other frittata recipes for one reason: every other one required pancetta or scamorza, and this one requires nothing that is not already in the kitchen."
+  },
+  "time": {
+    "activeMin": 25,
+    "totalMin": 25,
+    "note": "5 min to mix, 20 in the pan. Her own figures"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "wedge",
+    "proteinPerUnit": 13,
+    "proteinMath": "38 g from 6 large eggs at 6.3 g each. Plus about 8 g from 1/4 cup of grated parmesan, which is roughly 22 g at 23.3 g protein per 100 g, the figure read off the Armstrong label on 2026-08-02. Plus about 6 g from 113 g of cooked spaghetti, which is roughly 45 g dry at 13 g per 100 g for Barilla classic. Total about 52 g across 4 wedges, so 13 g each. BE HONEST ABOUT THIS: 13 g a wedge is a lunch, not a dinner that hits the daily target. Two wedges is 26 g. The egg and parmesan figures are label-based; the spaghetti one assumes cooked pasta weighs about 2.5 times its dry weight, which is a standard ratio and not something anyone weighed here."
+  },
+  "ingredients": [
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 6,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "spaghetti_cold",
+      "stock": "spaghetti_cooked",
+      "display": "cold leftover spaghetti",
+      "qty": 4,
+      "unit": "oz",
+      "prep": "straight from the fridge, plain and unsauced. 4 oz is 113 g, so weigh it",
+      "defining": true
+    },
+    {
+      "ref": "parmesan",
+      "stock": "parmesan",
+      "display": "grated Parmesan or pecorino cheese",
+      "qty": 0.25,
+      "unit": "cup",
+      "defining": true
+    },
+    {
+      "ref": "oil",
+      "staple": true,
+      "display": "olive oil",
+      "qty": 2,
+      "unit": "tbsp",
+      "prep": "plus more oil or butter for coating the skillet, and the source does not say how much",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "staple": true,
+      "display": "salt",
+      "qty": 0.125,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "pepper",
+      "staple": true,
+      "display": "freshly ground black pepper",
+      "qty": 1,
+      "unit": "grind",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "stovetop",
+    "whisk",
+    "mixingbowl_large",
+    "spatula",
+    "plates",
+    "measuringspoons",
+    "measuringcups",
+    "scale_digital"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Crack the 6 large eggs into a bowl and whisk very well. Mix in the 1/4 cup grated Parmesan or pecorino cheese, 2 tablespoons olive oil, 1/8 teaspoon salt, and a grind of pepper.",
+      "sourceText": "Mix the eggs. Crack the 6 large eggs into a bowl and whisk very well. Mix in the 1/4 cup grated Parmesan or pecorino cheese, 2 tablespoons olive oil, 1/8 teaspoon salt, and a grind of pepper.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 6,
+          "unit": "each"
+        },
+        {
+          "ref": "parmesan",
+          "amount": 0.25,
+          "unit": "cup"
+        },
+        {
+          "ref": "oil",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "salt",
+          "amount": 0.125,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper",
+          "amount": 1,
+          "unit": "grind"
+        }
+      ],
+      "equipment": [
+        "whisk",
+        "mixingbowl_large",
+        "measuringspoons",
+        "measuringcups"
+      ],
+      "look": "WHISK VERY WELL means keep going until the yolks and whites are one single yellow colour with no streaks of clear white left, and the surface has a light foam on it. Thirty seconds to a minute with the hand whisk. There is deliberately no timer on this step: the source gives no time for it, and the colour is the thing to judge, not a clock. Under-whisked eggs set in visible layers instead of one custard.The olive oil going INTO the eggs is not a mistake and it is not the pan oil. It makes the set frittata tender rather than rubbery. There is separate oil for the pan in the next step.1/8 teaspoon is the smallest spoon in your 10-piece set. If it is not marked, it is half of the 1/4 tsp.A GRIND OF PEPPER is one turn of the peppercorn grinder, her amount, and there is no more precise version of it in the source."
+    },
+    {
+      "n": 2,
+      "text": "Heat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
+      "sourceText": "Prep the pasta. If you have plain, unsauced spaghetti: Heat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
+      "uses": [
+        {
+          "ref": "spaghetti_cold",
+          "amount": 4,
+          "unit": "oz"
+        },
+        {
+          "ref": "oil",
+          "amount": 0,
+          "optional": true
+        },
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula",
+        "scale_digital"
+      ],
+      "heat": {
+        "surface": "stovetop",
+        "target": "Hot enough that the pasta starts to hiss steadily within a few seconds of going in. Then, once the egg goes in, low enough that you can see no movement at the edges at all.",
+        "recheck": "Right after the pasta goes in. Silence means too cool, bring it up until you hear it."
+      },
+      "doneness": {
+        "test": "Slide the spatula under the pasta and lift an edge to look at the underside. Patches of proper golden brown, not uniform pale, is her crisp and browned. That is the only thing to judge here.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE BRANCH FOR PLAIN PASTA, and it is her text for that case. Her recipe splits step 2 in two: one version for sauced spaghetti, one for plain. Yours is plain, confirmed 2026-08-12, so this is the plain one word for word. Nothing was merged or rewritten.SLICK means a thin shine across the whole base and up the sides, with no dry patches. The source does not give an amount for it and no amount has been invented here.NON-STICK PAN, not the stainless. This is the one job where zero grip is the entire point, because the whole dish has to release in one piece when you flip it.No timer here either, for the same reason: she gives no time for this step. The browned underside is the endpoint. PRESSING DOWN with the spatula is to get the strands in contact with the metal. A loose nest of pasta touches the pan in a few places and browns in a few places.The egg goes in AFTER the heat comes down. On hot metal the egg would scramble in threads instead of setting as one sheet."
+    },
+    {
+      "n": 3,
+      "text": "When the edges of the frittata look set and the center is still somewhat liquid, about 8 minutes, run a thin metal spatula around the skillet to loosen the sides of the frittata, then carefully slip it underneath to loosen the bottom.",
+      "sourceText": "Cook the frittata. When the edges of the frittata look set and the center is still somewhat liquid, about 8 minutes, run a thin metal spatula around the skillet to loosen the sides of the frittata, then carefully slip it underneath to loosen the bottom.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula"
+      ],
+      "minutes": 8,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Still low, from the end of the last step. The surface should barely move and nothing should be browning fast enough to smell.",
+        "recheck": "After 3 minutes. If any part of the edge is going dark brown rather than setting pale, it is too high."
+      },
+      "doneness": {
+        "test": "Tilt the pan slightly. The outer ring should stay put like set custard while the middle still slides. Both at once is what she is describing. If the whole thing slides it needs longer; if the middle does not move at all you have gone past it, which is not a disaster here, just carry on to the flip.",
+        "kind": "look"
+      },
+      "look": "Eight minutes is her number and it is a long time on low heat. Do not be tempted to raise it: the point is that the egg sets from the outside in, so the middle is still loose when you flip and then finishes on the second side.LOOSEN THE SIDES FIRST, then the bottom. If any of it is still stuck when you turn the pan over, the frittata tears and comes out in pieces. This step is entirely preparation for the flip.She says a thin metal spatula. Use the thinnest one in your utensil set; a thick or rounded one will not get under cleanly."
+    },
+    {
+      "n": 4,
+      "text": "Invert a dinner plate over the skillet. With one hand on the plate and the other on the handle, flip the frittata onto the plate in one confident \"up-and-over\" motion.",
+      "sourceText": "Flip the frittata. Invert a dinner plate over the skillet. With one hand on the plate and the other on the handle, flip the frittata onto the plate in one confident \"up-and-over\" motion.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "plates"
+      ],
+      "look": "Use a plate WIDER than the pan, so nothing hangs over the rim.The word she uses is CONFIDENT, and it is doing real work. One committed motion is what keeps it in one piece; a slow hesitant tilt lets it fold. Hold the plate flat against the pan, then turn the whole thing over as one object rather than pouring it out.Oven mitts or a dry tea towel on the pan hand. The handle has been on heat for thirteen minutes.The browned side is now facing UP on the plate. That is the side you want facing up when you serve, so remember it: the next step puts it back in the pan browned-side-up.",
+      "warn": "The middle is still liquid egg at this moment, so it will run if you tilt the plate. Keep the plate level from the flip until it goes back in the pan."
+    },
+    {
+      "n": 5,
+      "text": "Quickly slick the skillet with a little more oil or butter. Then, using a spatula, slide the frittata back into the pan. Don't worry if things are looking a little Humpty Dumpty, just fit it all back together again and keep it over low heat until it's cooked through, about 7 minutes more.",
+      "sourceText": "Cook the other side. Quickly slick the skillet with a little more oil or butter. Then, using a spatula, slide the frittata back into the pan. Don't worry if things are looking a little Humpty Dumpty, just fit it all back together again and keep it over low heat until it's cooked through, about 7 minutes more.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 0,
+          "optional": true
+        },
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula"
+      ],
+      "minutes": 7,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Low, the same as before the flip: the surface barely moving and nothing browning fast enough to smell.",
+        "recheck": "After 3 minutes. If the underside is darkening faster than the middle is setting, it is too high."
+      },
+      "doneness": {
+        "test": "Step 6 is the test, and it is hers: poke the middle with the spatula tip and look at whether liquid egg comes up.",
+        "kind": "look"
+      },
+      "look": "HUMPTY DUMPTY is her joke and it is also permission. If it breaks on the way in, push the pieces back together in the pan and the still-liquid egg in the middle glues them. A frittata that tore on the flip is not a ruined frittata.QUICKLY, because the pan is off the heat as little as possible and the frittata on the plate is still runny in the middle.It goes back in with the browned side UP, which means the pale side is now against the metal and gets its turn."
+    },
+    {
+      "n": 6,
+      "text": "Poke a hole in the middle of the frittata with the tip of the spatula to check that the egg is set. When it's ready, slide the frittata onto a plate. Let it cool a bit, then slice into wedges and serve.",
+      "sourceText": "Poke a hole in the middle of the frittata with the tip of the spatula to check that the egg is set. When it's ready, slide the frittata onto a plate. Let it cool a bit, then slice into wedges and serve.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "spatula",
+        "plates"
+      ],
+      "look": "SET means no liquid egg wells up into the hole you just made. Damp and firm is right. If clear or yellow liquid runs in, close it up and give it another two minutes.LET IT COOL A BIT is not optional if you want clean wedges. Straight out of the pan it is soft and the slices slump; five minutes and it holds an edge. It is also good at room temperature, which is how it is usually eaten in Naples.4 wedges at about 13 g of protein each. That is a lunch rather than a dinner that hits the daily target, and two wedges is 26 g. Worth knowing before you plan the rest of the day around it.Keeps 3 to 4 days in the fridge and is eaten cold or at room temperature, so there is no reheating problem to get wrong."
+    }
+  ],
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-12a",
+    "statement": "Every instruction is Leite's Culinaria's own sentence, in her order, with her times and her amounts, at her scale of 4 servings. Nothing was scaled, substituted, re-panned or re-heated. Her step 2 is written as two branches, one for sauced pasta and one for plain; the plain branch appears here verbatim because the pasta is plain, and choosing between two branches the author wrote is not a change to the recipe. Parmesan is one of the two cheeses she names. Everything this app adds (what a word means, which of his pans, protein arithmetic, timers, heat observables) is annotation attached to her sentences and is rendered as visibly separate from them.",
+    "sources": [
+      {
+        "name": "Leite's Culinaria",
+        "url": "https://leitesculinaria.com/98925/recipes-leftover-pasta-frittata.html",
+        "primary": true,
+        "note": "Leftover Pasta Frittata. 4.69 out of 5 from 22 ratings, 25 minutes total, serves 4. Fetched 2026-08-12; the recipe's structured data omits the instructions, so the step text was taken from the rendered page and the two branches of step 2 were read in full before choosing one."
+      }
+    ],
+    "readHash": "9f46a1fa"
+  }
+}

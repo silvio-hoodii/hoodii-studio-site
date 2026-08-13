@@ -516,6 +516,12 @@
       "where": "fridge",
       "state": "none",
       "note": "Semi-soft, melts smoothly, jalapeno already in it. Where mozzarella stretches, this one flows, so it suits a quesadilla or eggs rather than a pizza."
+    },
+    "spaghetti_cooked": {
+      "n": "cooked spaghetti (plain, leftover)",
+      "where": "fridge",
+      "state": "none",
+      "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days."
     }
   }
 }
