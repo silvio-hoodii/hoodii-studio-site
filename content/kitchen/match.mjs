@@ -1,0 +1,240 @@
+#!/usr/bin/env node
+/**
+ * Score a published recipe against what is actually in this kitchen.
+ *
+ *   node content/kitchen/match.mjs <recipe-url>
+ *   node content/kitchen/match.mjs <recipe-url> --json
+ *
+ * Why this exists. Silvio, 2026-08-12: "looking for the recipes online is the easy part, I think the
+ * hard part is us figuring out how we connect that to what's in the kitchen." Correct, and this file
+ * is that connection.
+ *
+ * Recipe corpora and scrapers are commodities. Every serious recipe site publishes JSON-LD because
+ * Google requires it for recipe search results, so extraction needs no API key and no library: six
+ * sites were parsed by hand in one session on 08-12. What cannot be bought is the mapping from
+ * "1 small onion (about 2 to 3 ounces), sliced thinly" to the specific bag of yellow onions in HIS
+ * pantry, kept distinct from the two white ones he bought that night. `stock/aliases.json` holds
+ * that, and it is the actual product.
+ *
+ * The one rule that matters most here: an ingredient this table does not recognise is reported
+ * UNKNOWN, never MISSING. Missing means we know he lacks it. Unknown means our table has a gap.
+ * Conflating them would silently reject dishes he could cook, which is exactly how the verbatim-only
+ * experiment took the catalogue to 0 of 30.
+ */
+
+import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join, resolve } from 'node:path';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ALIASES = JSON.parse(readFileSync(join(HERE, 'stock', 'aliases.json'), 'utf8'));
+
+/* ---------------- parsing an ingredient line ---------------- */
+
+const UNITS = [
+  'cups?', 'c', 'tablespoons?', 'tbsps?', 'tbs', 'tbl', 'teaspoons?', 'tsps?',
+  'ounces?', 'oz', 'pounds?', 'lbs?', 'lb', 'grams?', 'g', 'kilograms?', 'kg',
+  'milliliters?', 'millilitres?', 'ml', 'liters?', 'litres?', 'l',
+  'cloves?', 'sprigs?', 'pinch(?:es)?', 'dash(?:es)?', 'cans?', 'jars?', 'packages?',
+  'packs?', 'bunch(?:es)?', 'slices?', 'sticks?', 'heads?', 'stalks?', 'pieces?',
+  'handfuls?', 'quarts?', 'pints?', 'bowls?', 'servings?',
+];
+const SIZES = ['large', 'small', 'medium', 'big', 'extra large', 'jumbo', 'thin', 'thick'];
+
+/** Does the recipe itself mark this line as optional?
+ *
+ * Must be asked BEFORE parseIngredient, which strips parentheticals. Found 2026-08-12: gyudon's
+ * "Japanese red pickled ginger (benishoga) (optional), to serve" lost the word `optional` to the
+ * paren strip and was then reported as a missing ingredient, which is the app arguing with him about
+ * a garnish its own source called optional. */
+export function isOptionalLine(raw) {
+  /* Deliberately narrow. A first version also treated "to serve" as optional and swallowed gyudon's
+   * "4 cups short-grain white rice, to serve", which is the BASE of the dish, not a garnish. "to
+   * serve" usually means "for serving alongside" and sometimes means "this is the starch", and
+   * nothing in the text distinguishes them. So only an explicit optional marker counts. */
+  return /\boptional\b|\bif (?:using|desired|you like|you have)\b|\bfor garnish\b/i.test(String(raw));
+}
+
+/** Turn a published ingredient line into a bare ingredient name, or '' if nothing survives. */
+export function parseIngredient(raw) {
+  let s = String(raw).toLowerCase();
+
+  s = s.replace(/&frac\d+;|&[a-z]+;/g, ' ');       // html entities from scraped pages
+  s = s.replace(/\([^)]*\)/g, ' ');                 // "(about 2 to 3 ounces)"
+  s = s.replace(/\[[^\]]*\]/g, ' ');
+  s = s.split(/,/)[0];                              // prep after the first comma
+  s = s.split(/\bor\b/)[0];                         // "parmesan or pecorino" -> first named
+  s = s.replace(/\b(?:to taste|as needed|for (?:serving|garnish|the pan|dusting)|optional|divided|plus more.*)$/g, ' ');
+  s = s.replace(/[¼-¾⅐-⅞]/g, ' ');  // vetted fractions
+  s = s.replace(/\d+\s*\/\s*\d+/g, ' ');            // 1/2
+  s = s.replace(/\d+(?:[.,]\d+)?/g, ' ');           // remaining numbers
+  s = s.replace(/[-–—]/g, ' ');
+  s = s.replace(new RegExp(`\\b(?:${UNITS.join('|')})\\b`, 'g'), ' ');
+  s = s.replace(new RegExp(`\\b(?:${SIZES.join('|')})\\b`, 'g'), ' ');
+  s = s.replace(/\b(?:fresh|freshly|ground|chopped|minced|sliced|grated|shredded|diced|crushed|beaten|peeled|trimmed|rinsed|drained|cooked|raw|dried|frozen|of|the|a|an|about|approximately|good|quality|ripe|hot|cold|warm|boneless|skinless|bone in|skin on|thinly|roughly|finely)\b/g, ' ');
+  s = s.replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  return s;
+}
+
+/* ---------------- matching a name to this kitchen ---------------- */
+
+/** Alias phrases sorted longest-first, so `ground beef` is tested before `beef`. */
+function aliasIndex() {
+  const rows = [];
+  for (const [itemId, phrases] of Object.entries(ALIASES.map)) {
+    for (const p of phrases) rows.push({ itemId, phrase: parseIngredient(p) || p.toLowerCase() });
+  }
+  for (const p of ALIASES.staples) rows.push({ itemId: '__STAPLE__', phrase: parseIngredient(p) || p.toLowerCase() });
+  // Gaps match on their key AND on their aliases, because a recipe writes "Japanese dashi powder",
+  // never "hondashi". Without the aliases that line landed in UNKNOWN instead of MISSING.
+  for (const g of Object.keys(ALIASES._knownGaps)) {
+    if (g.startsWith('_')) continue;
+    const phrases = [g, ...((ALIASES._gapAliases || {})[g] || [])];
+    for (const p of phrases) rows.push({ itemId: `__GAP__${g}`, phrase: parseIngredient(p) || p.toLowerCase() });
+  }
+  return rows.filter((r) => r.phrase).sort((a, b) => b.phrase.length - a.phrase.length);
+}
+const INDEX = aliasIndex();
+const VETOES = ALIASES._vetoes || {};
+
+/** '__STAPLE__' | '__GAP__<name>' | '<itemId>' | null
+ *
+ * Vetoes exist because longest-match alone is not enough. Found on the first real run, 2026-08-12:
+ * "short-grain white rice" CONTAINS the phrase "white rice", so it matched longgrainrice and reported
+ * that he had the right rice when he does not. A false "you have this" is worse than a false "you are
+ * missing this", because the first silently produces the wrong dish and the second only costs a shop.
+ * So a qualifier in the text can disqualify an item outright, whatever the alias table says. */
+export function matchToItem(name) {
+  if (!name) return null;
+  for (const r of INDEX) {
+    const veto = VETOES[r.itemId];
+    if (veto && veto.some((v) => name.includes(parseIngredient(v) || v))) continue;
+    // Whole-phrase containment. Word-boundary guarded so `oil` does not match `boiling`.
+    const re = new RegExp(`(?:^|\\s)${r.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`);
+    if (re.test(name)) return r.itemId;
+  }
+  return null;
+}
+
+/** availableIds: Set of stock ids usable now (level have/low). */
+export function scoreRecipe(ingredientLines, availableIds) {
+  const have = [], missing = [], unknown = [], staples = [], optional = [];
+  for (const line of ingredientLines) {
+    const name = parseIngredient(line);
+    const hit = matchToItem(name);
+    // A garnish the source itself calls optional must never block a dish or count against it.
+    if (isOptionalLine(line) && !(hit && !hit.startsWith('__') && availableIds.has(hit))) {
+      optional.push({ line, name, item: hit && !hit.startsWith('__') ? hit : null });
+      continue;
+    }
+    if (hit === '__STAPLE__') { staples.push({ line, name }); continue; }
+    if (hit === null) { unknown.push({ line, name }); continue; }
+    if (hit.startsWith('__GAP__')) {
+      missing.push({ line, name, item: hit.slice(7), reason: ALIASES._knownGaps[hit.slice(7)] });
+      continue;
+    }
+    if (availableIds.has(hit)) have.push({ line, name, item: hit });
+    else missing.push({ line, name, item: hit });
+  }
+  return {
+    have, missing, unknown, staples, optional,
+    counted: have.length + missing.length,
+    verdict: missing.length === 0 ? (unknown.length ? 'probably-ready' : 'ready') : `missing-${missing.length}`,
+  };
+}
+
+/* ---------------- JSON-LD extraction ---------------- */
+
+export function extractRecipe(html) {
+  const out = [];
+  const re = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
+  let m;
+  while ((m = re.exec(html))) {
+    let d;
+    try { d = JSON.parse(m[1]); } catch { continue; }
+    const items = Array.isArray(d) ? d : (d['@graph'] || [d]);
+    for (const o of items) {
+      if (!o || typeof o !== 'object') continue;
+      if (!String(o['@type'] || '').includes('Recipe')) continue;
+      out.push({
+        name: o.name,
+        yield: o.recipeYield,
+        image: typeof o.image === 'string' ? o.image : (o.image?.url || o.image?.[0]?.url || o.image?.[0]),
+        totalTime: o.totalTime,
+        ingredients: (o.recipeIngredient || []).map((x) => String(x)),
+        rating: o.aggregateRating?.ratingValue ?? null,
+        ratingCount: o.aggregateRating?.ratingCount ?? o.aggregateRating?.reviewCount ?? null,
+      });
+    }
+  }
+  return out[0] || null;
+}
+
+/* ---------------- CLI ---------------- */
+
+const isEntry = process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+if (isEntry) {
+  const url = process.argv.find((a) => a.startsWith('http'));
+  if (!url) {
+    console.error('usage: node content/kitchen/match.mjs <recipe-url> [--json]');
+    process.exit(2);
+  }
+
+  // Live stock. Folded here rather than importing the TS so this stays a zero-build script.
+  const envPath = join(HERE, '..', '..', '.env.local');
+  const available = new Set();
+  if (existsSync(envPath)) {
+    const env = readFileSync(envPath, 'utf8');
+    const dbUrl = env.match(/^KITCHEN_DATABASE_URL=(.*)$/m)?.[1].trim().replace(/^["']|["']$/g, '');
+    if (dbUrl) {
+      const { neon } = await import('@neondatabase/serverless');
+      const sql = neon(dbUrl);
+      const rows = await sql`select item_id, ev, qty from stock_event order by at asc`;
+      const state = {};
+      for (const r of rows) {
+        const s = (state[r.item_id] ||= { ev: 'none', qty: null });
+        s.ev = r.ev;
+        if (r.qty !== null && r.qty !== undefined) s.qty = Number(r.qty);
+        if (r.ev === 'out' || r.ev === 'tossed') s.qty = 0;
+      }
+      const seed = JSON.parse(readFileSync(join(HERE, 'stock', 'items.json'), 'utf8')).items;
+      for (const [id, v] of Object.entries(seed)) {
+        if (['have', 'low', 'frozen'].includes(v.state)) available.add(id);
+      }
+      for (const [id, s] of Object.entries(state)) {
+        const usable = !['out', 'tossed', 'none'].includes(s.ev) && s.qty !== 0;
+        if (usable) available.add(id); else available.delete(id);
+      }
+    }
+  }
+
+  const res = await fetch(url, {
+    headers: { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' },
+  });
+  const r = extractRecipe(await res.text());
+  if (!r) { console.error(`No JSON-LD recipe found at ${url}`); process.exit(1); }
+
+  const score = scoreRecipe(r.ingredients, available);
+  if (process.argv.includes('--json')) {
+    console.log(JSON.stringify({ url, ...r, score }, null, 2));
+  } else {
+    console.log(`\n${r.name}`);
+    console.log(`${url}`);
+    console.log(`serves ${JSON.stringify(r.yield)}${r.rating ? ` · rated ${r.rating} from ${r.ratingCount}` : ''}`);
+    console.log(`\nVERDICT: ${score.verdict.toUpperCase()}   (${score.have.length} of ${score.counted} tracked ingredients on hand)\n`);
+    if (score.missing.length) {
+      console.log('MISSING');
+      for (const m of score.missing) console.log(`  x ${m.item.padEnd(18)} <- "${m.line.trim()}"${m.reason ? `\n      ${m.reason}` : ''}`);
+    }
+    if (score.have.length) {
+      console.log('\nHAVE');
+      for (const h of score.have) console.log(`  ok ${h.item.padEnd(18)} <- "${h.line.trim()}"`);
+    }
+    if (score.staples.length) console.log(`\nSTAPLES assumed present: ${score.staples.map((s) => s.name).join(', ')}`);
+    if (score.unknown.length) {
+      console.log('\nUNKNOWN, meaning aliases.json has a gap. NOT counted as missing.');
+      for (const u of score.unknown) console.log(`  ? "${u.line.trim()}"  parsed as "${u.name}"`);
+    }
+    console.log('');
+  }
+}

@@ -1,0 +1,771 @@
+{
+  "_": "The connection layer. Maps ingredient names AS PUBLISHED RECIPES WRITE THEM to this kitchen's item ids.",
+  "_why": "Silvio, 2026-08-12: 'looking for the recipes online is the easy part, I think the hard part is us figuring out how we connect that to what's in the kitchen.' He is right, and this file is that hard part. Recipe corpora and scrapers are commodities: recipe-scrapers handles 649 sites for free, and every serious recipe site publishes JSON-LD because Google requires it for search results. What nobody can sell us is the knowledge that `yellowonion` is his 3 lb bag of yellow, that `whiteonion` is two new ones bought 08-12, that `spaghetti_cooked` is leftovers in the fridge and NOT the dry Barilla in the pantry, and that `beef` is browned and bagged while `beef-raw` is frozen mince. That is what this table holds.",
+  "_rules": [
+    "Longest match wins, so `ground beef` must beat `beef`. The matcher sorts by phrase length before testing.",
+    "NEVER alias two things that behave differently into one id. Fresh tomatoes are not tinned tomatoes are not tomato sauce are not tomato paste, and that exact confusion rejected a bolognese on 2026-08-11.",
+    "`staple: true` items are assumed present and never counted as missing, because presence is binary and lives in KITCHEN.md rather than the event log.",
+    "An unmatched ingredient is reported as UNKNOWN, never as missing. Missing means we know he lacks it; unknown means this table has a gap. Conflating them would silently reject recipes he could cook, which is the failure mode of the whole verbatim experiment."
+  ],
+  "staples": [
+    "salt",
+    "kosher salt",
+    "sea salt",
+    "table salt",
+    "fine salt",
+    "coarse salt",
+    "pepper",
+    "black pepper",
+    "freshly ground black pepper",
+    "ground black pepper",
+    "water",
+    "cold water",
+    "warm water",
+    "boiling water",
+    "ice water",
+    "olive oil",
+    "extra virgin olive oil",
+    "extra-virgin olive oil",
+    "evoo",
+    "vegetable oil",
+    "neutral oil",
+    "neutral-tasting oil",
+    "canola oil",
+    "cooking oil",
+    "oil",
+    "sugar",
+    "white sugar",
+    "granulated sugar",
+    "caster sugar",
+    "superfine sugar",
+    "flour",
+    "all-purpose flour",
+    "all purpose flour",
+    "plain flour",
+    "baking soda",
+    "bicarbonate of soda",
+    "baking powder",
+    "vinegar",
+    "white vinegar",
+    "distilled vinegar",
+    "garlic powder",
+    "onion powder",
+    "paprika",
+    "smoked paprika",
+    "cumin",
+    "ground cumin",
+    "italian seasoning",
+    "dried oregano",
+    "oregano",
+    "dried basil",
+    "dried thyme",
+    "thyme",
+    "cajun seasoning",
+    "red pepper flakes",
+    "crushed red pepper",
+    "chili flakes",
+    "chilli flakes",
+    "pepper flakes",
+    "cayenne",
+    "bay leaf",
+    "bay leaves",
+    "honey",
+    "maple syrup",
+    "cocoa powder",
+    "cocoa",
+    "yeast",
+    "instant yeast"
+  ],
+  "map": {
+    "eggs": [
+      "egg",
+      "eggs",
+      "large egg",
+      "large eggs",
+      "medium egg",
+      "medium eggs",
+      "whole egg",
+      "whole eggs",
+      "free-range eggs",
+      "beaten egg",
+      "beaten eggs",
+      "egg yolk",
+      "egg yolks",
+      "egg white",
+      "egg whites"
+    ],
+    "beef-raw": [
+      "ground beef",
+      "minced beef",
+      "beef mince",
+      "lean ground beef",
+      "extra lean ground beef",
+      "ground chuck",
+      "hamburger meat",
+      "mince",
+      "beef mince 10% fat",
+      "500g beef mince",
+      "1 lb ground beef"
+    ],
+    "beef": [
+      "cooked ground beef",
+      "browned ground beef",
+      "cooked beef mince"
+    ],
+    "roast": [
+      "sliced beef",
+      "thinly sliced beef",
+      "beef sirloin",
+      "sirloin tip",
+      "sirloin steak",
+      "thinly sliced ribeye",
+      "ribeye",
+      "flank steak",
+      "beef strips",
+      "stir-fry beef",
+      "shabu shabu beef"
+    ],
+    "chickenbreast": [
+      "chicken breast",
+      "chicken breasts",
+      "boneless skinless chicken breast",
+      "boneless skinless chicken breasts",
+      "chicken cutlet",
+      "chicken cutlets",
+      "skinless chicken breast"
+    ],
+    "chickenthighs": [
+      "chicken thigh",
+      "chicken thighs",
+      "bone-in chicken thighs",
+      "skin-on chicken thighs",
+      "boneless chicken thighs",
+      "chicken thigh fillets"
+    ],
+    "chickenwings": [
+      "chicken wing",
+      "chicken wings",
+      "wings",
+      "drumettes",
+      "winglets",
+      "party wings"
+    ],
+    "quarters": [
+      "chicken leg quarters",
+      "leg quarters",
+      "chicken legs",
+      "chicken drumsticks",
+      "drumsticks"
+    ],
+    "groundchickenfrozen": [
+      "ground chicken",
+      "minced chicken",
+      "chicken mince"
+    ],
+    "chickendeli": [
+      "sliced cooked chicken",
+      "deli chicken",
+      "rotisserie chicken",
+      "cooked chicken breast",
+      "shredded cooked chicken"
+    ],
+    "turkeydeli": [
+      "sliced turkey",
+      "deli turkey",
+      "smoked turkey",
+      "turkey breast slices"
+    ],
+    "tilapia": [
+      "tilapia",
+      "tilapia fillet",
+      "tilapia fillets",
+      "white fish",
+      "white fish fillets"
+    ],
+    "tomatoes_grape": [
+      "fresh tomatoes",
+      "tomato",
+      "tomatoes",
+      "grape tomatoes",
+      "cherry tomatoes",
+      "cherry tomato",
+      "plum tomatoes",
+      "roma tomatoes",
+      "vine tomatoes",
+      "ripe tomatoes"
+    ],
+    "tomatopaste": [
+      "tomato paste",
+      "tomato puree",
+      "tomato purée",
+      "double concentrate tomato"
+    ],
+    "basil": [
+      "fresh basil",
+      "basil leaves",
+      "fresh basil leaves",
+      "handful of basil"
+    ],
+    "parsley": [
+      "fresh parsley",
+      "flat-leaf parsley",
+      "flat leaf parsley",
+      "curly parsley",
+      "italian parsley",
+      "chopped parsley"
+    ],
+    "ginger": [
+      "fresh ginger",
+      "ginger",
+      "grated ginger",
+      "minced ginger",
+      "ginger root",
+      "gingerroot"
+    ],
+    "garlic": [
+      "garlic",
+      "garlic clove",
+      "garlic cloves",
+      "cloves garlic",
+      "minced garlic",
+      "crushed garlic",
+      "grated garlic",
+      "garlic puree"
+    ],
+    "yellowonion": [
+      "yellow onion",
+      "yellow onions",
+      "onion",
+      "onions",
+      "brown onion",
+      "brown onions",
+      "medium onion",
+      "large onion",
+      "small onion",
+      "sweet onion",
+      "sweet onions",
+      "spanish onion"
+    ],
+    "whiteonion": [
+      "white onion",
+      "white onions"
+    ],
+    "onion": [
+      "red onion",
+      "red onions"
+    ],
+    "greenonion": [
+      "green onion",
+      "green onions",
+      "scallion",
+      "scallions",
+      "spring onion",
+      "spring onions",
+      "salad onion"
+    ],
+    "carrots": [
+      "carrot",
+      "carrots",
+      "baby carrots",
+      "small carrot",
+      "matchstick carrots",
+      "shredded carrot"
+    ],
+    "peppers": [
+      "bell pepper",
+      "bell peppers",
+      "red bell pepper",
+      "yellow bell pepper",
+      "sweet pepper",
+      "sweet peppers",
+      "capsicum",
+      "green pepper"
+    ],
+    "cucumbers": [
+      "cucumber",
+      "cucumbers",
+      "english cucumber",
+      "persian cucumber"
+    ],
+    "mushrooms": [
+      "mushroom",
+      "mushrooms",
+      "cremini mushrooms",
+      "cremini",
+      "button mushrooms",
+      "white mushrooms",
+      "chestnut mushrooms",
+      "shiitake mushrooms",
+      "fresh shiitake",
+      "portobello",
+      "mixed mushrooms"
+    ],
+    "sweetpotato": [
+      "sweet potato",
+      "sweet potatoes",
+      "yam",
+      "yams"
+    ],
+    "arugula": [
+      "arugula",
+      "rocket",
+      "baby arugula",
+      "rocket leaves"
+    ],
+    "olives": [
+      "black olives",
+      "sliced black olives",
+      "olives",
+      "kalamata olives"
+    ],
+    "capers": [
+      "capers",
+      "capers drained",
+      "caper",
+      "brined capers"
+    ],
+    "lentils": [
+      "lentils",
+      "canned lentils",
+      "green lentils",
+      "brown lentils"
+    ],
+    "frozenveg": [
+      "frozen peas",
+      "peas",
+      "frozen corn",
+      "corn",
+      "frozen mixed vegetables",
+      "peas and carrots",
+      "frozen peas and carrots",
+      "butternut squash",
+      "frozen celery",
+      "celery"
+    ],
+    "frozenpeppers": [
+      "frozen peppers",
+      "frozen sliced peppers",
+      "frozen pepper strips"
+    ],
+    "fruit": [
+      "frozen berries",
+      "frozen strawberries",
+      "frozen mango",
+      "mixed berries",
+      "berries",
+      "frozen fruit"
+    ],
+    "pineapple": [
+      "pineapple",
+      "frozen pineapple",
+      "pineapple chunks"
+    ],
+    "lemon_fresh": [
+      "lemon",
+      "lemons",
+      "fresh lemon",
+      "lemon zest",
+      "zest of a lemon",
+      "juice of a lemon",
+      "lemon wedges"
+    ],
+    "lemon": [
+      "lemon juice",
+      "bottled lemon juice",
+      "lime juice"
+    ],
+    "milk": [
+      "milk",
+      "whole milk",
+      "2% milk",
+      "semi-skimmed milk",
+      "skim milk",
+      "dairy milk"
+    ],
+    "butter": [
+      "butter",
+      "unsalted butter",
+      "salted butter",
+      "melted butter",
+      "softened butter"
+    ],
+    "yogurt": [
+      "greek yogurt",
+      "yogurt",
+      "plain yogurt",
+      "natural yoghurt",
+      "yoghurt",
+      "0% greek yogurt"
+    ],
+    "cottagecheese": [
+      "cottage cheese"
+    ],
+    "parmesan": [
+      "parmesan",
+      "parmigiano",
+      "parmigiano reggiano",
+      "grated parmesan",
+      "parmesan cheese",
+      "grana padano",
+      "grana",
+      "pecorino",
+      "pecorino romano",
+      "hard cheese"
+    ],
+    "mozzarella": [
+      "mozzarella",
+      "fresh mozzarella",
+      "low-moisture mozzarella",
+      "shredded mozzarella",
+      "scamorza",
+      "provolone"
+    ],
+    "montereyjack": [
+      "monterey jack",
+      "pepper jack",
+      "jack cheese"
+    ],
+    "longgrainrice": [
+      "long grain rice",
+      "long-grain rice",
+      "white rice",
+      "rice",
+      "basmati rice",
+      "jasmine rice"
+    ],
+    "shortgrainrice": [
+      "short grain rice",
+      "short-grain rice",
+      "sushi rice",
+      "calrose rice",
+      "japanese rice",
+      "medium grain rice",
+      "arborio rice"
+    ],
+    "rice": [
+      "instant rice",
+      "minute rice",
+      "quick-cook rice"
+    ],
+    "pasta": [
+      "pasta",
+      "spaghetti",
+      "dry spaghetti",
+      "penne",
+      "rotini",
+      "fusilli",
+      "linguine",
+      "macaroni",
+      "dried pasta",
+      "spaghettini"
+    ],
+    "spaghetti_cooked": [
+      "cooked spaghetti",
+      "leftover spaghetti",
+      "cold leftover spaghetti",
+      "leftover pasta",
+      "cooked pasta"
+    ],
+    "oats": [
+      "oats",
+      "rolled oats",
+      "old-fashioned oats",
+      "porridge oats"
+    ],
+    "flour": [
+      "breadcrumbs",
+      "panko"
+    ],
+    "soy": [
+      "soy sauce",
+      "light soy sauce",
+      "soya sauce",
+      "shoyu",
+      "low sodium soy sauce",
+      "reduced-sodium soy sauce"
+    ],
+    "oyster": [
+      "oyster sauce"
+    ],
+    "mirin": [
+      "mirin",
+      "aji-mirin",
+      "sweet rice wine"
+    ],
+    "shaoxing": [
+      "shaoxing wine",
+      "shao xing",
+      "shaoxing rice wine",
+      "chinese cooking wine",
+      "rice wine",
+      "sake"
+    ],
+    "sesameoil": [
+      "sesame oil",
+      "toasted sesame oil",
+      "dark sesame oil"
+    ],
+    "cornstarch": [
+      "cornstarch",
+      "corn starch",
+      "cornflour",
+      "corn flour",
+      "potato starch",
+      "tapioca starch"
+    ],
+    "vinegar": [
+      "rice vinegar",
+      "rice wine vinegar",
+      "white wine vinegar",
+      "apple cider vinegar",
+      "cider vinegar",
+      "balsamic vinegar"
+    ],
+    "stock": [
+      "chicken broth",
+      "chicken stock",
+      "beef broth",
+      "beef stock",
+      "vegetable stock",
+      "vegetable broth",
+      "broth",
+      "stock"
+    ],
+    "stockcube": [
+      "stock cube",
+      "bouillon cube",
+      "chicken bouillon",
+      "chicken bouillon powder",
+      "bouillon powder",
+      "knorr cube"
+    ],
+    "mayo": [
+      "mayonnaise",
+      "mayo"
+    ],
+    "peanutbutter": [
+      "peanut butter"
+    ],
+    "raisins": [
+      "raisins",
+      "sultanas"
+    ],
+    "whey": [
+      "whey protein",
+      "protein powder",
+      "vanilla protein powder"
+    ]
+  },
+  "_knownGaps": {
+    "_": "Things published recipes ask for that this kitchen genuinely does not have, listed so the matcher reports them as MISSING with a real name rather than as UNKNOWN. Everything here has been hit by an actual rejected recipe.",
+    "hondashi": "Japanese dashi powder, dried bonito and kelp. Rejected Aaron and Claire Ground Beef Gyudon on 2026-08-11. Chicken bouillon covers the salt but not the oceanic depth.",
+    "kimchi": "Suggested alongside two Korean dishes, never required by one.",
+    "gochujang": "Korean fermented chilli paste. Rejects most spicy Korean recipes.",
+    "gochugaru": "Korean chilli flakes. Not the same as crushed red pepper: coarser, fruitier, much less hot.",
+    "pancetta": "Rejected three separate frittata recipes on 2026-08-12. Bacon is the usual stand-in.",
+    "tinned tomatoes": "Rejected the metric bolognese on 2026-08-11. NOTE: fresh grape tomatoes arrived 08-12, which changes what is possible but is still not the same product.",
+    "kidney beans": "Blocks chilli con carne.",
+    "enoki mushrooms": "Stringy, stays in strands. Cremini is meatier and not equivalent, though it works.",
+    "wine": "No red or white wine in the kitchen. Blocks a lot of braises and many ragu recipes.",
+    "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
+    "sesame seeds": "Toasted sesame seeds, wanted as a garnish by most Korean recipes.",
+    "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
+    "short grain rice": "Not owned. Long grain works but changes the dish: in a donburi the sauce is meant to soak a sticky layer of rice under the topping, and long grain stays separate so the sauce runs to the bottom of the bowl. About $5.77 and it unlocks every donburi plus the Beef Bulgogi pot rice already written."
+  },
+  "_vetoes": {
+    "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
+    "longgrainrice": [
+      "short grain",
+      "shortgrain",
+      "sushi",
+      "calrose",
+      "arborio",
+      "medium grain",
+      "glutinous",
+      "sticky rice",
+      "brown rice",
+      "wild rice"
+    ],
+    "rice": [
+      "short grain",
+      "sushi",
+      "arborio",
+      "long grain",
+      "basmati",
+      "jasmine",
+      "brown rice"
+    ],
+    "yellowonion": [
+      "white onion",
+      "red onion",
+      "green onion",
+      "spring onion",
+      "scallion",
+      "shallot",
+      "pickled"
+    ],
+    "tomatoes_grape": [
+      "canned",
+      "tinned",
+      "chopped tomatoes",
+      "crushed tomatoes",
+      "passata",
+      "tomato paste",
+      "tomato puree",
+      "tomato sauce",
+      "sun dried",
+      "sun-dried"
+    ],
+    "parmesan": [
+      "cream cheese",
+      "cheese sauce"
+    ],
+    "milk": [
+      "coconut milk",
+      "almond milk",
+      "oat milk",
+      "soy milk",
+      "condensed",
+      "evaporated",
+      "buttermilk"
+    ],
+    "butter": [
+      "peanut butter",
+      "almond butter",
+      "nut butter",
+      "buttermilk",
+      "butternut"
+    ],
+    "stock": [
+      "stock cube",
+      "bouillon"
+    ],
+    "pasta": [
+      "cooked",
+      "leftover",
+      "pasta sauce"
+    ],
+    "beef-raw": [
+      "cooked",
+      "browned",
+      "sliced",
+      "roast",
+      "steak",
+      "broth",
+      "stock"
+    ],
+    "garlic": [
+      "garlic powder",
+      "garlic salt",
+      "black garlic"
+    ],
+    "ginger": [
+      "pickled ginger",
+      "ground ginger",
+      "gingerbread",
+      "ginger ale"
+    ],
+    "peppers": [
+      "black pepper",
+      "pepper flakes",
+      "peppercorn",
+      "chilli pepper",
+      "chili pepper",
+      "jalapeno",
+      "cayenne"
+    ]
+  },
+  "_gapAliases": {
+    "_": "Alias phrases for the known gaps, so a recipe naming one is reported MISSING with a reason rather than UNKNOWN.",
+    "hondashi": [
+      "hondashi",
+      "dashi",
+      "dashi powder",
+      "japanese dashi powder",
+      "bonito",
+      "bonito flakes",
+      "katsuobushi",
+      "dried bonito flakes",
+      "kombu"
+    ],
+    "gochujang": [
+      "gochujang",
+      "korean chili paste",
+      "korean chilli paste",
+      "red pepper paste"
+    ],
+    "gochugaru": [
+      "gochugaru",
+      "korean chili flakes",
+      "korean chilli flakes",
+      "korean red pepper flakes"
+    ],
+    "pancetta": [
+      "pancetta",
+      "guanciale",
+      "bacon",
+      "smoked bacon",
+      "lardons",
+      "salami"
+    ],
+    "tinned tomatoes": [
+      "canned tomatoes",
+      "tinned tomatoes",
+      "chopped tomatoes",
+      "crushed tomatoes",
+      "passata",
+      "diced tomatoes",
+      "san marzano"
+    ],
+    "kidney beans": [
+      "kidney beans",
+      "black beans",
+      "cannellini",
+      "chickpeas",
+      "borlotti"
+    ],
+    "enoki mushrooms": [
+      "enoki",
+      "enoki mushrooms"
+    ],
+    "wine": [
+      "red wine",
+      "white wine",
+      "dry white wine",
+      "dry red wine",
+      "marsala",
+      "vermouth",
+      "sherry"
+    ],
+    "heavy cream": [
+      "heavy cream",
+      "double cream",
+      "whipping cream",
+      "single cream",
+      "half and half",
+      "creme fraiche",
+      "sour cream"
+    ],
+    "sesame seeds": [
+      "sesame seeds",
+      "toasted sesame seeds",
+      "white sesame seeds"
+    ],
+    "pickled ginger": [
+      "pickled ginger",
+      "benishoga",
+      "beni shoga"
+    ],
+    "kimchi": [
+      "kimchi"
+    ],
+    "short grain rice": [
+      "short grain rice",
+      "short grain white rice",
+      "sushi rice",
+      "calrose",
+      "japanese rice",
+      "medium grain rice"
+    ]
+  }
+}
