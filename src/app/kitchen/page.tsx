@@ -131,6 +131,15 @@ export default async function KitchenHome() {
         to cook two things at once.
       </p>
 
+      {/* A page nobody can navigate to is a hidden page. The offered list above is 1 recipe that has
+          been read and gated; this is 625 that have not, which is a completely different promise and
+          has to read as one. */}
+      <p className="quiet" style={{ marginTop: 14 }}>
+        <Link href="/kitchen/find">Browse what else you could make →</Link>{' '}
+        625 published dishes scored against the fridge, with photos. A menu to pick from, not recipes:
+        nothing there has been read or cooked.
+      </p>
+
       <hr className="divider" />
 
       {/* Nothing at all, said once, only when it is actually true. Until 2026-08-11 this page

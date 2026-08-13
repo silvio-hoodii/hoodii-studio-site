@@ -442,3 +442,63 @@
   outline: 2px solid var(--ring);
   outline-offset: -1px;
 }
+
+/* ---- the find surface: a menu with photos ----
+   The only images anywhere on this site. Everything else is inline SVG, deliberately, but "does this
+   look interesting" was his actual request and that cannot be answered by a name. */
+
+.kos .meallist { list-style: none; padding: 0; margin: 0; }
+
+.kos .mealrow {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+
+.kos .mealthumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  background: var(--muted);
+  display: block;
+}
+
+.kos .mealtop {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.kos .mealtop a { color: inherit; text-decoration: none; }
+.kos .mealtop a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.kos .v {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.kos .v.ok { color: var(--signal); }
+
+.kos .mealmeta,
+.kos .mealuses,
+.kos .mealmiss,
+.kos .mealvia {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+.kos .mealuses { color: var(--signal); }
+.kos .mealmiss { color: var(--foreground); }
+
+@media (max-width: 420px) {
+  .kos .mealrow { grid-template-columns: 44px 1fr; gap: 10px; }
+  .kos .mealthumb { width: 44px; height: 44px; }
+}

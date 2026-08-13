@@ -14,7 +14,6 @@
     "table salt",
     "fine salt",
     "coarse salt",
-    "pepper",
     "black pepper",
     "freshly ground black pepper",
     "ground black pepper",
@@ -282,7 +281,10 @@
       "sweet pepper",
       "sweet peppers",
       "capsicum",
-      "green pepper"
+      "green pepper",
+      "red pepper",
+      "orange pepper",
+      "sweet bell pepper"
     ],
     "cucumbers": [
       "cucumber",
@@ -438,10 +440,7 @@
       "pepper jack",
       "jack cheese",
       "cheddar",
-      "cheddar cheese",
-      "grated cheese",
-      "shredded cheese",
-      "cheese"
+      "cheddar cheese"
     ],
     "longgrainrice": [
       "long grain rice",
@@ -521,7 +520,9 @@
     "sesameoil": [
       "sesame oil",
       "toasted sesame oil",
-      "dark sesame oil"
+      "dark sesame oil",
+      "sesame seed oil",
+      "roasted sesame oil"
     ],
     "cornstarch": [
       "cornstarch",
@@ -1011,7 +1012,10 @@
       "gruyere",
       "emmental",
       "brie",
-      "blue cheese"
+      "blue cheese",
+      "soft cheese",
+      "queso fresco",
+      "paneer"
     ],
     "spinach": [
       "spinach",
