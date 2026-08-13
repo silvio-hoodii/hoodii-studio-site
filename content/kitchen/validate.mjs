@@ -319,17 +319,42 @@ function validate(r, file) {
    *
    * And only `sourced` is offered (see isRead in kitchen/page.tsx). The catalogue gets very small.
    * It was already 1 of 30, and honest-and-tiny beats broad-and-broken. */
-  const devs = Array.isArray(r.deviations) ? r.deviations.length : 0;
-  if (r.provenance?.tier === 'sourced' && devs > 0) {
-    fail(id, 'verbatim', `tier is "sourced" but ${devs} deviation(s) are declared`,
-      'Verbatim means verbatim: her scale, her vessel, her ingredients, her heat. Any deviation makes '
-      + 'this `adapted`, and adapted is not offered. Either cook it exactly as published or do not '
-      + 'offer the dish. Deciding a deviation is small enough is the judgement that produced five '
-      + 'defects in one evening.');
+  /* AMENDED 2026-08-12, and the amendment matters more than the original rule.
+   *
+   * The first version disqualified `sourced` on ANY deviation. That banned the wrong thing. Reviewing
+   * the five defects of 08-11: a pot swapped for a skillet, an invented browning target, an invented
+   * fond note, an invented unit conversion, and a sauce test three times thicker than the source
+   * asks for. NOT ONE was an ingredient substitution. Cornstarch for potato starch worked. Cremini
+   * for enoki worked. Fresh shiitake for dried worked. Sirloin for ribeye worked. Same for piccata:
+   * all four failures were prose, not swaps.
+   *
+   * So the defect class is agent-authored CONTENT, not substitution. And banning substitution took
+   * the catalogue to 0 of 30 and told him he could not cook gyudon over rice he owns. His answer:
+   * "Why couldn't we just replace that with long grain rice... I don't think something needing 450
+   * versus 500 would make such a difference." He is right, and on his own dish he is the one who
+   * should decide.
+   *
+   * So `decidedBy` is now load-bearing:
+   *   'silvio' - he chose it, having been told the consequence. Does NOT disqualify `sourced`.
+   *   'agent'  - an agent chose it on his behalf. DISQUALIFIES `sourced`. This is the whole defect
+   *              class and it stays banned.
+   * Absent counts as 'agent', because an unattributed change is one nobody owns. */
+  const devs = Array.isArray(r.deviations) ? r.deviations : [];
+  const agentDevs = devs.filter((d) => (d.decidedBy ?? 'agent') !== 'silvio');
+  if (r.provenance?.tier === 'sourced' && agentDevs.length) {
+    fail(id, 'verbatim',
+      `tier is "sourced" but ${agentDevs.length} deviation(s) were decided by an agent`,
+      'An agent may not change a published recipe on his behalf: vessel, scale, heat and cues are '
+      + 'exactly where all nine defects came from. He MAY change it himself. Ask him, state the '
+      + 'consequence, and set decidedBy:"silvio" with what he was told. Otherwise the tier is '
+      + '`adapted` and the dish is not offered. First offenders: '
+      + agentDevs.map((d) => JSON.stringify(String(d.what).slice(0, 40))).join(', '));
   }
-  if (r.provenance?.tier === 'adapted' && devs === 0) {
-    warn(id, 'verbatim', 'tier is "adapted" but no deviations are declared',
-      'If nothing was changed it is `sourced` and can be offered. If something was, list it.');
+  for (const d of devs) {
+    if (d.decidedBy === 'silvio' && !d.toldHim) {
+      warn(id, 'verbatim', `"${String(d.what).slice(0, 40)}" says he decided it but not what he was told`,
+        'His decision is only informed if the consequence was stated. Record it in `toldHim`.');
+    }
   }
 
   if (r.provenance?.tier === 'sourced') {

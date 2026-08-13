@@ -82,7 +82,20 @@ export interface Recipe {
   meal: string[];
   why?: string;
   source?: { name?: string; url?: string; why?: string };
-  deviations?: { what: string; why: string }[];
+  /** Where this recipe departs from its source.
+   *
+   *  `decidedBy` is load-bearing as of 2026-08-12. 'silvio' means he chose it after being told the
+   *  consequence, and it does NOT disqualify tier `sourced`. 'agent' (or absent) means an agent chose
+   *  on his behalf, which disqualifies `sourced`, because reviewing all nine defects this project has
+   *  produced, every single one was agent-authored content and not one was an ingredient swap he
+   *  asked for. `toldHim` records what he was told, since a decision is only informed if the
+   *  consequence was stated. */
+  deviations?: {
+    what: string;
+    why: string;
+    decidedBy?: 'silvio' | 'agent';
+    toldHim?: string;
+  }[];
   time: { activeMin?: number; totalMin?: number | null; note?: string | null };
   serves: {
     count: number | null;
