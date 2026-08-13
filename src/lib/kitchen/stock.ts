@@ -89,6 +89,20 @@ export async function deriveStock(now = new Date()): Promise<Stock> {
       // A scalar amount supersedes a stale breakdown rather than sitting next to it.
       if (e.qty_mode !== 'delta') it.portions = null;
     }
+    /* Buying, confirming or calling something low all ASSERT THAT IT EXISTS. So if a previous `out`
+     * zeroed the quantity, that zero has to be cleared, and cleared to NULL rather than to any
+     * number: the thing is here again and nobody said how much. Unknown stays unknown.
+     *
+     * Without this the zero survives, and the reconciliation below ("qty <= 0 means out") flips the
+     * item straight back to `out`. Found 2026-08-12 while scoring 625 recipes against the kitchen:
+     * `peppers` runs out -> bought -> out -> bought and still read GONE, hours after he bought
+     * peppers, having told me that produce going to waste is the thing he most wants this app to
+     * prevent. Anything re-bought after being finished, without a stated amount, was invisible. */
+    if (['bought', 'confirm', 'low'].includes(e.ev) && it.qty === 0 && evQty === null && !evPortions) {
+      it.qty = null;
+      it.portions = null;
+    }
+
     switch (e.ev) {
       case 'bought':  it.level = 'have'; if (e.where_at) it.where = e.where_at; break;
       case 'low':     it.level = 'low'; break;
