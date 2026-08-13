@@ -56,15 +56,20 @@ export function isOptionalLine(raw) {
 }
 
 /** Turn a published ingredient line into a bare ingredient name, or '' if nothing survives. */
-export function parseIngredient(raw) {
+export function parseIngredient(raw, keepAfterComma = false) {
   let s = String(raw).toLowerCase();
 
   s = s.replace(/&frac\d+;|&[a-z]+;/g, ' ');       // html entities from scraped pages
   s = s.replace(/\([^)]*\)/g, ' ');                 // "(about 2 to 3 ounces)"
   s = s.replace(/\[[^\]]*\]/g, ' ');
-  s = s.split(/,/)[0];                              // prep after the first comma
+  if (!keepAfterComma) s = s.split(/,/)[0];         // prep after the first comma
   s = s.split(/\bor\b/)[0];                         // "parmesan or pecorino" -> first named
-  s = s.replace(/\b(?:to taste|as needed|for (?:serving|garnish|the pan|dusting)|optional|divided|plus more.*)$/g, ' ');
+  /* Trailing noise. This matters more since staples became whole-name matches: any leftover word means
+   * "extra-virgin olive oil plus extra" no longer equals "olive oil" and a pantry staple reads as an
+   * unknown. Stripped anywhere, not just at the end, because these clauses turn up mid-line too. */
+  s = s.replace(/\bplus\b.*$/g, ' ');
+  s = s.replace(/\b(?:to taste|as needed|to serve|for (?:serving|garnish|the pan|dusting|frying|greasing)|optional|divided|defrosted|thawed|at room temperature|roughly|approx)\b/g, ' ');
+  s = s.replace(/\b(?:extra virgin|extravirgin|virgin|light|dark|low sodium|reduced sodium|free range|organic|unsalted|salted|semi skimmed|whole|full fat|reduced fat|skimmed)\b/g, ' ');
   s = s.replace(/[¼-¾⅐-⅞]/g, ' ');  // vetted fractions
   s = s.replace(/\d+\s*\/\s*\d+/g, ' ');            // 1/2
   s = s.replace(/\d+(?:[.,]\d+)?/g, ' ');           // remaining numbers
@@ -84,7 +89,11 @@ function aliasIndex() {
   for (const [itemId, phrases] of Object.entries(ALIASES.map)) {
     for (const p of phrases) rows.push({ itemId, phrase: parseIngredient(p) || p.toLowerCase() });
   }
-  for (const p of ALIASES.staples) rows.push({ itemId: '__STAPLE__', phrase: parseIngredient(p) || p.toLowerCase() });
+  /* Staples are matched on the WHOLE ingredient name, never a fragment. Found 2026-08-13: the `water`
+   * staple swallowed "145g tuna in spring water, drained", so a tuna pasta reported READY in a kitchen
+   * with no tuna. A staple claim says "this ingredient IS just salt"; an item claim legitimately says
+   * "this ingredient CONTAINS chicken thighs". Different claims, so different matching. */
+  for (const p of ALIASES.staples) rows.push({ itemId: '__STAPLE__', phrase: parseIngredient(p) || p.toLowerCase(), whole: true });
   // Gaps match on their key AND on their aliases, because a recipe writes "Japanese dashi powder",
   // never "hondashi". Without the aliases that line landed in UNKNOWN instead of MISSING.
   for (const g of Object.keys(ALIASES._knownGaps)) {
@@ -116,7 +125,16 @@ export function matchToItem(name, raw = name) {
      * ginger", which parses down to "ginger", which then vetoed ginger against itself. Ginger came
      * back UNRECOGNISED 48 times in a kitchen that has had fresh ginger since August 4. */
     if (veto && veto.some((v) => rawLc.includes(v))) continue;
-    // Whole-phrase containment. Word-boundary guarded so `oil` does not match `boiling`.
+    /* Staples must match the WHOLE name; items and gaps match a phrase inside it. Found 2026-08-13:
+     * the `water` staple swallowed "145g tuna in spring water, drained", so a tuna pasta reported
+     * READY in a kitchen with no tuna. The two claims are genuinely different. A staple claim is
+     * "this ingredient IS just salt". An item claim is "this ingredient CONTAINS chicken thighs".
+     * Only the second one is legitimately about a fragment. */
+    if (r.whole) {
+      if (name === r.phrase) return r.itemId;
+      continue;
+    }
+    // Word-boundary guarded so `oil` does not match `boiling`.
     const re = new RegExp(`(?:^|\\s)${r.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`);
     if (re.test(name)) return r.itemId;
   }
@@ -137,22 +155,31 @@ export function scoreRecipe(ingredientLines, availableIds) {
   const have = [], haveVia = [], missing = [], unknown = [], staples = [], optional = [];
   for (const line of ingredientLines) {
     const name = parseIngredient(line);
-    const hit = matchToItem(name, line);
+    /* Try the full line too. "200g bag frozen, shelled cooked prawn defrosted" reduces to just "bag"
+     * once everything after the comma is dropped, which lost the prawns entirely and let a prawn pasta
+     * look cookable. Prefer whichever parse actually resolves, and prefer a real answer over silence. */
+    let hit = matchToItem(name, line);
+    let shown = name;
+    if (hit === null) {
+      const full = parseIngredient(line, true);
+      const alt = matchToItem(full, line);
+      if (alt !== null) { hit = alt; shown = full; }
+    }
     // A garnish the source itself calls optional must never block a dish or count against it.
     if (isOptionalLine(line) && !(hit && !hit.startsWith('__') && availableIds.has(hit))) {
-      optional.push({ line, name, item: hit && !hit.startsWith('__') ? hit : null });
+      optional.push({ line, shown, item: hit && !hit.startsWith('__') ? hit : null });
       continue;
     }
-    if (hit === '__STAPLE__') { staples.push({ line, name }); continue; }
-    if (hit === null) { unknown.push({ line, name }); continue; }
+    if (hit === '__STAPLE__') { staples.push({ line, shown }); continue; }
+    if (hit === null) { unknown.push({ line, shown }); continue; }
 
     const req = hit.startsWith('__GAP__') ? hit.slice(7) : hit;
     const sub = substituteFor(req, availableIds);
-    if (sub) { haveVia.push({ line, name, item: req, ...sub }); continue; }
+    if (sub) { haveVia.push({ line, shown, item: req, ...sub }); continue; }
 
-    if (hit.startsWith('__GAP__')) { missing.push({ line, name, item: req, reason: ALIASES._knownGaps[req] }); continue; }
-    if (availableIds.has(hit)) have.push({ line, name, item: hit });
-    else missing.push({ line, name, item: hit });
+    if (hit.startsWith('__GAP__')) { missing.push({ line, shown, item: req, reason: ALIASES._knownGaps[req] }); continue; }
+    if (availableIds.has(hit)) have.push({ line, shown, item: hit });
+    else missing.push({ line, shown, item: hit });
   }
 
   /* An unrecognised ingredient must never be silently ignored, because that is what produced a

@@ -1,0 +1,4930 @@
+{
+ "_": "Ingredient lists and photos for matching. NO instructions: they stay at the source, which is the only thing a cook card may be built from.",
+ "provider": "www.tasteofhome.com",
+ "units": "us",
+ "attribution": "Recipe data: www.tasteofhome.com. Each dish links to its original page.",
+ "robotsCheckedAt": "2026-08-13",
+ "robotsNote": "No AI-crawler exclusions. Verified extraction against their Beef Stroganoff page.",
+ "fetchedAt": "2026-08-13",
+ "sourceCheckedAt": "2026-08-13",
+ "fetchedCount": 76,
+ "sourceOkCount": 76,
+ "meals": [
+  {
+   "id": "tasteofhome:apricot-chicken-drumsticks",
+   "name": "Apricot Chicken Drumsticks",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Apricot-Chicken-Drumsticks_exps41609_BFF2175911B09_14_1bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/apricot-chicken-drumsticks/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "12 chicken drumsticks (3 pounds)",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup canola oil",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup apricot jam, warmed",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup prepared mustard",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon brown sugar",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:artichoke-beef-stew",
+   "name": "Artichoke Beef Stew",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps9668_HSC143552B07_29_3b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/artichoke-beef-stew/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/3 cup all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2-1/2 pounds beef stew meat, cut into 1-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons canola oil",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-1/2 ounces) condensed beef consomme, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "2 medium onions, halved and sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 pound small fresh mushrooms, halved",
+     "measure": ""
+    },
+    {
+     "name": "1 cup red wine or beef broth",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon dill weed",
+     "measure": ""
+    },
+    {
+     "name": "2 jars (6-1/2 ounces each) marinated artichoke hearts, drained and chopped",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked noodles",
+     "measure": ""
+    }
+   ],
+   "rating": 4.71,
+   "ratingCount": 14,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:asian-glazed-chicken-thighs",
+   "name": "Asian Glazed Chicken Thighs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps107385_SD163324B08_05_7b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asian-glazed-chicken-thighs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/4 cup rice vinegar",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons reduced-sodium soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons honey",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons canola oil",
+     "measure": ""
+    },
+    {
+     "name": "4 boneless skinless chicken thighs (about 1 pound)",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon minced fresh gingerroot or 1/2 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "Toasted sesame seeds, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 4.67,
+   "ratingCount": 15,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:asian-noodle-stir-fry",
+   "name": "Asian Noodle Stir-Fry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Asian-Noodle-Stir-Fry_exps163755_SD2401789A08_08_2b_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asian-noodle-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (9 ounces) refrigerated angel hair pasta",
+     "measure": ""
+    },
+    {
+     "name": "1 package (10 oz.)  julienned carrots",
+     "measure": ""
+    },
+    {
+     "name": "1 package (6 oz.) snow peas",
+     "measure": ""
+    },
+    {
+     "name": "2 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "1 can (11 ounces) mandarin oranges, undrained",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup stir-fry sauce",
+     "measure": ""
+    },
+    {
+     "name": "Chopped green onion",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:asian-tofu-noodle-soup",
+   "name": "Asian Tofu Noodle Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps76325_HC153382A09_04_8b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asian-tofu-noodle-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon canola oil",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon minced fresh gingerroot",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon crushed red pepper flakes, optional",
+     "measure": ""
+    },
+    {
+     "name": "1/2 pound sliced fresh mushrooms",
+     "measure": ""
+    },
+    {
+     "name": "1 carton (32 ounces) reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup sherry or reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup reduced-sodium soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "7 ounces firm tofu, drained and cut into 1/2-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "1 cup fresh snow peas, julienned",
+     "measure": ""
+    },
+    {
+     "name": "1 large carrot, shredded",
+     "measure": ""
+    },
+    {
+     "name": "2 green onions, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "8 ounces uncooked Chinese egg noodles or  uncooked spaghetti",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Finely chopped peanuts and additional green onions",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 1,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:asparagus-beef-lo-mein",
+   "name": "Asparagus Beef Lo Mein",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Asparagus-Beef-Lo-Mein_EXPS_SDAM17_23290_D12_09_4b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asparagus-beef-lo-mein/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 beef top sirloin steak (1 pound), cut into thin strips",
+     "measure": ""
+    },
+    {
+     "name": "2 packages (3 ounces each) beef ramen noodles",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup hoisin sauce",
+     "measure": ""
+    },
+    {
+     "name": "2-1/4 cups water, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 pound fresh asparagus, trimmed and cut into 2-1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 small garlic clove, minced",
+     "measure": ""
+    }
+   ],
+   "rating": 4.56,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:asparagus-stir-fry",
+   "name": "Asparagus Stir-Fry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps37456_CFT990854D12A.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asparagus-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 teaspoon cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon sugar",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon reduced-sodium soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon minced fresh gingerroot",
+     "measure": ""
+    },
+    {
+     "name": "8 fresh asparagus spears, trimmed and cut into 2-1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup sliced fresh mushrooms",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup julienned carrot",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon minced garlic",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon canola oil",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 1,
+   "sourceOk": true,
+   "sourceIngredientCount": 10
+  },
+  {
+   "id": "tasteofhome:asparagus-tomato-salad-with-dressing",
+   "name": "Asparagus-Tomato Salad with Dressing",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps5592_CS1564C64.jpg",
+   "source": "https://www.tasteofhome.com/recipes/asparagus-tomato-salad-with-dressing/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "DRESSING:",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon red wine vinegar",
+     "measure": ""
+    },
+    {
+     "name": "1/2 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon Dijon mustard",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "SALAD:",
+     "measure": ""
+    },
+    {
+     "name": "12 fresh asparagus spears, cut into 1-1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "3 small tomatoes, seeded and diced",
+     "measure": ""
+    },
+    {
+     "name": "1 small red onion, sliced",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:beef-bacon-stroganoff",
+   "name": "Beef &#038; Bacon Stroganoff",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/10/Beef-Bacon-Stroganoff_exps47169_TH1789927D59A_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/beef-bacon-stroganoff/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound lean ground beef (90% lean)",
+     "measure": ""
+    },
+    {
+     "name": "5 thick-sliced bacon strips, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sliced fresh mushrooms",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) beef broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of mushroom with roasted garlic soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons Worcestershire sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon paprika",
+     "measure": ""
+    },
+    {
+     "name": "6 cups uncooked egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons prepared horseradish",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup shredded white cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "Minced fresh parsley, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 4.41,
+   "ratingCount": 22,
+   "sourceOk": true,
+   "sourceIngredientCount": 17
+  },
+  {
+   "id": "tasteofhome:beef-curry-with-rice",
+   "name": "Beef Curry with Rice",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2020/04/Indian-Curried-Beef-with-Rice_EXPS_TOHESCODR20_238659_E02_11_6b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/beef-curry-with-rice/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/2 teaspoons salt, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cardamom",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground allspice",
+     "measure": ""
+    },
+    {
+     "name": "1 boneless beef chuck roast (2 pounds), cut into 1-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "2 medium onions, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon minced fresh gingerroot",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons curry powder",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1 package (10 ounces) frozen chopped spinach, thawed and squeezed dry",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup plain Greek yogurt",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked rice",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Additional plain Greek yogurt and chopped red onion",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:beef-veggie-casserole",
+   "name": "Beef Veggie Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps13270_WNC62337D62.jpg",
+   "source": "https://www.tasteofhome.com/recipes/beef-veggie-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 envelope mushroom gravy mix",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup water",
+     "measure": ""
+    },
+    {
+     "name": "2 cups cubed cooked beef",
+     "measure": ""
+    },
+    {
+     "name": "2 cups frozen mixed vegetables",
+     "measure": ""
+    },
+    {
+     "name": "2 medium potatoes, peeled, cubed and cooked",
+     "measure": ""
+    },
+    {
+     "name": "1 tube (12 ounces) refrigerated buttermilk biscuits, separated into 10 biscuits",
+     "measure": ""
+    }
+   ],
+   "rating": 4.25,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 6
+  },
+  {
+   "id": "tasteofhome:best-spaghetti-and-meatballs",
+   "name": "Best Spaghetti and Meatballs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Best-Spaghetti-and-Meatballs_EXPS_THSO17_1912_B04_19_11b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/best-spaghetti-and-meatballs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 tablespoons olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups chopped onions",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (12 ounces each) tomato paste",
+     "measure": ""
+    },
+    {
+     "name": "3 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1 can (29 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup minced fresh parsley",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "MEATBALLS:",
+     "measure": ""
+    },
+    {
+     "name": "4 large eggs, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "2 cups soft bread cubes (cut into 1/4-inch pieces)",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1 cup grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "3 pounds ground beef",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons canola oil",
+     "measure": ""
+    },
+    {
+     "name": "2 pounds spaghetti, cooked",
+     "measure": ""
+    }
+   ],
+   "rating": 4.76,
+   "ratingCount": 42,
+   "sourceOk": true,
+   "sourceIngredientCount": 21
+  },
+  {
+   "id": "tasteofhome:black-bean-tomato-chili",
+   "name": "Black Bean-Tomato Chili",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps57414_TH143194C06_11_1b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/black-bean-tomato-chili/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 tablespoons olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cinnamon",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "3 cans (14-1/2 ounces each) diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (15 ounces each) black beans, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 cup orange juice or juice from 3 medium oranges",
+     "measure": ""
+    }
+   ],
+   "rating": 3.57,
+   "ratingCount": 7,
+   "sourceOk": true,
+   "sourceIngredientCount": 11
+  },
+  {
+   "id": "tasteofhome:black-pepper-chicken-stir-fry",
+   "name": "Black Pepper Chicken",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/0001/01/Indian-Pepper-Chicken_EXPS_FT19_152315_F_07124_1.jpg",
+   "source": "https://www.tasteofhome.com/recipes/black-pepper-chicken-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 cup reduced-sodium soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon honey",
+     "measure": ""
+    },
+    {
+     "name": "3/4 teaspoon coarsely ground pepper",
+     "measure": ""
+    },
+    {
+     "name": "3/4 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground turmeric",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon curry powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 pounds boneless skinless chicken thighs, cubed",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup canola oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "Minced fresh cilantro and thinly sliced green onions",
+     "measure": ""
+    }
+   ],
+   "rating": 3.9,
+   "ratingCount": 10,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:buffalo-chicken-casserole",
+   "name": "Buffalo Chicken Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2025/01/Buffalo-Chicken-Casserole_EXPS_TOHD24_244597_JuliaHartbeck_5.jpg",
+   "source": "https://www.tasteofhome.com/recipes/buffalo-chicken-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound uncooked penne pasta",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 pounds boneless skinless chicken breasts, cut into 1/2-in. pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 cup ranch salad dressing",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup Buffalo wing sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 cup shredded mozzarella cheese",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup crumbled blue cheese",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Sliced green onions",
+     "measure": ""
+    }
+   ],
+   "rating": 4.75,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:cashew-curry-chicken-salad",
+   "name": "Cashew-Curry Chicken Salad",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/EXPS_175226_SD143204C12_04_1bC_RMS-2.jpg",
+   "source": "https://www.tasteofhome.com/recipes/cashew-curry-chicken-salad/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2/3 cup honey Greek yogurt",
+     "measure": ""
+    },
+    {
+     "name": "4 teaspoons lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "4 teaspoons honey",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon curry powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "3 cups cubed cooked chicken breast",
+     "measure": ""
+    },
+    {
+     "name": "4 celery ribs, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 medium carrots, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup golden raisins",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped cashews",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:ceylon-chicken-curry-noodle-soup",
+   "name": "Ceylon Chicken Curry Noodle Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2020/10/Ceylon-Chicken-Curry-Rice-Noodle-Soup_EXPS_RC20MZ_253717_B08_26_5b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/ceylon-chicken-curry-noodle-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "6 ounces uncooked wide rice noodles",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons ghee or olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless chicken breasts, thinly sliced and cut into 1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup sliced fresh carrots",
+     "measure": ""
+    },
+    {
+     "name": "3 bay leaves",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons minced fresh gingerroot",
+     "measure": ""
+    },
+    {
+     "name": "1 lemongrass stalk",
+     "measure": ""
+    },
+    {
+     "name": "1 whole star anise",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon curry powder",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons ground turmeric",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon cayenne pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 anchovy fillets, minced, optional",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons white wine vinegar",
+     "measure": ""
+    },
+    {
+     "name": "1 carton (32 ounces) chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (13.66 ounces) coconut milk",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons jaggery or dark brown sugar",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups chopped fresh kale",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup cherry tomatoes, halved",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 21
+  },
+  {
+   "id": "tasteofhome:chicken-alphabet-soup",
+   "name": "Chicken Alphabet Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Chicken-Alphabet-Soup_exps42456_KAC2379526B05_16_4b_RMS-4.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-alphabet-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 medium carrots, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 celery ribs, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup chopped sweet onion",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "2 quarts chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "3 cups shredded cooked chicken breast",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon dried thyme",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups uncooked alphabet pasta",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons minced fresh parsley",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:chicken-caesar-burgers",
+   "name": "Chicken Caesar Burgers",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps43571_CFT1437887D17.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-caesar-burgers/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/4 cup finely chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons shredded Parmesan cheese, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons dried parsley flakes",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Worcestershire sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/2 pound ground chicken",
+     "measure": ""
+    },
+    {
+     "name": "2 hamburger buns, split",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup torn romaine",
+     "measure": ""
+    },
+    {
+     "name": "4 teaspoons fat-free creamy Caesar salad dressing",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 7,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:chicken-casserole",
+   "name": "Chicken Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/11/Chicken-Casserole_EXPS_TOHD24_4527_LeticiaAlmeida_08.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 cup chopped celery",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons chopped green pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter",
+     "measure": ""
+    },
+    {
+     "name": "2 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (4-1/2 ounces) sliced mushrooms, drained",
+     "measure": ""
+    },
+    {
+     "name": "6 pimiento-stuffed olives, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "5 cups cooked wide egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "TOPPING:",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup cornflake crumbs",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup shredded cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter, melted",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 34,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:chicken-club-casseroles",
+   "name": "Chicken Club Casseroles",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Chicken-Club-Casseroles_EXPS_13X9BZ19_49257_E10_03_7b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-club-casseroles/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "4 cups uncooked spiral pasta",
+     "measure": ""
+    },
+    {
+     "name": "4 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (10-3/4 ounces each) condensed cheddar cheese soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup crumbled cooked bacon",
+     "measure": ""
+    },
+    {
+     "name": "1 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1 cup mayonnaise",
+     "measure": ""
+    },
+    {
+     "name": "4 medium tomatoes, seeded and chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 cups fresh baby spinach, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded Colby-Monterey Jack cheese",
+     "measure": ""
+    }
+   ],
+   "rating": 3.92,
+   "ratingCount": 13,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:chicken-mushroom-stir-fry",
+   "name": "Chicken Mushroom Stir-Fry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps2748_cwjf91p29bbook.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-mushroom-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 large egg white",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon sesame oil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon brown sugar",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon white pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken breasts, cut into 1/2-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup oyster sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons cold water",
+     "measure": ""
+    },
+    {
+     "name": "4 tablespoons vegetable oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons minced fresh gingerroot",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 green onions, sliced",
+     "measure": ""
+    },
+    {
+     "name": "4 medium carrots, cubed",
+     "measure": ""
+    },
+    {
+     "name": "1 pound fresh mushrooms, quartered",
+     "measure": ""
+    },
+    {
+     "name": "1/4 pound fresh snow pea pods, trimmed and cut in half",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 18
+  },
+  {
+   "id": "tasteofhome:chicken-egg-noodle-casserole",
+   "name": "Chicken Noodle Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2025/01/Chicken-Noodle-Casserole_EXPS_TOHD24_173191_JenaCarlin_10.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-egg-noodle-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "6 cups uncooked egg noodles (about 12 ounces)",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (10-3/4 ounces each) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "3 cups cubed cooked chicken breasts",
+     "measure": ""
+    },
+    {
+     "name": "1 cup crushed Ritz crackers (about 20 crackers)",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup butter, melted",
+     "measure": ""
+    }
+   ],
+   "rating": 4.55,
+   "ratingCount": 51,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:chicken-piccata-meatballs",
+   "name": "Chicken Piccata Meatballs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2025/01/Chicken-Piccata-Meatballs_EXPS_TOHD24_236310_KristinaVanni_6.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-piccata-meatballs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 cup dry bread crumbs",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "1 large egg, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound ground chicken",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons canola oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup white wine",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (3-1/2 ounces) capers, drained",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter",
+     "measure": ""
+    },
+    {
+     "name": "Shredded Parmesan cheese and lemon wedges",
+     "measure": ""
+    }
+   ],
+   "rating": 4.75,
+   "ratingCount": 20,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
+   "id": "tasteofhome:chicken-stew-over-biscuits",
+   "name": "Chicken Stew over Biscuits",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Chicken-Stew-over-Biscuits_EXPS_RR22_14439_DR_12_09_2b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chicken-stew-over-biscuits/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 envelopes chicken gravy mix",
+     "measure": ""
+    },
+    {
+     "name": "2 cups water",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup white wine",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon minced fresh parsley",
+     "measure": ""
+    },
+    {
+     "name": "1 to 2 teaspoons chicken bouillon granules",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon minced garlic",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "5 medium carrots, cut into 1-inch chunks",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, cut into 8 wedges",
+     "measure": ""
+    },
+    {
+     "name": "1 broiler/fryer chicken (3 to 4 pounds), cut up and skin removed",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup cold water",
+     "measure": ""
+    },
+    {
+     "name": "1 tube (6 ounces) refrigerated buttermilk biscuits",
+     "measure": ""
+    }
+   ],
+   "rating": 4.56,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:chili-beef-noodle-skillet",
+   "name": "Chili Beef Noodle Skillet",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps15351_GB153642C12_12_1b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chili-beef-noodle-skillet/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (8 ounces) egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "2 pounds ground beef",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup chopped celery",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 can (28 ounces) diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 to 1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/2 to 1 cup shredded cheddar cheese",
+     "measure": ""
+    }
+   ],
+   "rating": 3.36,
+   "ratingCount": 11,
+   "sourceOk": true,
+   "sourceIngredientCount": 10
+  },
+  {
+   "id": "tasteofhome:coconut-mango-thai-beef-curry",
+   "name": "Coconut Mango Thai Beef Curry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Coconut-Mango-Thai-Beef-Curry_EXPS_DODBZ20_73335_B07_23_1b-3.jpg",
+   "source": "https://www.tasteofhome.com/recipes/coconut-mango-thai-beef-curry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 tablespoons peanut oil or canola oil",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons red curry paste",
+     "measure": ""
+    },
+    {
+     "name": "2-1/2 cups coconut milk",
+     "measure": ""
+    },
+    {
+     "name": "2-1/2 pounds boneless beef chuck roast, cut into 1-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "1 cup dried mango, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Hot cooked rice, sliced red onions, fresh cilantro and lime wedges",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 1,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:creamy-corned-beef-casserole",
+   "name": "Corned Beef Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Creamy-Corned-Beef-Casserole_EXPS_FT24_10462_JR_0117_8.jpg",
+   "source": "https://www.tasteofhome.com/recipes/creamy-corned-beef-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 can (12 ounces) corned beef, crumbled or 1-1/2 cups diced cooked corned beef",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "8 ounces cheddar cheese, cubed",
+     "measure": ""
+    },
+    {
+     "name": "1 package (7 ounces) small shell pasta, cooked and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 cup milk",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "2 bread slices, cubed",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter, melted",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:comforting-chicken-noodle-soup",
+   "name": "Creamy Chicken Noodle Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Comforting-Chicken-Noodle-Soup_EXPS_FT24_9735_ST_0404_1.jpg",
+   "source": "https://www.tasteofhome.com/recipes/comforting-chicken-noodle-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 quarts water",
+     "measure": ""
+    },
+    {
+     "name": "8 teaspoons chicken bouillon granules",
+     "measure": ""
+    },
+    {
+     "name": "6-1/2 cups uncooked wide egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (10-3/4 ounces each) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "3 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "Minced fresh parsley",
+     "measure": ""
+    }
+   ],
+   "rating": 4.8,
+   "ratingCount": 108,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:creamy-chicken-thighs-noodles",
+   "name": "Creamy Chicken Thighs &#038; Noodles",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps71009_EDSC153431B01_15_7b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/creamy-chicken-thighs-noodles/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "8 boneless skinless chicken thighs (about 2 pounds)",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (10-1/2 ounces each) condensed cream of mushroom soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-1/2 ounces) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons paprika",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon onion powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon cayenne pepper",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked wide egg noodles",
+     "measure": ""
+    }
+   ],
+   "rating": 4.55,
+   "ratingCount": 22,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:curried-beef-stir-fry",
+   "name": "Curried Beef Stir-Fry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps4916_TH1335C29C.jpg",
+   "source": "https://www.tasteofhome.com/recipes/curried-beef-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 tablespoons soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon minced gingerroot or 1 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "4 tablespoons vegetable oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 pound beef top sirloin steak, cut into 1/8 inch strips",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, cut into 1-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, cut into 1-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 medium sweet red pepper, cut into 1-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "2 large celery ribs, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 cup cold water",
+     "measure": ""
+    },
+    {
+     "name": "5 teaspoons cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1 to 2 teaspoons curry powder",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked rice or noodles",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:curry-chicken-stew",
+   "name": "Curry Chicken Stew",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps175218__EDSC143234B04_15_1b-2.jpg",
+   "source": "https://www.tasteofhome.com/recipes/curry-chicken-stew/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 cans (14-1/2 ounces each) chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 tub Knorr concentrated chicken stock (4.66 oz.)",
+     "measure": ""
+    },
+    {
+     "name": "4 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon curry powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon cayenne pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "6 boneless skinless chicken breasts (6 ounces each)",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, cut into thin strips",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked rice",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Chopped fresh cilantro and chutney",
+     "measure": ""
+    }
+   ],
+   "rating": 3.56,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:easy-asian-glazed-meatballs",
+   "name": "Easy Asian Glazed Meatballs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps191534_SD153323D06_04_6b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/easy-asian-glazed-meatballs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 cup hoisin sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons rice vinegar",
+     "measure": ""
+    },
+    {
+     "name": "4 teaspoons brown sugar",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Sriracha chili sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "1 package (12 ounces) frozen fully cooked homestyle or Italian meatballs, thawed",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Thinly sliced green onions and toasted sesame seeds",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked rice",
+     "measure": ""
+    }
+   ],
+   "rating": 4.76,
+   "ratingCount": 17,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:easy-beef-soup",
+   "name": "Easy Beef Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Easy-Beef-Soup_EXPS_FT21_10037_F_1117_1.jpg",
+   "source": "https://www.tasteofhome.com/recipes/easy-beef-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 pound ground beef",
+     "measure": ""
+    },
+    {
+     "name": "2 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) stewed tomatoes",
+     "measure": ""
+    },
+    {
+     "name": "1 package (10 ounces) frozen mixed vegetables",
+     "measure": ""
+    },
+    {
+     "name": "1 can (8 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 envelope onion soup mix",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon sugar",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:egg-and-broccoli-casserole",
+   "name": "Egg and Broccoli Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Egg-and-Broccoli-Casserole_exps8130_HSC133238B07_17_6b_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/egg-and-broccoli-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 cups 4% cottage cheese",
+     "measure": ""
+    },
+    {
+     "name": "3 cups frozen chopped broccoli, thawed and drained",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "6 large eggs, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup butter, melted",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons finely chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "Additional shredded cheddar cheese, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 4.6,
+   "ratingCount": 5,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:egg-topped-grilled-asparagus-with-cajun-shrimp",
+   "name": "Egg-Topped Grilled Asparagus with Cajun Shrimp",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2022/06/Egg-Topped-Grilled-Asparagus-with-Cajun-Shrimp_EXPS_RC22_267156_MD_03_01_1b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/egg-topped-grilled-asparagus-with-cajun-shrimp/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "12 fresh asparagus spears",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Cajun seasoning, divided",
+     "measure": ""
+    },
+    {
+     "name": "4 thin slices prosciutto",
+     "measure": ""
+    },
+    {
+     "name": "8 uncooked shrimp (16-20 per pound), peeled and deveined",
+     "measure": ""
+    },
+    {
+     "name": "4 large eggs",
+     "measure": ""
+    },
+    {
+     "name": "Shaved Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "Lemon wedges, optional",
+     "measure": ""
+    }
+   ],
+   "rating": null,
+   "ratingCount": null,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:eggplant-zucchini-bolognese",
+   "name": "Eggplant Zucchini Bolognese",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Eggplant-Zucchini-Bolognese_EXPS_GBBZ19_43387_C11_07_8b-3-e1721988857471.jpg",
+   "source": "https://www.tasteofhome.com/recipes/eggplant-zucchini-bolognese/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (16 ounces) penne pasta",
+     "measure": ""
+    },
+    {
+     "name": "1 small eggplant, peeled and cut into 1-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 medium zucchini, cut into 1/4-inch slices",
+     "measure": ""
+    },
+    {
+     "name": "1 medium yellow summer squash, cut into 1/4-inch slices",
+     "measure": ""
+    },
+    {
+     "name": "1 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons minced garlic",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound lean ground beef (90% lean)",
+     "measure": ""
+    },
+    {
+     "name": "1 can (28 ounces) tomato puree",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon Italian seasoning",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon brown sugar",
+     "measure": ""
+    },
+    {
+     "name": "8 teaspoons grated Parmesan cheese",
+     "measure": ""
+    }
+   ],
+   "rating": 4.56,
+   "ratingCount": 27,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:firefighter-s-chicken-spaghetti",
+   "name": "Firefighters Chicken Spaghetti",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Firefighter-s-Chicken-Spaghetti_EXPS_FT21_18145_F_0707_1.jpg",
+   "source": "https://www.tasteofhome.com/recipes/firefighter-s-chicken-spaghetti/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "12 ounces uncooked spaghetti, broken in half",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of chicken soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) condensed cream of mushroom soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sour cream",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup whole milk",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup butter, melted, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons dried parsley flakes",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded part-skim mozzarella cheese",
+     "measure": ""
+    },
+    {
+     "name": "1 cup grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "2 to 3 celery ribs, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 can (4 ounces) mushroom stems and pieces, drained",
+     "measure": ""
+    },
+    {
+     "name": "5 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups crushed cornflakes",
+     "measure": ""
+    }
+   ],
+   "rating": 4.49,
+   "ratingCount": 45,
+   "sourceOk": true,
+   "sourceIngredientCount": 17
+  },
+  {
+   "id": "tasteofhome:grecian-pasta-chicken-skillet",
+   "name": "Grecian Pasta &#038; Chicken Skillet",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps107837_TH163619B09_24_6b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/grecian-pasta-chicken-skillet/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 can (14-1/2 ounces) reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) no-salt-added diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "3/4 pound boneless skinless chicken breasts, cut into 1-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup white wine or water",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "4 ounces multigrain thin spaghetti",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (7-1/2 ounces) marinated quartered artichoke hearts, drained and coarsely chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 cups fresh baby spinach",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup roasted sweet red pepper strips",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup sliced ripe olives",
+     "measure": ""
+    },
+    {
+     "name": "1 green onion, finely chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons minced fresh parsley",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon grated lemon zest",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "Crumbled reduced-fat feta cheese, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 4.88,
+   "ratingCount": 8,
+   "sourceOk": true,
+   "sourceIngredientCount": 18
+  },
+  {
+   "id": "tasteofhome:greek-style-chicken-burgers",
+   "name": "Greek-Style Chicken Burgers",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Greek-Style-Chicken-Burgers_exps40352_SD2847494C02_13_4bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/greek-style-chicken-burgers/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "SAUCE:",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup fat-free plain Greek yogurt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup chopped peeled cucumber",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup crumbled reduced-fat feta cheese",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons snipped fresh dill",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1 small garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "BURGERS:",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, finely chopped",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup dry bread crumbs",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound ground chicken",
+     "measure": ""
+    },
+    {
+     "name": "4 hamburger buns, split",
+     "measure": ""
+    },
+    {
+     "name": "4 lettuce leaves",
+     "measure": ""
+    },
+    {
+     "name": "4 tomato slices",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 19
+  },
+  {
+   "id": "tasteofhome:grilled-steak-salad-with-tomatoes-avocado",
+   "name": "Grilled Steak Salad with Tomatoes &#038; Avocado",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Grilled-Steak-Salad-with-Tomatoes-Avocado_exps147474_TH143192B02_06_2bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/grilled-steak-salad-with-tomatoes-avocado/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 beef top sirloin steak (1-1/4 inches thick and 1-1/2 pounds)",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "3 teaspoons Creole seasoning",
+     "measure": ""
+    },
+    {
+     "name": "2 large tomatoes, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) cannellini beans, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) black beans, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "3 green onions, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup minced fresh cilantro",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons grated lemon zest",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1 medium ripe avocado, peeled and cubed (1/2 inch)",
+     "measure": ""
+    }
+   ],
+   "rating": 4.17,
+   "ratingCount": 12,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:scrambled-egg-hash-brown-cups",
+   "name": "Hash Brown Egg Cups",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/10/Scrambled-Egg-Hash-Brown-Cups_EXPS_TOHD24_171940_JoJoBaccam_10.jpg",
+   "source": "https://www.tasteofhome.com/recipes/scrambled-egg-hash-brown-cups/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (20 ounces) refrigerated Southwest-style shredded hash brown potatoes",
+     "measure": ""
+    },
+    {
+     "name": "1-1/4 cups shredded cheddar-Monterey Jack cheese, divided",
+     "measure": ""
+    },
+    {
+     "name": "6 large eggs",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon butter",
+     "measure": ""
+    },
+    {
+     "name": "10 thick-sliced bacon strips, cooked and crumbled",
+     "measure": ""
+    }
+   ],
+   "rating": 4.68,
+   "ratingCount": 19,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:instant-pot-chicken-noodle-soup",
+   "name": "Instant Pot Chicken Noodle Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2025/02/Instant-Pot-Chicken-Noodle-Soup_EXPS_TOHD25_264748_JonathanMelendez_03.jpg",
+   "source": "https://www.tasteofhome.com/recipes/instant-pot-chicken-noodle-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon butter",
+     "measure": ""
+    },
+    {
+     "name": "3 medium carrots, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 celery rib, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 small onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons salt",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken breasts",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken thighs",
+     "measure": ""
+    },
+    {
+     "name": "8 cups reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "3 bay leaves",
+     "measure": ""
+    },
+    {
+     "name": "2 cups uncooked egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup sprigs fresh parsley, stems removed, chopped",
+     "measure": ""
+    }
+   ],
+   "rating": null,
+   "ratingCount": null,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
+   "id": "tasteofhome:italian-beef-tortellini-stew",
+   "name": "Italian Beef Tortellini Stew",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Italian-Beef-Tortellini-Stew_exps134224_THHC2238742B09_20_5bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/italian-beef-tortellini-stew/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/3 cup all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon pepper, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 pound beef stew meat, cut into 1-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 medium zucchini, cut into 1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 celery ribs, sliced",
+     "measure": ""
+    },
+    {
+     "name": "3 small carrots, sliced",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons each dried oregano, basil and marjoram",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup dry red wine or reduced-sodium beef broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (28 ounces) crushed tomatoes",
+     "measure": ""
+    },
+    {
+     "name": "3 cups reduced-sodium beef broth",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon sugar",
+     "measure": ""
+    },
+    {
+     "name": "1 package (9 ounces) refrigerated cheese tortellini",
+     "measure": ""
+    },
+    {
+     "name": "1 package (6 ounces) fresh baby spinach",
+     "measure": ""
+    }
+   ],
+   "rating": 4.2,
+   "ratingCount": 10,
+   "sourceOk": true,
+   "sourceIngredientCount": 16
+  },
+  {
+   "id": "tasteofhome:keto-cheeseburger-casserole",
+   "name": "Keto Cheeseburger Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/10/Keto-Cheeseburger-Casserole_EXPS_TOHcom24_278333_DR_10_15_14b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/keto-cheeseburger-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon butter",
+     "measure": ""
+    },
+    {
+     "name": "1 pound ground beef",
+     "measure": ""
+    },
+    {
+     "name": "1/2 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons tomato paste",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons dried parsley flakes",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup reduced-sodium beef broth",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons heavy whipping cream",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons mayonnaise",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons dill pickle relish",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons reduced-sugar ketchup",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons Worcestershire sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup crumbled cooked bacon",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded cheddar cheese, divided",
+     "measure": ""
+    }
+   ],
+   "rating": null,
+   "ratingCount": null,
+   "sourceOk": true,
+   "sourceIngredientCount": 17
+  },
+  {
+   "id": "tasteofhome:mediterranean-chicken-pasta",
+   "name": "Mediterranean Chicken Pasta",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps183149_TH143194B06_06_3b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/mediterranean-chicken-pasta/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (12 ounces) uncooked tricolor spiral pasta",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken breasts, cut into 1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1 large sweet red pepper, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, peeled and thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 cup white wine or reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup julienned soft sun-dried tomatoes (not packed in oil)",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Italian seasoning",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon crushed red pepper flakes",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) reduced-sodium chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14 ounces) water-packed quartered artichoke hearts, drained",
+     "measure": ""
+    },
+    {
+     "name": "1 package (6 ounces) fresh baby spinach",
+     "measure": ""
+    },
+    {
+     "name": "1 cup (4 ounces) crumbled feta cheese",
+     "measure": ""
+    },
+    {
+     "name": "Thinly sliced fresh basil leaves and shaved Parmesan cheese, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 3.75,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 18
+  },
+  {
+   "id": "tasteofhome:pasta-with-chicken-and-squash",
+   "name": "Pasta with Chicken and Squash",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps6484_PWR963625D59.jpg",
+   "source": "https://www.tasteofhome.com/recipes/pasta-with-chicken-and-squash/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (16 ounces) spiral pasta",
+     "measure": ""
+    },
+    {
+     "name": "2 cups heavy whipping cream",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon butter",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded Mexican cheese blend",
+     "measure": ""
+    },
+    {
+     "name": "1 small onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "5 tablespoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 medium zucchini, julienned",
+     "measure": ""
+    },
+    {
+     "name": "2 medium yellow summer squash, julienned",
+     "measure": ""
+    },
+    {
+     "name": "1-1/4 teaspoons salt, divided",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken breasts, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon each dried basil, marjoram and savory",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon dried rosemary, crushed",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon rubbed sage",
+     "measure": ""
+    }
+   ],
+   "rating": 4.63,
+   "ratingCount": 8,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
+   "id": "tasteofhome:pasta-with-eggplant-sauce",
+   "name": "Pasta with Eggplant Sauce",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Pasta-with-Eggplant-Sauce_exps97341_BAFTB2307047D03_16_1bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/pasta-with-eggplant-sauce/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 large eggplant, cut into 1-inch cubes",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup finely chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons minced fresh parsley",
+     "measure": ""
+    },
+    {
+     "name": "1 garlic clove, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) Italian stewed tomatoes, cut up",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup dry red wine or chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (6 ounces) Italian tomato paste",
+     "measure": ""
+    },
+    {
+     "name": "1 can (4-1/2 ounces) sliced mushrooms, drained",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon sugar",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "3/4 pound thin spaghetti",
+     "measure": ""
+    },
+    {
+     "name": "Grated Parmesan cheese",
+     "measure": ""
+    }
+   ],
+   "rating": null,
+   "ratingCount": null,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:penne-with-veggies-and-black-beans",
+   "name": "Penne with Veggies and Black Beans",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Penne-with-Veggies-and-Black-Beans_EXPS_CF2BZ19_44335_C12_18_4b-5-e1721989570165.jpg",
+   "source": "https://www.tasteofhome.com/recipes/penne-with-veggies-and-black-beans/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3/4 cup uncooked penne pasta",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup sliced zucchini",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup sliced fresh carrot",
+     "measure": ""
+    },
+    {
+     "name": "4 medium fresh mushrooms, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 small green pepper, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 small onion, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 small garlic clove, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon each dried basil, oregano and thyme",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 cup canned black beans, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup chopped seeded tomato",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons shredded Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons minced fresh parsley",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
+   "id": "tasteofhome:philly-cheesesteak-egg-rolls",
+   "name": "Philly Cheesesteak Egg Rolls",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2021/04/Philly-Cheesesteak-Egg-Rolls-_EXPS_THAS21_261682_B04_13_12b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/philly-cheesesteak-egg-rolls/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound beef ribeye steak, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon butter",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, seeded and thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup shredded provolone cheese",
+     "measure": ""
+    },
+    {
+     "name": "1 ounce Velveeta",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Worcestershire sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "15 egg roll wrappers",
+     "measure": ""
+    },
+    {
+     "name": "Oil for deep-fat frying",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup sweet chili sauce",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 1,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:polenta-chili-casserole",
+   "name": "Polenta Chili Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Polenta-Chili-Casserole_EXPS_13x9BZ20_32215_E10_02_1b-5.jpg",
+   "source": "https://www.tasteofhome.com/recipes/polenta-chili-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "4 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1-1/4 cups yellow cornmeal",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded cheddar cheese, divided",
+     "measure": ""
+    },
+    {
+     "name": "3 cans (15 ounces each) vegetarian chili with beans",
+     "measure": ""
+    },
+    {
+     "name": "1 package (16 ounces) frozen mixed vegetables, thawed and well drained",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 6
+  },
+  {
+   "id": "tasteofhome:pressure-cooker-chicken-enchilada-soup",
+   "name": "Pressure Cooker Chicken Enchilada Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/04/Pressure-Cooker-Chicken-Enchilada-Soup_exps207672_SD153322C04_08_4b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/pressure-cooker-chicken-enchilada-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon canola oil",
+     "measure": ""
+    },
+    {
+     "name": "2 Anaheim or poblano peppers, finely chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 pound boneless skinless chicken breasts",
+     "measure": ""
+    },
+    {
+     "name": "1 carton (48 ounces) chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) Mexican diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10 ounces) enchilada sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons tomato paste",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon chili powder",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/2 to 1 teaspoon chipotle hot pepper sauce, optional",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup minced fresh cilantro",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Shredded cheddar cheese, cubed avocado, sour cream and tortilla strips",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
+   "id": "tasteofhome:pressure-cooker-white-bean-chicken-chili",
+   "name": "Pressure-Cooker White Bean Chicken Chili",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Pressure-Cooker-White-Bean-Chicken-Chili_EXPS_SDON16_207674_B06_08_3b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/pressure-cooker-white-bean-chicken-chili/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3/4 pound boneless skinless chicken breasts, cut into 1-1/4-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 jalapeno pepper, seeded and chopped",
+     "measure": ""
+    },
+    {
+     "name": "4 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (15 ounces each) cannellini beans, rinsed and drained, divided",
+     "measure": ""
+    },
+    {
+     "name": "2-1/2 cups chicken broth, divided",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups shredded cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "Optional toppings: sliced avocado, quartered cherry tomatoes and chopped fresh cilantro",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:quick-chicken-broccoli-stir-fry",
+   "name": "Quick Chicken &#038; Broccoli Stir-Fry",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps137336_TH153343B04_22_3b-3.jpg",
+   "source": "https://www.tasteofhome.com/recipes/quick-chicken-broccoli-stir-fry/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 tablespoons rice vinegar",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons mirin (sweet rice wine)",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons chili garlic sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon cornstarch",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon reduced-sodium soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons fish sauce or additional soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup reduced-sodium chicken broth, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 cups instant brown rice",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons sesame oil",
+     "measure": ""
+    },
+    {
+     "name": "4 cups fresh broccoli florets",
+     "measure": ""
+    },
+    {
+     "name": "2 cups cubed cooked chicken",
+     "measure": ""
+    },
+    {
+     "name": "2 green onions, sliced",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:quick-and-easy-chili",
+   "name": "Quick Chili",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/10/Quick-and-Easy-Chili_EXPS_TOHD24_7304_ChristineMa_8.jpg",
+   "source": "https://www.tasteofhome.com/recipes/quick-and-easy-chili/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound ground beef",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 to 3 teaspoons chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) Mexican stewed tomatoes",
+     "measure": ""
+    },
+    {
+     "name": "1 can (16 ounces) chili beans, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 cup frozen corn",
+     "measure": ""
+    },
+    {
+     "name": "Shredded cheddar cheese, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 10
+  },
+  {
+   "id": "tasteofhome:quick-sesame-chicken-noodles",
+   "name": "Quick Sesame Chicken Noodles",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Quick-Sesame-Chicken-Noodles_EXPS_SDON17_178043_D07_06_4b-2.jpg",
+   "source": "https://www.tasteofhome.com/recipes/quick-sesame-chicken-noodles/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 tablespoon sesame oil",
+     "measure": ""
+    },
+    {
+     "name": "1 package (22 ounces) frozen grilled chicken breast strips",
+     "measure": ""
+    },
+    {
+     "name": "1 medium yellow summer squash, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 cup julienned carrots",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup halved fresh snow peas",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 packages (3 ounces each) chicken ramen noodles, broken into small pieces",
+     "measure": ""
+    },
+    {
+     "name": "1-1/3 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup white wine or chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons reduced-sodium teriyaki sauce",
+     "measure": ""
+    },
+    {
+     "name": "4 green onions, sliced",
+     "measure": ""
+    }
+   ],
+   "rating": 4.33,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 11
+  },
+  {
+   "id": "tasteofhome:red-curry-carrot-soup",
+   "name": "Red Curry Carrot Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Red-Curry-Carrot-Soup_EXPS_SSBZ18_49557_C04_11__4b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/red-curry-carrot-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "5 packages (3 ounces each) ramen noodles",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons peanut oil",
+     "measure": ""
+    },
+    {
+     "name": "1 can (13.66 ounces) coconut milk, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons red curry paste",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons curry powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground turmeric",
+     "measure": ""
+    },
+    {
+     "name": "32 frozen fully cooked homestyle meatballs (1/2 ounce each)",
+     "measure": ""
+    },
+    {
+     "name": "4 cups chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 medium zucchini, finely chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium carrot, halved and sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup shredded cabbage",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons fish sauce or soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "Optional garnishes: Bean sprouts, chow mein noodles, chopped fresh basil, green onions and microgreens",
+     "measure": ""
+    }
+   ],
+   "rating": 4.25,
+   "ratingCount": 8,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:roast-chicken-with-creole-stuffing",
+   "name": "Roast Chicken with Creole Stuffing",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Roast-Chicken-with-Creole-Stuffing_EXPS_GBHRBZ17_7580_D07_13_7b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/roast-chicken-with-creole-stuffing/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/2 cups uncooked brown rice",
+     "measure": ""
+    },
+    {
+     "name": "2 Italian sausage links",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons vegetable oil",
+     "measure": ""
+    },
+    {
+     "name": "1 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "5 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup diced green pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup diced sweet red pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon lemon juice",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon sugar",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon hot pepper sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon chicken bouillon granules",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon dried thyme",
+     "measure": ""
+    },
+    {
+     "name": "1-1/4 teaspoons salt, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 cup diced fully cooked ham",
+     "measure": ""
+    },
+    {
+     "name": "1 cup cooked small shrimp, peeled and deveined, optional",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons minced fresh parsley",
+     "measure": ""
+    },
+    {
+     "name": "1 roasting chicken (5 to 6 pounds)",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon paprika",
+     "measure": ""
+    },
+    {
+     "name": "Dash pepper",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 1,
+   "sourceOk": true,
+   "sourceIngredientCount": 23
+  },
+  {
+   "id": "tasteofhome:salami-scrambled-eggs",
+   "name": "Salami Scrambled Eggs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps34185_CFT950584D22.jpg",
+   "source": "https://www.tasteofhome.com/recipes/salami-scrambled-eggs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 small onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter",
+     "measure": ""
+    },
+    {
+     "name": "3 eggs",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup diced hard salami",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup shredded Swiss cheese",
+     "measure": ""
+    }
+   ],
+   "rating": null,
+   "ratingCount": null,
+   "sourceOk": true,
+   "sourceIngredientCount": 6
+  },
+  {
+   "id": "tasteofhome:spaghetti-meatball-soup",
+   "name": "Spaghetti &#038; Meatball Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Spaghetti-Meatball-Soup_EXPS_SSBZ18_184296_C04_13__3b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/spaghetti-meatball-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 cup soft bread crumbs",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "2 large eggs, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup freshly grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "3/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 pounds bulk mild Italian sausage",
+     "measure": ""
+    },
+    {
+     "name": "SOUP:",
+     "measure": ""
+    },
+    {
+     "name": "4 cups beef stock",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (24 ounces) marinara sauce",
+     "measure": ""
+    },
+    {
+     "name": "3 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "Parmesan rind, optional",
+     "measure": ""
+    },
+    {
+     "name": "8 ounces angel hair pasta, broken into 1-1/2-inch pieces",
+     "measure": ""
+    },
+    {
+     "name": "Additional freshly grated Parmesan cheese, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 4.82,
+   "ratingCount": 11,
+   "sourceOk": true,
+   "sourceIngredientCount": 16
+  },
+  {
+   "id": "tasteofhome:chili-spaghetti-with-hot-dogs",
+   "name": "Spaghetti with Hot Dogs",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2025/01/Chili-Spaghetti-with-Hot-Dogs_EXPS_TOHD24_41175_DanielleMoore_6.jpg",
+   "source": "https://www.tasteofhome.com/recipes/chili-spaghetti-with-hot-dogs/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "8 ounces uncooked spaghetti",
+     "measure": ""
+    },
+    {
+     "name": "1 package (1 pound) hot dogs, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped celery",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons canola oil",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon prepared mustard",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon Worcestershire sauce",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 cup shredded cheddar cheese",
+     "measure": ""
+    }
+   ],
+   "rating": 4.17,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:spicy-chicken-and-hominy-soup",
+   "name": "Spicy Chicken and Hominy Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/EXPS_TOHD24_142730_PerrySantanachote_7.jpg",
+   "source": "https://www.tasteofhome.com/recipes/spicy-chicken-and-hominy-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound boneless skinless chicken breasts, cubed",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 chipotle peppers in adobo sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (14-1/2 ounces each) chicken broth, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) hominy, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (4 ounces) chopped green chiles",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 11
+  },
+  {
+   "id": "tasteofhome:spicy-veggie-pasta-bake",
+   "name": "Spicy Veggie Pasta Bake",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps189817_SD153323A06_05_3B-v2-Napkin-e1723550307399.jpg",
+   "source": "https://www.tasteofhome.com/recipes/spicy-veggie-pasta-bake/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 cups uncooked spiral pasta",
+     "measure": ""
+    },
+    {
+     "name": "1 medium yellow summer squash",
+     "measure": ""
+    },
+    {
+     "name": "1 small zucchini",
+     "measure": ""
+    },
+    {
+     "name": "1 medium sweet red pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1 small red onion, halved and sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sliced fresh mushrooms",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon crushed red pepper flakes",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (24 ounces) spicy marinara sauce",
+     "measure": ""
+    },
+    {
+     "name": "8 ounces fresh mozzarella cheese pearls",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Grated Parmesan cheese and julienned fresh basil",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:spinach-beef-spaghetti-pie",
+   "name": "Spinach-Beef Spaghetti Pie",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Spinach-Beef-Spaghetti-Pie_EXPS_MIOPBZ17_16201_B10_014_2b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/spinach-beef-spaghetti-pie/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "6 ounces uncooked angel hair pasta",
+     "measure": ""
+    },
+    {
+     "name": "2 large eggs, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "1 pound ground beef",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup chopped green pepper",
+     "measure": ""
+    },
+    {
+     "name": "1 jar (14 ounces) meatless pasta sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon Creole seasoning",
+     "measure": ""
+    },
+    {
+     "name": "3/4 teaspoon garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1 package (8 ounces) cream cheese, softened",
+     "measure": ""
+    },
+    {
+     "name": "1 package (10 ounces) frozen chopped spinach, thawed and squeezed dry",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup shredded part-skim mozzarella cheese",
+     "measure": ""
+    }
+   ],
+   "rating": 4.58,
+   "ratingCount": 12,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:stewed-tomatoes-with-dumplings",
+   "name": "Stewed Tomatoes with Dumplings",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps18738_DHC1145894D212.jpg",
+   "source": "https://www.tasteofhome.com/recipes/stewed-tomatoes-with-dumplings/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 can (14-1/2 ounces) diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon sugar",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons butter",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup biscuit/baking mix",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons milk",
+     "measure": ""
+    }
+   ],
+   "rating": 4.86,
+   "ratingCount": 7,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:stewed-zucchini-and-tomatoes",
+   "name": "Stewed Zucchini and Tomatoes",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Stewed-Zucchini-and-Tomatoes_EXPS_SDAS18_130433_D04_03__4b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/stewed-zucchini-and-tomatoes/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 medium zucchini, cut into 1/4-inch slices",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt, divided",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, thinly sliced",
+     "measure": ""
+    },
+    {
+     "name": "3 medium tomatoes, sliced",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup condensed tomato soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1 cup shredded cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "Minced fresh basil, optional",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 10
+  },
+  {
+   "id": "tasteofhome:easy-ground-beef-taco-salad",
+   "name": "Taco Salad",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/09/Easy-Ground-Beef-Taco-Salad_EXPS_TOHD24_175295_AlejandroMonfort_14.jpg",
+   "source": "https://www.tasteofhome.com/recipes/easy-ground-beef-taco-salad/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 pound ground beef",
+     "measure": ""
+    },
+    {
+     "name": "1 envelope reduced-sodium taco seasoning",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup water",
+     "measure": ""
+    },
+    {
+     "name": "1 medium head iceberg lettuce, torn (about 8 cups)",
+     "measure": ""
+    },
+    {
+     "name": "2 cups shredded cheddar cheese",
+     "measure": ""
+    },
+    {
+     "name": "2 cups broken nacho-flavored tortilla chips",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup Catalina salad dressing",
+     "measure": ""
+    },
+    {
+     "name": "Optional toppings: Diced tomatoes, black beans, cubed avocado, salsa or pico de gallo",
+     "measure": ""
+    }
+   ],
+   "rating": 4.67,
+   "ratingCount": 15,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:teriyaki-chicken-wings",
+   "name": "Teriyaki Chicken Wings",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Teriyaki-Chicken-Wings_EXPS_FT24_5270_EC_012324_3.jpg",
+   "source": "https://www.tasteofhome.com/recipes/teriyaki-chicken-wings/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "3 pound whole chicken wings",
+     "measure": ""
+    },
+    {
+     "name": "1 cup all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 teaspoons garlic powder",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon pepper",
+     "measure": ""
+    },
+    {
+     "name": "Oil for deep-fat frying",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup soy sauce",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup sugar",
+     "measure": ""
+    },
+    {
+     "name": "Optional: thinly sliced green onions and sesame seeds",
+     "measure": ""
+    }
+   ],
+   "rating": 4.17,
+   "ratingCount": 6,
+   "sourceOk": true,
+   "sourceIngredientCount": 9
+  },
+  {
+   "id": "tasteofhome:veggie-thai-curry-soup",
+   "name": "Thai Curry Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2024/10/EXPS_TOHD24_173375_EricKleinberg_8.jpg",
+   "source": "https://www.tasteofhome.com/recipes/veggie-thai-curry-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 package (8.8 ounces) thin rice noodles or uncooked angel hair pasta",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon sesame oil",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons red curry paste",
+     "measure": ""
+    },
+    {
+     "name": "1 cup light coconut milk",
+     "measure": ""
+    },
+    {
+     "name": "1 carton (32 ounces) reduced-sodium chicken broth or vegetable broth",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon reduced-sodium soy sauce or fish sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 package (14 ounces) firm tofu, drained and cubed",
+     "measure": ""
+    },
+    {
+     "name": "1 can (8-3/4 ounces) whole baby corn, drained and cut in half",
+     "measure": ""
+    },
+    {
+     "name": "1 can (5 ounces) bamboo shoots, drained",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups sliced fresh shiitake mushrooms",
+     "measure": ""
+    },
+    {
+     "name": "1/2 medium sweet red pepper, cut into thin strips",
+     "measure": ""
+    },
+    {
+     "name": "Torn fresh basil leaves and lime wedges",
+     "measure": ""
+    }
+   ],
+   "rating": 4.25,
+   "ratingCount": 4,
+   "sourceOk": true,
+   "sourceIngredientCount": 12
+  },
+  {
+   "id": "tasteofhome:thai-meatball-soup",
+   "name": "Thai Meatball Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2022/11/Thai-Meatball-Soup_EXPS_RC22_268407_P2_MD_05_05_8b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/thai-meatball-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1/2 cup fresh cilantro, finely chopped",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup unsweetened shredded coconut",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons teriyaki sauce, divided",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground ginger",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 pounds ground chicken",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup sesame oil",
+     "measure": ""
+    },
+    {
+     "name": "3 cups chicken broth",
+     "measure": ""
+    },
+    {
+     "name": "1 can (13.66 ounces) coconut milk",
+     "measure": ""
+    },
+    {
+     "name": "1-1/2 cups julienned carrots",
+     "measure": ""
+    },
+    {
+     "name": "2 cups torn fresh kale",
+     "measure": ""
+    },
+    {
+     "name": "4-1/2 teaspoons lime juice",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon brown sugar",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Lime wedges and additional chopped cilantro",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 7,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:tomato-soup-salad-dressing",
+   "name": "Tomato Soup Salad Dressing",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps16345_CX10210C49B-3.jpg",
+   "source": "https://www.tasteofhome.com/recipes/tomato-soup-salad-dressing/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 can (10-3/4 ounces) condensed tomato soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup vegetable oil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup cider vinegar",
+     "measure": ""
+    },
+    {
+     "name": "1 cup sugar",
+     "measure": ""
+    },
+    {
+     "name": "1 small onion, quartered",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "Salad greens and vegetables of your choice",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
+   "id": "tasteofhome:tomato-basil-steak",
+   "name": "Tomato-Basil Steak",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Tomato-Basil-Steak_exps175123_EDSC143234D03_27_1bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/tomato-basil-steak/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/4 pounds boneless beef shoulder top blade or flat iron steaks",
+     "measure": ""
+    },
+    {
+     "name": "1/2 pound whole fresh mushrooms, quartered",
+     "measure": ""
+    },
+    {
+     "name": "1 medium sweet yellow pepper, julienned",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) stewed tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (8 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 envelope onion soup mix",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons minced fresh basil",
+     "measure": ""
+    },
+    {
+     "name": "Hot cooked rice",
+     "measure": ""
+    }
+   ],
+   "rating": 4.67,
+   "ratingCount": 12,
+   "sourceOk": true,
+   "sourceIngredientCount": 8
+  },
+  {
+   "id": "tasteofhome:creamy-tuna-noodle-casserole",
+   "name": "Tuna Noodle Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/Creamy-Tuna-Noodle-Casserole_EXPS_FT24_46064_ST_0404_3.jpg",
+   "source": "https://www.tasteofhome.com/recipes/creamy-tuna-noodle-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "5 cups uncooked egg noodles",
+     "measure": ""
+    },
+    {
+     "name": "1 cup frozen peas",
+     "measure": ""
+    },
+    {
+     "name": "1 can (10-3/4 ounces) reduced-fat reduced-sodium condensed cream of mushroom soup, undiluted",
+     "measure": ""
+    },
+    {
+     "name": "1 cup fat-free sour cream",
+     "measure": ""
+    },
+    {
+     "name": "2/3 cup grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup 2% milk",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "2 cans (5 ounces each) light tuna in water, drained and flaked",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup finely chopped onion",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup finely chopped green pepper",
+     "measure": ""
+    },
+    {
+     "name": "TOPPING:",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup soft bread crumbs",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon butter, melted",
+     "measure": ""
+    }
+   ],
+   "rating": 4.46,
+   "ratingCount": 98,
+   "sourceOk": true,
+   "sourceIngredientCount": 13
+  },
+  {
+   "id": "tasteofhome:veggie-bean-casserole",
+   "name": "Veggie Bean Casserole",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps36038_CX1113249D49A.jpg",
+   "source": "https://www.tasteofhome.com/recipes/veggie-bean-casserole/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "2 medium carrots, diced",
+     "measure": ""
+    },
+    {
+     "name": "2 celery ribs, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 large onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "1 medium green pepper, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons canola oil",
+     "measure": ""
+    },
+    {
+     "name": "3 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "1 can (28 ounces) diced tomatoes, undrained",
+     "measure": ""
+    },
+    {
+     "name": "2 cups frozen corn",
+     "measure": ""
+    },
+    {
+     "name": "1 can (16 ounces) kidney beans, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) garbanzo beans or chickpeas, rinsed and drained",
+     "measure": ""
+    },
+    {
+     "name": "1 can (15 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons picante sauce",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 3,
+   "sourceOk": true,
+   "sourceIngredientCount": 14
+  },
+  {
+   "id": "tasteofhome:veggie-frittata",
+   "name": "Veggie Frittata",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2023/02/Veggie-Frittata-_EXPS_TOHJJ23_231238_P2_MD_01_13_4b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/veggie-frittata/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "9 large eggs",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon salt, divided",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon pepper, divided",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon olive oil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped carrot",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped sweet red pepper",
+     "measure": ""
+    },
+    {
+     "name": "1/3 cup chopped red onion",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup sliced zucchini",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons chopped fresh basil, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup grape tomatoes, halved",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 2,
+   "sourceOk": true,
+   "sourceIngredientCount": 11
+  },
+  {
+   "id": "tasteofhome:zesty-chicken-soup",
+   "name": "Zesty Chicken Soup",
+   "category": null,
+   "area": null,
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/Zesty-Chicken-Soup_exps23950_HCK133243C09_17_2bC_RMS.jpg",
+   "source": "https://www.tasteofhome.com/recipes/zesty-chicken-soup/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/4 pounds boneless skinless chicken breasts",
+     "measure": ""
+    },
+    {
+     "name": "4 cups water",
+     "measure": ""
+    },
+    {
+     "name": "1 tablespoon canola oil",
+     "measure": ""
+    },
+    {
+     "name": "1 medium onion, chopped",
+     "measure": ""
+    },
+    {
+     "name": "2 celery ribs, chopped",
+     "measure": ""
+    },
+    {
+     "name": "4 garlic cloves, minced",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) Mexican diced tomatoes",
+     "measure": ""
+    },
+    {
+     "name": "1 can (14-1/2 ounces) diced tomatoes",
+     "measure": ""
+    },
+    {
+     "name": "1 can (8 ounces) tomato sauce",
+     "measure": ""
+    },
+    {
+     "name": "1 cup medium salsa",
+     "measure": ""
+    },
+    {
+     "name": "3 medium zucchini, halved and sliced",
+     "measure": ""
+    },
+    {
+     "name": "2 medium carrots, sliced",
+     "measure": ""
+    },
+    {
+     "name": "1 cup frozen white corn",
+     "measure": ""
+    },
+    {
+     "name": "1 can (4 ounces) chopped green chiles",
+     "measure": ""
+    },
+    {
+     "name": "3 teaspoons ground cumin",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons chili powder",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "Optional: Shredded cheddar cheese and tortilla chips",
+     "measure": ""
+    }
+   ],
+   "rating": 5,
+   "ratingCount": 9,
+   "sourceOk": true,
+   "sourceIngredientCount": 18
+  }
+ ]
+}

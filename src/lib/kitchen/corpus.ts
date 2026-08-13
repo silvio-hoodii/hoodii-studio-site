@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock, expiringSoon } from './stock';
 // One matcher implementation, in .mjs, so the CLI and the app can never disagree. See match-mjs.d.ts.
@@ -29,21 +29,55 @@ export interface Candidate {
 const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
 
 async function loadCorpus() {
-  const raw = JSON.parse(await readFile(join(DIR, 'themealdb.json'), 'utf8'));
-  const all = raw.meals as CorpusMeal[];
-  /* Only dishes whose source URL was VERIFIED to carry a real recipe. He clicked "Pollo en Salsa" and
-   * landed on a Costa Rican site's category index, because that is what TheMealDB has stored for it.
-   * corpus-verify.mjs fetched all 594 sources and found 183 that cannot yield a recipe: 86 pages with
-   * no recipe markup at all, 62 HTTP 402s from the Dotdash sites (allrecipes, simplyrecipes,
-   * thespruceeats) blocking bots, and the rest dead or 404. Offering those is offering a link we
-   * cannot stand behind, and it is also offering a dish that could never become a cook card. */
-  const usable = all.filter((m) => m.sourceOk === true);
+  /* Every provider in corpus/ is merged. The directory is plural on purpose: TheMealDB was only ever
+   * a seed, and it turned out to be the wrong SHAPE, not merely small. It is community-contributed,
+   * so it carries 167 desserts and twelve pasta dishes, and its single bolognese had no source URL.
+   * Silvio, 2026-08-13: "why are we trusting this purpose that apparently has the randomest recipes in
+   * the world when we could have gone straight to BBC Good Food." Corpora are now ingested straight
+   * from real sites via their published sitemaps, and only from sites whose robots.txt permits it. */
+  const files = (await readdir(DIR)).filter((f) => f.endsWith('.json'));
+  const meals: CorpusMeal[] = [];
+  const providers: { provider: string; count: number; attribution: string }[] = [];
+  let totalKnown = 0;
+  let checkedAt: string | null = null;
+
+  for (const f of files) {
+    const raw = JSON.parse(await readFile(join(DIR, f), 'utf8'));
+    const all = (raw.meals ?? []) as CorpusMeal[];
+    totalKnown += all.length;
+    /* Only dishes whose source URL was VERIFIED to carry a real recipe. He clicked "Pollo en Salsa"
+     * and landed on a Costa Rican site's category index, because that is what TheMealDB stored for it.
+     * A link offered as a recipe has to be one, and a dish whose source yields nothing could never
+     * become a cook card anyway. */
+    const usable = all.filter((m) => m.sourceOk === true);
+    meals.push(...usable);
+    providers.push({
+      provider: raw.provider ?? f,
+      count: usable.length,
+      attribution: raw.attribution ?? raw.provider ?? f,
+    });
+    if (raw.sourceCheckedAt && (!checkedAt || raw.sourceCheckedAt > checkedAt)) checkedAt = raw.sourceCheckedAt;
+  }
+
+  /* Same dish ingested twice under slightly different names is noise he already complained about
+   * ("one is called shashuka and the other one is called chachuca"). This only removes EXACT
+   * duplicates after normalising case and punctuation; near-duplicates are left alone deliberately,
+   * because fuzzy-merging names hides real dishes. */
+  const seen = new Set<string>();
+  const deduped = meals.filter((m) => {
+    const k = String(m.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+
   return {
-    meals: usable,
-    attribution: raw.attribution as string,
-    hiddenNoSource: all.length - usable.length,
-    totalKnown: all.length,
-    sourceCheckedAt: raw.sourceCheckedAt as string | null,
+    meals: deduped,
+    providers: providers.sort((a, b) => b.count - a.count),
+    hiddenNoSource: totalKnown - meals.length,
+    dupesDropped: meals.length - deduped.length,
+    totalKnown,
+    sourceCheckedAt: checkedAt,
   };
 }
 
@@ -64,7 +98,7 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
 }
 
 export async function findCandidates() {
-  const [{ meals, attribution, hiddenNoSource, totalKnown, sourceCheckedAt }, stock] =
+  const [{ meals, providers, hiddenNoSource, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
     await Promise.all([loadCorpus(), deriveStock()]);
   const available = usableIds(stock);
 
@@ -94,9 +128,10 @@ export async function findCandidates() {
   const cookable = (c: Candidate) => c.score.missing.length === 0;
 
   return {
-    attribution,
+    providers,
     total: meals.length,
     hiddenNoSource,
+    dupesDropped,
     totalKnown,
     sourceCheckedAt,
     nameOf: (id: string) => nameOf(stock, id),

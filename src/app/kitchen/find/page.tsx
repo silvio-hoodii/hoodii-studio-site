@@ -103,9 +103,13 @@ export default async function Find() {
         published recipe. Pick one and it gets turned into a proper card first.
       </p>
       <p className="quiet" style={{ marginTop: 10 }}>
-        {d.hiddenNoSource} of {d.totalKnown} known dishes are hidden because their link does not lead
-        to a real recipe, checked one by one on {d.sourceCheckedAt}. Most are pages that no longer
-        exist or sites that block us. A link offered as a recipe has to be one.
+        From {d.providers.map((p) => `${p.provider} (${p.count})`).join(', ')}. Ingested straight from
+        each site&apos;s own published sitemap, and only from sites whose robots.txt permits it.
+      </p>
+      <p className="quiet" style={{ marginTop: 6 }}>
+        {d.hiddenNoSource} of {d.totalKnown} are hidden because their link does not lead to a real
+        recipe, checked one by one on {d.sourceCheckedAt}, and {d.dupesDropped} were exact duplicates.
+        A link offered as a recipe has to be one.
       </p>
 
       <hr className="divider" />
@@ -160,8 +164,13 @@ export default async function Find() {
 
       <hr className="divider" style={{ marginTop: 34 }} />
       <p className="quiet">
-        {d.attribution}. Ingredient lists and photos only: instructions are never copied here, they
-        stay at the original recipe, which is also the one thing a cook card may be built from.
+        {d.providers.map((p) => p.attribution).join(' · ')}
+      </p>
+      <p className="quiet" style={{ marginTop: 6 }}>
+        Ingredient lists and photos only: instructions are never copied here, they stay at the original
+        recipe, which is also the one thing a cook card may be built from. Sites that ask AI agents not
+        to crawl them are not crawled, which is why there is no NYT Cooking, Serious Eats, Maangchi or
+        Woks of Life here.
       </p>
     </div>
   );

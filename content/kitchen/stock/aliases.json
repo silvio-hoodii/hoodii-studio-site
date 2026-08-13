@@ -17,7 +17,6 @@
     "black pepper",
     "freshly ground black pepper",
     "ground black pepper",
-    "water",
     "cold water",
     "warm water",
     "boiling water",
@@ -73,7 +72,8 @@
     "cocoa powder",
     "cocoa",
     "yeast",
-    "instant yeast"
+    "instant yeast",
+    "water"
   ],
   "map": {
     "eggs": [
@@ -895,7 +895,13 @@
       "serrano",
       "thai chilli",
       "fresh chilli",
-      "chilli pepper"
+      "chilli pepper",
+      "red chillies",
+      "green chillies",
+      "chillies",
+      "chilies",
+      "long red chillies",
+      "red chilli peppers"
     ],
     "fish sauce": [
       "fish sauce",
@@ -995,7 +1001,12 @@
       "haddock",
       "mussels",
       "scallops",
-      "crab"
+      "crab",
+      "prawn",
+      "cooked prawn",
+      "shelled cooked prawn",
+      "raw king prawns",
+      "tiger prawns"
     ],
     "green beans": [
       "green beans",
@@ -1114,7 +1125,11 @@
       "anchovies",
       "anchovy fillets",
       "tinned salmon",
-      "mackerel"
+      "mackerel",
+      "tuna in spring water",
+      "tuna in oil",
+      "tuna steak",
+      "tuna chunks"
     ]
   },
   "_substitutes": {
