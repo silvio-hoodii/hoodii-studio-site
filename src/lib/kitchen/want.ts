@@ -1,9 +1,9 @@
 import 'server-only';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock } from './stock';
 import { scoreRecipe, extractRecipe, type Score } from '../../../content/kitchen/match.mjs';
-import type { CorpusMeal } from './corpus';
+import { loadCorpus, type CorpusMeal } from './corpus';
 
 /* "I want a stroganoff. What do I need?"
  *
@@ -61,14 +61,11 @@ export async function wantByName(q: string, limit = 12) {
   if (!query) return { hits: [] as WantHit[], stock: (await usableStock()).stock };
   const { stock, ids } = await usableStock();
 
-  const files = (await readdir(DIR)).filter((f) => f.endsWith('.json'));
-  const rows: { m: CorpusMeal; provider: string }[] = [];
-  for (const f of files) {
-    const raw = JSON.parse(await readFile(join(DIR, f), 'utf8'));
-    for (const m of (raw.meals ?? []) as CorpusMeal[]) {
-      if (m.sourceOk === true) rows.push({ m, provider: raw.provider ?? f });
-    }
-  }
+  /* The one shared loader, so this page cannot disagree with find or shop about what the corpus is.
+   * It was the third independent reimplementation of it, and the only one of the three that deduped was
+   * the find page's. */
+  const { meals: corpusMeals } = await loadCorpus();
+  const rows = corpusMeals.map((m) => ({ m, provider: m.provider ?? 'corpus' }));
 
   /* Rank by WHERE the query lands, not just whether it does. An exact title beats a title that starts
    * with it, which beats a mention anywhere, which beats a hit buried in the ingredient list. Without

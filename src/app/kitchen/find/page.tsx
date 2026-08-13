@@ -128,8 +128,12 @@ export default async function Find({
       </p>
       <p className="quiet" style={{ marginTop: 6 }}>
         {d.hiddenNoSource} of {d.totalKnown} are hidden because their link does not lead to a real
-        recipe, checked one by one on {d.sourceCheckedAt}, and {d.dupesDropped} were exact duplicates.
-        A link offered as a recipe has to be one.
+        recipe, each one fetched and checked on {d.sourceCheckedAt}, and {d.dupesDropped} more were
+        exact duplicates. A link offered as a recipe has to be one.
+        {d.uncheckedCount > 0 && (
+          <> {d.uncheckedCount} have not been checked either way yet and are also held back, because
+          &ldquo;checked&rdquo; has to mean checked.</>
+        )}
       </p>
 
       <FilterBar
@@ -174,10 +178,30 @@ export default async function Find({
             label={d.nameOf}
           />
 
+          {/* THAWING IS ITS OWN ANSWER. These 41 dishes used to sit inside "Ready" wearing the same
+              green badge, which is a promise the kitchen cannot keep until the afternoon. */}
+          <Group
+            title="Ready, once something thaws"
+            note="Nothing to buy, but this needs something out of the freezer first. Decide these in the morning, not at six."
+            list={d.thaw}
+            limit={12}
+            label={d.nameOf}
+          />
+
           <Group
             title="Probably ready"
             note="Nothing known to be missing, but one or two ingredients are not in the kitchen's vocabulary yet, so this is a maybe rather than a yes."
             list={d.probably}
+            limit={8}
+            label={d.nameOf}
+          />
+
+          {/* Was computed and dropped, which is why the "nothing missing" chip said 139 while the
+              sections added to 135. A dish in no group is unreachable without guessing a filter. */}
+          <Group
+            title="Nothing missing, but too much unrecognised to promise"
+            note="No known gaps, yet several ingredients are not in the kitchen's vocabulary, so the app cannot honestly say yes. Read the list before you commit."
+            list={d.unclear}
             limit={8}
             label={d.nameOf}
           />

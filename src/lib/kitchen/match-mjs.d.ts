@@ -31,6 +31,8 @@ declare module '*/match.mjs' {
   }
   export function parseIngredient(raw: string): string;
   export function isOptionalLine(raw: string): boolean;
+  /** Every item id that could serve this line, not just the winner of the first-hit race. */
+  export function matchAllItems(name: string, raw?: string): Set<string>;
   export function matchToItem(name: string, raw?: string): string | null;
   export function scoreRecipe(lines: string[], availableIds: Set<string>): Score;
   export function extractRecipe(html: string): {

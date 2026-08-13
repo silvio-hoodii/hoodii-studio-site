@@ -82,7 +82,7 @@ export function parseIngredient(raw, opts = {}) {
   s = s.replace(/[¼-¾⅐-⅞]/g, ' ');  // vetted fractions
   s = s.replace(/\d+\s*\/\s*\d+/g, ' ');            // 1/2
   s = s.replace(/\d+(?:[.,]\d+)?/g, ' ');           // remaining numbers
-  s = s.replace(/[-–—]/g, ' ');
+  s = s.replace(/[-–—]/g, ' ');   // lint-prose-allow: this line exists to REMOVE them
   s = s.replace(UNITS_RE, ' ');
   s = s.replace(SIZES_RE, ' ');
   /* PREP words go. PRODUCT-IDENTITY words STAY.
@@ -102,7 +102,20 @@ export function parseIngredient(raw, opts = {}) {
    * Keeping words is SAFE, because item matching is containment: "onion sliced" still contains "onion".
    * Only the stripping destroyed information, and it destroyed exactly the information that tells two
    * products apart. */
-  s = s.replace(/\b(?:freshly|chopped|grated|shredded|diced|crushed|beaten|peeled|trimmed|rinsed|deseeded|halved|quartered|of|the|a|an|about|approximately|good|quality|ripe|thinly|roughly|finely)\b/g, ' ');
+  /* `crushed` was in this list until 2026-08-13 and it was the same mistake as ground and minced,
+   * one word later. Measured over all 29,787 ingredient lines in the corpus: "crushed" is followed by
+   * "red pepper" 59 times and "tomatoes" 27, and in the ~320 remaining cases it TRAILS the ingredient
+   * ("garlic cloves, crushed"). So leading `crushed` is product identity and trailing `crushed` is prep,
+   * and stripping it unconditionally destroyed the identity to save the prep.
+   *
+   * The cost was a false "you have this", which is the expensive direction: "crushed red pepper" parsed
+   * down to "red pepper", which is a BELL PEPPER alias, so 59 recipes wanting chilli flakes were told
+   * the fridge had them because there are bell peppers in it. Same for a bare "jalapeno", which landed
+   * on the jar of crushed jalapeno instead of the fresh chilli he does not have.
+   *
+   * Not stripping it costs nothing, because trailing prep is already handled: "2 garlic cloves crushed"
+   * still contains the phrase "garlic", and matchToItem tests containment for items. */
+  s = s.replace(/\b(?:freshly|chopped|grated|shredded|diced|beaten|peeled|trimmed|rinsed|deseeded|halved|quartered|of|the|a|an|about|approximately|good|quality|ripe|thinly|roughly|finely)\b/g, ' ');
   s = s.replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
   return s;
 }
@@ -225,6 +238,38 @@ export function matchToItem(name, raw = name) {
     if (re.test(name)) return r.itemId;
   }
   return null;
+}
+
+/* EVERY item that could serve a line, not just the winner.
+ *
+ * `matchToItem` returns on the first hit and stops, which is right for scoring: one line needs one
+ * answer. It is WRONG for the question "is this food usable by anything", and the difference showed up
+ * on 2026-08-13 as a lie on the most prominent list on the shop page.
+ *
+ * He owns a box of Barilla Rotini, a box of spaghetti, and a seed row called `pasta`. All three alias
+ * lists claim "penne", "macaroni", "shells". `pasta` wins the race on every generic pasta line, so
+ * `rotini` and `spaghetti` are never credited and the page reported them as food nothing is using. Same
+ * with his white onions: "1 onion, chopped" resolves to `yellowonion` because that row happens to own
+ * the generic phrase, so the white onions read as neglected while 242 dishes would happily take one.
+ *
+ * The claim "nothing is using this" is about the FOOD. Deriving it from "the matcher did not credit
+ * this ROW" is Law 3: reporting an intermediate as an outcome. So ask the real question directly.
+ */
+export function matchAllItems(name, raw = name) {
+  const out = new Set();
+  if (!name) return out;
+  const rawLc = String(raw).toLowerCase();
+  for (const r of candidates(name)) {
+    const veto = VETO_LC[r.itemId];
+    if (veto && veto.some((v) => v.re.test(rawLc))) continue;
+    if (r.whole) {
+      if (name === r.phrase) out.add(r.itemId);
+      continue;
+    }
+    const re = new RegExp(`(?:^|\\s)${r.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s|$)`);
+    if (re.test(name)) out.add(r.itemId);
+  }
+  return out;
 }
 
 /** availableIds: Set of stock ids usable now (level have/low). */

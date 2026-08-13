@@ -6,7 +6,25 @@ import { corpusCount } from '@/lib/kitchen/corpus';
 
 export const dynamic = 'force-dynamic';
 
-const mins = (n?: number | null) => (n == null ? null : n >= 90 ? `${Math.round(n / 60)} h` : `${n} min`);
+/* Math.round(90/60) is 2, so a 90 minute dish read "2 h" and overstated by a quarter. He plans around
+ * these. Minutes all the way to two hours, then halves. */
+const mins = (n?: number | null) => {
+  if (n == null) return null;
+  if (n < 120) return `${n} min`;
+  const h = Math.floor(n / 60);
+  const rest = n % 60;
+  return rest === 0 ? `${h} h` : rest === 30 ? `${h}.5 h` : `${h} h ${rest} min`;
+};
+
+/* NAME THE DEADLINE, DO NOT DESCRIBE A MOOD, which DESIGN.md states and this expression ignored for
+ * everything already expired. The negative branch was simply never written, so his arugula at
+ * use_by minus 3 days rendered as "today" and the sirloin at minus 8 rendered as "today" too. */
+const pastDue = (d: number | null | undefined) => {
+  if (d == null) return '';
+  if (d < 0) return `${-d} d past its best`;
+  if (d === 0) return 'today';
+  return `${d} d left`;
+};
 
 /** Strip the shop's branding: "spring mix salad (Your Fresh Market)". */
 const short = (s: string) => s.replace(/\s*\([^)]*\)/g, '').trim();
@@ -135,7 +153,10 @@ export default async function KitchenHome() {
           the way to thousands in its smallest font and misreporting the count on the way. Counted now,
           never typed. */}
       <p className="lede" style={{ marginTop: 14 }}>
-        <Link href="/kitchen/find"><b>Browse {browsable.toLocaleString()} dishes you could make →</b></Link>
+        {/* "dishes you could make" was an 18x overclaim in the largest bold type on a page headed
+            "What you can cook right now": 139 of the 2,586 are missing nothing. The count was honestly
+            computed and the sentence around it was not, which is the harder half to notice. */}
+        <Link href="/kitchen/find"><b>Browse {browsable.toLocaleString()} dishes, scored against the fridge &#8594;</b></Link>
       </p>
       <p className="quiet" style={{ marginTop: 4 }}>
         Scored against the fridge, with photos. A menu to pick from, not recipes: nothing there has
@@ -199,7 +220,7 @@ export default async function KitchenHome() {
                   <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}&max=1`}>
                     {short(i.n)}{amt ? `, ${amt}` : ''}
                   </Link>
-                  <span>{i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}</span>
+                  <span>{pastDue(i.daysLeft)}</span>
                 </li>
               );
             })}

@@ -5,6 +5,8 @@ import { deriveStock, expiringSoon } from './stock';
 import { scoreRecipe, type Score } from '../../../content/kitchen/match.mjs';
 
 export interface CorpusMeal {
+  /** Filled in by loadCorpus during the merge, so counts can be tallied after the dedupe. */
+  provider?: string;
   id: string;
   name: string;
   category: string;
@@ -29,6 +31,14 @@ export interface Candidate {
    *  than cuisine: the real question is "what can I make with the chicken thighs", not "show me
    *  Italian". Derived from the match, so it needs no tagging and cannot drift from the scoring. */
   usesIds: string[];
+  /* WHAT IS STILL IN THE FREEZER, by name.
+   *
+   * `usableIds` counts frozen food as available, which is right for "do I need to shop" and wrong for
+   * "can I cook this now". 41 of the 139 dishes badged ready depended on something frozen, and no
+   * surface said so. DESIGN.md is explicit: "frozen is not have. Discovering at 6pm that dinner needed
+   * thawing at 6am is a specific, avoidable failure, and it deserves its own state." The hub already
+   * models it as status 'thaw'; find, want and shop all threw the axis away. */
+  needsThaw: string[];
 }
 
 export interface Filters {
@@ -40,7 +50,18 @@ export interface Filters {
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
 
-async function loadCorpus() {
+/* ONE LOADER, and it is exported because there were three.
+ *
+ * Found 2026-08-13: /kitchen/find said 2,586 dishes and /kitchen/shop said 2,626, one tap apart, along
+ * with 139 versus 144 cookable and different unlock counts on every row. `shop.ts` and `want.ts` each
+ * reimplemented this function and neither deduped, so every number on the shop page was computed over a
+ * corpus 40 rows larger than the one the find page used.
+ *
+ * This is a verbatim recurrence of what `recipes.ts` documents as fixed, where two surfaces disagreed
+ * about the same word by 14x. The lesson taken then was "extract isOfferable()". The lesson available
+ * was "one loader", and taking the smaller one bought a second instance of the same bug six hours later.
+ * Law 1: eliminate the class. Two callers of one function cannot disagree. */
+export async function loadCorpus() {
   /* Every provider in corpus/ is merged. The directory is plural on purpose: TheMealDB was only ever
    * a seed, and it turned out to be the wrong SHAPE, not merely small. It is community-contributed,
    * so it carries 167 desserts and twelve pasta dishes, and its single bolognese had no source URL.
@@ -51,6 +72,7 @@ async function loadCorpus() {
   const meals: CorpusMeal[] = [];
   const providers: { provider: string; count: number; attribution: string }[] = [];
   let totalKnown = 0;
+  let unchecked = 0;
   let checkedAt: string | null = null;
 
   for (const f of files) {
@@ -61,12 +83,20 @@ async function loadCorpus() {
      * and landed on a Costa Rican site's category index, because that is what TheMealDB stored for it.
      * A link offered as a recipe has to be one, and a dish whose source yields nothing could never
      * become a cook card anyway. */
-    const usable = all.filter((m) => m.sourceOk === true);
+    const provider = raw.provider ?? f;
+    /* THREE STATES, not two. `sourceOk === false` was checked and failed; `sourceOk` ABSENT was never
+     * checked at all. The find page said "214 of 2840 are hidden ... checked one by one", and 31 of
+     * those 214 had never been fetched. Law 3, in a sentence written to demonstrate rigour. */
+    unchecked += all.filter((m) => m.sourceOk === undefined).length;
+    const usable = all.filter((m) => m.sourceOk === true).map((m) => ({ ...m, provider }));
     meals.push(...usable);
+    /* count is filled in AFTER the dedupe below. It used to be `usable.length`, which is why the find
+     * page's byline added up to 2,626 under a headline saying 2,586: the provider tallies were taken
+     * before 40 duplicates were dropped. He checks arithmetic like that with a phone calculator. */
     providers.push({
-      provider: raw.provider ?? f,
-      count: usable.length,
-      attribution: raw.attribution ?? raw.provider ?? f,
+      provider,
+      count: 0,
+      attribution: raw.attribution ?? provider ?? f,
     });
     if (raw.sourceCheckedAt && (!checkedAt || raw.sourceCheckedAt > checkedAt)) checkedAt = raw.sourceCheckedAt;
   }
@@ -83,10 +113,13 @@ async function loadCorpus() {
     return true;
   });
 
+  for (const p of providers) p.count = deduped.filter((m) => m.provider === p.provider).length;
+
   return {
     meals: deduped,
     providers: providers.sort((a, b) => b.count - a.count),
-    hiddenNoSource: totalKnown - meals.length,
+    hiddenNoSource: totalKnown - meals.length - unchecked,
+    uncheckedCount: unchecked,
     dupesDropped: meals.length - deduped.length,
     totalKnown,
     sourceCheckedAt: checkedAt,
@@ -110,7 +143,7 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
 }
 
 export async function findCandidates(filters: Filters = {}) {
-  const [{ meals, providers, hiddenNoSource, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
+  const [{ meals, providers, hiddenNoSource, uncheckedCount, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
     await Promise.all([loadCorpus(), deriveStock()]);
   const available = usableIds(stock);
 
@@ -120,6 +153,10 @@ export async function findCandidates(filters: Filters = {}) {
    * less useful than one that saves something. */
   const soon = new Map(
     expiringSoon(stock, 7, 25).map((i) => [i.id, { name: i.n, daysLeft: i.daysLeft ?? 99 }]),
+  );
+  /* deriveStock already knows where everything is. Nothing was reading the freezer axis. */
+  const frozen = new Set(
+    Object.values(stock.items).filter((it) => it.where === 'freezer').map((it) => it.id),
   );
 
   const all: Candidate[] = meals.map((meal) => {
@@ -134,7 +171,8 @@ export async function findCandidates(filters: Filters = {}) {
     // Resolve substitute ids to words here, once, so no surface has to know about item ids.
     for (const v of score.haveVia) if (v.via) v.via = nameOf(stock, v.via);
     const usesIds = [...new Set(hits.map((h) => h.item).filter((x): x is string => !!x))];
-    return { meal, score, usesExpiring, usesIds };
+    const needsThaw = [...new Set(usesIds.filter((id) => frozen.has(id)).map((id) => nameOf(stock, id)))];
+    return { meal, score, usesExpiring, usesIds, needsThaw };
   });
 
   const byName = (a: Candidate, b: Candidate) => a.meal.name.localeCompare(b.meal.name);
@@ -203,6 +241,7 @@ export async function findCandidates(filters: Filters = {}) {
     providers,
     total: meals.length,
     hiddenNoSource,
+    uncheckedCount,
     dupesDropped,
     totalKnown,
     sourceCheckedAt,
@@ -212,9 +251,16 @@ export async function findCandidates(filters: Filters = {}) {
       .filter((c) => cookable(c) && c.usesExpiring.length > 0)
       .sort((a, b) => a.usesExpiring[0]!.daysLeft - b.usesExpiring[0]!.daysLeft
         || b.usesExpiring.length - a.usesExpiring.length),
-    ready: all.filter((c) => c.score.verdict === 'ready' && c.usesExpiring.length === 0).sort(byName),
-    probably: all.filter((c) => c.score.verdict === 'probably-ready' && c.usesExpiring.length === 0).sort(byName),
-    unclear: all.filter((c) => c.score.verdict === 'unclear' && c.usesExpiring.length === 0).sort(byName),
+    /* READY NOW means the pan can go on now. A dish needing a thaw is not that, and calling it ready
+     * paints the `--signal` colour on a claim that is false for the next several hours. `kitchen.css`
+     * says of that colour: "the one place --signal is allowed: a value that is true right now." */
+    ready: all.filter((c) => c.score.verdict === 'ready' && c.usesExpiring.length === 0 && c.needsThaw.length === 0).sort(byName),
+    thaw: all.filter((c) => cookable(c) && c.usesExpiring.length === 0 && c.needsThaw.length > 0).sort(byName),
+    probably: all.filter((c) => c.score.verdict === 'probably-ready' && c.usesExpiring.length === 0 && c.needsThaw.length === 0).sort(byName),
+    /* `unclear` was computed and never rendered, so four dishes missing nothing at all belonged to no
+     * group and were unreachable in the default view while the "nothing missing" chip still counted
+     * them. The chip said 139 and the sections added to 135. */
+    unclear: all.filter((c) => c.score.verdict === 'unclear' && c.usesExpiring.length === 0 && c.needsThaw.length === 0).sort(byName),
     missingOne: all.filter((c) => c.score.missing.length === 1).sort(byName),
     missingTwo: all.filter((c) => c.score.missing.length === 2).sort(byName),
     /* What one purchase would unlock the most dishes. Counted only over dishes missing EXACTLY that

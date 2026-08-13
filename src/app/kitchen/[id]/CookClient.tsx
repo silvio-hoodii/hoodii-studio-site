@@ -111,8 +111,26 @@ export default function CookClient({
   // -1 is the prep screen. Steps are 0-indexed from there.
   const params = useSearchParams();
   const router = useRouter();
-  const deep = Number(params.get('step'));
-  const [i, setI] = useState(Number.isFinite(deep) && deep > 0 ? deep - 1 : -1);
+  /* NORMALISE THE PARAM ONCE, so no downstream line can ever see garbage.
+   *
+   * `?step=abc` returned HTTP 500 in production, found 2026-08-13 by an agent told to break these
+   * surfaces. `Number('abc')` is NaN, and the render-phase sync below compares `deep !== seenDeep`.
+   * NaN is not equal to itself, so that branch fired on every render, forever, and React aborted with
+   * a max-update-depth error during SSR. The loudest possible failure on the one screen he stands at
+   * with a pan already hot, reachable by a typo.
+   *
+   * Guarding the comparison (Object.is) would have stopped the loop and left the garbage in play. This
+   * clamps instead, so `deep` is always an integer inside the recipe, and `?step=7` on a six-step
+   * recipe lands on step 6 rather than rendering a blank page. That was the second half of the same
+   * report: `recipe.steps[6]` is undefined, `if (!s) return null` dropped the entire component, and the
+   * whole visible text of the page became the single word "Kitchen" with no way back. */
+  const rawStep = Number(params.get('step'));
+  const deep = Number.isFinite(rawStep) && rawStep > 0
+    ? Math.min(Math.trunc(rawStep), recipe.steps.length)
+    : 0;
+  /* The debrief is a step too, `?step=done`, for the reason in the comment above `goStep`. */
+  const deepDone = params.get('step') === 'done';
+  const [i, setI] = useState(deep > 0 ? deep - 1 : -1);
 
   /* THE STEP LIVES IN THE URL.
    *
@@ -124,12 +142,27 @@ export default function CookClient({
    * `replace` rather than `push`, so fourteen steps do not become fourteen entries to escape through,
    * and `scroll: false` because the page already scrolls itself on a step change. useState stays as the
    * render source; this only mirrors it somewhere durable. */
-  const goStep = (next: number) => {
+  const goStep = (next: number | 'done') => {
+    if (next === 'done') {
+      setDone(true);
+      router.replace(`/kitchen/${recipe.id}?step=done`, { scroll: false });
+      return;
+    }
+    setDone(false);
     setI(next);
     const q = next < 0 ? '' : `?step=${next + 1}`;
     router.replace(`/kitchen/${recipe.id}${q}`, { scroll: false });
   };
-  const [done, setDone] = useState(false);
+  /* THE DEBRIEF IS IN THE URL TOO, and leaving it out was the sharpest thing found on 2026-08-13.
+   *
+   * `done` was the one piece of state not mirrored anywhere durable, so on "Done cooking" the URL still
+   * read `?step=6`. A reload, a tab eviction, or a stray Back during the debrief returned him to step 6
+   * with the rating and the note gone. This file's own comment says a debrief is "the most expensive
+   * thing to lose, because by the time anyone notices, the cook is over and the detail is gone", and
+   * then left it in the single place that does not survive a refresh, inside the component that moved
+   * the step index into the URL for exactly this reason. Three of his notes have already been destroyed
+   * once by a different bug on this screen. */
+  const [done, setDone] = useState(deepDone);
   const total = recipe.steps.length;
   const byRef = useMemo(() => Object.fromEntries(prep.map((p) => [p.ref, p])), [prep]);
 
@@ -140,7 +173,12 @@ export default function CookClient({
   const [seenDeep, setSeenDeep] = useState(deep);
   if (deep !== seenDeep) {
     setSeenDeep(deep);
-    if (Number.isFinite(deep) && deep > 0) setI(deep - 1);
+    if (deep > 0) setI(deep - 1);
+  }
+  const [seenDone, setSeenDone] = useState(deepDone);
+  if (deepDone !== seenDone) {
+    setSeenDone(deepDone);
+    setDone(deepDone);
   }
 
   const timers = useSyncExternalStore(subscribe, readTimers, serverTimers);
@@ -276,7 +314,21 @@ export default function CookClient({
 
   /* ---------------- one step, one screen ---------------- */
   const s = recipe.steps[i];
-  if (!s) return null;
+  /* NEVER RENDER NOTHING. `deep` is clamped above so an out-of-range ?step can no longer reach here,
+   * but a recipe with no steps still could, and the old `return null` produced a page whose entire
+   * visible text was the word "Kitchen": no dish name, no back link, no nav, nothing to tap. A dead end
+   * on a cooking screen is worse than an error, because he cannot tell it apart from a slow load. */
+  if (!s) {
+    return (
+      <div className="wrap">
+        <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>&#8592; Kitchen</Link>
+        <h1>{recipe.name}</h1>
+        <p className="lede">This recipe has no step {i + 1}. Nothing is wrong with your kitchen; the
+        link you followed points past the end of it.</p>
+        <button className="primary" onClick={() => goStep(-1)}>Back to the start of this dish</button>
+      </div>
+    );
+  }
   /* The amounts table for THIS step. It is a table of NUMBERS, so a reference with no number does
    * not belong in it.
    *
@@ -390,7 +442,7 @@ export default function CookClient({
         {i < total - 1 ? (
           <button className="primary" onClick={() => goStep(i + 1)}>Next</button>
         ) : (
-          <button className="primary" onClick={() => setDone(true)}>Done cooking</button>
+          <button className="primary" onClick={() => goStep('done')}>Done cooking</button>
         )}
       </div>
     </div>

@@ -510,7 +510,12 @@
 .kos .filters { margin-top: 16px; }
 
 .kos .searchrow { display: flex; gap: 8px; }
-.kos .searchrow input[type="search"] {
+/* type="url" was picking up NONE of this. The /kitchen/want field is half that page's purpose ("paste
+ * the address of any recipe page") and it had no border token, no flex, and critically no 16px, which
+ * is the one thing the comment below says is not optional. Invisible to curl, obvious on a phone. */
+.kos .searchrow input[type="search"],
+.kos .searchrow input[type="url"],
+.kos .searchrow input[type="text"] {
   flex: 1 1 auto;
   min-width: 0;
   font-size: 16px;               /* 16px or iOS zooms the whole page on focus */

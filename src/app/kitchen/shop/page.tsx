@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { shoppingView } from '@/lib/kitchen/shop';
 
+/* Same fix as the hub: everything already expired rendered as "use today", including a roast eight days
+ * past. DESIGN.md: "Label the deadline, do not describe a mood." */
+const pastDue = (d: number | null | undefined) => {
+  if (d == null) return '';
+  if (d < 0) return `${-d} d past its best`;
+  if (d === 0) return 'use today';
+  return `${d} d left`;
+};
+
 export const dynamic = 'force-dynamic';
 
 /* The shopping list, and the anti-shopping list.
@@ -45,7 +54,7 @@ export default async function Shop() {
               <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}`}>{i.name}</Link>
               <span>
                 {i.daysLeft !== null
-                  ? (i.daysLeft <= 0 ? 'use today' : `${i.daysLeft} d left`)
+                  ? pastDue(i.daysLeft)
                   : (i.ageDays !== null ? `in ${i.where}, ${i.ageDays} d` : i.where)}
               </span>
             </li>
@@ -72,7 +81,7 @@ export default async function Shop() {
                 {i.name}
                 <span>
                   {i.daysLeft !== null
-                    ? (i.daysLeft <= 0 ? 'use today' : `${i.daysLeft} d left`)
+                    ? pastDue(i.daysLeft)
                     : `${i.where}, ${i.ageDays} d`}
                 </span>
               </li>

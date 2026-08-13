@@ -64,7 +64,7 @@ export function renderRecipe(r) {
   const prep = r.ingredients
     .filter((i) => usedRefs.has(i.ref))
     .map((i) => ({
-      qty: amount(i.qty, i.unit) || '—',
+      qty: amount(i.qty, i.unit) || '-',
       name: i.display + (i.prep ? `, ${i.prep}` : ''),
     }));
 

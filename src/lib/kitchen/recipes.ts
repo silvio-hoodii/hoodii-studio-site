@@ -78,7 +78,7 @@ function have(ing: Ingredient, stock: Stock): 'yes' | 'frozen' | 'no' {
   /* Amounts decide when both sides know one.
    *
    * Until 2026-08-11 this line was the whole test, and it asked "is this ingredient present at
-   * all?" — so a dish needing 500 g of beef counted as READY against 50 g. That is the "it says X
+   * all?", so a dish needing 500 g of beef counted as READY against 50 g. That is the "it says X
    * recipes when really there is none" complaint: the number was never dishonest, it just answered
    * a different question than the one being asked of it.
    *

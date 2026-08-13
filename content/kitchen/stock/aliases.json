@@ -82,7 +82,6 @@
     "peppercorns",
     "ground pepper",
     "coarse black pepper",
-    "white pepper",
     "pepper to taste",
     "clear honey",
     "runny honey",
@@ -452,9 +451,7 @@
     "montereyjack": [
       "monterey jack",
       "pepper jack",
-      "jack cheese",
-      "cheddar",
-      "cheddar cheese"
+      "jack cheese"
     ],
     "longgrainrice": [
       "long grain rice",
@@ -480,23 +477,11 @@
     ],
     "pasta": [
       "pasta",
-      "spaghetti",
-      "dry spaghetti",
-      "penne",
-      "rotini",
-      "fusilli",
-      "linguine",
-      "macaroni",
       "dried pasta",
-      "spaghettini",
-      "farfalle",
-      "conchiglie",
       "orzo",
       "tagliatelle",
       "pappardelle",
       "fettuccine",
-      "bucatini",
-      "rigatoni",
       "ziti",
       "gnocchi",
       "vermicelli",
@@ -509,13 +494,10 @@
       "soba noodles",
       "udon noodles",
       "rice noodles",
-      "couscous",
       "orecchiette",
       "cavatappi",
-      "shells",
       "elbow macaroni",
-      "pasta shapes",
-      "dried spaghetti"
+      "pasta shapes"
     ],
     "spaghetti_cooked": [
       "cooked spaghetti",
@@ -680,7 +662,8 @@
       "dried spaghetti",
       "spaghettini",
       "linguine",
-      "bucatini"
+      "bucatini",
+      "dry spaghetti"
     ],
     "rotini": [
       "rotini",
@@ -719,7 +702,6 @@
     "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
     "sesame seeds": "Toasted sesame seeds, wanted as a garnish by most Korean recipes.",
     "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
-    "short grain rice": "Not owned. Long grain works but changes the dish: in a donburi the sauce is meant to soak a sticky layer of rice under the topping, and long grain stays separate so the sauce runs to the bottom of the bowl. About $5.77 and it unlocks every donburi plus the Beef Bulgogi pot rice already written.",
     "potatoes": "No regular potatoes. The sweet potato is not a substitute in anything roasted or mashed: different sugar, different texture, and it collapses.",
     "fresh coriander": "Also sold as cilantro. None in the kitchen. Parsley looks similar and tastes nothing like it, so it is not a swap.",
     "fresh chilli": "No fresh chillies of any colour, scotch bonnet and thai chilli included. The crushed red pepper and crushed jalapeno bring heat but not the fresh fruity flavour.",
@@ -762,7 +744,8 @@
     "whole chicken": "No whole chicken or bone-in chicken pieces beyond the thighs and wings in the freezer. The frozen ground chicken is mince and is not a roast.",
     "poultry mince": "No ground turkey. The only poultry mince here is frozen ground chicken.",
     "condiments and jams": "No chutney, jam, marmalade, molasses, hoisin-style sweet sauces or barbecue sauce. Ketchup, mayonnaise, pesto, sriracha, relish and the two vinaigrettes ARE here.",
-    "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto."
+    "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto.",
+    "cheddar": "No cheddar. Monterey Jack is here and melts much the same way, so it stands in wherever the cheese is melted into something. It is milder and less tangy, so anywhere the cheddar flavour is the point of the dish it will taste flat."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -947,7 +930,11 @@
       "lemon pepper",
       "red pepper powder",
       "jarred",
-      "roasted red"
+      "roasted red",
+      "crushed red pepper",
+      "crushed chilli",
+      "crushed chili",
+      "crushed pepper"
     ],
     "groundchickenfrozen": [
       "whole chicken",
@@ -982,9 +969,7 @@
       "consomme",
       "gravy",
       "cube",
-      "raw",
-      "mince",
-      "ground"
+      "raw"
     ],
     "turkeydeli": [
       "ground turkey",
@@ -1216,14 +1201,6 @@
     ],
     "kimchi": [
       "kimchi"
-    ],
-    "short grain rice": [
-      "short grain rice",
-      "short grain white rice",
-      "sushi rice",
-      "calrose",
-      "japanese rice",
-      "medium grain rice"
     ],
     "potatoes": [
       "potato",
@@ -1513,7 +1490,6 @@
       "chives",
       "fresh chives",
       "snipped chives",
-      "dill fronds",
       "fresh rosemary",
       "dried rosemary",
       "dried oregano",
@@ -1740,10 +1716,7 @@
     ],
     "other rice and grains": [
       "risotto rice",
-      "arborio rice",
       "paella rice",
-      "sushi rice",
-      "short grain rice",
       "brown rice",
       "wild rice",
       "quinoa",
@@ -1754,6 +1727,21 @@
       "pearl barley",
       "rice flour",
       "glutinous rice"
+    ],
+    "cheddar": [
+      "cheddar",
+      "cheddar cheese",
+      "mature cheddar",
+      "sharp cheddar",
+      "extra sharp cheddar",
+      "mild cheddar",
+      "grated cheddar",
+      "strong cheddar",
+      "red leicester",
+      "colby",
+      "colby jack",
+      "cheddar jack",
+      "shredded cheddar"
     ]
   },
   "_substitutes": {
@@ -1781,6 +1769,10 @@
     "cumin seeds": {
       "have": "cumin",
       "note": "You have ground cumin, not seeds. Use about two thirds as much, and add it later than the recipe says: ground spice burns in seconds where seeds want a minute in hot oil. You lose the pop of a whole seed."
+    },
+    "cheddar": {
+      "have": "montereyjack",
+      "note": "Monterey Jack, same weight. It melts like a mild cheddar and browns a little paler, so a gratin or a toastie works as written. What you lose is the tang: cheddar is sharp and Jack is not, so in anything where the cheese is the flavour rather than the texture, expect it to taste mild. Adding a little grated parmesan brings some of the sharpness back."
     }
   }
 }

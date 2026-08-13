@@ -1,9 +1,9 @@
 import 'server-only';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock } from './stock';
-import { scoreRecipe } from '../../../content/kitchen/match.mjs';
-import type { CorpusMeal } from './corpus';
+import { scoreRecipe, matchAllItems, parseIngredient } from '../../../content/kitchen/match.mjs';
+import { loadCorpus } from './corpus';
 
 const ALIASES = JSON.parse(
   await readFile(join(process.cwd(), 'content', 'kitchen', 'stock', 'aliases.json'), 'utf8'),
@@ -67,12 +67,10 @@ export async function shoppingView() {
     if (it.level === 'have' || it.level === 'low') available.add(it.id);
   }
 
-  const files = (await readdir(DIR)).filter((f) => f.endsWith('.json'));
-  const meals: CorpusMeal[] = [];
-  for (const f of files) {
-    const raw = JSON.parse(await readFile(join(DIR, f), 'utf8'));
-    for (const m of (raw.meals ?? []) as CorpusMeal[]) if (m.sourceOk === true) meals.push(m);
-  }
+  /* THE SAME LOADER THE FIND PAGE USES. This function used to reimplement it and skip the dedupe, so
+   * this page counted 2,626 dishes and 144 cookable while /kitchen/find counted 2,586 and 139, one tap
+   * apart. Two callers of one function cannot disagree. */
+  const { meals } = await loadCorpus();
 
   const scored = meals.map((m) => ({
     m,
@@ -109,12 +107,29 @@ export async function shoppingView() {
     .sort((a, b) => b.count - a.count)
     .slice(0, 14);
 
-  /* ALREADY HERE AND GOING NOWHERE. Every stock id that no nearly-cookable dish touches. This is the
-   * half of his sentence that a shopping list normally ignores, and it is the half he raised first. */
+  /* ALREADY HERE AND GOING NOWHERE, and the definition of "going nowhere" was wrong until 2026-08-13.
+   *
+   * It used to ask "did the matcher CREDIT this row", which is not the same question as "can this food
+   * be used". matchToItem returns the first hit and stops, so where two rows can serve one line only one
+   * is ever credited. `map.pasta` claimed the word "rotini", so his 410 g box of Barilla Rotini was
+   * printed under "nothing is using it" while 570 dishes matched that box. His white onions read as
+   * neglected because "1 onion, chopped" resolves to the yellow ones.
+   *
+   * So ask the real question with matchAllItems, which returns EVERY row that could serve a line rather
+   * than the winner of a race. Law 3: the claim on screen is about the food, so it has to be derived
+   * from the food, not from an intermediate. */
   const touched = new Set<string>();
+  const reach = new Map<string, number>();
   for (const x of scored) {
-    if (x.s.missing.length > 1) continue;
-    for (const h of [...x.s.have, ...x.s.haveVia]) if (h.item) touched.add(h.item);
+    const near = x.s.missing.length <= 1;
+    for (const line of x.m.ingredients) {
+      const raw = `${line.measure} ${line.name}`;
+      for (const id of matchAllItems(parseIngredient(raw), raw)) {
+        if (id.startsWith('__')) continue;
+        reach.set(id, (reach.get(id) ?? 0) + 1);
+        if (near) touched.add(id);
+      }
+    }
   }
 
   /* An item can only be "used" if some alias points at it. Staples resolve to __STAPLE__ rather than to
@@ -122,10 +137,16 @@ export async function shoppingView() {
    * forever: the first version of this page listed salt, flour, oil, sugar and yeast as neglected food.
    * Items with NO alias are a different problem and get their own list, because no recipe can ever
    * reach them however long they sit there. That is a hole in the kitchen's vocabulary, not waste. */
-  const aliasedIds = new Set(Object.keys(ALIASES.map));
-
+  /* The split between the two lists is REACH OVER THE CORPUS, not "does an alias key exist".
+   *
+   * The old test was wrong in the direction that blames him. Five of the eight rows on this page could
+   * never leave the "you are not using this" list no matter what he cooked, because nothing could match
+   * them: `beef` vetoed its own aliases, `rotini` was shadowed by `pasta`, `whey` and `fruit` and `rice`
+   * had reach zero. The list's implicit promise is "cook something and this goes away", and for those
+   * five it was false. Reach zero means our vocabulary cannot see it, which is our bug to fix, and it
+   * belongs in the second list where the page already says so. */
   const unreachable: Idle[] = [...available]
-    .filter((id) => !aliasedIds.has(id) && !STAPLE_IDS.has(id) && !NOT_FOOD.has(id))
+    .filter((id) => (reach.get(id) ?? 0) === 0 && !STAPLE_IDS.has(id) && !NOT_FOOD.has(id))
     .map((id) => {
       const it = stock.items[id];
       return {
@@ -140,7 +161,7 @@ export async function shoppingView() {
     .sort((a, b) => (a.daysLeft ?? 999) - (b.daysLeft ?? 999));
 
   const idle: Idle[] = [...available]
-    .filter((id) => aliasedIds.has(id) && !touched.has(id))
+    .filter((id) => (reach.get(id) ?? 0) > 0 && !touched.has(id) && !STAPLE_IDS.has(id) && !NOT_FOOD.has(id))
     .map((id) => {
       const it = stock.items[id];
       return {
