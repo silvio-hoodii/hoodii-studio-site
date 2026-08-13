@@ -152,6 +152,23 @@ export interface Recipe {
      *  moves and `pnpm build` exits 1. It does not prove a human read anything; it proves the words
      *  have not changed since whoever stamped it looked, which is all `readAt` ever claimed. */
     readHash?: string;
+    /** Asserts that this recipe applies no heat ANYWHERE, which is the only thing that lets an
+     *  unsourced recipe be offered (see `isOfferable`).
+     *
+     *  It is a positive claim rather than an inference, and that is the whole point. Until
+     *  2026-08-13 the test was `!r.steps.some(s => s.heat)`, which read a MISSING FIELD as a claim of
+     *  no heat. That field is empirically unpopulated: eight recipes in this corpus say "Oven to
+     *  450F", "Air fryer at 375F for 10 minutes", "Bake 18 to 20 minutes" and carry `heat` on no step
+     *  at all, so all eight answered "no heat" to that question. They stayed out of the app only
+     *  because their `form` is `dish` and their read stamps were stale, neither of which has anything
+     *  to do with heat. The gate was safe by coincidence, and `_migration` recipes are skipped by the
+     *  validator so nothing was ever going to populate that field on its own.
+     *
+     *  `validate.mjs` cross-checks this claim against the words on the screen via
+     *  `content/kitchen/heat-evidence.mjs`, on EVERY recipe including migrated ones, and fails the
+     *  build on a contradiction. So this cannot be typed into a file to buy an exemption: setting it
+     *  on something that mentions an oven exits 1. */
+    heatFree?: boolean;
   };
 }
 

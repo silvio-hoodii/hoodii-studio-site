@@ -15,6 +15,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, basename } from 'node:path';
 import { renderHash } from './render.mjs';
+import { heatEvidence, NO_HEAT_FORMS } from './heat-evidence.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RECIPES = join(HERE, 'recipes');
@@ -439,6 +440,37 @@ function validate(r, file) {
   }
 }
 
+/* ---- the no-heat claim, cross-checked against the words on the screen ----------------------------
+ *
+ * `isOfferable()` will offer an UNSOURCED recipe if it is an assembly or macro that applies no heat,
+ * because every defect that ever reached the stove was an invented heat, timing or doneness
+ * instruction and something that never heats anything cannot carry that. The reasoning holds. The
+ * first implementation of the test did not: it asked `!steps.some(s => s.heat)`, so a missing field
+ * counted as a claim of no heat, and eight recipes in this corpus print oven temperatures and
+ * air-fryer times while carrying `heat` on no step at all. All eight answered "no heat".
+ *
+ * So the claim is now explicit (`provenance.heatFree`) and this is what makes it worth anything.
+ * It runs on EVERY recipe, migrated or not, because the eight unpopulated ones are all migrated and
+ * the `_migration` skip is the reason nothing ever caught this.
+ */
+function checkHeatClaim(r, id, migrated) {
+  const claimed = r.provenance?.heatFree === true;
+  const ev = heatEvidence(r);
+
+  if (claimed && ev.length) {
+    const shown = ev.slice(0, 4).map((e) => `${e.where} ${e.why}${e.match ? ` ("${e.match}")` : ''}`);
+    fail(id, 'heat', `provenance.heatFree is true, but ${ev.length} thing(s) in it apply heat: ${shown.join('; ')}`,
+      'heatFree is what lets an unsourced recipe be offered at all. Either the claim is wrong, or the '
+      + `heat is real and this needs a published source. Run: node content/kitchen/heat-evidence.mjs ${id} -v`);
+  }
+
+  // The other direction is not a failure, just a dish sitting on the shelf for no reason.
+  if (!claimed && !migrated && NO_HEAT_FORMS.has(r.form) && !ev.length && r.provenance?.tier !== 'sourced') {
+    warn(id, 'heat', 'applies no heat and could be offered, but does not claim provenance.heatFree',
+      'Nothing here heats anything, so it is eligible for the no-heat bar. Read it as rendered, then set heatFree: true.');
+  }
+}
+
 /* ------------------------------------------------------------------ */
 
 if (!existsSync(RECIPES)) {
@@ -469,7 +501,12 @@ for (const f of files) {
     fail(basename(f, '.json'), 'json', `will not parse: ${e.message}`);
     continue;
   }
-  if (STRICT && r._migration) { unmigrated.push(r.id || basename(f, '.json')); continue; }
+  const rid = r.id || basename(f, '.json');
+  // Deliberately OUTSIDE the _migration skip below. All eight recipes that claimed no heat while
+  // printing oven temperatures were migrated ones, so skipping them is precisely how this stayed
+  // invisible. It only ever fails on a false claim, so it cannot deadlock the migration backlog.
+  checkHeatClaim(r, rid, !!r._migration);
+  if (STRICT && r._migration) { unmigrated.push(rid); continue; }
   validate(r, path);
 }
 

@@ -27,10 +27,34 @@ enforces it:
 
 - **Any entry in `deviations` disqualifies `sourced`.** No classification, no size threshold, no
   judgement about whether a change is small enough. That judgement produced all five defects above.
-- **Only `sourced` is offered.** `adapted` is reachable and honestly labelled with its change count,
-  and is never recommended.
+- **Only `sourced` is offered**, plus the one exemption below. `adapted` is reachable and honestly
+  labelled with its change count, and is never recommended.
 - **`provenance.readHash`** is a hash of the rendered text. `readAt` compared two hand-typed strings,
   so two edits satisfied it. A hash cannot be typed into agreement.
+
+## The one exemption, and the shape it had to take
+
+Added 2026-08-13, on Silvio's call. An `assembly` or `macro` that **applies no heat anywhere** may be
+offered unsourced. Everything in the table below is an invented heat, timing or doneness instruction;
+stirring measured things into a bowl carries none of that by construction. Tier stays honest
+(`authored` stays `authored`) and the cook screen still shows that tier's draft warning.
+
+**The first version of the test was wrong in a way worth remembering.** It asked
+`!steps.some(s => s.heat)`, reading a missing field as a claim of no heat. That field is unpopulated
+across most of this corpus: eight recipes print "Oven to 450F", "Air fryer at 375F for 10 minutes",
+"Bake 18 to 20 minutes" and carry `heat` on no step at all. All eight answered "no heat" to the gate.
+They stayed out of the app only because their `form` is `dish` and their read stamps were stale,
+neither of which is about heat, and `validate.mjs --strict` skips `_migration` recipes so nothing was
+ever going to populate that field. **The gate was safe by coincidence, not by construction.**
+
+So the absence is no longer evidence. A recipe must assert `provenance.heatFree: true`, and
+`content/kitchen/heat-evidence.mjs` cross-checks that claim against the words on the screen, on every
+recipe including migrated ones. Claim it on something that mentions an oven and the build exits 1.
+Run `node content/kitchen/heat-evidence.mjs <id> -v` to see what it found.
+
+That check also caught a live one: the Greek Yogurt Bowl's why-panel said *"microwave the fruit alone
+for 20 seconds first"*, an unsourced heat instruction inside a dish offered on the grounds that it
+applies no heat. Removed, re-read, re-stamped.
 
 The offered catalogue went to **0 of 30** the moment this landed. That is the correct number.
 

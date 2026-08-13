@@ -178,7 +178,16 @@ export function rank(items: Cookable[]): Cookable[] {
  *  that risk by construction. Decided 2026-08-13 after an audit of the 27 machine-migrated recipes
  *  found 6 with no heat step, one already clean, the rest one qty/closure bug away from it. */
 const NO_HEAT_FORMS = new Set(['assembly', 'macro']);
-const hasNoHeat = (r: Recipe) => !r.steps.some((s) => s.heat);
+
+/** The no-heat claim, and where it is allowed to come from.
+ *
+ *  This used to be `!r.steps.some(s => s.heat)`, an inference from a missing field, and the field is
+ *  empirically unpopulated: eight recipes here print oven temperatures and air-fryer times and carry
+ *  `heat` on no step at all, so all eight claimed no heat. `form` and stale read stamps were the only
+ *  things keeping them out, and neither is about heat. Law 1: the absence is now unrepresentable as
+ *  evidence. A recipe must SAY it applies no heat, and `validate.mjs` refuses to build if the words
+ *  on the screen disagree. See `provenance.heatFree` in types.ts and content/kitchen/heat-evidence.mjs. */
+const claimsNoHeat = (r: Recipe) => r.provenance?.heatFree === true;
 
 /** Is this recipe fit to be OFFERED, as opposed to merely present.
  *
@@ -203,5 +212,5 @@ export function isOfferable(r: Recipe): boolean {
   if (p.cookedResult === 'failed') return false;
   if (!p.readAt || p.readAt !== r.build) return false;
   if (p.tier === 'sourced') return true;
-  return NO_HEAT_FORMS.has(r.form) && hasNoHeat(r);
+  return NO_HEAT_FORMS.has(r.form) && claimsNoHeat(r);
 }

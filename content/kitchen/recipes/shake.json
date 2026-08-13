@@ -106,6 +106,7 @@
     "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
     "sources": [],
     "readAt": "2026-08-13-noheat",
-    "readHash": "e2972ba6"
+    "readHash": "e2972ba6",
+    "heatFree": true
   }
 }

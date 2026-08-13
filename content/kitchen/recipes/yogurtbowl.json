@@ -1,7 +1,7 @@
 {
   "id": "yogurtbowl",
   "name": "Greek Yogurt Bowl",
-  "build": "2026-08-13-noheat",
+  "build": "2026-08-13-heatfree",
   "form": "assembly",
   "meal": [
     "breakfast"
@@ -95,7 +95,7 @@
       "uses": [
         "frozen_berries_or_mango"
       ],
-      "look": "They thaw in the yogurt in about 10 minutes and release juice into it, which is the point. If you want it ready now, microwave the fruit alone for 20 seconds first.",
+      "look": "They thaw in the yogurt in about 10 minutes and release juice into it, which is the point.",
       "_inferred": [
         "uses"
       ]
@@ -120,7 +120,8 @@
     "cooked": false,
     "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft. There is no heat or doneness judgment anywhere in this one, which is why it is offered despite having no source: nothing here can burn.",
     "sources": [],
-    "readAt": "2026-08-13-noheat",
-    "readHash": "704678c1"
+    "readAt": "2026-08-13-heatfree",
+    "readHash": "6ff33af4",
+    "heatFree": true
   }
 }
