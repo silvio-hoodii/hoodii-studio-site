@@ -4,6 +4,7 @@ import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
 import { lastCookedMap } from '@/lib/kitchen/cook';
 import { corpusCount } from '@/lib/kitchen/corpus';
+import { dueInText } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,16 +16,6 @@ const mins = (n?: number | null) => {
   const h = Math.floor(n / 60);
   const rest = n % 60;
   return rest === 0 ? `${h} h` : rest === 30 ? `${h}.5 h` : `${h} h ${rest} min`;
-};
-
-/* NAME THE DEADLINE, DO NOT DESCRIBE A MOOD, which DESIGN.md states and this expression ignored for
- * everything already expired. The negative branch was simply never written, so his arugula at
- * use_by minus 3 days rendered as "today" and the sirloin at minus 8 rendered as "today" too. */
-const pastDue = (d: number | null | undefined) => {
-  if (d == null) return '';
-  if (d < 0) return `${-d} d past its best`;
-  if (d === 0) return 'today';
-  return `${d} d left`;
 };
 
 /** Strip the shop's branding: "spring mix salad (Your Fresh Market)". */
@@ -247,7 +238,7 @@ export default async function KitchenHome() {
                   <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}&max=1`}>
                     {short(i.n)}{amt ? `, ${amt}` : ''}
                   </Link>
-                  <span>{pastDue(i.daysLeft)}</span>
+                  <span>{dueInText(i.daysLeft)}</span>
                 </li>
               );
             })}

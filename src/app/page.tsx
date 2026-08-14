@@ -3,6 +3,7 @@ import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { today } from '@/lib/day';
+import { daysAgoText } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import { getBodyCompSummary } from '@/lib/health/db';
@@ -98,7 +99,7 @@ async function gymRow(): Promise<Row> {
       label: 'Gym',
       line:
         since != null && since > 1 ? (
-          <>Last trained <span className="live tnum">{since} d</span> ago, next up {next}</>
+          <>Last trained <span className="live tnum">{daysAgoText(since)}</span>, next up {next}</>
         ) : (
           /* "Lower B" is a name, not a number: it had .tnum on it, and --signal, which globals
              reserves for a value that is true right now. /gym renders the same string in plain grey
@@ -125,7 +126,7 @@ async function healthRow(): Promise<Row> {
     if (summary.stale) {
       return {
         label: 'Health',
-        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, {summary.daysSinceLatest} days old</>,
+        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
         sub: `no measurement since ${summary.latest.date}`,
         href: '/health',
       };

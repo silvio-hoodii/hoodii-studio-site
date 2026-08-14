@@ -1,5 +1,6 @@
 import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSummary } from '@/lib/health/db';
 import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
+import { daysAgoText } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +48,7 @@ export default async function HealthPage() {
       {bodySummary.stale && (
         <div className="stale">
           <span className="k">Stale</span>
-          Last measurement was {bodySummary.daysSinceLatest} days ago, on {bodySummary.latest?.date}.
+          Last measurement was {daysAgoText(bodySummary.daysSinceLatest ?? 0)}, on {bodySummary.latest?.date}.
           Nothing below has moved since then, and the days after it are not rest days, they are days
           this page knows nothing about.
         </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSummary, getRecentPlays, getLatestTop, getMostPlayed } from '@/lib/music/db';
 import { getAccessToken, getNowPlaying, TIME_RANGES, RANGE_LABEL, type NowPlaying } from '@/lib/music/spotify';
+import { timeAgo } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,20 +34,11 @@ async function nowPlayingSafe(): Promise<{ track: NowPlaying | null; broken: str
   }
 }
 
-function when(iso: string): string {
-  const then = new Date(iso).getTime();
-  const mins = Math.max(0, Math.round((Date.now() - then) / 60000));
-  if (mins < 60) return `${mins}m ago`;
-  if (mins < 60 * 24) return `${Math.round(mins / 60)}h ago`;
-  const days = Math.round(mins / (60 * 24));
-  return days === 1 ? 'yesterday' : `${days}d ago`;
-}
-
 /* One row of the collected history, shared by the open list and the folded one. */
 function Play(p: { playedAt: string; trackName: string; trackUrl: string | null; artistName: string; albumName: string | null }) {
   return (
     <div className="play" key={p.playedAt}>
-      <div className="pwhen tnum">{when(p.playedAt)}</div>
+      <div className="pwhen tnum">{timeAgo(p.playedAt)}</div>
       <div className="pbody">
         <div className="ptrack">
           {p.trackUrl ? (
@@ -102,7 +94,7 @@ export default async function MusicPage() {
         <div className="alarm">
           <strong>The collector is not working.</strong>{' '}
           {summary.liveness.lastOkAt
-            ? `Last successful run was ${when(summary.liveness.lastOkAt)}.`
+            ? `Last successful run was ${timeAgo(summary.liveness.lastOkAt)}.`
             : 'It has never completed a successful run.'}{' '}
           Plays are being lost while this is true, and they cannot be recovered later.
           {(now.broken ?? summary.liveness.lastError) && (
