@@ -671,3 +671,57 @@
   font-weight: 600;
   box-shadow: inset 0 -2px 0 var(--signal);
 }
+
+/* ---- provenance chips ----
+   Was a nine-line bordered block above the ingredients, printing the statement, the sources and a
+   second sentence repeating what the statement had already said. On the oats page that was most of
+   the first screen, so the QA voice was drowning the food it exists to qualify.
+
+   Each chip opens to the exact sentence it used to print. Nothing was rewritten and no provenance
+   DATA changed; only how much is on screen before you ask for it.
+
+   The draft chip keeps the destructive edge and says what it means in the label itself, because
+   "treat as a draft" is the one sentence that has to reach him before he turns on heat. */
+.kos .provs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.kos .prov {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 0 11px;
+  max-width: 100%;
+}
+
+.kos .prov > summary {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  /* 44px, the tap floor, applied through the summary so the whole chip is the target. */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.kos .prov > summary:hover { color: var(--foreground); }
+
+.kos .prov.draft { border-color: var(--destructive); }
+.kos .prov.draft > summary { color: var(--destructive); font-weight: 600; }
+
+.kos .prov[open] {
+  /* Open, it stops being a chip in a row and becomes a paragraph. */
+  flex: 1 1 100%;
+}
+
+.kos .provbody {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--foreground);
+  padding: 2px 0 12px;
+  max-width: 60ch;
+}

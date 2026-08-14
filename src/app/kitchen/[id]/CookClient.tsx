@@ -204,44 +204,70 @@ export default function CookClient({
           <span>{total} steps</span>
         </div>
 
-        {/* Trust, stated before he turns anything on. Not a footnote. */}
-        {recipe.provenance && (
-          <div className={`box ${recipe.provenance.tier === 'authored' ? 'warn' : 'look'}`} style={{ marginTop: 18 }}>
-            <span className="k">
-              {recipe.provenance.tier === 'authored'
-                ? 'No source · treat as a draft'
-                : recipe.provenance.tier === 'adapted' ? 'Adapted from a real recipe' : 'Sourced'}
-            </span>
-            {recipe.provenance.statement}
-            {recipe.provenance.sources.map((s, k) => (
-              <div key={k} style={{ marginTop: 6 }}>
-                {s.url ? <a href={s.url} target="_blank" rel="noreferrer">{s.name ?? s.url}</a> : <b>{s.name}</b>}
-                {s.note ? <> · {s.note}</> : null}
-              </div>
-            ))}
-            {!recipe.provenance.cooked && (
-              <div style={{ marginTop: 6 }}>
-                Nobody has cooked these exact quantities yet. If something is off, that is worth
-                writing in the debrief.
-              </div>
+        {/* Trust, stated before he turns anything on, and no longer at the volume it was.
+         *
+         * This was a nine-line bordered block above the ingredients: the full provenance statement,
+         * then the sources, then a second sentence repeating what the statement had just said about
+         * nothing having been cooked. On the oats page it was most of the first screen, so the QA
+         * voice was drowning the food it was there to qualify.
+         *
+         * Chips, each opening to the exact sentence it used to print. The claim is unchanged and
+         * the DATA is untouched; only how much of it is on screen before you ask.
+         *
+         * The one thing NOT compressed is the warning itself. "agent-written, treat as a draft" is
+         * in the label, not behind the tap, because that is the sentence that has to reach him
+         * before he turns on heat and it is the one this whole schema exists to carry. */}
+        {(recipe.provenance || recipe.deviations?.length) && (
+          <div className="provs">
+            {recipe.provenance && (
+              <details className={`prov ${recipe.provenance.tier === 'authored' ? 'draft' : ''}`}>
+                <summary>
+                  {recipe.provenance.tier === 'authored'
+                    ? 'agent-written, treat as a draft'
+                    : recipe.provenance.tier === 'adapted'
+                      ? 'adapted from a real recipe'
+                      : 'sourced'}
+                </summary>
+                <div className="provbody">
+                  {recipe.provenance.statement}
+                  {recipe.provenance.sources.map((s, k) => (
+                    <div key={k} style={{ marginTop: 6 }}>
+                      {s.url ? <a href={s.url} target="_blank" rel="noreferrer">{s.name ?? s.url}</a> : <b>{s.name}</b>}
+                      {s.note ? <> · {s.note}</> : null}
+                    </div>
+                  ))}
+                </div>
+              </details>
             )}
+
+            {recipe.provenance && !recipe.provenance.cooked && (
+              <details className="prov">
+                <summary>never cooked</summary>
+                <div className="provbody">
+                  Nobody has cooked these exact quantities yet. If something is off, that is worth
+                  writing in the debrief.
+                </div>
+              </details>
+            )}
+
+            {/* Where this recipe departs from the sources it cites, and why. Without it "adapted" is
+                just a nicer-sounding word for "an agent wrote it": the tier says a real recipe
+                exists and this is the part that shows what was actually done with it. */}
+            {recipe.deviations?.length ? (
+              <details className="prov">
+                <summary>changed from the source ({recipe.deviations.length})</summary>
+                <div className="provbody">
+                  {recipe.deviations.map((d, k) => (
+                    <div className="dev" key={k}>
+                      <b>{d.what}</b>
+                      <span>{d.why}</span>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            ) : null}
           </div>
         )}
-
-        {/* Where this recipe departs from the sources it cites, and why. Without it "adapted" is
-            just a nicer-sounding word for "an agent wrote it": the tier says a real recipe exists
-            and this is the part that shows what was actually done with it. */}
-        {recipe.deviations?.length ? (
-          <details className="devs">
-            <summary>What was changed from the sources, and why ({recipe.deviations.length})</summary>
-            {recipe.deviations.map((d, k) => (
-              <div className="dev" key={k}>
-                <b>{d.what}</b>
-                <span>{d.why}</span>
-              </div>
-            ))}
-          </details>
-        ) : null}
 
         {notes.length > 0 && (
           <div className="box look" style={{ marginTop: 18 }}>
