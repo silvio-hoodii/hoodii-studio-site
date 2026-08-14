@@ -286,3 +286,50 @@ body {
   font-size: 13.5px;
   color: var(--muted-foreground);
 }
+
+/* ---- 404 ----
+ * Global rather than a surface stylesheet: a root not-found renders inside the root layout, so
+ * none of the per-surface CSS is loaded when it appears. */
+.notfound {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(48px, 12vw, 96px) 20px 64px;
+  font-family: var(--font-sans);
+}
+
+.notfound .eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.notfound h1 {
+  font-size: clamp(24px, 5.5vw, 30px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.notfound p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin: 10px 0 0;
+}
+
+.notfound a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 18px;
+  font-size: 15px;
+  color: var(--foreground);
+  /* Underlined, because it is the only thing on the page to do and the reset strips link styling:
+     dark body text that happens to be clickable is not an exit anyone takes. */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
