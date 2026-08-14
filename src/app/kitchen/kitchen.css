@@ -280,7 +280,7 @@
   font-weight: 500;
   padding: 13px 16px;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   background: var(--background);
   color: var(--foreground);
   cursor: pointer;
@@ -422,12 +422,13 @@
 }
 .kos .timer-live.ready { color: var(--signal); }
 
-.kos input[type="password"], .kos textarea {
+/* password comes from globals.css now; this keeps the textarea. */
+.kos textarea {
   width: 100%;
   font-family: var(--font-sans);
   font-size: 16px;
   padding: 12px 13px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--background);
   color: var(--foreground);
@@ -514,7 +515,7 @@
   min-width: 0;
   font-size: 16px;               /* 16px or iOS zooms the whole page on focus */
   padding: 11px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   background: var(--background);
   color: var(--foreground);
   border-radius: 2px;
@@ -541,7 +542,7 @@
 .kos .chip {
   display: inline-block;
   padding: 8px 11px;             /* >=40px tall with the font below: thumb-sized */
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: 2px;
   font-size: 14px;
   line-height: 1.2;

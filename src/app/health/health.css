@@ -61,16 +61,6 @@
   text-decoration: none;
   text-align: center;
 }
-.health input[type='password'] {
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  padding: 13px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--background);
-  color: var(--foreground);
-}
 .health .changes { font-size: 13px; color: var(--destructive); }
 
 /* ---- section ---- */
@@ -249,11 +239,6 @@
  * separating two paragraphs is not something you have to be able to find with your eye or your
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
-
-.health button.primary,
-.health .btn,
-.health input,
-.health select { border-color: var(--border-strong); }
 
 /* The strip cells keep their faint edge: 30 of them side by side ARE the chart, and a heavy border
  * on every rest day would read as data. They are focusable, so they still get the ring. */

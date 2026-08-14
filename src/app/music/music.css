@@ -243,9 +243,6 @@
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
 
-.music button,
-.music input { border-color: var(--border-strong); }
-
 .music a:focus-visible,
 .music button:focus-visible {
   outline: 2px solid var(--signal);

@@ -103,14 +103,14 @@
   min-height: 52px;
   cursor: pointer;
 }
-.french button.primary[disabled] { background: none; color: var(--muted-foreground); border-color: var(--border); font-weight: 400; cursor: default; }
+.french button.primary[disabled] { background: none; color: var(--muted-foreground); border-color: var(--border-strong); font-weight: 400; cursor: default; }
 .french button.ghost {
   display: block;
   width: 100%;
   font: inherit;
   font-size: 15px;
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   color: var(--foreground);
   border-radius: var(--radius);
   padding: 13px;
@@ -128,10 +128,11 @@
 .french input.f, .french select.f {
   width: 100%;
   font: inherit;
-  font-size: 15.5px;
+  /* 16px, same iOS zoom floor as everywhere else. This was 15.5. */
+  font-size: 16px;
   padding: 11px 12px;
   min-height: 46px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--background);
   color: var(--foreground);
@@ -182,7 +183,7 @@
   font-size: 14px;
   font-weight: 600;
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   padding: 12px 4px;
   min-height: 60px;
@@ -230,15 +231,6 @@
  * separating two paragraphs is not something you have to be able to find with your eye or your
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
-
-.french button,
-.french .btn,
-.french input,
-.french select { border-color: var(--border-strong); }
-
-/* Except the two rating buttons that carry meaning in their own colour. */
-.french .rate button.r1 { border-color: var(--destructive); }
-.french .rate button.r4 { border-color: var(--signal); }
 
 .french a:focus-visible,
 .french button:focus-visible,

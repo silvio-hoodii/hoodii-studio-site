@@ -179,9 +179,6 @@
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
 
-.curio button,
-.curio input { border-color: var(--border-strong); }
-
 .curio a:focus-visible,
 .curio button:focus-visible {
   outline: 2px solid var(--signal);

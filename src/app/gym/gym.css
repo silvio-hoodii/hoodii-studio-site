@@ -56,7 +56,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 8px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--background);
   color: var(--muted-foreground);
@@ -70,7 +70,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   padding: 7px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--background);
   color: var(--foreground);
@@ -138,9 +138,12 @@
 .gym .set-row input[type='number'], .gym .set-row input[type='text'] {
   width: 100%;
   font-family: var(--font-mono);
-  font-size: 15px;
+  /* 16px. Below it, iOS zooms the whole page when the field takes focus, which mid-set means
+     losing your place in the workout to a pinch gesture. Three comments elsewhere in this repo
+     call this non-negotiable and this file was at 15. */
+  font-size: 16px;
   padding: 9px 10px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--background);
   color: var(--foreground);
@@ -150,7 +153,7 @@
   width: 2.4rem;
   height: 2.4rem;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   background: var(--background);
   cursor: pointer;
 }
@@ -171,7 +174,7 @@
 .gym .swap-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .gym .swap-opt {
   text-align: left;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   padding: 10px 12px;
   background: var(--background);
@@ -235,7 +238,7 @@
   font-weight: 500;
   padding: 13px 16px;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   background: var(--background);
   color: var(--foreground);
   cursor: pointer;
@@ -251,16 +254,6 @@
 }
 .gym button:disabled { opacity: 0.4; cursor: default; }
 
-.gym input[type='password'] {
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  padding: 13px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--background);
-  color: var(--foreground);
-}
 
 .gym .not-here {
   border-left: 2px solid var(--border);
@@ -281,12 +274,6 @@
  * separating two paragraphs is not something you have to be able to find with your eye or your
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
-
-.gym button,
-.gym .btn,
-.gym input,
-.gym select,
-.gym textarea { border-color: var(--border-strong); }
 
 .gym a:focus-visible,
 .gym button:focus-visible,

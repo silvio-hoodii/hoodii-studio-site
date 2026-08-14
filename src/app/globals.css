@@ -157,6 +157,26 @@ body {
   }
 }
 
+/* ---- the password field ----
+ *
+ * Four login pages do identical work: one label, one field, one button. They rendered as four
+ * different things, because gym, health and kitchen each wrote their own rule and FRENCH WROTE
+ * NONE. /french/login's password box was a bare unpadded 174px stub next to three 350px siblings.
+ *
+ * Fixing that by adding a fourth copy would leave the same bug one route away. The rule lives here
+ * once, so the next gated surface is styled before anyone writes any CSS for it. */
+input[type='password'] {
+  width: 100%;
+  font-family: var(--font-sans);
+  /* 16px keeps iOS from zooming the page on focus. */
+  font-size: 16px;
+  padding: 13px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+
 /* ---- one heading scale, one label ----
  *
  * There were three h1 clamps (22-27 on gym and health, 24-30 on kitchen, 26-32 on french) and two
