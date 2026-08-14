@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getActivity, getSummary } from '@/lib/french/db';
 import FrenchClient from './FrenchClient';
 
@@ -9,7 +8,6 @@ export default async function FrenchPage() {
 
   return (
     <div className="wrap">
-      <Link href="/" className="eyebrow">← Silvio Neyra</Link>
       <FrenchClient initialSummary={summary} initialActivity={activity} />
     </div>
   );

@@ -80,6 +80,14 @@
   --input: oklch(0.895 0.003 100);
   --ring: oklch(0.55 0.004 100);
 
+  /* --border measures 1.34:1 against the background, well under the 3:1 floor for a non-text
+     control edge, which made every secondary button outline and every unfilled progress dot
+     effectively invisible on a phone. Found and fixed inside kitchen.css on 2026-08-13, where it
+     then sat as a private token that no other surface could see. It lives here now so a fix to the
+     contrast of a control edge is a fix everywhere, not a fix on the one page someone was looking
+     at. */
+  --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background));
+
   /* Cards are not the idiom here. Kept small rather than zero so inputs do not look broken. */
   --radius: 0.25rem;
 }
@@ -104,6 +112,9 @@
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
   --ring: oklch(0.6 0.004 100);
+  /* Restated rather than inherited: a custom property resolves its var()s against the element it
+     is declared on, so the :root copy would still be mixing the light foreground and background. */
+  --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background));
 }
 
 html,
@@ -130,4 +141,56 @@ body {
   .tnum {
     font-variant-numeric: tabular-nums;
   }
+}
+
+/* ---- the one way home ----
+ *
+ * Lives here rather than in a per-surface stylesheet because the component is mounted from seven
+ * different layouts, each of which scopes its own CSS under its own root class. See
+ * src/components/SiteHeader.tsx for why the header exists at all.
+ *
+ * Deliberately NOT sticky. Two of the surfaces already stick something to the top of the viewport
+ * (the kitchen timer rail, the gym rest timer), and a second competing sticky bar on a phone is
+ * how a cook screen loses the room it needs.
+ */
+.site-header {
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--background);
+}
+
+.site-header-in {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.site-header-in a {
+  color: var(--foreground);
+  text-decoration: none;
+  /* 44px is the tap floor. Applied to the link and not to the bar, so the hit area is the words. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.site-header-in a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.site-header-in a:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.site-header-in span {
+  color: var(--muted-foreground);
+  letter-spacing: 0.1em;
 }

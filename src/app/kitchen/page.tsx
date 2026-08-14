@@ -142,7 +142,6 @@ export default async function KitchenHome() {
 
   return (
     <div className="wrap">
-      <Link href="/" className="eyebrow">&#8592; Silvio Neyra</Link>
       <KitchenNav here="home" />
       <h1>What you can cook right now</h1>
       <p className="lede">

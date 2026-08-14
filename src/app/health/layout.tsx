@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './health.css';
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Health',
@@ -14,5 +15,10 @@ export const viewport: Viewport = {
 };
 
 export default function HealthLayout({ children }: { children: React.ReactNode }) {
-  return <div className="health">{children}</div>;
+  return (
+    <div className="health">
+      <SiteHeader app="Health" />
+      {children}
+    </div>
+  );
 }

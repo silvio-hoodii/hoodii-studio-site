@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
-import './curio.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,11 +30,6 @@ export default async function CurioPage() {
 
   return (
     <div className="curio">
-      <div className="top">
-        <Link href="/" className="back">Silvio Neyra</Link>
-        <span className="where">Curio</span>
-      </div>
-
       <p className="blurb">
         Things I got curious about and looked up properly, two a morning. Kept here because the
         answer is worth more than the moment of wondering, and because I forget them otherwise.

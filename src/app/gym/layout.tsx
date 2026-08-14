@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './gym.css';
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Gym',
@@ -14,5 +15,10 @@ export const viewport: Viewport = {
 };
 
 export default function GymLayout({ children }: { children: React.ReactNode }) {
-  return <div className="gym">{children}</div>;
+  return (
+    <div className="gym">
+      <SiteHeader app="Gym" />
+      {children}
+    </div>
+  );
 }

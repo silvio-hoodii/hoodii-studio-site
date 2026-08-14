@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getSummary, getRecentPlays, getLatestTop, getMostPlayed } from '@/lib/music/db';
 import { getAccessToken, getNowPlaying, TIME_RANGES, RANGE_LABEL, type NowPlaying } from '@/lib/music/spotify';
-import './music.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,11 +61,6 @@ export default async function MusicPage() {
 
   return (
     <div className="music">
-      <div className="top">
-        <Link href="/" className="back">Silvio Neyra</Link>
-        <span className="where">Music</span>
-      </div>
-
       <p className="blurb">
         What I am listening to. The charts come from Spotify, which works them out over its own
         windows. The history underneath does not: Spotify hands back the last fifty plays and

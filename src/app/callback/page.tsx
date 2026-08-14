@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import './callback.css';
 
 export const dynamic = 'force-dynamic';
 

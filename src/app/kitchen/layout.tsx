@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './kitchen.css';
 import TimerRail from './TimerRail';
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Kitchen',
@@ -19,6 +20,9 @@ export const viewport: Viewport = {
 export default function KitchenLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="kos">
+      {/* In the layout, so /kitchen/find, /kitchen/want, /kitchen/shop, every dish page and
+          /kitchen/login all get a way home without anyone having to remember. */}
+      <SiteHeader app="Kitchen" />
       {/* Above the page rather than inside it, because a timer belongs to the kitchen and not to
           whichever recipe happened to start it. This is what makes a pasta timer visible while he
           is three steps into the chicken. */}

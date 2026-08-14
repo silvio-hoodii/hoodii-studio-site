@@ -19,32 +19,8 @@
   padding: clamp(32px, 8vw, 64px) 20px 64px;
 }
 
-.music .top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.music .back,
-.music .where {
-  font-family: var(--font-mono);
-  font-size: clamp(15px, 3.4vw, 17px);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: inherit;
-}
-
-.music .where {
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--muted-foreground);
-}
-
-.music .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* The masthead that used to sit here was a copy of the hub's, which made three different header
+   idioms across seven surfaces. It is now one shared component mounted from the layout. */
 
 .music .blurb {
   font-size: 15px;

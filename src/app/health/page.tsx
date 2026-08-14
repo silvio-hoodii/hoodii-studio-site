@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSummary } from '@/lib/health/db';
 import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
 
@@ -32,7 +31,6 @@ export default async function HealthPage() {
 
   return (
     <div className="wrap">
-      <Link href="/" className="eyebrow">← Silvio Neyra</Link>
       <h1>Health</h1>
       <p className="lede">
         Weight, swim history, and lifting attendance, pulled from the Samsung Health export pipeline

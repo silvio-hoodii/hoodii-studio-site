@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './french.css';
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'French',
@@ -14,5 +15,10 @@ export const viewport: Viewport = {
 };
 
 export default function FrenchLayout({ children }: { children: React.ReactNode }) {
-  return <div className="french">{children}</div>;
+  return (
+    <div className="french">
+      <SiteHeader app="French" />
+      {children}
+    </div>
+  );
 }
