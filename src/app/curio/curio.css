@@ -7,8 +7,7 @@
  */
 
 .curio {
-  --gap: clamp(28px, 6vw, 44px);
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(32px, 8vw, 64px) 20px 64px;
 }
@@ -210,3 +209,7 @@
 }
 .curio .more > summary:hover { color: var(--foreground); }
 .curio .more[open] > summary { margin-bottom: 8px; }
+
+/* The page title. It had none: /curio opened straight into a paragraph and its only name was the
+   word in the header bar. The scale comes from globals.css. */
+.curio h1 { margin: 0 0 4px; }

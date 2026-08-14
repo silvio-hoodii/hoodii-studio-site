@@ -87,6 +87,8 @@ export default async function MusicPage() {
 
   return (
     <div className="music">
+      {/* See /curio: this page had no h1 either. */}
+      <h1>Music</h1>
       <p className="blurb">
         What I am listening to. The charts come from Spotify, which works them out over its own
         windows. The history underneath does not: Spotify hands back the last fifty plays and

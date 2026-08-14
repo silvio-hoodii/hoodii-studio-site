@@ -13,8 +13,7 @@
  */
 
 .music {
-  --gap: clamp(28px, 6vw, 44px);
-  max-width: 780px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(32px, 8vw, 64px) 20px 64px;
 }
@@ -270,3 +269,6 @@
   align-items: center;
 }
 .music .more > summary:hover { color: var(--foreground); }
+
+/* See curio.css: this page had no title either. Scale from globals.css. */
+.music h1 { margin: 0 0 4px; }

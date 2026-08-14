@@ -83,6 +83,10 @@ export default async function CurioPage() {
 
   return (
     <div className="curio">
+      {/* Every other surface opens with a title. These two opened straight into a paragraph, so
+          their only name was the 12px word in the header bar, and a screen reader found no h1 at
+          all on the page. */}
+      <h1>Curio</h1>
       <p className="blurb">
         Things I got curious about and looked up properly, two a morning. Kept here because the
         answer is worth more than the moment of wondering, and because I forget them otherwise.

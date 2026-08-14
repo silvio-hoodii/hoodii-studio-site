@@ -16,7 +16,7 @@
 .french * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 .french .wrap {
-  max-width: 600px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(28px, 7vw, 52px) var(--pad) 60px;
 }
@@ -33,18 +33,13 @@
 }
 .french a.eyebrow:hover { color: var(--foreground); }
 
-.french h1 {
-  font-size: clamp(26px, 6vw, 32px);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-  margin: 10px 0 0;
-}
+/* h1 comes from globals.css: one scale for the whole site. */
 .french h2 {
   font-family: var(--font-mono);
-  font-size: 11px;
+  /* See health.css: one label value, 12px / 0.13em. */
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--muted-foreground);
   margin: 0;
@@ -81,7 +76,10 @@
 .french .exam-strip button:hover { color: var(--foreground); }
 
 /* ---- section ---- */
-.french .section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+/* Ink, not the hairline. --border is the weight that separates two adjacent ROWS everywhere else on
+   the site, so using it as a SECTION rule left /french with no visible structure: the line between
+   two sections looked exactly like the line between two list items. */
+.french .section { margin-top: var(--gap); padding-top: 24px; border-top: 1px solid var(--foreground); }
 .french .section:first-of-type { margin-top: 26px; }
 
 /* ---- today counts + review cta ---- */

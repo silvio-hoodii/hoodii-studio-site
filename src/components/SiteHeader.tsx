@@ -15,14 +15,15 @@ import Link from 'next/link';
  *
  * Server component on purpose: it is a link and a label, and nothing here should ship JS.
  *
- * `measure` exists only because /music sets a 780px column while everything else uses 680px, so a
- * fixed width here would misalign the header against the content under it. When the measure gets
- * unified into one token this prop goes away.
+ * It takes no width. It reads `--measure`, the one reading column the whole site shares, so a
+ * surface that needs a wider one (music, which is the only page with a three-column grid) overrides
+ * that variable on a wrapper and the header follows it automatically. The prop this component used
+ * to carry for exactly that job is gone, along with its own docstring predicting it would be.
  */
-export default function SiteHeader({ app, measure }: { app?: string; measure?: number }) {
+export default function SiteHeader({ app }: { app?: string }) {
   return (
     <header className="site-header">
-      <div className="site-header-in" style={measure ? { maxWidth: measure } : undefined}>
+      <div className="site-header-in">
         <Link href="/">Silvio Neyra</Link>
         {app && <span>{app}</span>}
       </div>

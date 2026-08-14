@@ -13,7 +13,7 @@
 .health * { box-sizing: border-box; }
 
 .health .wrap {
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(28px, 7vw, 52px) var(--pad) 80px;
 }
@@ -30,18 +30,14 @@
 }
 .health a.eyebrow:hover { color: var(--foreground); }
 
-.health h1 {
-  font-size: clamp(22px, 5vw, 27px);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-  margin: 10px 0 0;
-}
+/* h1 comes from globals.css: one scale for the whole site. */
 .health h2 {
   font-family: var(--font-mono);
-  font-size: 11px;
+  /* 12px / 0.13em is the site's label, agreed by twelve other rules. This was 11 / 0.1em, which is
+     most of why /health read as a different product from /curio. */
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--muted-foreground);
   margin: 0;

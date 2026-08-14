@@ -9,8 +9,7 @@
  */
 
 .idx {
-  --gap: clamp(28px, 6vw, 44px);
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(32px, 8vw, 64px) 20px 64px;
 }

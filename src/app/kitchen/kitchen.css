@@ -24,7 +24,7 @@
 .kos * { box-sizing: border-box; }
 
 .kos .wrap {
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(28px, 7vw, 52px) var(--pad) 112px;
 }
@@ -43,13 +43,7 @@
 }
 .kos a.eyebrow:hover { color: var(--foreground); }
 
-.kos h1 {
-  font-size: clamp(24px, 5.5vw, 30px);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-  font-weight: 600;
-  margin: 10px 0 0;
-}
+/* h1 comes from globals.css: one scale for the whole site. */
 
 .kos h2 {
   font-size: 17px;
@@ -276,7 +270,7 @@
   padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
   display: flex;
   gap: 8px;
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
 }
 
@@ -337,7 +331,7 @@
   background: var(--background);
   border-bottom: 1px solid var(--foreground);
   padding: 8px var(--pad) 9px;
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
 }
 

@@ -4,13 +4,15 @@ import SiteHeader from '@/components/SiteHeader';
 /* This layout exists only to carry the site header and the stylesheet. /music is a single route
  * with no children, so there is nothing else for it to do.
  *
- * 780 because the column here is wider than the 680 everywhere else, and a header that does not
- * line up with the content under it reads as a mistake rather than as a decision. */
+ * The wrapper is what buys the wider column. /music is the only surface with a three-column grid,
+ * so it overrides `--measure` for everything inside it, header included. Setting it here rather
+ * than hardcoding 780 in two places is what keeps the header aligned with the content by
+ * construction instead of by two numbers agreeing. */
 export default function MusicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <SiteHeader app="Music" measure={780} />
+    <div className="measure-wide">
+      <SiteHeader app="Music" />
       {children}
-    </>
+    </div>
   );
 }

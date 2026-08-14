@@ -90,6 +90,20 @@
 
   /* Cards are not the idiom here. Kept small rather than zero so inputs do not look broken. */
   --radius: 0.25rem;
+
+  /* ONE reading column for the whole site.
+   *
+   * It was 680 on five surfaces, 600 on french and 780 on music, with no reason behind either
+   * divergence, so the text block visibly slid sideways when you navigated between apps. That is
+   * the single defect a stranger notices first, because it moves the entire page.
+   *
+   * Music genuinely earns a wider one: it is the only surface with a three-column grid. It opts in
+   * by overriding this variable on a wrapper, rather than by hardcoding a number, which is what
+   * lets the shared header line up with whatever the surface underneath it chose. */
+  --measure: 680px;
+
+  /* The space above a section block. Was 22, 30, 40, 44 and 56 across seven surfaces. */
+  --gap: clamp(28px, 6vw, 44px);
 }
 
 .dark {
@@ -143,6 +157,33 @@ body {
   }
 }
 
+/* ---- one heading scale, one label ----
+ *
+ * There were three h1 clamps (22-27 on gym and health, 24-30 on kitchen, 26-32 on french) and two
+ * surfaces with no h1 at all, so half the site opened on a title and half opened on a paragraph.
+ *
+ * The mono uppercase label is the site's signature element and appeared in 20 near-identical rules
+ * at 13 sizes and 8 tracking values. Twelve of them agreed on 12px/0.13em, so that is the value;
+ * health and french set their section headings one pixel down and 0.03em tighter, which is most of
+ * why those two read as a different product.
+ */
+h1 {
+  font-size: clamp(24px, 5.5vw, 30px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
+}
+
+.site-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
 /* ---- the one way home ----
  *
  * Lives here rather than in a per-surface stylesheet because the component is mounted from seven
@@ -158,8 +199,11 @@ body {
   background: var(--background);
 }
 
+/* The one surface that earns a wider column opts in here, and the header inside it follows. */
+.measure-wide { --measure: 780px; }
+
 .site-header-in {
-  max-width: 680px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
