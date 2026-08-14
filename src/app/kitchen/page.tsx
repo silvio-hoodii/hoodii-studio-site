@@ -140,6 +140,21 @@ export default async function KitchenHome() {
     .filter((i) => i.qty !== null && i.qty > 0)
     .sort((a, b) => (b.since ?? '').localeCompare(a.since ?? ''));
 
+  /* A receipt for the last stock read, and nothing more than that.
+   *
+   * This is NOT the "how much is left" list that was removed on 2026-08-13, and it must not grow
+   * into one: DESIGN.md rules that out by name, and it was right. This is one line answering a
+   * different question, which had no answer anywhere. He drops photos of a shop into Drive, an
+   * agent reads them and writes events, and until now the app said nothing at all about it. On
+   * 2026-08-14 he dropped seventeen photos, eighteen items moved, and every visible surface looked
+   * exactly as it had before. An intake with no acknowledgement is one he cannot trust. */
+  const touched = Object.values(stock.items).filter((i) => i.since && i.ageDays != null);
+  /* ageDays, not a date subtraction done here: the fold already computes it against the kitchen's
+   * own day boundary, and doing the arithmetic twice is how two surfaces end up disagreeing. */
+  const readAgeDays = touched.length ? Math.min(...touched.map((i) => i.ageDays as number)) : null;
+  const lastReadItems = touched.filter((i) => i.ageDays === readAgeDays);
+  const lastRead = lastReadItems[0]?.since ?? null;
+
   return (
     <div className="wrap">
       <KitchenNav here="home" />
@@ -148,6 +163,17 @@ export default async function KitchenHome() {
         From what is actually in this kitchen. Nothing here needs a shop first, and nothing asks you
         to cook two things at once.
       </p>
+
+      {/* The receipt. One line, and it stays one line. */}
+      {lastRead && readAgeDays != null && (
+        <p className="quiet" style={{ marginTop: 10 }}>
+          {readAgeDays === 0
+            ? `Stock last read today: ${lastReadItems.length} item${lastReadItems.length === 1 ? '' : 's'} moved.`
+            : readAgeDays === 1
+              ? `Stock last read yesterday: ${lastReadItems.length} item${lastReadItems.length === 1 ? '' : 's'} moved.`
+              : `Stock last read ${readAgeDays} days ago, on ${lastRead}. Everything below assumes nothing has changed since.`}
+        </p>
+      )}
 
       {/* The door to the menu. It used to sit in `.quiet`, the smallest type on the page, and it
           hardcoded "625" when the real figure was already 2,586. A page offering one dish was burying
