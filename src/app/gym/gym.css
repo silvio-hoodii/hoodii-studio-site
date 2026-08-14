@@ -123,8 +123,12 @@
 .gym .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
 .gym .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
 
+/* The suggestion is the most useful thing on this screen and deserves the emphasis, but a green
+   rule on nine blocks at once is structural decoration: after the third one the colour has stopped
+   meaning "true right now" and started meaning "block". Full-strength ink is the same emphasis
+   without spending the signal, which is what kitchen.css does for its heat blocks. */
 .gym .ex-suggest {
-  border-left: 2px solid var(--signal);
+  border-left: 2px solid var(--foreground);
   padding-left: 11px;
   margin: 10px 0;
   font-size: 14.5px;

@@ -100,7 +100,10 @@ async function gymRow(): Promise<Row> {
         since != null && since > 1 ? (
           <>Last trained <span className="live tnum">{since} d</span> ago, next up {next}</>
         ) : (
-          <>Next up <span className="live tnum">{next}</span></>
+          /* "Lower B" is a name, not a number: it had .tnum on it, and --signal, which globals
+             reserves for a value that is true right now. /gym renders the same string in plain grey
+             one click away. Nothing in this branch is a live number, so nothing is green. */
+          <>Next up <b>{next}</b></>
         ),
       sub: nextUp.streak > 0 ? `${nextUp.streak}-day streak` : 'logged between sets',
       href: '/gym',

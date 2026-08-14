@@ -337,8 +337,11 @@ export default function FrenchClient({
 
       <div className="section" style={{ marginTop: 22, paddingTop: 0, borderTop: 'none' }}>
         <div className="counts">
-          <div className="c-due"><b className="tnum">{summary.dueNow}</b><span>Due</span></div>
-          <div className="c-new"><b className="tnum live">{newCount}</b><span>New</span></div>
+          {/* Green only when there is something to be green about. --signal means a value that is
+              true right now, and a zero in the live colour claims liveness where there is none: this
+              page currently shows 0 due and 0 new, and both were rendering green. */}
+          <div className="c-due"><b className={`tnum${summary.dueNow > 0 ? ' live' : ''}`}>{summary.dueNow}</b><span>Due</span></div>
+          <div className="c-new"><b className={`tnum${newCount > 0 ? ' live' : ''}`}>{newCount}</b><span>New</span></div>
           <div className="c-str"><b className="tnum">{summary.streak}</b><span>Day streak</span></div>
         </div>
         <button type="button" className="primary" disabled={!summary.queueSize} onClick={startReview}>
