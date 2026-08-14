@@ -326,7 +326,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         * browsing, and a closed disclosure is a thing you do not know is there. Reported lost on
         * 2026-08-11 when both were present the whole time. */}
       {warmupList.length > 0 && (
-        <details className="collapse" style={{ marginTop: 18 }} open>
+        <details className="fold" style={{ marginTop: 18 }} open>
           <summary>Warmup ({warmupList.length} min)</summary>
           {warmupList.map((w) => (
             <div className="warm-item" key={w.name}>
@@ -338,9 +338,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       )}
 
       {blocks.map((block, bi) => (
-        <div className={`block${block.type === 'superset' || block.type === 'pair' ? ' tied' : ''}`} key={bi}>
-          <div className="block-label">{block.label} <span className="tag">{block.tag}</span></div>
-          {howToRun(block) && <div className="block-how">{howToRun(block)}</div>}
+        <div className={`exgroup${block.type === 'superset' || block.type === 'pair' ? ' tied' : ''}`} key={bi}>
+          <div className="exgroup-label">{block.label} <span className="tag">{block.tag}</span></div>
+          {howToRun(block) && <div className="exgroup-how">{howToRun(block)}</div>}
           {block.exercises.map((ex) => {
             const swap = swaps[ex.id];
             const eff = effOf(ex);
@@ -422,7 +422,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       ))}
 
       {cooldownList.length > 0 && (
-        <details className="collapse" style={{ marginTop: 24 }} open>
+        <details className="fold" style={{ marginTop: 24 }} open>
           <summary>Cooldown</summary>
           {cooldownList.map((c) => (
             <div className="warm-item" key={c.name}>
@@ -433,7 +433,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         </details>
       )}
 
-      <details className="collapse">
+      <details className="fold">
         <summary>RIR guide</summary>
         {rirGuide.map((r) => (
           <div className="warm-item" key={r.rir}>
@@ -453,7 +453,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         )}
       </div>
 
-      <div className={`timer-bar${timer ? '' : ' hidden'}`}>
+      <div className={`timer-bar${timer ? '' : ' off'}`}>
         <div>
           <div className="timer-label">{timer?.label} rest</div>
           <div className={`timer-time${remaining === 0 ? ' go' : ''}`}>

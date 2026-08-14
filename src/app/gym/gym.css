@@ -96,8 +96,8 @@
 }
 
 /* ---- blocks + exercises ---- */
-.gym .block { margin-top: 30px; }
-.gym .block-label {
+.gym .exgroup { margin-top: 30px; }
+.gym .exgroup-label {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
@@ -106,12 +106,12 @@
   color: var(--muted-foreground);
   margin-bottom: 10px;
 }
-.gym .block-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+.gym .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
 
 /* How to run the block. The label alone said WHERE ("rack area") and never HOW, so a superset and
  * two straight exercises rendered identically. Sentence case on purpose: it is an instruction to
  * follow mid-set, not another mono heading to skim past. */
-.gym .block-how {
+.gym .exgroup-how {
   font-size: 13px;
   line-height: 1.45;
   color: var(--muted-foreground);
@@ -120,7 +120,7 @@
 
 /* A superset is one unit of work, so its exercises get a rule down the side tying them together.
  * Cheaper and quieter than a card, and it survives the monochrome palette. */
-.gym .block.tied { border-left: 2px solid var(--border); padding-left: 13px; }
+.gym .exgroup.tied { border-left: 2px solid var(--border); padding-left: 13px; }
 
 .gym .ex { padding: 16px 0; border-top: 1px solid var(--border); }
 .gym .ex:first-child { border-top: 0; }
@@ -202,14 +202,14 @@
   max-width: 680px;
   margin: 0 auto;
 }
-.gym .timer-bar.hidden { display: none; }
+.gym .timer-bar.off { display: none; }
 .gym .timer-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
 .gym .timer-time { font-family: var(--font-mono); font-size: 30px; font-variant-numeric: tabular-nums; }
 .gym .timer-time.go { color: var(--signal); }
 
 /* ---- warmup / cooldown / RIR ---- */
-.gym details.collapse { border-top: 1px solid var(--border); padding: 12px 0; }
-.gym details.collapse summary {
+.gym details.fold { border-top: 1px solid var(--border); padding: 12px 0; }
+.gym details.fold summary {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
