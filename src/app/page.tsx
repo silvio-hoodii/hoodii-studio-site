@@ -2,6 +2,8 @@ import { fetchSpotify } from '@/lib/fetchers';
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
+import { loadProgram } from '@/lib/gym/program';
+import { splitName } from '@/lib/gym/program-shared';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
@@ -80,10 +82,25 @@ async function kitchenRow(): Promise<Row> {
 
 async function gymRow(): Promise<Row> {
   try {
-    const nextUp = await computeNextUp(new Date().toISOString().slice(0, 10));
+    const [nextUp, program] = await Promise.all([
+      computeNextUp(new Date().toISOString().slice(0, 10)),
+      loadProgram(),
+    ]);
+    const day = program.days[nextUp.nextDay];
+    const next = day ? splitName(day) : nextUp.nextDay;
+    const since = nextUp.daysSince;
+
+    /* "Next up Lower B" is true after a week off and after a rest day, and it reads the same either
+     * way: a row that only ever says what is queued cannot say that nothing has happened. The gap
+     * is the more useful fact once it opens, so past a single rest day it leads. */
     return {
       label: 'Gym',
-      line: <>Next up <span className="live tnum">{nextUp.nextDay}</span></>,
+      line:
+        since != null && since > 1 ? (
+          <>Last trained <span className="live tnum">{since} d</span> ago, next up {next}</>
+        ) : (
+          <>Next up <span className="live tnum">{next}</span></>
+        ),
       sub: nextUp.streak > 0 ? `${nextUp.streak}-day streak` : 'logged between sets',
       href: '/gym',
     };
@@ -97,6 +114,18 @@ async function healthRow(): Promise<Row> {
   try {
     const summary = await getBodyCompSummary();
     if (!summary.latest?.kg) throw new Error('no readings');
+
+    /* `.live` is reserved for a value that is true right now, so a reading two weeks old must not
+     * wear it. The store is filled by a one-shot migration with no recurring sync behind it, which
+     * means "as of 2026-08-09" would otherwise sit here reading as a current weight forever. */
+    if (summary.stale) {
+      return {
+        label: 'Health',
+        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, {summary.daysSinceLatest} days old</>,
+        sub: `no measurement since ${summary.latest.date}`,
+        href: '/health',
+      };
+    }
     return {
       label: 'Health',
       line: <>Weight <span className="live tnum">{summary.latest.kg.toFixed(1)} kg</span></>,
@@ -163,10 +192,19 @@ async function musicRow(): Promise<Row> {
     if (s.plays === 0) {
       return { label: 'Music', line: 'Nothing collected yet', sub: 'the first scheduled run fills it in', href: '/music' };
     }
+    /* Was "plays kept that Spotify would have dropped". Spotify hands back the last fifty plays on
+     * request, and the table holds fifty: exactly one batch, nothing yet preserved that asking again
+     * would not return. The sentence becomes true after months of collecting and was being told from
+     * day one. What is true today is the count and the date it starts at. */
     return {
       label: 'Music',
-      line: <><span className="live tnum">{s.plays}</span> plays kept that Spotify would have dropped</>,
-      sub: `${s.artists} artists since ${s.since?.slice(0, 10) ?? 'recently'}`,
+      line: (
+        <>
+          <span className="live tnum">{s.plays}</span> plays collected
+          {s.since ? ` since ${s.since.slice(0, 10)}` : ''}
+        </>
+      ),
+      sub: `${s.artists} artists, ${s.tracks} tracks`,
       href: '/music',
     };
   } catch {

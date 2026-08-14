@@ -5,6 +5,17 @@
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
 export const DAY_ORDER: DayKey[] = ['monday', 'tuesday', 'thursday', 'friday'];
+
+/* The keys above are weekday names, and the cycle is rolling: computeNextUp picks the next day from
+ * what was actually logged, so the app selects "thursday" on a Tuesday. GymClient has derived a
+ * readable split name from the day's own title since 2026-08-11 ("Lower B: Hinge" -> "Lower B")
+ * rather than carrying a second field that could drift from what it labels. The hub row was still
+ * printing the raw key, so the front door said "Next up monday" while the page it linked to said
+ * "Lower B". Same function now, both places. */
+export function splitName(d: { title: string; name: string }): string {
+  const head = d.title.split(/:\s/)[0]?.trim();
+  return head || d.name;
+}
 export const BUDGETS = [45, 60, 90] as const;
 
 export function exType(ex: Exercise | Alt): ExerciseType {

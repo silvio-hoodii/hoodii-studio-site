@@ -11,6 +11,12 @@ export interface BodyCompSummary {
   smoothedKg: number | null;
   trend30: TrendDelta | null;
   trend90: TrendDelta | null;
+  /* Days between the newest reading and today. The store was filled once, by a migration script
+   * that has no recurring counterpart, so without this the page would render "as of 2026-08-09"
+   * forever and every reader would take it for a current weight. */
+  daysSinceLatest: number | null;
+  /* 14 days, the same threshold HealthOS/CURRENT.md applies to itself. */
+  stale: boolean;
 }
 
 export interface TrendDelta {
@@ -37,4 +43,7 @@ export interface AdherenceDay {
   date: string;
   trained: boolean;
   logged: boolean;
+  /* Whether the watch export has reached this day at all. Days past the last synced session used to
+   * render identically to days he genuinely rested, so a stalled sync looked like a month off. */
+  known: boolean;
 }

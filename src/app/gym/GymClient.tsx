@@ -7,7 +7,7 @@ import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
   DAY_ORDER, BUDGETS, budgetedBlocks, exType, parseTargetReps, restSeconds,
-  effectiveExercise, PLATE_IDS, plateMath, warmupRamp,
+  effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
 interface Props {
@@ -269,18 +269,6 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
   const warmupList = warmups[day.warmup] || [];
   const cooldownList = day.cooldown.map((k) => cooldowns[k]).filter(Boolean) as CooldownItem[];
-
-  /* The program runs on a rolling cycle, not the calendar: computeNextUp() picks the next day from
-   * what was actually logged. So the tabs said "Monday / Tuesday / Thursday / Friday" while the app
-   * selected "Thursday" on a Tuesday, which is two true things that read as a contradiction.
-   *
-   * The split name is DERIVED from the day's own title rather than added as a second field, because
-   * a hand-kept short name is exactly the kind of duplicate string that drifts from what it labels.
-   * "Lower B: Hinge" becomes "Lower B". */
-  function splitName(d: Day): string {
-    const head = d.title.split(/:\s/)[0]?.trim();
-    return head || d.name;
-  }
 
   /* How to actually run a block, derived from its type. Nothing in the UI distinguished a superset
    * from a straight block, so two exercises sharing one rest window looked identical to two done

@@ -18,6 +18,10 @@ const isoDaysAgo = (days: number): string =>
 
 const daysBetween = (a: string, b: string): number => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
 
+/* The same 14 days HealthOS/CURRENT.md uses to flag itself. One threshold, one meaning, whichever
+ * surface you read it on. */
+export const STALE_AFTER_DAYS = 14;
+
 function median(values: number[]): number | null {
   if (!values.length) return null;
   const s = [...values].sort((a, b) => a - b);
@@ -46,7 +50,14 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
     order by date desc, (source = 'Watch') desc limit 1
   `;
   const latest = (latestRows[0] as BodyCompPoint | undefined) ?? null;
-  if (!latest) return { latest: null, smoothedKg: null, trend30: null, trend90: null };
+  if (!latest) {
+    return { latest: null, smoothedKg: null, trend30: null, trend90: null, daysSinceLatest: null, stale: false };
+  }
+
+  /* How old the newest reading is. This store was filled by a one-shot migration with no recurring
+   * sync behind it, so "as of 2026-08-09" would have rendered as current weight indefinitely. */
+  const daysSinceLatest = Math.max(0, daysBetween(latest.date, new Date().toISOString().slice(0, 10)));
+  const stale = daysSinceLatest > STALE_AFTER_DAYS;
 
   const recentRows = await sql`
     select kg from health_body_comp
@@ -73,7 +84,7 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   };
 
   const [trend30, trend90] = await Promise.all([trendAt(30), trendAt(90)]);
-  return { latest, smoothedKg, trend30, trend90 };
+  return { latest, smoothedKg, trend30, trend90, daysSinceLatest, stale };
 }
 
 /** Session-level swim history for the last N days, plus all-time PRs. */
@@ -110,17 +121,30 @@ export async function getSwimSummary(days = 90): Promise<SwimSummary> {
  *  surfaces, computed the same way: attendance from the watch, load from the app. */
 export async function getLiftingAdherence(days = 30): Promise<AdherenceDay[]> {
   const cutoff = isoDaysAgo(days);
-  const [trainedRows, loggedRows] = await Promise.all([
+  const [trainedRows, loggedRows, horizonRows] = await Promise.all([
     sql`select distinct date from health_watch_session where kind = 'strength' and date >= ${cutoff}`,
     sql`select distinct date from gym_set where done = true and reps is not null and reps > 0 and date >= ${cutoff}`,
+    /* How far the watch export has actually reached, across every kind of session and not just
+     * strength: a swim on the 9th is proof the sync ran that day, an absence of strength rows is
+     * not. Past this date the strip knows nothing, and it now says so instead of drawing a rest
+     * day. The migration was one-shot, so this horizon has been frozen since 2026-08-09. */
+    sql`select max(date) as last from health_watch_session`,
   ]);
   const trained = new Set((trainedRows as unknown as { date: string }[]).map((r) => r.date));
   const logged = new Set((loggedRows as unknown as { date: string }[]).map((r) => r.date));
+  const horizon = (horizonRows[0] as { last: string | null } | undefined)?.last ?? null;
 
   const out: AdherenceDay[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
-    out.push({ date, trained: trained.has(date), logged: logged.has(date) });
+    /* A day the app logged is known regardless of the watch: the gym log is its own evidence. */
+    const isLogged = logged.has(date);
+    out.push({
+      date,
+      trained: trained.has(date),
+      logged: isLogged,
+      known: isLogged || (horizon != null && date <= horizon),
+    });
   }
   return out;
 }

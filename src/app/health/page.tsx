@@ -28,6 +28,9 @@ export default async function HealthPage() {
 
   const trainedCount = adherence.filter((d) => d.trained).length;
   const loggedCount = adherence.filter((d) => d.trained && d.logged).length;
+  /* Counting a day the export never reached as a rest day is the same lie the strip used to draw. */
+  const unknownDays = adherence.filter((d) => !d.known).length;
+  const lastKnown = [...adherence].reverse().find((d) => d.known)?.date ?? null;
 
   return (
     <div className="wrap">
@@ -37,6 +40,17 @@ export default async function HealthPage() {
         that already runs on the laptop. Read-only: nothing here is loggable, and healthos.db stays
         the source of truth.
       </p>
+
+      {/* The mirror is filled by a one-shot migration. Until a scheduled sync replaces it, the only
+        * honest thing this page can do about its own age is say it out loud. */}
+      {bodySummary.stale && (
+        <div className="stale">
+          <span className="k">Stale</span>
+          Last measurement was {bodySummary.daysSinceLatest} days ago, on {bodySummary.latest?.date}.
+          Nothing below has moved since then, and the days after it are not rest days, they are days
+          this page knows nothing about.
+        </div>
+      )}
 
       <hr className="divider" style={{ marginTop: 24 }} />
 
@@ -103,6 +117,13 @@ export default async function HealthPage() {
           sessions logged there. <span className="live tnum">{trainedCount}</span> trained,{' '}
           <span className="tnum">{loggedCount}</span> also logged
           {trainedCount > loggedCount ? `, ${trainedCount - loggedCount} trained but unlogged` : ''}.
+          {unknownDays > 0 && (
+            <>
+              {' '}The export stops at {lastKnown ?? 'no date at all'}, so the last{' '}
+              <span className="tnum">{unknownDays}</span> day{unknownDays === 1 ? '' : 's'} are
+              unknown rather than rest, and those counts cover only the days before it.
+            </>
+          )}
         </p>
         <AdherenceStrip days={adherence} />
       </div>

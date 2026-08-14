@@ -219,6 +219,7 @@ export interface AdherenceCell {
   date: string;
   trained: boolean;
   logged: boolean;
+  known: boolean;
 }
 
 export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
@@ -228,9 +229,18 @@ export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
       <div className="strip">
         {days.map((d) => {
           const cls = ['strip-cell'];
+          if (!d.known) cls.push('unknown');
           if (d.trained) cls.push('trained');
           if (d.logged) cls.push('logged');
-          const state = d.trained && d.logged ? 'trained + logged' : d.trained ? 'trained, not logged' : 'rest';
+          /* An empty cell used to mean "rest" whether he rested or the export simply had not
+             reached that day, which turned a stalled sync into a month of claimed rest days. */
+          const state = !d.known
+            ? 'no data, the watch export has not reached this day'
+            : d.trained && d.logged
+              ? 'trained + logged'
+              : d.trained
+                ? 'trained, not logged'
+                : 'rest';
           const label = `${d.date}: ${state}`;
           return (
             <button
@@ -248,6 +258,9 @@ export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
         <span className="key"><span className="swatch" /> rest</span>
         <span className="key"><span className="swatch trained" /> trained</span>
         <span className="key"><span className="swatch trained logged" /> trained + logged</span>
+        {days.some((d) => !d.known) && (
+          <span className="key"><span className="swatch unknown" /> no data</span>
+        )}
       </div>
     </div>
   );

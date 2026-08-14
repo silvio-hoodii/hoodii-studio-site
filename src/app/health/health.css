@@ -170,6 +170,17 @@
   cursor: default;
 }
 .health .strip-cell.trained { background: var(--muted-foreground); border-color: var(--muted-foreground); }
+/* Hatched, not empty. An empty cell is a claim ("he rested"); this one says nothing is known. */
+.health .strip-cell.unknown,
+.health .strip-legend .swatch.unknown {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--background) 0 3px,
+    var(--muted) 3px 6px
+  );
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
 .health .strip-cell.logged::after {
   content: '';
   position: absolute;
@@ -189,6 +200,29 @@
 .health .strip-legend .swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--border); background: var(--background); position: relative; }
 .health .strip-legend .swatch.trained { background: var(--muted-foreground); border-color: var(--muted-foreground); }
 .health .strip-legend .swatch.logged::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--background); }
+
+/* ---- staleness ----
+   The store behind this page was filled once, by a migration script with no recurring counterpart.
+   Without this the newest reading renders as the current weight forever. */
+.health .stale {
+  border: 1px solid var(--destructive);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-top: 20px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.health .stale .k {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--destructive);
+  margin-bottom: 5px;
+}
 
 .health .not-here {
   border-left: 2px solid var(--border);
