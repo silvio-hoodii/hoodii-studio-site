@@ -18,10 +18,18 @@ interface Props {
   nextUp: NextUp;
 }
 
+/* No `rir`. It was declared here, sent on every POST as null, stored in a column, and never once
+ * filled: 396 logged sets, 0 with a value, because no input for it was ever built. The progression
+ * engine declares the field in its own type and reads it nowhere.
+ *
+ * Removed rather than given an input. A third box on every set row is real friction on a phone in a
+ * gym, and building the capture ahead of any demand for it is what left 1,359 French cards with one
+ * review. The gym_set column stays, so nothing historical is lost and adding this back later is a
+ * form field and a payload key. The RIR guide stays on the page too: it teaches the idea, which is
+ * useful whether or not anything records it. */
 interface SetEntry {
   weight: string;
   reps: string;
-  rir: string;
   done: boolean;
 }
 
@@ -190,7 +198,6 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
             arr[s.set_idx - 1] = {
               weight: s.weight != null ? String(s.weight) : '',
               reps: s.reps != null ? String(s.reps) : '',
-              rir: '',
               done: !!s.done,
             };
             next[s.exercise_id] = arr;
@@ -204,7 +211,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   }, [activeDay]);
 
   function getSet(effId: string, idx: number): SetEntry {
-    return sets[effId]?.[idx] ?? { weight: '', reps: '', rir: '', done: false };
+    return sets[effId]?.[idx] ?? { weight: '', reps: '', done: false };
   }
 
   function updateSet(ex: Exercise, effId: string, idx: number, patch: Partial<SetEntry>) {
@@ -222,7 +229,6 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       exerciseId: effId, exerciseName: ex.name, setIdx: idx + 1,
       weight: entry.weight === '' ? null : Number(entry.weight),
       reps: entry.reps === '' ? null : Number(entry.reps),
-      rir: entry.rir === '' ? null : Number(entry.rir),
       done: entry.done,
       swappedFrom: swaps[ex.id] ? ex.id : null,
       suggW: p?.suggestion.weight ?? null,
