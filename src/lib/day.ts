@@ -14,12 +14,29 @@
  * changes take care of themselves. en-CA formats as YYYY-MM-DD, which is the shape everything
  * downstream compares as a string.
  */
-const CALGARY = 'America/Edmonton';
+export const CALGARY = 'America/Edmonton';
+
+/* One formatter, built once. Three separate implementations of "what day is it" existed before
+ * this file was consolidated on 2026-08-14: this one, `kitchenDay` in lib/kitchen/db.ts, and a
+ * hand-rolled `getTimezoneOffset()` version inside GymClient that used the CLIENT's timezone and
+ * not Calgary at all. Two of them agreed by coincidence; the third stamped every workout with
+ * whatever zone the phone happened to be in. */
+const FMT = new Intl.DateTimeFormat('en-CA', {
+  timeZone: CALGARY,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+/** Which calendar day, in Calgary, an instant fell on. Returns YYYY-MM-DD. */
+export function dayOf(instant: Date | string | number = new Date()): string {
+  return FMT.format(instant instanceof Date ? instant : new Date(instant));
+}
 
 export function today(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: CALGARY }).format(new Date());
+  return dayOf(new Date());
 }
 
 export function daysAgo(n: number): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: CALGARY }).format(new Date(Date.now() - n * 86400000));
+  return dayOf(new Date(Date.now() - n * 86400000));
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
+import { today } from '@/lib/day';
 import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
@@ -32,11 +33,6 @@ interface SetEntry {
   reps: string;
   done: boolean;
 }
-
-const todayDate = () => {
-  const d = new Date();
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-};
 
 async function postJson(url: string, body: unknown) {
   const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -122,7 +118,10 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   }, [write]);
 
   const day: Day = program.days[activeDay];
-  const date = todayDate();
+  /* Calgary, from lib/day.ts, not the phone's timezone. This used getTimezoneOffset() and so
+   * stamped a workout with wherever the phone thought it was, while the hub counted days-since in
+   * Calgary. Two answers to "what day is it" on one dish of data. */
+  const date = today();
 
   const blocks = useMemo(() => budgetedBlocks(day, budget), [day, budget]);
 
