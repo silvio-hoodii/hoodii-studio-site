@@ -232,15 +232,27 @@ export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
           if (!d.known) cls.push('unknown');
           if (d.trained) cls.push('trained');
           if (d.logged) cls.push('logged');
+          // Needs its own outline: .logged alone paints a background-coloured dot on an unfilled
+          // cell, which is nothing at all.
+          if (d.logged && !d.trained) cls.push('logged-only');
           /* An empty cell used to mean "rest" whether he rested or the export simply had not
-             reached that day, which turned a stalled sync into a month of claimed rest days. */
-          const state = !d.known
-            ? 'no data, the watch export has not reached this day'
-            : d.trained && d.logged
-              ? 'trained + logged'
-              : d.trained
-                ? 'trained, not logged'
-                : 'rest';
+             reached that day, which turned a stalled sync into a month of claimed rest days.
+
+             `logged && !trained` is the fourth case and it was falling through to "rest": a day he
+             logged a full session in the gym app but the watch export has no strength row for.
+             2026-08-04 is exactly that day, and it rendered pixel-identical to a rest day with an
+             aria-label saying "rest", because .logged draws a hole punched in a filled cell and
+             the cell underneath was not filled. Both the picture and the screen reader asserted a
+             rest day on a day he trained. Found by an adversarial pass on 2026-08-14. */
+          const state = d.trained && d.logged
+            ? 'trained + logged'
+            : d.trained
+              ? 'trained, not logged'
+              : d.logged
+                ? 'logged in the app, the watch has no session for it'
+                : !d.known
+                  ? 'no data, the watch export has not reached this day'
+                  : 'rest';
           const label = `${d.date}: ${state}`;
           return (
             <button
@@ -258,6 +270,9 @@ export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
         <span className="key"><span className="swatch" /> rest</span>
         <span className="key"><span className="swatch trained" /> trained</span>
         <span className="key"><span className="swatch trained logged" /> trained + logged</span>
+        {days.some((d) => d.logged && !d.trained) && (
+          <span className="key"><span className="swatch logged-only" /> logged, watch missed it</span>
+        )}
         {days.some((d) => !d.known) && (
           <span className="key"><span className="swatch unknown" /> no data</span>
         )}

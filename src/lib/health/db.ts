@@ -1,6 +1,7 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
 import type { AdherenceDay, BodyCompPoint, BodyCompSummary, SwimSummary, TrendDelta } from './types';
+import { today, daysAgo } from '../day';
 
 // Same underlying Neon database as Kitchen/Gym (health_ prefix keeps the tables apart), see
 // content/health/schema.sql. Falls back through the same chain gym/db.ts uses in case
@@ -13,8 +14,8 @@ if (!DATABASE_URL) {
 
 export const sql = neon(DATABASE_URL);
 
-const isoDaysAgo = (days: number): string =>
-  new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+// Calgary dates, not UTC ones: every row in these tables was stamped in local time. See lib/day.ts.
+const isoDaysAgo = (days: number): string => daysAgo(days);
 
 const daysBetween = (a: string, b: string): number => Math.round((Date.parse(b) - Date.parse(a)) / 86400000);
 
@@ -56,7 +57,7 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
 
   /* How old the newest reading is. This store was filled by a one-shot migration with no recurring
    * sync behind it, so "as of 2026-08-09" would have rendered as current weight indefinitely. */
-  const daysSinceLatest = Math.max(0, daysBetween(latest.date, new Date().toISOString().slice(0, 10)));
+  const daysSinceLatest = Math.max(0, daysBetween(latest.date, today()));
   const stale = daysSinceLatest > STALE_AFTER_DAYS;
 
   const recentRows = await sql`
@@ -119,7 +120,7 @@ export async function getSwimSummary(days = 90): Promise<SwimSummary> {
  *  app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than
  *  duplicating that state: the "trained but unlogged" gap is exactly what CURRENT.md already
  *  surfaces, computed the same way: attendance from the watch, load from the app. */
-export async function getLiftingAdherence(days = 30): Promise<AdherenceDay[]> {
+export async function getLiftingAdherence(days = 30): Promise<{ days: AdherenceDay[]; horizon: string | null }> {
   const cutoff = isoDaysAgo(days);
   const [trainedRows, loggedRows, horizonRows] = await Promise.all([
     sql`select distinct date from health_watch_session where kind = 'strength' and date >= ${cutoff}`,
@@ -136,7 +137,7 @@ export async function getLiftingAdherence(days = 30): Promise<AdherenceDay[]> {
 
   const out: AdherenceDay[] = [];
   for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    const date = daysAgo(i);
     /* A day the app logged is known regardless of the watch: the gym log is its own evidence. */
     const isLogged = logged.has(date);
     out.push({
@@ -146,5 +147,9 @@ export async function getLiftingAdherence(days = 30): Promise<AdherenceDay[]> {
       known: isLogged || (horizon != null && date <= horizon),
     });
   }
-  return out;
+  /* The horizon comes back with the days. Deriving "where does the export stop" from the `known`
+   * flags instead reads the wrong answer the moment he logs a session past the horizon: that day
+   * is known because the APP saw it, and the page would then announce the export reaches a date it
+   * has never reached. Found by an adversarial pass on 2026-08-14. */
+  return { days: out, horizon };
 }

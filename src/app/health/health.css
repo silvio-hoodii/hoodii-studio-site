@@ -181,6 +181,16 @@
   border-style: dashed;
   border-color: var(--border-strong);
 }
+/* Logged in the gym app, with no watch session behind it. Outlined rather than filled: he was
+   there, but the attendance source that this strip is built from did not see it. */
+.health .strip-cell.logged-only,
+.health .strip-legend .swatch.logged-only {
+  background: var(--background);
+  border: 2px solid var(--muted-foreground);
+}
+.health .strip-cell.logged-only::after,
+.health .strip-legend .swatch.logged-only::after { content: none; }
+
 .health .strip-cell.logged::after {
   content: '';
   position: absolute;

@@ -5,8 +5,13 @@ import Link from 'next/link';
  * from a stale search result, and it was off-palette and a dead end.
  *
  * It carries its own link home rather than the shared SiteHeader, because a root not-found renders
- * inside the root layout only: a 404 under /kitchen never reaches the kitchen layout, so nothing
- * mounted there would be here.
+ * inside the root LAYOUT tree only: a 404 under /kitchen never mounts the kitchen layout's
+ * components, so nothing rendered there is here.
+ *
+ * Its METADATA is a separate matter and does resolve from the segment, so /kitchen/nope serves
+ * "Kitchen · Silvio Neyra" and the kitchen's description. That is wrong in a link preview and
+ * right in a browser tab, and it is not worth a per-segment not-found file to change. Noted so the
+ * next person does not read the paragraph above and expect otherwise.
  *
  * There is deliberately no list of routes. The index is the list, it is one tap away, and a
  * hand-kept copy of it here is the kind of duplicate that drifts.

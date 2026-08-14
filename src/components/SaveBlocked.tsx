@@ -51,7 +51,9 @@ export default function SaveBlocked({
   const [busy, setBusy] = useState(false);
   const [wrong, setWrong] = useState(false);
 
-  const waiting = `${queued} ${noun}${queued === 1 ? '' : 's'} waiting to be saved.`;
+  /* No count when there is nothing countable. A refused finish queues no sets, and the first
+   * version still printed "1 set waiting to be saved" over a queue that held no set at all. */
+  const waiting = queued > 0 ? ` ${queued} ${noun}${queued === 1 ? '' : 's'} waiting to be saved.` : '';
   const cls = `save-blocked${sticky ? ' stick' : ''}`;
 
   async function retry() {
@@ -93,7 +95,7 @@ export default function SaveBlocked({
           {err === 'offline'
             ? 'The request never reached the server.'
             : `The server refused it (${err}).`}{' '}
-          Nothing you entered was lost. {waiting}
+          Nothing you entered was lost.{waiting}
         </p>
         <div className="row">
           <button type="button" disabled={busy} onClick={() => void retry()}>
@@ -110,7 +112,7 @@ export default function SaveBlocked({
       <p>
         Reading is open to anyone. Changing your logs is not, because everything else is worked out
         from them. Unlock this device once and it stays unlocked for a year. Nothing you entered was
-        lost. {waiting}
+        lost.{waiting}
       </p>
       <div className="row">
         <input

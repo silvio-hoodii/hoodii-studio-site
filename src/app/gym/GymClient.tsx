@@ -59,8 +59,16 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    * fires from an onBlur and must not depend on having re-rendered since the last one; the count
    * is state because the banner shows it. */
   const pendingRef = useRef<Map<string, PendingWrite>>(new Map());
-  const [pendingCount, setPendingCount] = useState(0);
+  /* Only the SETS, not the finish. The banner counts what it can name, and the first version passed
+   * the whole queue size next to the word "set": pressing Finish on a locked device with nothing
+   * typed produced "1 set waiting to be saved" over a queue holding one finish and no sets. A
+   * component built to stop the UI asserting unconfirmed things must not assert one itself. */
+  const [pendingSets, setPendingSets] = useState(0);
   const [saveErr, setSaveErr] = useState<string | null>(null);
+  const [finishBlocked, setFinishBlocked] = useState(false);
+  const finishWantedRef = useRef(false);
+  const finishLandedRef = useRef(false);
+  const countSets = () => [...pendingRef.current.keys()].filter((k) => k.startsWith('set:')).length;
 
   /* The one place a write leaves this component.
    *
@@ -71,7 +79,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const write = useCallback(async (key: string, url: string, body: unknown): Promise<boolean> => {
     const queue = (reason: string) => {
       pendingRef.current.set(key, { key, url, body });
-      setPendingCount(pendingRef.current.size);
+      setPendingSets(countSets());
       setSaveErr(reason);
       return false;
     };
@@ -83,12 +91,16 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       });
       if (!r.ok) return queue(r.status === 401 ? 'locked' : `failed ${r.status}`);
       pendingRef.current.delete(key);
-      setPendingCount(pendingRef.current.size);
+      // Recorded here rather than at the call site, so a finish that goes out inside a queue flush
+      // counts as landed and is never posted a second time.
+      if (key.startsWith('finish:')) finishLandedRef.current = true;
+      setPendingSets(countSets());
       if (pendingRef.current.size === 0) setSaveErr(null);
       return true;
     } catch {
       return queue('offline');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Send everything queued. Each attempt re-queues itself on failure, so a partial flush leaves the
@@ -259,12 +271,40 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
   /* "Session saved." is a claim about the database, so it is only allowed once the database has
    * agreed. Sets owed from earlier in the session go first: finishing a session whose sets never
-   * landed would record an empty workout and call it done. */
-  async function finishWorkout() {
-    if (pendingRef.current.size > 0 && !(await retryPending())) return;
-    if (await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay })) {
-      setFinished(true);
+   * landed would record an empty workout and call it done.
+   *
+   * Three things this has to get right, all of them found by an adversarial pass on 2026-08-14
+   * after the first version shipped:
+   *
+   *  - A refused finish must CHANGE something on screen. The first version returned silently when
+   *    the queue would not flush, so with three sets owed a tap re-sent them, they were refused
+   *    again, and the page was byte-identical before and after. A button that does nothing visible
+   *    is the same lie as a button that claims success.
+   *  - A finish that lands LATER, through the banner's unlock, is still a finish. Otherwise the
+   *    session is recorded, the screen says nothing, and he presses Finish again.
+   *  - It must not post twice. `finishLanded` is set by `write` itself on the finish key, so a
+   *    finish that went out as part of a queue flush is not re-sent here. */
+  async function flushAndFinish(): Promise<boolean> {
+    finishWantedRef.current = true;
+    if (pendingRef.current.size > 0 && !(await retryPending())) {
+      setFinishBlocked(true);
+      return false;
     }
+    if (!finishLandedRef.current) {
+      if (!(await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay }))) {
+        setFinishBlocked(true);
+        return false;
+      }
+    }
+    setFinishBlocked(false);
+    setFinished(true);
+    return true;
+  }
+
+  /* What the banner's retry means depends on how far he had got. If he was only entering sets, send
+   * the sets. If he had already asked to finish, finish. */
+  async function retryAll(): Promise<boolean> {
+    return finishWantedRef.current ? flushAndFinish() : retryPending();
   }
 
   const warmupList = warmups[day.warmup] || [];
@@ -315,8 +355,8 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         <SaveBlocked
           err={saveErr}
           noun="set"
-          queued={pendingCount}
-          onRetry={retryPending}
+          queued={pendingSets}
+          onRetry={retryAll}
           loginHref="/gym/login"
           sticky
         />
@@ -447,9 +487,19 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         {finished ? (
           <p className="lede">Session saved. {totals.done}/{totals.total} sets logged.</p>
         ) : (
-          <button className="primary" style={{ width: '100%' }} onClick={finishWorkout}>
-            Finish workout ({totals.done}/{totals.total})
-          </button>
+          <>
+            <button className="primary" style={{ width: '100%' }} onClick={() => void flushAndFinish()}>
+              Finish workout ({totals.done}/{totals.total})
+            </button>
+            {/* Said at the button, not only in the banner at the top of the page. He pressed a
+              * thing down here, so this is where "it did not work" has to appear. */}
+            {finishBlocked && (
+              <p className="lede" style={{ color: 'var(--destructive)' }}>
+                Not finished. The server refused it, so this session is not recorded yet. Unlock
+                this device in the notice at the top of the page and it will finish on its own.
+              </p>
+            )}
+          </>
         )}
       </div>
 

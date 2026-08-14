@@ -2,6 +2,7 @@ import { fetchSpotify } from '@/lib/fetchers';
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
+import { today } from '@/lib/day';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import { getBodyCompSummary } from '@/lib/health/db';
@@ -83,7 +84,7 @@ async function kitchenRow(): Promise<Row> {
 async function gymRow(): Promise<Row> {
   try {
     const [nextUp, program] = await Promise.all([
-      computeNextUp(new Date().toISOString().slice(0, 10)),
+      computeNextUp(today()),
       loadProgram(),
     ]);
     const day = program.days[nextUp.nextDay];
@@ -195,7 +196,16 @@ async function musicRow(): Promise<Row> {
     /* Was "plays kept that Spotify would have dropped". Spotify hands back the last fifty plays on
      * request, and the table holds fifty: exactly one batch, nothing yet preserved that asking again
      * would not return. The sentence becomes true after months of collecting and was being told from
-     * day one. What is true today is the count and the date it starts at. */
+     * day one. What is true today is the count and the date it starts at.
+     *
+     * And a count with a start date implies accumulation, which is its own quiet overclaim. Checked
+     * against music_sync on 2026-08-14: the collector has run cleanly three times a day since
+     * 2026-08-11 and added zero plays every time, because all fifty arrived in one backfill that hit
+     * the API's fifty-item cap. So the row states the age of the newest play too, once it is old
+     * enough to mean something. The liveness alarm above cannot cover this: those runs succeeded. */
+    const newestAgeDays = s.latest
+      ? Math.floor((Date.now() - Date.parse(s.latest)) / 86_400_000)
+      : null;
     return {
       label: 'Music',
       line: (
@@ -204,7 +214,10 @@ async function musicRow(): Promise<Row> {
           {s.since ? ` since ${s.since.slice(0, 10)}` : ''}
         </>
       ),
-      sub: `${s.artists} artists, ${s.tracks} tracks`,
+      sub:
+        newestAgeDays != null && newestAgeDays >= 2
+          ? `nothing new for ${newestAgeDays} days, newest play ${s.latest?.slice(0, 10)}`
+          : `${s.artists} artists, ${s.tracks} tracks`,
       href: '/music',
     };
   } catch {

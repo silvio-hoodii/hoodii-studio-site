@@ -67,8 +67,15 @@ export default function FrenchClient({
   const [toast, setToastMsg] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [saveErr, setSaveErr] = useState<string | null>(null);
-  /* State, not a ref: the banner reads which kind of write is owed while rendering. */
-  const [pending, setPending] = useState<PendingWrite | null>(null);
+  /* State, not a ref: the banner reads what is owed while rendering.
+   *
+   * A LIST, one entry per kind. The first version kept a single slot and overwrote it, so rating a
+   * card (refused, queued), closing the overlay and then logging a chapter (refused) discarded the
+   * review with no trace while the banner went on claiming something was waiting. Found by an
+   * adversarial pass on 2026-08-14. Gym solved the same problem with a keyed Map. */
+  const [pending, setPending] = useState<PendingWrite[]>([]);
+  const queueWrite = (w: PendingWrite) =>
+    setPending((prev) => [...prev.filter((p) => p.kind !== w.kind), w]);
 
   function showToast(msg: string) {
     setToastMsg(msg);
@@ -79,7 +86,7 @@ export default function FrenchClient({
   /* One place a write leaves this component, and it returns whether the server took it. Callers
    * decide what to render from that, which is the whole fix: nothing here may advance, clear a
    * form, or print a confirmation on the strength of a promise that merely resolved. */
-  async function post(url: string, body: unknown): Promise<boolean> {
+  async function post(kind: PendingWrite['kind'], url: string, body: unknown): Promise<boolean> {
     try {
       const res = await fetch(url, {
         method: 'POST',
@@ -90,8 +97,13 @@ export default function FrenchClient({
         setSaveErr(res.status === 401 ? 'locked' : `failed ${res.status}`);
         return false;
       }
-      setSaveErr(null);
-      setPending(null);
+      /* Only this kind is settled. Clearing the whole queue here would drop a review that is still
+       * owed just because a chapter went through. */
+      setPending((prev) => {
+        const left = prev.filter((p) => p.kind !== kind);
+        if (left.length === 0) setSaveErr(null);
+        return left;
+      });
       return true;
     } catch {
       setSaveErr('offline');
@@ -99,17 +111,27 @@ export default function FrenchClient({
     }
   }
 
+  /* Reads, so the proxy lets them through, but an unchecked `.json()` on a 500 throws inside a
+   * promise nobody awaited. `refresh()` is called un-awaited from three places. Leaving the last
+   * good numbers on screen is the right failure here: this is a refresh, not a load. */
   const refresh = useCallback(async () => {
-    const [s, a] = await Promise.all([
-      fetch('/french/api/summary').then((r) => r.json()),
-      fetch('/french/api/activity').then((r) => r.json()),
-    ]);
-    setSummary(s);
-    setActivity(a);
+    try {
+      const [sRes, aRes] = await Promise.all([
+        fetch('/french/api/summary'),
+        fetch('/french/api/activity'),
+      ]);
+      if (!sRes.ok || !aRes.ok) return;
+      setSummary(await sRes.json());
+      setActivity(await aRes.json());
+    } catch {
+      // keep what is on screen
+    }
   }, []);
 
   async function startReview() {
-    const q: QueueCard[] = await fetch('/french/api/queue').then((r) => r.json());
+    const res = await fetch('/french/api/queue').catch(() => null);
+    if (!res?.ok) return showToast('Could not load the queue. Try again.');
+    const q: QueueCard[] = await res.json();
     if (!q.length) return;
     setQueue(q);
     setIdx(0);
@@ -141,29 +163,28 @@ export default function FrenchClient({
   async function rate(r: number) {
     if (!revealed || idx >= queue.length) return;
     const card = queue[idx] as QueueCard;
-    setPending({ kind: 'review', card, rating: r });
-    if (!(await post('/french/api/review', { id: card.id, rating: r }))) return;
+    queueWrite({ kind: 'review', card, rating: r });
+    if (!(await post('review', '/french/api/review', { id: card.id, rating: r }))) return;
     advance(card, r);
   }
 
   /* Re-sends whatever was refused. SaveBlocked calls this after a successful unlock, so unlocking
    * and saving stay one action rather than a password entry followed by a redo he has to work out. */
   async function retryPending(): Promise<boolean> {
-    const p = pending;
-    if (!p) return true;
-    if (p.kind === 'review') {
-      if (!(await post('/french/api/review', { id: p.card.id, rating: p.rating }))) return false;
-      advance(p.card, p.rating);
-      return true;
+    let allOk = true;
+    for (const p of pending) {
+      if (p.kind === 'review') {
+        if (await post('review', '/french/api/review', { id: p.card.id, rating: p.rating })) advance(p.card, p.rating);
+        else allOk = false;
+      } else if (p.kind === 'chapter') {
+        if (await post('chapter', '/french/api/chapter', p.body)) chapterSaved();
+        else allOk = false;
+      } else {
+        if (await post('exam', '/french/api/exam', { date: p.date })) refresh();
+        else allOk = false;
+      }
     }
-    if (p.kind === 'chapter') {
-      if (!(await post('/french/api/chapter', p.body))) return false;
-      chapterSaved();
-      return true;
-    }
-    if (!(await post('/french/api/exam', { date: p.date }))) return false;
-    refresh();
-    return true;
+    return allOk;
   }
 
   useEffect(() => {
@@ -202,8 +223,8 @@ export default function FrenchClient({
       title: form.title.trim() || null,
       pages: form.pages.trim() || null,
     };
-    setPending({ kind: 'chapter', body });
-    if (!(await post('/french/api/chapter', body))) return;
+    queueWrite({ kind: 'chapter', body });
+    if (!(await post('chapter', '/french/api/chapter', body))) return;
     chapterSaved();
   }
 
@@ -212,8 +233,8 @@ export default function FrenchClient({
     const v = window.prompt('TCF exam date (YYYY-MM-DD), blank to clear:', cur);
     if (v === null) return;
     const date = v.trim() || null;
-    setPending({ kind: 'exam', date });
-    if (!(await post('/french/api/exam', { date }))) return;
+    queueWrite({ kind: 'exam', date });
+    if (!(await post('exam', '/french/api/exam', { date }))) return;
     refresh();
   }
 
@@ -242,12 +263,14 @@ export default function FrenchClient({
   const current = queue[idx];
   const finished = reviewing && idx >= queue.length && queue.length > 0;
 
-  const pendingKind = pending?.kind;
-  const pendingNoun = pendingKind === 'review' ? 'review' : pendingKind === 'chapter' ? 'section' : 'change';
+  const kinds = new Set(pending.map((p) => p.kind));
+  const pendingNoun =
+    kinds.size !== 1 ? 'change' : kinds.has('review') ? 'review' : kinds.has('chapter') ? 'section' : 'change';
   const blocked = saveErr ? (
     <SaveBlocked
       err={saveErr}
       noun={pendingNoun}
+      queued={pending.length}
       onRetry={retryPending}
       loginHref="/french/login"
     />
@@ -370,7 +393,10 @@ export default function FrenchClient({
                 </>
               )}
             </div>
-            {blocked}
+            {/* `reviewing &&`, because .rev stays in the DOM as display:none and the copy outside
+              * this overlay is the one that shows on the home screen. Two role="alert" regions and
+              * two password fields coexisted before. */}
+            {reviewing && blocked}
             <div className={`rate${revealed ? ' on' : ''}`}>
               <button type="button" className="r1" onClick={() => rate(1)}><b>Again</b><i>{current.preview?.again != null ? human(current.preview.again) : ''}</i></button>
               <button type="button" className="r2" onClick={() => rate(2)}><b>Hard</b><i>{current.preview?.hard != null ? human(current.preview.hard) : ''}</i></button>

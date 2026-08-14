@@ -48,6 +48,19 @@ export function proxy(req: NextRequest) {
    * mid-cook now offers the password field in place rather than sending him off to find a page. */
   if (pathname === '/kitchen/api/unlock') return NextResponse.next();
 
+  /* Two routes that READ but are shaped as POSTs, because both take a body the URL cannot carry:
+   * /gym/api/plan is handed the day's exercise list and returns suggestions, /gym/api/session is
+   * handed a date and returns the sets already logged for it. Neither writes anything.
+   *
+   * The rule here is "reads are open, writes need the cookie", and the method was standing in for
+   * that rule. It got these two wrong. Found 2026-08-14 by an adversarial pass: on a device without
+   * the cookie both 401d, the client swallowed it, and /gym then rendered an empty grid and
+   * "0/20 sets" for a day that may have a full session in the database. The page was making a claim
+   * about the store out of a request the store never answered. Gating by intent rather than by verb
+   * is what stops that, so they are named here rather than left to a method check that cannot see
+   * the difference. */
+  if (pathname === '/gym/api/plan' || pathname === '/gym/api/session') return NextResponse.next();
+
   // Writes to the event logs / set log / card store.
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api') || pathname.startsWith('/french/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();

@@ -1,5 +1,6 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadRirGuide } from '@/lib/gym/program';
 import { computeNextUp } from '@/lib/gym/cycle';
+import { today } from '@/lib/day';
 import GymClient from './GymClient';
 
 export const dynamic = 'force-dynamic';
@@ -10,7 +11,7 @@ export default async function GymHome() {
     loadWarmups(),
     loadCooldowns(),
     loadRirGuide(),
-    computeNextUp(new Date().toISOString().slice(0, 10)),
+    computeNextUp(today()),
   ]);
 
   return (

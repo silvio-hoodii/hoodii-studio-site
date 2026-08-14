@@ -151,14 +151,24 @@
 .french .act i.a4 { background: var(--signal); }
 
 /* ---- review overlay ---- */
-.french .rev { position: fixed; inset: 0; background: var(--background); z-index: 30; display: none; flex-direction: column; padding: calc(16px + env(safe-area-inset-top)) var(--pad) calc(20px + env(safe-area-inset-bottom)); }
+/* Scrollable, and the card shrinks before the rating row does.
+ *
+ * This is a fixed full-height layer with no scroll of its own, so anything inserted between the
+ * card and the rating buttons pushes the buttons off the bottom of the screen and there is no way
+ * to reach them. That happened the moment the save-failure banner was mounted here on 2026-08-14:
+ * at 375x667 the four buttons sat 65px below the fold, and the only exit left was `close`, which
+ * abandons the sitting. Found by an adversarial pass, not by looking at it on a big screen.
+ *
+ * `min-height: 0` is the load-bearing half: without it a flex child will not shrink below its
+ * content, so `flex: 1` alone does not let the card give up room. */
+.french .rev { position: fixed; inset: 0; background: var(--background); z-index: 30; display: none; flex-direction: column; overflow-y: auto; padding: calc(16px + env(safe-area-inset-top)) var(--pad) calc(20px + env(safe-area-inset-bottom)); }
 .french .rev.on { display: flex; }
 .french .rev-top { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
 .french .rev-top .prog { font-family: var(--font-mono); font-size: 13px; color: var(--muted-foreground); }
 .french .rev-top .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--signal); font-weight: 600; }
 .french .rev-top button { margin-left: auto; font: inherit; font-size: 14px; background: none; border: none; color: var(--muted-foreground); cursor: pointer; padding: 8px; }
 .french .rev-top button:hover { color: var(--foreground); }
-.french .face { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; cursor: pointer; max-width: 560px; width: 100%; margin: 0 auto; }
+.french .face { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; cursor: pointer; max-width: 560px; width: 100%; margin: 0 auto; }
 .french .fr { font-size: clamp(28px, 8vw, 38px); font-weight: 600; letter-spacing: -0.01em; }
 .french .en { font-size: 21px; color: var(--muted-foreground); }
 .french .es { font-size: 15px; color: var(--muted-foreground); font-style: italic; }
@@ -166,7 +176,7 @@
 .french .src { font-family: var(--font-mono); font-size: 11px; color: var(--muted-foreground); letter-spacing: 0.04em; }
 .french .hint { font-size: 14px; color: var(--muted-foreground); }
 
-.french .rate { display: none; gap: 7px; }
+.french .rate { display: none; gap: 7px; flex: 0 0 auto; }
 .french .rate.on { display: flex; }
 .french .rate button {
   flex: 1;

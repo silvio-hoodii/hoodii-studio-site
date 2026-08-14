@@ -106,6 +106,12 @@ export interface MusicSummary {
   artists: number;
   tracks: number;
   since: string | null;
+  /* The newest play in the store, which is a different question from whether the collector ran.
+   * On 2026-08-14 the collector had run cleanly three times a day for three days and added zero
+   * plays each time: everything in the table arrived in ONE backfill on 2026-08-11 that hit the
+   * 50-item cap. A working collector with nothing to collect looks exactly like a broken one from
+   * the outside, so the page has to state the last play rather than imply accumulation. */
+  latest: string | null;
   liveness: Liveness;
 }
 
@@ -140,14 +146,16 @@ export async function getSummary(): Promise<MusicSummary> {
     select count(*)::int                     as plays,
            count(distinct artist_name)::int  as artists,
            count(distinct track_id)::int     as tracks,
-           min(played_at)                    as since
-      from music_play`) as Array<{ plays: number; artists: number; tracks: number; since: unknown }>;
+           min(played_at)                    as since,
+           max(played_at)                    as latest
+      from music_play`) as Array<{ plays: number; artists: number; tracks: number; since: unknown; latest: unknown }>;
 
   return {
     plays: counts?.plays ?? 0,
     artists: counts?.artists ?? 0,
     tracks: counts?.tracks ?? 0,
     since: counts?.since ? iso(counts.since) : null,
+    latest: counts?.latest ? iso(counts.latest) : null,
     liveness: await getLiveness(),
   };
 }

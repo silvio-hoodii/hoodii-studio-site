@@ -26,11 +26,12 @@ export default async function HealthPage() {
     getLiftingAdherence(30),
   ]);
 
-  const trainedCount = adherence.filter((d) => d.trained).length;
-  const loggedCount = adherence.filter((d) => d.trained && d.logged).length;
+  const days = adherence.days;
+  const trainedCount = days.filter((d) => d.trained).length;
+  const loggedCount = days.filter((d) => d.trained && d.logged).length;
   /* Counting a day the export never reached as a rest day is the same lie the strip used to draw. */
-  const unknownDays = adherence.filter((d) => !d.known).length;
-  const lastKnown = [...adherence].reverse().find((d) => d.known)?.date ?? null;
+  const unknownDays = days.filter((d) => !d.known).length;
+  const horizon = adherence.horizon;
 
   return (
     <div className="wrap">
@@ -119,13 +120,13 @@ export default async function HealthPage() {
           {trainedCount > loggedCount ? `, ${trainedCount - loggedCount} trained but unlogged` : ''}.
           {unknownDays > 0 && (
             <>
-              {' '}The export stops at {lastKnown ?? 'no date at all'}, so the last{' '}
-              <span className="tnum">{unknownDays}</span> day{unknownDays === 1 ? '' : 's'} are
-              unknown rather than rest, and those counts cover only the days before it.
+              {' '}The watch export stops at {horizon ?? 'no date at all'}, so{' '}
+              <span className="tnum">{unknownDays}</span> day{unknownDays === 1 ? '' : 's'} in this
+              window are unknown rather than rest, and those counts cover only the days it reached.
             </>
           )}
         </p>
-        <AdherenceStrip days={adherence} />
+        <AdherenceStrip days={days} />
       </div>
     </div>
   );

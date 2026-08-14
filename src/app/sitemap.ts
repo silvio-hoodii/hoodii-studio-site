@@ -9,7 +9,10 @@ import type { MetadataRoute } from 'next';
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: 'https://hoodii.studio/', changeFrequency: 'weekly', priority: 1 },
+    /* No trailing slash: the canonical this site emits for the front page is
+     * `https://hoodii.studio`, and a sitemap that names a different string for the same page is
+     * two answers to one question. */
+    { url: 'https://hoodii.studio', changeFrequency: 'weekly', priority: 1 },
     { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
     { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
   ];
