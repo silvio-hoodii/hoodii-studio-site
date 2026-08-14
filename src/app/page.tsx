@@ -363,8 +363,23 @@ export default async function Home() {
   ]);
   const rows = [kitchen, gym, health, french, curio, music, ...STATIC_ROWS];
 
+  /* Who this is, in the form a search engine reads rather than infers. Both links are already
+   * printed in the footer below, so nothing here is newly public. `sameAs` is the whole point: it
+   * is what ties this domain to the GitHub and LinkedIn profiles as one person instead of three
+   * unrelated pages that happen to share a name. */
+  const person = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Silvio Neyra',
+    url: 'https://hoodii.studio',
+    email: 'mailto:silvio@hoodii.studio',
+    address: { '@type': 'PostalAddress', addressLocality: 'Calgary', addressRegion: 'AB', addressCountry: 'CA' },
+    sameAs: ['https://github.com/silvio-hoodii', 'https://linkedin.com/in/silvio-neyra-rivas'],
+  };
+
   return (
     <div className="idx">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
       <div className="top">
         <h1>Silvio Neyra</h1>
         <span className="where">Calgary</span>
@@ -397,7 +412,10 @@ export default async function Home() {
       <div className="foot">
         <a href="https://github.com/silvio-hoodii" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://linkedin.com/in/silvio-neyra-rivas" target="_blank" rel="noreferrer">LinkedIn</a>
-        <a href="mailto:silvio@hoodii.studio">Email</a>
+        {/* The address in full, not a link labelled "Email". A bare mailto opens whatever mail
+          * client the machine thinks it has, which on a work laptop is often nothing at all, and
+          * the reader cannot copy an address they were never shown. */}
+        <a href="mailto:silvio@hoodii.studio">silvio@hoodii.studio</a>
         {/* Brixel was here and should not have been. This row is how to reach me; a company is not
          * a contact method, and it already has its own line under In production. */}
         {spotify.isPlaying && spotify.title && (

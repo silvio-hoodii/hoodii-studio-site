@@ -46,6 +46,18 @@ export const metadata: Metadata = {
    * can use past the cut. Approved 2026-08-14. */
   description:
     'Twelve years bridging business and technology, now building the software myself. A kitchen that knows my fridge, a lifting log, and French flashcards from book pages I worked.',
+  /* The image is not named here on purpose: `src/app/opengraph-image.tsx` is picked up by file
+   * convention and Next fills in the url, width, height and type, which is four fewer strings to
+   * keep in sync with a file. */
+  openGraph: {
+    type: 'website',
+    siteName: 'Silvio Neyra',
+    url: 'https://hoodii.studio',
+    title: 'Silvio Neyra',
+    description:
+      'Twelve years bridging business and technology, now building the software myself. A kitchen that knows my fridge, a lifting log, and French flashcards from book pages I worked.',
+  },
+  twitter: { card: 'summary_large_image' },
 }
 
 export const viewport: Viewport = {
