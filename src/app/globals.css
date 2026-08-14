@@ -194,3 +194,95 @@ body {
   color: var(--muted-foreground);
   letter-spacing: 0.1em;
 }
+
+/* ---- a write that did not land ----
+ *
+ * Global for the same reason the header is: it is mounted from more than one surface, and the one
+ * thing this component must never do is look different depending on which app failed. See
+ * src/components/SaveBlocked.tsx.
+ *
+ * --destructive, not --signal. --signal means a value that is true right now; a refused write is
+ * the opposite of that.
+ */
+.save-blocked {
+  border: 1px solid var(--destructive);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  background: var(--background);
+  padding: 13px 15px;
+  margin: 16px 0;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+/* Once it appears it follows him down the page. A workout is a long scroll and the set he just
+   typed is nowhere near the top of it, so a banner that stays at the top is a banner he never
+   sees. Nothing else on these surfaces sticks to the top. */
+.save-blocked.stick {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+
+.save-blocked .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--destructive);
+  margin-bottom: 6px;
+}
+
+.save-blocked p {
+  margin: 0 0 11px;
+}
+
+.save-blocked .row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.save-blocked input {
+  flex: 1 1 150px;
+  font-family: var(--font-sans);
+  /* 16px so a phone does not zoom the page when this gets focus. */
+  font-size: 16px;
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.save-blocked button {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  min-height: 44px;
+  padding: 11px 16px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  cursor: pointer;
+}
+.save-blocked button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.save-blocked .wrong {
+  margin: 9px 0 0;
+  color: var(--destructive);
+}
+
+.save-blocked .alt {
+  margin: 9px 0 0;
+  font-size: 13.5px;
+  color: var(--muted-foreground);
+}

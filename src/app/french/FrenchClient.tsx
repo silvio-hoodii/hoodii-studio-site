@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import SaveBlocked from '@/components/SaveBlocked';
 import type { FrenchSummary } from '@/lib/french/db';
 
 /* Ported from LanguageOS/site/french.html's inline script, same interaction shape: a home screen
@@ -32,6 +33,16 @@ interface ActivityDay {
   reviewed: number;
 }
 
+/* The write that failed and is still owed. All three of this app's writes went out without anyone
+ * checking the answer: `rate` did not even await the fetch before advancing the queue, so a rated
+ * card left the screen whether or not the server took it, and there are no cards in this database
+ * yet only because nothing has been ingested. `saveChapter` said "Logged." on a refusal and cleared
+ * the form under it. `setExam` said nothing at all and left the old date on screen. */
+type PendingWrite =
+  | { kind: 'review'; card: QueueCard; rating: number }
+  | { kind: 'chapter'; body: { book: string; chapter: string; title: string | null; pages: string | null } }
+  | { kind: 'exam'; date: string | null };
+
 function human(d: number): string {
   if (d < 30) return `${Math.round(d)}d`;
   if (d < 365) return `${Math.round(d / 30)}mo`;
@@ -55,11 +66,37 @@ export default function FrenchClient({
   const [form, setForm] = useState({ book: 'easy-french', chapter: '', pages: '', title: '' });
   const [toast, setToastMsg] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [saveErr, setSaveErr] = useState<string | null>(null);
+  /* State, not a ref: the banner reads which kind of write is owed while rendering. */
+  const [pending, setPending] = useState<PendingWrite | null>(null);
 
   function showToast(msg: string) {
     setToastMsg(msg);
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToastMsg(null), 1900);
+  }
+
+  /* One place a write leaves this component, and it returns whether the server took it. Callers
+   * decide what to render from that, which is the whole fix: nothing here may advance, clear a
+   * form, or print a confirmation on the strength of a promise that merely resolved. */
+  async function post(url: string, body: unknown): Promise<boolean> {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        setSaveErr(res.status === 401 ? 'locked' : `failed ${res.status}`);
+        return false;
+      }
+      setSaveErr(null);
+      setPending(null);
+      return true;
+    } catch {
+      setSaveErr('offline');
+      return false;
+    }
   }
 
   const refresh = useCallback(async () => {
@@ -90,19 +127,43 @@ export default function FrenchClient({
     setRevealed(true);
   }
 
-  async function rate(r: number) {
-    if (!revealed || idx >= queue.length) return;
-    const card = queue[idx] as QueueCard;
-    fetch('/french/api/review', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: card.id, rating: r }),
-    });
+  /* Advance only once the rating is recorded. A review IS the network call, so blocking here costs
+   * nothing that was ever going to work offline, and the alternative is a card that has visibly
+   * left the queue while its schedule never moved. */
+  function advance(card: QueueCard, r: number) {
     // Again -> the card comes back at the end of this same sitting.
     const nextQueue = r === 1 ? [...queue, card] : queue;
     setQueue(nextQueue);
     setIdx((i) => i + 1);
     setRevealed(false);
+  }
+
+  async function rate(r: number) {
+    if (!revealed || idx >= queue.length) return;
+    const card = queue[idx] as QueueCard;
+    setPending({ kind: 'review', card, rating: r });
+    if (!(await post('/french/api/review', { id: card.id, rating: r }))) return;
+    advance(card, r);
+  }
+
+  /* Re-sends whatever was refused. SaveBlocked calls this after a successful unlock, so unlocking
+   * and saving stay one action rather than a password entry followed by a redo he has to work out. */
+  async function retryPending(): Promise<boolean> {
+    const p = pending;
+    if (!p) return true;
+    if (p.kind === 'review') {
+      if (!(await post('/french/api/review', { id: p.card.id, rating: p.rating }))) return false;
+      advance(p.card, p.rating);
+      return true;
+    }
+    if (p.kind === 'chapter') {
+      if (!(await post('/french/api/chapter', p.body))) return false;
+      chapterSaved();
+      return true;
+    }
+    if (!(await post('/french/api/exam', { date: p.date }))) return false;
+    refresh();
+    return true;
   }
 
   useEffect(() => {
@@ -124,33 +185,35 @@ export default function FrenchClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reviewing, revealed, idx, queue]);
 
-  async function saveChapter() {
-    if (!form.chapter.trim()) return showToast('Which chapter?');
-    await fetch('/french/api/chapter', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        book: form.book,
-        chapter: form.chapter.trim(),
-        title: form.title.trim() || null,
-        pages: form.pages.trim() || null,
-      }),
-    });
-    setForm({ book: form.book, chapter: '', pages: '', title: '' });
+  /* The form is cleared and the confirmation printed here, in one place, so neither can happen on a
+   * path where the server said no. Both used to sit directly after an unchecked fetch. */
+  function chapterSaved() {
+    setForm((f) => ({ book: f.book, chapter: '', pages: '', title: '' }));
     setLogOpen(false);
     showToast('Logged. Send a photo of the pages to make cards.');
     refresh();
+  }
+
+  async function saveChapter() {
+    if (!form.chapter.trim()) return showToast('Which chapter?');
+    const body = {
+      book: form.book,
+      chapter: form.chapter.trim(),
+      title: form.title.trim() || null,
+      pages: form.pages.trim() || null,
+    };
+    setPending({ kind: 'chapter', body });
+    if (!(await post('/french/api/chapter', body))) return;
+    chapterSaved();
   }
 
   async function setExam() {
     const cur = summary.examDate || '';
     const v = window.prompt('TCF exam date (YYYY-MM-DD), blank to clear:', cur);
     if (v === null) return;
-    await fetch('/french/api/exam', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date: v.trim() || null }),
-    });
+    const date = v.trim() || null;
+    setPending({ kind: 'exam', date });
+    if (!(await post('/french/api/exam', { date }))) return;
     refresh();
   }
 
@@ -179,6 +242,17 @@ export default function FrenchClient({
   const current = queue[idx];
   const finished = reviewing && idx >= queue.length && queue.length > 0;
 
+  const pendingKind = pending?.kind;
+  const pendingNoun = pendingKind === 'review' ? 'review' : pendingKind === 'chapter' ? 'section' : 'change';
+  const blocked = saveErr ? (
+    <SaveBlocked
+      err={saveErr}
+      noun={pendingNoun}
+      onRetry={retryPending}
+      loginHref="/french/login"
+    />
+  ) : null;
+
   return (
     <>
       <div className="exam-strip">
@@ -194,6 +268,10 @@ export default function FrenchClient({
 
       <h1>Français</h1>
       <p className="lede">{tagline}</p>
+
+      {/* The same banner is mounted twice: once here for the home screen writes, and once inside
+        * the review overlay, which is a fixed full-screen layer this would otherwise sit behind. */}
+      {!reviewing && blocked}
 
       <div className="section" style={{ marginTop: 22, paddingTop: 0, borderTop: 'none' }}>
         <div className="counts">
@@ -292,6 +370,7 @@ export default function FrenchClient({
                 </>
               )}
             </div>
+            {blocked}
             <div className={`rate${revealed ? ' on' : ''}`}>
               <button type="button" className="r1" onClick={() => rate(1)}><b>Again</b><i>{current.preview?.again != null ? human(current.preview.again) : ''}</i></button>
               <button type="button" className="r2" onClick={() => rate(2)}><b>Hard</b><i>{current.preview?.hard != null ? human(current.preview.hard) : ''}</i></button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import SaveBlocked from '@/components/SaveBlocked';
 import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
@@ -35,6 +36,14 @@ async function postJson(url: string, body: unknown) {
   return r.json();
 }
 
+/* A write that failed and is still owed to the server. Keyed so that typing 40, then 45, then 47
+ * into the same box queues ONE entry holding 47, not three that would replay in order. */
+interface PendingWrite {
+  key: string;
+  url: string;
+  body: unknown;
+}
+
 export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp }: Props) {
   const [activeDay, setActiveDay] = useState<DayKey>(nextUp.nextDay);
   const [budget, setBudget] = useState<number | null>(null);
@@ -45,6 +54,52 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const [timer, setTimer] = useState<{ label: string; targetEnd: number } | null>(null);
   const [finished, setFinished] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  /* Everything owed to the server, and what went wrong last. The queue is a ref because autosave
+   * fires from an onBlur and must not depend on having re-rendered since the last one; the count
+   * is state because the banner shows it. */
+  const pendingRef = useRef<Map<string, PendingWrite>>(new Map());
+  const [pendingCount, setPendingCount] = useState(0);
+  const [saveErr, setSaveErr] = useState<string | null>(null);
+
+  /* The one place a write leaves this component.
+   *
+   * Was: `void postJson(...).catch(() => {})` for every set and `await ... .catch(() => {})` for
+   * the finish, which is why a locked phone logged a whole session into nothing and then said
+   * "Session saved." Returning a boolean rather than throwing is deliberate: every caller has to
+   * decide what to render, and a promise nobody awaited is exactly how this got shipped. */
+  const write = useCallback(async (key: string, url: string, body: unknown): Promise<boolean> => {
+    const queue = (reason: string) => {
+      pendingRef.current.set(key, { key, url, body });
+      setPendingCount(pendingRef.current.size);
+      setSaveErr(reason);
+      return false;
+    };
+    try {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return queue(r.status === 401 ? 'locked' : `failed ${r.status}`);
+      pendingRef.current.delete(key);
+      setPendingCount(pendingRef.current.size);
+      if (pendingRef.current.size === 0) setSaveErr(null);
+      return true;
+    } catch {
+      return queue('offline');
+    }
+  }, []);
+
+  /* Send everything queued. Each attempt re-queues itself on failure, so a partial flush leaves the
+   * banner up with an honest count rather than silently dropping the rest. */
+  const retryPending = useCallback(async (): Promise<boolean> => {
+    let allOk = true;
+    for (const p of [...pendingRef.current.values()]) {
+      if (!(await write(p.key, p.url, p.body))) allOk = false;
+    }
+    return allOk;
+  }, [write]);
 
   const day: Day = program.days[activeDay];
   const date = todayDate();
@@ -150,7 +205,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
   function autosave(ex: Exercise, effId: string, idx: number, entry: SetEntry) {
     const p = plan[effId];
-    void postJson('/gym/api/set', {
+    void write(`set:${date}:${effId}:${idx}`, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
       exerciseId: effId, exerciseName: ex.name, setIdx: idx + 1,
       weight: entry.weight === '' ? null : Number(entry.weight),
@@ -160,7 +215,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       swappedFrom: swaps[ex.id] ? ex.id : null,
       suggW: p?.suggestion.weight ?? null,
       suggR: p?.suggestion.reps ?? null,
-    }).catch(() => {});
+    });
   }
 
   function toggleDone(ex: Exercise, effId: string, idx: number) {
@@ -202,9 +257,14 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks, sets, swaps]);
 
+  /* "Session saved." is a claim about the database, so it is only allowed once the database has
+   * agreed. Sets owed from earlier in the session go first: finishing a session whose sets never
+   * landed would record an empty workout and call it done. */
   async function finishWorkout() {
-    await postJson('/gym/api/finish', { date, day: activeDay }).catch(() => {});
-    setFinished(true);
+    if (pendingRef.current.size > 0 && !(await retryPending())) return;
+    if (await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay })) {
+      setFinished(true);
+    }
   }
 
   const warmupList = warmups[day.warmup] || [];
@@ -260,6 +320,19 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         <span>{totals.done}/{totals.total} sets</span>
         {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ', consider a rest day' : ''}</span>}
       </div>
+
+      {/* Sticky, because the set he just typed is most of a screen below this line and a warning
+        * that scrolls away is a warning he does not get. */}
+      {saveErr && (
+        <SaveBlocked
+          err={saveErr}
+          noun="set"
+          queued={pendingCount}
+          onRetry={retryPending}
+          loginHref="/gym/login"
+          sticky
+        />
+      )}
 
       {/* Open by default. Collapsed, these read as missing: you are holding a phone in a gym, not
         * browsing, and a closed disclosure is a thing you do not know is there. Reported lost on
