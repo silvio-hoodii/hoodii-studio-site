@@ -333,3 +333,71 @@ body {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* ---- the store did not answer ----
+ * The error boundary's own styles. Global because the boundary sits above every surface's
+ * stylesheet: when it renders, none of the per-app CSS is in play. See src/app/error.tsx. */
+.unreachable {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 52px) 20px 64px;
+  font-family: var(--font-sans);
+}
+
+.unreachable .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--destructive);
+  margin-bottom: 8px;
+}
+
+.unreachable p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--foreground);
+  margin: 0;
+  max-width: 54ch;
+  border-left: 2px solid var(--destructive);
+  padding-left: 13px;
+}
+
+.unreachable-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.unreachable-actions button {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  min-height: 44px;
+  padding: 11px 16px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  cursor: pointer;
+}
+
+.unreachable-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 15px;
+  color: var(--muted-foreground);
+  text-underline-offset: 3px;
+}
+.unreachable-actions a:hover { color: var(--foreground); }
+
+.unreachable-actions button:focus-visible,
+.unreachable-actions a:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
