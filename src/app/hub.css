@@ -107,12 +107,7 @@
   margin-top: 3px;
 }
 
-/* The only colour in the system. A number that is true right now. */
-.idx .live {
-  color: var(--signal);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
+/* .live, the only colour in the system, is declared once in globals.css. */
 
 .idx .arrow {
   font-family: var(--font-mono);

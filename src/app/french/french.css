@@ -44,9 +44,7 @@
   color: var(--muted-foreground);
   margin: 0;
 }
-.french .lede { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); margin: 10px 0 0; max-width: 54ch; }
-.french .tnum { font-variant-numeric: tabular-nums; }
-.french .live { color: var(--signal); font-weight: 600; }
+/* .lede, .tnum and .live are declared once in globals.css. */
 .french .changes { font-size: 13px; color: var(--destructive); }
 
 /* ---- exam strip ---- */
@@ -88,7 +86,6 @@
 .french .counts b { font-family: var(--font-mono); font-size: 34px; font-weight: 500; display: block; font-variant-numeric: tabular-nums; }
 /* Was `.c-due b { color: var(--signal) }`, which painted the number green whether it was 12 or 0.
    The component decides now, per the rule that the colour marks a value that is true right now. */
-.french .counts b.live { color: var(--signal); }
 .french .counts span { font-size: 12px; color: var(--muted-foreground); letter-spacing: 0.06em; text-transform: uppercase; }
 
 .french button.primary, .french .btn.primary {
@@ -125,7 +122,8 @@
 /* ---- book section / chapter log form ---- */
 .french .lastch { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
 .french .lastch em { font-style: normal; color: var(--muted-foreground); font-weight: 400; font-size: 14px; }
-.french .empty { color: var(--muted-foreground); font-size: 14.5px; margin: 0 0 14px; }
+/* .empty is declared once in globals.css and now means one thing: there is nothing here. Three of
+   the four places this surface used it were not empty states, and they say .lede instead. */
 .french label.f { display: block; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); margin: 12px 0 5px; }
 .french input.f, .french select.f {
   width: 100%;

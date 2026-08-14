@@ -118,7 +118,7 @@ export default async function MusicPage() {
             <span className="npartist">{now.track.artistName}</span>
           </>
         ) : (
-          <span className="nplabel quiet">
+          <span className="nplabel off">
             {now.broken ? 'Cannot tell, the Spotify connection is down' : 'Nothing playing right now'}
           </span>
         )}

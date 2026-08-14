@@ -151,10 +151,13 @@ body {
   body {
     @apply bg-background text-foreground font-sans;
   }
-  /* Numbers in an index have to line up in columns. */
-  .tnum {
-    font-variant-numeric: tabular-nums;
-  }
+}
+
+/* Numbers in an index have to line up in columns. Unlayered rather than inside `@layer base`,
+   because a layered rule loses to any unlayered one and five surfaces had each written their own
+   copy of this on top of it. */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---- the password field ----
@@ -195,13 +198,92 @@ h1 {
   margin: 10px 0 0;
 }
 
-.site-label {
+/* ---- one declaration per idiom ----
+ *
+ * Everything from here to the site header was written out once per surface. Not similar: identical.
+ * `.lede` existed four times character for character, `.quiet` and `.count` twice each, `.live` in
+ * seven stylesheets, `.tnum` in five on top of the one above, and `.not-here` twice in files where
+ * nothing used it at all. `.empty` was the exception that proves the rest: three surfaces each
+ * invented their own answer to "there is nothing here", so /health drew a left rule, /music drew
+ * nothing, /french used the same class for four things that were not empty states, and /curio had
+ * no answer at all and rendered a heading over a blank space.
+ *
+ * A copy is not a style, it is a future disagreement. The last pass spent itself pulling twelve
+ * date formats back to four and three h1 clamps back to one, and every one of those started as two
+ * files agreeing. Declared once, two surfaces cannot drift; that is Law 1 applied to a stylesheet.
+ *
+ * A surface may still override any of these, but it has to do it in its own file, on purpose,
+ * where the divergence is visible as a divergence.
+ *
+ * One trap, paid for once already: each of these is a single class, so a surface rule that names an
+ * ELEMENT (`.kos h2`, `.gym h2`) outranks it. While the duplicate copies existed as `.kos .count`
+ * they tied with the element rule and won on source order; deleting them handed six headings on
+ * /kitchen/find and /kitchen/shop back to `.kos h2`. If you add one of these classes to a tag a
+ * surface styles by name, exclude it there (`.kos h2:not(.count)`) rather than writing the idiom
+ * out again.
+ */
+
+/* The mono uppercase label, the site's signature element. `.count` is the same thing carrying a
+   bottom margin, which is why it is one rule and not two. */
+.site-label,
+.count {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--muted-foreground);
+}
+.count {
+  margin: 0 0 2px;
+}
+
+/* The sentence under a title. */
+.lede {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin: 10px 0 0;
+  max-width: 54ch;
+}
+
+/* An aside: a qualification, a source note, a count beside a heading. */
+.quiet {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
+/* The one chromatic colour, and the only thing allowed to wear it: a value that is true right now. */
+.live {
+  color: var(--signal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The rule that opens a section. The margin above it is a per-surface decision and stays in the
+   surface's own file; everything else about it is not. */
+.divider {
+  border: 0;
+  border-top: 1px solid var(--foreground);
+  opacity: 0.85;
+}
+
+/* ---- there is nothing here ----
+ *
+ * One answer for the whole site, and it is the left-rule idiom the error boundary and the music
+ * collector alarm already use for "a note about the state of this thing" rather than content.
+ *
+ * It says nothing on its own. Every use has to name WHY it is empty, because "no data" on a page
+ * whose whole job is to hold data is the app knowing something and not saying it. */
+.empty {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  border-left: 2px solid var(--border);
+  padding-left: 13px;
+  margin: 0;
 }
 
 /* ---- the one way home ----

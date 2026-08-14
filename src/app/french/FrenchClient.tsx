@@ -357,7 +357,7 @@ export default function FrenchClient({
               {BOOKS[summary.lastChapter.book] || summary.lastChapter.book} · ch. {summary.lastChapter.chapter}
               <br /><em>{summary.lastChapter.title || ''}</em>
             </p>
-            <p className="empty">{summary.chapters} section{summary.chapters === 1 ? '' : 's'} logged.</p>
+            <p className="lede">{summary.chapters} section{summary.chapters === 1 ? '' : 's'} logged.</p>
           </>
         ) : (
           <p className="empty">No sections logged yet.</p>
@@ -394,11 +394,11 @@ export default function FrenchClient({
 
       <div className="section">
         <h2>Cards</h2>
-        <p className="empty">{cardStat}</p>
+        <p className="lede">{cardStat}</p>
         <div className="act">
           {cells.map((c) => <i key={c.date} className={c.level} title={`${c.date}: ${c.value}`} />)}
         </div>
-        <p className="empty" style={{ marginTop: 10, fontSize: 14 }}>
+        <p className="lede" style={{ fontSize: 14 }}>
           {/* First person, like the rest of the site. This was addressed to "you", which on a
             * public page reads as an instruction to the reader. */}
           Cards come from pages I have actually worked. I photograph the page, send it over, and it

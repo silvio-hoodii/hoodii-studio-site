@@ -16,7 +16,9 @@
   margin: 0 0 18px;
 }
 
-.cb .lede { font-size: 16px; line-height: 1.5; margin: 0 0 14px; }
+/* .lede is declared once in globals.css. This page used to set its own size and drop the muted
+   colour, for no reason anyone recorded, on the one page a stranger reaches by accident. */
+.cb .lede { margin-bottom: 14px; }
 
 .cb .box {
   font-family: var(--font-mono);

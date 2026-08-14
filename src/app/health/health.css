@@ -42,11 +42,9 @@
   color: var(--muted-foreground);
   margin: 0;
 }
-.health .lede { font-size: 15px; line-height: 1.55; color: var(--muted-foreground); margin: 10px 0 0; max-width: 54ch; }
-.health .tnum { font-variant-numeric: tabular-nums; }
-.health .live { color: var(--signal); font-weight: 600; }
+/* .lede, .tnum and .live are declared once in globals.css. */
 
-.health .divider { border: 0; border-top: 1px solid var(--foreground); opacity: 0.85; margin: 0; }
+.health .divider { margin: 0; }
 
 .health button.primary, .health .btn.primary {
   font-family: var(--font-sans);
@@ -88,12 +86,8 @@
 .health .stat-delta { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
 .health .stat-delta.down { color: var(--signal); }
 
-.health .empty {
-  font-size: 14px;
-  color: var(--muted-foreground);
-  border-left: 2px solid var(--border);
-  padding-left: 13px;
-}
+/* .empty is declared once in globals.css. This surface's version is where the shared one came
+   from: a left rule reads as a note about the state of a thing rather than as its content. */
 
 /* ---- charts ---- */
 /* min-height reserves the drawn height before the chart has measured itself. The server renders a
@@ -263,14 +257,6 @@
   text-transform: uppercase;
   color: var(--destructive);
   margin-bottom: 5px;
-}
-
-.health .not-here {
-  border-left: 2px solid var(--border);
-  padding-left: 13px;
-  font-size: 14.5px;
-  color: var(--muted-foreground);
-  margin-top: 20px;
 }
 
 

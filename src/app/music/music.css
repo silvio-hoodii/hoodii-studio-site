@@ -37,13 +37,8 @@
 }
 
 .music .dot { margin: 0 8px; opacity: 0.5; }
-.music .tnum { font-variant-numeric: tabular-nums; }
 
-.music .live {
-  color: var(--signal);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
+/* .tnum and .live are declared once in globals.css. */
 
 /* ---- the collector alarm ----
  * A left rule in the signal colour, not a filled banner. Loud by placement, not by decoration. */
@@ -97,7 +92,9 @@
   color: var(--signal);
 }
 
-.music .nplabel.quiet { color: var(--muted-foreground); }
+/* `.off`, not `.quiet`: `.quiet` is now a global aside style with its own size and line height,
+   and this is a modifier on a label that already has both. */
+.music .nplabel.off { color: var(--muted-foreground); }
 
 .music .nptrack { font-size: 16px; font-weight: 600; }
 .music .nptrack a { color: inherit; text-decoration: none; }
@@ -179,11 +176,7 @@
   margin-top: 1px;
 }
 
-.music .empty {
-  font-size: 13.5px;
-  color: var(--muted-foreground);
-  margin: 0;
-}
+/* .empty is declared once in globals.css. */
 
 /* ---- the collected history ---- */
 

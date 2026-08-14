@@ -100,8 +100,22 @@ export default async function CurioPage() {
       </div>
 
       <h2 className="sec">The mornings</h2>
+      {/* This page had no answer for being empty. With no rows it rendered two headings over blank
+          space and a footer link, which reads as broken rather than as new, and the one thing a
+          reader needs to know at that moment is whether the digest is arriving. Both states name
+          the reason rather than saying "no data". */}
+      {/* Inside .digests rather than beside it, so the section keeps the rule under its heading:
+          `.sec + .digests` is what draws it, and an empty state that skipped the wrapper would
+          take the section's own top line away with it. */}
       <div className="digests">
-        {recent.map(Morning)}
+        {recent.length === 0 ? (
+          <p className="empty">
+            No mornings yet. A scheduled job writes one each day, so if this stays empty, that job
+            has stopped.
+          </p>
+        ) : (
+          recent.map(Morning)
+        )}
       </div>
 
       {/* This page was 28,000px tall and every one of them was open. Two answers a morning is not a
@@ -119,7 +133,16 @@ export default async function CurioPage() {
       )}
 
       <h2 className="sec">Everything, in one line each</h2>
-      <div className="ledger">{items.slice(0, OPEN_ROWS).map(Row)}</div>
+      <div className="ledger">
+        {items.length === 0 ? (
+          <p className="empty">
+            Nothing logged yet. A row lands here whenever I ask something in a session and it gets
+            answered, so this one fills up on its own.
+          </p>
+        ) : (
+          items.slice(0, OPEN_ROWS).map(Row)
+        )}
+      </div>
       {/* The ledger was 13,289px of a 19,108px page at 390 wide: 64 rows, and "one line each" is a
           line and a half on a phone. Same fold as the mornings above. */}
       {items.length > OPEN_ROWS && (

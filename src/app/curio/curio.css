@@ -32,13 +32,7 @@
 
 .curio .dot { margin: 0 8px; opacity: 0.5; }
 
-.curio .live {
-  color: var(--signal);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.curio .tnum { font-variant-numeric: tabular-nums; }
+/* .live and .tnum are declared once in globals.css. */
 
 .curio .sec {
   font-family: var(--font-mono);
@@ -188,6 +182,9 @@
   /* A grid item does not shrink below its own content by default, and one long question with no
      spaces in it would push the second column off the page. */
   .curio .lrow { min-width: 0; }
+  /* The empty state lives inside the same wrapper so the section keeps its rule, which makes it a
+     grid item too. It is a sentence, not a row, so it spans. */
+  .curio .ledger > .empty { grid-column: 1 / -1; }
 }
 
 
