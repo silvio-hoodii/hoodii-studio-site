@@ -52,9 +52,12 @@ function human(d: number): string {
 export default function FrenchClient({
   initialSummary,
   initialActivity,
+  canEdit,
 }: {
   initialSummary: FrenchSummary;
   initialActivity: ActivityDay[];
+  /** Whether this device holds the cookie. Presentation only: see the note in page.tsx. */
+  canEdit: boolean;
 }) {
   const [summary, setSummary] = useState(initialSummary);
   const [activity, setActivity] = useState(initialActivity);
@@ -242,9 +245,13 @@ export default function FrenchClient({
   }
 
   const newCount = Math.min(summary.unseen, summary.newPerDay);
+  /* Two different readers. He needs the instruction; a stranger needs to know that empty is the
+   * design and not a broken page. The rule this app exists to enforce is the interesting half. */
   const tagline =
     summary.total === 0
-      ? 'No cards yet. Do a section in the book, then send a photo of the page.'
+      ? canEdit
+        ? 'No cards yet. Do a section in the book, then send a photo of the page.'
+        : 'Build three. Cards enter only from pages of a book I have actually sat down and worked, so this is empty until I do. The two versions before it were seeded with 1,359 cards and got one review.'
       : summary.learned === 0
         ? `${summary.total} card${summary.total === 1 ? '' : 's'} in, all still settling.`
         : `${summary.learned} of ${summary.total} cards holding past three weeks.`;
@@ -289,12 +296,14 @@ export default function FrenchClient({
               : `exam date ${summary.examDate} has passed`)
             : 'no exam date set'}
         </div>
-        <button type="button" onClick={() => setExamOpen((v) => !v)}>
-          {examOpen ? 'cancel' : 'edit'}
-        </button>
+        {canEdit && (
+          <button type="button" onClick={() => setExamOpen((v) => !v)}>
+            {examOpen ? 'cancel' : 'edit'}
+          </button>
+        )}
       </div>
 
-      {examOpen && (
+      {canEdit && examOpen && (
         <div className="exam-edit">
           <label className="f" htmlFor="examdate">TCF exam date</label>
           <div className="row2">
@@ -350,8 +359,10 @@ export default function FrenchClient({
         ) : (
           <p className="empty">No sections logged yet.</p>
         )}
-        <button type="button" className="ghost" onClick={() => setLogOpen((v) => !v)}>Log a section I finished</button>
-        {logOpen && (
+        {canEdit && (
+          <button type="button" className="ghost" onClick={() => setLogOpen((v) => !v)}>Log a section I finished</button>
+        )}
+        {canEdit && logOpen && (
           <div>
             <label className="f">Book</label>
             <select className="f" value={form.book} onChange={(e) => setForm({ ...form, book: e.target.value })}>
@@ -385,8 +396,10 @@ export default function FrenchClient({
           {cells.map((c) => <i key={c.date} className={c.level} title={`${c.date}: ${c.value}`} />)}
         </div>
         <p className="empty" style={{ marginTop: 10, fontSize: 14 }}>
-          Cards come from pages you actually worked. Photograph the page, send it over, and it lands
-          here. Nothing is ever bulk-loaded.
+          {/* First person, like the rest of the site. This was addressed to "you", which on a
+            * public page reads as an instruction to the reader. */}
+          Cards come from pages I have actually worked. I photograph the page, send it over, and it
+          lands here. Nothing is ever bulk-loaded.
         </p>
       </div>
 

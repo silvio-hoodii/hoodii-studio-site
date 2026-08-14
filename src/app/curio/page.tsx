@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
+import type { CurioDigest, CurioItem } from '@/lib/curio/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,8 +29,57 @@ function Flavor({ kind }: { kind: string }) {
   return <span className={`flav flav-${kind}`}>{kind}</span>;
 }
 
+/* One morning. Lifted out so the open list and the folded one cannot drift apart. */
+function Morning(d: CurioDigest) {
+  return (
+    <article key={d.day} className="digest">
+      <div className="dday tnum">{d.day}</div>
+      <div className="dbody">
+        {d.opener && <p className="opener">{d.opener}</p>}
+        {d.fresh.map((f, i) => (
+          <div className="item" key={`${d.day}-${i}`}>
+            <h3>{f.headline}</h3>
+            <p>{f.body}</p>
+            {f.source && (
+              <a className="src" href={f.source} target="_blank" rel="noreferrer">
+                source
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+/* One ledger row, shared by the open list and the folded one. */
+function Row(it: CurioItem) {
+  return (
+    <div className="lrow" key={it.id}>
+      <div className="lq">
+        {it.question} <Flavor kind={it.flavor} />
+      </div>
+      <div className="la">
+        {it.answer}{' '}
+        {it.sourceUrl && (
+          <a href={it.sourceUrl} target="_blank" rel="noreferrer">source</a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* How many ledger rows stay open. */
+const OPEN_ROWS = 12;
+
+/* How many mornings stay open. Six is about a screen and a half of reading, which is enough to see
+   what this is without committing to all of it. */
+const OPEN_MORNINGS = 6;
+
 export default async function CurioPage() {
   const [summary, digests, items] = await Promise.all([getSummary(), getDigests(), getItems()]);
+  const recent = digests.slice(0, OPEN_MORNINGS);
+  const earlier = digests.slice(OPEN_MORNINGS);
 
   return (
     <div className="curio">
@@ -47,43 +97,33 @@ export default async function CurioPage() {
 
       <h2 className="sec">The mornings</h2>
       <div className="digests">
-        {digests.map((d) => (
-          <article key={d.day} className="digest">
-            <div className="dday tnum">{d.day}</div>
-            <div className="dbody">
-              {d.opener && <p className="opener">{d.opener}</p>}
-              {d.fresh.map((f, i) => (
-                <div className="item" key={`${d.day}-${i}`}>
-                  <h3>{f.headline}</h3>
-                  <p>{f.body}</p>
-                  {f.source && (
-                    <a className="src" href={f.source} target="_blank" rel="noreferrer">
-                      source
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </article>
-        ))}
+        {recent.map(Morning)}
       </div>
 
-      <h2 className="sec">Everything, in one line each</h2>
-      <div className="ledger">
-        {items.map((it) => (
-          <div className="lrow" key={it.id}>
-            <div className="lq">
-              {it.question} <Flavor kind={it.flavor} />
-            </div>
-            <div className="la">
-              {it.answer}{' '}
-              {it.sourceUrl && (
-                <a href={it.sourceUrl} target="_blank" rel="noreferrer">source</a>
-              )}
-            </div>
+      {/* This page was 28,000px tall and every one of them was open. Two answers a morning is not a
+          lot; two hundred of them in one scroll is, and the newest is the one worth arriving at.
+          A native <details> rather than pagination or a "load more" button: the older mornings stay
+          in the document, so browser find-in-page and a crawler both still reach them, and it costs
+          no client JavaScript on a page that otherwise ships none. */}
+      {earlier.length > 0 && (
+        <details className="more">
+          <summary>{earlier.length} earlier mornings, back to {earlier[earlier.length - 1]?.day}</summary>
+          <div className="digests">
+            {earlier.map(Morning)}
           </div>
-        ))}
-      </div>
+        </details>
+      )}
+
+      <h2 className="sec">Everything, in one line each</h2>
+      <div className="ledger">{items.slice(0, OPEN_ROWS).map(Row)}</div>
+      {/* The ledger was 13,289px of a 19,108px page at 390 wide: 64 rows, and "one line each" is a
+          line and a half on a phone. Same fold as the mornings above. */}
+      {items.length > OPEN_ROWS && (
+        <details className="more">
+          <summary>the other {items.length - OPEN_ROWS}</summary>
+          <div className="ledger">{items.slice(OPEN_ROWS).map(Row)}</div>
+        </details>
+      )}
 
       <div className="foot">
         <Link href="/">Back to the index</Link>

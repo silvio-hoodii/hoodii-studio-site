@@ -42,6 +42,31 @@ function when(iso: string): string {
   return days === 1 ? 'yesterday' : `${days}d ago`;
 }
 
+/* One row of the collected history, shared by the open list and the folded one. */
+function Play(p: { playedAt: string; trackName: string; trackUrl: string | null; artistName: string; albumName: string | null }) {
+  return (
+    <div className="play" key={p.playedAt}>
+      <div className="pwhen tnum">{when(p.playedAt)}</div>
+      <div className="pbody">
+        <div className="ptrack">
+          {p.trackUrl ? (
+            <a href={p.trackUrl} target="_blank" rel="noreferrer">{p.trackName}</a>
+          ) : (
+            p.trackName
+          )}
+        </div>
+        <div className="pmeta">
+          {p.artistName}
+          {p.albumName && <><span className="dot">·</span>{p.albumName}</>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* How many plays stay open. Thirty is a couple of days of listening. */
+const OPEN_PLAYS = 30;
+
 function daysSince(iso: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
 }
@@ -225,26 +250,19 @@ export default async function MusicPage() {
 
       <h2 className="sec">Recently played</h2>
       {recent.length > 0 ? (
-        <div className="plays">
-          {recent.map((p) => (
-            <div className="play" key={p.playedAt}>
-              <div className="pwhen tnum">{when(p.playedAt)}</div>
-              <div className="pbody">
-                <div className="ptrack">
-                  {p.trackUrl ? (
-                    <a href={p.trackUrl} target="_blank" rel="noreferrer">{p.trackName}</a>
-                  ) : (
-                    p.trackName
-                  )}
-                </div>
-                <div className="pmeta">
-                  {p.artistName}
-                  {p.albumName && <><span className="dot">·</span>{p.albumName}</>}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="plays">{recent.slice(0, OPEN_PLAYS).map(Play)}</div>
+          {/* Bounded before it needs to be. The table holds fifty rows today because Spotify hands
+              back fifty at a time, so this fold does nothing yet; the day the collector has been
+              running for a month it is the difference between a page and a scroll. Native
+              <details>, so the older plays stay in the document and cost no JavaScript. */}
+          {recent.length > OPEN_PLAYS && (
+            <details className="more">
+              <summary>{recent.length - OPEN_PLAYS} older plays</summary>
+              <div className="plays">{recent.slice(OPEN_PLAYS).map(Play)}</div>
+            </details>
+          )}
+        </>
       ) : (
         <p className="empty">
           Nothing collected yet. The first scheduled run will fill this in.

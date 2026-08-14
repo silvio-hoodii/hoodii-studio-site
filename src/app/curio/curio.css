@@ -188,3 +188,25 @@
   outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
+
+/* ---- the fold ----
+   This page was 28,000px tall with every morning open. The older ones stay in the document rather
+   than behind pagination, so find-in-page and a crawler still reach them and the page ships no
+   JavaScript to manage it. */
+.curio .more { margin-top: var(--gap); }
+.curio .more > summary {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  padding: 14px 0;
+  border-top: 1px solid var(--foreground);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.curio .more > summary:hover { color: var(--foreground); }
+.curio .more[open] > summary { margin-bottom: 8px; }

@@ -294,10 +294,18 @@ export default function CookClient({
           </div>
         )}
 
-        <p className="count" style={{ marginTop: 22 }}>And this gear</p>
-        <p className="quiet">{gear.map((g) => g.name).join(' · ')}</p>
-        <p className="quiet" style={{ marginTop: 8, fontStyle: 'italic' }}>
-          Both lists above are built from what the steps actually use, so nothing can be missing from them.
+        {/* Overnight oats needs a jar and a spoon, neither of which is in the equipment vocabulary,
+            so this printed the heading "And this gear" over an empty line. A heading for an empty
+            list reads as a list that failed to load. */}
+        {gear.length > 0 && (
+          <>
+            <p className="count" style={{ marginTop: 22 }}>And this gear</p>
+            <p className="quiet">{gear.map((g) => g.name).join(' · ')}</p>
+          </>
+        )}
+        <p className="quiet" style={{ marginTop: gear.length > 0 ? 8 : 22, fontStyle: 'italic' }}>
+          {gear.length > 0 ? 'Both lists above are' : 'The list above is'} built from what the steps
+          actually use, so nothing can be missing from {gear.length > 0 ? 'them' : 'it'}.
         </p>
         {/* The version, on screen, so a conversation about a step can name which text it means. Law 2:
             "We should have a law where everything that we discuss is the same versions." */}
