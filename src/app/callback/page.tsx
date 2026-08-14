@@ -2,7 +2,9 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Callback' };
+/* Indexable until now, and there is nothing here worth finding: it is an OAuth landing whose entire
+ * content is a code that expires in about ten minutes. */
+export const metadata = { title: 'Callback', robots: { index: false, follow: false } };
 
 /* The OAuth landing for the Spotify app, whose one registered redirect URI is
  * https://hoodii.studio/callback. It exists so re-authorising does not need a throwaway local

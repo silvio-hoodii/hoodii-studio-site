@@ -5,6 +5,9 @@ import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Kitchen',
+  /* Noindex, but a description still fills in the card when a link gets pasted into a message. */
+  description:
+    'What I can cook tonight from what is actually in my fridge, written out for someone still learning to cook.',
   robots: { index: false, follow: false },
 };
 

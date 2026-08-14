@@ -5,8 +5,9 @@ import { getAccessToken, getNowPlaying, TIME_RANGES, RANGE_LABEL, type NowPlayin
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Music · Silvio Neyra',
+  title: 'Music',
   description: 'What I listen to, and a listening history that only exists because something writes it down.',
+  alternates: { canonical: '/music' },
 };
 
 /* The honest-states rule, applied to the hardest case on this site.

@@ -3,9 +3,12 @@ import { getDigests, getItems, getSummary } from '@/lib/curio/db';
 
 export const dynamic = 'force-dynamic';
 
+/* "Curio", not "Curio · Silvio Neyra": the root layout's title template appends the name now, and
+ * this read "Curio · Silvio Neyra · Silvio Neyra" for as long as it took to notice. */
 export const metadata = {
-  title: 'Curio · Silvio Neyra',
+  title: 'Curio',
   description: 'Questions I wondered about, answered and kept.',
+  alternates: { canonical: '/curio' },
 };
 
 /* The point of this page, in his words: the thing that arrives by email, "here as a way to

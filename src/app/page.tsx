@@ -10,6 +10,10 @@ import './hub.css';
 
 export const dynamic = 'force-dynamic';
 
+/* Declared here rather than in the root layout, where it would be inherited by every route and
+ * would tell a crawler the whole site is a duplicate of this page. */
+export const metadata = { alternates: { canonical: '/' } };
+
 /* The index shows STATE, not link labels.
  *
  * That is the whole anti-generic move, and it matters more than any palette. Six cards saying what

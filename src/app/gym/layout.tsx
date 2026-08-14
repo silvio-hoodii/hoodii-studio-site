@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Gym',
+  description: 'My lifting log. An upper/lower split on a rolling cycle, filled in between sets.',
   robots: { index: false, follow: false },
 };
 
