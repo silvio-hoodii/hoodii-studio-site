@@ -118,7 +118,11 @@ export default async function Find({
   });
 
   return (
-    <div className="wrap">
+    /* `wide` is the only kitchen route that asks for it. The kitchen layout is shared with the cook
+       screen, where one step filling the phone is the whole design, so the opt-in has to be per
+       page rather than on the layout. See the `:has` rule in kitchen.css for how the header above
+       this element follows it. */
+    <div className="wrap wide">
       <KitchenNav here="find" />
       <h1>What could I make</h1>
       <p className="lede">
@@ -134,9 +138,17 @@ export default async function Find({
         {d.hiddenNoSource} of {d.totalKnown} are hidden because their link does not lead to a real
         recipe, each one fetched and checked on {d.sourceCheckedAt}, and {d.dupesDropped} more were
         exact duplicates. A link offered as a recipe has to be one.
+        {/* Both spaces are explicit `{' '}` and not typed spaces. Written the obvious way, as
+            `<> {n} have not been checked...`, this shipped "31have not been checked" to the live
+            page: the compiler dropped the space between the expression and the word after it. The
+            source looks correct, which is why it survived. Found by reading the rendered page. */}
         {d.uncheckedCount > 0 && (
-          <> {d.uncheckedCount} have not been checked either way yet and are also held back, because
-          &ldquo;checked&rdquo; has to mean checked.</>
+          <>
+            {' '}
+            {d.uncheckedCount}
+            {' '}have not been checked either way yet and are also held back, because
+            &ldquo;checked&rdquo; has to mean checked.
+          </>
         )}
       </p>
 

@@ -222,6 +222,27 @@ h1 {
 /* The one surface that earns a wider column opts in here, and the header inside it follows. */
 .measure-wide { --measure: 780px; }
 
+/* ---- the wider column for a surface that is a table rather than a page of prose ----
+ *
+ * Below 1024 nothing changes. The phone is the surface he actually uses, and it keeps the one
+ * reading measure the whole site agreed on.
+ *
+ * Above it, every route was the same phone column standing in a void on a 1440px screen (audit
+ * finding F21). The surfaces that lost something to that are the ones whose content is rows,
+ * charts and dates rather than sentences: the dish menu, the listening history, the body charts,
+ * the curio ledger. Reading surfaces do NOT opt in, on purpose. The hub, a dish page and the gym
+ * log keep the narrow column, because a wider void with intent beats a stretched paragraph.
+ *
+ * One value, not one per surface. Twelve date formats and three h1 clamps are what the last pass
+ * spent its time undoing, and a second breakpoint width would be the same mistake with a new name.
+ *
+ * Declared after .measure-wide so /music, which is both, resolves to this above 1024. */
+@media (min-width: 1024px) {
+  .measure-data {
+    --measure: 960px;
+  }
+}
+
 .site-header-in {
   max-width: var(--measure);
   margin: 0 auto;

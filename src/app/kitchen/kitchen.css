@@ -501,6 +501,35 @@
   .kos .mealthumb { width: 44px; height: 44px; }
 }
 
+/* ---- /kitchen/find on a wide screen ----
+ *
+ * This is the one kitchen route that is a table. It renders up to 60 rows of photo, name, verdict
+ * and a line of missing ingredients, and on a 1440px screen all of it was a 680px strip with 380px
+ * of nothing on either side (audit finding F21). Two columns halves the scroll on the page whose
+ * whole job is "show me five things and let me look at them".
+ *
+ * Every other kitchen route stays narrow. A dish page is a page to read and the cook screen is one
+ * step filling a phone, so the opt-in is a class the FIND PAGE puts on its own wrapper.
+ *
+ * `:has` rather than a class on the layout, because the layout is shared, and rather than a second
+ * hardcoded width on the page, because the site header is a sibling ABOVE the content: it reads
+ * --measure too, and if the page moved its own column the header would stay at 680 and sit visibly
+ * off-centre over it. Moving the variable on the common ancestor moves both from one declaration.
+ */
+@media (min-width: 1024px) {
+  .kos:has(> .wrap.wide) { --measure: 960px; }
+
+  .kos .wrap.wide .meallist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 34px;
+  }
+  /* A grid item will not shrink below its own content by default, and a dish name is one long
+     unbroken string often enough that the second column would be pushed off the page without it. */
+  .kos .wrap.wide .mealrow,
+  .kos .wrap.wide .mealbody { min-width: 0; }
+}
+
 /* ---- filters ----
    Links and one GET form, no client JS. Every filter is a URL so it works before hydration, survives
    a reload mid-cook, and can be bookmarked. Chips are sized for a thumb, not a mouse. */

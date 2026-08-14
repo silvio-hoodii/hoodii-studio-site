@@ -167,6 +167,29 @@
   .curio .digest { grid-template-columns: 1fr; gap: 8px; }
 }
 
+/* ---- the desktop half of the page ----
+ *
+ * The layout opts into `.measure-data`, so above 1024 this surface has 960px instead of 680. The
+ * mornings do not stretch to fill it and are not meant to: their paragraphs keep their 60-62ch
+ * measure, and what the extra width buys them is a date gutter that is no longer eaten out of the
+ * reading column.
+ *
+ * The ledger is the block that actually changes. It is 64 rows of one line each, which is the one
+ * genuinely tabular thing on the page and the largest single stretch of it, so on a wide screen it
+ * runs in two columns and halves the scroll. Only here: at 680 a second column would give each row
+ * about 40 characters and the "one line each" would stop being one line.
+ */
+@media (min-width: 1024px) {
+  .curio .ledger {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 36px;
+  }
+  /* A grid item does not shrink below its own content by default, and one long question with no
+     spaces in it would push the second column off the page. */
+  .curio .lrow { min-width: 0; }
+}
+
 
 /* ---- control edges and focus, propagated from kitchen.css 2026-08-14 ----
  *

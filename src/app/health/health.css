@@ -144,6 +144,39 @@
 }
 .health .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
 
+/* ---- a pair of charts ----
+ *
+ * One grid for both widths. Stacked on a phone, side by side above 1024 where the surface has
+ * opted into the wider column (see `.measure-data` in globals.css). Weight and body fat over the
+ * same 120 days are read against each other, so putting them on one line is the point rather than
+ * a way to fill space.
+ *
+ * The caption is a figcaption, not a styled div: side by side, "which one is this" is a question
+ * the markup should answer for a screen reader too, and the endpoint label it used to rely on is
+ * inside an SVG.
+ */
+.health .pair { display: grid; gap: 20px; }
+/* min-width 0, because an inline SVG carries an intrinsic width and a grid item's default
+   `min-width: auto` will refuse to shrink below it, which pushes the second column off the page. */
+.health .chartfig { margin: 0; min-width: 0; }
+.health .chart-cap {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 6px;
+}
+
+@media (min-width: 1024px) {
+  .health .pair {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    align-items: start;
+  }
+}
+
 /* ---- adherence strip ---- */
 .health .strip { display: flex; gap: 4px; flex-wrap: wrap; }
 .health .strip-cell {

@@ -17,7 +17,8 @@ export const viewport: Viewport = {
 
 export default function HealthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="health">
+    /* `measure-data`: this surface is charts and a 30-cell strip, not prose. See globals.css. */
+    <div className="health measure-data">
       <SiteHeader app="Health" />
       {children}
     </div>

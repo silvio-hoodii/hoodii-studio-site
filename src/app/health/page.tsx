@@ -78,12 +78,21 @@ export default async function HealthPage() {
                 </div>
               )}
             </div>
-            <LineChart points={weightSeries} unit="kg" decimals={1} />
-            {bfSeries.length > 1 && (
-              <div style={{ marginTop: 20 }}>
-                <LineChart points={bfSeries} unit="%" decimals={1} />
-              </div>
-            )}
+            {/* Side by side above 1024, stacked below it, from one grid. The captions arrive with
+                the pairing and are not decoration: stacked, the two charts were told apart by the
+                unit on a single endpoint label, and read side by side that stops being enough. */}
+            <div className="pair">
+              <figure className="chartfig">
+                <figcaption className="chart-cap">Weight, kg</figcaption>
+                <LineChart points={weightSeries} unit="kg" decimals={1} />
+              </figure>
+              {bfSeries.length > 1 && (
+                <figure className="chartfig">
+                  <figcaption className="chart-cap">Body fat, %</figcaption>
+                  <LineChart points={bfSeries} unit="%" decimals={1} />
+                </figure>
+              )}
+            </div>
           </>
         ) : (
           <p className="empty">No body composition data yet.</p>
