@@ -96,7 +96,11 @@
 }
 
 /* ---- charts ---- */
-.health .chart-wrap { position: relative; width: 100%; }
+/* min-height reserves the drawn height before the chart has measured itself. The server renders a
+   600-unit box scaled into whatever width it lands in, which is shorter than 160 on a phone; the
+   reservation is what keeps everything below from jumping when the measured version replaces it.
+   See the header comment in HealthCharts.tsx. */
+.health .chart-wrap { position: relative; width: 100%; min-height: 160px; }
 .health .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
 
 .health .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
@@ -112,6 +116,14 @@
   font-size: 12px;
   font-weight: 600;
   fill: var(--signal);
+  /* The last point of a time series is always at the right edge, so this label is always the one
+     that flips to end-anchored and lands back on top of the line it is labelling. A halo the colour
+     of the page, painted under the glyphs, is one rule; the alternative is guessing at an offset
+     that clears a line whose slope changes with the data. */
+  paint-order: stroke;
+  stroke: var(--background);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 .health .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
 .health .chart-crosshair.on { opacity: 0.6; }

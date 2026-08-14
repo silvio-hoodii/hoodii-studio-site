@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /* Charts for the Health surface, hand-built inline SVG per the workspace `dataviz` skill rather
  * than a charting dependency (this repo takes no chart lib, same zero-dependency posture as
@@ -16,12 +16,48 @@ import { useRef, useState } from 'react';
  * only earns its place at 2+ series per the skill's mark spec).
  */
 
-const W = 600;
+/* ---- why the width is measured rather than fixed ----
+ *
+ * These used to draw into a fixed 600-unit viewBox with `width: 100%; height: auto`, which means
+ * the browser scales the whole picture, TEXT INCLUDED, by container width over 600.
+ *
+ * On a 390px phone the container is 350px, so the scale is 0.58 and the 10.5px axis labels landed
+ * at 6.1px. Measured, not estimated: `getBoundingClientRect().height` on the label was 8px. That is
+ * the surface he actually reads, and nothing could see it. The markup is right, the CSS says 10.5px,
+ * `getComputedStyle` says 10.5px, and only a screenshot shows a number nobody can read. Same defect
+ * with the sign flipped at the other end: paired at 1440 the desktop pass would have made this
+ * worse on a phone and inflated the swim chart's labels to 17px on a laptop.
+ *
+ * So the viewBox is the container's own pixel width and the scale is exactly 1 everywhere. A label
+ * is the size it says it is, a 2px stroke is 2px, and the chart is 160px tall on every screen
+ * instead of 93px on a phone and 256px on a laptop. This is the class removed rather than two
+ * breakpoints of compensation, which is what the first draft of this change did.
+ *
+ * The fallback is what the server renders, before any element has a width to measure. `min-height`
+ * on `.chart-wrap` reserves the final 160px so the swap on hydration moves nothing below it.
+ */
+const W_FALLBACK = 600;
 const H = 160;
 const PAD_L = 40;
 const PAD_R = 12;
 const PAD_T = 16;
 const PAD_B = 24;
+
+function useMeasuredWidth(ref: React.RefObject<HTMLDivElement | null>): number {
+  const [w, setW] = useState(W_FALLBACK);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const next = entries[0]?.contentRect.width ?? 0;
+      // Rounded, so a fractional resize does not re-render the chart on every pixel of a drag.
+      if (next > 0) setW(Math.round(next));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return w;
+}
 
 function niceTicks(min: number, max: number, count = 3): number[] {
   if (min === max) return [min];
@@ -45,6 +81,7 @@ export function LineChart({
   decimals?: number;
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const W = useMeasuredWidth(wrapRef);
   const [hover, setHover] = useState<{ i: number; x: number; y: number } | null>(null);
 
   if (points.length < 2) {
@@ -149,6 +186,7 @@ export interface BarPoint {
 
 export function BarChart({ points, unit }: { points: BarPoint[]; unit: string }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const W = useMeasuredWidth(wrapRef);
   const [hover, setHover] = useState<number | null>(null);
 
   if (!points.length) {
