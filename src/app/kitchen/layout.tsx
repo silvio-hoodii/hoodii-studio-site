@@ -4,7 +4,12 @@ import TimerRail from './TimerRail';
 import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
-  title: 'Kitchen',
+  /* A template as well as a name, because the root layout's template only reaches the segments
+   * directly under it. With a bare `title: 'Kitchen'` here, /kitchen resolved to
+   * "Kitchen · Silvio Neyra" and every dish page under it resolved to a naked "Overnight Oats"
+   * with no owner on it. Caught by testing the dish title rather than assuming the template
+   * cascaded, which it does not. */
+  title: { default: 'Kitchen', template: '%s · Silvio Neyra' },
   /* Noindex, but a description still fills in the card when a link gets pasted into a message. */
   description:
     'What I can cook tonight from what is actually in my fridge, written out for someone still learning to cook.',

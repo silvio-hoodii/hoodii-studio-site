@@ -275,3 +275,30 @@
   color: var(--muted-foreground);
   margin-top: 20px;
 }
+
+
+/* ---- control edges and focus, propagated from kitchen.css 2026-08-14 ----
+ *
+ * --border measures 1.34:1 against the background, well under the 3:1 floor for a non-text control
+ * edge. The kitchen found and fixed that on 2026-08-13 and the fix stayed inside kitchen.css, so
+ * the other six surfaces kept the invisible edge and had no focus ring at all.
+ *
+ * Only CONTROL boundaries are raised. Rules between sections keep --border on purpose: a hairline
+ * separating two paragraphs is not something you have to be able to find with your eye or your
+ * thumb, and darkening every one of them would turn a quiet page into a grid.
+ */
+
+.gym button,
+.gym .btn,
+.gym input,
+.gym select,
+.gym textarea { border-color: var(--border-strong); }
+
+.gym a:focus-visible,
+.gym button:focus-visible,
+.gym input:focus-visible,
+.gym select:focus-visible,
+.gym summary:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}

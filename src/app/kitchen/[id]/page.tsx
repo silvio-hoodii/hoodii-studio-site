@@ -6,6 +6,16 @@ import CookClient from './CookClient';
 
 export const dynamic = 'force-dynamic';
 
+/* Every dish page was titled "Kitchen". Open three of them while cooking and the tab strip is three
+ * identical words, which is the one moment on this site where someone genuinely has several tabs
+ * open and needs to tell them apart. The root layout's template turns this into
+ * "Chicken Gyudon · Silvio Neyra". */
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const recipe = await getRecipe(id);
+  return recipe ? { title: recipe.name } : {};
+}
+
 export default async function CookPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const recipe = await getRecipe(id);

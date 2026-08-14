@@ -63,6 +63,8 @@ export default function FrenchClient({
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
+  const [examOpen, setExamOpen] = useState(false);
+  const [examDraft, setExamDraft] = useState(initialSummary.examDate ?? '');
   const [form, setForm] = useState({ book: 'easy-french', chapter: '', pages: '', title: '' });
   const [toast, setToastMsg] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -228,13 +230,14 @@ export default function FrenchClient({
     chapterSaved();
   }
 
-  async function setExam() {
-    const cur = summary.examDate || '';
-    const v = window.prompt('TCF exam date (YYYY-MM-DD), blank to clear:', cur);
-    if (v === null) return;
-    const date = v.trim() || null;
+  /* Was window.prompt, the only native OS dialog left on the site: a grey system box in a
+   * typeface nothing else here uses, with a free-text field that accepts "next tuesday" and stores
+   * it. A date input gets the phone's date wheel and cannot produce a string the server has to
+   * guess at. */
+  async function saveExam(date: string | null) {
     queueWrite({ kind: 'exam', date });
     if (!(await post('exam', '/french/api/exam', { date }))) return;
+    setExamOpen(false);
     refresh();
   }
 
@@ -286,8 +289,35 @@ export default function FrenchClient({
               : `exam date ${summary.examDate} has passed`)
             : 'no exam date set'}
         </div>
-        <button type="button" onClick={setExam}>edit</button>
+        <button type="button" onClick={() => setExamOpen((v) => !v)}>
+          {examOpen ? 'cancel' : 'edit'}
+        </button>
       </div>
+
+      {examOpen && (
+        <div className="exam-edit">
+          <label className="f" htmlFor="examdate">TCF exam date</label>
+          <div className="row2">
+            <input
+              id="examdate"
+              className="f"
+              type="date"
+              value={examDraft}
+              onChange={(e) => setExamDraft(e.target.value)}
+            />
+            <div className="exam-actions">
+              <button type="button" className="primary" onClick={() => void saveExam(examDraft || null)}>
+                Save
+              </button>
+              {summary.examDate && (
+                <button type="button" className="ghost" onClick={() => void saveExam(null)}>
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <h1>Français</h1>
       <p className="lede">{tagline}</p>
