@@ -201,8 +201,29 @@ function validate(r, file) {
     for (const b of BANNED_HEAT) {
       if (b.re.test(blob)) fail(id, 'heat', `${where} references a dial position: ${b.re.source}`, b.why);
     }
+    /* The banned cues exist because vague instructions failed him at the stove, and every one of
+     * them was written by an agent. The verbatim law then created a collision nobody had hit until
+     * 2026-08-14: Salt and Lavender's Mongolian beef says "Spoon out excess fat as needed", and
+     * `as needed` is banned. Three ways out, and only one is honest. Rewriting her sentence breaks
+     * the rule that produced every good outcome this project has had. Dropping it omits a step the
+     * source has, which is banned outright. So: a banned cue that is HER phrase, quoted, on a
+     * `sourced` recipe, is allowed to stand as her instruction, PROVIDED the step carries a `look`
+     * annotation, which is where the amount or the test he actually needs is written.
+     *
+     * The protection is unchanged where it matters. An agent writing "as needed" into its own prose
+     * still fails, because the phrase will not be in sourceText. The exemption cannot be reached by
+     * inventing, only by quoting. */
+    const quoted = r.provenance?.tier === 'sourced' ? String(s.sourceText || '') : '';
     for (const b of BANNED_CUE) {
-      if (b.re.test(blob)) fail(id, 'cue', `${where} uses a banned cue: ${b.re.source}`, b.why);
+      if (!b.re.test(blob)) continue;
+      const fromSource = b.re.test(quoted) && b.re.test(String(s.text || ''));
+      if (fromSource && String(s.look || '').trim()) continue;
+      if (fromSource) {
+        fail(id, 'cue', `${where} quotes the source's "${b.re.source}" with no annotation explaining it`,
+          `${b.why} Her sentence may stand, but the step must carry a \`look\` that says what it means here.`);
+        continue;
+      }
+      fail(id, 'cue', `${where} uses a banned cue: ${b.re.source}`, b.why);
     }
 
     // A heat level in the instruction with nothing observable attached to it.

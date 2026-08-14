@@ -725,3 +725,10 @@
   padding: 2px 0 12px;
   max-width: 60ch;
 }
+
+/* Paragraph breaks in the Why panel actually break.
+   Every `look` annotation in the corpus is one long string, and where its sentences were butted
+   together they rendered as "released in one piece.BREAKING IT UP means". Found on 2026-08-14 by
+   reading a recipe as the renderer prints it rather than as JSON, which is the only way this class
+   of defect is visible at all. Recipes with no newlines are unaffected. */
+.kos .box.look { white-space: pre-line; }

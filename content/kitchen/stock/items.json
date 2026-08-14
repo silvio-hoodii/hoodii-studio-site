@@ -581,6 +581,21 @@
       "state": "have",
       "src": "KITCHEN.md",
       "note": "KITCHEN.md fridge condiments."
+    },
+    "beef-raw": {
+      "n": "raw ground beef",
+      "state": "have",
+      "where": "freezer",
+      "note": "Distinct from `beef`, which is BROWNED beef already cooked and bagged. Two different foods that a recipe treats completely differently, and printing them one above the other as \"ground beef\" twice is what read as a broken app on 2026-08-13. Events have existed for this id since 2026-08-11; the catalogue row was missing until 2026-08-14, which made every recipe pointing at it fail validation.",
+      "src": "event",
+      "since": "2026-08-11"
+    },
+    "brownsugar": {
+      "n": "brown sugar",
+      "state": "none",
+      "where": "pantry",
+      "note": "NOT the white sugar. Added to the catalogue 2026-08-14 because it is the single thing standing between this kitchen and a published Mongolian ground beef recipe it otherwise satisfies exactly (Salt & Lavender, 4.92 from 25 ratings). Her sauce is a third of a cup of it. White sugar, honey and maple syrup are all in the cupboard and any of them is a substitution, which only Silvio may decide.",
+      "src": "doc"
     }
   }
 }
