@@ -147,6 +147,11 @@ harmless, and PSN is not surfaced on the hub.
   disabling the rule.
 - Dev server: `pnpm dev` (port 3001). **Test on `localhost`, not `127.0.0.1`** — the dev server
   blocks cross-origin dev resources from the bare IP and the page silently will not hydrate.
+- **Do not run `pnpm build` while `pnpm dev` is up.** They share `.next`, and the build leaves the
+  dev server serving a stale CSS chunk under the SAME hashed filename. It cost two false readings on
+  2026-08-15: a change measured as "no effect" when the stylesheet was correct all along. Stop dev,
+  build, restart. Anything that has to be certain should be measured against `pnpm start`, which
+  serves what actually deploys.
 - Renaming a root convention file leaves a stale Turbopack cache. `rm -rf .next/dev` and restart.
 
 ## Domain status

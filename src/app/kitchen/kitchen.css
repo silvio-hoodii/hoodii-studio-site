@@ -524,23 +524,7 @@
   margin-right: 2px;
 }
 
-.kos .chip {
-  display: inline-block;
-  padding: 8px 11px;             /* >=40px tall with the font below: thumb-sized */
-  border: 1px solid var(--border-strong);
-  border-radius: 2px;
-  font-size: 14px;
-  line-height: 1.2;
-  text-decoration: none;
-  color: var(--foreground);
-  background: var(--background);
-}
-.kos .chip:hover { border-color: var(--foreground); }
-.kos .chip.on {
-  background: var(--foreground);
-  color: var(--background);
-  border-color: var(--foreground);
-}
+/* `.chip` is declared once in globals.css and shared with /gym. */
 .kos .chip i {
   font-style: normal;
   font-family: var(--font-mono);
@@ -594,7 +578,7 @@
    every secondary button outline and every unfilled progress dot effectively invisible.
    --border-strong was declared here and was therefore invisible to the other six surfaces, which
    all kept the unreadable edge. It lives in globals.css now. */
-.kos .chip { border-color: var(--border-strong); }
+/* .chip carries --border-strong from its own rule in globals.css now. */
 .kos .dots button { background: var(--border-strong); }
 
 /* ---- plainlist on a phone ----

@@ -315,6 +315,44 @@ h1 {
   opacity: 0.85;
 }
 
+/* ---- a chip ----
+ *
+ * A small tappable filter. /kitchen had one at 14px sans with a 2px corner that inverts to solid
+ * ink when it is on; /gym had another at 12px mono with the shared 4px corner that tints faintly
+ * when it is on. Two answers to the same control, and the faint tint is the weaker of the two: on a
+ * phone in a gym, "which of these five is selected" should not be a question about grey.
+ *
+ * Kitchen's shape, the site's radius token, and the inverted fill for the selected one.
+ */
+.chip {
+  /* 44px is the tap floor the rest of the site already keeps, and these were 35px on /gym: a
+     one-handed control on a phone, below the floor, on the page most likely to be used while
+     holding something else. /kitchen raises it further to 56 in its own file, which is an earned
+     decision from KitchenOS/DESIGN.md about wet hands and a pan being on, not drift. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  color: var(--foreground);
+  background: var(--background);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--foreground); }
+.chip.on {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
 /* ---- a big number ----
  *
  * Two of these existed and they were mirror images. /french put the number first at 34px mono with

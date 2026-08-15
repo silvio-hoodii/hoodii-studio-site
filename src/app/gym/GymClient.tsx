@@ -420,9 +420,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       <div className="budgets">
         <span className="quiet" style={{ alignSelf: 'center', marginRight: 4 }}>I have</span>
         {BUDGETS.map((m) => (
-          <button key={m} className={budget === m ? 'on' : ''} onClick={() => setBudget(budget === m ? null : m)}>{m}</button>
+          <button key={m} className={`chip${budget === m ? ' on' : ''}`} onClick={() => setBudget(budget === m ? null : m)}>{m}</button>
         ))}
-        <button className={budget === null ? 'on' : ''} onClick={() => setBudget(null)}>Full</button>
+        <button className={`chip${budget === null ? ' on' : ''}`} onClick={() => setBudget(null)}>Full</button>
       </div>
 
       <div className="progress-row">
