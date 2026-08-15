@@ -2,9 +2,10 @@ import Link from 'next/link';
 import KitchenNav from './KitchenNav';
 import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
-import { lastCookedMap } from '@/lib/kitchen/cook';
+import { lastCookedMap, proteinToday } from '@/lib/kitchen/cook';
 import { corpusCount } from '@/lib/kitchen/corpus';
 import { dueInText } from '@/lib/format';
+import { getProteinTarget } from '@/lib/kitchen/protein';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,6 +81,7 @@ export default async function KitchenHome() {
   const recipes = await allRecipes();
   const cooked = await lastCookedMap();
   const browsable = await corpusCount();
+  const [proteinLogged, proteinTarget] = await Promise.all([proteinToday(), getProteinTarget()]);
 
   const all: Cookable[] = recipes.map((r) => {
     const last = cooked[r.name];
@@ -187,6 +189,54 @@ export default async function KitchenHome() {
         <Link href="/kitchen/shop">What is worth buying, and what is sitting here unused →</Link>
       </p>
 
+
+      {/* What today's cooking has actually put in, and nothing more than that.
+        *
+        * `logProtein` and `proteinToday` have existed in cook.ts since the migration with zero
+        * callers and an empty table. This is the caller, and it is a byproduct of finishing a cook
+        * rather than a food diary, because a diary is upkeep and upkeep is what killed the French
+        * app twice.
+        *
+        * Which means the number is NOT his intake, and the line says so in the same breath. A shake
+        * and a tub of cottage cheese do not pass through this app, so a total presented as "today's
+        * protein" would be confidently short every single day. The target comes from HealthOS via
+        * the mirror, never typed here, and it shows its own arithmetic.
+        *
+        * It renders only once something has been logged. An empty progress bar at the top of the
+        * page every morning is a chore notification, which is exactly what this must not become. */}
+      {proteinLogged > 0 && (
+        <>
+          <p className="sec">Protein from what you cooked today</p>
+          <div className="stats">
+            <div>
+              <div className="stat-k">Logged here</div>
+              <div className="stat-v live">
+                {Math.round(proteinLogged)}<span className="stat-u">g</span>
+              </div>
+              {proteinTarget && (
+                <div className="stat-d">
+                  {Math.max(0, Math.round(proteinTarget.grams - proteinLogged))} g short of{' '}
+                  {proteinTarget.grams}
+                </div>
+              )}
+            </div>
+            {proteinTarget && (
+              <div>
+                <div className="stat-k">Target</div>
+                <div className="stat-v">
+                  {proteinTarget.grams}<span className="stat-u">g</span>
+                </div>
+                <div className="stat-d">{proteinTarget.basis ?? 'from HealthOS'}</div>
+              </div>
+            )}
+          </div>
+          <p className="quiet" style={{ marginTop: 2 }}>
+            Only dishes finished in this app. A shake or a tub of cottage cheese never passes
+            through here, so treat this as a floor and not as the day&apos;s total.
+            {proteinTarget?.measuredOn && ` Target computed by HealthOS from the ${proteinTarget.measuredOn} measurement.`}
+          </p>
+        </>
+      )}
 
       {/* Nothing at all, said once, only when it is actually true. Until 2026-08-11 this page
           printed "nothing ready to start" as its first concrete statement WHENEVER `now` was empty,

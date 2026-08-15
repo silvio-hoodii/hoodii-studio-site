@@ -88,10 +88,15 @@ export async function finishCook(e: {
   }
 }
 
+/* Upsert, not insert. See the unique index in content/kitchen/schema.sql: the debrief is
+   re-submittable by design, and a retry after a refused save would otherwise count the same meal
+   twice. `at` is refreshed too, so the row says when the figure was last stated. */
 export async function logProtein(e: { dish: string; units: number; proteinG: number; day?: string }) {
   await sql`
     insert into protein_log (day, dish, units, protein_g)
     values (${e.day ?? kitchenDay()}, ${e.dish}, ${e.units}, ${e.proteinG})
+    on conflict (day, dish) do update set
+      units = excluded.units, protein_g = excluded.protein_g, at = now()
   `;
 }
 

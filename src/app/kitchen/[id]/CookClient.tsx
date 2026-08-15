@@ -657,6 +657,9 @@ function Debrief({
   const [rating, setRating] = useState('');
   const [note, setNote] = useState('');
   const [ranOut, setRanOut] = useState<string[]>([]);
+  /* Defaults to one portion, because that is the answer almost every time and this must cost one
+     tap or nothing at all. Zero is a real answer too: cooked it, has not eaten it yet. */
+  const [units, setUnits] = useState(1);
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -668,7 +671,7 @@ function Debrief({
       const res = await fetch('/kitchen/api/finish', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dish: recipe.id, dishName: recipe.name, rating, note, ranOut }),
+        body: JSON.stringify({ dish: recipe.id, dishName: recipe.name, rating, note, ranOut, units }),
       });
       // Same silent-success bug as StepNote had. A debrief is the most expensive thing to lose,
       // because by the time anyone notices, the cook is over and the detail is gone.
@@ -732,6 +735,35 @@ function Debrief({
               >{c.display}</button>
             ))}
           </div>
+        </>
+      )}
+
+      {/* Only when the recipe actually states a per-portion figure. A dish that does not know its
+          own protein must not ask a question it cannot use the answer to.
+
+          This is the only place protein gets logged, and it is deliberately a byproduct of
+          finishing a cook rather than a diary. LanguageOS is the cautionary tale in this workspace:
+          1,359 cards seeded up front, one review ever logged. Anything that needs daily upkeep from
+          him does not survive here. */}
+      {recipe.serves.proteinPerUnit != null && (
+        <>
+          <p className="count" style={{ marginTop: 24 }}>How much of it did you eat?</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {[0, 1, 2, 3].map((n) => (
+              <button
+                key={n}
+                className={`chip${units === n ? ' on' : ''}`}
+                onClick={() => setUnits(n)}
+              >{n === 0 ? 'None yet' : `${n} ${recipe.serves.unit ?? 'serving'}${n > 1 ? 's' : ''}`}</button>
+            ))}
+          </div>
+          {/* The arithmetic, not the conclusion. Standing rule: every protein number shows how it
+              was reached, because he audits them and he is right to. */}
+          <p className="quiet" style={{ marginTop: 8 }}>
+            {units === 0
+              ? 'Nothing logged against today.'
+              : `${recipe.serves.proteinPerUnit} g per ${recipe.serves.unit ?? 'serving'} x ${units} = ${Math.round(recipe.serves.proteinPerUnit * units)} g protein, logged against today.`}
+          </p>
         </>
       )}
 

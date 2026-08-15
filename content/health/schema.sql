@@ -67,3 +67,23 @@ create table if not exists health_sync (
   error       text
 );
 create index if not exists health_sync_ran on health_sync (ran_at desc);
+
+-- What HealthOS PUBLISHES about the body, as opposed to what it measured.
+--
+-- The protein target is computed from lean mass by HealthOS/server/publish-current.mjs and moves on
+-- its own when he is measured again. HOODII/CLAUDE.md forbids restating it anywhere: every copy is
+-- a number that goes stale silently, and one already produced a cross-agent discrepancy.
+--
+-- The obvious alternative, having the site read HealthOS/current.json off the disk, works on the
+-- laptop and returns nothing on Vercel, which is the only place the kitchen is ever opened. So the
+-- published figure travels the same road as the weight: computed once, mirrored, read everywhere.
+create table if not exists health_target (
+  generated_at    timestamptz primary key,
+  protein_g       real,
+  protein_floor_g real,
+  basis           text,
+  measured_date   text,
+  measured_stale  boolean,
+  lean_kg         real,
+  weight_kg       real
+);

@@ -79,6 +79,17 @@ create table if not exists protein_log (
   protein_g real        not null
 );
 create index if not exists protein_log_day on protein_log (day);
+/* One row per dish per day, replaced rather than added to.
+ *
+ * The debrief can be submitted more than once: a refused save puts a retry button on the screen,
+ * and the point of that button is to send the same thing again. A plain insert would count the
+ * portions twice and the page would quietly overstate his intake. Overstating is the worse of the
+ * two errors here (a false "you have this" beats no claim at all only when it is true), and this
+ * surface already presents itself as a floor.
+ *
+ * Two genuine sittings of the same dish on one day are still expressible: the debrief asks how many
+ * portions, so the answer is 2, not two submissions of 1. */
+create unique index if not exists protein_log_day_dish on protein_log (day, dish);
 
 -- Cooking a dish consumes its ingredients. This is the join that never existed: the old app wrote a
 -- finished dish to cook-log.jsonl and NOTHING to stock, so a roast eaten on Aug 6 was still leading

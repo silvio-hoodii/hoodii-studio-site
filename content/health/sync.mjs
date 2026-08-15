@@ -41,6 +41,7 @@ if (existsSync('.env.local')) {
 const HEALTHOS_DIR = resolve(import.meta.dirname, '..', '..', '..', 'HealthOS');
 const SQLITE_PATH = resolve(HEALTHOS_DIR, 'healthos.db');
 const SWIM_JSON_PATH = resolve(HEALTHOS_DIR, 'swimming-sessions.json');
+const CURRENT_JSON_PATH = resolve(HEALTHOS_DIR, 'current.json');
 
 const url = process.env.HEALTH_DATABASE_URL || process.env.GYM_DATABASE_URL || process.env.KITCHEN_DATABASE_URL;
 if (!url) throw new Error('HEALTH_DATABASE_URL (or GYM_DATABASE_URL / KITCHEN_DATABASE_URL) not set');
@@ -72,6 +73,7 @@ let swims = [];
 let bcWritten = 0;
 let wsWritten = 0;
 let swWritten = 0;
+let targetWritten = 0;
 
 try {
 
@@ -127,6 +129,33 @@ for (const s of swims) {
   swWritten++;
 }
 
+// --- the published target ----------------------------------------------------------------
+// Not recomputed here. publish-current.mjs derives it from lean mass and this copies the answer,
+// so there is exactly one place that knows the formula.
+const cur = JSON.parse(readFileSync(CURRENT_JSON_PATH, 'utf8'));
+if (cur?.generatedAt && cur?.targets?.protein_g != null) {
+  await q(
+    `insert into health_target (generated_at, protein_g, protein_floor_g, basis, measured_date, measured_stale, lean_kg, weight_kg)
+     values ($1,$2,$3,$4,$5,$6,$7,$8)
+     on conflict (generated_at) do update set
+       protein_g = excluded.protein_g, protein_floor_g = excluded.protein_floor_g,
+       basis = excluded.basis, measured_date = excluded.measured_date,
+       measured_stale = excluded.measured_stale, lean_kg = excluded.lean_kg,
+       weight_kg = excluded.weight_kg`,
+    [
+      cur.generatedAt,
+      cur.targets.protein_g,
+      cur.targets.protein_floor_g ?? null,
+      cur.targets.basis ?? null,
+      cur.measured?.date ?? null,
+      cur.measured?.stale === true,
+      cur.body?.lean_kg ?? null,
+      cur.body?.weight_kg ?? null,
+    ],
+  );
+  targetWritten = 1;
+}
+
 } catch (err) {
   failure = err instanceof Error ? err.message : String(err);
 }
@@ -134,6 +163,7 @@ for (const s of swims) {
 console.log(`${DRY ? '[dry run] ' : ''}body_comp: ${bcWritten} rows (sqlite had ${bodyComp.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}watch_session (strength+swimming): ${wsWritten} rows (sqlite had ${watchSessions.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
+console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 
 const checks = await Promise.all([
   client.query('select count(*)::int n from health_body_comp'),
