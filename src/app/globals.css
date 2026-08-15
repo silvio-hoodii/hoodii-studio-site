@@ -315,6 +315,38 @@ h1 {
   opacity: 0.85;
 }
 
+/* ---- a link that leaves ----
+ *
+ * Nothing on this site said which links go somewhere else. The sharpest case was the hub, where the
+ * same arrow sat on rows that open an app on this domain and on rows that open a client's website,
+ * but it was true everywhere: a recipe's original publisher, a track on Spotify, a source under a
+ * curio answer.
+ *
+ * Driven off `target="_blank"` rather than a class someone remembers to add, so the marker cannot
+ * drift from the behaviour: the attribute that makes the link leave is the attribute that marks it.
+ * The second string is alt text for the generated content, which is what a screen reader announces.
+ *
+ * Two opt-outs, both declared rather than forgotten. `.row` on the hub carries its own arrow cell
+ * and gets the same distinction there. `.all-external` is for a block where every single link goes
+ * out and thirty markers would be noise rather than information.
+ */
+a[target='_blank']:not(.row)::after {
+  /* The literal glyph, not a CSS escape: written as '\2197' the backslash was eaten one layer
+     up and the page printed a control character followed by "97". Seen in a screenshot of the
+     footer, which is the only place it would ever have shown. */
+  content: '↗' / ' (opens in a new tab)';
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.82em;
+  margin-left: 0.22em;
+  vertical-align: 0.08em;
+  opacity: 0.75;
+  text-decoration: none;
+}
+.all-external a[target='_blank']::after {
+  content: '' / '';
+  margin: 0;
+}
+
 /* ---- a section heading ----
  *
  * The label and the rule that opens the section it names, which the site was drawing both ways

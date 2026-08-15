@@ -102,7 +102,10 @@ export default async function MusicPage() {
         </div>
       )}
 
-      <div className="np">
+      {/* `all-external`: every link on this page goes to Spotify, so the per-link "leaves the
+        * site" marker declared in globals.css would print thirty times and say nothing. Declared
+        * here rather than left off by omission. */}
+      <div className="np all-external">
         {now.track ? (
           <>
             <span className="npdot" aria-hidden="true" />
@@ -141,7 +144,7 @@ export default async function MusicPage() {
       {/* ---------------------------------------------------------------- Spotify's charts */}
 
       <h2 className="sec">Top tracks</h2>
-      <div className="ranges">
+      <div className="ranges all-external">
         {TIME_RANGES.map((range, i) => {
           const snap = topTracks[i];
           return (
@@ -168,7 +171,7 @@ export default async function MusicPage() {
       </div>
 
       <h2 className="sec">Top artists</h2>
-      <div className="ranges">
+      <div className="ranges all-external">
         {TIME_RANGES.map((range, i) => {
           const snap = topArtists[i];
           return (
@@ -244,7 +247,7 @@ export default async function MusicPage() {
       <h2 className="sec">Recently played</h2>
       {recent.length > 0 ? (
         <>
-          <div className="plays">{recent.slice(0, OPEN_PLAYS).map(Play)}</div>
+          <div className="plays all-external">{recent.slice(0, OPEN_PLAYS).map(Play)}</div>
           {/* Bounded before it needs to be. The table holds fifty rows today because Spotify hands
               back fifty at a time, so this fold does nothing yet; the day the collector has been
               running for a month it is the difference between a page and a scroll. Native
@@ -252,7 +255,7 @@ export default async function MusicPage() {
           {recent.length > OPEN_PLAYS && (
             <details className="more">
               <summary>{recent.length - OPEN_PLAYS} older plays</summary>
-              <div className="plays">{recent.slice(OPEN_PLAYS).map(Play)}</div>
+              <div className="plays all-external">{recent.slice(OPEN_PLAYS).map(Play)}</div>
             </details>
           )}
         </>

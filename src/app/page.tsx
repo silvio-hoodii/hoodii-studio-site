@@ -350,7 +350,9 @@ function RowView({ r }: { r: Row }) {
         <div className="line">{r.line}</div>
         {r.sub && <div className="sub">{r.sub}</div>}
       </div>
-      <div className="arrow">{r.href && !r.off ? '→' : '·'}</div>
+      {/* Two different destinations should not wear the same glyph. Every other row on this page
+          opens an app on this domain; these three open somebody else's website. */}
+      <div className="arrow">{r.href && !r.off ? (r.external ? '↗' : '→') : '·'}</div>
     </>
   );
 
