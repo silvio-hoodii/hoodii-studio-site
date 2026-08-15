@@ -49,3 +49,21 @@ create table if not exists health_swim_session (
   total_lengths     integer
 );
 create index if not exists health_swim_session_date on health_swim_session (date);
+
+-- Every run of content/health/sync.mjs writes a row here, successful or not.
+--
+-- Without it this surface cannot tell two very different things apart: he has not stepped on the
+-- scale for three weeks, and the mirror stopped being written three weeks ago. The page showed the
+-- same sentence for both. /music learned this first, from a Spotify token that dies silently every
+-- 180 days, and the fix there was the same: log the RUN, not just the data, and shout when the last
+-- successful run is old.
+create table if not exists health_sync (
+  id          bigserial primary key,
+  ran_at      timestamptz not null default now(),
+  ok          boolean     not null,
+  body_rows   integer,
+  watch_rows  integer,
+  swim_rows   integer,
+  error       text
+);
+create index if not exists health_sync_ran on health_sync (ran_at desc);

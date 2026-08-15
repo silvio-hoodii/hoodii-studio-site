@@ -88,6 +88,41 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   return { latest, smoothedKg, trend30, trend90, daysSinceLatest, stale };
 }
 
+export interface SyncLiveness {
+  lastOkAt: string | null;
+  hoursSince: number | null;
+  stale: boolean;
+  lastError: string | null;
+}
+
+/* Whether the MIRROR is being written, which is a different question from whether he has weighed
+ * himself lately and the page was answering both with one sentence. A store filled once and never
+ * again looks exactly like a person who stopped stepping on the scale.
+ *
+ * 36 hours, the same threshold /music uses for its collector: a daily job that has not run in a day
+ * and a half has missed one, and one is enough to say so. */
+const SYNC_STALE_AFTER_HOURS = 36;
+
+export async function getSyncLiveness(): Promise<SyncLiveness> {
+  const rows = await sql`
+    select ran_at, ok, error from health_sync order by ran_at desc limit 20
+  `;
+  const all = rows as unknown as { ran_at: string; ok: boolean; error: string | null }[];
+  const lastOk = all.find((r) => r.ok) ?? null;
+  const lastErr = all.find((r) => !r.ok && r.error)?.error ?? null;
+  if (!lastOk) {
+    // No successful run on record at all, including the case where the table is empty.
+    return { lastOkAt: null, hoursSince: null, stale: true, lastError: lastErr };
+  }
+  const hoursSince = (Date.now() - Date.parse(lastOk.ran_at)) / 3_600_000;
+  return {
+    lastOkAt: lastOk.ran_at,
+    hoursSince: Math.floor(hoursSince),
+    stale: hoursSince > SYNC_STALE_AFTER_HOURS,
+    lastError: lastErr,
+  };
+}
+
 /** Session-level swim history for the last N days, plus all-time PRs. */
 export async function getSwimSummary(days = 90): Promise<SwimSummary> {
   const cutoff = isoDaysAgo(days);

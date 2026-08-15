@@ -1,4 +1,4 @@
-import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSummary } from '@/lib/health/db';
+import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSummary, getSyncLiveness } from '@/lib/health/db';
 import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
 import { daysAgoText } from '@/lib/format';
 
@@ -19,12 +19,13 @@ function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek:
 }
 
 export default async function HealthPage() {
-  const [bodySummary, weightSeries, bfSeries, swim, adherence] = await Promise.all([
+  const [bodySummary, weightSeries, bfSeries, swim, adherence, sync] = await Promise.all([
     getBodyCompSummary(),
     getBodyCompSeries(120).then((rows) => rows.filter((r) => r.kg != null).map((r) => ({ date: r.date, value: r.kg as number }))),
     getBodyCompSeries(120).then((rows) => rows.filter((r) => r.bf_pct != null).map((r) => ({ date: r.date, value: r.bf_pct as number }))),
     getSwimSummary(90),
     getLiftingAdherence(30),
+    getSyncLiveness(),
   ]);
 
   const days = adherence.days;
@@ -43,14 +44,32 @@ export default async function HealthPage() {
         the source of truth.
       </p>
 
-      {/* The mirror is filled by a one-shot migration. Until a scheduled sync replaces it, the only
-        * honest thing this page can do about its own age is say it out loud. */}
-      {bodySummary.stale && (
+      {/* Two different things can be wrong here and they used to share one sentence.
+        *
+        * The MIRROR can stop being written, which is a broken pipeline and nothing on this page can
+        * be trusted to be current. Or he can simply not have stepped on the scale, which is not a
+        * fault at all and the numbers below are still the last true ones. A page that says "stale"
+        * for both is doing what /music's collector alarm exists to prevent: letting a dead job look
+        * like a quiet week. The sync writes a row every run now, so this can tell them apart. */}
+      {sync.stale && (
         <div className="stale">
-          <span className="k">Stale</span>
-          Last measurement was {daysAgoText(bodySummary.daysSinceLatest ?? 0)}, on {bodySummary.latest?.date}.
-          Nothing below has moved since then, and the days after it are not rest days, they are days
-          this page knows nothing about.
+          <span className="k">Not syncing</span>
+          {sync.lastOkAt
+            ? `The mirror behind this page last updated ${daysAgoText(Math.floor((sync.hoursSince ?? 0) / 24))}.`
+            : 'The mirror behind this page has never recorded a successful update.'}{' '}
+          Everything below is whatever it held at that point, whether or not the laptop has newer
+          numbers. Run <code>node content/health/sync.mjs</code> in hoodii-studio-site.
+          {sync.lastError && <span className="why">{sync.lastError}</span>}
+        </div>
+      )}
+
+      {!sync.stale && bodySummary.stale && (
+        <div className="stale">
+          <span className="k">No recent measurement</span>
+          The sync is running, so this is current: the last time you weighed in was{' '}
+          {daysAgoText(bodySummary.daysSinceLatest ?? 0)}, on {bodySummary.latest?.date}. Nothing
+          below has moved since then, and the days after it are not rest days, they are days this
+          page knows nothing about.
         </div>
       )}
 
