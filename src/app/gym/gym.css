@@ -132,6 +132,14 @@
 }
 .gym .ex-suggest-why { display: block; color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
 
+/* Eight sessions of the top set. No text inside the SVG on purpose: a viewBox scales its own type,
+   which is how /health ended up drawing 6px axis labels on a phone. The numbers are HTML. */
+.gym .trend { display: flex; align-items: center; gap: 9px; margin-top: 7px; }
+.gym .trend svg { display: block; overflow: visible; }
+.gym .trend path { fill: none; stroke: var(--foreground); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.gym .trend circle { fill: var(--signal); }
+.gym .trend-n { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted-foreground); }
+
 /* ---- set rows ---- */
 .gym .sets { margin-top: 10px; }
 .gym .set-row { display: grid; grid-template-columns: 1.5rem 1fr 1fr 2.4rem; gap: 8px; align-items: center; padding: 6px 0; }

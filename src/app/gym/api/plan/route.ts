@@ -22,13 +22,17 @@ export async function POST(req: Request) {
     const out = await Promise.all(
       exercises.map(async (ex) => {
         const last = await getLastSession(ex.id, date);
-        const recent = await getRecentSessions(ex.id, date, 3);
+        /* Eight, not three. Three is all the stall detector needs and it is what this asked for
+           until now, but the client draws a trend from the same rows and three points is not a
+           trend. `suggest` still looks at the window it always did, so nothing about the
+           progression logic changes with the number here. */
+        const recent = await getRecentSessions(ex.id, date, 8);
         const suggestion = suggest(last, {
           type: ex.type || 'weighted',
           targetReps: ex.targetReps,
           increment: ex.increment,
           today: date,
-          recent,
+          recent: recent.slice(0, 3),
         });
         return { id: ex.id, last, suggestion, recent };
       }),

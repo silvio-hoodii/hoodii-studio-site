@@ -48,6 +48,74 @@ interface PendingWrite {
   body: unknown;
 }
 
+/* The top set of a session, which is the one number worth putting on a line.
+ *
+ * Weight first, reps as the tie-break, and reps alone when there is no weight: a bodyweight or
+ * timed exercise progresses by count and would otherwise draw a flat line at zero. */
+function topSet(sets: { weight: number | null; reps: number | null }[]): number | null {
+  let best: number | null = null;
+  const weighted = sets.some((s) => s.weight != null && s.weight > 0);
+  for (const s of sets) {
+    const v = weighted ? s.weight : s.reps;
+    if (v == null) continue;
+    if (best == null || v > best) best = v;
+  }
+  return best;
+}
+
+/* Eight sessions, one line, no text inside the drawing.
+ *
+ * Deliberately no axis, no labels and no numbers in the SVG. The range is stated in HTML beside it,
+ * because text inside a viewBox scales with the box and /health spent this week rendering its axis
+ * labels at 6.1px on a phone for exactly that reason. Fixed pixel size for the same reason: this
+ * one cannot be stretched.
+ *
+ * It only appears from three sessions on. Two points is a line between two points, not a trend, and
+ * a chart on an exercise he has done once is decoration on a screen he already found cluttered. */
+function Trend({ recent }: { recent: LastSession[] }) {
+  const points = [...recent]
+    .reverse()
+    .map((s) => topSet(s.sets))
+    .filter((v): v is number => v != null);
+  if (points.length < 3) return null;
+
+  const W = 92;
+  const H = 20;
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const span = max - min || 1;
+  const x = (i: number) => (i / (points.length - 1)) * (W - 4) + 2;
+  const y = (v: number) => H - 3 - ((v - min) / span) * (H - 6);
+  const d = points.map((v, i) => `${i === 0 ? 'M' : 'L'} ${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+  const lastX = x(points.length - 1);
+  const lastY = y(points[points.length - 1] as number);
+  const first = points[0] as number;
+  const latest = points[points.length - 1] as number;
+
+  return (
+    <span className="trend">
+      <svg
+        width={W}
+        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`${points.length} sessions, ${first} to ${latest}`}
+      >
+        <path d={d} />
+        <circle cx={lastX} cy={lastY} r={2.5} />
+      </svg>
+      {/* "flat at 10" over a line with a visible hump in it is the drawing and the caption
+          disagreeing. Only the genuinely unchanging series gets called held; a series that ended
+          where it started but moved in between says so and lets the line show the shape. */}
+      <span className="trend-n tnum">
+        {points.every((v) => v === points[0])
+          ? `held at ${latest}`
+          : `${first} to ${latest}`} over {points.length}
+      </span>
+    </span>
+  );
+}
+
 /* Where a swap chosen but not yet lifted is kept.
  *
  * The DB is the record of what he DID: a set logged under an alternative carries `swapped_from`, so
@@ -64,7 +132,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const [budget, setBudget] = useState<number | null>(null);
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
-  const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion }>>({});
+  const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
   const [openAlts, setOpenAlts] = useState<Set<string>>(new Set());
   const [timer, setTimer] = useState<{ label: string; targetEnd: number } | null>(null);
   const [finished, setFinished] = useState(false);
@@ -268,7 +336,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       .then((data) => {
         if (cancelled) return;
         const byId: typeof plan = {};
-        for (const ex of data.exercises || []) byId[ex.id] = { last: ex.last, suggestion: ex.suggestion };
+        for (const ex of data.exercises || []) {
+          byId[ex.id] = { last: ex.last, suggestion: ex.suggestion, recent: ex.recent ?? [] };
+        }
         setPlan((prev) => ({ ...prev, ...byId }));
       })
       .catch(() => {});
@@ -510,6 +580,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
                   <div className="ex-suggest">
                     {p.suggestion.weight != null ? `${p.suggestion.weight} lb × ${p.suggestion.reps}` : `× ${p.suggestion.reps}`}
                     <span className="ex-suggest-why">{p.suggestion.reason}</span>
+                    {p.recent && <Trend recent={p.recent} />}
                   </div>
                 )}
 
