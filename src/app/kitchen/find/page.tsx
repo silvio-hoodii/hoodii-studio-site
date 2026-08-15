@@ -88,7 +88,7 @@ function Group({
   if (!list.length) return null;
   return (
     <>
-      <h2 className="count" style={{ marginTop: 30 }}>{title} <span className="quiet">{list.length}</span></h2>
+      <h2 className="sec">{title} <span className="quiet">{list.length}</span></h2>
       {note && <p className="quiet" style={{ marginBottom: 10 }}>{note}</p>}
       <ul className="meallist">
         {list.slice(0, limit).map((c) => <Card key={c.meal.id} c={c} label={label} />)}
@@ -160,13 +160,12 @@ export default async function Find({
         total={d.total}
       />
 
-      <hr className="divider" />
 
       {/* FILTERED: one ranked list. The point of filtering is that the answer is now short enough to
           read straight through, so five sections would just put scrolling back. */}
       {d.isFiltered ? (
         d.results.length === 0 ? (
-          <h2 className="count" style={{ marginTop: 22 }}>nothing matches those filters</h2>
+          <h2 className="sec">nothing matches those filters</h2>
         ) : (
           <Group
             title="Matches"
@@ -234,7 +233,7 @@ export default async function Find({
 
       {d.unlocks.length > 0 && (
         <>
-          <h2 className="count" style={{ marginTop: 30 }}>One purchase, most dishes</h2>
+          <h2 className="sec">One purchase, most dishes</h2>
           <p className="quiet" style={{ marginBottom: 8 }}>
             Counted only over dishes missing nothing but this, so the number means it.
           </p>

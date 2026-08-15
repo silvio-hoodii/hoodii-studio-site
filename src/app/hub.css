@@ -137,17 +137,8 @@
  * "Projects" would be the exact generic move this design exists to avoid.
  */
 
-.idx .sec {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin: var(--gap) 0 12px;
-}
+/* .sec is declared once in globals.css. */
 
-.idx .sec + .rows { border-top: 1px solid var(--foreground); opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .idx .arrow { transition: none; }

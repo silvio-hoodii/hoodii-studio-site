@@ -103,15 +103,7 @@
 
 /* ---- section headings ---- */
 
-.music .sec {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin: var(--gap) 0 12px;
-}
+/* .sec is declared once in globals.css. */
 
 /* The qualifier that keeps "most played" from reading as "top of all time". It is part of the
  * heading rather than a footnote because a footnote is a thing you can miss. */
@@ -122,8 +114,6 @@
   opacity: 0.8;
 }
 
-.music .sec + .ranges,
-.music .sec + .plays { border-top: 1px solid var(--foreground); padding-top: 18px; }
 
 /* ---- charts ---- */
 

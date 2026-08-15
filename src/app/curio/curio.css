@@ -34,18 +34,8 @@
 
 /* .live and .tnum are declared once in globals.css. */
 
-.curio .sec {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin: var(--gap) 0 12px;
-}
+/* .sec is declared once in globals.css. */
 
-.curio .sec + .digests,
-.curio .sec + .ledger { border-top: 1px solid var(--foreground); }
 
 /* ---- the mornings ---- */
 

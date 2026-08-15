@@ -315,6 +315,29 @@ h1 {
   opacity: 0.85;
 }
 
+/* ---- a section heading ----
+ *
+ * The label and the rule that opens the section it names, which the site was drawing both ways
+ * round. The hub, /curio and /music put the label first and the rule under it, so the rule read as
+ * the top edge of the list. /kitchen, /health, /french and /gym put the rule first, so it read as
+ * the boundary between one section and the next. Same component, flipped, on seven surfaces.
+ *
+ * Settled on rule-then-label. It was already the majority, and it is the reading that holds up: a
+ * full-ink rule is a boundary, and a boundary belongs at the start of the thing it opens, not
+ * underneath the words that name it. If he wants the other way round it is this one declaration.
+ */
+.sec {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--foreground);
+  margin: var(--gap) 0 12px;
+  padding-top: 13px;
+}
+
 /* ---- there is nothing here ----
  *
  * One answer for the whole site, and it is the left-rule idiom the error boundary and the music

@@ -28,9 +28,8 @@ export default async function Shop() {
         purchase would add to that, and what is already in the kitchen that none of it touches.
       </p>
 
-      <hr className="divider" />
 
-      <h2 className="count" style={{ marginTop: 22 }}>
+      <h2 className="sec">
         Already here, nothing uses it <span className="quiet">{d.idle.length}</span>
       </h2>
       <p className="quiet" style={{ marginBottom: 8 }}>
@@ -60,7 +59,7 @@ export default async function Shop() {
 
       {d.unreachable.length > 0 && (
         <>
-          <h2 className="count" style={{ marginTop: 30 }}>
+          <h2 className="sec">
             No recipe asks for these <span className="quiet">{d.unreachable.length}</span>
           </h2>
           <p className="quiet" style={{ marginBottom: 8 }}>
@@ -87,7 +86,7 @@ export default async function Shop() {
 
       <hr className="divider" style={{ marginTop: 30 }} />
 
-      <h2 className="count" style={{ marginTop: 22 }}>Buy one thing, unlock this many</h2>
+      <h2 className="sec">Buy one thing, unlock this many</h2>
       <p className="quiet" style={{ marginBottom: 8 }}>
         Counted only over dishes that are short of nothing else, so the number means it rather than
         meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live

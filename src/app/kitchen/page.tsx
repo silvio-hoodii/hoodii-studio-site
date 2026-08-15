@@ -187,7 +187,6 @@ export default async function KitchenHome() {
         <Link href="/kitchen/shop">What is worth buying, and what is sitting here unused →</Link>
       </p>
 
-      <hr className="divider" />
 
       {/* Nothing at all, said once, only when it is actually true. Until 2026-08-11 this page
           printed "nothing ready to start" as its first concrete statement WHENEVER `now` was empty,
@@ -195,12 +194,12 @@ export default async function KitchenHome() {
           site and could not find the dish he had asked for that afternoon. A false negative in the
           loudest position on the page is worse than no status at all. */}
       {now.length === 0 && thawing.length === 0 && adapting.length === 0 && (
-        <p className="count" style={{ marginTop: 22 }}>nothing ready to start</p>
+        <p className="sec">nothing ready to start</p>
       )}
 
       {now.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 22 }}>
+          <p className="sec">
             <span className="live">{now.length}</span> ready to start
           </p>
           <div>{now.map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
@@ -211,21 +210,21 @@ export default async function KitchenHome() {
           say which, because "With one small change" read as a caveat and buried the only dish. */}
       {thawing.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>Start tonight, once one thing thaws</p>
+          <p className="sec">Start tonight, once one thing thaws</p>
           <div>{thawing.slice(0, 8).map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
         </>
       )}
 
       {adapting.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>With one swap</p>
+          <p className="sec">With one swap</p>
           <div>{adapting.slice(0, 8).map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
         </>
       )}
 
       {soon.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>Use these first</p>
+          <p className="sec">Use these first</p>
           {/* Each one is a LINK now. It used to be plain text: he was told three things were dying
               today and given nothing to tap, while /kitchen/find had a group of dishes that eat exactly
               those items one tap away. DESIGN.md's rule is never to say what is wrong without saying
@@ -255,7 +254,7 @@ export default async function KitchenHome() {
 
       {blocked.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>Off the list</p>
+          <p className="sec">Off the list</p>
           <p className="quiet" style={{ marginBottom: 8 }}>
             Named after something you do not have. Still openable, they are just not being offered.
           </p>
@@ -277,7 +276,7 @@ export default async function KitchenHome() {
           on the screen rather than in a git commit. */}
       {adapted.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>Changed from the original, so not offered</p>
+          <p className="sec">Changed from the original, so not offered</p>
           <p className="quiet" style={{ marginBottom: 8 }}>
             These were scaled, or had an ingredient swapped, or got a different pan than the recipe
             says. That layer is where every problem has come from: one of these produced five wrong
@@ -303,7 +302,7 @@ export default async function KitchenHome() {
           what the recipe was." */}
       {unread.length > 0 && (
         <>
-          <p className="count" style={{ marginTop: 30 }}>Not checked yet</p>
+          <p className="sec">Not checked yet</p>
           <p className="quiet" style={{ marginBottom: 8 }}>
             Nobody has read these the way you would read them. Open them if you like, but expect
             them to be wrong somewhere, because the one recipe that has been checked was wrong in

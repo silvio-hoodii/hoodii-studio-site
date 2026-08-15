@@ -45,13 +45,12 @@
 
 /* h1 comes from globals.css: one scale for the whole site. */
 
-/* :not(.count), because /kitchen/find and /kitchen/shop use `<h2 class="count">` for a section
-   label and `.kos h2` (0,1,1) outranks the shared `.count` (0,1,0). While `.count` was ALSO written
-   out here as `.kos .count` the two tied and source order settled it; the moment the shared one
-   moved to globals.css, three headings on find and three on shop silently went from a 12px mono
-   label to a 17px sans heading. Caught by diffing computed styles against the live build, not by
-   looking, which is worth knowing: it is a plausible-looking heading either way. */
-.kos h2:not(.count) {
+/* :not(.sec), because /kitchen/find and /kitchen/shop use `<h2 class="sec">` for a section label
+   and `.kos h2` (0,1,1) outranks the shared `.sec` (0,1,0). This has already bitten once: when the
+   shared label moved to globals.css, six headings on those two pages silently went from a 12px mono
+   label to a 17px sans heading, and it was caught by diffing computed styles against the live
+   build, not by looking. Either heading is plausible on its own. */
+.kos h2:not(.sec) {
   font-size: 17px;
   line-height: 1.3;
   font-weight: 600;
