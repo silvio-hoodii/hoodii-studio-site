@@ -279,7 +279,12 @@ const WORK: Row[] = [
   {
     label: 'The Moment',
     line: 'Storefront, checkout and admin for a bakery here in Calgary',
-    sub: <><span className="live tnum">154</span> real orders have gone through it</>,
+    /* Not `.live`. --signal means a value that is true right now, and 154 is a number somebody
+       typed: The Moment's orders live in a different project's Supabase that this site has no
+       connection to, so the count is a snapshot and drifts silently from the day it was written.
+       Dated instead, which is the honest version of the same sentence. Wiring it to the real store
+       would make it live again, and until that happens it must not wear the colour that says so. */
+    sub: <><span className="tnum">154</span> real orders had gone through it by August 2026</>,
     /* themomentyyc.com, NOT themoment.ca. The .ca is an unrelated business and it is wrong in
      * several repo files, which is how it kept getting shipped. Confirmed 2026-08-11 by reading the
      * title: .ca returns "The Moment | Discover Insight Today". A 200 is not a confirmation. */
@@ -324,7 +329,10 @@ const STOPPED: Row[] = [
   },
   {
     label: 'French, twice',
-    line: <>Two versions before this one. <span className="live tnum">1,359</span> cards generated for me up front, and exactly one review ever logged</>,
+    /* Also not `.live`. This is a count of cards in a database that no longer exists, under a
+       heading that says "what I stopped building". A finished fact about a dead project is the
+       precise opposite of a value that is true right now. */
+    line: <>Two versions before this one. <span className="tnum">1,359</span> cards generated for me up front, and exactly one review ever logged</>,
     sub: 'the third takes a card only from a page I have actually sat down and worked',
     plain: true,
   },

@@ -1,0 +1,117 @@
+/* Four pages of prose, on the hub's own wrapper.
+ *
+ * Almost nothing new. `.idx` already gives the column and the padding, `.sec`, `.lede` and `.quiet`
+ * come from globals.css, and adding a fifth typographic system for four pages of text is exactly
+ * the drift the last two days were spent undoing. What is genuinely missing from the system is a
+ * body paragraph, because until now every surface here was rows and numbers rather than writing.
+ */
+
+/* `.idx h1` is the hub's MASTHEAD: the name of the site, set in mono capitals at 17px. On a page
+   whose h1 is a title rather than a wordmark that is the wrong thing entirely, and it made "THE
+   MOMENT" read as a logo. These pages take the site's own heading scale back, from globals.css. */
+.idx.work h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(24px, 5.5vw, 30px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  margin: 10px 0 0;
+  text-transform: none;
+}
+
+.idx .body {
+  font-size: 16px;
+  line-height: 1.62;
+  /* Wider than the 54ch on `.lede`, which is a standfirst and wants to be short. This is reading. */
+  max-width: 66ch;
+  margin: 15px 0 0;
+}
+
+/* A run of paragraphs sets tighter than the gap between a heading and the first one. */
+.idx .body + .body { margin-top: 13px; }
+
+/* The one-line facts under a title: what it is, where it runs, what it is built on. A definition
+   list, because that is what it is, and a screen reader should hear the pairing. */
+.idx .facts {
+  margin: 18px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.idx .facts > div {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.idx .facts dt {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  padding-top: 3px;
+}
+
+.idx .facts dd { margin: 0; }
+
+@media (max-width: 460px) {
+  .idx .facts > div { grid-template-columns: 1fr; gap: 3px; }
+}
+
+/* The one decision that mattered, and what it cost. A left rule, the same idiom the kitchen uses
+   for a block that is about the work rather than being the work. */
+.idx .decision {
+  border-left: 2px solid var(--foreground);
+  padding-left: 13px;
+  margin: var(--gap) 0 0;
+}
+
+.idx .decision .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 6px;
+}
+
+.idx .decision p { margin: 0; font-size: 15.5px; line-height: 1.6; max-width: 62ch; }
+.idx .decision p + p { margin-top: 10px; }
+
+/* A pull line for the kitchen story's one-sentence findings. Not a blockquote: nobody is being
+   quoted, it is the sentence the whole section is there to earn. */
+.idx .finding {
+  font-size: 17px;
+  line-height: 1.5;
+  font-weight: 500;
+  max-width: 58ch;
+  margin: var(--gap) 0 0;
+}
+
+.idx .draft {
+  border: 1px solid var(--destructive);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-top: 18px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.idx .draft .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--destructive);
+  margin-bottom: 5px;
+}
