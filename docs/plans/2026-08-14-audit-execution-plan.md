@@ -10,6 +10,11 @@ screenshots: HOODII/.cache/site-audit-2026-08-14/ (22 files, phone 390x844 + des
 
 # hoodii.studio audit execution plan
 
+> **Status, updated 2026-08-14 evening.** All of P0, section 6, and P1-3, P1-4, P1-5 and P1-6
+> are shipped and live. Read the newest `next-session-handoff-2026-08-14-*.md` at the HOODII
+> root FIRST: it carries what is actually left, which of the open questions have been answered,
+> and the one decision that is now blocking. This file remains the spec; it is not the status.
+
 This file is self-contained. Everything the executor needs is in here or in a file this plan names.
 Five adversarial audit agents produced the findings; a sixth verifier tried to refute the twelve
 load-bearing claims and confirmed eleven at file:line (the twelfth, the /gym void, is
