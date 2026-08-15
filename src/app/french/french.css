@@ -88,36 +88,19 @@
    The component decides now, per the rule that the colour marks a value that is true right now. */
 .french .counts span { font-size: 12px; color: var(--muted-foreground); letter-spacing: 0.06em; text-transform: uppercase; }
 
+/* Everything about how a button looks now comes from globals.css. What is left is the only thing
+   that was ever this surface's own: the main action spans the column. It used to also be a point
+   larger, a weight bolder and four pixels taller than the same button on every other surface. */
 .french button.primary, .french .btn.primary {
   display: block;
   width: 100%;
-  font: inherit;
-  font-size: 17px;
-  font-weight: 600;
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 15px;
-  min-height: 52px;
-  cursor: pointer;
 }
 .french button.primary[disabled] { background: none; color: var(--muted-foreground); border-color: var(--border-strong); font-weight: 400; cursor: default; }
 .french button.ghost {
   display: block;
   width: 100%;
-  font: inherit;
-  font-size: 15px;
-  background: none;
-  border: 1px solid var(--border-strong);
-  color: var(--foreground);
-  border-radius: var(--radius);
-  padding: 13px;
-  min-height: 48px;
-  cursor: pointer;
   margin-bottom: 10px;
 }
-.french button.ghost:hover { border-color: var(--foreground); }
 
 /* ---- book section / chapter log form ---- */
 .french .lastch { font-size: 17px; font-weight: 600; margin: 0 0 4px; }

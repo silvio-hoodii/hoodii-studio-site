@@ -30,7 +30,7 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
         the data: a connection failed.
       </p>
       <div className="unreachable-actions">
-        <button type="button" onClick={reset}>Try again</button>
+        <button type="button" className="primary" onClick={reset}>Try again</button>
         {/* A plain <a>, not next/link, and this is the one place that is right. An error boundary
             is rendering because something under it already failed; the way out should not depend on
             the client router it may have failed inside. This does a real page load. */}

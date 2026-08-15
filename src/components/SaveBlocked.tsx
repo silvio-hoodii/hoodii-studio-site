@@ -98,7 +98,7 @@ export default function SaveBlocked({
           Nothing you entered was lost.{waiting}
         </p>
         <div className="row">
-          <button type="button" disabled={busy} onClick={() => void retry()}>
+          <button type="button" className="primary" disabled={busy} onClick={() => void retry()}>
             {busy ? 'Trying…' : 'Try again'}
           </button>
         </div>
@@ -125,7 +125,7 @@ export default function SaveBlocked({
             if (e.key === 'Enter' && pw && !busy) void unlock();
           }}
         />
-        <button type="button" disabled={busy || !pw} onClick={() => void unlock()}>
+        <button type="button" className="primary" disabled={busy || !pw} onClick={() => void unlock()}>
           {busy ? 'Unlocking…' : 'Unlock and save'}
         </button>
       </div>

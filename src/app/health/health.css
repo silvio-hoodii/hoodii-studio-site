@@ -46,19 +46,9 @@
 
 .health .divider { margin: 0; }
 
-.health button.primary, .health .btn.primary {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  padding: 13px 16px;
-  border-radius: var(--radius);
-  border: 1px solid var(--primary);
-  background: var(--primary);
-  color: var(--primary-foreground);
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-}
+/* The button is declared once in globals.css. This surface wrote out the primary variant and no
+   base rule at all, so the one button it owns, on /health/login, was styled and nothing else
+   would have been. */
 .health .changes { font-size: 13px; color: var(--destructive); }
 
 /* ---- section ---- */
@@ -186,6 +176,10 @@
 /* ---- adherence strip ---- */
 .health .strip { display: flex; gap: 4px; flex-wrap: wrap; }
 .health .strip-cell {
+  /* These are buttons, so they take the shared button rule's padding. The cells are 16px square
+     with border-box sizing, which hides it, but a padded 16px button is an accident waiting for
+     the day one of them gets a label. */
+  padding: 0;
   width: 16px;
   height: 16px;
   border-radius: 3px;

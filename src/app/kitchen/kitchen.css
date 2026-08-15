@@ -246,27 +246,9 @@
   margin: 0 auto;
 }
 
-.kos button, .kos .btn {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  padding: 13px 16px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-strong);
-  background: var(--background);
-  color: var(--foreground);
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-}
-.kos button:hover, .kos .btn:hover { border-color: var(--muted-foreground); }
-.kos button.primary, .kos .btn.primary {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border-color: var(--primary);
-  flex: 1;
-}
-.kos button:disabled { opacity: 0.4; cursor: default; }
+/* The button is declared once in globals.css. All that is left here is the one thing that is
+   this surface's own: the primary action sits in a fixed bottom bar and shares its width. */
+.kos button.primary, .kos .btn.primary { flex: 1; }
 
 /* Collapsed by default. It answers a question he only asks once per recipe, and it must not stand
    between him and the ingredient list. */
@@ -613,7 +595,7 @@
    every secondary button outline and every unfilled progress dot effectively invisible.
    --border-strong was declared here and was therefore invisible to the other six surfaces, which
    all kept the unreadable edge. It lives in globals.css now. */
-.kos button, .kos .btn, .kos .chip { border-color: var(--border-strong); }
+.kos .chip { border-color: var(--border-strong); }
 .kos .dots button { background: var(--border-strong); }
 
 /* ---- plainlist on a phone ----

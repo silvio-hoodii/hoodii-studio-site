@@ -223,27 +223,9 @@
   max-width: var(--measure);
   margin: 0 auto;
 }
-.gym button, .gym .btn {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 500;
-  padding: 13px 16px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-strong);
-  background: var(--background);
-  color: var(--foreground);
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-}
-.gym button:hover, .gym .btn:hover { border-color: var(--muted-foreground); }
-.gym button.primary, .gym .btn.primary {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border-color: var(--primary);
-  flex: 1;
-}
-.gym button:disabled { opacity: 0.4; cursor: default; }
+/* The button is declared once in globals.css. All that is left here is the one thing that is
+   this surface's own: the primary action sits in a fixed bottom bar and shares its width. */
+.gym button.primary, .gym .btn.primary { flex: 1; }
 
 
 /* .not-here was declared here and in health.css, character for character, and used by neither.

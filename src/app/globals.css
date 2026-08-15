@@ -180,6 +180,51 @@ input[type='password'] {
   color: var(--foreground);
 }
 
+/* ---- one button ----
+ *
+ * Same argument as the password field above, and the same evidence. `.kos button` and `.gym button`
+ * were byte-identical including their hover, primary and disabled states. `.health` wrote out the
+ * primary variant only, so the one button on /health/login was the base rule's job and there was no
+ * base rule. `.french` invented its own at 17px/600 with a 52px floor, and the two banner buttons in
+ * this very file wrote a third at 15px with a 44px floor. Four heights for one gesture.
+ *
+ * Bare `button`, not `.surface button`, because the whole failure mode is a surface that gets added
+ * later and starts from nothing. Every existing variant is scoped tighter than this and still wins:
+ * the cook screen's 2px step dots, the French rating row, the timer chips. A surface that wants a
+ * button to look different overrides it in its own file, where the divergence reads as a choice.
+ *
+ * No min-height here on purpose. It would beat the `height: 2px` on the cook screen's step dots,
+ * because min-height wins over height, and turn fourteen hairlines into fourteen blocks.
+ */
+button,
+.btn {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+button:hover,
+.btn:hover {
+  border-color: var(--muted-foreground);
+}
+button.primary,
+.btn.primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* ---- one heading scale, one label ----
  *
  * There were three h1 clamps (22-27 on gym and health, 24-30 on kitchen, 26-32 on french) and two
@@ -426,22 +471,9 @@ h1 {
   color: var(--foreground);
 }
 
-.save-blocked button {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  min-height: 44px;
-  padding: 11px 16px;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  background: var(--primary);
-  color: var(--primary-foreground);
-  cursor: pointer;
-}
-.save-blocked button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
+/* The buttons in here carry `.primary` and take the shared rule above. They used to be a fourth
+   size, 15px on a 44px floor, which is how a banner that appears on three surfaces ended up with a
+   button unlike every other button on the site. */
 
 .save-blocked .wrong {
   margin: 9px 0 0;
@@ -540,18 +572,7 @@ h1 {
   margin-top: 20px;
 }
 
-.unreachable-actions button {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  min-height: 44px;
-  padding: 11px 16px;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  background: var(--primary);
-  color: var(--primary-foreground);
-  cursor: pointer;
-}
+/* Also `.primary`, also from the shared rule. */
 
 .unreachable-actions a {
   display: inline-flex;
