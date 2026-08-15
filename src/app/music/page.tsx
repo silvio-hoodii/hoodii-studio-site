@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getSummary, getRecentPlays, getLatestTop, getMostPlayed } from '@/lib/music/db';
 import { getAccessToken, getNowPlaying, TIME_RANGES, RANGE_LABEL, type NowPlaying } from '@/lib/music/spotify';
 import { timeAgo } from '@/lib/format';
@@ -263,9 +262,6 @@ export default async function MusicPage() {
         </p>
       )}
 
-      <div className="foot">
-        <Link href="/">Back to the index</Link>
-      </div>
     </div>
   );
 }

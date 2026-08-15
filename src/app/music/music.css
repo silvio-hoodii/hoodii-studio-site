@@ -205,18 +205,7 @@
   margin-top: 2px;
 }
 
-.music .foot {
-  margin-top: var(--gap);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.music .foot a {
-  color: var(--muted-foreground);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border);
-}
-.music .foot a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+/* The footer is `.site-footer` in globals.css, mounted from the layout like the header. */
 
 @media (max-width: 640px) {
   .music .ranges,

@@ -144,18 +144,7 @@
  * one that earns the signal colour. */
 .curio .flav-myth { color: var(--signal); border-color: var(--signal); }
 
-.curio .foot {
-  margin-top: var(--gap);
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.curio .foot a {
-  color: var(--muted-foreground);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border);
-}
-.curio .foot a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+/* The footer is `.site-footer` in globals.css, mounted from the layout like the header. */
 
 @media (max-width: 460px) {
   .curio .digest { grid-template-columns: 1fr; gap: 8px; }

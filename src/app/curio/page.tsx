@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
 import type { CurioDigest, CurioItem } from '@/lib/curio/db';
 
@@ -152,9 +151,6 @@ export default async function CurioPage() {
         </details>
       )}
 
-      <div className="foot">
-        <Link href="/">Back to the index</Link>
-      </div>
     </div>
   );
 }

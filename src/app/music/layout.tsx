@@ -1,5 +1,6 @@
 import './music.css';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 /* This layout exists only to carry the site header and the stylesheet. /music is a single route
  * with no children, so there is nothing else for it to do.
@@ -17,6 +18,7 @@ export default function MusicLayout({ children }: { children: React.ReactNode })
     <div className="measure-wide measure-data">
       <SiteHeader app="Music" />
       {children}
+      <SiteFooter standalone />
     </div>
   );
 }

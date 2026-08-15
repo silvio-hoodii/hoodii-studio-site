@@ -1,5 +1,6 @@
 import './curio.css';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 /* Carries the site header and the stylesheet; /curio has no child routes.
  *
@@ -11,6 +12,9 @@ export default function CurioLayout({ children }: { children: React.ReactNode })
     <div className="measure-data">
       <SiteHeader app="Curio" />
       {children}
+      {/* In the layout for the same reason the header is. /curio is one route today, and the next
+          one under it should not depend on anyone remembering. */}
+      <SiteFooter standalone />
     </div>
   );
 }

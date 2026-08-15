@@ -6,6 +6,7 @@ import { today } from '@/lib/day';
 import { daysAgoText } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
+import SiteFooter from '@/components/SiteFooter';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
@@ -413,15 +414,10 @@ export default async function Home() {
         {STOPPED.map((r) => <RowView key={r.label} r={r} />)}
       </div>
 
-      <div className="foot">
-        <a href="https://github.com/silvio-hoodii" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="https://linkedin.com/in/silvio-neyra-rivas" target="_blank" rel="noreferrer">LinkedIn</a>
-        {/* The address in full, not a link labelled "Email". A bare mailto opens whatever mail
-          * client the machine thinks it has, which on a work laptop is often nothing at all, and
-          * the reader cannot copy an address they were never shown. */}
-        <a href="mailto:silvio@hoodii.studio">silvio@hoodii.studio</a>
-        {/* Brixel was here and should not have been. This row is how to reach me; a company is not
-         * a contact method, and it already has its own line under In production. */}
+      {/* The same row /curio and /music carry, minus the link home, because this is home. Brixel was
+        * in here once and should not have been: this row is how to reach me, a company is not a
+        * contact method, and it already has its own line under In production. */}
+      <SiteFooter home={false}>
         {spotify.isPlaying && spotify.title && (
           <span className="np">
             <span className="eq" aria-hidden="true"><i /><i /><i /></span>
@@ -434,7 +430,7 @@ export default async function Home() {
             )}
           </span>
         )}
-      </div>
+      </SiteFooter>
     </div>
   );
 }

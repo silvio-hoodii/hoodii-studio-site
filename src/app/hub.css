@@ -153,25 +153,9 @@
   .idx .arrow { transition: none; }
 }
 
-/* ---- foot ---- */
-
-.idx .foot {
-  margin-top: var(--gap);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-  align-items: baseline;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted-foreground);
-}
-
-.idx .foot a {
-  color: var(--muted-foreground);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border);
-}
-.idx .foot a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
+/* ---- foot ----
+   The row itself is `.site-footer` in globals.css now, shared with /curio and /music. What stays
+   here is the one thing only this page has: the strip that says what is playing. */
 
 .idx .np { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; }
 

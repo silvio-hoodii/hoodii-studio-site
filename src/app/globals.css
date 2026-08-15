@@ -346,6 +346,40 @@ h1 {
   background: var(--background);
 }
 
+/* The other end of it. Same argument, same place. See src/components/SiteFooter.tsx. */
+.site-footer {
+  margin-top: var(--gap);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: baseline;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.site-footer a {
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.site-footer a:hover {
+  color: var(--foreground);
+  border-bottom-color: var(--foreground);
+}
+.site-footer a:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* Mounted from a layout, so it is outside whatever padded column the page drew and has to draw its
+   own. No top margin here: the page above it already ends on its own bottom padding. */
+.site-footer.standalone {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+
 /* The one surface that earns a wider column opts in here, and the header inside it follows. */
 .measure-wide { --measure: 780px; }
 
