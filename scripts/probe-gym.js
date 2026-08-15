@@ -297,15 +297,28 @@
       const ex = $$('.ex').find((e) => $('.swap-opt', e)) || $$('.ex').find((e) => $('.ex-swap .swap-toggle', e));
       if (!ex) return { pass: false, detail: 'no swappable exercise' };
       if (!$('.swap-opt', ex)) { $('.ex-swap .swap-toggle', ex).click(); await waitFor(() => $('.swap-opt', ex)); }
+      const slot = ex.dataset.slot;
       const before = text($('.ex-name', ex));
+      const beforeEff = ex.dataset.eff;
       const beforeMeta = text($('.ex-meta', ex));
       const wanted = text($('.swap-opt-name', $('.swap-opt', ex)));
       $('.swap-opt', ex).click();
-      await waitFor(() => $$('.ex').some((e) => text($('.ex-name', e)) === wanted));
-      const card2 = $$('.ex').find((e) => text($('.ex-name', e)) === wanted);
+      await waitFor(() => {
+        const c = $$('.ex').find((e) => e.dataset.slot === slot);
+        return c && c.dataset.eff !== beforeEff ? c : null;
+      });
+      const card2 = $$('.ex').find((e) => e.dataset.slot === slot);
+      /* Addressed by SLOT and asserted on the effective id, not on what the note says about the
+         previous name. Swapping a card that is already swapped is a legitimate move and the note
+         keeps naming the ORIGINAL slot, correctly: an earlier version of this test read that as a
+         failure and it was the test that was wrong, twice, on live. */
       return {
-        pass: !!card2 && text($('.swapped-note', card2))?.includes(before),
-        detail: { from: before, to: wanted, metaBefore: beforeMeta, metaAfter: card2 ? text($('.ex-meta', card2)) : null, note: card2 ? text($('.swapped-note', card2)) : null },
+        pass: !!card2 && card2.dataset.eff !== beforeEff && text($('.ex-name', card2)) === wanted && !!$('.swapped-note', card2),
+        detail: {
+          slot, from: before, to: wanted, effBefore: beforeEff, effAfter: card2?.dataset.eff,
+          metaBefore: beforeMeta, metaAfter: card2 ? text($('.ex-meta', card2)) : null,
+          note: card2 ? text($('.swapped-note', card2)) : null,
+        },
       };
     },
 
@@ -332,11 +345,13 @@
     async swappedExerciseGetsItsOwnSuggestion() {
       const swapped = $$('.ex').find((e) => $('.swapped-note', e));
       if (!swapped) return { pass: false, detail: 'nothing is swapped' };
-      await sleep(600);
-      const sugg = $('.ex-suggest', swapped);
+      /* Waited for, not slept through. The suggestion arrives from a round trip to /gym/api/plan,
+         and a fixed 600ms passed against a local build and failed against the deployed one, which
+         is a test reporting an app defect that is really a slow network. */
+      const sugg = await waitFor(() => $('.ex-suggest', swapped), 6000);
       return {
         pass: !!sugg,
-        detail: { exercise: text($('.ex-name', swapped)), suggestion: text(sugg), note: sugg ? null : 'no suggestion rendered for the swapped exercise' },
+        detail: { exercise: text($('.ex-name', swapped)), suggestion: text(sugg), note: sugg ? null : 'no suggestion after 6s' },
       };
     },
 
