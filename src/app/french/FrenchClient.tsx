@@ -336,13 +336,26 @@ export default function FrenchClient({
       {!reviewing && blocked}
 
       <div className="section" style={{ marginTop: 22, paddingTop: 0, borderTop: 'none' }}>
-        <div className="counts">
-          {/* Green only when there is something to be green about. --signal means a value that is
-              true right now, and a zero in the live colour claims liveness where there is none: this
-              page currently shows 0 due and 0 new, and both were rendering green. */}
-          <div className="c-due"><b className={`tnum${summary.dueNow > 0 ? ' live' : ''}`}>{summary.dueNow}</b><span>Due</span></div>
-          <div className="c-new"><b className={`tnum${newCount > 0 ? ' live' : ''}`}>{newCount}</b><span>New</span></div>
-          <div className="c-str"><b className="tnum">{summary.streak}</b><span>Day streak</span></div>
+        {/* The same stat block /health uses, label above the number. It used to be the other way
+            up and a point and a half bigger, which is most of why the two pages the hub lists next
+            to each other did not look like the same product.
+
+            Green only when there is something to be green about. --signal means a value that is
+            true right now, and a zero in the live colour claims liveness where there is none: this
+            page currently shows 0 due and 0 new, and both were rendering green. */}
+        <div className="stats">
+          <div>
+            <div className="stat-k">Due</div>
+            <div className={`stat-v${summary.dueNow > 0 ? ' live' : ''}`}>{summary.dueNow}</div>
+          </div>
+          <div>
+            <div className="stat-k">New</div>
+            <div className={`stat-v${newCount > 0 ? ' live' : ''}`}>{newCount}</div>
+          </div>
+          <div>
+            <div className="stat-k">Day streak</div>
+            <div className="stat-v">{summary.streak}</div>
+          </div>
         </div>
         <button type="button" className="primary" disabled={!summary.queueSize} onClick={startReview}>
           {summary.queueSize ? `Review ${summary.queueSize}` : summary.total === 0 ? 'No cards yet' : 'Nothing due today'}
@@ -395,7 +408,7 @@ export default function FrenchClient({
       <div className="section">
         <h2>Cards</h2>
         <p className="lede">{cardStat}</p>
-        <div className="act">
+        <div className="act strip">
           {cells.map((c) => <i key={c.date} className={c.level} title={`${c.date}: ${c.value}`} />)}
         </div>
         <p className="lede" style={{ fontSize: 14 }}>

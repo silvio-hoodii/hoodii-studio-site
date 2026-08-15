@@ -62,19 +62,19 @@ export default async function HealthPage() {
           <>
             <div className="stats">
               <div>
-                <div className="stat-label">Weight</div>
-                <div className="stat-value tnum">
-                  {bodySummary.latest.kg?.toFixed(1)}<span className="unit">kg</span>
+                <div className="stat-k">Weight</div>
+                <div className="stat-v">
+                  {bodySummary.latest.kg?.toFixed(1)}<span className="stat-u">kg</span>
                 </div>
-                <div className="stat-delta down">{trendLine(bodySummary.trend30)}</div>
+                <div className="stat-d down">{trendLine(bodySummary.trend30)}</div>
               </div>
               {bodySummary.latest.bf_pct != null && (
                 <div>
-                  <div className="stat-label">Body fat</div>
-                  <div className="stat-value tnum">
-                    {bodySummary.latest.bf_pct.toFixed(1)}<span className="unit">%</span>
+                  <div className="stat-k">Body fat</div>
+                  <div className="stat-v">
+                    {bodySummary.latest.bf_pct.toFixed(1)}<span className="stat-u">%</span>
                   </div>
-                  <div className="stat-delta">{bodySummary.latest.date}</div>
+                  <div className="stat-d">{bodySummary.latest.date}</div>
                 </div>
               )}
             </div>
@@ -103,16 +103,16 @@ export default async function HealthPage() {
         <div className="section-head"><h2>Swim history</h2></div>
         <div className="stats">
           <div>
-            <div className="stat-label">Longest</div>
-            <div className="stat-value tnum">{Math.round(swim.longestDistanceM ?? 0)}<span className="unit">m</span></div>
+            <div className="stat-k">Longest</div>
+            <div className="stat-v">{Math.round(swim.longestDistanceM ?? 0)}<span className="stat-u">m</span></div>
           </div>
           <div>
-            <div className="stat-label">Best pace / 100m</div>
-            <div className="stat-value tnum">{msToPace(swim.bestPacePer100mMs)}</div>
+            <div className="stat-k">Best pace / 100m</div>
+            <div className="stat-v">{msToPace(swim.bestPacePer100mMs)}</div>
           </div>
           <div>
-            <div className="stat-label">Total sessions</div>
-            <div className="stat-value tnum">{swim.totalSessions}</div>
+            <div className="stat-k">Total sessions</div>
+            <div className="stat-v">{swim.totalSessions}</div>
           </div>
         </div>
         <BarChart

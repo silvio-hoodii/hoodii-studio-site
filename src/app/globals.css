@@ -315,6 +315,77 @@ h1 {
   opacity: 0.85;
 }
 
+/* ---- a big number ----
+ *
+ * Two of these existed and they were mirror images. /french put the number first at 34px mono with
+ * the label under it; /health put an 11px label first with the value under it at 22px sans. Same
+ * component, upside down relative to each other, on two surfaces the hub links to side by side.
+ *
+ * Label above. /health's stat carries a third line under the value (the trend against a previous
+ * measurement), and with the label underneath the number that line would orphan it between two
+ * numbers. Reading order of a table, which is what this site is.
+ *
+ * Mono for the value, per the type split the whole site runs on: the mono carries labels, state and
+ * numbers, the sans carries prose. /health setting its numbers in sans was the odd one out.
+ */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.stat-k {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 3px;
+}
+
+.stat-v {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-u {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  margin-left: 2px;
+}
+
+.stat-d {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+
+/* ---- a strip of days ----
+ *
+ * /french draws intensity per day and /health draws a category per day, which is a real difference
+ * and stays. What was not a difference worth having is the geometry: 22px tall bars stretched to
+ * fill the width on one, 16px fixed squares on the other, different gaps and different corners.
+ * One cell shape, two colour scales. */
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.strip > * {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
 /* ---- a link that leaves ----
  *
  * Nothing on this site said which links go somewhere else. The sharpest case was the hub, where the

@@ -81,12 +81,7 @@
 .french .section:first-of-type { margin-top: 26px; }
 
 /* ---- today counts + review cta ---- */
-.french .counts { display: flex; gap: 28px; margin-bottom: 18px; }
-.french .counts div { line-height: 1.15; }
-.french .counts b { font-family: var(--font-mono); font-size: 34px; font-weight: 500; display: block; font-variant-numeric: tabular-nums; }
-/* Was `.c-due b { color: var(--signal) }`, which painted the number green whether it was 12 or 0.
-   The component decides now, per the rule that the colour marks a value that is true right now. */
-.french .counts span { font-size: 12px; color: var(--muted-foreground); letter-spacing: 0.06em; text-transform: uppercase; }
+/* The stat block is declared once in globals.css and shared with /health. */
 
 /* Everything about how a button looks now comes from globals.css. What is left is the only thing
    that was ever this surface's own: the main action spans the column. It used to also be a point
@@ -125,8 +120,10 @@
 .french .row2 > * { flex: 1; }
 
 /* ---- activity strip ---- */
-.french .act { display: flex; gap: 2px; margin-top: 4px; overflow: hidden; }
-.french .act i { flex: 1; height: 22px; border-radius: 2px; background: var(--muted); min-width: 2px; }
+/* Cell size, gap and corner come from `.strip` in globals.css, shared with /health. What stays here
+   is the only thing that is different: this one shades by how much was reviewed, not by category. */
+.french .act { margin-top: 4px; }
+.french .act i { background: var(--muted); }
 .french .act i.a1 { background: color-mix(in oklch, var(--signal) 30%, var(--muted)); }
 .french .act i.a2 { background: color-mix(in oklch, var(--signal) 55%, var(--muted)); }
 .french .act i.a3 { background: color-mix(in oklch, var(--signal) 78%, var(--muted)); }

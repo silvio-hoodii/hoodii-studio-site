@@ -61,20 +61,10 @@
   margin-bottom: 16px;
 }
 
-/* ---- stat row ---- */
-.health .stats { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 18px; }
-.health .stat-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin-bottom: 3px;
-}
-.health .stat-value { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-.health .stat-value .unit { font-size: 13px; font-weight: 500; color: var(--muted-foreground); margin-left: 2px; }
-.health .stat-delta { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
-.health .stat-delta.down { color: var(--signal); }
+/* ---- stat row ----
+   `.stats`, `.stat-k`, `.stat-v`, `.stat-u` and `.stat-d` are declared once in globals.css and
+   shared with /french. Only the one thing that is this surface's own stays here. */
+.health .stat-d.down { color: var(--signal); }
 
 /* .empty is declared once in globals.css. This surface's version is where the shared one came
    from: a left rule reads as a note about the state of a thing rather than as its content. */
@@ -173,16 +163,14 @@
   }
 }
 
-/* ---- adherence strip ---- */
-.health .strip { display: flex; gap: 4px; flex-wrap: wrap; }
+/* ---- adherence strip ----
+   The cell's size, gap and corner come from `.strip` in globals.css, shared with /french. What is
+   this surface's own is what the fills MEAN. */
 .health .strip-cell {
   /* These are buttons, so they take the shared button rule's padding. The cells are 16px square
      with border-box sizing, which hides it, but a padded 16px button is an accident waiting for
      the day one of them gets a label. */
   padding: 0;
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
   border: 1px solid var(--border);
   background: var(--background);
   position: relative;
