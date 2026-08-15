@@ -91,7 +91,14 @@
   border-bottom: 1px solid var(--border);
 }
 
-.curio .src { display: inline-block; margin-top: 8px; }
+/* An 18px target on a phone. Padded to the floor rather than made bigger: the link is a footnote
+   under an answer and should not grow, but it does have to be hittable. */
+.curio .src {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 2px;
+}
 .curio .src:hover,
 .curio .la a:hover { color: var(--foreground); border-bottom-color: var(--foreground); }
 

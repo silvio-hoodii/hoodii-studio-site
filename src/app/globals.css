@@ -523,6 +523,12 @@ a[target='_blank']:not(.row)::after {
 }
 
 .site-footer a {
+  /* 44px, the same floor the header link keeps and for the same reason. These measured 19px: a row
+     of one-line text links is a control, and on a phone it has to be tappable rather than merely
+     visible. The hit area is the words plus the space above and below them, not the row. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--muted-foreground);
   text-decoration: none;
   border-bottom: 1px solid var(--border);
