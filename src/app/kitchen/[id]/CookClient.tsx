@@ -597,7 +597,7 @@ function StepNote({ dish, step, stepOf, stepText }: {
   }
 
   if (sent) {
-    return <p className="quiet" style={{ marginBottom: 15 }}>Noted against step {step}. It will be waiting next time you open this dish.</p>;
+    return <p className="lede" style={{ marginBottom: 15 }}>Noted against step {step}. It will be waiting next time you open this dish.</p>;
   }
 
   if (!open) {
@@ -719,7 +719,7 @@ function Debrief({
       {consumable.length > 0 && (
         <>
           <p className="count" style={{ marginTop: 24 }}>Did anything run out?</p>
-          <p className="quiet" style={{ marginBottom: 10 }}>
+          <p className="lede" style={{ marginBottom: 10 }}>
             Only tap what is actually finished. Skipping this is fine, it just means the kitchen keeps
             assuming you still have some.
           </p>

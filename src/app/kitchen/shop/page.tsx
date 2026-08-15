@@ -32,13 +32,13 @@ export default async function Shop() {
       <h2 className="sec">
         Already here, nothing uses it <span className="quiet">{d.idle.length}</span>
       </h2>
-      <p className="quiet" style={{ marginBottom: 8 }}>
+      <p className="lede" style={{ marginBottom: 8 }}>
         Not one of these appears in any dish that is cookable now or one thing short. This list comes
         before the buying list on purpose: a shopping list that only ever adds is how a kitchen fills
         with food nobody eats.
       </p>
       {d.idle.length === 0 ? (
-        <p className="quiet">Nothing idle. Everything in the kitchen is reachable by something.</p>
+        <p className="lede">Nothing idle. Everything in the kitchen is reachable by something.</p>
       ) : (
         <ul className="plainlist">
           {d.idle.map((i) => (
@@ -53,7 +53,7 @@ export default async function Shop() {
           ))}
         </ul>
       )}
-      <p className="quiet" style={{ marginTop: 8 }}>
+      <p className="lede" style={{ marginTop: 8 }}>
         Tapping one shows every dish that uses it, including ones needing a shop.
       </p>
 
@@ -62,7 +62,7 @@ export default async function Shop() {
           <h2 className="sec">
             No recipe asks for these <span className="quiet">{d.unreachable.length}</span>
           </h2>
-          <p className="quiet" style={{ marginBottom: 8 }}>
+          <p className="lede" style={{ marginBottom: 8 }}>
             Not one of the {d.total.toLocaleString()} dishes names these, so no amount of cooking will
             move them off this list. Some of that is honest (nothing asks for whey protein) and some is
             us (already-browned beef is not a thing a published ingredient list ever calls for, even
@@ -87,7 +87,7 @@ export default async function Shop() {
       <hr className="divider" style={{ marginTop: 30 }} />
 
       <h2 className="sec">Buy one thing, unlock this many</h2>
-      <p className="quiet" style={{ marginBottom: 8 }}>
+      <p className="lede" style={{ marginBottom: 8 }}>
         Counted only over dishes that are short of nothing else, so the number means it rather than
         meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live
         lookup, never from a guess.

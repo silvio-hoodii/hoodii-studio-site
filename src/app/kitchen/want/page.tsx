@@ -60,7 +60,7 @@ function Ingredients({ hit, label }: { hit: WantHit; label: (id: string) => stri
         <div className="box look" style={{ marginTop: 14 }}>
           <span className="k">Our list does not recognise these, {s.unknown.length}</span>
           <div>{s.unknown.map((u) => u.shown || u.line.trim()).join(', ')}</div>
-          <div className="quiet" style={{ marginTop: 4 }}>
+          <div className="lede" style={{ marginTop: 4 }}>
             Not the same as missing. It means the kitchen&apos;s vocabulary has a hole here, so check
             these yourself rather than trusting either answer.
           </div>
@@ -194,7 +194,7 @@ export default async function Want({
               );
             })}
           </ul>
-          <p className="quiet" style={{ marginTop: 10 }}>
+          <p className="lede" style={{ marginTop: 10 }}>
             Tap one to see the full list and exactly what is short.
           </p>
         </>
@@ -210,7 +210,7 @@ export default async function Want({
               </li>
             ))}
           </ul>
-          <p className="quiet" style={{ marginTop: 14 }}>
+          <p className="lede" style={{ marginTop: 14 }}>
             A pasted link works for sites this app will not crawl, which includes NYT Cooking, Serious
             Eats, Maangchi and The Woks of Life. All of them ask AI crawlers to stay out of their
             catalogues, so it does. Handing over one page you are reading is a different thing.

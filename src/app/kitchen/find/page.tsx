@@ -89,12 +89,16 @@ function Group({
   return (
     <>
       <h2 className="sec">{title} <span className="quiet">{list.length}</span></h2>
-      {note && <p className="quiet" style={{ marginBottom: 10 }}>{note}</p>}
+      {/* The note under a group heading is a whole sentence explaining what the group means, so it
+          is sans. The count beside the heading stays mono: the split this site declares is that mono
+          carries labels, state and numbers and sans carries prose, and a paragraph of monospace on
+          the surface a beginner reads with wet hands was the wrong half of it. */}
+      {note && <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>{note}</p>}
       <ul className="meallist">
         {list.slice(0, limit).map((c) => <Card key={c.meal.id} c={c} label={label} />)}
       </ul>
       {list.length > limit && (
-        <p className="quiet" style={{ marginTop: 8 }}>
+        <p className="lede" style={{ marginTop: 8 }}>
           and {list.length - limit} more. Narrow it with the search box or a chip above rather than
           scrolling.
         </p>
@@ -134,7 +138,7 @@ export default async function Find({
         From {d.providers.map((p) => `${p.provider} (${p.count})`).join(', ')}. Ingested straight from
         each site&apos;s own published sitemap, and only from sites whose robots.txt permits it.
       </p>
-      <p className="quiet" style={{ marginTop: 6 }}>
+      <p className="lede" style={{ marginTop: 6 }}>
         {d.hiddenNoSource} of {d.totalKnown} are hidden because their link does not lead to a real
         recipe, each one fetched and checked on {d.sourceCheckedAt}, and {d.dupesDropped} more were
         exact duplicates. A link offered as a recipe has to be one.
@@ -234,7 +238,7 @@ export default async function Find({
       {d.unlocks.length > 0 && (
         <>
           <h2 className="sec">One purchase, most dishes</h2>
-          <p className="quiet" style={{ marginBottom: 8 }}>
+          <p className="lede" style={{ marginBottom: 8 }}>
             Counted only over dishes missing nothing but this, so the number means it.
           </p>
           <ul className="plainlist stack">
@@ -252,7 +256,7 @@ export default async function Find({
       <p className="quiet">
         {d.providers.map((p) => p.attribution).join(' · ')}
       </p>
-      <p className="quiet" style={{ marginTop: 6 }}>
+      <p className="lede" style={{ marginTop: 6 }}>
         Ingredient lists and photos only: instructions are never copied here, they stay at the original
         recipe, which is also the one thing a cook card may be built from. Sites that ask AI agents not
         to crawl them are not crawled, which is why there is no NYT Cooking, Serious Eats, Maangchi or

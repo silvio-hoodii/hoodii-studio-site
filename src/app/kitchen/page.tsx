@@ -178,7 +178,7 @@ export default async function KitchenHome() {
             computed and the sentence around it was not, which is the harder half to notice. */}
         <Link href="/kitchen/find"><b>Browse {browsable.toLocaleString()} dishes, scored against the fridge &#8594;</b></Link>
       </p>
-      <p className="quiet" style={{ marginTop: 4 }}>
+      <p className="lede" style={{ marginTop: 4 }}>
         Scored against the fridge, with photos. A menu to pick from, not recipes: nothing there has
         been read or cooked.
       </p>
@@ -230,7 +230,7 @@ export default async function KitchenHome() {
               </div>
             )}
           </div>
-          <p className="quiet" style={{ marginTop: 2 }}>
+          <p className="lede" style={{ marginTop: 2 }}>
             Only dishes finished in this app. A shake or a tub of cottage cheese never passes
             through here, so treat this as a floor and not as the day&apos;s total.
             {proteinTarget?.measuredOn && ` Target computed by HealthOS from the ${proteinTarget.measuredOn} measurement.`}
@@ -305,7 +305,7 @@ export default async function KitchenHome() {
       {blocked.length > 0 && (
         <>
           <p className="sec">Off the list</p>
-          <p className="quiet" style={{ marginBottom: 8 }}>
+          <p className="lede" style={{ marginBottom: 8 }}>
             Named after something you do not have. Still openable, they are just not being offered.
           </p>
           {/* Off the list must never mean unreachable. Raised 2026-08-09: "now that it's off, I
@@ -327,7 +327,7 @@ export default async function KitchenHome() {
       {adapted.length > 0 && (
         <>
           <p className="sec">Changed from the original, so not offered</p>
-          <p className="quiet" style={{ marginBottom: 8 }}>
+          <p className="lede" style={{ marginBottom: 8 }}>
             These were scaled, or had an ingredient swapped, or got a different pan than the recipe
             says. That layer is where every problem has come from: one of these produced five wrong
             instructions in a single evening, and not one of them was a number the original gave. They
@@ -353,7 +353,7 @@ export default async function KitchenHome() {
       {unread.length > 0 && (
         <>
           <p className="sec">Not checked yet</p>
-          <p className="quiet" style={{ marginBottom: 8 }}>
+          <p className="lede" style={{ marginBottom: 8 }}>
             Nobody has read these the way you would read them. Open them if you like, but expect
             them to be wrong somewhere, because the one recipe that has been checked was wrong in
             eleven places.
