@@ -77,17 +77,35 @@
 }
 
 /* ---- blocks + exercises ---- */
-.gym .exgroup { margin-top: 30px; }
+/* ---- a block reads as a block ----
+   The boundary between two blocks was a 30px margin, and the boundary between two exercises inside
+   one was a 1px hairline. The hierarchy was upside down, which is what "four exercises at the same
+   level and they were sort of inside one" describes. A block now opens with the same full-ink rule
+   the rest of the site opens a section with; the hairline stays for the rows underneath it. */
+.gym .exgroup {
+  margin-top: 30px;
+  border-top: 1px solid var(--foreground);
+  padding-top: 13px;
+}
 .gym .exgroup-label {
   font-family: var(--font-mono);
-  font-size: 11px;
+  /* 12px / 0.13em is the site's label, agreed by twelve other rules. This was the last surface
+     still setting its own. */
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--muted-foreground);
   margin-bottom: 10px;
 }
 .gym .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+/* Where he is, and how much is left, on a page that is six screens long. Full ink, because it is
+   the one part of the label that is a value rather than a name. */
+.gym .exgroup-n {
+  color: var(--foreground);
+  margin-right: 9px;
+  letter-spacing: 0.06em;
+}
 
 /* How to run the block. The label alone said WHERE ("rack area") and never HOW, so a superset and
  * two straight exercises rendered identically. Sentence case on purpose: it is an instruction to
@@ -101,7 +119,9 @@
 
 /* A superset is one unit of work, so its exercises get a rule down the side tying them together.
  * Cheaper and quieter than a card, and it survives the monochrome palette. */
-.gym .exgroup.tied { border-left: 2px solid var(--border); padding-left: 13px; }
+/* The bracket holds the two exercises that share a rest window, and not the label above them:
+   wrapping the whole block made the label look like a parent of a nested thing. */
+.gym .exgroup.tied .exlist { border-left: 2px solid var(--border); padding-left: 13px; }
 
 .gym .ex { padding: 16px 0; border-top: 1px solid var(--border); }
 .gym .ex:first-child { border-top: 0; }
@@ -151,7 +171,8 @@
 .gym .set-row .done-toggle.on { background: var(--signal); border-color: var(--signal); }
 
 /* ---- swap picker ---- */
-.gym .swap-toggle {
+.gym .swap-toggle,
+.gym .swap-revert {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--muted-foreground);

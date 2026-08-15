@@ -7,7 +7,7 @@ import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } fr
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
-  DAY_ORDER, BUDGETS, budgetedBlocks, exType, parseTargetReps, restSeconds,
+  DAY_ORDER, BUDGETS, budgetedBlocks, exType, findExercise, parseTargetReps, restSeconds,
   effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
@@ -48,8 +48,19 @@ interface PendingWrite {
   body: unknown;
 }
 
+/* Where a swap chosen but not yet lifted is kept.
+ *
+ * The DB is the record of what he DID: a set logged under an alternative carries `swapped_from`, so
+ * the swap is recoverable from the log the moment one set lands. This holds the other half, the
+ * minute between picking an alternative and finishing the first set of it, which no server knows
+ * about. Per date, so yesterday's substitutions do not follow him into today. */
+const swapKey = (date: string) => `gym:swaps:${date}`;
+
 export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp }: Props) {
-  const [activeDay, setActiveDay] = useState<DayKey>(nextUp.nextDay);
+  /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
+   * has already advanced past today, so opening on it showed a different workout with every box
+   * empty. See the comment on NextUp.todayDay. */
+  const [activeDay, setActiveDay] = useState<DayKey>(nextUp.todayDay ?? nextUp.nextDay);
   const [budget, setBudget] = useState<number | null>(null);
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
@@ -104,7 +115,6 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
     } catch {
       return queue('offline');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Send everything queued. Each attempt re-queues itself on failure, so a partial flush leaves the
@@ -168,31 +178,50 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
     }
   }, [remaining, timer]);
 
-  // ---- load suggestions + hydrate today's already-logged sets, on day change ----
+  /* ---- rehydrate today's session ----
+   *
+   * Two things come back from the log, not one. The SETS, and the SWAPS that were in force when
+   * they were logged, which `swapped_from` has been recording all along and nothing ever read.
+   *
+   * Without the second half the first half is worse than useless. Sets are stored under the id of
+   * the exercise actually performed, so after a reload the page would show the ORIGINAL exercise
+   * with three empty boxes while the three sets he did sat in the database under a different id.
+   * His words, 2026-08-14: "it always came back to the default when I switch pages... I'm not
+   * really sure it's working well."
+   *
+   * Day only. Not `swaps`, not `budget`: this overwrites set values from the server, and re-running
+   * it while he is typing would clobber an entry that has not been saved yet. */
   useEffect(() => {
     let cancelled = false;
-    const exercises = blocks.flatMap((b) =>
-      b.exercises.filter((e) => e.log).map((e) => {
-        const eff = effOf(e);
-        return { id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff), increment: eff.increment };
-      }),
-    );
-    if (exercises.length) {
-      postJson('/gym/api/plan', { date, exercises })
-        .then((data) => {
-          if (cancelled) return;
-          const byId: typeof plan = {};
-          for (const ex of data.exercises || []) byId[ex.id] = { last: ex.last, suggestion: ex.suggestion };
-          setPlan((prev) => ({ ...prev, ...byId }));
-        })
-        .catch(() => {});
-    }
+
+    /* Anything picked on this device and not yet lifted. Read here rather than in an initial state,
+       because this component server-renders and localStorage does not exist there; applied through
+       the same promise as the server's answer, because setting state synchronously in an effect
+       cascades a render before paint. */
+    let local: Record<string, Alt> = {};
+    try {
+      const raw = localStorage.getItem(swapKey(date));
+      if (raw) local = JSON.parse(raw) as Record<string, Alt>;
+    } catch { /* private mode, a full disk: a lost swap is not worth breaking the page over */ }
+
+    /* Precedence, weakest first: this device's memory, then the log (what actually happened, and
+       the same answer on every device), then anything he has changed since the page opened. */
+    const applySwaps = (fromLog: Record<string, Alt>) => {
+      const merged = { ...local, ...fromLog };
+      if (!Object.keys(merged).length) return;
+      setSwaps((prev) => { const n = { ...merged, ...prev }; persistSwaps(n); return n; });
+    };
+
     postJson('/gym/api/session', { date })
       .then((data) => {
         if (cancelled || !data.sets) return;
+        const rows = data.sets as {
+          exercise_id: string; set_idx: number; weight: number | null; reps: number | null;
+          done: boolean; swapped_from: string | null;
+        }[];
         setSets((prev) => {
           const next = { ...prev };
-          for (const s of data.sets as { exercise_id: string; set_idx: number; weight: number | null; reps: number | null; done: boolean }[]) {
+          for (const s of rows) {
             const arr = (next[s.exercise_id] = next[s.exercise_id] ? [...next[s.exercise_id]!] : []);
             arr[s.set_idx - 1] = {
               weight: s.weight != null ? String(s.weight) : '',
@@ -203,17 +232,55 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
           }
           return next;
         });
+        const fromLog: Record<string, Alt> = {};
+        for (const s of rows) {
+          if (!s.swapped_from) continue;
+          const slot = findExercise(day, s.swapped_from);
+          const alt = slot?.alts?.find((a) => a.id === s.exercise_id);
+          if (alt) fromLog[s.swapped_from] = alt;
+        }
+        applySwaps(fromLog);
+      })
+      .catch(() => { if (!cancelled) applySwaps({}); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeDay]);
+
+  /* ---- suggestions, for whatever is on screen right now ----
+   *
+   * Separate from the hydrate above, and keyed on the EFFECTIVE exercise ids rather than the day.
+   * Sharing one effect meant a swap fetched nothing, so a swapped exercise rendered with no
+   * suggestion, no plate math and no warmup ramp: the three things that make the screen worth
+   * opening, missing on exactly the exercise he had just chosen deliberately. */
+  const planTargets = useMemo(
+    () => blocks.flatMap((b) => b.exercises.filter((e) => e.log).map((e) => {
+      const eff = effOf(e);
+      return { id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff), increment: eff.increment };
+    })),
+    [blocks, effOf],
+  );
+  const planKey = planTargets.map((t) => t.id).join(',');
+
+  useEffect(() => {
+    if (!planTargets.length) return;
+    let cancelled = false;
+    postJson('/gym/api/plan', { date, exercises: planTargets })
+      .then((data) => {
+        if (cancelled) return;
+        const byId: typeof plan = {};
+        for (const ex of data.exercises || []) byId[ex.id] = { last: ex.last, suggestion: ex.suggestion };
+        setPlan((prev) => ({ ...prev, ...byId }));
       })
       .catch(() => {});
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeDay]);
+  }, [planKey]);
 
   function getSet(effId: string, idx: number): SetEntry {
     return sets[effId]?.[idx] ?? { weight: '', reps: '', done: false };
   }
 
-  function updateSet(ex: Exercise, effId: string, idx: number, patch: Partial<SetEntry>) {
+  function updateSet(effId: string, idx: number, patch: Partial<SetEntry>) {
     setSets((prev) => {
       const arr = prev[effId] ? [...prev[effId]!] : [];
       arr[idx] = { ...getSet(effId, idx), ...patch };
@@ -221,36 +288,45 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
     });
   }
 
-  function autosave(ex: Exercise, effId: string, idx: number, entry: SetEntry) {
-    const p = plan[effId];
-    void write(`set:${date}:${effId}:${idx}`, '/gym/api/set', {
+  /* These take `eff`, the exercise he is ACTUALLY doing, and `slotId`, the position in the program
+   * it is filling. They never see the original Exercise, which is the point: every defect here so
+   * far has been `ex.name` written where `eff.name` was meant, and the two are only different after
+   * a swap, so it survives any test done without one. Today's log carries the proof:
+   * `exercise_id: box-jump` next to `exercise_name: "Broad Jump"`, a row that contradicts itself. */
+  function autosave(slotId: string, eff: Exercise, idx: number, entry: SetEntry) {
+    const p = plan[eff.id];
+    void write(`set:${date}:${eff.id}:${idx}`, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
-      exerciseId: effId, exerciseName: ex.name, setIdx: idx + 1,
+      exerciseId: eff.id, exerciseName: eff.name, setIdx: idx + 1,
       weight: entry.weight === '' ? null : Number(entry.weight),
       reps: entry.reps === '' ? null : Number(entry.reps),
       done: entry.done,
-      swappedFrom: swaps[ex.id] ? ex.id : null,
+      swappedFrom: swaps[slotId] ? slotId : null,
       suggW: p?.suggestion.weight ?? null,
       suggR: p?.suggestion.reps ?? null,
     });
   }
 
-  function toggleDone(ex: Exercise, effId: string, idx: number) {
-    const entry = { ...getSet(effId, idx), done: !getSet(effId, idx).done };
-    updateSet(ex, effId, idx, entry);
-    autosave(ex, effId, idx, entry);
-    if (entry.done) {
-      const secs = restSeconds(effOf(ex).rest);
-      startTimer(ex.name, secs);
-    }
+  function toggleDone(slotId: string, eff: Exercise, idx: number) {
+    const entry = { ...getSet(eff.id, idx), done: !getSet(eff.id, idx).done };
+    updateSet(eff.id, idx, entry);
+    autosave(slotId, eff, idx, entry);
+    if (entry.done) startTimer(eff.name, restSeconds(eff.rest));
+  }
+
+  function persistSwaps(next: Record<string, Alt>) {
+    try {
+      if (Object.keys(next).length) localStorage.setItem(swapKey(date), JSON.stringify(next));
+      else localStorage.removeItem(swapKey(date));
+    } catch { /* see the restore above */ }
   }
 
   function swapExercise(originalId: string, alt: Alt) {
-    setSwaps((prev) => ({ ...prev, [originalId]: alt }));
+    setSwaps((prev) => { const n = { ...prev, [originalId]: alt }; persistSwaps(n); return n; });
     setOpenAlts((prev) => { const n = new Set(prev); n.delete(originalId); return n; });
   }
   function revertSwap(originalId: string) {
-    setSwaps((prev) => { const n = { ...prev }; delete n[originalId]; return n; });
+    setSwaps((prev) => { const n = { ...prev }; delete n[originalId]; persistSwaps(n); return n; });
   }
   function toggleAltPicker(id: string) {
     setOpenAlts((prev) => {
@@ -382,10 +458,28 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         </details>
       )}
 
+      {/* A BLOCK, not a heading over some exercises.
+        *
+        * Silvio, after training on 2026-08-14: "the layout was confusing because there are like
+        * four exercises at the same level and they were sort of inside one." Measured, he was
+        * describing an inverted hierarchy: the boundary between two blocks was nothing at all
+        * (a 30px margin and an 11px grey label) while the boundary between two exercises INSIDE a
+        * block was a visible hairline. So seven exercises read as one flat list, and the left
+        * bracket that only some blocks carry was the only structure on screen, which is what read
+        * as "inside one".
+        *
+        * Now the block opens with the full-ink rule the rest of the site opens a section with, and
+        * carries its position, so at any point on a long scroll he can see which of how many he is
+        * in. The bracket wraps the EXERCISES rather than the whole block, so it groups the two
+        * things that are actually tied instead of swallowing the label as well. */}
       {blocks.map((block, bi) => (
         <div className={`exgroup${block.type === 'superset' || block.type === 'pair' ? ' tied' : ''}`} key={bi}>
-          <div className="exgroup-label">{block.label} <span className="tag">{block.tag}</span></div>
+          <div className="exgroup-label">
+            <span className="exgroup-n tnum">{bi + 1}/{blocks.length}</span>
+            {block.label} <span className="tag">{block.tag}</span>
+          </div>
           {howToRun(block) && <div className="exgroup-how">{howToRun(block)}</div>}
+          <div className="exlist">
           {block.exercises.map((ex) => {
             const swap = swaps[ex.id];
             const eff = effOf(ex);
@@ -394,11 +488,18 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
             const targetW = p?.suggestion.weight ?? null;
             const ramp = block.type === 'main' && targetW != null ? warmupRamp(targetW) : null;
             return (
-              <div className="ex" key={ex.id}>
+              /* The slot in the program and the exercise actually filling it. They differ only
+                 after a swap, which is exactly when everything here has gone wrong before, and the
+                 interaction harness has no other way to see an id. See scripts/probe-gym.js. */
+              <div className="ex" key={ex.id} data-slot={ex.id} data-eff={eff.id}>
                 <div className="ex-name">{eff.name}</div>
                 <div className="ex-meta">{eff.sets}×{eff.reps} · {eff.rest} rest</div>
                 <div className="ex-cue">{eff.cue}</div>
-                {swap && <div className="swapped-note">Swapped from {ex.name} · <button className="swap-toggle" onClick={() => revertSwap(ex.id)}>revert</button></div>}
+                {/* `swap-revert`, not `swap-toggle`. Both controls sat on a swapped card wearing the same class,
+                     and the revert link renders first, so "the swap control" resolved to the wrong one: an
+                     interaction test aiming at the alternatives list reverted the swap instead. Two different
+                     actions should not answer to the same name. */}
+                {swap && <div className="swapped-note">Swapped from {ex.name} · <button className="swap-revert" onClick={() => revertSwap(ex.id)}>revert</button></div>}
 
                 {showPlate && targetW != null && (
                   <div className="ex-sub">{plateMath(targetW)}</div>
@@ -423,19 +524,19 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
                             type="number" inputMode="decimal" placeholder={eff.bodyweight ? 'BW' : 'lb'}
                             value={entry.weight}
                             disabled={!!eff.bodyweight}
-                            onChange={(e) => updateSet(ex, eff.id, i, { weight: e.target.value })}
-                            onBlur={() => autosave(ex, eff.id, i, getSet(eff.id, i))}
+                            onChange={(e) => updateSet(eff.id, i, { weight: e.target.value })}
+                            onBlur={() => autosave(ex.id, eff, i, getSet(eff.id, i))}
                           />
                           <input
                             type="number" inputMode="decimal" placeholder={eff.timed ? 's' : 'reps'}
                             value={entry.reps}
-                            onChange={(e) => updateSet(ex, eff.id, i, { reps: e.target.value })}
-                            onBlur={() => autosave(ex, eff.id, i, getSet(eff.id, i))}
+                            onChange={(e) => updateSet(eff.id, i, { reps: e.target.value })}
+                            onBlur={() => autosave(ex.id, eff, i, getSet(eff.id, i))}
                           />
                           <button
                             type="button" aria-label="mark set done"
                             className={`done-toggle${entry.done ? ' on' : ''}`}
-                            onClick={() => toggleDone(ex, eff.id, i)}
+                            onClick={() => toggleDone(ex.id, eff, i)}
                           />
                         </div>
                       );
@@ -463,6 +564,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
               </div>
             );
           })}
+          </div>
         </div>
       ))}
 

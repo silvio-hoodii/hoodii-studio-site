@@ -131,6 +131,13 @@ harmless, and PSN is not surfaced on the hub.
 - Production deploys from `main`.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
   All four, before any push.
+- **Touching `/gym`? Run `scripts/probe-gym.js` as well.** The four gates are static: they all passed
+  on a build whose swap control silently reset on every page load, whose logged sets then became
+  invisible, whose write recorded one exercise's id next to another's name, and which opened on the
+  wrong day the moment the first set of a session landed. Silvio found all of that by training with
+  it. The probe drives the real interactions in a real browser and stubs every write, so nothing
+  reaches his log. Usage is in the file's header. It is the only test on this repo that presses a
+  button.
 - **The lockfile check is not optional and `pnpm build` cannot substitute for it.** On 2026-08-09 a
   dep was removed by editing `package.json` directly instead of running `pnpm remove`. Every local
   command passed, because `node_modules` was already correct and install never re-ran. Vercel

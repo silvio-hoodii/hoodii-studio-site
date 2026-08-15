@@ -1,5 +1,5 @@
 import 'server-only';
-import { getLastTrainingRow, getTrainingDates } from './db';
+import { getLastTrainingRow, getSessionDay, getTrainingDates } from './db';
 import { DAY_ORDER } from './program-shared';
 import type { DayKey } from './types';
 
@@ -19,6 +19,15 @@ export interface NextUp {
   nextDay: DayKey;
   streak: number;
   restNudge: boolean;
+  /** The day already recorded against today, if there is one.
+   *
+   * `nextDay` is the answer to "what should I train next", and the hub asks exactly that. It is the
+   * wrong answer to "what am I looking at", because the moment the first set of a session lands,
+   * `getLastTrainingRow` returns TODAY and the cycle advances past it: reloading /gym mid-workout
+   * opened the FOLLOWING day, with different exercises and every box empty, and the session he was
+   * halfway through looked like it had never happened. Reported as the app "behaving a little bit
+   * weird" on 2026-08-14 after a real session. Two questions, two fields. */
+  todayDay: DayKey | null;
 }
 
 /** Rolling "what's next": dropped weekday-locking, train any day, rest = days you didn't.
@@ -55,5 +64,7 @@ export async function computeNextUp(today: string): Promise<NextUp> {
     if (daysSince != null && daysSince > 1) streak = 0; // currently resting
   }
 
-  return { today, lastDay, lastDate, daysSince, nextDay, streak, restNudge: streak >= 5 };
+  const todayDay = (await getSessionDay(today)) as DayKey | null;
+
+  return { today, lastDay, lastDate, daysSince, nextDay, streak, restNudge: streak >= 5, todayDay };
 }

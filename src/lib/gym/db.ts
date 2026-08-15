@@ -135,7 +135,7 @@ export async function finishSession(opts: { date: string; day?: string | null })
 /** A date's logged sets (with done + suggestion) to rehydrate an in-progress session on another device. */
 export async function getSessionForHydrate(date: string) {
   return sql`
-    select exercise_id, set_idx, weight, reps, done, suggested_weight, suggested_reps
+    select exercise_id, set_idx, weight, reps, done, suggested_weight, suggested_reps, swapped_from
     from gym_set where date = ${date} order by exercise_id, set_idx
   `;
 }
