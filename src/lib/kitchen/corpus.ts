@@ -181,13 +181,31 @@ export async function findCandidates(filters: Filters = {}) {
   /* FACETS, counted over everything BEFORE filtering, so a chip never claims a count the filter then
    * contradicts. `uses` is limited to things he actually has: offering "filter by pork" when there is
    * no pork in the kitchen is the app wasting his time. */
+  /* COUNTED OVER COOKABLE DISHES, not over all 2,586. Changed 2026-08-16, and the reason is the
+   * whole point of the chips. Silvio, looking at a page listing 135 dishes he can cook: "why is it
+   * not possible to pick one, like five options?"
+   *
+   * Counted over everything, the eight chips came out butter, eggs, frozen veg, garlic, spice rack,
+   * stock, tinned tomatoes, yellow onions. **Not one protein.** Garlic wins that race because garlic
+   * is in everything, which is exactly why filtering by it tells him nothing, and meanwhile the 5 kg
+   * of ground beef, the chicken breast, the drumsticks and the tilapia — the things a dinner is
+   * actually built around — never got a chip at all. The most abundant ingredient in a corpus is the
+   * least useful thing to filter by.
+   *
+   * Over cookable dishes the order changes to garlic, eggs (41), butter, green onions, yellow onions,
+   * soy, parsley, spice rack, CHICKEN BREAST (19), tinned tomatoes, grape tomatoes, pasta. Twelve
+   * rather than eight, because the ninth was the first one that answered "what do I do with the
+   * chicken". */
   const usesCount = new Map<string, number>();
-  for (const c of all) for (const id of c.usesIds) usesCount.set(id, (usesCount.get(id) ?? 0) + 1);
+  for (const c of all) {
+    if (c.score.missing.length > 0) continue;
+    for (const id of c.usesIds) usesCount.set(id, (usesCount.get(id) ?? 0) + 1);
+  }
   const usesFacets = [...usesCount.entries()]
     .filter(([id]) => available.has(id))
     .map(([id, count]) => ({ id, name: nameOf(stock, id), count }))
     .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
+    .slice(0, 12);
 
   const cuisineCount = new Map<string, number>();
   for (const c of all) if (c.meal.area) cuisineCount.set(c.meal.area, (cuisineCount.get(c.meal.area) ?? 0) + 1);

@@ -70,13 +70,22 @@ export function FilterBar({
       </div>
 
       {usesFacets.length > 0 && (
-        <div className="chiprow" role="group" aria-label="Filter by an ingredient you have">
-          <span className="chiplabel">Uses</span>
+        <div className="chiprow" role="group" aria-label="Show dishes you can cook with one thing you have">
+          {/* "Ready with", not "Uses", and the chip pins `max` to 0 when nothing is chosen yet.
+              The count on the chip is dishes he can cook RIGHT NOW with that ingredient, so the
+              filter has to return that same set or the chip is lying: tapping "chicken breast 19"
+              and landing on 400 rows, most of them missing something, is the contradiction this
+              file's header already warns about. An explicit "up to 1 missing" is carried through
+              untouched, because that is him asking a different question on purpose. */}
+          <span className="chiplabel">Ready with</span>
           {usesFacets.map((u) => (
             <Link
               key={u.id}
               className={`chip ${filters.uses === u.id ? 'on' : ''}`}
-              href={href(filters, { uses: filters.uses === u.id ? undefined : u.id })}
+              href={href(filters, {
+                uses: filters.uses === u.id ? undefined : u.id,
+                max: filters.max ?? 0,
+              })}
             >
               {u.name} <i>{u.count}</i>
             </Link>
