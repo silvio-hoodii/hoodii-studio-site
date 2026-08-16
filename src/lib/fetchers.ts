@@ -15,6 +15,11 @@ export type SpotifyPayload = {
   title?: string
   artist?: string
   url?: string
+  /* When the track finished, ISO, and ONLY set on the recently-played branch. A "last played" with
+   * no age is the same defect the hub's body weight had before 2026-08-14: a true fact presented
+   * with no way to tell whether it is hours or a fortnight old. Absent while isPlaying is true,
+   * because "now" is the answer. */
+  playedAt?: string
 }
 
 export type PsnGame = {
@@ -79,13 +84,15 @@ export async function fetchSpotify(): Promise<SpotifyPayload> {
     const recentRes = await fetch(SPOTIFY_RECENTLY_PLAYED, { headers, cache: 'no-store' })
     if (recentRes.status === 200) {
       const data = await recentRes.json()
-      const track = data.items?.[0]?.track
+      const item = data.items?.[0]
+      const track = item?.track
       if (track) {
         return {
           isPlaying: false,
           title: track.name,
           artist: track.artists.map((a: { name: string }) => a.name).join(', '),
           url: track.external_urls.spotify,
+          playedAt: item.played_at,
         }
       }
     }

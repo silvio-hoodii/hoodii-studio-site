@@ -3,7 +3,7 @@ import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { today } from '@/lib/day';
-import { daysAgoText } from '@/lib/format';
+import { daysAgoText, timeAgo } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import SiteFooter from '@/components/SiteFooter';
@@ -281,12 +281,16 @@ const WORK: Row[] = [
   {
     label: 'The Moment',
     line: 'Storefront, checkout and admin for a bakery here in Calgary',
-    /* Not `.live`. --signal means a value that is true right now, and 154 is a number somebody
-       typed: The Moment's orders live in a different project's Supabase that this site has no
-       connection to, so the count is a snapshot and drifts silently from the day it was written.
-       Dated instead, which is the honest version of the same sentence. Wiring it to the real store
-       would make it live again, and until that happens it must not wear the colour that says so. */
-    sub: <><span className="tnum">154</span> real orders had gone through it by August 2026</>,
+    /* This said "154 real orders had gone through it", meaning the storefront, and it was false.
+       The 154 records in themoment/sales/exports/orders-raw.json split by Square `source.name` into
+       135 with no source (sold in person at markets), 17 hand-made Payment Links, and 2 from the
+       app. The online store has taken one real order since opening on 2 July 2026. The bad number
+       came from CareerOS/strategy/project-evidence-ledger.md, which counted the bakery's Square
+       ACCOUNT and called it throughput; that line is fixed at source.
+
+       Still not `.live`. --signal means a value that is true right now, and this is a snapshot from
+       a store this site has no connection to. Dated instead. */
+    sub: <><span className="tnum">154</span> orders through July 2026, nearly all taken in person at markets. The online store has taken one</>,
     /* themomentyyc.com, NOT themoment.ca. The .ca is an unrelated business and it is wrong in
      * several repo files, which is how it kept getting shipped. Confirmed 2026-08-11 by reading the
      * title: .ca returns "The Moment | Discover Insight Today". A 200 is not a confirmation. */
@@ -296,7 +300,10 @@ const WORK: Row[] = [
     label: 'Versatile',
     /* "eight worksheets the staff actually fill in" was the first draft and it is exactly the claim
      * the evidence ledger forbids: adoption is not something we have measured, only deployment. */
-    line: 'Marketing site and the internal operations hub for a Calgary accounting firm. A tax season mapped into five phases and sixteen steps, plus eight process templates',
+    /* Four and fifteen, not five and sixteen. The bigger pair describes a static HTML hub retired in
+     * 2026; the live one at hub.versatilecpa.ca runs s1 to s15 across four phases and says
+     * "Fifteen steps, one place" on its own page. Same stale ledger line as the row above. */
+    line: 'Marketing site and the internal operations hub for a Calgary accounting firm. A tax season mapped into four phases and fifteen steps, plus eight process templates',
     sub: 'the site is public, the hub sits behind the firm’s own login',
     href: '/work/versatile',
   },
@@ -435,10 +442,32 @@ export default async function Home() {
       {/* The same row /curio and /music carry, minus the link home, because this is home. Brixel was
         * in here once and should not have been: this row is how to reach me, a company is not a
         * contact method, and it already has its own line under In production. */}
+      {/* Guarded on `title`, not on `isPlaying`. It used to be both, which meant that on a quiet
+        * evening `fetchSpotify` fetched a perfectly good last-played track, returned it, and this
+        * line threw it away. The API offers both and the fetcher already asked for both.
+        *
+        * `title` is also the right guard for the trap in AGENTS.md: fetchSpotify returns
+        * `{ isPlaying: false }` for a dead refresh token AND for nobody listening, and the two are
+        * indistinguishable from that flag alone. A dead token yields no title, so it still renders
+        * nothing. Do not add a fallback that gives this a title when the token is gone: that would
+        * turn a silent 180-day expiry into a footer that looks fine.
+        *
+        * The equaliser is the only thing here wearing --signal, and it appears only while something
+        * is actually playing, which is what that colour is reserved for. A last-played track is a
+        * fact about the past and gets a plain label and its own age instead. */}
       <SiteFooter home={false}>
-        {spotify.isPlaying && spotify.title && (
+        {spotify.title && (
           <span className="np">
-            <span className="eq" aria-hidden="true"><i /><i /><i /></span>
+            {spotify.isPlaying ? (
+              <>
+                <span className="eq" aria-hidden="true"><i /><i /><i /></span>
+                <span className="npk">Now playing</span>
+              </>
+            ) : (
+              <span className="npk">
+                Last played{spotify.playedAt ? `, ${timeAgo(spotify.playedAt)}` : ''}
+              </span>
+            )}
             {spotify.url ? (
               <a href={spotify.url} target="_blank" rel="noreferrer">
                 {spotify.title}{spotify.artist ? ` · ${spotify.artist}` : ''}

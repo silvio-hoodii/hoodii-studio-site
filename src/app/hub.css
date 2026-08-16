@@ -148,7 +148,31 @@
    The row itself is `.site-footer` in globals.css now, shared with /curio and /music. What stays
    here is the one thing only this page has: the strip that says what is playing. */
 
-.idx .np { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; }
+/* `flex-wrap` and `max-width` are the label's fault: the strip used to be an equaliser plus a track
+   and now carries up to "LAST PLAYED, 14 DAYS AGO" in front of it. A long track and artist could
+   push past the column, and the one thing this site's layout must never do is scroll the body
+   sideways on a phone. It wraps onto a second line instead. */
+.idx .np {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  max-width: 100%;
+}
+
+/* Says which of the two states this is. `npk` and not the `k` used elsewhere on the site, because
+   a shared class name is an API and this one is only ever a footer label: reusing `k` would put a
+   third caller on a selector two other surfaces already style. The equaliser carries "now playing"
+   on its own, but the words are what he asked for and they are the only thing that distinguishes a
+   quiet evening from a live one at a glance. */
+.idx .npk {
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
 
 .idx .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 9px; }
 .idx .eq i { width: 2px; background: var(--signal); animation: eq 1.1s ease-in-out infinite; }
