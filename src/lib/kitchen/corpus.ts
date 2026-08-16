@@ -188,8 +188,8 @@ export async function findCandidates(filters: Filters = {}) {
    * Counted over everything, the eight chips came out butter, eggs, frozen veg, garlic, spice rack,
    * stock, tinned tomatoes, yellow onions. **Not one protein.** Garlic wins that race because garlic
    * is in everything, which is exactly why filtering by it tells him nothing, and meanwhile the 5 kg
-   * of ground beef, the chicken breast, the drumsticks and the tilapia — the things a dinner is
-   * actually built around — never got a chip at all. The most abundant ingredient in a corpus is the
+   * of ground beef, the chicken breast, the drumsticks and the tilapia, which are the things a
+   * dinner is built around, never got a chip at all. The most abundant ingredient in a corpus is the
    * least useful thing to filter by.
    *
    * Over cookable dishes the order changes to garlic, eggs (41), butter, green onions, yellow onions,
