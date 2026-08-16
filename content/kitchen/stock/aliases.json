@@ -769,6 +769,29 @@
       "peppercorn blend",
       "mixed peppercorns",
       "four peppercorn blend"
+    ],
+    "oregano": [
+      "oregano",
+      "dried oregano",
+      "oregano leaves",
+      "dried oregano leaves"
+    ],
+    "chilipowder": [
+      "chilli powder",
+      "chili powder",
+      "mild chilli powder",
+      "hot chilli powder",
+      "mild chili powder"
+    ],
+    "sesameseeds": [
+      "sesame seeds",
+      "toasted sesame seeds",
+      "white sesame seeds",
+      "sesame seed"
+    ],
+    "cinnamon": [
+      "cinnamon",
+      "ground cinnamon"
     ]
   },
   "_knownGaps": {
@@ -783,7 +806,6 @@
     "enoki mushrooms": "Stringy, stays in strands. Cremini is meatier and not equivalent, though it works.",
     "wine": "No red or white wine in the kitchen. Blocks a lot of braises and many ragu recipes.",
     "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
-    "sesame seeds": "Toasted sesame seeds, wanted as a garnish by most Korean recipes.",
     "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
     "potatoes": "NARROWED 2026-08-16. Nine RED potatoes arrived 08-14 and are now the stock item `potatoes_red`, so plain 'potatoes', 'new potatoes' and 'baby potatoes' are no longer a gap. Red-skinned potatoes are waxy: good boiled, roasted, in a stew or a salad. What is still missing is a FLOURY potato, so mash, baked potatoes and chips still do not work.",
     "fresh coriander": "Also sold as cilantro. None in the kitchen. Parsley looks similar and tastes nothing like it, so it is not a swap.",
@@ -802,14 +824,14 @@
     "lamb": "No lamb.",
     "worcestershire sauce": "No Worcestershire sauce.",
     "feta": "No feta. This row is the whole SOFT/FRESH CHEESE bucket, not only feta: ricotta, mascarpone, cream cheese, goat's cheese, halloumi and blue cheese are all in it and none is here. The three cheeses in this kitchen are parmesan, mozzarella and Monterey Jack, and none of them behaves like any of those. Read the ingredient line, not this row's name, when a dish is rejected for it.",
-    "warm spices": "No cinnamon, nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala or curry powder. The rack has paprika, smoked paprika, cumin, garlic powder, onion powder, Italian seasoning, Cajun and chilli flakes, and that is all of it.",
+    "warm spices": "NARROWED 2026-08-16. Ground CINNAMON arrived (Great Value, 60 g) and is the stock item `cinnamon`. Still missing: nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala and curry powder.",
     "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
     "ham": "No ham or bacon.",
     "lemongrass": "No lemongrass.",
     "tinned fish": "NARROWED 2026-08-16. Three tins of flaked white tuna arrived 08-14 (two Ocean's albacore 184 g, one PC 170 g) and are now the stock item `tuna`. Still missing: tinned salmon, sardines, anchovies and mackerel. The only other fish here is frozen tilapia.",
     "brown sugar": "No brown sugar, only white.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
-    "fresh soft herbs": "No thyme, sage, rosemary, tarragon, oregano, bay or chives, fresh OR dried, and no mixed-herb blend. The only herbs here are fresh parsley, fresh dill, fresh basil and the Italian seasoning blend. This row and the staples list used to disagree, and the staple was winning.",
+    "fresh soft herbs": "NARROWED 2026-08-16. Dried OREGANO arrived (Great Value, 32 g) and is the stock item `oregano`. Still missing, fresh or dried: thyme, sage, rosemary, tarragon, bay, chives and any mixed-herb blend. The herbs here are fresh parsley, fresh dill, fresh basil, dried oregano and the Italian seasoning blend.",
     "green vegetables": "No broccoli, asparagus, green beans, cauliflower, pak choi, spring greens, kale or spinach. The vegetables here are onion, carrot, peppers, sweet potato and whatever is in the frozen mixed bag.",
     "avocado": "No avocado.",
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
@@ -822,7 +844,7 @@
     "spirits": "No brandy, rum, whisky or liqueur.",
     "root veg": "No parsnip, swede, turnip, celeriac, fennel, radish or beetroot.",
     "steak": "No steak cuts. The beef here is 4.5 kg of raw mince in the freezer plus one bag of browned mince. Mince is not a swap for a steak in anything where the cut is the point, and the sliced sirloin from the August roast is finished.",
-    "other spices": "Not on the rack: chilli powder, cayenne, five spice, white pepper, mustard powder, all-purpose or taco or steak seasoning. The rack is paprika, smoked paprika, cumin, garlic powder, garlic salt, onion powder, Italian seasoning, Cajun, crushed red pepper and crushed jalapeno, and that is all.",
+    "other spices": "NARROWED 2026-08-16. CHILI POWDER arrived (Great Value, 150 g) and is the stock item `chilipowder`. Note it is the North American BLEND, ground chilli plus cumin, oregano and garlic, not pure ground chilli. Still not on the rack: cayenne, five spice, white pepper, mustard powder, and the all-purpose/taco/steak seasonings.",
     "whole chicken": "No whole chicken or bone-in chicken pieces beyond the thighs and wings in the freezer. The frozen ground chicken is mince and is not a roast.",
     "poultry mince": "No ground turkey. The only poultry mince here is frozen ground chicken.",
     "condiments and jams": "No chutney, jam, marmalade, molasses, hoisin-style sweet sauces or barbecue sauce. Ketchup, mayonnaise, pesto, sriracha, relish and the two vinaigrettes ARE here.",
@@ -1238,6 +1260,11 @@
       "hot sauce",
       "chilli sauce",
       "chili sauce"
+    ],
+    "cinnamon": [
+      "cinnamon stick",
+      "cinnamon sticks",
+      "cinnamon quill"
     ]
   },
   "_gapAliases": {
@@ -1306,12 +1333,6 @@
       "half and half",
       "creme fraiche",
       "sour cream"
-    ],
-    "sesame seeds": [
-      "sesame seeds",
-      "toasted sesame seeds",
-      "white sesame seeds",
-      "sesame seed"
     ],
     "pickled ginger": [
       "pickled ginger",
@@ -1499,9 +1520,7 @@
       "paneer"
     ],
     "warm spices": [
-      "cinnamon",
       "cinnamon stick",
-      "ground cinnamon",
       "nutmeg",
       "allspice",
       "cardamom",
@@ -1588,7 +1607,6 @@
       "sage leaves",
       "rosemary",
       "tarragon",
-      "oregano leaves",
       "marjoram",
       "chervil",
       "bay leaf fresh",
@@ -1597,8 +1615,6 @@
       "snipped chives",
       "fresh rosemary",
       "dried rosemary",
-      "dried oregano",
-      "oregano",
       "dried thyme",
       "dried basil",
       "bay leaf",
@@ -1778,8 +1794,6 @@
       "beef suet"
     ],
     "other spices": [
-      "chilli powder",
-      "chili powder",
       "cayenne pepper",
       "cayenne",
       "chinese five spice",
@@ -1880,10 +1894,6 @@
     "tinned tomatoes": {
       "have": "tomatoes_grape",
       "note": "680 g of fresh grape tomatoes, bought 08-12 on clearance. Halve them and cook them down about 10 minutes longer than a tin needs, since they carry more water and no acid correction. Brighter and less deep than tinned."
-    },
-    "sesame seeds": {
-      "have": "sesameoil",
-      "note": "No seeds, but the toasted sesame oil carries the same flavour. A few drops at the end instead of a sprinkle. You lose the crunch, which is most of the point of a garnish, so this is a poor swap for texture and a fine one for taste."
     },
     "brown sugar": {
       "have": "sugar",

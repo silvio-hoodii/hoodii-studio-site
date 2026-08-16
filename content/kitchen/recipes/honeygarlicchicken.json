@@ -1,7 +1,7 @@
 {
   "id": "honeygarlicchicken",
   "name": "Honey Garlic Chicken",
-  "build": "2026-08-16b",
+  "build": "2026-08-16c",
   "form": "dish",
   "meal": [
     "dinner"
@@ -400,7 +400,7 @@
       ],
       "minutes": 1,
       "heat": null,
-      "look": "REMOVE FROM THE HEAT means physically lift the pan off the burner, not just turn the burner down. An induction hob stops heating the instant you lift the pan, and the sauce will keep thickening on residual heat if you leave it sitting there.\n\nSLICED GREEN ONIONS: cut them into thin rings across the stalk, greens and whites both, and scatter them over the top. They go on RAW and they are not cooked at any point in this recipe.\n\nYour green onions were bought on 4 August and were marked low on the 12th, so look at them first. Limp is fine, slimy or brown at the cut end is not. If they are gone, the dish loses a garnish and nothing else: it is finished without them.\n\nRICE is not in her recipe and no amount for it has been invented here. If you want it, the rice cooker takes cupfuls of its own cup with water to the matching line on the pot, and starting it before step 1 lands it at the same time as the chicken."
+      "look": "REMOVE FROM THE HEAT means physically lift the pan off the burner, not just turn the burner down. An induction hob stops heating the instant you lift the pan, and the sauce will keep thickening on residual heat if you leave it sitting there.\n\nSLICED GREEN ONIONS: cut them into thin rings across the stalk, greens and whites both, and scatter them over the top. They go on RAW and they are not cooked at any point in this recipe.\n\nYou bought a fresh bunch on 2026-08-16, whites and roots intact, so there is no need to check these.\n\nRICE is not in her recipe and no amount for it has been invented here. If you want it, the rice cooker takes cupfuls of its own cup with water to the matching line on the pot, and starting it before step 1 lands it at the same time as the chicken."
     }
   ],
   "deviations": [
@@ -415,7 +415,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": false,
-    "readAt": "2026-08-16b",
+    "readAt": "2026-08-16c",
     "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the vinegar: she says rice, the cupboard has distilled white, and he made that call himself after being told the difference. Everything else is her page, word for word.",
     "sources": [
       {
@@ -425,6 +425,6 @@
         "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
       }
     ],
-    "readHash": "7358d835"
+    "readHash": "e4bba56a"
   }
 }
