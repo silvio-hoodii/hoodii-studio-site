@@ -212,8 +212,21 @@ function validate(r, file) {
      *
      * The protection is unchanged where it matters. An agent writing "as needed" into its own prose
      * still fails, because the phrase will not be in sourceText. The exemption cannot be reached by
-     * inventing, only by quoting. */
-    const quoted = r.provenance?.tier === 'sourced' ? String(s.sourceText || '') : '';
+     * inventing, only by quoting.
+     *
+     * AMENDED 2026-08-16: the gate used to also require tier `sourced`, and that part was wrong on
+     * its own terms. What makes quoting safe is that the phrase is in BOTH sourceText and text, not
+     * what the tier says. The tier gate meant an `adapted` recipe was punished for its source's own
+     * words: Honey Garlic Chicken is Budget Bytes verbatim except for one tablespoon of vinegar he
+     * has not ruled on yet, and her step 4 says "saute for 30-60 seconds until fragrant". Banned
+     * cue, her sentence, annotated in `look`, and the only way through was to rewrite her, which is
+     * the thing this whole file exists to stop.
+     *
+     * The hole that gate was accidentally covering is now closed properly, below: the sourceText
+     * checks (present, and every number in `text` traceable to it) run on ANY recipe that carries
+     * sourceText, not only on `sourced` ones. So an agent still cannot reach this exemption by
+     * pasting its own sentence into sourceText and calling it a quote. */
+    const quoted = String(s.sourceText || '');
     for (const b of BANNED_CUE) {
       if (!b.re.test(blob)) continue;
       const fromSource = b.re.test(quoted) && b.re.test(String(s.text || ''));
@@ -387,7 +400,18 @@ function validate(r, file) {
     } else if (!primary[0].url) {
       fail(id, 'sourcing', 'the primary source has no url', 'It has to be checkable against the original.');
     }
+  }
 
+  /* THE SOURCETEXT CHECKS RUN ON ANY RECIPE THAT CARRIES SOURCETEXT, not only on `sourced` ones.
+   * Widened 2026-08-16 alongside the banned-cue exemption above, and it is what makes that widening
+   * safe: sourceText now buys a quoting exemption, so sourceText itself has to be checked wherever
+   * it appears. A recipe one field away from `sourced` was previously getting its quotes ignored and
+   * its numbers unchecked at the same time, which is the wrong half of both rules.
+   *
+   * A recipe with no sourceText anywhere is untouched by this: it is `authored`, it is not offered,
+   * and it says so on its own card. */
+  const anySourceText = r.steps.some((s) => String(s.sourceText || '').trim());
+  if (r.provenance?.tier === 'sourced' || anySourceText) {
     for (const s of r.steps) {
       const src = (s.sourceText || '').trim();
       if (!src) {

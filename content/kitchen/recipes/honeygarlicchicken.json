@@ -1,0 +1,429 @@
+{
+  "id": "honeygarlicchicken",
+  "name": "Honey Garlic Chicken",
+  "build": "2026-08-16a",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "You picked this one on 2026-08-16 off a list of thirty-three. It is Budget Bytes' recipe, unchanged, at her scale of four. Seven steps, one pan, twenty-eight minutes, and every ingredient was checked against your stock line by line before it was written. The sauce is stirred together cold in a bowl before anything is turned on, which is the part that makes it hard to get wrong: by the time the pan is hot there is nothing left to measure.",
+  "source": "https://www.budgetbytes.com/honey-garlic-chicken/",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2024/08/Honey-Garlic-Chicken-Plated.jpg",
+  "time": {
+    "activeMin": 28,
+    "totalMin": 28,
+    "note": "her numbers: 10 prep, 18 cook. The per-step timers split those two figures across the steps and are the only times here that are not hers"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 26,
+    "proteinMath": "ESTIMATE, and the scale replaces it the moment you use it. She says 2 boneless skinless chicken breasts and gives no weight. Two typical breasts are 450 to 500 g raw. Raw boneless skinless chicken breast is about 23 g of protein per 100 g, so 450 g is about 104 g and 500 g is about 115 g for the whole pan. Across her 4 portions that is 26 to 29 g each, and 26 is the lower figure because a number that cannot overclaim is the right one to print. WEIGH THE TWO BREASTS before they go in and this stops being an estimate. The sauce contributes nothing worth counting: honey, soy, vinegar, sriracha, sesame oil and a tablespoon of cornstarch are sugar, salt and fat. If you eat half the pan rather than a quarter, double it."
+  },
+  "ingredients": [
+    {
+      "ref": "chicken",
+      "stock": "chickenbreast",
+      "display": "boneless, skinless chicken breasts",
+      "qty": 2,
+      "unit": "each",
+      "prep": "thawed. Weigh them: two typical breasts are 450 to 500 g and that is what the protein figure rests on",
+      "defining": true
+    },
+    {
+      "ref": "honey",
+      "display": "honey",
+      "qty": 0.3333,
+      "unit": "cup",
+      "staple": true,
+      "defining": true
+    },
+    {
+      "ref": "soy",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 2,
+      "unit": "tbsp",
+      "defining": true
+    },
+    {
+      "ref": "vinegar",
+      "stock": "vinegar",
+      "display": "rice vinegar",
+      "qty": 1,
+      "unit": "tbsp",
+      "standsIn": "She says RICE vinegar. What is in the cupboard is DISTILLED WHITE vinegar, 5% acidity, and nobody has ever asked whether there is rice vinegar too. White is sharper and has none of rice vinegar's slight sweetness. Against a third of a cup of honey one tablespoon of it will be a little sharper and nothing else, but it is a different product and the swap is yours to make, not the app's.",
+      "defining": false
+    },
+    {
+      "ref": "sriracha",
+      "stock": "sriracha",
+      "display": "sriracha",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "sesameoil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 2,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "cornstarch",
+      "stock": "cornstarch",
+      "display": "cornstarch",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": true
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "pepper",
+      "display": "black pepper",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "garlicpowder",
+      "display": "garlic powder",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "flour",
+      "display": "all-purpose flour",
+      "qty": 2,
+      "unit": "tbsp",
+      "staple": true,
+      "defining": true
+    },
+    {
+      "ref": "oil",
+      "display": "olive oil",
+      "qty": 3,
+      "unit": "tbsp",
+      "staple": true,
+      "prep": "goes in as 2 tbsp for the first batch of chicken and 1 tbsp for the second, which is her split",
+      "defining": false
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter",
+      "qty": 2,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "garlic",
+      "stock": "garlic",
+      "display": "cloves of garlic",
+      "qty": 4,
+      "unit": "clove",
+      "prep": "minced, meaning chopped as small as you can get them",
+      "defining": true
+    },
+    {
+      "ref": "greenonion",
+      "stock": "greenonion",
+      "display": "green onions",
+      "qty": 2,
+      "unit": "stalk",
+      "prep": "sliced. They go on raw at the very end, so they need no cooking",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "pan_stainless_large",
+    "stovetop",
+    "bowlset",
+    "whisk",
+    "mixingbowl_large",
+    "measuringcups",
+    "measuringspoons",
+    "scale_digital",
+    "thermometer",
+    "knife_sharp",
+    "cuttingboard",
+    "woodenspoon",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Start by making the sauce. Combine the honey, soy sauce, rice vinegar, sriracha, toasted sesame oil, and cornstarch together in a small bowl. Set the sauce aside.",
+      "sourceText": "Start by making the sauce. Combine the honey, soy sauce, rice vinegar, sriracha, toasted sesame oil, and cornstarch together in a small bowl. Set the sauce aside.",
+      "uses": [
+        {
+          "ref": "honey",
+          "amount": 0.3333,
+          "unit": "cup"
+        },
+        {
+          "ref": "soy",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "vinegar",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "sriracha",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "sesameoil",
+          "amount": 2,
+          "unit": "tsp"
+        },
+        {
+          "ref": "cornstarch",
+          "amount": 1,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "look": "NOTHING IS HOT YET. Every measurement in the whole recipe happens in this step and the next one, and then you never measure anything again. That is why she starts here.\n\nA SMALL BOWL means one from the prep-bowl set, not a mixing bowl. The whole sauce is about half a cup.\n\nMEASURING THE HONEY: oil the measuring cup first, or measure the sesame oil in it before the honey. Honey clings to a dry cup and you lose a spoonful of it to the sides.\n\nCOMBINE means stir until it is one liquid. Use the whisk. THE ONE THING THAT MATTERS HERE: cornstarch sinks and hides on the bottom of the bowl. Lift the bowl up and look underneath before you stop. Any white grit still sitting down there will not thicken anything later, and thickening is the whole job of the sauce.\n\nCornstarch has to go into COLD liquid like this. Tipped straight into a hot pan it turns into lumps you cannot stir out.\n\nSET ASIDE means leave the bowl on the counter next to the hob. You come back to it in step 5, and it will have separated by then, which is expected."
+    },
+    {
+      "n": 2,
+      "text": "Cut the chicken breasts into small 1/2 inch sized pieces. Season with salt, black pepper and garlic powder. Then toss the chicken pieces in the flour until each piece is evenly coated.",
+      "sourceText": "Cut the chicken breasts into small 1/2 inch sized pieces. Season with salt, black pepper and garlic powder. Then toss the chicken pieces in the flour until each piece is evenly coated.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 2,
+          "unit": "each"
+        },
+        {
+          "ref": "salt",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "garlicpowder",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "flour",
+          "amount": 2,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "mixingbowl_large",
+        "measuringspoons",
+        "scale_digital"
+      ],
+      "minutes": 7,
+      "heat": null,
+      "look": "WEIGH THE TWO BREASTS FIRST, before you cut them. It takes five seconds and it turns the protein number on this card from an estimate into a fact.\n\nHALF AN INCH is about the width of your little fingernail. Cubes, not strips. They do not have to be neat, they have to be roughly the same size as each other, because same size means they all finish cooking at the same moment.\n\nSEASON WITH means sprinkle it over the cut pieces from a height, so it lands spread out rather than in one patch. All three go on before the flour.\n\nTOSS means put the pieces in a bowl, add the flour, and turn them over and over with your hands or the spoon until you cannot see wet chicken anywhere. EVENLY COATED is her test and it is a look: no pink patches showing through, every face dusty white. Two tablespoons is not much flour, so it is a thin dusting and not a batter, and that is correct.\n\nThat thin flour coat does two jobs. It is what browns in the pan, and it is what makes the sauce thick and glossy later when it washes off the chicken into the liquid.\n\nRAW CHICKEN: wash your hands, the board and the knife with soap before they touch anything else, and do not put the cooked chicken back onto this board or this plate."
+    },
+    {
+      "n": 3,
+      "text": "Heat a large skillet over medium-high heat and add 2 Tbsp of oil. Swirl to coat the surface of the skillet. Once the skillet is hot, add half of the chicken and cook until browned on all sides and cooked through. Remove the chicken from the skillet onto a separate plate and set aside. Add the remaining 1 Tbsp of oil and repeat with cooking the 2nd batch of chicken until cooked through. Set all of the chicken aside.",
+      "sourceText": "Heat a large skillet over medium-high heat and add 2 Tbsp of oil. Swirl to coat the surface of the skillet. Once the skillet is hot, add half of the chicken and cook until browned on all sides and cooked through. Remove the chicken from the skillet onto a separate plate and set aside. Add the remaining 1 Tbsp of oil and repeat with cooking the 2nd batch of chicken until cooked through. Set all of the chicken aside.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "oil",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon",
+        "thermometer",
+        "plates",
+        "measuringspoons"
+      ],
+      "minutes": 12,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Hot enough that a piece of chicken hisses loudly the moment it touches the pan and keeps hissing while it cooks. A pan that stays quiet is not hot enough, and quiet is what makes floured chicken glue itself to the metal instead of browning. The oil should look thin and run like water when you tilt the pan, and it should not be sending up smoke.",
+        "recheck": "TWICE. Once about a minute after the first batch goes in, because cold chicken drops the pan temperature and it needs to come back up. And again BEFORE the second batch goes in, which is the moment this kind of recipe goes wrong: the pan is hotter than it was at the start and there is loose flour sitting in the oil from the first batch. Look at the oil. If it is smoking, or the loose bits in it have gone dark brown, bring the heat down until the smoking stops and let it settle for thirty seconds before the chicken goes in. Her instruction is to REPEAT the first batch, and repeating it means putting the chicken into the same pan she described, not a hotter one."
+      },
+      "doneness": {
+        "test": "Take the biggest piece out onto a plate and push the instant-read thermometer into the middle of it. 165F is cooked through. Under that, it goes back in. Do this for both batches; the second batch is faster than the first because the pan is already hot.",
+        "kind": "probe"
+      },
+      "look": "A LARGE SKILLET is a frying pan, and here it means the LARGE STAINLESS one, not the non-stick. Two reasons, both from her own recipe: browning is the one job stainless does better, and step 5 tells you to scrape browned bits off the bottom, which is a thing only stainless makes.\n\nSTAINLESS STICKS IF YOU RUSH IT, so do this first and it will not. Heat the pan EMPTY AND DRY for two to three minutes. Flick in a few drops of water. If they hiss and vanish, it is not ready. If a bead forms and rolls around the pan like mercury, it is ready. THEN add the oil, swirl, then add the chicken. Do the water test on the dry pan only, never once the oil is in, because water hitting hot oil spits back at you.\n\nBROWNED, and this is the word you asked about after the last dish. There are three different things it can mean and she means the first one:\n  COOKED, which is what this dish wants. The outside goes from raw and pale to golden and dry-looking, and the thermometer says 165F.\n  SEARED is a deep, almost mahogany crust from a very hot dry pan. Not this dish.\n  BURNT is black and smells acrid. That is what happened to the piccata. If any piece goes black, take it out and throw it away rather than letting it into the sauce.\n\nHALF OF THE CHICKEN AT A TIME is not optional and it is the single most important line in the step. All of it at once drops the pan temperature so far that the chicken releases water and boils in it, grey, with no browning and a sauce that will not thicken. Two batches, and the pieces should sit in one layer with a gap between them.\n\nA SEPARATE PLATE means a clean one, not the plate or board the raw chicken came off.\n\nTHE 12 MINUTE TIMER ON THIS STEP IS A PLANNING NUMBER, not an instruction. It is her 18 minutes of cook time split across the steps, and she gives no time for the chicken at all. The thermometer decides when this step is over. If the timer goes and the chicken is at temperature, it is done early.\n\nDO NOT PRY A PIECE THAT RESISTS. Floured chicken releases itself from stainless when the underside has browned. If it is stuck, it is not ready; give it another thirty seconds and try again. Prying is what tears the coating off and leaves it in the pan."
+    },
+    {
+      "n": 4,
+      "text": "In the same skillet add the butter and lower the heat down to medium-low heat. Add the minced garlic cloves and saute for 30-60 seconds until fragrant.",
+      "sourceText": "In the same skillet add the butter and lower the heat down to medium-low heat. Add the minced garlic cloves and saute for 30-60 seconds until fragrant.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "garlic",
+          "amount": 4,
+          "unit": "clove"
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "minutes": 1,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The butter melts within a few seconds and foams gently around the edges. It must not go brown and it must not smoke. If the butter browns the instant it lands, the pan is too hot from the chicken: take the pan off the heat entirely for thirty seconds, then put it back.",
+        "recheck": "Right now, before the garlic goes in. The pan has just been at chicken-browning heat and it does not cool down on its own the moment you turn the dial. This is an induction hob, so the burner changes in seconds but the metal does not."
+      },
+      "doneness": {
+        "test": "The garlic goes from raw chalky white to pale gold at the edges, and the butter is foaming around it. Pale gold, not brown. Set a timer for 30 seconds and stand at the pan for all of it.",
+        "kind": "look"
+      },
+      "look": "STAND HERE AND DO NOT WALK AWAY. This is the fastest step in the recipe and it is the one with no margin: garlic goes from raw to burnt in about fifteen seconds, and burnt garlic is bitter through the whole sauce with no way to fix it.\n\nSAUTE means cook in fat while keeping it moving. Push the garlic around the pan with the wooden spoon the entire time; do not let it sit still.\n\nUNTIL FRAGRANT is her phrase. This app normally refuses smell cues, because they ask you to recognise something you have not smelled before, and it stays here only because it is her sentence. Ignore it and use the look instead: pale gold at the edges, inside her 30 to 60 seconds. If you want the smell too, it is sweet and nutty rather than sharp, and you will notice it happen.\n\nIN THE SAME SKILLET means do not wash the pan. The browned bits stuck to the bottom are flavour and step 5 lifts them into the sauce."
+    },
+    {
+      "n": 5,
+      "text": "Next give the sauce another brief stir, then pour the sauce into the skillet with the garlic. Stir the sauce and scrape up any browned bits that are stuck at the bottom of the skillet. Let the sauce simmer for about 2 minutes to allow the cornstarch to activate and thicken the sauce.",
+      "sourceText": "Next give the sauce another brief stir, then pour the sauce into the skillet with the garlic. Stir the sauce and scrape up any browned bits that are stuck at the bottom of the skillet. Let the sauce simmer for about 2 minutes to allow the cornstarch to activate and thicken the sauce.",
+      "uses": [
+        {
+          "ref": "cornstarch",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Bubbles breaking across the whole surface of the sauce, not only around the edge, and not a violent rolling boil. The sauce has to actually bubble or the cornstarch will never thicken it.",
+        "recheck": "Straight after the sauce goes in. It is cold and it will silence the pan for a moment, so give it thirty seconds and look again before deciding the heat is wrong."
+      },
+      "doneness": {
+        "test": "Drag the spoon across the bottom of the pan and watch the bare stripe of metal it leaves. While the sauce is still thin it floods back instantly. When it has thickened the stripe stays open for about a second before closing. That, not the clock, is the endpoint.",
+        "kind": "look"
+      },
+      "look": "GIVE THE SAUCE ANOTHER BRIEF STIR is not a throwaway line. The cornstarch has been settling on the bottom of that bowl since step 1 and it is all sitting there now. Stir it back in or you will pour clear liquid into the pan and leave the thickener behind in the bowl.\n\nBROWNED BITS stuck to the bottom are called fond, and they are cooked chicken and flour, not burnt-on damage. They are where most of the flavour of this sauce comes from. The liquid loosens them: push the spoon along the metal and they lift off in a few seconds and dissolve.\n\nIf any of them are BLACK rather than brown, that is the piccata failure and it will make the whole sauce bitter. Fish them out with the spoon before the sauce goes in.\n\nSIMMER means gently bubbling, not boiling hard.\n\nABOUT 2 MINUTES is her time and the spoon test above is what actually decides it. It may be quicker: how fast cornstarch thickens depends on how hot the pan is, and yours has just cooked two batches of chicken."
+    },
+    {
+      "n": 6,
+      "text": "Now add the cooked chicken back to the skillet and stir with the sauce until all of the pieces are evenly coated. Continue to cook for 1-2 more minutes to allow the chicken to heat through.",
+      "sourceText": "Now add the cooked chicken back to the skillet and stir with the sauce until all of the pieces are evenly coated. Continue to cook for 1-2 more minutes to allow the chicken to heat through.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Still gently bubbling around the chicken, the same as the step before. If it stops bubbling entirely the pan has gone too cool; if the sauce starts spitting and going sticky on the pan sides it is too hot.",
+        "recheck": "Just after the chicken goes back in. A plateful of cooled chicken drops the temperature again."
+      },
+      "doneness": {
+        "test": "Every piece is glossy and dark with sauce, with no pale floury patches left showing. The sauce clings to the chicken and coats the back of the spoon rather than running off it like water.",
+        "kind": "look"
+      },
+      "look": "ALL THE JUICE ON THE PLATE goes in too. Tip it in with the chicken; it is chicken juice and it belongs in the sauce.\n\nEVENLY COATED is her test and it is the one in the doneness box above.\n\n1 TO 2 MINUTES is only long enough to warm the chicken back up. It was already cooked through in step 3 and the thermometer said so. Leaving it in longer past that dries it out, so this is a step to end early rather than late.\n\nIf the sauce has gone too thick to coat by now, that is normal on a hot pan: a tablespoon of water stirred in loosens it straight back. Nothing else needs changing."
+    },
+    {
+      "n": 7,
+      "text": "Remove the skillet from the heat, top with sliced green onions, and enjoy!",
+      "sourceText": "Remove the skillet from the heat, top with sliced green onions, and enjoy!",
+      "uses": [
+        {
+          "ref": "greenonion",
+          "amount": 2,
+          "unit": "stalk"
+        }
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "plates"
+      ],
+      "minutes": 1,
+      "heat": null,
+      "look": "REMOVE FROM THE HEAT means physically lift the pan off the burner, not just turn the burner down. An induction hob stops heating the instant you lift the pan, and the sauce will keep thickening on residual heat if you leave it sitting there.\n\nSLICED GREEN ONIONS: cut them into thin rings across the stalk, greens and whites both, and scatter them over the top. They go on RAW and they are not cooked at any point in this recipe.\n\nYour green onions were bought on 4 August and were marked low on the 12th, so look at them first. Limp is fine, slimy or brown at the cut end is not. If they are gone, the dish loses a garnish and nothing else: it is finished without them.\n\nRICE is not in her recipe and no amount for it has been invented here. If you want it, the rice cooker takes cupfuls of its own cup with water to the matching line on the pot, and starting it before step 1 lands it at the same time as the chicken."
+    }
+  ],
+  "deviations": [
+    {
+      "what": "Distilled white vinegar instead of the rice vinegar she calls for, 1 tbsp",
+      "why": "PENDING HIS ANSWER, and until he gives one this recipe is `adapted` and is not offered. The cupboard has a 1 L bottle of Great Value distilled white vinegar at 5% acidity, photographed 2026-08-01. Nobody has ever asked whether there is rice vinegar as well, so this is an unknown rather than a known gap.",
+      "consequence": "Rice vinegar is about 4% acid and slightly sweet. Distilled white is 5% and has no sweetness at all, so the sauce comes out a little sharper. Against a third of a cup of honey the difference is small, and this is one tablespoon in a sauce for four.",
+      "decidedBy": "agent"
+    }
+  ],
+  "provenance": {
+    "tier": "adapted",
+    "cooked": false,
+    "readAt": "2026-08-16a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. TIER IS `adapted` FOR ONE REASON ONLY: the rice vinegar. Everything else is verbatim. One word from him about the vinegar moves this to `sourced`.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/honey-garlic-chicken/",
+        "primary": true,
+        "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
+      }
+    ],
+    "readHash": "aa473259"
+  }
+}

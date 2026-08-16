@@ -81,7 +81,16 @@ export interface Recipe {
   form: 'dish' | 'technique' | 'method' | 'assembly' | 'macro';
   meal: string[];
   why?: string;
-  source?: { name?: string; url?: string; why?: string };
+  source?: string | { name?: string; url?: string; why?: string };
+  /** A photograph of the finished dish, taken FROM THE SOURCE PAGE, hotlinked rather than copied.
+   *
+   *  Added 2026-08-16 on his ask: "make sure there is a link and a picture, maybe for reference, on
+   *  how simple it is". A recipe card made of instructions alone gives him no way to answer "is this
+   *  the kind of thing I want to eat" or "does that look like what I just made". Nobody in this
+   *  project takes photographs, so the honest picture is the publisher's own, credited by the link
+   *  that sits beside it. Optional: Maangchi's page carries no og:image and that renders as no
+   *  photo rather than as a broken box. */
+  image?: string;
   /** Where this recipe departs from its source.
    *
    *  `decidedBy` is load-bearing as of 2026-08-12. 'silvio' means he chose it after being told the

@@ -1,6 +1,7 @@
 {
   "id": "mongolian",
   "name": "Mongolian Ground Beef",
+  "image": "https://www.saltandlavender.com/wp-content/uploads/2025/04/mongolian-ground-beef-4.jpg",
   "build": "2026-08-14a",
   "form": "dish",
   "meal": [

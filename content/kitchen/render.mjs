@@ -105,7 +105,16 @@ const wrap = (t, width, indent = '') =>
     return lines;
   }, []).map((l) => indent + l).join('\n');
 
-function print(r, { look = false } = {}) {
+/* `look` DEFAULTS ON, changed 2026-08-16. This file's own header says it exists because "nothing has
+ * ever run against the thing he actually reads", and then it hid a field the cook screen always
+ * shows: `CookClient.tsx` renders every `look` as a "Why" box on the step, unconditionally. So the
+ * default output was not what the cook screen renders, which is the one promise this file makes.
+ *
+ * Caught on Honey Garlic Chicken, where the whole beginner layer lives in `look`: which pan, the
+ * water-bead test for stainless, what "browned" means (the question he asked in cook_log 17), and
+ * why the chicken goes in in two batches. None of it appeared in a read that was supposed to be the
+ * final check before he cooks. `--no-why` hides it if a diff is ever easier to read without. */
+function print(r, { look = true } = {}) {
   const { prep, steps } = renderRecipe(r);
   const W = 92;
 
@@ -127,7 +136,18 @@ function print(r, { look = false } = {}) {
     if (s.heat) console.log('\nHEAT\n' + wrap(s.heat, W - 2, '  ') + (s.recheck ? `\n  Check again: ${s.recheck}` : ''));
     if (s.doneness) console.log('\nHOW YOU KNOW IT IS READY\n' + wrap(s.doneness, W - 2, '  '));
     if (s.warn) console.log('\nCAREFUL\n' + wrap(s.warn, W - 2, '  '));
-    if (look && s.look) console.log('\nWHY\n' + wrap(s.look, W - 2, '  '));
+    /* Paragraph breaks survive, because they survive on the real screen: `kitchen.css` sets
+     * `white-space: pre-line` on `.box.look`, so a blank line in the data is a blank line in front
+     * of him. Wrapping the field as one blob turned five labelled paragraphs into a wall of text
+     * here and nowhere else, which is the same class of mismatch as hiding the field entirely. */
+    if (look && s.look) {
+      console.log('\nWHY');
+      const paras = String(s.look).split(/\n{2,}/);
+      paras.forEach((para, i) => {
+        console.log(wrap(para.replace(/\n/g, ' '), W - 2, '  '));
+        if (i < paras.length - 1) console.log('');
+      });
+    }
   }
   console.log('\n' + '='.repeat(W));
 }
@@ -172,7 +192,7 @@ if (isEntry && id) {
   if (process.argv.includes('--hash')) {
     console.log(renderHash(recipe));
   } else {
-    print(recipe, { look: process.argv.includes('--why') });
+    print(recipe, { look: !process.argv.includes('--no-why') });
     console.log(`\nrendered-text hash: ${renderHash(recipe)}`);
     console.log('Read every step above, fix what that finds, then set provenance.readHash to this.');
   }

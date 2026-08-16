@@ -188,12 +188,45 @@ export default function CookClient({
     return <Debrief recipe={recipe} consumable={consumable} />;
   }
 
+  /* One source, resolved once. `source` is a bare url on newer recipes and an object on older ones,
+   * and the primary entry in `provenance.sources` is the canonical answer where both exist. */
+  const primarySource = recipe.provenance?.sources?.find((s) => s.url);
+  const sourceUrl = primarySource?.url
+    ?? (typeof recipe.source === 'string' ? recipe.source : recipe.source?.url)
+    ?? null;
+  const sourceName = primarySource?.name
+    ?? (typeof recipe.source === 'object' ? recipe.source?.name : null)
+    ?? (sourceUrl ? new URL(sourceUrl).hostname.replace(/^www\./, '') : null);
+
   /* ---------------- prep screen ---------------- */
   if (i < 0) {
     return (
       <div className="wrap">
         <Link href="/kitchen" className="eyebrow" style={{ textDecoration: 'none' }}>← Kitchen</Link>
         <h1>{recipe.name}</h1>
+
+        {/* THE SOURCE, ON THE FIRST SCREEN, WITH A PHOTOGRAPH. Asked for on 2026-08-16: "make sure
+            there is a link and a picture, maybe for reference, on how simple it is."
+            It was already here and it was three taps away, folded inside a collapsed chip labelled
+            "sourced" underneath the ingredients. A recipe whose whole claim is that it follows one
+            published page verbatim has to show which page, before he starts, not behind a summary.
+            The photo is the publisher's own, hotlinked and credited by the link next to it: nobody
+            here takes photographs, and a card with no picture cannot answer "is that what mine is
+            supposed to look like". A recipe with no image renders the link alone. */}
+        {sourceUrl && (
+          <a className="srcref" href={sourceUrl} target="_blank" rel="noreferrer">
+            {recipe.image && (
+              /* Plain img, not next/image: these are external hosts and the Hobby image-optimiser
+                 allowance is not worth spending on a page only he opens. */
+              <img className="srcshot" src={recipe.image} alt={`${recipe.name} as ${sourceName ?? 'the source'} photographed it`} loading="lazy" />
+            )}
+            <span className="srcmeta">
+              <b>{sourceName ?? 'the original recipe'}</b>
+              <span>Every instruction on this card is theirs. Tap to read the original.</span>
+            </span>
+          </a>
+        )}
+
         {recipe.why && <p className="lede">{recipe.why}</p>}
 
         <div className="meta" style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 14, color: 'var(--ink-faint)' }}>
@@ -440,8 +473,17 @@ export default function CookClient({
           know how much". */}
       {rows.length > 0 && (
         <div className="amounts">
-          {rows.map((r) => (
-            <div className="row" key={r.ref}>
+          {/* KEYED BY POSITION, NOT BY REF. Found 2026-08-16 by walking the real screens of Honey
+              Garlic Chicken in a browser. `ref` is not unique within a step: the split-must-sum rule
+              in RECIPE-SCHEMA.md exists precisely so one step can declare the same ingredient twice,
+              and her step 3 does, with 2 tbsp of oil for the first batch of chicken and 1 tbsp for
+              the second. Two React children with key "oil" meant React reconciled them wrongly on
+              the way to step 4, and a stale "2 tbsp olive oil" row rode along onto the garlic step,
+              where no oil is used at all. `render.mjs` printed step 4 correctly, so the CLI and the
+              screen disagreed, which is the one thing that file exists to prevent.
+              Mongolian never hit it because its splits are across steps rather than inside one. */}
+          {rows.map((r, k) => (
+            <div className="row" key={`${r.ref}:${k}`}>
               <span className="qty">{r.qty}</span>
               <span className="nm">{r.display}</span>
             </div>
