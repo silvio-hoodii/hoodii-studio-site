@@ -59,6 +59,22 @@
 
 .idx .facts dd { margin: 0; }
 
+/* 44px, the tap floor the rest of this site keeps. Measured on the live pages the night they were
+   published and found at 19px: the "Live at" links are the only real CONTROLS on these pages and
+   they were the smallest thing on them. The 2026-08-15 sweep that fixed eight of these missed
+   /work/* because those pages were noindex and linked from nowhere at the time, which is a good
+   reminder that "we measured every control on every page" means the pages that existed.
+
+   An inline link inside a sentence is deliberately NOT given this treatment. Growing it to 44px
+   opens a hole in the paragraph it sits in, and a link a reader is already reading around is a
+   different thing from a control they are aiming at. The kitchen page's "The app is here" is the
+   only one of those. */
+.idx .facts dd a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 @media (max-width: 460px) {
   .idx .facts > div { grid-template-columns: 1fr; gap: 3px; }
 }
