@@ -609,12 +609,10 @@
       "tapioca starch"
     ],
     "vinegar": [
-      "rice vinegar",
-      "rice wine vinegar",
-      "white wine vinegar",
-      "apple cider vinegar",
-      "cider vinegar",
-      "balsamic vinegar"
+      "white vinegar",
+      "distilled vinegar",
+      "distilled white vinegar",
+      "plain vinegar"
     ],
     "stock": [
       "chicken broth",
@@ -830,7 +828,9 @@
     "condiments and jams": "No chutney, jam, marmalade, molasses, hoisin-style sweet sauces or barbecue sauce. Ketchup, mayonnaise, pesto, sriracha, relish and the two vinaigrettes ARE here.",
     "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto.",
     "cheddar": "No cheddar. Monterey Jack is here and melts much the same way, so it stands in wherever the cheese is melted into something. It is milder and less tangy, so anywhere the cheddar flavour is the point of the dish it will taste flat.",
-    "sun dried tomatoes": "No sun-dried tomatoes, in oil or dry. Added 2026-08-16 after the 796 ml tin of DICED tomatoes was being credited for them, which put a pesto grilled cheese and a rice-noodle dish on the ready list. They are a different product entirely: chewy, concentrated and salty rather than wet, and nothing here stands in for them."
+    "sun dried tomatoes": "No sun-dried tomatoes, in oil or dry. Added 2026-08-16 after the 796 ml tin of DICED tomatoes was being credited for them, which put a pesto grilled cheese and a rice-noodle dish on the ready list. They are a different product entirely: chewy, concentrated and salty rather than wet, and nothing here stands in for them.",
+    "rice vinegar": "No rice vinegar. Split off the `vinegar` row 2026-08-16: that row is a 1 L bottle of DISTILLED WHITE vinegar and it was claiming rice, rice wine, white wine, cider and balsamic vinegar as well, five different products reported as a plain HAVE. Rice vinegar is about 4% and slightly sweet; distilled white is 5% and has no sweetness at all, which is a real difference in a small sauce.",
+    "wine and cider vinegar": "No white wine, red wine, cider or balsamic vinegar. The two vinaigrettes in the fridge are dressings, not vinegar. Split off the `vinegar` row 2026-08-16 for the same reason as rice vinegar."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -1855,6 +1855,20 @@
       "sundried tomato",
       "semi dried tomatoes",
       "sun blush tomatoes"
+    ],
+    "rice vinegar": [
+      "rice vinegar",
+      "rice wine vinegar",
+      "seasoned rice vinegar"
+    ],
+    "wine and cider vinegar": [
+      "white wine vinegar",
+      "red wine vinegar",
+      "apple cider vinegar",
+      "cider vinegar",
+      "balsamic vinegar",
+      "sherry vinegar",
+      "malt vinegar"
     ]
   },
   "_substitutes": {
@@ -1886,6 +1900,14 @@
     "cheddar": {
       "have": "montereyjack",
       "note": "Monterey Jack, same weight. It melts like a mild cheddar and browns a little paler, so a gratin or a toastie works as written. What you lose is the tang: cheddar is sharp and Jack is not, so in anything where the cheese is the flavour rather than the texture, expect it to taste mild. Adding a little grated parmesan brings some of the sharpness back."
+    },
+    "rice vinegar": {
+      "have": "vinegar",
+      "note": "You have distilled white vinegar, not rice. It is stronger and has none of rice vinegar's slight sweetness, so use a little less than the recipe says and taste before adding the rest. In a sauce carrying honey or sugar the difference is small; in a dressing or a quick pickle it is the whole flavour."
+    },
+    "wine and cider vinegar": {
+      "have": "vinegar",
+      "note": "Distilled white vinegar stands in for cider or wine vinegar at a pinch: same job, sharper and flatter, none of the fruit. Fine in a cooked sauce, poor anywhere it is tasted raw."
     }
   },
   "_notAnIngredient": {
