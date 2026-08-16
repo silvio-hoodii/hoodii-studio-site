@@ -829,7 +829,8 @@
     "poultry mince": "No ground turkey. The only poultry mince here is frozen ground chicken.",
     "condiments and jams": "No chutney, jam, marmalade, molasses, hoisin-style sweet sauces or barbecue sauce. Ketchup, mayonnaise, pesto, sriracha, relish and the two vinaigrettes ARE here.",
     "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto.",
-    "cheddar": "No cheddar. Monterey Jack is here and melts much the same way, so it stands in wherever the cheese is melted into something. It is milder and less tangy, so anywhere the cheddar flavour is the point of the dish it will taste flat."
+    "cheddar": "No cheddar. Monterey Jack is here and melts much the same way, so it stands in wherever the cheese is melted into something. It is milder and less tangy, so anywhere the cheddar flavour is the point of the dish it will taste flat.",
+    "sun dried tomatoes": "No sun-dried tomatoes, in oil or dry. Added 2026-08-16 after the 796 ml tin of DICED tomatoes was being credited for them, which put a pesto grilled cheese and a rice-noodle dish on the ready list. They are a different product entirely: chewy, concentrated and salty rather than wet, and nothing here stands in for them."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -1205,6 +1206,38 @@
       "dill relish",
       "pickle juice",
       "dried dill"
+    ],
+    "tomatoes_canned": [
+      "sun dried",
+      "sundried",
+      "sun-dried",
+      "semi dried",
+      "semi-dried",
+      "paste",
+      "puree",
+      "pureed",
+      "passata",
+      "crushed",
+      "ketchup",
+      "salsa",
+      "soup",
+      "juice",
+      "chutney",
+      "relish",
+      "fire roasted",
+      "stewed",
+      "whole peeled",
+      "cherry tomatoes in"
+    ],
+    "tomatosauce": [
+      "pasta sauce",
+      "pizza sauce",
+      "tomato paste",
+      "soy sauce",
+      "fish sauce",
+      "hot sauce",
+      "chilli sauce",
+      "chili sauce"
     ]
   },
   "_gapAliases": {
@@ -1813,6 +1846,15 @@
       "colby jack",
       "cheddar jack",
       "shredded cheddar"
+    ],
+    "sun dried tomatoes": [
+      "sun dried tomatoes",
+      "sundried tomatoes",
+      "sun-dried tomatoes",
+      "sun dried tomato",
+      "sundried tomato",
+      "semi dried tomatoes",
+      "sun blush tomatoes"
     ]
   },
   "_substitutes": {
