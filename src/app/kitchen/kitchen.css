@@ -739,3 +739,35 @@
 .kos .srcmeta span { font-size: 13px; color: var(--muted-foreground); }
 .kos .srcref:hover .srcmeta b,
 .kos .srcref:focus-visible .srcmeta b { text-decoration: underline; }
+
+/* The step's own equipment, named as HIS things rather than the source's word for them. */
+.kos .stepgear {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+.kos .stepgear .k {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-right: 8px;
+}
+
+/* A fold, for everything that is not an answer to "what can I cook". Reachable, not unavoidable. */
+.kos details.fold { margin: 14px 0 0; border-top: 1px solid var(--border); padding-top: 12px; }
+.kos details.fold > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  list-style-position: outside;
+  padding: 2px 0;
+}
+.kos details.fold[open] > summary { margin-bottom: 10px; color: var(--foreground); }
+.kos details.fold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }

@@ -32,6 +32,11 @@ function Verdict({ c }: { c: Candidate }) {
 
 function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
   const t = thumb(c.meal.image);
+  /* Straight to the cook card when one exists. /kitchen/want answers "what would this need", which
+     is the wrong screen for a dish already written out step by step. */
+  const href = c.cardId
+    ? `/kitchen/${c.cardId}`
+    : `/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`;
   const missing = c.score.missing.map((m) => (m.item ? label(m.item) : m.shown));
   return (
     <li className="mealrow">
@@ -44,7 +49,7 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
           alt="" rather than the dish name: with aria-hidden on the wrapper the name was announced
           nowhere at all, so it was carrying a promise it could not keep. The visible fallback when an
           image 404s is the empty tile plus the name in the row, which is what he actually sees. */}
-      <Link href={`/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`} tabIndex={-1} aria-hidden="true">
+      <Link href={href} tabIndex={-1} aria-hidden="true">
         {t
           ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
           : <div className="mealthumb" />}
@@ -54,7 +59,8 @@ function Card({ c, label }: { c: Candidate; label: (id: string) => string }) {
           {/* Leads INTO the app, not out of it. Until now the only interactive thing on a row was a
               link to the publisher, so "pick one and it gets turned into a card" had no gesture behind
               it anywhere on the page. The original recipe is still one tap further on. */}
-          <Link href={`/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`}><b>{c.meal.name}</b></Link>
+          <Link href={href}><b>{c.meal.name}</b></Link>
+          {c.cardId && <span className="v ok">card</span>}
           <Verdict c={c} />
         </div>
         <div className="mealmeta">{[c.meal.area, c.meal.category].filter(Boolean).join(' · ')}</div>

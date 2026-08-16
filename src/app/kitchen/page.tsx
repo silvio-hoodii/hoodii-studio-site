@@ -120,7 +120,21 @@ export default async function KitchenHome() {
   const unread = all.filter((c) => !isRead(c) && c.recipe.provenance?.tier !== 'adapted');
   const offered = rank(read);
   const blocked = read.filter((c) => c.offer.status === 'blocked');
-  const now = offered.filter((c) => c.offer.status === 'ready');
+  const readyAll = offered.filter((c) => c.offer.status === 'ready');
+  /* SPLIT, 2026-08-16. The five things at the top of this page were overnight oats, a smoothie, a
+   * protein shake, a yogurt bowl and frozen cottage cheese bites, under a heading reading
+   * "5 READY TO START" on a page titled "What you can cook right now". His words: "I don't think a
+   * smoothie needs a recipe. Protein shake also doesn't need a recipe... nowhere on the first page
+   * can I see what I can make."
+   *
+   * He is right, and the split is already in the data: `form` is `dish` for a thing you cook and
+   * `assembly` or `macro` for things you stir in a glass. They are offered only through the heat-free
+   * exemption in SOURCING.md, which was about honesty rather than about them being dinner. They stay
+   * reachable one tap down, because hiding a dish is a navigation bug. They just stop being the
+   * answer to "what can I cook". */
+  const NO_RECIPE_FORMS = new Set(['assembly', 'macro']);
+  const now = readyAll.filter((c) => !NO_RECIPE_FORMS.has(c.recipe.form));
+  const noRecipe = readyAll.filter((c) => NO_RECIPE_FORMS.has(c.recipe.form));
   /* Split on 2026-08-11. These used to share one heading, "With one small change", which reads as a
    * caveat and is wrong for a thaw: a bag of thin slices needing 20 minutes on the counter is not a
    * dish you have to change anything about. Two headings, each saying which thing it means. */
@@ -244,13 +258,20 @@ export default async function KitchenHome() {
           site and could not find the dish he had asked for that afternoon. A false negative in the
           loudest position on the page is worse than no status at all. */}
       {now.length === 0 && thawing.length === 0 && adapting.length === 0 && (
-        <p className="sec">nothing ready to start</p>
+        <>
+          <p className="sec">no cook card ready tonight</p>
+          <p className="lede">
+            A cook card is a recipe written out step by step and checked against this kitchen. There
+            are only a handful, on purpose. The menu below has thousands scored against the fridge:
+            pick one and it gets turned into a card.
+          </p>
+        </>
       )}
 
       {now.length > 0 && (
         <>
           <p className="sec">
-            <span className="live">{now.length}</span> ready to start
+            <span className="live">{now.length}</span> ready to cook
           </p>
           <div>{now.map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
         </>
@@ -302,91 +323,115 @@ export default async function KitchenHome() {
           different foods. Amounts belong on the ingredient row of a prep screen, where the number
           changes a decision. `counted` is still computed above for whoever wants it back. */}
 
-      {blocked.length > 0 && (
+      {/* EVERYTHING THAT IS NOT AN ANSWER TO "WHAT CAN I COOK", FOLDED AWAY. Rewritten 2026-08-16.
+          This was three open sections and a closing paragraph: "Off the list", "Changed from the
+          original, so not offered", "Not checked yet", listing 27 recipes he cannot cook, each with
+          its own paragraph of explanation, plus 120 words about the app's own past failures. His
+          words: "there's this first section, so I have to keep scrolling, then there's not the
+          list. I don't care what's off the list."
+
+          Every one of them stays reachable, because 2026-08-09 established that not offering a dish
+          is a ranking decision and hiding it is a navigation bug. Reachable is not the same as
+          unavoidable. One summary line, tap to open. */}
+      {(noRecipe.length > 0 || blocked.length > 0 || adapted.length > 0 || unread.length > 0) && (
         <>
-          <p className="sec">Off the list</p>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Named after something you do not have. Still openable, they are just not being offered.
-          </p>
-          {/* Off the list must never mean unreachable. Raised 2026-08-09: "now that it's off, I
-              can't even check what the recipe was." Not offering a dish is a ranking decision;
-              hiding it is a navigation bug. */}
-          <ul className="plainlist">
-            {blocked.map((c) => (
-              <li key={c.recipe.id}>
-                <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
-                <span> no {c.offer.missing.filter((m) => m.defining).map((m) => head(m.display)).join(', ')}</span>
-              </li>
-            ))}
-          </ul>
+          <hr className="divider" style={{ marginTop: 30 }} />
+
+          {noRecipe.length > 0 && (
+            <details className="fold">
+              <summary>No recipe really needed ({noRecipe.length})</summary>
+              <p className="lede" style={{ marginBottom: 8 }}>
+                Oats, a smoothie, a shake, a yogurt bowl. Nothing is heated and nothing can go wrong,
+                so they are here for the protein arithmetic rather than for the instructions.
+              </p>
+              <ul className="plainlist az">
+                {noRecipe.map((c) => (
+                  <li key={c.recipe.id}>
+                    <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                    {c.recipe.serves?.proteinPerUnit
+                      ? <span>{c.recipe.serves.proteinPerUnit} g</span>
+                      : null}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+
+          {(blocked.length > 0 || adapted.length > 0 || unread.length > 0) && (
+            <details className="fold">
+              <summary>
+                Everything else in here ({blocked.length + adapted.length + unread.length})
+              </summary>
+
+              {blocked.length > 0 && (
+                <>
+                  <p className="sec">Off the list</p>
+                  <p className="lede" style={{ marginBottom: 8 }}>
+                    Named after something you do not have.
+                  </p>
+                  <ul className="plainlist">
+                    {blocked.map((c) => (
+                      <li key={c.recipe.id}>
+                        <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                        <span> no {c.offer.missing.filter((m) => m.defining).map((m) => head(m.display)).join(', ')}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {adapted.length > 0 && (
+                <>
+                  <p className="sec">Changed from the original</p>
+                  <p className="lede" style={{ marginBottom: 8 }}>
+                    Scaled, or an ingredient swapped, or a different pan than the recipe says. That
+                    layer is where every failure has come from, so these are readable but not
+                    recommended.
+                  </p>
+                  <ul className="plainlist az">
+                    {[...adapted]
+                      .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
+                      .map((c) => (
+                        <li key={c.recipe.id}>
+                          <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                          {c.recipe.deviations?.length
+                            ? <span>{c.recipe.deviations.length} changed</span>
+                            : null}
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+
+              {unread.length > 0 && (
+                <>
+                  <p className="sec">Never checked</p>
+                  <p className="lede" style={{ marginBottom: 8 }}>
+                    Nobody has read these the way you would read them. Expect mistakes.
+                  </p>
+                  <ul className="plainlist az">
+                    {[...unread]
+                      .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
+                      .map((c) => (
+                        <li key={c.recipe.id}>
+                          <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+
+              <p className="quiet" style={{ marginTop: 16 }}>
+                <b>{read.length} of {recipes.length}</b> recipes are offered. A recipe is offered only
+                if it follows one published recipe with nothing altered: its scale, its pan, its
+                ingredients, its heat. Changing any of that is where every failure has come from, so
+                the checking was replaced with having less to check.
+              </p>
+            </details>
+          )}
         </>
       )}
 
-      {/* Changed from a published recipe, therefore not offered. This section exists so the reason is
-          on the screen rather than in a git commit. */}
-      {adapted.length > 0 && (
-        <>
-          <p className="sec">Changed from the original, so not offered</p>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            These were scaled, or had an ingredient swapped, or got a different pan than the recipe
-            says. That layer is where every problem has come from: one of these produced five wrong
-            instructions in a single evening, and not one of them was a number the original gave. They
-            are still here to read and still cookable. They are just not being recommended.
-          </p>
-          <ul className="plainlist az">
-            {[...adapted]
-              .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
-              .map((c) => (
-                <li key={c.recipe.id}>
-                  <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
-                  {c.recipe.deviations?.length
-                    ? <span> {c.recipe.deviations.length} changes</span>
-                    : null}
-                </li>
-              ))}
-          </ul>
-        </>
-      )}
-
-      {/* Not offered, still reachable. Raised 2026-08-09: "now that it's off, I can't even check
-          what the recipe was." */}
-      {unread.length > 0 && (
-        <>
-          <p className="sec">Not checked yet</p>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Nobody has read these the way you would read them. Open them if you like, but expect
-            them to be wrong somewhere, because the one recipe that has been checked was wrong in
-            eleven places.
-          </p>
-          <ul className="plainlist az">
-            {[...unread]
-              .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name))
-              .map((c) => (
-                <li key={c.recipe.id}>
-                  <Link href={`/kitchen/${c.recipe.id}`}>{c.recipe.name}</Link>
-                </li>
-              ))}
-          </ul>
-        </>
-      )}
-
-      {/* Moved here from the top of the page on 2026-08-11. It answers a real question he asked on
-          08-09 ("is this something that the agent came up with so I shouldn't trust it?") and it
-          earns its place, but at the top it was about 90 words of the app's own failures standing
-          between him and any food. Counting the other explanatory paragraphs, this page carried
-          roughly 200 words about its own trustworthiness and one dish. A footnote is a footnote. */}
-      <hr className="divider" style={{ marginTop: 34 }} />
-      <p className="quiet">
-        <b>{read.length} of {recipes.length}</b> recipes are being offered, and the bar changed on
-        2026-08-11. A recipe is now offered only if it follows one published recipe with nothing
-        altered: its scale, its pan, its ingredients, its heat. Changing any of that is where every
-        failure has come from. Piccata burnt after passing a six-source check on its numbers. A Korean
-        beef bowl produced five wrong instructions in one evening, and not one of them was a figure a
-        source gave: they were a pan swapped for a pot, a browning target the dish cannot reach, a
-        note about fond in a dish that has none, a unit the rice cooker does not use, and a sauce
-        asked to be three times thicker than the original wants. Passing a check was never the same as
-        working, so the checking was replaced with having less to check.
-      </p>
     </div>
   );
 }

@@ -11,9 +11,13 @@ export const dynamic = 'force-dynamic';
  * up a bunch of recipes so I will be open to buying potatoes BUT I ALSO HAVE SWEET POTATOES THAT HAVE
  * BEEN SITTING THERE FOR A WHILE NOW."
  *
- * Both halves of that, and they pull against each other. So what he already owns and is not using comes
- * FIRST, above anything to buy. A list that only ever adds is how a kitchen fills up with food nobody
- * eats, and he has already lost clearance peppers that way.
+ * Both halves of that, and they pull against each other. A list that only ever adds is how a kitchen
+ * fills up with food nobody eats, and he has already lost clearance peppers that way.
+ *
+ * What he already owns and is not using used to come FIRST, above anything to buy. Changed 2026-08-16:
+ * "why in Worth Buying do we have a section that says already there, nothing used? ... So I have to
+ * keep scrolling to get to the thing that is supposed to be on the page." The anti-list keeps its
+ * place on the page and loses its claim on the top of it.
  */
 
 export default async function Shop() {
@@ -29,13 +33,67 @@ export default async function Shop() {
       </p>
 
 
+      <h2 className="sec">Buy one thing, unlock this many</h2>
+      <p className="lede" style={{ marginBottom: 8 }}>
+        Counted only over dishes that are short of nothing else, so the number means it rather than
+        meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live
+        lookup, never from a guess.
+      </p>
+
+      <ul className="meallist">
+        {d.unlocks.map((u) => (
+          <li className="mealrow" key={u.item} style={{ gridTemplateColumns: '1fr' }}>
+            <div className="mealbody">
+              <div className="mealtop">
+                <b>{u.item}</b>
+                <span className="v ok">{u.count} dishes</span>
+              </div>
+              {/* Gaps are grouped for scoring, so the group name is often not a thing you can buy.
+                  These are the ingredients the recipes actually asked for. */}
+              {u.asks.length > 0 && (
+                <div className="mealmeta">
+                  what they ask for: {u.asks.map((a) => `${a.name}${a.n > 1 ? ` (${a.n})` : ''}`).join(', ')}
+                </div>
+              )}
+              {u.reason && <div className="mealmiss">{u.reason}</div>}
+              {u.examples.length > 0 && (
+                <div className="mealvia">
+                  e.g.{' '}
+                  {u.examples.map((e, k) => (
+                    <span key={k}>
+                      {k > 0 && ' · '}
+                      {e.source
+                        ? <Link href={`/kitchen/want?url=${encodeURIComponent(e.source)}`}>{e.name}</Link>
+                        : e.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <hr className="divider" style={{ marginTop: 30 }} />
+
+      {/* FOLDED, 2026-08-16. These two sat ABOVE the buying list, with a paragraph each, on a page
+          he opens to answer "what should I buy". His words: "why in Worth Buying do we have a
+          section that says already there, nothing used? Don't really care about that. No recipes
+          for this either. So I have to keep scrolling to get to the thing that is supposed to be on
+          the page."
+
+          The old comment argued they came first on purpose, because a shopping list that only ever
+          adds is how a kitchen fills with food nobody eats. That reasoning is still right and it
+          does not justify putting them between him and the answer. They keep their place on the
+          page, one tap down. */}
+      <details className="fold">
+        <summary>What is already here and going unused ({d.idle.length + d.unreachable.length})</summary>
       <h2 className="sec">
         Already here, nothing uses it <span className="quiet">{d.idle.length}</span>
       </h2>
       <p className="lede" style={{ marginBottom: 8 }}>
-        Not one of these appears in any dish that is cookable now or one thing short. This list comes
-        before the buying list on purpose: a shopping list that only ever adds is how a kitchen fills
-        with food nobody eats.
+        Not one of these appears in any dish that is cookable now or one thing short. Worth a look
+        before buying anything: a list that only ever adds is how a kitchen fills with food nobody
+        eats.
       </p>
       {d.idle.length === 0 ? (
         <p className="lede">Nothing idle. Everything in the kitchen is reachable by something.</p>
@@ -84,48 +142,7 @@ export default async function Shop() {
         </>
       )}
 
-      <hr className="divider" style={{ marginTop: 30 }} />
-
-      <h2 className="sec">Buy one thing, unlock this many</h2>
-      <p className="lede" style={{ marginBottom: 8 }}>
-        Counted only over dishes that are short of nothing else, so the number means it rather than
-        meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live
-        lookup, never from a guess.
-      </p>
-
-      <ul className="meallist">
-        {d.unlocks.map((u) => (
-          <li className="mealrow" key={u.item} style={{ gridTemplateColumns: '1fr' }}>
-            <div className="mealbody">
-              <div className="mealtop">
-                <b>{u.item}</b>
-                <span className="v ok">{u.count} dishes</span>
-              </div>
-              {/* Gaps are grouped for scoring, so the group name is often not a thing you can buy.
-                  These are the ingredients the recipes actually asked for. */}
-              {u.asks.length > 0 && (
-                <div className="mealmeta">
-                  what they ask for: {u.asks.map((a) => `${a.name}${a.n > 1 ? ` (${a.n})` : ''}`).join(', ')}
-                </div>
-              )}
-              {u.reason && <div className="mealmiss">{u.reason}</div>}
-              {u.examples.length > 0 && (
-                <div className="mealvia">
-                  e.g.{' '}
-                  {u.examples.map((e, k) => (
-                    <span key={k}>
-                      {k > 0 && ' · '}
-                      {e.source
-                        ? <Link href={`/kitchen/want?url=${encodeURIComponent(e.source)}`}>{e.name}</Link>
-                        : e.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+      </details>
     </div>
   );
 }

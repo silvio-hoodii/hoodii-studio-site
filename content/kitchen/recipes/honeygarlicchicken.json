@@ -1,7 +1,7 @@
 {
   "id": "honeygarlicchicken",
   "name": "Honey Garlic Chicken",
-  "build": "2026-08-16a",
+  "build": "2026-08-16b",
   "form": "dish",
   "meal": [
     "dinner"
@@ -287,10 +287,10 @@
         "recheck": "TWICE. Once about a minute after the first batch goes in, because cold chicken drops the pan temperature and it needs to come back up. And again BEFORE the second batch goes in, which is the moment this kind of recipe goes wrong: the pan is hotter than it was at the start and there is loose flour sitting in the oil from the first batch. Look at the oil. If it is smoking, or the loose bits in it have gone dark brown, bring the heat down until the smoking stops and let it settle for thirty seconds before the chicken goes in. Her instruction is to REPEAT the first batch, and repeating it means putting the chicken into the same pan she described, not a hotter one."
       },
       "doneness": {
-        "test": "Take the biggest piece out onto a plate and push the instant-read thermometer into the middle of it. 165F is cooked through. Under that, it goes back in. Do this for both batches; the second batch is faster than the first because the pan is already hot.",
+        "test": "Take the biggest piece out onto a plate and push the instant-read thermometer into the middle. 165F is cooked through; under that it goes back in. Do both batches. THIS, not the 12 minute timer, is what ends the step: the timer is our own split of her 18 minutes of cook time and she gives no time for the chicken at all.",
         "kind": "probe"
       },
-      "look": "A LARGE SKILLET is a frying pan, and here it means the LARGE STAINLESS one, not the non-stick. Two reasons, both from her own recipe: browning is the one job stainless does better, and step 5 tells you to scrape browned bits off the bottom, which is a thing only stainless makes.\n\nSTAINLESS STICKS IF YOU RUSH IT, so do this first and it will not. Heat the pan EMPTY AND DRY for two to three minutes. Flick in a few drops of water. If they hiss and vanish, it is not ready. If a bead forms and rolls around the pan like mercury, it is ready. THEN add the oil, swirl, then add the chicken. Do the water test on the dry pan only, never once the oil is in, because water hitting hot oil spits back at you.\n\nBROWNED, and this is the word you asked about after the last dish. There are three different things it can mean and she means the first one:\n  COOKED, which is what this dish wants. The outside goes from raw and pale to golden and dry-looking, and the thermometer says 165F.\n  SEARED is a deep, almost mahogany crust from a very hot dry pan. Not this dish.\n  BURNT is black and smells acrid. That is what happened to the piccata. If any piece goes black, take it out and throw it away rather than letting it into the sauce.\n\nHALF OF THE CHICKEN AT A TIME is not optional and it is the single most important line in the step. All of it at once drops the pan temperature so far that the chicken releases water and boils in it, grey, with no browning and a sauce that will not thicken. Two batches, and the pieces should sit in one layer with a gap between them.\n\nA SEPARATE PLATE means a clean one, not the plate or board the raw chicken came off.\n\nTHE 12 MINUTE TIMER ON THIS STEP IS A PLANNING NUMBER, not an instruction. It is her 18 minutes of cook time split across the steps, and she gives no time for the chicken at all. The thermometer decides when this step is over. If the timer goes and the chicken is at temperature, it is done early.\n\nDO NOT PRY A PIECE THAT RESISTS. Floured chicken releases itself from stainless when the underside has browned. If it is stuck, it is not ready; give it another thirty seconds and try again. Prying is what tears the coating off and leaves it in the pan."
+      "look": "YOUR PAN IS THE LARGE STAINLESS ONE. She writes \"skillet\", which just means frying pan. Not the non-stick: step 5 has you scrape browned bits off the bottom and only stainless makes them.\n\nSTAINLESS ONLY STICKS IF YOU RUSH IT. Heat it EMPTY AND DRY for two to three minutes, then flick in a few drops of water. Hiss and vanish means not ready. A bead that rolls around like mercury means ready. Then the oil, then the chicken. Water test on the dry pan only, never once the oil is in.\n\nBROWNED, the word you asked about last time. She means COOKED: pale raw outside goes golden and dry-looking, thermometer reads 165F. Not SEARED, which is the dark mahogany crust. Not BURNT, which is black, and which is what the piccata did. Any black piece goes in the bin, not in the sauce.\n\nHALF AT A TIME, and this is the line that decides the dish. All of it at once cools the pan so far that the chicken boils in its own water: grey, no browning, and a sauce that will not thicken. One layer, gaps between the pieces.\n\nIf a piece resists when you move it, it is not ready. Wait thirty seconds; prying tears the coating off. Use a clean plate, not the one the raw chicken came off."
     },
     {
       "n": 4,
@@ -406,16 +406,17 @@
   "deviations": [
     {
       "what": "Distilled white vinegar instead of the rice vinegar she calls for, 1 tbsp",
-      "why": "PENDING HIS ANSWER, and until he gives one this recipe is `adapted` and is not offered. The cupboard has a 1 L bottle of Great Value distilled white vinegar at 5% acidity, photographed 2026-08-01. Nobody has ever asked whether there is rice vinegar as well, so this is an unknown rather than a known gap.",
-      "consequence": "Rice vinegar is about 4% acid and slightly sweet. Distilled white is 5% and has no sweetness at all, so the sauce comes out a little sharper. Against a third of a cup of honey the difference is small, and this is one tablespoon in a sauce for four.",
-      "decidedBy": "agent"
+      "why": "He decided it on 2026-08-16, in his own words: \"There's white vinegar here. I don't know why you're asking me. You know what I have.\" The cupboard holds one bottle, Great Value distilled white at 5% acidity.",
+      "consequence": "Rice vinegar is about 4% and slightly sweet. Distilled white is 5% and has no sweetness, so the sauce is a touch sharper. One tablespoon against a third of a cup of honey.",
+      "decidedBy": "silvio",
+      "toldHim": "That white is sharper and has none of rice vinegar's sweetness, that it is one tablespoon against a third of a cup of honey, and that the difference would be small."
     }
   ],
   "provenance": {
-    "tier": "adapted",
+    "tier": "sourced",
     "cooked": false,
-    "readAt": "2026-08-16a",
-    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. TIER IS `adapted` FOR ONE REASON ONLY: the rice vinegar. Everything else is verbatim. One word from him about the vinegar moves this to `sourced`.",
+    "readAt": "2026-08-16b",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the vinegar: she says rice, the cupboard has distilled white, and he made that call himself after being told the difference. Everything else is her page, word for word.",
     "sources": [
       {
         "name": "Budget Bytes",
@@ -424,6 +425,6 @@
         "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
       }
     ],
-    "readHash": "aa473259"
+    "readHash": "7358d835"
   }
 }

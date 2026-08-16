@@ -418,6 +418,9 @@ export default function CookClient({
       return [{ ref: u.ref, qty, display: p.display }];
     });
 
+  const gearName = new Map(gear.map((g) => [g.id, g.name]));
+  const stepGear = (s.equipment ?? []).map((e) => gearName.get(e) ?? e);
+
   const timerId = `${recipe.id}:${i + 1}`;
   const mine = timers.find((t) => t.id === timerId);
 
@@ -489,6 +492,20 @@ export default function CookClient({
             </div>
           ))}
         </div>
+      )}
+
+      {/* WHICH OF HIS THINGS THIS STEP NEEDS, named from `equipment.json`, on the step itself.
+          2026-08-16: "I don't have a skillet." Correct, and nobody here does. "Skillet" is Budget
+          Bytes' word and the verbatim rule keeps it, so the step says skillet while the kitchen
+          contains a large stainless steel pan, and the reconciliation was buried in a paragraph of
+          `look`. The step already DECLARES its equipment, validated against the vocabulary in both
+          directions; it just never rendered it anywhere but the prep screen. Same failure as
+          "what baking sheet this wasn't on the list wtf", one screen further in. */}
+      {stepGear.length > 0 && (
+        <p className="stepgear">
+          <span className="k">Yours</span>
+          {stepGear.join(' · ')}
+        </p>
       )}
 
       {s.heat?.target && (

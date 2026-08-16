@@ -1,6 +1,8 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock, expiringSoon } from './stock';
+import { allRecipes } from './recipes';
+import type { Recipe } from './types';
 // One matcher implementation, in .mjs, so the CLI and the app can never disagree. See match-mjs.d.ts.
 import { scoreRecipe, unreachableStock, type Score } from '../../../content/kitchen/match.mjs';
 
@@ -23,6 +25,8 @@ export interface CorpusMeal {
 }
 
 export interface Candidate {
+  /** The id of a cook card that already exists for this dish, so the row can link straight to it. */
+  cardId?: string | null;
   meal: CorpusMeal;
   score: Score;
   /** Stock ids this dish would consume that are on a clock, soonest first. */
@@ -145,6 +149,26 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
 export async function findCandidates(filters: Filters = {}) {
   const [{ meals, providers, hiddenNoSource, uncheckedCount, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
     await Promise.all([loadCorpus(), deriveStock()]);
+  const cards: Recipe[] = await allRecipes();
+
+  /* WHICH OF THESE ALREADY HAS A COOK CARD, keyed by the source url the card cites.
+   *
+   * 2026-08-16, on Honey Garlic Chicken: "if I click one recipe from the What Can I Make page it
+   * takes me to the one specific dish with the link already in the Read It thing... how many clicks
+   * do I have to make to get to the actual? There's no way for me to naturally click around and
+   * find this thing." Correct: every row here pointed at /kitchen/want, which is the page that says
+   * what a dish would NEED. For a dish that has already been written out step by step that is one
+   * screen of nothing, and the card it should have opened was unreachable except by typing the id. */
+  const cardByUrl = new Map<string, string>();
+  for (const r of cards) {
+    const urls = [
+      typeof r.source === 'string' ? r.source : r.source?.url,
+      ...(r.provenance?.sources ?? []).map((x) => x.url),
+    ].filter((u): u is string => !!u);
+    // Trailing slashes differ between the corpus and what a recipe cites, and that is not a reason
+    // to send him the long way round.
+    for (const u of urls) cardByUrl.set(u.replace(/\/+$/, ''), r.id);
+  }
   const available = usableIds(stock);
 
   /* Dishes that would eat something already on a clock. This is the single most valuable ranking in
@@ -172,7 +196,8 @@ export async function findCandidates(filters: Filters = {}) {
     for (const v of score.haveVia) if (v.via) v.via = nameOf(stock, v.via);
     const usesIds = [...new Set(hits.map((h) => h.item).filter((x): x is string => !!x))];
     const needsThaw = [...new Set(usesIds.filter((id) => frozen.has(id)).map((id) => nameOf(stock, id)))];
-    return { meal, score, usesExpiring, usesIds, needsThaw };
+    const cardId = meal.source ? cardByUrl.get(meal.source.replace(/\/+$/, '')) ?? null : null;
+    return { meal, score, usesExpiring, usesIds, needsThaw, cardId };
   });
 
   const byName = (a: Candidate, b: Candidate) => a.meal.name.localeCompare(b.meal.name);
