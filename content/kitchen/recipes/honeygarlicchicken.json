@@ -1,7 +1,7 @@
 {
   "id": "honeygarlicchicken",
   "name": "Honey Garlic Chicken",
-  "build": "2026-08-16d",
+  "build": "2026-08-16e",
   "form": "dish",
   "meal": [
     "dinner"
@@ -283,14 +283,14 @@
       "minutes": 12,
       "heat": {
         "surface": "stovetop",
-        "target": "Hot enough that a piece of chicken hisses loudly the moment it touches the pan and keeps hissing while it cooks. A pan that stays quiet is not hot enough, and quiet is what makes floured chicken glue itself to the metal instead of browning. The oil should look thin and run like water when you tilt the pan, and it should not be sending up smoke.",
-        "recheck": "TWICE. Once about a minute after the first batch goes in, because cold chicken drops the pan temperature and it needs to come back up. And again BEFORE the second batch goes in, which is the moment this kind of recipe goes wrong: the pan is hotter than it was at the start and there is loose flour sitting in the oil from the first batch. Look at the oil. If it is smoking, or the loose bits in it have gone dark brown, bring the heat down until the smoking stops and let it settle for thirty seconds before the chicken goes in. Her instruction is to REPEAT the first batch, and repeating it means putting the chicken into the same pan she described, not a hotter one."
+        "target": "A steady, even sizzle. Loud spitting and any smoke means too hot, and too hot is the failure this step actually has: on 2026-08-16 the flour coating went black on the outside faces while the middle of the same piece was still pink. Bring it down until it sizzles rather than spits and accept that the pieces take longer. The oil should look thin and run like water when you tilt the pan, and it should never smoke.",
+        "recheck": "About a minute after the first batch goes in, and again before the second batch. The pan is hotter by then than it was at the start and there is loose flour in the oil from the first round. If the oil is smoking or the loose bits have gone dark, take the pan off the burner for thirty seconds before the chicken goes in. On induction the burner obeys instantly and the metal does not, so lifting the pan is what actually lowers it."
       },
       "doneness": {
-        "test": "Take the biggest piece out onto a plate and push the instant-read thermometer into the middle. 165F is cooked through; under that it goes back in. Do both batches. THIS, not the 12 minute timer, is what ends the step: the timer is our own split of her 18 minutes of cook time and she gives no time for the chicken at all.",
+        "test": "Push the instant-read thermometer into the middle of the biggest piece. 165F is cooked through; under that it goes back in. THIS ends the step, not the 12 minute timer, which is our own split of her 18 minutes and not a number she gives. IF THE OUTSIDE IS ALREADY DARK AND THE MIDDLE READS LOW, the heat was too high: turn it down and give the rest of the batch longer, or finish these pieces in the air fryer at 415F, which is what worked on 2026-08-16.",
         "kind": "probe"
       },
-      "look": "YOUR PAN IS THE LARGE STAINLESS ONE. She writes \"skillet\", which just means frying pan. Not the non-stick: step 5 has you scrape browned bits off the bottom and only stainless makes them.\n\nSTAINLESS ONLY STICKS IF YOU RUSH IT. Heat it EMPTY AND DRY for two to three minutes, then flick in a few drops of water. Hiss and vanish means not ready. A bead that rolls around like mercury means ready. Then the oil, then the chicken. Water test on the dry pan only, never once the oil is in.\n\nBROWNED, the word you asked about last time. She means COOKED: pale raw outside goes golden and dry-looking, thermometer reads 165F. Not SEARED, which is the dark mahogany crust. Not BURNT, which is black, and which is what the piccata did. Any black piece goes in the bin, not in the sauce.\n\nHALF AT A TIME, and this is the line that decides the dish. All of it at once cools the pan so far that the chicken boils in its own water: grey, no browning, and a sauce that will not thicken. One layer, gaps between the pieces.\n\nIf a piece resists when you move it, it is not ready. Wait thirty seconds; prying tears the coating off. Use a clean plate, not the one the raw chicken came off."
+      "look": "HER PAN IS A SKILLET, which just means frying pan. Yours is the LARGE STAINLESS one, not the non-stick, because step 5 has you scrape browned bits off the bottom and only stainless makes them.\n\nTHE AIR FRYER IS A LEGITIMATE ALTERNATIVE for this step and you found it yourself. Hot air hits every face at once, there is no pan temperature to judge, and a coated piece cooks through instead of only browning. 415F worked on 2026-08-16. It costs you the browned bits that step 5 wants, so if you go that way, keep a spoonful of oil in the pan for the garlic and expect a slightly lighter sauce.\n\nTOO HOT IS THE FAILURE THIS STEP HAS, not too cold. Flour is the fastest-burning thing in the pan: at the heat that browns bare chicken nicely, a dusted coating is already going dark. Outside black with a pink middle means one thing only, that the heat was too high. Lower and longer, and let the thermometer say when.\n\nSTAINLESS ONLY STICKS IF YOU RUSH IT. Heat it EMPTY AND DRY two to three minutes, flick in a few drops of water. Hiss and vanish means not ready; a bead rolling like mercury means ready. Then oil, then chicken. Dry pan only, never once the oil is in.\n\nBROWNED, the word you asked about. She means COOKED: pale raw goes golden and dry-looking, thermometer 165F. Not SEARED, the dark mahogany crust. Not BURNT, which is black.\n\nHALF AT A TIME. All of it at once cools the pan so far the chicken boils in its own water: grey, no colour, and a sauce that will not thicken. One layer, gaps between the pieces. If one resists when you move it, it is not ready; wait thirty seconds rather than prying."
     },
     {
       "n": 4,
@@ -415,7 +415,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": true,
-    "readAt": "2026-08-16d",
+    "readAt": "2026-08-16e",
     "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the vinegar: she says rice, the cupboard has distilled white, and he made that call himself after being told the difference. Everything else is her page, word for word.",
     "sources": [
       {
@@ -425,7 +425,7 @@
         "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
       }
     ],
-    "readHash": "e2170e4c",
+    "readHash": "508aa4e9",
     "cookedResult": "worked"
   }
 }

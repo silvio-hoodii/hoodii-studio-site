@@ -15,12 +15,12 @@
       "class": "heat",
       "present": true,
       "tech": "induction",
-      "notes": "INDUCTION, confirmed 2026-08-08. Responds almost instantly with none of the lag a gas or coil burner has. Dial numbers are NOT consistent across burners: some run 1 to 120, some 1 to 10, some low/medium/high. AND IT HEATS A RING, NOT A BASE: only the metal directly over the coil gets hot, so any pan wider than the coil has a hot band and two cooler zones. This is the mechanism behind 'it is either too hot or too low', reported after three separate cooks.",
+      "notes": "INDUCTION, confirmed 2026-08-08. Responds almost instantly with none of the lag a gas or coil burner has. Dial numbers are NOT consistent across burners: some run 1 to 120, some 1 to 10, some low/medium/high.",
       "hardRule": "Never reference a notch, a number, or 'the lowest setting'. Describe what the pot should be doing and have him adjust to match, then check again in two minutes.",
       "blamedFor": [
         "2026-08-05 bulgogi rice failure",
         "2026-08-08 arroz tapado rice failure",
-        "2026-08-16 honey garlic chicken, black patches on some pieces while others stayed raw"
+        "2026-08-16 honey garlic chicken, floured chicken blackening outside while raw inside at her medium-high"
       ]
     },
     "airfryer": {
@@ -31,7 +31,7 @@
         "chicken pieces",
         "anything that browns unevenly in a pan on this hob"
       ],
-      "notes": "No hot band by construction, which makes it the reliable answer for small pieces here. He moved the chicken to it mid-cook on 2026-08-16 when the stainless pan started blackening patches, and it worked. Capacity in litres still unrecorded."
+      "notes": "No pan temperature to judge and hot air on every face at once, so a coated piece cooks through instead of just browning. He moved the chicken into it at 415F mid-cook on 2026-08-16 when the stainless pan blackened the outsides with the middles still pink, and it finished properly. Duration not recorded. Capacity in litres still unrecorded."
     },
     "paninipress": {
       "name": "panini press",
@@ -118,9 +118,9 @@
       "notes": "Heat empty and dry on medium 2 to 3 min, flick in a few drops of water: hissing and vanishing means NOT ready, a bead rolling like mercury means ready. Then oil, then food. The water test is safe on a dry pan and dangerous in oil.",
       "history": "Went unused for weeks because food sticks to it, and so was reported as not existing. A skill gap presenting as an equipment gap.",
       "badFor": [
-        "browning small pieces on this induction hob, until the hot ring is mapped"
+        "browning small floured pieces: the coating blackens before the middle cooks"
       ],
-      "inductionCaution": "An induction coil is a RING roughly 14 to 18 cm across and it heats ONLY the metal directly over it. This pan is wider than that, so a band of its base runs far hotter than its centre and rim, and a thin stainless base does not spread the difference sideways. Small pieces blacken on the band while pieces an inch away stay raw, which is not something a dial setting can cause and is not a mistake he is making. Signature seen on piccata 2026-08-09 and Honey Garlic Chicken 2026-08-16. Until the hot zone is mapped (flour test in KitchenOS/KITCHEN.md), a recipe browning SMALL PIECES should say to move food between the band and the rim rather than to change the heat, or use the air fryer."
+      "inductionCaution": "RETRACTED AND REPLACED 2026-08-16. This row briefly claimed the induction coil's ring shape gave the pan a hot band and cool zones. He corrected it: the failure was one piece with black faces and a raw middle, which is not uneven heating across a pan, it is the surface cooking faster than heat travels inward. What is true: a flour coating blackens well before a half-inch piece of chicken reaches 165F, and 'medium-high' covers a wide band whose top end is fierce on a thin base. Lower and longer, thermometer ends the step. Outside dark with a pink middle means the heat was too high, full stop. For small coated pieces prefer the air fryer."
     },
     "pan_stainless_small": {
       "name": "small stainless steel pan",
