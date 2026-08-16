@@ -5,10 +5,10 @@
  "attribution": "Recipe data: www.tasteofhome.com. Each dish links to its original page.",
  "robotsCheckedAt": "2026-08-13",
  "robotsNote": "No AI-crawler exclusions. Verified extraction against their Beef Stroganoff page.",
- "fetchedAt": "2026-08-13",
- "sourceCheckedAt": "2026-08-13",
- "fetchedCount": 76,
- "sourceOkCount": 76,
+ "fetchedAt": "2026-08-16",
+ "sourceCheckedAt": "2026-08-16",
+ "fetchedCount": 3,
+ "sourceOkCount": 79,
  "meals": [
   {
    "id": "tasteofhome:apricot-chicken-drumsticks",
@@ -1735,6 +1735,51 @@
    "sourceIngredientCount": 8
   },
   {
+   "id": "tasteofhome:cool-summertime-oatmeal",
+   "name": "Cool Summertime Oatmeal",
+   "category": "Breakfast",
+   "area": null,
+   "keywords": [],
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps122883_SD153321D01_30_2b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/cool-summertime-oatmeal/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/3 cups old-fashioned oats",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup fat-free milk",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup reduced-fat plain yogurt",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup honey",
+     "measure": ""
+    },
+    {
+     "name": "1 cup pitted fresh or frozen dark sweet cherries, thawed",
+     "measure": ""
+    },
+    {
+     "name": "1 cup fresh or frozen blueberries, thawed",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup chopped walnuts, toasted",
+     "measure": ""
+    }
+   ],
+   "rating": 3.4,
+   "ratingCount": 5,
+   "sourceOk": true,
+   "sourceIngredientCount": 7
+  },
+  {
    "id": "tasteofhome:creamy-corned-beef-casserole",
    "name": "Corned Beef Casserole",
    "category": null,
@@ -2655,6 +2700,83 @@
    "sourceIngredientCount": 7
   },
   {
+   "id": "tasteofhome:herbed-oatmeal-pan-bread",
+   "name": "Herbed Oatmeal Pan Bread",
+   "category": null,
+   "area": null,
+   "keywords": [],
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2017/09/exps1281_FM153592C03_20_3b.jpg",
+   "source": "https://www.tasteofhome.com/recipes/herbed-oatmeal-pan-bread/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1-1/2 cups boiling water",
+     "measure": ""
+    },
+    {
+     "name": "1 cup old-fashioned oats",
+     "measure": ""
+    },
+    {
+     "name": "2 packages (1/4 ounce each) active dry yeast",
+     "measure": ""
+    },
+    {
+     "name": "1/2 cup warm water (110&deg; to 115&deg;)",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup sugar",
+     "measure": ""
+    },
+    {
+     "name": "3 tablespoons butter, softened",
+     "measure": ""
+    },
+    {
+     "name": "2 teaspoons salt",
+     "measure": ""
+    },
+    {
+     "name": "1 large egg, room temperature, lightly beaten",
+     "measure": ""
+    },
+    {
+     "name": "4 to 4-3/4 cups all-purpose flour",
+     "measure": ""
+    },
+    {
+     "name": "TOPPING:",
+     "measure": ""
+    },
+    {
+     "name": "1/4 cup butter, melted, divided",
+     "measure": ""
+    },
+    {
+     "name": "2 tablespoons grated Parmesan cheese",
+     "measure": ""
+    },
+    {
+     "name": "1 teaspoon dried basil",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon dried oregano",
+     "measure": ""
+    },
+    {
+     "name": "1/2 teaspoon garlic powder",
+     "measure": ""
+    }
+   ],
+   "rating": 4.71,
+   "ratingCount": 14,
+   "sourceOk": true,
+   "sourceIngredientCount": 15
+  },
+  {
    "id": "tasteofhome:instant-pot-chicken-noodle-soup",
    "name": "Instant Pot Chicken Noodle Soup",
    "category": null,
@@ -2981,6 +3103,47 @@
    "ratingCount": 4,
    "sourceOk": true,
    "sourceIngredientCount": 18
+  },
+  {
+   "id": "tasteofhome:orange-oatmeal",
+   "name": "Orange Oatmeal",
+   "category": "Breakfast",
+   "area": null,
+   "keywords": [],
+   "image": "https://www.tasteofhome.com/wp-content/uploads/2018/01/exps22940_CB50843D17.jpg",
+   "source": "https://www.tasteofhome.com/recipes/orange-oatmeal/",
+   "youtube": null,
+   "tags": [],
+   "ingredients": [
+    {
+     "name": "1 cup water",
+     "measure": ""
+    },
+    {
+     "name": "3/4 cup orange juice",
+     "measure": ""
+    },
+    {
+     "name": "1/8 teaspoon salt",
+     "measure": ""
+    },
+    {
+     "name": "1 cup quick-cooking oats",
+     "measure": ""
+    },
+    {
+     "name": "1/4 teaspoon grated orange zest",
+     "measure": ""
+    },
+    {
+     "name": "1 to 2 tablespoons brown sugar",
+     "measure": ""
+    }
+   ],
+   "rating": 4,
+   "ratingCount": 8,
+   "sourceOk": true,
+   "sourceIngredientCount": 6
   },
   {
    "id": "tasteofhome:pasta-with-chicken-and-squash",

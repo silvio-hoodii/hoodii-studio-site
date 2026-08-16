@@ -4,6 +4,10 @@
  *
  *   node content/kitchen/corpus-ingest.mjs bbcgoodfood --limit 2000
  *   node content/kitchen/corpus-ingest.mjs bbcgoodfood --limit 50 --match bolognese,stroganoff
+ *   node content/kitchen/corpus-ingest.mjs bbcgoodfood --replace          # full re-ingest, drops what is there
+ *
+ * MERGES into an existing corpus file by default. It used to overwrite, which on 2026-08-16 turned a
+ * 648-recipe file into a 105-recipe one and printed "wrote 105 recipes" while doing it.
  *
  * Why this replaces leaning on TheMealDB. Silvio, 2026-08-13: "why are we trusting this purpose that
  * apparently has the randomest recipes in the world when we could have gone straight to BBC Good Food
@@ -202,7 +206,45 @@ await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
 
 if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 const stamp = new Date().toISOString().slice(0, 10);
-writeFileSync(join(OUT_DIR, `${site}.json`), JSON.stringify({
+const outPath = join(OUT_DIR, `${site}.json`);
+
+/* MERGE BY DEFAULT. Changed 2026-08-16, after this script destroyed 543 recipes and reported it as a
+ * success.
+ *
+ * What happened: `node corpus-ingest.mjs budgetbytes --limit 120 --match oat,cookie,...` was run to add
+ * the baking half of the site, which the original dinner-keyword ingest had never pulled. It fetched
+ * 105 recipes and wrote them OVER a file holding 648, printing "wrote 105 recipes to
+ * corpus/budgetbytes.json". Nothing in that sentence is false and nothing in it says 543 dishes just
+ * stopped existing. It was caught only because the file was counted afterwards, and restored from git.
+ *
+ * `--match` makes this near-certain rather than unlikely: the flag exists to fetch a SUBSET, and the
+ * one thing you never want a subset fetch to do is replace the whole. The two flags were pulling in
+ * opposite directions and the destructive one was the default.
+ *
+ * So: an existing corpus is merged, keyed by id, with freshly fetched entries winning on conflict.
+ * `--replace` still does the old thing for a genuine full re-ingest, and says out loud what it is
+ * about to drop. Law 1: the bad outcome is now unreachable by accident rather than warned about. */
+const replace = args.includes('--replace');
+let existing = [];
+if (existsSync(outPath)) {
+  try { existing = JSON.parse(readFileSync(outPath, 'utf8')).meals ?? []; } catch { existing = []; }
+}
+let merged = meals;
+if (existing.length && !replace) {
+  const byId = new Map(existing.map((m) => [m.id, m]));
+  let added = 0, refreshed = 0;
+  for (const m of meals) {
+    if (byId.has(m.id)) { refreshed++; byId.set(m.id, { ...byId.get(m.id), ...m }); } else { byId.set(m.id, m); added++; }
+  }
+  merged = [...byId.values()];
+  console.log(`
+merging into ${existing.length} already in corpus/${site}.json: ${added} new, ${refreshed} refreshed`);
+} else if (existing.length && replace) {
+  console.log(`
+--replace: DROPPING ${existing.length} recipes already in corpus/${site}.json and writing ${meals.length}`);
+}
+
+writeFileSync(outPath, JSON.stringify({
   _: 'Ingredient lists and photos for matching. NO instructions: they stay at the source, which is '
      + 'the only thing a cook card may be built from.',
   provider: cfg.host,
@@ -213,8 +255,11 @@ writeFileSync(join(OUT_DIR, `${site}.json`), JSON.stringify({
   fetchedAt: stamp,
   sourceCheckedAt: stamp,
   fetchedCount: meals.length,
-  sourceOkCount: meals.length,
-  meals: meals.sort((a, b) => String(a.name).localeCompare(String(b.name))),
+  sourceOkCount: merged.length,
+  meals: merged.sort((a, b) => String(a.name).localeCompare(String(b.name))),
 }, null, 1) + '\n');
 
-console.log(`\nwrote ${meals.length} recipes to corpus/${site}.json (${failed} pages had no recipe markup)`);
+/* Report the TOTAL IN THE FILE, not the number fetched. "wrote 105 recipes" was true and it was
+ * also the sentence that hid 543 deletions. */
+console.log(`
+fetched ${meals.length}, corpus/${site}.json now holds ${merged.length} (${failed} pages had no recipe markup)`);
