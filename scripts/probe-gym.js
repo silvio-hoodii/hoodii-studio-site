@@ -24,12 +24,28 @@
  *   agent-browser --session gymtest eval "$(cat scripts/probe-gym.js)"
  *   agent-browser --session gymtest eval "__probe.run()"
  *
+ * IF THAT `eval "$(cat ...)"` FAILS with "Argument list too long", this file has outgrown the
+ * shell's argument limit, which happened on 2026-08-16. Serve it and eval it by URL instead:
+ *   cp scripts/probe-gym.js public/__probe-tmp.js && pnpm build && pnpm start
+ *   agent-browser --session gymtest eval "fetch('/__probe-tmp.js').then(r=>r.text()).then(t=>{(0,eval)(t); return typeof __probe})"
+ *   rm public/__probe-tmp.js          # BEFORE committing. It must never ship.
+ *
+ * START FROM A CLEAN BROWSER. `localStorage.clear()` then reload before a full run. Swaps and the
+ * finished state persist, so poking at the page by hand first makes three of these fail with
+ * "session already saved" and look like app defects. They are not.
+ *
  * Some tests reload the page. After a reload the harness is gone, so re-eval the file and call the
  * named test: `__probe.run('swapSurvivesReload:after')`. `run()` with no argument runs everything
  * that does not need a reload and tells you which ones it skipped.
  */
 (() => {
-  const WRITE_ROUTES = ['/gym/api/set', '/gym/api/finish'];
+  /* EVERY write route under /gym/api must be listed here. A route missing from this list is not
+     stubbed, so the probe posts it to the real Neon store for real.
+     /gym/api/note was added to the app on 2026-08-16 and not to this list, and the first probe of
+     the note box went out over the network. It was refused, but only because the browser had no
+     unlock cookie: with one, a test would have written a fake note into his actual log. Adding a
+     write route means adding it here in the same change. */
+  const WRITE_ROUTES = ['/gym/api/set', '/gym/api/finish', '/gym/api/note'];
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has
      said yes, not whether the server says yes; that is the unlock route's own business. */
@@ -555,6 +571,53 @@
           saysSaved: saved,
           bannerStillUp: !!$('.save-blocked'),
         },
+      };
+    },
+
+    /* The note box sends what he typed, then empties. Added with the box on 2026-08-16. */
+    async noteBoxPostsWhatWasTyped() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      state.mode = 'ok';
+      const box = $('.note-box');
+      if (!box) return { pass: false, detail: 'no note box on the page' };
+      const body = 'probe note: racks taken, used the smith instead';
+      type(box, body);
+      await sleep(120);
+      const btn = $$('.note-actions button').find((b) => /save note/i.test(text(b)));
+      if (!btn) return { pass: false, detail: 'no save button' };
+      const grab = since();
+      btn.click();
+      await sleep(600);
+      const posted = grab().filter((c) => c.url.includes('/gym/api/note'));
+      return {
+        pass: posted.length === 1 && posted[0].body?.body === body && $('.note-box').value === '',
+        detail: { posts: posted.length, sentBody: posted[0]?.body ?? null, boxCleared: $('.note-box').value === '' },
+      };
+    },
+
+    /* A REFUSED note stays in the box.
+     *
+     * This is the one behaviour here that differs from a set on purpose, so it gets its own test.
+     * A queued set can be re-read off the screen, because the input holds the value. A note is a
+     * sentence he said once; clearing the box on a write that never landed loses it from the world.
+     * So `saveNote` clears only when the write returns true, and this proves it stays otherwise. */
+    async aRefusedNoteStaysInTheBox() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      const box = $('.note-box');
+      if (!box) return { pass: false, detail: 'no note box on the page' };
+      const body = 'probe note: this one must survive a refusal';
+      state.mode = 'locked';
+      type(box, body);
+      await sleep(120);
+      const btn = $$('.note-actions button').find((b) => /save note/i.test(text(b)));
+      btn.click();
+      await sleep(600);
+      const stillThere = $('.note-box').value === body;
+      const banner = !!$('.save-blocked');
+      state.mode = 'ok';
+      return {
+        pass: stillThere && banner,
+        detail: { textSurvived: stillThere, bannerRaised: banner, valueNow: $('.note-box').value.slice(0, 40) },
       };
     },
 

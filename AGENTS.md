@@ -71,7 +71,8 @@ always lose to the thing that exists.
 |---|---|---|
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
-| `/gym` | Lifting log. `content/gym/` + `gym_*` tables | yes |
+| `/gym` | Lifting log + a note box. `content/gym/` + `gym_*` tables | yes |
+| `/gym/conditioning` | Run, bike and swim progressions. Read-only, `content/gym/conditioning.json` | no writes |
 | `/health` | Body composition, read-only from `healthos.db` | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
@@ -131,6 +132,18 @@ harmless, and PSN is not surfaced on the hub.
 - Production deploys from `main`.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
   All four, before any push.
+- **Touching `/gym`? Run `node scripts/gym-notes.mjs` FIRST.** There is a note box at the bottom of
+  the workout, added 2026-08-16 at his request, and it writes to `gym_note`. It is the only place
+  the app records anything in his own words: everything else is numbers typed into boxes, and a
+  number cannot say "the racks were taken" or "my knee felt off". Act on what is there, then
+  `node scripts/gym-notes.mjs --handled <id>`. The kitchen already learned what happens otherwise:
+  a captured question nobody answers is worse than no capture, because he stops believing the box
+  does anything.
+- **Adding a POST route under `/gym/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
+  Nothing is optional about this: the probe drives a real browser against the real Neon store, and
+  an unstubbed write route means a test posts into his actual training log. `/gym/api/note` was
+  added without it and the first probe went out over the network. `scripts/lint-probe-routes.mjs`
+  now fails the build on it, so this is a description of a gate rather than a thing to remember.
 - **Touching `/gym`? Run `scripts/probe-gym.js` as well.** The four gates are static: they all passed
   on a build whose swap control silently reset on every page load, whose logged sets then became
   invisible, whose write recorded one exercise's id next to another's name, and which opened on the

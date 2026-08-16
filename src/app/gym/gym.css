@@ -335,3 +335,23 @@
    piece must not break mid-distance; the note is free to wrap. */
 .gym .plan-table .wide { width: 55%; }
 .gym .plan-table .nowrap { white-space: nowrap; }
+
+/* ---- note from the floor ---- */
+.gym .note-box {
+  width: 100%;
+  font-family: var(--font-sans);
+  /* 16px, same non-negotiable as the set inputs: below it iOS zooms the page on focus, and here
+     that would happen the moment he taps the microphone to start talking. */
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+  resize: vertical;
+}
+.gym .note-box:focus { outline: none; border-color: var(--foreground); }
+.gym .note-actions { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.gym .note-actions .btn { min-height: 44px; }
+.gym .note-actions .btn:disabled { opacity: 0.45; cursor: default; }

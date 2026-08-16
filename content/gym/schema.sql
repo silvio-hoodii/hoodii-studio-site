@@ -46,3 +46,24 @@ create index if not exists gym_set_date    on gym_set (date);
 -- gym_swim, gym_body_weight. Schema for both is a straight copy of healthos.db's `swims` and
 -- `body_weight` tables when that lands, not designed yet because the UI that would read them isn't
 -- built yet either, and a state table nothing reads is exactly the kind of thing that goes stale.
+
+-- Notes written during or after a session, added 2026-08-16. Silvio: "maybe a note place in the
+-- end for when I find something that I wanna write it down or tell you."
+--
+-- Same job as the kitchen's cook_log: the ONLY record of what actually happened, in his words, at
+-- the moment it happened. Everything else in this database is numbers he typed into boxes, which
+-- cannot say "the racks were all taken" or "my knee felt off on the second set".
+--
+-- No exercise_id. He asked for one box at the END of the workout, not a note per exercise, and a
+-- per-exercise note is a different feature with a different failure mode (nine empty boxes on
+-- screen while he is trying to lift). `day` and `date` are enough to find the session it belongs to.
+create table if not exists gym_note (
+  id         bigserial primary key,
+  date       text        not null,
+  day        text,
+  day_title  text,
+  body       text        not null,
+  handled    boolean     not null default false,  -- set true once an agent has acted on it
+  created_at timestamptz not null default now()
+);
+create index if not exists gym_note_date on gym_note (date desc);

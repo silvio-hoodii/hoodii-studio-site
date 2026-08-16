@@ -149,6 +149,11 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const [pendingSets, setPendingSets] = useState(0);
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const [finishBlocked, setFinishBlocked] = useState(false);
+  const [note, setNote] = useState('');
+  const [notesSaved, setNotesSaved] = useState(0);
+  /* Every note is its own queue key. A set upserts on (date, exercise, index) so re-typing corrects
+   * it; two notes on one evening are two separate things he said and neither replaces the other. */
+  const noteSeq = useRef(0);
   const finishWantedRef = useRef(false);
   const finishLandedRef = useRef(false);
   const countSets = () => [...pendingRef.current.keys()].filter((k) => k.startsWith('set:')).length;
@@ -375,6 +380,21 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       suggW: p?.suggestion.weight ?? null,
       suggR: p?.suggestion.reps ?? null,
     });
+  }
+
+  /** Sends the note, and clears the box only if it actually landed. A queued note stays on screen
+   *  AND in the retry queue, so the flush after unlocking can double-post it; that is the trade
+   *  taken deliberately, because a duplicate note is a nuisance and a lost one is not recoverable. */
+  async function saveNote() {
+    const body = note.trim();
+    if (!body) return;
+    const ok = await write(`note:${date}:${noteSeq.current++}`, '/gym/api/note', {
+      date, day: activeDay, dayTitle: day.title, body,
+    });
+    if (ok) {
+      setNote('');
+      setNotesSaved((n) => n + 1);
+    }
   }
 
   function toggleDone(slotId: string, eff: Exercise, idx: number) {
@@ -661,6 +681,54 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
           </div>
         ))}
       </details>
+
+      {/* ---- a note from the floor ----
+        *
+        * Asked for on 2026-08-16: "maybe a note place in the end for when I find something that I
+        * wanna write it down or tell you."
+        *
+        * ON VOICE. He asked whether he could send a voice note. He can, and this is it: the
+        * microphone on the phone keyboard dictates straight into this box. Recording and uploading
+        * real audio would mean blob storage, a transcription service and a bill, to arrive at text
+        * in a database, which is where this already puts it. The hint under the label exists
+        * because the capability is invisible: the keyboard has the button, the web page cannot
+        * show it.
+        *
+        * Stays visible after the session is finished. A thought does not arrive on cue, and the
+        * most likely moment for one is walking out.
+        *
+        * The text is NOT cleared unless the write actually landed. Sets are different: the input
+        * itself holds the value and a queued set can be re-read off the screen. A note that failed
+        * to send and got wiped out of the box is gone from the world. */}
+      <div className="exgroup">
+        <div className="exgroup-label">
+          Note <span className="tag">(anything worth telling me)</span>
+        </div>
+        <p className="ex-cue" style={{ marginBottom: 8 }}>
+          Tap the microphone on your keyboard and talk. It arrives as text. Machines taken, something
+          that hurt, a swap you made, a question: whatever it is, it gets read before the next change
+          to the programme.
+        </p>
+        <textarea
+          className="note-box"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={3}
+          placeholder="The racks were all taken so I..."
+          autoCapitalize="sentences"
+          spellCheck
+        />
+        <div className="note-actions">
+          <button className="btn" onClick={() => void saveNote()} disabled={!note.trim()}>
+            Save note
+          </button>
+          {notesSaved > 0 && (
+            <span className="quiet">
+              {notesSaved} note{notesSaved === 1 ? '' : 's'} saved today
+            </span>
+          )}
+        </div>
+      </div>
 
       <div style={{ marginTop: 30, marginBottom: 30 }}>
         {finished ? (

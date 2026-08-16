@@ -163,3 +163,44 @@ export async function getTrainingDates(limit = 30): Promise<string[]> {
   `;
   return (rows as unknown as { date: string }[]).map((r) => r.date);
 }
+
+/** A note written at the end of a session. Added 2026-08-16, at his request: "maybe a note place in
+ *  the end for when I find something that I wanna write it down or tell you."
+ *
+ *  Deliberately append-only and with no upsert key. A set is a measurement and re-typing it should
+ *  correct it in place; a note is a thing he said at a moment, and two notes on one evening are two
+ *  notes, not a correction. Same reasoning as the kitchen's cook_log.
+ *
+ *  `handled` is the half that makes this worth building. The kitchen learned on 2026-08-02 that a
+ *  captured question nobody answers is WORSE than no capture at all, because it teaches him the box
+ *  does nothing. Unhandled notes are what an agent reads at the start of a session. */
+export async function addNote(opts: {
+  date: string;
+  day?: string | null;
+  dayTitle?: string | null;
+  body: string;
+}) {
+  await sql`
+    insert into gym_note (date, day, day_title, body)
+    values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, ${opts.body})
+  `;
+}
+
+export interface NoteRow {
+  id: number;
+  date: string;
+  day: string | null;
+  day_title: string | null;
+  body: string;
+  handled: boolean;
+  created_at: string;
+}
+
+/** Newest first. `onlyUnhandled` is the agent's view: what has he told me that I have not acted on. */
+export async function getNotes(opts: { limit?: number; onlyUnhandled?: boolean } = {}): Promise<NoteRow[]> {
+  const limit = opts.limit ?? 20;
+  const rows = opts.onlyUnhandled
+    ? await sql`select * from gym_note where handled = false order by created_at desc limit ${limit}`
+    : await sql`select * from gym_note order by created_at desc limit ${limit}`;
+  return rows as unknown as NoteRow[];
+}
