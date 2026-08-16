@@ -2,7 +2,8 @@ import Draft from '../Draft';
 
 export const metadata = {
   title: 'Brixel',
-  description: 'The site, the lead intake, and the quoting and contract paperwork behind a Calgary trades company.',
+  description:
+    'A construction company in Calgary, and the pricing, contracts and job paperwork that let it sit between a builder and the trade doing the work.',
 };
 
 export default function BrixelPage() {
@@ -10,15 +11,15 @@ export default function BrixelPage() {
     <>
       <h1>Brixel</h1>
       <p className="lede">
-        A trades company in Calgary. I built the site and the lead intake, and the quoting and
-        contract paperwork that runs behind them.
+        A construction company in Calgary. It sits between builders and the trades who do the work,
+        and I built the pricing, the contracts and the job paperwork that let it hold that position.
       </p>
       <Draft />
 
       <dl className="facts">
         <div>
           <dt>What</dt>
-          <dd>Public site, lead capture, and the operating paperwork a job actually needs</dd>
+          <dd>Quoting, contracts and delivery paperwork for a construction intermediary, plus its site and lead intake</dd>
         </div>
         <div>
           <dt>Live at</dt>
@@ -26,52 +27,61 @@ export default function BrixelPage() {
         </div>
         <div>
           <dt>Stack</dt>
-          <dd>Next.js on Vercel, leads to a sheet, a toll-free line, analytics</dd>
+          <dd>Next.js on Vercel, leads to a sheet, a toll-free line. The operations half is not software</dd>
         </div>
         <div>
           <dt>Shipped</dt>
-          <dd>Five commercial templates, and six quote revisions on one live job</dd>
+          <dd>Five commercial templates, and one foundation package priced, subcontracted and invoiced end to end</dd>
         </div>
       </dl>
 
       <h2 className="sec">What I actually did</h2>
       <p className="body">
-        A trades website is easy and mostly beside the point. The part that decides whether a
-        company makes money is what happens between a homeowner calling and an invoice being paid:
-        how the job gets quoted, what the quote commits you to, who carries the risk if a
-        subcontractor is not paid, and what a change to the scope does to the price. None of that is
-        a web page.
+        The company was incorporated on 30 March 2026 and its first job was invoiced the same day. A
+        new-build house on Siksika Nation, Alberta: the exterior foundation package, a dimpled
+        membrane and two inches of rigid foam down the basement wall, then perforated drain and radon
+        gravel around the footing. Brixel priced it for the builder, subcontracted the install,
+        invoiced the builder, and was billed by the trade. Not a website. That is the whole business
+        model, run once, end to end.
       </p>
       <p className="body">
-        So most of the work was operations. I researched how payment and lien risk works in Alberta,
-        wrote the quoting protocol, and built the contract and change-order paperwork, then made the
-        site the front of that rather than a thing on its own. The lead form exists because someone
-        has to answer it within the hour; the templates exist because a verbal change to a scope is
-        an argument waiting for a month from now.
+        Most of the work was getting to a number. The trade quotes per square foot and per linear
+        foot; the builder wants one price per house. Translating between those took six revisions
+        before one was approved: materials moved, the gravel spec moved, and the version that got
+        signed dropped the self-adhered waterproofing layer because the builder&apos;s own crew was
+        doing it.
+      </p>
+      <p className="body">
+        Then the job itself corrected the estimate. The drawings give a 1,260 square foot basement
+        wall and a 178 foot perimeter. What went on was 991 square feet of membrane, 720.8 of foam
+        and 180.2 feet of drain, because those layers only run on the part of the wall that ends up
+        underground, and the foam only to frost depth. Nobody had modelled that, and it changes how
+        the next house gets priced.
       </p>
 
       <div className="decision">
         <span className="k">The decision that mattered</span>
         <p>
-          We had a plan to prove the numbers behind the whole model with a small advertising test. I
-          went and checked what a spend that size can actually establish, and the honest answer is
-          the cost of getting a click and how many clicks become an enquiry. Nothing about how many
-          enquiries become customers, which is the number the plan was built on.
+          The easy version of this business is an introduction. Put the builder in a room with the
+          trade, take a fee, carry nothing. Brixel signed both sides instead: a service agreement
+          with the builder, a subcontractor agreement with the trade, and its own scope, quote and
+          change-order documents in between. So it is the one holding the risk if a subcontractor is
+          not paid or the work is wrong.
         </p>
         <p>
-          So the test got rewritten to measure only what it can measure, with the pass and fail
-          conditions written down before it ran. Cheaper than finding out afterwards that a season
-          of spending had proved something else, and the reason I would rather be the person who
-          reads the benchmark than the person who quotes the industry average.
+          Which is why the five templates existed before the first job did. A position between two
+          parties only exists on paper, so I read how payment and lien risk actually works in Alberta
+          and wrote the paperwork off that. A verbal change to a scope is an argument scheduled for a
+          month from now.
         </p>
       </div>
 
       <h2 className="sec">What I would say about it honestly</h2>
       <p className="body">
-        This one is a business as much as a build, and it is early. The paperwork has been used on a
-        real job and the quote went through six revisions, which is the useful evidence: the
-        templates survived contact. The marketing side has not been proven yet, and the test that
-        would prove part of it has not run.
+        One house has been invoiced. A second location went into pricing in July and has not been.
+        One is a small number, and I would rather write that down than describe a business with one
+        job as if it were busy. What it shows is that the thing works when it is run: priced,
+        subcontracted, installed, invoiced, on paperwork that held.
       </p>
     </>
   );
