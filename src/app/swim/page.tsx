@@ -14,7 +14,8 @@ export const metadata = {
 };
 
 /* This was swim.hoodii.studio, a separate Vercel project generating one 105 KB HTML file every
- * morning. Same data, same reasoning, now a route like everything else.
+ * morning. Same data, same reasoning, now a route like everything else. That project and its alias
+ * were deleted on 2026-08-16, so this page is the only reading surface there is.
  *
  * WHAT CHANGED, and it is the only part worth arguing about: the old page shipped its whole
  * schedule as a JSON blob inline and did the filtering in the browser, which meant "open right now"
