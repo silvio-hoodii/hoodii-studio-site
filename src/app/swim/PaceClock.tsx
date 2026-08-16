@@ -10,10 +10,14 @@ import { useEffect, useRef } from 'react';
  * decorative because it shows the real current time. That is why it survives the move and the
  * porcelain-and-terracotta deck-clock palette does not.
  *
- * It is also the one legitimate use of --signal on this page, and arguably on the site. That colour
- * is reserved for a value that is true right now, and a hand pointing at the current second is the
- * purest example of one there is. Everything else here is monochrome, so the sweep hand is the only
- * coloured thing in view.
+ * The sweep hand is the purest use of --signal there is. That colour is reserved for a value that is
+ * true right now, and a hand pointing at the current second is exactly that.
+ *
+ * It is not the ONLY coloured thing on the page, and an earlier version of this comment said it was.
+ * The pin at the centre wears it too, because the pin is part of this hand, and so does the time on
+ * a session that is open at this second, which is the same claim about now made about a different
+ * fact. Three uses, one meaning. Worth stating precisely rather than claiming an exclusivity the
+ * stylesheet does not have.
  *
  * The original drove all three hands from a requestAnimationFrame loop, sixty times a second, to
  * move an hour hand that visibly changes twice an hour. This keeps rAF for the second hand only,

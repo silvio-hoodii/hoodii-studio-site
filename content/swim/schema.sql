@@ -13,9 +13,23 @@
 
 -- One lane-swim session at one pool on one day.
 --
--- The primary key is the natural one, because the source has no ids: schedule.json is regenerated
--- from scratch every morning and nothing in it is stable across runs except the tuple below. That
--- also makes the sync idempotent for free.
+-- `id` is a manufactured key, because the source has none: schedule.json is regenerated from
+-- scratch every morning and nothing in it is stable across runs. The sync joins the identifying
+-- fields with a separator and stores the result, the same way content/curio/sync.mjs manufactures
+-- an id from a question. That also makes the sync idempotent for free.
+--
+-- DETAIL AND NOTE ARE PART OF THE KEY, and leaving them out silently lost real sessions. The first
+-- version keyed on (pool, activity, date, start, "end") and 439 sessions became 437 rows without
+-- complaining, because two pairs collide:
+--
+--   MNP, 2026-08-19 10:30 to 12:30, "North Comp" and "South Comp"
+--   Seton YMCA, 2026-08-21 09:00 to 12:00, "Limited" and "50m Configuration - 6 Lanes"
+--
+-- Those are two different bodies of water and two different lane setups at the same hour, both
+-- genuinely swimmable. An `on conflict do update` merged each pair into one row, so the page
+-- under-reported what was open and nothing anywhere said so. A key that quietly discards rows is
+-- worse than a key that collides loudly. Hence a single text id built from every field that can
+-- distinguish two sessions, with nulls coalesced, since a primary key cannot hold one.
 --
 -- Times are Calgary wall clock as "HH:MM", zero-padded, 24-hour, exactly as the scrapers emit them.
 -- Kept as text on purpose. Every comparison this app makes is either against another such string or
@@ -24,6 +38,7 @@
 -- "what the clock on the pool wall will say", and would break the day the province stops observing
 -- daylight time.
 create table if not exists swim_session (
+  id        text primary key,
   pool      text not null,
   activity  text not null,
   date      text not null,
@@ -32,8 +47,7 @@ create table if not exists swim_session (
   op        text not null,
   detail    text,
   spaces    integer,
-  note      text,
-  primary key (pool, activity, date, start, "end")
+  note      text
 );
 create index if not exists swim_session_date on swim_session (date, start);
 

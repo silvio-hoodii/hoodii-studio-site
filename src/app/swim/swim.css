@@ -52,8 +52,10 @@
    works and is one edit from not working. */
 .swim .clock .hand { transform-origin: 32px 32px; }
 
-/* THE one chromatic thing on this page. --signal is for a value that is true right now, and a hand
-   pointing at the current second is the least arguable example of one on the whole site. */
+/* --signal is for a value that is true right now, and a hand pointing at the current second is the
+   least arguable example of one on the whole site. The pin goes with it because the pin is part of
+   the hand. NOT the only chromatic thing here, which an earlier version of this comment claimed:
+   an open session gets it too, forty lines down, for the same reason. */
 .swim .clock .sweep,
 .swim .clock .pin { stroke: var(--signal); fill: var(--signal); }
 .swim .clock .sweep { stroke: var(--signal); }

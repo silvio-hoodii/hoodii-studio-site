@@ -40,6 +40,16 @@ if (!url) throw new Error('SWIM_DATABASE_URL (or GYM_DATABASE_URL / KITCHEN_DATA
 
 const DRY = process.argv.includes('--dry-run');
 
+/* The key the source does not give us. Every field that can distinguish two real sessions goes in,
+   including detail and note: MNP runs its North and South pools in the same hour and Seton runs two
+   lane configurations in the same hour, and without those two fields each pair collapses into one
+   row. `op` is deliberately OUT, because it is a property of who published the schedule rather than
+   of the swim, and a scraper renaming itself must not duplicate every session it owns.
+   Unit-separator joins rather than a pipe, since a pool called "Village Square | Leisure" would
+   otherwise be able to forge another pool's id. */
+const sessionId = (s) =>
+  [s.pool, s.activity, s.date, s.start, s.end, s.detail ?? '', s.note ?? ''].join('');
+
 const client = new Client(url);
 await client.connect();
 
@@ -76,20 +86,33 @@ try {
        last week's rows behind forever and the timetable would slowly fill with sessions that are
        not happening.
 
-       Deleting first inside the same connection, after the zero-row guard above has already passed,
-       so the window where the table is empty is milliseconds and only ever opens on a payload we
-       have already decided is good. */
+       IN A TRANSACTION, and this is not belt and braces. Without it, a connection dropped partway
+       through the insert loop leaves a HALF-WRITTEN timetable, and the page has no way to see that.
+       Liveness reads the newest row where ok = true, so it would still be reading yesterday's
+       successful run: `covers_through` still reaches today, `generated` is still recent, and both
+       alarms stay silent over a table missing four hundred sessions. The page would quietly report
+       a city with almost no lane swim, which is the exact failure the two-alarm design exists to
+       prevent, arriving through the one door the alarms cannot watch. Either the whole window
+       lands or none of it does and yesterday's rows survive intact. */
+    await client.query('begin');
     await client.query('delete from swim_session');
     for (const s of sessions) {
       await client.query(
-        `insert into swim_session (pool, activity, date, start, "end", op, detail, spaces, note)
-         values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-         on conflict (pool, activity, date, start, "end") do update set
-           op = excluded.op, detail = excluded.detail,
-           spaces = excluded.spaces, note = excluded.note`,
-        [s.pool, s.activity, s.date, s.start, s.end, s.op, s.detail ?? null, s.spaces ?? null, s.note ?? null],
+        `insert into swim_session (id, pool, activity, date, start, "end", op, detail, spaces, note)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+         on conflict (id) do update set
+           op = excluded.op, spaces = excluded.spaces`,
+        [sessionId(s), s.pool, s.activity, s.date, s.start, s.end, s.op, s.detail ?? null, s.spaces ?? null, s.note ?? null],
       );
       sessionRows++;
+    }
+
+    /* Counted, not assumed. `sessionRows` is loop iterations, and the two are only equal while no
+       two sessions share an id. They were not equal on the first run here: 439 in, 437 rows out,
+       and nothing said so. Comparing them is what turns a silent merge into a visible one. */
+    const [{ n }] = (await client.query('select count(*)::int n from swim_session')).rows;
+    if (n !== sessionRows) {
+      throw new Error(`${sessionRows} sessions in the payload but ${n} rows written: ${sessionRows - n} collided on id, which means real sessions were lost. Widen sessionId().`);
     }
 
     for (const c of coverage) {
@@ -110,6 +133,7 @@ try {
       );
       poolRows++;
     }
+    await client.query('commit');
   } else {
     sessionRows = sessions.length;
     coverageRows = coverage.length;
@@ -117,6 +141,18 @@ try {
   }
 } catch (err) {
   failure = err instanceof Error ? err.message : String(err);
+  /* Roll back before anything else touches this connection. Postgres refuses every statement in a
+     failed transaction until it is closed, so without this the swim_sync insert below would itself
+     fail and the run would leave no record of why it died. Wrapped, because rollback outside a
+     transaction is only a warning and must not replace the real error. */
+  if (!DRY) {
+    try { await client.query('rollback'); } catch { /* nothing was open */ }
+  }
+  /* Row counts describe what was WRITTEN, and after a rollback nothing was. Reporting the loop's
+     progress here would print "312 rows" for a run that wrote none. */
+  sessionRows = 0;
+  coverageRows = 0;
+  poolRows = 0;
 }
 
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${sessionRows} rows`);
