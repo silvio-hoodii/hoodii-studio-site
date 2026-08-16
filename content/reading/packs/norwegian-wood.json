@@ -1,0 +1,198 @@
+{
+  "book": "Norwegian Wood",
+  "author": "Haruki Murakami",
+  "slug": "norwegian-wood",
+  "year": 1987,
+  "kind": "novel",
+  "unit": "part",
+  "total_chapters": 5,
+  "generated": "2026-08-11",
+  "finished_on": null,
+  "sections": [
+    {
+      "id": "s1",
+      "from": 1,
+      "to": 1,
+      "title": "Hamburg, thirty-seven, and the song",
+      "recap": "The book does not begin in the story it is about. Watanabe is thirty-seven and landing in Hamburg when he hears an orchestral cover of the Beatles' \"Norwegian Wood (This Bird Has Flown)\", which was Naoko's favourite song, and the whole novel unfolds as what that piece of music drags back. Everything you read is therefore a man in middle age reconstructing his late teens and early twenties, which is why the tone is elegiac even in the happy parts. The setting he returns to is Tokyo in the late 1960s, with student protests going on around a narrator who is largely indifferent to them."
+    },
+    {
+      "id": "s2",
+      "from": 2,
+      "to": 2,
+      "title": "Kizuki, and what his death does",
+      "recap": "Kizuki was Watanabe's best friend and Naoko's first boyfriend, and he kills himself at seventeen without explanation. That death is the event the rest of the book orbits. It leaves Watanabe and Naoko as the two people who each lost the same person, and it is grief rather than attraction that first draws them together. The novel is unusually direct that suicide here is not a plot device with a cause to be uncovered; it happens, it is not explained, and the survivors have to carry it. Hatsumi, the girlfriend of Watanabe's friend Nagasawa, later kills herself too, which stops Kizuki reading as a single aberration."
+    },
+    {
+      "id": "s3",
+      "from": 3,
+      "to": 3,
+      "title": "Naoko, and the sanatorium",
+      "recap": "Watanabe and Naoko sleep together after her twentieth birthday, and rather than bringing them closer it precedes her withdrawal. She leaves for a psychiatric sanatorium in the mountains and Watanabe is left without her and without a way to help. He visits, and it is there he meets Reiko Ishida, an older patient who is Naoko's confidante and who has her own account of mental illness and a life that came apart. The sanatorium chapters are the still centre of the book: a place deliberately outside ordinary time where people are neither getting better on a schedule nor being written off."
+    },
+    {
+      "id": "s4",
+      "from": 4,
+      "to": 4,
+      "title": "Midori, the other direction",
+      "recap": "Midori Kobayashi is a classmate, and she is the opposite of Naoko in every dimension the book cares about: vivid, blunt, funny, alive to the present, and interested in Watanabe now rather than through the medium of a shared dead friend. The novel's actual tension is not who Watanabe prefers but what each woman represents. Naoko is the pull backwards into the loss and the obligation it created. Midori is the possibility of a life that continues. He develops real feelings for Midori while still travelling to the mountains, and the book does not let him off the hook for that overlap."
+    },
+    {
+      "id": "s5",
+      "from": 5,
+      "to": 5,
+      "title": "Naoko's death, Reiko, and the phone call",
+      "recap": "Naoko kills herself. Watanabe wanders Japan for roughly a month, functionally unreachable, and grief here is portrayed as something you walk rather than something you process. He comes back and reconnects with Reiko, who leaves the sanatorium; after an informal memorial for Naoko the two of them sleep together on his rooftop, which reads as a rite rather than a romance. Out of it he understands that Midori is the person who matters most. He telephones her to say so. She asks, \"Where are you now?\", and the novel ends on him unable to answer, standing in the middle of a place he cannot name."
+    }
+  ],
+  "cards": [
+    {
+      "id": "n01",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "plot",
+      "q": "How does the novel actually open, and how old is the narrator there?",
+      "a": "Not in the 1960s at all. Watanabe is thirty-seven, landing in Hamburg, and he hears an orchestral cover of the Beatles song. The entire book is the memory that unlocks."
+    },
+    {
+      "id": "n02",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "detail",
+      "q": "Where does the title come from, and what does the Japanese title literally mean?",
+      "a": "From the Beatles' \"Norwegian Wood (This Bird Has Flown)\", which is Naoko's favourite song. The Japanese title, Noruwei no Mori, literally means Norwegian FOREST, which is a different image from the English one and closer to what the book is about."
+    },
+    {
+      "id": "n03",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "detail",
+      "q": "When and where is it set, and what is happening in the background?",
+      "a": "Tokyo in the late 1960s, during student protests against the established order. They are largely background: the narrator is conspicuously unengaged by the politics going on around him."
+    },
+    {
+      "id": "n04",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who is Kizuki, and what happens to him?",
+      "a": "Watanabe's best friend and Naoko's first boyfriend. He kills himself at seventeen. It is the event the entire novel proceeds from, and it is not given an explanation."
+    },
+    {
+      "id": "n05",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "why",
+      "q": "What first brings Watanabe and Naoko together, and why does that matter for everything after?",
+      "a": "Shared grief, not attraction. They are the two people left holding the same loss. Say out loud whether a relationship founded that way was ever going to work, because the book keeps quietly asking it."
+    },
+    {
+      "id": "n06",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who are Nagasawa and Hatsumi, and why does Hatsumi matter?",
+      "a": "Nagasawa is Watanabe's charismatic and callous university friend; Hatsumi is his girlfriend. She later kills herself. Her death stops Kizuki's from reading as one inexplicable event and makes it a pattern the book is deliberately building."
+    },
+    {
+      "id": "n07",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "plot",
+      "q": "What happens after Naoko's twentieth birthday?",
+      "a": "She and Watanabe sleep together, and rather than drawing her closer it is followed by her withdrawal. She leaves for a psychiatric sanatorium in the mountains."
+    },
+    {
+      "id": "n08",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "who",
+      "q": "Who is Reiko Ishida?",
+      "a": "An older patient at the sanatorium and Naoko's confidante, with her own history of mental illness and a life that fell apart. She becomes Watanabe's friend during the visits and is central at the very end."
+    },
+    {
+      "id": "n09",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "What is the sanatorium like as a place in the book?",
+      "a": "A retreat in the mountains that sits deliberately outside ordinary time. Nobody there is on a schedule to recover and nobody is written off either, which is what makes it feel restful and unnerving at once."
+    },
+    {
+      "id": "n10",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "who",
+      "q": "Who is Midori Kobayashi, and what does she represent against Naoko?",
+      "a": "A classmate who is vivid, blunt and funny, and who wants Watanabe in the present rather than through a shared dead friend. Naoko is the pull backwards into loss; Midori is the possibility of continuing."
+    },
+    {
+      "id": "n11",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "why",
+      "q": "Watanabe develops feelings for Midori while still visiting Naoko. Does the book judge him for it?",
+      "a": "It does not let him off, and it does not condemn him either. Worth saying where you land: he is honest about the overlap and cruel to nobody deliberately, and both women are hurt anyway."
+    },
+    {
+      "id": "n12",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "What does Watanabe do when Naoko dies?",
+      "a": "He wanders Japan for about a month, effectively unreachable. Grief is shown as something walked rather than processed, and the book gives it no useful lesson."
+    },
+    {
+      "id": "n13",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "What happens with Reiko at the end?",
+      "a": "She leaves the sanatorium and comes to him. They hold an informal memorial for Naoko and then sleep together on his rooftop, which reads as a rite of closing rather than a romance. It is what lets him see that Midori is the one who matters."
+    },
+    {
+      "id": "n14",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "detail",
+      "q": "What are the last beats, and what is the final line doing?",
+      "a": "He phones Midori to tell her he loves her, and she asks, \"Where are you now?\" The book ends with him unable to answer, standing somewhere he cannot name. It is a literal question about a phone box and a total statement of where he is in his life."
+    }
+  ],
+  "talk": {
+    "short": "A man of thirty-seven hears a Beatles song on a plane and it drops him back into being twenty in Tokyo, caught between two women: one the fragile girlfriend of his best friend who killed himself, the other a blunt, funny classmate who is entirely alive to the present. It is a book about how you carry other people's deaths and whether you are allowed to go on living afterwards.",
+    "if_pressed": "It is Murakami's realist novel, with none of the surreal machinery he is usually known for, which is exactly why it sold as it did. The structure matters: it is a memory, so it is elegiac even in the funny parts, and the ending withholds resolution on purpose. The final exchange is the whole book compressed into a question about location.",
+    "arguments": [
+      {
+        "q": "Is Midori the right answer or the easy one?",
+        "a": "She is the life-affirming choice and the reader is clearly meant to want her, which is precisely what makes some readers suspicious of it. The counter-reading is that choosing Midori is not choosing joy over sorrow, it is agreeing to keep living, which the book treats as the harder thing."
+      },
+      {
+        "q": "Does the book romanticise suicide and mental illness?",
+        "a": "It is the standard charge. Three characters kill themselves and the sanatorium is written as beautiful. The defence is that it refuses to explain any of the deaths or draw a lesson from them, which is the opposite of what romanticising usually does."
+      },
+      {
+        "q": "Are the women characters or functions?",
+        "a": "Naoko and Midori map so cleanly onto death and life that the argument writes itself. Reiko is usually the evidence for the defence, since she does not fit the scheme."
+      }
+    ],
+    "one_liners": [
+      "It is the one Murakami with no talking cats and no second moon, which is why it is the one that made him famous and the one he seemed to like least.",
+      "The Japanese title means Norwegian Forest, not Wood, which is a better description of the book.",
+      "It ends on someone asking him where he is, and him not knowing."
+    ],
+    "prompts": [
+      "Did the ending land as hopeful or as bleak for you?",
+      "You read Murakami before this, The Wind-Up Bird Chronicle too. Does this one feel like the same writer?",
+      "Which of the two women does the book actually seem to be in love with, as opposed to which one Watanabe picks?"
+    ]
+  },
+  "context": [
+    "Published in 1987. 296 pages in the US paperback and 400 in the UK edition, so the two look like very different books on a shelf.",
+    "It made Murakami a celebrity in Japan, especially among young readers, which by his own account he disliked enough that he left the country for a period at the height of it.",
+    "The English title comes from the Beatles song, but the Japanese title translates as Norwegian Forest, and the difference is not trivial: a forest is somewhere you get lost, which is closer to what the novel does."
+  ],
+  "sources": [
+    "raw/companions/norwegian-wood/SOURCES.md"
+  ]
+}

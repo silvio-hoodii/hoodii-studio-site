@@ -1,0 +1,214 @@
+{
+  "book": "Project Hail Mary",
+  "author": "Andy Weir",
+  "slug": "project-hail-mary",
+  "year": 2021,
+  "kind": "novel",
+  "unit": "part",
+  "total_chapters": 5,
+  "generated": "2026-08-11",
+  "finished_on": "2026-08-11",
+  "sections": [
+    {
+      "id": "s1",
+      "from": 1,
+      "to": 1,
+      "title": "Waking up with no name",
+      "recap": "A man comes round in a room he does not recognise, with two dead bodies beside him and no idea who he is. Everything in the opening stretch is worked out rather than remembered: that he is on a ship, that the ship is called the Hail Mary, that he is roughly four years and eight months from Earth and closing on Tau Ceti, and eventually that he is the only one of three still alive. His memory comes back in pieces alongside the present-day problem, so the book keeps cutting between the ship and how the mission was built. The reason for the amnesia is not an accident, which matters later."
+    },
+    {
+      "id": "s2",
+      "from": 2,
+      "to": 2,
+      "title": "Astrophage, the Petrova line, and how he got here",
+      "recap": "The Sun is dimming, and the visible sign is the Petrova line, an infrared arc running from the Sun to Venus. The cause is Astrophage: a single-celled organism that feeds on the Sun, stores enormous energy as mass, and expels it as light to move. It breeds using carbon dioxide, which is why it commutes to Venus. Left alone it costs perhaps ten to fifteen percent of the Sun's output and brings an ice age inside thirty years, and it threatens other stars within about eight light-years. Grace is a molecular biologist who left research to teach junior-high science, pulled in because of an unfashionable paper he once wrote. Eva Stratt runs the response with effectively unlimited authority, and Stratt is the one who sedated Grace and gave him the drug that erased his memory. He never agreed to go."
+    },
+    {
+      "id": "s3",
+      "from": 3,
+      "to": 3,
+      "title": "Rocky",
+      "recap": "At Tau Ceti there is another ship, the Blip-A, and aboard it one surviving Eridian engineer whom Grace names Rocky. Erid orbits 40 Eridani and has the same problem with Astrophage. The first-contact stretch is the heart of the book and it is almost entirely engineering: Eridians perceive by passive sonar rather than by light, they speak in chords, and their air would kill a human on contact, so everything has to be built before anything can be said. Rocky works in xenonite, a material far tougher than anything human. They construct a shared language, then a shared workspace, and Grace ends up teaching Rocky radiation and time dilation. Two last survivors of two separate crews, each sent to die, decide to work the problem together."
+    },
+    {
+      "id": "s4",
+      "from": 4,
+      "to": 4,
+      "title": "Taumoeba, and the thing Grace breaks",
+      "recap": "Tau Ceti has a Petrova line and is nevertheless not dying, and that discrepancy is the clue: something is eating the Astrophage. They find Taumoeba, a predator that keeps the population in check. Getting it home is not simply a matter of carrying it. Taumoeba escapes aboard the Hail Mary and eats the ship's Astrophage fuel, which forces nitrogen sterilisation and a tank swap. Then it turns out Taumoeba cannot survive the nitrogen in the atmospheres it would have to work in, so they selectively breed a nitrogen-resistant strain. That solves the stated problem and creates the real one: the strain Grace has bred can also get through xenonite, and xenonite is what Rocky's entire ship is made of. The fix and the disaster are the same act."
+    },
+    {
+      "id": "s5",
+      "from": 5,
+      "to": 5,
+      "title": "The choice, and Erid",
+      "recap": "Grace can go home. The mission is already accomplished the moment he launches the unmanned beetle drones toward Earth carrying the Taumoeba and the instructions for using it, and nothing about saving Earth requires him personally to survive. What Earth's survival does not cover is Rocky, whose ship is now carrying a microbe that eats it. Grace turns the ship around, having worked out that he can live on Taumoeba as food. Sixteen years later he is on Erid, in a housing that keeps him alive in an atmosphere that would not, teaching science to Eridian children, which is the job he had before any of this started. Rocky confirms the Sun came back to full brightness and that humanity made it. He thinks about going home and decides he is already where he wants to be."
+    }
+  ],
+  "cards": [
+    {
+      "id": "p01",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "plot",
+      "q": "What is the situation in the opening, exactly?",
+      "a": "A man wakes with no memory of who he is, in a room he cannot identify, with two dead bodies next to him. He has to deduce everything: that it is a spacecraft, that it is the Hail Mary, that he is about four years and eight months out and approaching Tau Ceti, and that he is the last of a crew of three."
+    },
+    {
+      "id": "p02",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "detail",
+      "q": "Why does the book keep cutting back to Earth?",
+      "a": "Because Grace's memory returns in pieces rather than all at once, so the past-tense chapters are not flashback for flavour, they are the same investigation running on a delay. You learn how the mission was assembled at roughly the rate he does."
+    },
+    {
+      "id": "p03",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "plot",
+      "q": "What is Astrophage and what does it do to the Sun?",
+      "a": "A single-celled organism that feeds on the Sun, stores enormous amounts of energy as mass, and expels that energy as light to move. It needs carbon dioxide to breed, which is why it travels between the Sun and Venus. It costs the Sun output, and the projection is a ten to fifteen percent drop and an ice age within about thirty years."
+    },
+    {
+      "id": "p04",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "detail",
+      "q": "What is the Petrova line?",
+      "a": "The visible symptom of the problem: an infrared arc running from the Sun out to Venus, which is the Astrophage migration route made visible. It is what tells scientists something is physically moving between the two."
+    },
+    {
+      "id": "p05",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who is Eva Stratt and what is her authority?",
+      "a": "A former European Space Agency administrator put in charge of the global response with effectively unlimited authority. She is not a scientist in the story so much as the person who can override any government or institution, and the book is fairly unsentimental about what that lets her do."
+    },
+    {
+      "id": "p06",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "why",
+      "q": "Grace did not volunteer. Stratt drugged him and wiped his memory to get him aboard. Is she right?",
+      "a": "No settled answer, and the book knows it. She traded one man's consent against the survival of the species, and she was correct that he was the right person and correct that he would not go. Worth deciding whether the outcome does any work in your judgement of it, since it very nearly did not come out this way."
+    },
+    {
+      "id": "p07",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "who",
+      "q": "Who is Rocky, and what is he doing at Tau Ceti?",
+      "a": "An eyeless, spider-like engineer from Erid, a planet orbiting 40 Eridani. He is the last survivor of the crew of the Blip-A, sent for exactly the same reason Grace was: Astrophage is killing his star too. Two last survivors of two separate doomed missions, arriving at the same place."
+    },
+    {
+      "id": "p08",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "How do Eridians perceive and communicate?",
+      "a": "By passive sonar rather than by light, so Rocky has no eyes and hears shape. They speak in chords rather than in single tones, which is why the human-Eridian language has to be built as music rather than as speech."
+    },
+    {
+      "id": "p09",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "What is xenonite and why does it matter twice?",
+      "a": "Rocky's building material, far tougher than anything human, and the substance the two use to build every shared workspace and tunnel. It matters again at the end, because the thing that threatens Rocky's ship is a microbe that has learned to get through xenonite."
+    },
+    {
+      "id": "p10",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "why",
+      "q": "Why does the first-contact section work as well as it does?",
+      "a": "Because almost none of it is talking. Their atmospheres and pressures are mutually lethal, so every exchange has to be engineered before it can happen, and the friendship gets built out of solved problems rather than declared. Worth saying out loud what you would have expected first contact to look like and how far this is from it."
+    },
+    {
+      "id": "p11",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "plot",
+      "q": "What is Taumoeba, and what clue leads to it?",
+      "a": "A predator that eats Astrophage. The clue is a discrepancy: Tau Ceti has a Petrova line, so it has Astrophage, and yet it is not dimming to death like the Sun. Something must be holding the population down, and finding what is the actual mission."
+    },
+    {
+      "id": "p12",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "plot",
+      "q": "What goes wrong with Taumoeba aboard the Hail Mary?",
+      "a": "It gets loose and starts eating the ship's Astrophage, which is the fuel. That forces nitrogen sterilisation and swapping the fuel tanks. The organism that saves Earth is also the organism that can strand him."
+    },
+    {
+      "id": "p13",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "Why do they have to breed a nitrogen-resistant strain, and what does that cost?",
+      "a": "Because plain Taumoeba cannot survive the nitrogen in the atmospheres where it would have to work, so it would be useless on arrival. Selective breeding fixes that and simultaneously produces a strain that can get through xenonite, which is what Rocky's ship is made of. The solution and the catastrophe are the same act."
+    },
+    {
+      "id": "p14",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "How is Earth actually saved, and does Grace need to be alive for it?",
+      "a": "He sends unmanned beetle drones back to Earth carrying the Taumoeba and the instructions. That is the mission completed, and no part of it requires him to come home. It is the reason the ending is a choice rather than a rescue."
+    },
+    {
+      "id": "p15",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "Why does he turn back instead of going home?",
+      "a": "Because Rocky's ship is now carrying the xenonite-eating strain and Rocky will die without help, and because Grace works out he can survive on Taumoeba as food. He gives up the trip home for the person, having already saved the planet by post."
+    },
+    {
+      "id": "p16",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "why",
+      "q": "He ends up on Erid teaching science to children, which is the job he quit. What is the book saying with that?",
+      "a": "The man who was drugged and conscripted into being a hero ends up choosing, freely, the exact ordinary life he had before. Worth deciding whether you read that as a happy ending, as a joke at the expense of heroism, or as the book quietly arguing that teaching was never the lesser thing."
+    }
+  ],
+  "talk": {
+    "short": "The Sun is dimming because a microbe is eating it, and a science teacher wakes up alone on a ship four years from Earth with no memory and no crew, sent to find out why one nearby star is surviving the same infection. Then he meets an alien engineer sent to solve the identical problem, and most of the book is the two of them doing science at each other across a wall neither can cross.",
+    "if_pressed": "The engine of it is problem-solving rather than plot: almost every chapter is a concrete obstacle worked through with real physics and biology, which is why people who do not normally read science fiction finish it. The relationship with Rocky is what people actually remember. And the ending turns on Grace choosing his friend over going home, after the planet has already been saved by unmanned drone.",
+    "arguments": [
+      {
+        "q": "Is Stratt a villain?",
+        "a": "She drugs a man, erases his memory and puts him on a suicide mission he refused. She is also right about every call she makes, and the species survives because of her. The book declines to resolve it, and readers split hard."
+      },
+      {
+        "q": "Does the science hold up, and does it matter?",
+        "a": "Astrophage is a deliberately convenient invention that permits relativistic travel and near-infinite energy density. The book is rigorous about consequences once you grant it. Whether that counts as hard science fiction or as a very well-behaved fantasy is the usual argument."
+      },
+      {
+        "q": "Is the amnesia a device to hide exposition?",
+        "a": "Yes, plainly, and the question is whether it earns itself. It lets the past-tense chapters arrive as discovery rather than as briefing, and it means the reveal about how he got aboard lands late. Some readers find that elegant, some find it a way to withhold."
+      }
+    ],
+    "one_liners": [
+      "It is a first-contact novel where the hard part is not trust, it is that both atmospheres are lethal, so every conversation has to be built before it can be had.",
+      "The planet gets saved by unmanned drone about fifty pages before the end. What is left is whether he goes home.",
+      "An alien speaks in chords, so the audiobook had to be scored rather than just narrated."
+    ],
+    "prompts": [
+      "You listened to this on Audible with Ray Porter narrating, and Rocky's chords are done with sound rather than described. Did that add something a print copy could not have, or did it just make it easier to keep going?",
+      "Stratt: defensible or not? Say where the line is for you.",
+      "Does the ending read as happy to you?"
+    ]
+  },
+  "context": [
+    "Published 4 May 2021, 496 pages. Andy Weir's third novel, after The Martian and Artemis, and the one that returned him to the single-stranded-problem-solving mode that made The Martian work.",
+    "It won the 2021 Dragon Award for Best Science Fiction Novel and the 2021 Goodreads Choice Award for Science Fiction, and was a 2022 Hugo finalist for Best Novel. Bill Gates and Barack Obama both put it on their 2021 recommendation lists, and it had spent 57 weeks on the New York Times bestseller list as of July 2026.",
+    "The audiobook is not merely an alternative format for this one. Ray Porter's narration won the 2022 Audie Award for Audiobook of the Year, and because Rocky speaks in chords the production uses melodic sound behind his dialogue, so a piece of the alien's characterisation exists only in the recording."
+  ],
+  "sources": [
+    "raw/companions/project-hail-mary/SOURCES.md"
+  ]
+}

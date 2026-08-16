@@ -1,0 +1,214 @@
+{
+  "book": "12 Rules for Life",
+  "author": "Jordan B. Peterson",
+  "slug": "12-rules-for-life",
+  "year": 2018,
+  "kind": "nonfiction",
+  "unit": "part",
+  "total_chapters": 5,
+  "generated": "2026-08-11",
+  "finished_on": null,
+  "sections": [
+    {
+      "id": "s1",
+      "from": 1,
+      "to": 1,
+      "title": "The frame: suffering, meaning, responsibility",
+      "recap": "The claim the whole book rests on is that suffering is built into the structure of being. It is not a problem to be solved or a sign that something has gone wrong; it is the baseline condition. What follows from that is the book's actual argument: since you cannot remove suffering, the live question is whether you face it or withdraw from it, and the individual can choose. From there come the two recurring emphases: pursue meaning rather than happiness, because happiness is not available on demand and meaning is; and accept responsibility, which the book treats as the thing that makes suffering bearable rather than as a burden added on top of it."
+    },
+    {
+      "id": "s2",
+      "from": 2,
+      "to": 2,
+      "title": "Rules 1 to 4: yourself",
+      "recap": "Stand up straight with your shoulders back. Treat yourself like someone you are responsible for helping. Make friends with people who want the best for you. Compare yourself to who you were yesterday, not to who someone else is today. The first four are all about the relationship with yourself, and the pattern is consistent: extend to yourself the seriousness you would extend to someone in your care, and pick your reference points so that improvement is measurable rather than humiliating. Rule 1 is where the lobster argument sits, used to claim that social hierarchy and its neurology are far older than human culture."
+    },
+    {
+      "id": "s3",
+      "from": 3,
+      "to": 3,
+      "title": "Rules 5 to 8: other people, and the truth",
+      "recap": "Do not let your children do anything that makes you dislike them. Set your house in perfect order before you criticize the world. Pursue what is meaningful, not what is expedient. Tell the truth, or at least don't lie. This middle stretch turns outward, and it is where the book's politics are most visible: rule 6 in particular is the one quoted approvingly and attacked most often, depending on whether you read it as a call to competence or as an instruction to shut up about injustice. Rule 7 states the meaning-over-expedience principle directly, and rule 8's hedge, or at least don't lie, is a deliberately lower bar than the rule it follows."
+    },
+    {
+      "id": "s4",
+      "from": 4,
+      "to": 4,
+      "title": "Rules 9 to 12: attention, precision, and the small ones",
+      "recap": "Assume that the person you are listening to might know something you don't. Be precise in your speech. Do not bother children when they are skateboarding. Pet a cat when you encounter one on the street. Nine and ten are about epistemic humility and about naming things accurately enough to act on them. Eleven and twelve are the ones that sound like jokes and are not: the skateboarding rule is an argument against protecting people out of their own competence, and the cat rule is about taking the small available goods seriously in a life you have just been told is structurally full of suffering. The last rule is the answer to the first premise."
+    },
+    {
+      "id": "s5",
+      "from": 5,
+      "to": 5,
+      "title": "How it is made, and how it landed",
+      "recap": "Essay format, one chapter per rule, argued through psychology, mythology, religion and personal anecdote rather than through studies. The influences are Jungian psychology and biblical narrative, mixed with contemporary stories including Harry Potter and The Lion King. It sold over ten million copies by May 2023 and topped bestseller lists internationally. Reviews were decidedly mixed: supporters praised its realism about human struggle, while critics called it unbearably banal and accused Peterson of social Darwinism and of misogyny. Academic psychologists questioned the scientific rigour specifically, on the grounds that the book leans on anecdote rather than evidence."
+    }
+  ],
+  "cards": [
+    {
+      "id": "j01",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "idea",
+      "q": "What is the book's founding claim about suffering?",
+      "a": "That suffering is built into the structure of being. It is the baseline condition rather than a malfunction, so the live question is not how to remove it but whether you face it or withdraw."
+    },
+    {
+      "id": "j02",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "why",
+      "q": "Why meaning rather than happiness?",
+      "a": "Because happiness is not available on demand and cannot survive the premise about suffering, whereas meaning can be pursued deliberately and holds up inside difficulty. Worth saying whether you find that persuasive or a way of relabelling endurance."
+    },
+    {
+      "id": "j03",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "idea",
+      "q": "State rules 1 and 2.",
+      "a": "One: stand up straight with your shoulders back. Two: treat yourself like someone you are responsible for helping."
+    },
+    {
+      "id": "j04",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "idea",
+      "q": "State rules 3 and 4.",
+      "a": "Three: make friends with people who want the best for you. Four: compare yourself to who you were yesterday, not to who someone else is today."
+    },
+    {
+      "id": "j05",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "evidence",
+      "q": "What are the lobsters doing in this book?",
+      "a": "They are used in rule 1 as an example of naturally forming social hierarchy and its neurology, the argument being that hierarchy long predates human culture. It is also the single most attacked passage in the book."
+    },
+    {
+      "id": "j06",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "why",
+      "q": "What connects the first four rules?",
+      "a": "They are all about the relationship with yourself: extend to yourself the seriousness you would extend to someone in your care, and choose reference points that make improvement measurable rather than humiliating."
+    },
+    {
+      "id": "j07",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "idea",
+      "q": "State rules 5 and 6.",
+      "a": "Five: do not let your children do anything that makes you dislike them. Six: set your house in perfect order before you criticize the world."
+    },
+    {
+      "id": "j08",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "idea",
+      "q": "State rules 7 and 8.",
+      "a": "Seven: pursue what is meaningful, not what is expedient. Eight: tell the truth, or at least don't lie."
+    },
+    {
+      "id": "j09",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "why",
+      "q": "Rule 6 is the most contested one. What are the two readings?",
+      "a": "Either a call to establish competence and standing before you set about reforming the world, or an instruction to keep quiet about injustice until your own life is flawless, which is never. Which one you hear largely predicts what you think of the book."
+    },
+    {
+      "id": "j10",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "Rule 8 hedges: 'or at least don't lie'. Why is the hedge there?",
+      "a": "It sets a deliberately lower and more achievable bar than the rule it follows. Telling the whole truth may be beyond you in a given moment; not actively lying is available to anyone."
+    },
+    {
+      "id": "j11",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "idea",
+      "q": "State rules 9 and 10.",
+      "a": "Nine: assume that the person you are listening to might know something you don't. Ten: be precise in your speech."
+    },
+    {
+      "id": "j12",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "idea",
+      "q": "State rules 11 and 12.",
+      "a": "Eleven: do not bother children when they are skateboarding. Twelve: pet a cat when you encounter one on the street."
+    },
+    {
+      "id": "j13",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "why",
+      "q": "The last two rules sound trivial. What are they actually doing?",
+      "a": "Eleven is an argument against protecting people out of their own competence, using risk-taking children as the case. Twelve is about taking small available goods seriously in a life the book has already declared structurally full of suffering, so it answers the opening premise."
+    },
+    {
+      "id": "j14",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "technique",
+      "q": "How is the book actually argued, and from what influences?",
+      "a": "One essay per rule, argued through psychology, mythology, religion and personal anecdote rather than through studies. The influences are Jungian psychology and biblical narrative, mixed with contemporary stories including Harry Potter and The Lion King."
+    },
+    {
+      "id": "j15",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "evidence",
+      "q": "How did it sell, and how was it received?",
+      "a": "Over ten million copies by May 2023, topping bestseller lists internationally, with decidedly mixed reviews. Supporters praised its realism about human struggle; critics called it unbearably banal and accused Peterson of social Darwinism and misogyny."
+    },
+    {
+      "id": "j16",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "evidence",
+      "q": "What is the specific academic criticism, as opposed to the political one?",
+      "a": "That the scientific rigour is weak: academic psychologists noted the book relies on anecdote rather than evidence-based research. That is a separate charge from the accusations about its politics and can be true independently of them."
+    }
+  ],
+  "talk": {
+    "short": "A clinical psychologist's twelve rules for living, argued through mythology, religion and anecdote rather than through studies. The premise is that suffering is built into the structure of being, and the conclusion is that meaning and responsibility, rather than happiness, are what make it bearable.",
+    "if_pressed": "The rules run from posture and self-care through to how you raise children, whether you should criticise the world before fixing your own life, telling the truth, and listening as though the other person knows something. The last two are deliberately small: leave risk-taking children alone, and pet the cat. It sold over ten million copies and split reviewers completely.",
+    "arguments": [
+      {
+        "q": "Is rule 6 wisdom or a gag order?",
+        "a": "Set your house in perfect order before you criticize the world reads either as a call to competence first, or as a demand for a moral standing nobody can ever reach, which conveniently silences criticism. Both readings are common and the text supports each."
+      },
+      {
+        "q": "Is it banal?",
+        "a": "Critics said unbearably banal, and stated flatly the rules are unobjectionable. The defence is that the rules are the index rather than the argument, and that the essays are where the work happens. Whether that defence holds depends on how much you got from the essays."
+      },
+      {
+        "q": "Does the lobster argument work?",
+        "a": "It is used to show hierarchy is older than human culture and therefore not merely a social construct. The objection is not usually that lobsters lack the neurology but that the inference from lobster to human social arrangement does far more work than the biology licenses."
+      }
+    ],
+    "one_liners": [
+      "The premise is that suffering is structural, not a malfunction, and everything else is what follows from accepting that.",
+      "Two of the twelve rules are about skateboarding children and street cats, and neither is a joke.",
+      "Critics called it unbearably banal, which is a strange charge to survive ten million copies."
+    ],
+    "prompts": [
+      "Which rule actually changed anything for you, if any?",
+      "You've also read The Subtle Art and Can't Hurt Me. Do these three agree about suffering, or are they saying different things?",
+      "Where do you come down on rule 6?"
+    ]
+  },
+  "context": [
+    "Published January 2018 by Random House Canada and Penguin Books, 448 pages in hardcover, subtitled An Antidote to Chaos.",
+    "Over ten million copies sold by May 2023, topping bestseller lists internationally.",
+    "This pack covers the twelve rules as stated and the book's structure, themes, influences and reception. It does NOT summarise the individual essays, because the source did not carry them, so the chapter-level content of each rule is deliberately absent rather than reconstructed from memory."
+  ],
+  "sources": [
+    "raw/companions/12-rules-for-life/SOURCES.md"
+  ]
+}

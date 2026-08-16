@@ -16,6 +16,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
     { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
 
+    /* Two apps that used to be someone else's subdomain, moved here 2026-08-16. /swim changes every
+     * morning; the finish packs change when a book gets finished. The individual /reading/[slug]
+     * pages are deliberately NOT listed: they are linked from /reading, which is enough for a
+     * crawler, and a sitemap that has to be hand-extended every time a book is added is the same
+     * hand-maintained list this whole migration exists to get rid of. */
+    { url: 'https://hoodii.studio/swim', changeFrequency: 'daily', priority: 0.6 },
+    { url: 'https://hoodii.studio/reading', changeFrequency: 'monthly', priority: 0.6 },
+
     /* The four project pages, published 2026-08-16. `monthly` rather than `weekly`: they describe
      * work that is finished, so the honest answer is that they change rarely. Each one declares its
      * own canonical, which is the rule this site follows for every indexed route. */

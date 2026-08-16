@@ -1,0 +1,208 @@
+{
+  "book": "Atomic Habits",
+  "author": "James Clear",
+  "slug": "atomic-habits",
+  "year": 2018,
+  "kind": "nonfiction",
+  "unit": "part",
+  "total_chapters": 5,
+  "generated": "2026-08-02",
+  "finished_on": null,
+  "sections": [
+    {
+      "id": "s1",
+      "from": 1,
+      "to": 1,
+      "title": "The case for small habits",
+      "recap": "The argument the whole book rests on. \"Atomic\" means two things at once: tiny, and powerful, the way atoms combine into molecules. A habit improved by one percent a day compounds to roughly thirty-seven times better over a year, so the size of any single action is a bad guide to whether it matters. The second move is the one people actually take away: stop setting outcome goals and set identity goals instead. You do not become a writer by finishing a book, you become one by writing each day. The habit is the vote you cast for the kind of person you are, and enough votes decide it."
+    },
+    {
+      "id": "s2",
+      "from": 2,
+      "to": 2,
+      "title": "First Law: Make It Obvious",
+      "recap": "Every habit runs on a four-step loop: cue, craving, response, reward. The cue triggers the brain to start a behaviour because it predicts a reward. The First Law works on that cue: if you want a habit, make its trigger impossible to miss. This is where environment design lives. A British hospital raised how much water people drank simply by putting the bottles where they could be seen. Laszlo Polgar raised three chess champions by building a household around chess. The inversion is how you break a habit: make the cue invisible, which is why the standard advice is to get the thing out of the house rather than to resist it."
+    },
+    {
+      "id": "s3",
+      "from": 3,
+      "to": 3,
+      "title": "Second Law: Make It Attractive",
+      "recap": "The second step of the loop is the craving, the motivation without which there is no reason to act at all. So the Second Law is about making the habit something you want rather than something you should do. Stephen Luby's handwashing programme in Pakistan is the clean example: the intervention that worked was pleasant-smelling soap, which made the act itself pleasurable rather than dutiful. To break a habit, invert it and make it unattractive."
+    },
+    {
+      "id": "s4",
+      "from": 4,
+      "to": 4,
+      "title": "Third Law: Make It Easy",
+      "recap": "The response is the habit you actually perform, and the Third Law is about lowering the friction in front of it until performing it beats not performing it. Two named techniques live here. Habit stacking attaches a new behaviour to one already running, using the formula \"After I [current habit], I will [new habit]\", so an existing routine becomes the cue and nothing depends on remembering or on motivation. The Two-Minute Rule says any new habit should take under two minutes to start: you are not trying to do the thing, you are trying to become the kind of person who shows up, and the two minutes is the vote. Scale comes later. To break a habit, invert it and make it difficult."
+    },
+    {
+      "id": "s5",
+      "from": 5,
+      "to": 5,
+      "title": "Fourth Law: Make It Satisfying",
+      "recap": "The reward is the end of the loop: it satisfies the craving and it teaches the brain which actions are worth repeating. The Fourth Law's problem is timing, because the rewards of good habits are usually delayed and the costs are immediate, which is exactly backwards from what the brain responds to. So you attach something immediately satisfying to the behaviour, and you track it so progress is visible. The Vietnam War heroin case is the book's strongest evidence that this is environmental rather than moral: soldiers who used heavily in Vietnam largely stopped on returning home, because the entire context around the habit had changed. To break a habit, invert it and make it unsatisfying."
+    }
+  ],
+  "cards": [
+    {
+      "id": "a01",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "idea",
+      "q": "What does \"atomic\" actually mean in the title?",
+      "a": "Two things at once: tiny, and powerful. Like atoms combining into molecules, small consistent choices compound into something much larger than any one of them. It is not a metaphor for \"small\", it is a metaphor for \"small AND fundamental\"."
+    },
+    {
+      "id": "a02",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "idea",
+      "q": "What is the one-percent claim, and what number does it produce?",
+      "a": "Improving by one percent a day compounds over a year to roughly thirty-seven times better. The point is not the arithmetic, it is that the size of any single action is a terrible guide to whether it matters."
+    },
+    {
+      "id": "a03",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "idea",
+      "q": "Identity-based habits: what is the actual argument?",
+      "a": "Stop setting outcome goals and set identity goals. Habits build identity through repetition rather than through one achievement: you do not become a writer by finishing a book, you become one by writing each day. Every time you do the habit you cast a vote for being that kind of person."
+    },
+    {
+      "id": "a04",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "why",
+      "q": "Why does the identity framing matter more than the tactics?",
+      "a": "Because it changes what failure means. If the goal is an outcome, missing a day is falling behind. If the goal is being a person who does this, missing a day is one vote against many, and the response is to show up again rather than to start over. It is also the part of the book people still quote years later."
+    },
+    {
+      "id": "a05",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "idea",
+      "q": "What are the four steps of the habit loop, in order?",
+      "a": "Cue, craving, response, reward. The cue triggers the brain because it predicts a reward. The craving is the motivation. The response is the habit itself, thought or action. The reward satisfies the craving and teaches the brain the action was worth repeating."
+    },
+    {
+      "id": "a06",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "idea",
+      "q": "What are the Four Laws, and how do they map onto the loop?",
+      "a": "One law per step. Make it obvious (cue), make it attractive (craving), make it easy (response), make it satisfying (reward). That mapping is the architecture of the whole book, and each law gets its own section."
+    },
+    {
+      "id": "a07",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "idea",
+      "q": "How do you break a bad habit, in the book's terms?",
+      "a": "Invert all four laws. Make it invisible, unattractive, difficult, and unsatisfying. That is why the advice is always to remove the thing from your environment rather than to resist it."
+    },
+    {
+      "id": "a08",
+      "ch": 2,
+      "sec": "s2",
+      "kind": "technique",
+      "q": "What is environment design, and what is the evidence given for it?",
+      "a": "Arrange your surroundings so the cue for the habit you want is unmissable. A British hospital increased how much water people drank just by placing the bottles visibly. Laszlo Polgar raised three chess champions by building an entire household around chess."
+    },
+    {
+      "id": "a09",
+      "ch": 3,
+      "sec": "s3",
+      "kind": "technique",
+      "q": "What is the Second Law's example, and why is it the good one?",
+      "a": "Stephen Luby's handwashing programme in Pakistan, where what worked was pleasant-smelling soap. It is the good example because nothing about the information changed. People already knew to wash their hands. The act itself was made pleasurable instead of dutiful."
+    },
+    {
+      "id": "a10",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "technique",
+      "q": "What is habit stacking, and what is the exact formula?",
+      "a": "Attach a new behaviour to one you already do reliably. \"After I [current habit], I will [new habit].\" The existing routine becomes the cue, so the new habit does not depend on you remembering it or feeling motivated."
+    },
+    {
+      "id": "a11",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "technique",
+      "q": "What is the Two-Minute Rule?",
+      "a": "Any new habit should take under two minutes to start. You break the behaviour into two-minute increments and those build into larger achievements. The point is not to do the thing, it is to reliably start it."
+    },
+    {
+      "id": "a12",
+      "ch": 4,
+      "sec": "s4",
+      "kind": "why",
+      "q": "Why is the Third Law the one that usually does the work?",
+      "a": "Because it is the only law that does not require you to feel anything. Obvious and attractive still route through attention and desire; easy just removes friction. If you only take one thing from the book, making the first two minutes trivially easy is the highest-yield move."
+    },
+    {
+      "id": "a13",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "idea",
+      "q": "What is the timing problem the Fourth Law solves?",
+      "a": "The rewards of good habits are delayed while their costs are immediate, and for bad habits it is the reverse. That is backwards from what the brain responds to, so you have to attach something immediately satisfying to the behaviour and make progress visible."
+    },
+    {
+      "id": "a14",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "evidence",
+      "q": "What is the Vietnam heroin case, and what does the book use it to prove?",
+      "a": "Soldiers who used heroin heavily in Vietnam largely stopped once they returned home. The book uses it as its strongest evidence that habits are environmental rather than moral: nothing about the individuals changed, the entire context around the habit did."
+    },
+    {
+      "id": "a15",
+      "ch": 5,
+      "sec": "s5",
+      "kind": "why",
+      "q": "Someone says \"it's just common sense repackaged.\" What is the honest answer?",
+      "a": "Partly fair. Almost none of the underlying psychology is new, and the habit loop predates the book. What it did was give the pieces names you can actually use in a sentence, map each one to a specific action, and pick examples good enough to remember. That is a real contribution even if it is not a discovery."
+    }
+  ],
+  "talk": {
+    "short": "It's a book about how habits actually form, and the argument is that the size of any single action tells you nothing about whether it matters, because small things compound. The bit people take away is the identity flip: don't set a goal to run a marathon, decide you're a person who runs, and then every run is a vote for that. The rest is a framework, four laws, one for each step of how a habit works.",
+    "if_pressed": "The four steps of a habit are cue, craving, response, reward, and the four laws are one per step: make it obvious, attractive, easy, satisfying. Flip all four to break a habit instead. The two techniques with names are habit stacking, which is 'after I do X, I will do Y', and the two-minute rule, which says start so small it takes under two minutes so the only thing you're building is showing up.",
+    "arguments": [
+      {
+        "q": "Is any of it actually new?",
+        "a": "Not really, and that is the standard criticism. The cue-craving-response-reward loop is established behavioural psychology, and the self-help shelf has said 'start small' for decades. What Clear did was name each piece so you can use it in a sentence, attach a specific action to each one, and choose examples memorable enough to survive. Whether that counts as a contribution or as repackaging is the actual argument."
+      },
+      {
+        "q": "Does it work?",
+        "a": "The framework is descriptive and mostly uncontroversial. The load-bearing question is whether naming the mechanism helps anyone execute, which the book cannot answer about you. Worth noticing that its own best evidence, the Vietnam heroin case, is about environment changing on its own rather than about anyone applying a technique."
+      },
+      {
+        "q": "Which part is worth keeping?",
+        "a": "The Two-Minute Rule and the identity flip. Both survive contact with a bad week, because both redefine success as showing up rather than as performing. The rest is a useful vocabulary more than a set of instructions."
+      }
+    ],
+    "one_liners": [
+      "Every habit is a vote for the kind of person you're becoming. You're not trying to win the election, you're trying to win most of the votes.",
+      "Cue, craving, response, reward. Four laws, one per step: make it obvious, attractive, easy, satisfying. Flip all four to break one.",
+      "The two-minute rule: make the start so small it's stupid, because the thing you're actually building is showing up, not the habit."
+    ],
+    "prompts": [
+      "Did you change anything after reading it, and is it still going?",
+      "Which of the four laws is the one you actually needed?",
+      "Was it worth reading, or would the summary have done?"
+    ]
+  },
+  "context": [
+    "Published in 2018. It has sold well over twenty million copies and is one of the best-selling non-fiction books of the last decade.",
+    "20 chapters plus an introduction and a conclusion, organised around the four laws.",
+    "Clear built the audience first through a newsletter and blog at jamesclear.com; the book is the consolidation of that material rather than the start of it."
+  ],
+  "sources": [
+    "raw/companions/atomic-habits/SOURCES.md",
+    "jamesclear.com: the habit loop and the Four Laws, from the author's own site",
+    "LitCharts Atomic Habits summary: structure, identity-based habits, case studies"
+  ]
+}

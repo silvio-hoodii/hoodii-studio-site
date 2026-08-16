@@ -12,6 +12,7 @@ import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import { getSummary as getMusicSummary } from '@/lib/music/db';
 import { getSummary as getSwimSummary, getLiveness as getSwimLiveness, shortPool } from '@/lib/swim/db';
+import { allPacks } from '@/lib/reading/packs';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -166,6 +167,27 @@ async function frenchRow(): Promise<Row> {
   }
 }
 
+async function readingRow(): Promise<Row> {
+  try {
+    const packs = await allPacks();
+    if (!packs.length) throw new Error('no packs');
+    const cards = packs.reduce((n, p) => n + p.cards.length, 0);
+    /* Counted off the files, like every other row that has data behind it. The hand-written version
+       said "The shelf, the queue, and whether a book is worth keeping", which is not what the app
+       is or has ever been, and it sat there reading perfectly plausibly until somebody opened the
+       deployed page. */
+    return {
+      label: 'Reading',
+      line: <><span className="tnum">{packs.length}</span> books finished, and <span className="tnum">{cards}</span> cards to find out whether any of it stuck</>,
+      sub: 'miss one and it hands back a recap of just that stretch',
+      href: '/reading',
+    };
+  } catch {
+    // A filesystem hiccup must not take the front door down with it.
+    return { label: 'Reading', line: 'Recall cards and a debrief for books I have finished', href: '/reading' };
+  }
+}
+
 async function swimRow(): Promise<Row> {
   try {
     const [s, live] = await Promise.all([getSwimSummary(), getSwimLiveness()]);
@@ -269,20 +291,6 @@ async function musicRow(): Promise<Row> {
 }
 
 const STATIC_ROWS: Row[] = [
-  {
-    /* This said "The shelf, the queue, and whether a book is worth keeping". The deployed app has
-     * no shelf and no queue on it: it serves finish packs, which are self-graded recall cards plus
-     * a debrief for a book you have finished, and one spoiler-gated companion for a book in
-     * progress. Caught 2026-08-11 by reading the deployed page, which is the same way the Swim row
-     * was caught two days earlier and the same underlying defect: a description written by hand
-     * rather than derived will drift and still read plausibly. Both rows stay hand-written until
-     * these apps become real routes, so both stay suspect. */
-    label: 'Reading',
-    line: 'Recall cards and a debrief for books I have finished, so I can tell whether any of it stuck',
-    sub: 'plus a companion for whatever I am reading now, gated so it cannot spoil ahead',
-    href: 'https://readingos.vercel.app',
-    external: true,
-  },
   /* Swim used to sit here, hand-written, pointing at swim.hoodii.studio. It is a real route as of
    * 2026-08-16 and its row is DERIVED from the mirror in swimRow() above, which is the actual fix
    * for the drift this list kept producing: this row once said "Sessions, drills, and what to work
@@ -419,10 +427,10 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [spotify, kitchen, gym, health, french, curio, music, swim] = await Promise.all([
-    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(),
+  const [spotify, kitchen, gym, health, french, curio, music, swim, reading] = await Promise.all([
+    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(), readingRow(),
   ]);
-  const rows = [kitchen, gym, health, french, curio, music, swim, ...STATIC_ROWS];
+  const rows = [kitchen, gym, health, french, curio, music, swim, reading, ...STATIC_ROWS];
 
   /* Who this is, in the form a search engine reads rather than infers. Both links are already
    * printed in the footer below, so nothing here is newly public. `sameAs` is the whole point: it

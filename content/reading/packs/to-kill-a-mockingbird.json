@@ -1,0 +1,442 @@
+{
+  "book": "To Kill a Mockingbird",
+  "author": "Harper Lee",
+  "slug": "to-kill-a-mockingbird",
+  "year": 1960,
+  "kind": "novel",
+  "unit": "chapter",
+  "total_chapters": 31,
+  "generated": "2026-08-02",
+  "finished_on": null,
+  "sections": [
+    {
+      "id": "s1",
+      "from": 1,
+      "to": 8,
+      "title": "The Radley summer",
+      "recap": "Maycomb, Alabama, in the middle of the Depression. Scout Finch is six, her brother Jem is ten, their mother is dead, and their father Atticus is the town lawyer. Calpurnia, the Black cook, runs the house. Each summer a small boy called Dill comes to stay next door, and the three of them spend their time daring each other to touch the Radley house, where a shut-in named Boo is supposed to live. Somebody starts leaving them presents in a knothole of the Radley oak: gum, pennies, two soap dolls carved to look like Jem and Scout. Nathan Radley, Boo's older brother, fills the knothole with cement. When Miss Maudie's house burns down in the night, someone puts a blanket around Scout's shoulders in the dark without her noticing. It was Boo."
+    },
+    {
+      "id": "s2",
+      "from": 9,
+      "to": 11,
+      "title": "Atticus takes the case",
+      "recap": "A boy at school taunts Scout that her father defends Black people, and that is how she learns Atticus has been appointed to defend Tom Robinson. Atticus tells her he will almost certainly lose, because a Black man's word will not beat a white family's, and that he has to take it anyway. Two set pieces build the father: a rabid dog comes down the street and Atticus, who never touches a gun, drops it with one shot, and the children learn he was once the best marksman in the county and gave it up because he thought it was an unfair advantage over living things. Then Jem, enraged by old Mrs. Dubose insulting Atticus, destroys her camellia bushes, and is sentenced to read aloud to her every afternoon. When she dies, Atticus reveals she was a morphine addict using those sessions to stretch the gaps between doses so she could die clean, and calls her the bravest person he ever knew: real courage is going on when you know you are licked before you begin."
+    },
+    {
+      "id": "s3",
+      "from": 12,
+      "to": 15,
+      "title": "The church, the aunt, and the night at the jail",
+      "recap": "With Atticus away, Calpurnia takes the children to her own church, where a woman named Lula challenges them at the door and the rest of the congregation takes up a collection for Tom Robinson's wife Helen. Scout notices Calpurnia speaks differently there than at home. They come back to find Aunt Alexandra installed on the porch, moved in to make Scout a lady and to lecture everyone on family breeding. Dill runs away from home and turns up under Scout's bed. Then the night before the trial: Atticus sits outside the jail with a light bulb on an extension cord, reading, and a group of men arrive to take Tom out. Scout runs into the middle of them, recognises Walter Cunningham's father, and starts politely making conversation about his son and his legal troubles until he crouches down, tells the men to clear out, and they go."
+    },
+    {
+      "id": "s4",
+      "from": 16,
+      "to": 21,
+      "title": "The trial",
+      "recap": "The morning after the jail, Atticus explains to the children why a friend like Mr. Cunningham turned up in a mob: a mob is still made of people, and it took an eight-year-old to remind them of it. Then the whole county packs the courthouse. On the way in the children see Dolphus Raymond, the white man who lives with a Black woman and fakes being a drunk so the town has a reason it can accept for it. The white section is full, so Reverend Sykes seats them in the segregated Black balcony, and they watch the entire trial from up there. The case falls apart under Atticus in a specific, physical way. Sheriff Heck Tate testifies that Mayella Ewell's injuries were on the right side of her face, with finger marks on her throat, and that no doctor was ever called. Bob Ewell takes the stand, and Atticus has him write his name: he is left-handed. Mayella testifies that she offered Tom a nickel to chop up a chiffarobe and that he attacked her inside the house. Then Atticus has Tom stand up: Tom's left arm is twelve inches shorter than his right and hangs dead, ruined in a cotton gin as a boy. He physically could not have done it. Tom testifies that Mayella sent all eight children away for ice cream, called him inside, grabbed him and kissed him, and that her father saw through the window and called her a whore. The prosecutor's real attack is that Tom said he felt sorry for her, a Black man pitying a white woman. Atticus's closing says the state's case rests on the assumption that all Black men lie, and that whatever else is unequal, a courtroom is the one place where all men are equal. The jury is out for hours, which has never happened before in such a case. Not one juror looks at Tom when they come back. Guilty. As Atticus walks out, every Black person in the balcony stands up."
+    },
+    {
+      "id": "s5",
+      "from": 22,
+      "to": 27,
+      "title": "After the verdict",
+      "recap": "The kitchen fills with food left by Black families who have nothing. Miss Maudie points out that the jury took hours instead of minutes, and that one juror, a Cunningham, wanted to acquit: a baby step, but a step. Bob Ewell spits in Atticus's face at the post office and says he will get him if it takes the rest of his life. Tom is held at a prison farm seventy miles away waiting on appeal. At Aunt Alexandra's missionary tea, the ladies pity a tribe in Africa while complaining about their own Black neighbours, and Atticus comes home in the middle of it: Tom ran at the exercise-yard fence in daylight and the guards shot him seventeen times. At school Scout hears her teacher condemn Hitler for persecuting Jews, and remembers the same teacher outside the courthouse saying it was time somebody taught Black people a lesson. Jem will not talk about the trial at all. Meanwhile Bob Ewell loses a job and blames Atticus, prowls Judge Taylor's house, and follows Tom's widow Helen to work until her employer threatens him."
+    },
+    {
+      "id": "s6",
+      "from": 28,
+      "to": 31,
+      "title": "Halloween night",
+      "recap": "Scout plays a ham in the school pageant, in a wire-frame costume that pins her arms and blinds her, misses her cue, and is too embarrassed to take it off for the walk home. In the dark someone follows them, then runs at them. Jem is grabbed, there is a crunch and a scream, and a man is on top of Scout strangling her through the wire until he is suddenly hauled off. Under the streetlight she sees a stranger carrying Jem home with his arm at a wrong angle. At the house there is a quiet man standing in the corner of Jem's room. Heck Tate arrives and says Bob Ewell is lying dead under a tree with a kitchen knife under his ribs. Scout finally looks at the man in the corner and it is Boo Radley. Atticus assumes Jem did it and insists it be handled openly; Heck Tate finally shouts that Jem stabbed nobody, Bob Ewell fell on his own knife, and that he is not covering for Jem but for the shy man in the corner, because dragging him into the public eye would be a sin. Scout says she understands: it would be sort of like shooting a mockingbird. She walks Boo home on his arm, like a lady with a gentleman, and never sees him again. Standing on his porch she looks back down the street and finally sees the last two years from where he stood."
+    }
+  ],
+  "cards": [
+    {
+      "id": "k41",
+      "ch": 1,
+      "sec": "s1",
+      "kind": "who",
+      "q": "Who is telling the story?",
+      "a": "Scout, but grown up, looking back. That's why the voice keeps doing two things at once: a six-year-old's take on a scene, and an adult's understanding of what she was actually looking at. The book opens by telling you Jem's arm got broken, then spends thirty chapters getting back to it."
+    },
+    {
+      "id": "k40",
+      "ch": 3,
+      "sec": "s1",
+      "kind": "detail",
+      "q": "What is Atticus's rule that the whole book is built on?",
+      "a": "You never really understand a person until you consider things from his point of view, until you climb into his skin and walk around in it. He tells Scout this in chapter 3 about her teacher. She actually does it in the last chapter, on Boo Radley's porch."
+    },
+    {
+      "id": "k42",
+      "ch": 8,
+      "sec": "s1",
+      "kind": "detail",
+      "q": "Before the trial ever starts, what has Boo Radley already done for the children?",
+      "a": "Left them gum, pennies, a spelling medal, a broken watch and two soap dolls carved to look like Jem and Scout in the knothole. Mended and folded Jem's torn trousers on the fence. And put a blanket around Scout's shoulders in the dark during the fire without her ever noticing he was there."
+    },
+    {
+      "id": "k01",
+      "ch": 9,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who is Tom Robinson?",
+      "a": "The Black man Atticus is appointed to defend. He works in Link Deas's fields and passes the Ewell house on his way there every day. His left arm was destroyed in a cotton gin as a boy and hangs dead at his side, which is what makes the charge physically impossible."
+    },
+    {
+      "id": "k02",
+      "ch": 9,
+      "sec": "s2",
+      "kind": "detail",
+      "q": "Atticus tells Scout he is going to lose this case. Why does he say he's taking it anyway?",
+      "a": "Because he could not tell his children what to do, or hold his head up in town, or even represent this county in the legislature, if he didn't. He says he has to live with himself before he can live with other people. He also expects the jury to side with the white Ewells regardless of the evidence."
+    },
+    {
+      "id": "k03",
+      "ch": 9,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who is Aunt Alexandra, and who is Francis?",
+      "a": "Alexandra is Atticus's sister, at Finch's Landing. She is preoccupied with family breeding and with making Scout a lady. Francis is her grandson, who calls Atticus a slur at Christmas and gets punched for it."
+    },
+    {
+      "id": "k04",
+      "ch": 10,
+      "sec": "s2",
+      "kind": "plot",
+      "q": "What happens with the dog in the street?",
+      "a": "A rabid dog, Tim Johnson, comes staggering down the street. Calpurnia phones Atticus, warns the whole street through the operator, and runs to warn the Radleys. Sheriff Heck Tate hands Atticus the rifle rather than shoot it himself, and Atticus kills it with one shot."
+    },
+    {
+      "id": "k05",
+      "ch": 10,
+      "sec": "s2",
+      "kind": "detail",
+      "q": "What do the children learn about Atticus from the dog, and why had he never told them?",
+      "a": "He was the deadest shot in Maycomb County in his time, nicknamed One-Shot Finch. He gave up shooting because he thought the talent was an unfair advantage over living things. He is also nearly blind in his left eye. Jem decides not to brag about it: his father is a gentleman."
+    },
+    {
+      "id": "k06",
+      "ch": 10,
+      "sec": "s2",
+      "kind": "detail",
+      "q": "Where does the title come from?",
+      "a": "Atticus tells the children they can shoot at tin cans and bluebirds but that it is a sin to kill a mockingbird. Miss Maudie explains why: mockingbirds don't eat gardens or nest in corncribs, they do nothing but sing. The book then applies it to two people."
+    },
+    {
+      "id": "k07",
+      "ch": 11,
+      "sec": "s2",
+      "kind": "who",
+      "q": "Who is Mrs. Dubose, and what was actually going on with her?",
+      "a": "The vicious old woman down the street who shouts insults at the children and calls Atticus trash. She was a morphine addict, prescribed it as a painkiller, and she used Jem's forced reading sessions to stretch the gaps between doses so she could die free of it. She had months to live and knew it."
+    },
+    {
+      "id": "k08",
+      "ch": 11,
+      "sec": "s2",
+      "kind": "why",
+      "q": "Atticus calls Mrs. Dubose the bravest person he ever knew. What is he defining courage as, and why does he want Jem to hear it right then?",
+      "a": "Courage is not a man with a gun in his hand; it is knowing you are licked before you begin and beginning anyway and seeing it through. He is about to do exactly that in a courtroom, and he wants Jem to have seen a version of it that has nothing to do with the trial."
+    },
+    {
+      "id": "k09",
+      "ch": 12,
+      "sec": "s3",
+      "kind": "plot",
+      "q": "What happens when Calpurnia takes the children to her church?",
+      "a": "A woman named Lula confronts her at the door about bringing white children; Calpurnia answers that it's the same God. The congregation welcomes them. There are no hymnbooks, so Zeebo lines out each hymn for people to repeat. Reverend Sykes closes the doors until the collection reaches ten dollars for Helen Robinson."
+    },
+    {
+      "id": "k10",
+      "ch": 12,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "What does Scout notice about how Calpurnia talks, and how does Calpurnia explain it?",
+      "a": "Calpurnia speaks in the congregation's dialect at church and proper English at the Finch house. She says it would be showing off to talk white folks' talk at church, that folks don't like somebody around who knows more than they do, and that you have to want to learn before it does you any good."
+    },
+    {
+      "id": "k11",
+      "ch": 12,
+      "sec": "s3",
+      "kind": "who",
+      "q": "Who is Helen Robinson, and who is Bob Ewell?",
+      "a": "Helen is Tom Robinson's wife, who can't get work once the accusation is public. Bob Ewell is the father of the woman making the accusation. The Ewells live behind the town dump on relief cheques he drinks."
+    },
+    {
+      "id": "k12",
+      "ch": 14,
+      "sec": "s3",
+      "kind": "plot",
+      "q": "How does Dill turn up that summer?",
+      "a": "He runs away from home in Meridian and Scout finds him hiding under her bed. He first invents a story about being chained in a basement, then admits he took money from his mother's purse and got most of the way by train and on foot. He says his parents don't seem to need him."
+    },
+    {
+      "id": "k13",
+      "ch": 15,
+      "sec": "s3",
+      "kind": "plot",
+      "q": "What happens the night before the trial, outside the jail?",
+      "a": "Atticus sits outside the jail door with a light bulb on an extension cord, reading. Four carloads of men arrive, having drawn the sheriff away, and tell him to step aside. The children turn up. A man grabs Jem by the collar, Scout kicks him, and Atticus can't make his children leave."
+    },
+    {
+      "id": "k14",
+      "ch": 15,
+      "sec": "s3",
+      "kind": "detail",
+      "q": "What actually breaks up the mob at the jail?",
+      "a": "Scout recognises Walter Cunningham's father and starts talking politely to him about his son and his entailment, the way you'd greet a neighbour, until the whole group is staring. He crouches down to her level, says he'll tell Walter she said hey, and tells the men to clear out. Mr. Underwood, the newspaper editor, then reveals he had them covered from a window with a shotgun the whole time."
+    },
+    {
+      "id": "k15",
+      "ch": 16,
+      "sec": "s4",
+      "kind": "why",
+      "q": "Atticus explains why Mr. Cunningham, who is basically a friend, came to hurt him. What does he say?",
+      "a": "That a mob is still made of people. A gang of wild animals can be stopped because they're still human. He says it took an eight-year-old child to bring them to their senses, which proves the point: a mob only works while nobody in it is being addressed as an individual."
+    },
+    {
+      "id": "k16",
+      "ch": 16,
+      "sec": "s4",
+      "kind": "who",
+      "q": "Who is Dolphus Raymond, and what's in his paper sack?",
+      "a": "A white man from a good family who lives with a Black woman and has mixed-race children, and who plays the town drunk. The sack holds Coca-Cola. He fakes the drinking so the town has a reason it can accept for the way he lives, because they can't accept that he simply prefers it."
+    },
+    {
+      "id": "k17",
+      "ch": 16,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "Where do the children end up sitting for the trial?",
+      "a": "The white section is full, so Reverend Sykes takes them up to the segregated Black balcony. They watch the entire trial from there, which is also why they're standing with the balcony at the end."
+    },
+    {
+      "id": "k18",
+      "ch": 17,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "What two things does Atticus establish from the sheriff's testimony?",
+      "a": "That no doctor was ever called, so there is no medical evidence at all; and that Mayella's injuries were on the RIGHT side of her face, with finger marks around her throat."
+    },
+    {
+      "id": "k19",
+      "ch": 17,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "Why does Atticus ask Bob Ewell to write his name?",
+      "a": "To show the jury he is left-handed. A left-handed man facing you bruises the right side of your face, which is the side Mayella was beaten on."
+    },
+    {
+      "id": "k20",
+      "ch": 18,
+      "sec": "s4",
+      "kind": "who",
+      "q": "Who is Mayella Ewell, and what does the cross-examination establish about her life?",
+      "a": "She is nineteen, the eldest of eight children, her mother is dead, they live on relief cheques her father drinks, she has been to school only a couple of years, and she has no friends at all. She insists her father has never beaten her, hesitating first."
+    },
+    {
+      "id": "k21",
+      "ch": 18,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "What is the moment that makes the charge physically impossible?",
+      "a": "Atticus asks Tom to stand. Tom's left arm is twelve inches shorter than his right and hangs dead at his side, ruined in a cotton gin when he was a boy. The man who beat the right side of Mayella's face led with his left."
+    },
+    {
+      "id": "k22",
+      "ch": 19,
+      "sec": "s4",
+      "kind": "plot",
+      "q": "What is Tom's account of what happened?",
+      "a": "Mayella had called him in for odd jobs many times and never paid him. On 21 November she asked him in to fix a door that wasn't broken, said she'd saved seven nickels to send all eight children for ice cream so they'd be gone, and asked him to get a box down from the chiffarobe. She grabbed him round the legs, hugged him and kissed his face, saying she'd never kissed a grown man before. Her father appeared at the window, called her a whore and threatened to kill her, and Tom ran."
+    },
+    {
+      "id": "k23",
+      "ch": 19,
+      "sec": "s4",
+      "kind": "why",
+      "q": "What single answer of Tom's does the prosecutor turn against him, and why is it fatal?",
+      "a": "That he helped her because he felt sorry for her. A Black man admitting he pitied a white woman puts him above her, which in that courtroom is the actual offence. He is telling the truth and it is the worst thing he could have said."
+    },
+    {
+      "id": "k24",
+      "ch": 20,
+      "sec": "s4",
+      "kind": "detail",
+      "q": "What is Atticus's closing argument, in one line?",
+      "a": "That there is no medical evidence and never was, that the state's case depends entirely on the assumption that all Black men lie, and that Mayella's real crime was breaking a code by kissing a Black man, so the evidence of it had to be destroyed. He says a courtroom is the one place where all men are created equal, whatever is true outside it."
+    },
+    {
+      "id": "k25",
+      "ch": 21,
+      "sec": "s4",
+      "kind": "plot",
+      "q": "What is the verdict, and what happens in the balcony?",
+      "a": "Guilty, polled juror by juror, and not one of them looks at Tom when they come in. As Atticus walks out down the middle aisle, every Black person in the balcony stands up. Reverend Sykes tells Scout to stand: her father is passing."
+    },
+    {
+      "id": "k26",
+      "ch": 22,
+      "sec": "s5",
+      "kind": "detail",
+      "q": "Miss Maudie says something did go right. What?",
+      "a": "The jury was out for hours rather than minutes, which has never happened in such a case in that county, and one juror actually wanted to acquit. She calls it a baby step, but a step. Atticus later says the holdout was a Cunningham."
+    },
+    {
+      "id": "k27",
+      "ch": 22,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "What does Bob Ewell do after the trial, given that he won?",
+      "a": "He stops Atticus at the post office corner, spits in his face, and says he'll get him if it takes the rest of his life. Atticus's view is that he'd rather it be him than the Ewell children, and that the man needed to get it out of his system."
+    },
+    {
+      "id": "k28",
+      "ch": 24,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "How does Tom Robinson die?",
+      "a": "At Enfield Prison Farm, waiting on appeal, he ran at the exercise-yard fence in broad daylight and the guards shot him seventeen times. They said he'd have made it over with two good arms."
+    },
+    {
+      "id": "k29",
+      "ch": 24,
+      "sec": "s5",
+      "kind": "why",
+      "q": "What is the missionary tea doing in the book?",
+      "a": "The ladies weep over a persecuted tribe in Africa while complaining in the same breath about their own Black neighbours being sulky since the trial. The hypocrisy is placed deliberately: Atticus walks into the middle of it with the news that Tom has been shot, and the women then go straight back to serving cake."
+    },
+    {
+      "id": "k30",
+      "ch": 25,
+      "sec": "s5",
+      "kind": "detail",
+      "q": "What does the newspaper editor write about Tom's death?",
+      "a": "Mr. Underwood, who has no love for Black people at all, writes that it is a sin to kill cripples, and that Tom was a dead man the minute Mayella Ewell opened her mouth and screamed. The trial was the formality."
+    },
+    {
+      "id": "k31",
+      "ch": 26,
+      "sec": "s5",
+      "kind": "detail",
+      "q": "What does Scout notice about her teacher, Miss Gates?",
+      "a": "In class Miss Gates condemns Hitler for persecuting the Jews and says that in America we don't believe in persecuting anybody. Scout remembers hearing her outside the courthouse saying it was time somebody taught Black people a lesson, that they were getting above themselves."
+    },
+    {
+      "id": "k32",
+      "ch": 27,
+      "sec": "s5",
+      "kind": "plot",
+      "q": "What three things does Bob Ewell do in the months after the trial?",
+      "a": "He gets a WPA job and is fired for laziness within days, blaming Atticus. He prowls around Judge Taylor's house one Sunday night while the judge is home alone. And he follows Helen Robinson to work crooning obscenities behind her, until her employer Link Deas threatens him with the law."
+    },
+    {
+      "id": "k33",
+      "ch": 28,
+      "sec": "s6",
+      "kind": "plot",
+      "q": "What happens on the walk home from the pageant?",
+      "a": "Somebody follows them in the dark, then runs at them. Scout is trapped in a wire ham costume that pins her arms. Jem is grabbed, there's a crunch and a scream, and a man is strangling Scout through the wire until he is suddenly hauled backwards off her. She gets to the road and sees a stranger under the streetlight carrying Jem home with his arm at a wrong angle."
+    },
+    {
+      "id": "k34",
+      "ch": 28,
+      "sec": "s6",
+      "kind": "detail",
+      "q": "What does the sheriff find, and what saved Scout's life?",
+      "a": "Bob Ewell is lying dead under a tree with a kitchen knife under his ribs. The chicken-wire ham costume: Heck Tate shows the knife mark cut clean through it. Jem's arm is broken, and he lives."
+    },
+    {
+      "id": "k35",
+      "ch": 29,
+      "sec": "s6",
+      "kind": "plot",
+      "q": "Who is the quiet man standing in the corner of Jem's room?",
+      "a": "Boo Radley. Scout tells her story, turns to point at the man who carried Jem home, actually looks at him for the first time, and recognises him. She says, 'Hey, Boo.'"
+    },
+    {
+      "id": "k36",
+      "ch": 30,
+      "sec": "s6",
+      "kind": "detail",
+      "q": "What is the argument between Atticus and Heck Tate on the porch?",
+      "a": "Atticus assumes Jem killed Bob Ewell and insists it go through open court, because he will not have his son protected by whispering. Heck Tate finally shouts that Jem stabbed nobody: Bob Ewell fell on his own knife. He is not covering for Jem. He is covering for the shy man in the corner."
+    },
+    {
+      "id": "k37",
+      "ch": 30,
+      "sec": "s6",
+      "kind": "why",
+      "q": "How does Scout close the argument, and why is that the whole book?",
+      "a": "Atticus asks if she understands, and she says yes: dragging Boo into the public eye would be sort of like shooting a mockingbird. Boo and Tom are the same figure, one saved and one not. She has arrived, on her own, at the thing Atticus told her about killing mockingbirds in chapter 10."
+    },
+    {
+      "id": "k38",
+      "ch": 31,
+      "sec": "s6",
+      "kind": "plot",
+      "q": "How does Scout walk Boo home?",
+      "a": "She has him crook his arm and takes it, so that anyone watching from a window would see a lady walking her escort down the street. He goes inside and shuts the door, and she never sees him again."
+    },
+    {
+      "id": "k39",
+      "ch": 31,
+      "sec": "s6",
+      "kind": "why",
+      "q": "What does Scout do standing on the Radley porch, and why is it the ending?",
+      "a": "She turns and looks down the street and sees the last two years from where Boo stood watching them: the seasons, the snowman, the fire, the children running past. It is Atticus's rule from chapter 3, that you never understand a person until you climb into his skin and walk around in it, finally performed rather than stated. Then Atticus says most people are real nice, when you finally see them."
+    }
+  ],
+  "talk": {
+    "short": "It's narrated by a six-year-old girl in a small Alabama town during the Depression. Her father is the town lawyer and he gets appointed to defend a Black man accused of raping a white woman, and he actually takes it seriously, which the town hates him for. But half the book isn't the trial at all, it's the kids obsessing over a recluse next door they've never seen. And those two things turn out to be the same story: people you've made up your mind about before you've ever met them.",
+    "if_pressed": "The trial is the middle of the book, not the end. He proves the man couldn't physically have done it, the jury convicts anyway, and then it keeps going for another ten chapters about what that costs everybody. The recluse next door saves the kids' lives at the end and the sheriff lies to keep his name out of the paper. That's the part people forget.",
+    "arguments": [
+      {
+        "q": "Is Atticus actually the hero everyone says?",
+        "a": "This is the live one. In 2015 they published Go Set a Watchman, which Harper Lee actually wrote FIRST, submitted to her editor Tay Hohoff in early 1957 and was told to rewrite from the child's point of view. The manuscript turned up in late 2014 and came out 14 July 2015 as a 'sequel'. In it, an older Atticus attends a White Citizens Council meeting and holds openly paternalistic racist views. Readers who'd used Atticus as proof that not every white Southerner was a racist were furious. Two positions worth having: either Watchman is a discarded draft and shouldn't count, or the saintly Atticus was always the sanded-down version and the first draft was the honest one."
+      },
+      {
+        "q": "Does Atticus break his own rule at the end?",
+        "a": "Strong argument and most people haven't thought about it. He spends the entire book saying a courtroom is the one place where all men are equal, and that he won't have his son protected by whispering. Then on the porch he agrees to a lie: Bob Ewell fell on his own knife. He accepts that the law would grind up an innocent man, so it gets kept away from the law. Either that's hypocrisy, or it's him finally admitting the system he defended in chapter 20 doesn't actually work, which is a much darker ending than the one people remember."
+      },
+      {
+        "q": "The white-savior problem",
+        "a": "The standard modern criticism, and it's fair. Tom Robinson barely exists as a person; he gets one scene in the witness box and then dies offstage. Calpurnia is defined almost entirely by her position in a white family's kitchen. The Black community's role is largely to stand up in a balcony and leave food on a porch. The story of a Black man's lynching-by-jury is told as a white child's education."
+      },
+      {
+        "q": "Why is it still one of the most banned books in America?",
+        "a": "Banned from both directions, which is the interesting part. For decades it was pulled for the racial slurs and for dealing with rape. More recently it's been pulled from curricula from the other side, for the slurs subjecting Black students to them in class and for the white-savior framing. Same book, opposite objections, sixty years apart."
+      },
+      {
+        "q": "Is it a kids' book?",
+        "a": "The narrator is a child but the narration isn't. It's adult Scout remembering, so every scene runs on two tracks: what she saw at six and what she understands now. The mob at the jail is funny if you're six and terrifying if you're not, and the book plays both at once on purpose."
+      }
+    ],
+    "one_liners": [
+      "The title is a rule Atticus gives about not shooting mockingbirds, and the book then hands you two of them: Tom Robinson and Boo Radley. One doesn't make it.",
+      "The case is won on evidence and lost anyway. That's the point, and it's why the trial is in the middle of the book instead of at the end.",
+      "The whole thing is set up in chapter 3, when Atticus tells Scout you never understand somebody until you climb into their skin. The last page is her literally standing on Boo Radley's porch looking at her own street from his side."
+    ],
+    "prompts": [
+      "Which of them did you actually find yourself liking, and which one did the book want you to like?",
+      "Did the ending sit right with you, or did the cover-up bother you?",
+      "What's the bit you'd tell somebody about if you only had one bit?",
+      "Would you have finished it if you hadn't been listening to it?"
+    ]
+  },
+  "context": [
+    "Published 11 July 1960; it was Harper Lee's first published novel and won the Pulitzer for fiction in 1961.",
+    "Go Set a Watchman was written first, submitted to Lippincott in early 1957 and rejected in that form; the editor Tay Hohoff pushed Lee through drafts until it became this book. The old manuscript was found in late 2014 and published 14 July 2015.",
+    "Lee published nothing else in her lifetime. She died in 2016.",
+    "It is set in the mid-1930s Depression, but written and published in 1960, in the middle of the civil rights movement. It's a book about the 1930s aimed at 1960."
+  ],
+  "sources": [
+    "raw/companions/to-kill-a-mockingbird/SOURCES.md (ch 1-8, GradeSaver + LitCharts)",
+    "raw/companions/to-kill-a-mockingbird/SOURCES-ch9-31.md (GradeSaver ch 7-12, 13-18, 19-24, 25-31)",
+    "Encyclopedia of Alabama, 'Go Set a Watchman': Atticus at a White Citizens Council meeting, reader reaction",
+    "Musselman Library research guide / Columbia RBML: Watchman submitted to Lippincott early 1957, editor Tay Hohoff, manuscript found late 2014, published 14 July 2015"
+  ]
+}
