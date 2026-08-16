@@ -15,5 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://hoodii.studio', changeFrequency: 'weekly', priority: 1 },
     { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
     { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
+
+    /* The four project pages, published 2026-08-16. `monthly` rather than `weekly`: they describe
+     * work that is finished, so the honest answer is that they change rarely. Each one declares its
+     * own canonical, which is the rule this site follows for every indexed route. */
+    { url: 'https://hoodii.studio/work/themoment', changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://hoodii.studio/work/versatile', changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://hoodii.studio/work/brixel', changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://hoodii.studio/work/kitchen', changeFrequency: 'monthly', priority: 0.8 },
   ];
 }

@@ -1,6 +1,5 @@
-import Draft from '../Draft';
-
 export const metadata = {
+  alternates: { canonical: '/work/versatile' },
   title: 'Versatile',
   description: 'A marketing site and an internal operations hub for a Calgary accounting firm, and the tax season mapped into it.',
 };
@@ -13,7 +12,6 @@ export default function VersatilePage() {
         An accounting firm in Calgary. I built their public site and the internal hub the staff work
         the tax season out of.
       </p>
-      <Draft />
 
       <dl className="facts">
         <div>

@@ -1,6 +1,5 @@
-import Draft from '../Draft';
-
 export const metadata = {
+  alternates: { canonical: '/work/themoment' },
   title: 'The Moment',
   description: 'Storefront, checkout and admin for a Calgary bakery, and the decision that kept it running.',
 };
@@ -13,7 +12,6 @@ export default function TheMomentPage() {
         A bakery in Calgary. I built the storefront people order from, the checkout that takes the
         money, and the back office the owner runs the day from.
       </p>
-      <Draft />
 
       <dl className="facts">
         <div>

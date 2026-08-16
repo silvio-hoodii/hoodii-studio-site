@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Draft from '../Draft';
 
 export const metadata = {
+  alternates: { canonical: '/work/kitchen' },
   title: 'The dish that burnt',
   description: 'An app I built told me how to cook, and the food came out wrong. What the failures had in common changed how I build.',
 };
@@ -15,7 +15,6 @@ export default function KitchenStoryPage() {
         what the failures had in common is the most useful thing I have learned building software on
         my own.
       </p>
-      <Draft />
 
       <h2 className="sec">What it had already passed</h2>
       <p className="body">

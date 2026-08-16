@@ -271,9 +271,11 @@ const STATIC_ROWS: Row[] = [
  * claims that are NOT allowed: no adoption metrics, no revenue, no team-size implications, and
  * nothing that reads as an employment relationship rather than work delivered.
  *
- * Versatile has no `href` on purpose. Its hub sits behind the firm's own Entra login, so there is
- * nothing a stranger can open. Saying so is more honest than linking a door that will not budge,
- * and it is the same rule the app rows follow: never claim a state you cannot show.
+ * Since 2026-08-16 these rows open MY page about the work rather than the client's website. The
+ * client URL still exists one level down, on the "Live at" line of each page. That ordering is the
+ * point: a row that jumped straight to themomentyyc.com sent you to a bakery, which tells you
+ * nothing about what I did there. `external` comes off together with the href, so the glyph flips
+ * from ↗ to → on its own instead of being hand-edited into agreement.
  */
 const WORK: Row[] = [
   {
@@ -288,8 +290,7 @@ const WORK: Row[] = [
     /* themomentyyc.com, NOT themoment.ca. The .ca is an unrelated business and it is wrong in
      * several repo files, which is how it kept getting shipped. Confirmed 2026-08-11 by reading the
      * title: .ca returns "The Moment | Discover Insight Today". A 200 is not a confirmation. */
-    href: 'https://themomentyyc.com',
-    external: true,
+    href: '/work/themoment',
   },
   {
     label: 'Versatile',
@@ -297,15 +298,19 @@ const WORK: Row[] = [
      * the evidence ledger forbids: adoption is not something we have measured, only deployment. */
     line: 'Marketing site and the internal operations hub for a Calgary accounting firm. A tax season mapped into five phases and sixteen steps, plus eight process templates',
     sub: 'the site is public, the hub sits behind the firm’s own login',
-    href: 'https://versatilecpa.ca',
-    external: true,
+    href: '/work/versatile',
   },
   {
+    /* "Trades company. The site and the lead intake, plus the quoting and contract paperwork behind
+     * it" was this row until 2026-08-16, and it had the same defect Silvio found in the page: it
+     * leads with the website, which is the least of it, and never names the job that happened. */
     label: 'Brixel',
-    line: 'Trades company. The site and the lead intake, plus the quoting and contract paperwork behind it',
-    sub: 'five commercial templates, six quote revisions on one live job',
-    href: 'https://brixelcorp.com',
-    external: true,
+    line: 'A construction company that sits between builders and the trades. I built the pricing, the quoting and the contract paperwork',
+    /* Not "end to end", and not "signed". A reviewer checking this against Brixel/ on 2026-08-16
+     * found the contract folders empty and the gravel phase uninvoiced. See the header comment on
+     * src/app/work/brixel/page.tsx. */
+    sub: 'one exterior foundation package priced, subcontracted and invoiced, on six quote revisions',
+    href: '/work/brixel',
   },
 ];
 
@@ -346,7 +351,10 @@ const STOPPED: Row[] = [
     label: 'Written recipes',
     line: 'The first dish I ever cooked from my own kitchen app burnt. It had passed a six-source check on every quantity, a full read of all eighteen steps, and a clean validator',
     sub: 'every failure was a sentence the model wrote, and none was a number a source gave, so it now copies one published recipe and adds only what a printed page cannot',
-    plain: true,
+    /* The only row in this section with a destination, because it is the only one whose post-mortem
+     * got written up. Without it /work/kitchen is in the sitemap and linked from nowhere, which is
+     * the orphan state the rest of the site is careful not to create. */
+    href: '/work/kitchen',
   },
 ];
 
