@@ -156,6 +156,19 @@ export default async function Find({
         )}
       </p>
 
+      {/* Says out loud when food in the kitchen is invisible to the matcher, because on 2026-08-16 it
+          was: the 08-14 receipt created thirteen stock ids with no alias row, four of which were also
+          still listed as things he does not own, so this page insisted he had no potatoes with nine in
+          the pantry. Zero is the normal state and this renders nothing. See `unreachableStock`. */}
+      {d.invisible.length > 0 && (
+        <p className="lede" style={{ marginTop: 6 }}>
+          {d.invisible.length} thing{d.invisible.length === 1 ? '' : 's'} in the kitchen{' '}
+          {d.invisible.length === 1 ? 'is' : 'are'} invisible to this page and cannot be credited to any
+          dish: {d.invisible.map((i) => i.n).join(', ')}. That is a gap in{' '}
+          <code>stock/aliases.json</code>, not in the kitchen.
+        </p>
+      )}
+
       <FilterBar
         filters={d.filters}
         usesFacets={d.usesFacets}

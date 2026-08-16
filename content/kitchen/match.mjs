@@ -57,7 +57,20 @@ export function isOptionalLine(raw) {
    * "4 cups short-grain white rice, to serve", which is the BASE of the dish, not a garnish. "to
    * serve" usually means "for serving alongside" and sometimes means "this is the starch", and
    * nothing in the text distinguishes them. So only an explicit optional marker counts. */
-  return /\boptional\b|\bif (?:using|desired|you like|you have)\b|\bfor garnish\b/i.test(String(raw));
+  const s = String(raw);
+  if (/\boptional\b|\bif (?:using|desired|you like|you have)\b|\bfor garnish\b/i.test(s)) return true;
+  /* THE DISCRIMINATOR THE 2026-08-12 VERSION WAS MISSING, added 2026-08-16. "nothing in the text
+   * distinguishes them" was not true: the amount does. A line that is a serving suggestion carries no
+   * quantity ("green vegetables to serve", "crusty bread to serve"), and a line that is part of the
+   * dish carries one ("4 cups short-grain white rice, to serve", "50g parmesan, plus extra to serve").
+   * So require BOTH the serving phrase and the absence of any number.
+   *
+   * What this cost while it was missing: 50 dishes across the corpus were reported as blocked by
+   * "green vegetables" and 28 by "bread", every one of them a side dish BBC Good Food suggests and
+   * none of them an ingredient. 87 cookable dishes were hidden behind a suggestion to eat some
+   * broccoli with it, in an app whose whole job is to answer "what can I make right now".
+   * 571 lines in the corpus match this rule; the amount-carrying ones above are all kept. */
+  return /\b(?:to serve|for serving|on the side|to accompany)\b/i.test(s) && !/[0-9¼½¾⅓⅔⅛⅜⅝⅞]/.test(s);
 }
 
 /** Turn a published ingredient line into a bare ingredient name, or '' if nothing survives. */
@@ -68,7 +81,14 @@ export function parseIngredient(raw, opts = {}) {
    * mentions for that one and 24 for jalapeno. Decomposing first keeps the letters. */
   let s = String(raw).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
+  /* `&amp;` becomes the word, not a space. Budget Bytes writes "salt &amp; pepper to taste" and the
+   * blanket entity strip left "salt pepper", which no alias and no staple matches and which the
+   * and-compound split can no longer see. 77 lines in the corpus carry it. Before this, the fallback
+   * chain reached the bare "pepper" alias and credited his four yellow sweet peppers for a pinch of
+   * seasoning: a false HAVE, which is the expensive direction. */
+  s = s.replace(/&amp;/g, ' and ');                 // BEFORE the blanket strip, or it becomes a space
   s = s.replace(/&frac\d+;|&[a-z]+;/g, ' ');       // html entities from scraped pages
+  s = s.replace(/&/g, ' and ');                     // and a bare ampersand, after the entities are gone
   s = s.replace(/\([^)]*\)/g, ' ');                 // "(about 2 to 3 ounces)"
   s = s.replace(/\[[^\]]*\]/g, ' ');
   if (!keepAfterComma) s = s.split(/,/)[0];         // prep after the first comma
@@ -356,6 +376,39 @@ export function scoreRecipe(ingredientLines, availableIds) {
     counted: new Set([...have, ...haveVia, ...missing].map((h) => h.item ?? h.shown)).size,
     verdict,
   };
+}
+
+/** Food he owns that NO published ingredient line can ever reach.
+ *
+ * THE BUG THIS EXISTS TO MAKE VISIBLE, found 2026-08-16. The 08-14 receipt ingest created thirteen new
+ * stock ids straight from photos: `potatoes_red`, `tomatoes_canned`, `beansprouts`, `ryebread`, `tuna`,
+ * `fettuccine`, `beefconsomme`, `beanmedley`, `chickendrumsticks` and more. Not one of them got an
+ * alias row, so the matcher could not see any of them. Worse, four were ALSO still listed in
+ * `_knownGaps`, so `/kitchen/find` was actively telling him he had no potatoes while nine sat in the
+ * pantry, no tinned tomatoes while a 796 ml tin sat beside them, and no bread while a loaf did.
+ *
+ * `lint-aliases.mjs` could not catch it. Its checks are about CONFLICTS between rows that exist, and
+ * these rows did not exist. And the ingest path cannot be gated at build time either, because stock is
+ * events in Neon and a build must not depend on a database being up.
+ *
+ * So the mechanism is a report on the page instead of a gate in the build: /kitchen/find states the
+ * count out loud whenever it is not zero. Anything live in the fold that no alias phrase and no staple
+ * can reach is named, unless it is declared in `_notAnIngredient` (currently just the mason jars).
+ * A future receipt cannot add itself to that list, which is the whole point.
+ *
+ * @param items  the folded stock items: `{ id, n, level }`
+ * @returns      `[{ id, n }]`, empty when everything is reachable
+ */
+export function unreachableStock(items) {
+  const aliased = new Set(Object.keys(ALIASES.map || {}));
+  const skip = new Set((ALIASES._notAnIngredient?.ids) || []);
+  return (items || [])
+    .filter((it) => it && (it.level === 'have' || it.level === 'low'))
+    .filter((it) => !skip.has(it.id) && !aliased.has(it.id))
+    // The display name is the fallback probe: `red potatoes` would have resolved even with no alias
+    // row of its own. Only something no phrase at all can reach is reported.
+    .filter((it) => matchToItem(parseIngredient(it.n ?? it.id), it.n ?? it.id) === null)
+    .map((it) => ({ id: it.id, n: it.n ?? it.id }));
 }
 
 /* ---------------- JSON-LD extraction ---------------- */

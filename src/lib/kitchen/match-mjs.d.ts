@@ -34,6 +34,10 @@ declare module '*/match.mjs' {
   /** Every item id that could serve this line, not just the winner of the first-hit race. */
   export function matchAllItems(name: string, raw?: string): Set<string>;
   export function matchToItem(name: string, raw?: string): string | null;
+  /** Live stock no published ingredient line can reach, so the page can say so out loud. */
+  export function unreachableStock(
+    items: { id: string; n?: string; level?: string }[],
+  ): { id: string; n: string }[];
   export function scoreRecipe(lines: string[], availableIds: Set<string>): Score;
   export function extractRecipe(html: string): {
     name?: string;

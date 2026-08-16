@@ -89,7 +89,14 @@
     "bicarb",
     "fine sea salt",
     "flaky sea salt",
-    "sea salt flakes"
+    "sea salt flakes",
+    "cracked red pepper",
+    "crushed red pepper flakes",
+    "dried chilli flakes",
+    "dried chili flakes",
+    "salt and pepper",
+    "salt and pepper to taste",
+    "kosher salt and pepper"
   ],
   "map": {
     "eggs": [
@@ -164,9 +171,13 @@
     "quarters": [
       "chicken leg quarters",
       "leg quarters",
-      "chicken legs",
+      "chicken legs"
+    ],
+    "chickendrumsticks": [
       "chicken drumsticks",
-      "drumsticks"
+      "drumsticks",
+      "chicken drumstick",
+      "drumstick"
     ],
     "groundchickenfrozen": [
       "ground chicken",
@@ -193,6 +204,17 @@
       "white fish",
       "white fish fillets"
     ],
+    "tuna": [
+      "tuna",
+      "canned tuna",
+      "tinned tuna",
+      "tuna in spring water",
+      "tuna in water",
+      "tuna in oil",
+      "tuna chunks",
+      "flaked tuna",
+      "albacore tuna"
+    ],
     "tomatoes_grape": [
       "fresh tomatoes",
       "tomato",
@@ -210,6 +232,22 @@
       "tomato puree",
       "tomato purée",
       "double concentrate tomato"
+    ],
+    "tomatoes_canned": [
+      "canned tomatoes",
+      "tinned tomatoes",
+      "canned tomato",
+      "tinned tomato",
+      "tinned tomatos",
+      "chopped tomatoes",
+      "diced tomatoes",
+      "chopped tomato",
+      "diced tomato"
+    ],
+    "tomatosauce": [
+      "tomato sauce",
+      "canned tomato sauce",
+      "plain tomato sauce"
     ],
     "basil": [
       "fresh basil",
@@ -323,6 +361,21 @@
       "sweet potatoes",
       "yam",
       "yams"
+    ],
+    "potatoes_red": [
+      "potato",
+      "potatoes",
+      "red potatoes",
+      "red potato",
+      "new potatoes",
+      "baby potatoes",
+      "salad potatoes",
+      "waxy potatoes"
+    ],
+    "beansprouts": [
+      "bean sprouts",
+      "beansprouts",
+      "mung bean sprouts"
     ],
     "arugula": [
       "arugula",
@@ -481,7 +534,6 @@
       "orzo",
       "tagliatelle",
       "pappardelle",
-      "fettuccine",
       "ziti",
       "gnocchi",
       "vermicelli",
@@ -498,6 +550,11 @@
       "cavatappi",
       "elbow macaroni",
       "pasta shapes"
+    ],
+    "fettuccine": [
+      "fettuccine",
+      "fettucine",
+      "fettuccini"
     ],
     "spaghetti_cooked": [
       "cooked spaghetti",
@@ -562,12 +619,17 @@
     "stock": [
       "chicken broth",
       "chicken stock",
-      "beef broth",
-      "beef stock",
       "vegetable stock",
       "vegetable broth",
       "broth",
       "stock"
+    ],
+    "beefconsomme": [
+      "beef consomme",
+      "beef consommé",
+      "beef broth",
+      "beef stock",
+      "consomme"
     ],
     "stockcube": [
       "stock cube",
@@ -686,6 +748,29 @@
       "pickled onion",
       "pickled red onion",
       "pickled onions"
+    ],
+    "ryebread": [
+      "bread",
+      "sliced bread",
+      "rye bread",
+      "slices of bread"
+    ],
+    "beanmedley": [
+      "mixed beans",
+      "bean medley",
+      "three bean mix",
+      "canned mixed beans"
+    ],
+    "relish": [
+      "relish",
+      "sweet relish",
+      "dill relish",
+      "pickle relish"
+    ],
+    "peppercornblend": [
+      "peppercorn blend",
+      "mixed peppercorns",
+      "four peppercorn blend"
     ]
   },
   "_knownGaps": {
@@ -695,14 +780,14 @@
     "gochujang": "Korean fermented chilli paste. Rejects most spicy Korean recipes.",
     "gochugaru": "Korean chilli flakes. Not the same as crushed red pepper: coarser, fruitier, much less hot.",
     "pancetta": "Rejected three separate frittata recipes on 2026-08-12. Bacon is the usual stand-in.",
-    "tinned tomatoes": "Rejected the metric bolognese on 2026-08-11. NOTE: fresh grape tomatoes arrived 08-12, which changes what is possible but is still not the same product.",
+    "tinned tomatoes": "NARROWED 2026-08-16. A 796 ml tin of Stoney Creek DICED tomatoes arrived 08-14 and is now the stock item `tomatoes_canned`, so 'canned/tinned/chopped/diced tomatoes' is no longer a gap. What is still missing is CRUSHED, PASSATA and WHOLE PEELED, and the difference is not pedantry: diced tomatoes are treated with calcium chloride to hold their shape, so they will not collapse into a smooth sauce over 45 minutes the way crushed or whole peeled do.",
     "kidney beans": "Blocks chilli con carne.",
     "enoki mushrooms": "Stringy, stays in strands. Cremini is meatier and not equivalent, though it works.",
     "wine": "No red or white wine in the kitchen. Blocks a lot of braises and many ragu recipes.",
     "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
     "sesame seeds": "Toasted sesame seeds, wanted as a garnish by most Korean recipes.",
     "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
-    "potatoes": "No regular potatoes. The sweet potato is not a substitute in anything roasted or mashed: different sugar, different texture, and it collapses.",
+    "potatoes": "NARROWED 2026-08-16. Nine RED potatoes arrived 08-14 and are now the stock item `potatoes_red`, so plain 'potatoes', 'new potatoes' and 'baby potatoes' are no longer a gap. Red-skinned potatoes are waxy: good boiled, roasted, in a stew or a salad. What is still missing is a FLOURY potato, so mash, baked potatoes and chips still do not work.",
     "fresh coriander": "Also sold as cilantro. None in the kitchen. Parsley looks similar and tastes nothing like it, so it is not a swap.",
     "fresh chilli": "No fresh chillies of any colour, scotch bonnet and thai chilli included. The crushed red pepper and crushed jalapeno bring heat but not the fresh fruity flavour.",
     "fish sauce": "No fish sauce. Soy sauce is saltier and not funky, so it changes a Thai or Vietnamese dish substantially.",
@@ -714,17 +799,16 @@
     "cabbage": "No cabbage, white or red. The frozen salad mix is not the same thing cooked.",
     "leek": "No leeks.",
     "mustard": "No prepared mustard or mustard powder. The honey Dijon vinaigrette is a dressing, not a substitute.",
-    "bread": "No bread, baguette, pita or breadcrumbs. There IS flour and yeast, so bread is a project rather than an ingredient.",
+    "bread": "NARROWED 2026-08-16. A 450 g C&G light rye loaf arrived 08-14 and is now the stock item `ryebread`, so a plain slice of bread is no longer a gap. Still missing: baguette, pita, tortillas, naan, buns and breadcrumbs of any kind. There IS flour and yeast, so those remain a project rather than an ingredient.",
     "prawns": "No prawns, shrimp, squid or salmon. Tilapia is the only fish and it is frozen.",
     "lamb": "No lamb.",
     "worcestershire sauce": "No Worcestershire sauce.",
-    "feta": "No feta. Parmesan, mozzarella and Monterey Jack are the three cheeses here and none behaves like feta.",
+    "feta": "No feta. This row is the whole SOFT/FRESH CHEESE bucket, not only feta: ricotta, mascarpone, cream cheese, goat's cheese, halloumi and blue cheese are all in it and none is here. The three cheeses in this kitchen are parmesan, mozzarella and Monterey Jack, and none of them behaves like any of those. Read the ingredient line, not this row's name, when a dish is rejected for it.",
     "warm spices": "No cinnamon, nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala or curry powder. The rack has paprika, smoked paprika, cumin, garlic powder, onion powder, Italian seasoning, Cajun and chilli flakes, and that is all of it.",
-    "bean sprouts": "No bean sprouts.",
     "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
     "ham": "No ham or bacon.",
     "lemongrass": "No lemongrass.",
-    "tinned fish": "No tinned tuna, salmon, sardines or anchovies. The only fish here is frozen tilapia.",
+    "tinned fish": "NARROWED 2026-08-16. Three tins of flaked white tuna arrived 08-14 (two Ocean's albacore 184 g, one PC 170 g) and are now the stock item `tuna`. Still missing: tinned salmon, sardines, anchovies and mackerel. The only other fish here is frozen tilapia.",
     "brown sugar": "No brown sugar, only white.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
     "fresh soft herbs": "No thyme, sage, rosemary, tarragon, oregano, bay or chives, fresh OR dried, and no mixed-herb blend. The only herbs here are fresh parsley, fresh dill, fresh basil and the Italian seasoning blend. This row and the staples list used to disagree, and the staple was winning.",
@@ -834,7 +918,10 @@
       "condensed",
       "evaporated",
       "buttermilk",
-      "milk chocolate"
+      "milk chocolate",
+      "ricotta",
+      "milk powder",
+      "powdered milk"
     ],
     "butter": [
       "peanut butter",
@@ -934,7 +1021,13 @@
       "crushed red pepper",
       "crushed chilli",
       "crushed chili",
-      "crushed pepper"
+      "crushed pepper",
+      "salt & pepper",
+      "salt &amp; pepper",
+      "cracked red pepper",
+      "red pepper flake",
+      "chilli flakes",
+      "chili flakes"
     ],
     "groundchickenfrozen": [
       "whole chicken",
@@ -1148,16 +1241,9 @@
       "salami"
     ],
     "tinned tomatoes": [
-      "canned tomatoes",
-      "tinned tomatoes",
-      "chopped tomatoes",
       "crushed tomatoes",
       "passata",
-      "diced tomatoes",
-      "san marzano",
-      "tinned tomatos",
-      "tinned tomato",
-      "canned tomato"
+      "san marzano"
     ],
     "kidney beans": [
       "kidney beans",
@@ -1203,10 +1289,6 @@
       "kimchi"
     ],
     "potatoes": [
-      "potato",
-      "potatoes",
-      "new potatoes",
-      "baby potatoes",
       "maris piper",
       "russet potatoes",
       "mashed potato",
@@ -1309,7 +1391,6 @@
       "dijon"
     ],
     "bread": [
-      "bread",
       "baguette",
       "pita bread",
       "pitta bread",
@@ -1404,10 +1485,6 @@
       "harissa",
       "sumac"
     ],
-    "bean sprouts": [
-      "bean sprouts",
-      "beansprouts"
-    ],
     "peanuts": [
       "peanuts",
       "roasted peanuts",
@@ -1441,18 +1518,13 @@
       "lemon grass"
     ],
     "tinned fish": [
-      "tuna",
-      "tinned tuna",
-      "canned tuna",
       "sardines",
       "anchovies",
       "anchovy fillets",
       "tinned salmon",
+      "canned salmon",
       "mackerel",
-      "tuna in spring water",
-      "tuna in oil",
-      "tuna steak",
-      "tuna chunks"
+      "tuna steak"
     ],
     "brown sugar": [
       "brown sugar",
@@ -1670,8 +1742,7 @@
       "beef short rib",
       "stewing steak",
       "beef bones",
-      "beef suet",
-      "beef consomme"
+      "beef suet"
     ],
     "other spices": [
       "chilli powder",
@@ -1774,5 +1845,11 @@
       "have": "montereyjack",
       "note": "Monterey Jack, same weight. It melts like a mild cheddar and browns a little paler, so a gratin or a toastie works as written. What you lose is the tang: cheddar is sharp and Jack is not, so in anything where the cheese is the flavour rather than the texture, expect it to taste mild. Adding a little grated parmesan brings some of the sharpness back."
     }
+  },
+  "_notAnIngredient": {
+    "_": "Stock ids that are NOT food and must never be counted as invisible to the matcher. This list exists so the check in corpus.ts can be strict by default: anything live in the fold that no alias phrase and no staple can reach is REPORTED on /kitchen/find, unless it is declared here. A new receipt cannot add itself to this list, which is the point.",
+    "ids": [
+      "jars"
+    ]
   }
 }

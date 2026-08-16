@@ -2,7 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock, expiringSoon } from './stock';
 // One matcher implementation, in .mjs, so the CLI and the app can never disagree. See match-mjs.d.ts.
-import { scoreRecipe, type Score } from '../../../content/kitchen/match.mjs';
+import { scoreRecipe, unreachableStock, type Score } from '../../../content/kitchen/match.mjs';
 
 export interface CorpusMeal {
   /** Filled in by loadCorpus during the merge, so counts can be tallied after the dedupe. */
@@ -231,7 +231,14 @@ export async function findCandidates(filters: Filters = {}) {
     || a.score.unknown.length - b.score.unknown.length
     || byName(a, b);
 
+  /* Food he owns that the matcher cannot see, named on the page rather than gated in the build. The
+   * reasoning and the 2026-08-16 incident are in `unreachableStock` in match.mjs. Zero is the normal
+   * state; anything else means a receipt added stock nobody gave an alias row, and every dish wanting
+   * that food is being reported as blocked while it sits in the pantry. */
+  const invisible = unreachableStock(Object.values(stock.items));
+
   return {
+    invisible,
     isFiltered,
     filters,
     usesFacets,
