@@ -77,6 +77,7 @@ always lose to the thing that exists.
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
+| `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
 | `/kitchen/login`, `/gym/login`, `/health/login`, `/french/login` | The gate, one cookie for all | public |
 

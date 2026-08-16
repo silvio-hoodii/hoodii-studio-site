@@ -1,0 +1,229 @@
+/* /swim, the Calgary lane-swim schedule.
+ *
+ * Same system as the index: tokens only, no hardcoded colour, rules instead of cards, near-zero
+ * radius, one --signal for a value that is true right now.
+ *
+ * The app this came from had a full identity of its own, documented in SwimOS/wedge/DESIGN.md:
+ * porcelain and abyss and a deck-clock red, Bricolage Grotesque over Martian Mono. It was reasoned
+ * rather than defaulted, and it is gone anyway, because a personal site whose surfaces each carry
+ * their own palette is six sites sharing a domain. What survived the move is the ARGUMENT under it,
+ * which is better than the palette was: the pace clock is functional and not decorative, the
+ * timetable earns authority from typographic rigour rather than from boxes, and the coverage ledger
+ * is the trust mechanism rather than a footnote. All three are here, in this site's monochrome.
+ *
+ * Names are new (`swim-row`, `slot`, `pool`, not `row`/`tab`/`chip`). A shared LOOK is a CSS
+ * decision and a shared CLASS NAME is an API: /gym shipped `className="tab"` on a new nav because
+ * it should look like the day tabs, and seventeen probe tests that select `.tab` failed over two
+ * characters.
+ */
+
+.swim {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(32px, 8vw, 64px) 20px 64px;
+}
+
+/* ---- masthead with the clock ---- */
+
+.swim .top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.swim .blurb {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  max-width: 46ch;
+  margin: 14px 0 0;
+}
+
+.swim .clock {
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  color: var(--foreground);
+}
+
+/* Every hand rotates about the middle of the 64-unit viewBox. Stated rather than inherited: the
+   original relied on the SVG default origin of 0,0 lining up with hands authored from x=32, which
+   works and is one edit from not working. */
+.swim .clock .hand { transform-origin: 32px 32px; }
+
+/* THE one chromatic thing on this page. --signal is for a value that is true right now, and a hand
+   pointing at the current second is the least arguable example of one on the whole site. */
+.swim .clock .sweep,
+.swim .clock .pin { stroke: var(--signal); fill: var(--signal); }
+.swim .clock .sweep { stroke: var(--signal); }
+.swim .clock .pin { stroke: none; }
+
+/* ---- the two alarms ---- */
+
+/* Two different faults, two different banners, and they must not share a sentence. `wrong` is the
+   schedule no longer reaching today, which makes every answer on the page false. `behind` is the
+   mirror not being written, which makes it merely old. The first is louder because it is worse. */
+.swim .wrong,
+.swim .behind {
+  border-left: 3px solid;
+  padding: 12px 14px;
+  margin-top: 22px;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.swim .wrong { border-color: var(--destructive); }
+.swim .behind { border-color: var(--border); color: var(--muted-foreground); }
+
+.swim .wrong .k,
+.swim .behind .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.swim .wrong .k { color: var(--destructive); }
+
+.swim .why {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  opacity: 0.75;
+  word-break: break-word;
+}
+
+/* ---- session rows ---- */
+
+.swim .swim-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+}
+
+.swim .swim-row .slot {
+  flex: 0 0 auto;
+  min-width: 11ch;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Only a session happening at this second gets the colour. "Starting soon" is a promise about the
+   future, which is exactly what --signal is not for. */
+.swim .swim-row.open .slot { color: var(--signal); }
+
+.swim .swim-row .what { flex: 1 1 auto; min-width: 0; }
+
+.swim .swim-row .pool {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.swim .swim-row .meta {
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  line-height: 1.4;
+}
+
+.swim .swim-row .left {
+  flex: 0 0 auto;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.swim .none {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- the week ---- */
+
+.swim .day {
+  border-top: 1px solid var(--border);
+  padding: 0;
+}
+
+.swim .day > summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* 44px, the tap floor every control on this site keeps. A summary is a control. */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.swim .day > summary::-webkit-details-marker { display: none; }
+.swim .day > summary .n { color: var(--muted-foreground); }
+.swim .day[open] > summary { color: var(--foreground); }
+.swim .day .swim-row:first-of-type { border-top-style: dashed; }
+.swim .day .inner { padding-bottom: 10px; }
+
+/* ---- coverage ledger ---- */
+
+.swim .cov { margin-top: 34px; border-top: 1px solid var(--border); }
+
+.swim .cov > summary {
+  cursor: pointer;
+  padding: 14px 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.swim .cov > summary::-webkit-details-marker { display: none; }
+
+.swim .cov-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.swim .cov-row .st {
+  flex: 0 0 auto;
+  min-width: 9ch;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.swim .cov-row .nm { flex: 1 1 auto; min-width: 0; }
+.swim .cov-row .nt { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
+.swim .cov-row .nt + .nt { margin-top: 1px; opacity: 0.85; }
+.swim .cov-row.off .nm { color: var(--muted-foreground); }
+
+.swim .src {
+  margin-top: 26px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
