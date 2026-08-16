@@ -4,13 +4,27 @@ export const metadata = {
   description: 'A marketing site and an internal operations hub for a Calgary accounting firm, and the tax season mapped into it.',
 };
 
+/* "Five phases and sixteen steps" was here and it described the WRONG HUB. That count belongs to a
+ * static HTML hub from March 2026 that has since been replaced. The live one, at hub.versatilecpa.ca
+ * out of versatile-cpa-master, has four phases and fifteen steps: `src/components/hub/
+ * t1-process-data.ts` runs s1 to s15 with Phase 1 Intake through Phase 4 Filing, and the page's own
+ * copy reads "Fifteen steps, one place". Counted, not remembered.
+ *
+ * It came in from CareerOS/strategy/project-evidence-ledger.md, which froze the March figure and was
+ * never updated. That line is corrected at source now. Count the steps in the deployed hub before
+ * changing this number, and do not take it from the ledger.
+ *
+ * Adoption is the other trap on this page. The ledger's "Do not use" list bars usage claims beyond
+ * the fact of deployment, and the lede used to say the staff work the season out of it while the
+ * closing paragraph refused to claim adoption. Both cannot be true.
+ */
 export default function VersatilePage() {
   return (
     <>
       <h1>Versatile Accounting</h1>
       <p className="lede">
-        An accounting firm in Calgary. I built their public site and the internal hub the staff work
-        the tax season out of.
+        An accounting firm in Calgary. I built their public site and the internal hub that
+        documents how the tax season runs.
       </p>
 
       <dl className="facts">
@@ -28,7 +42,7 @@ export default function VersatilePage() {
         </div>
         <div>
           <dt>Shipped</dt>
-          <dd>A season mapped into five phases and sixteen steps, plus eight process templates</dd>
+          <dd>A season mapped into four phases and fifteen steps, plus eight process templates</dd>
         </div>
       </dl>
 
@@ -43,8 +57,7 @@ export default function VersatilePage() {
       <p className="body">
         Out of that came the phases, the steps and the templates, and only then a hub to hold them.
         I did the discovery, wrote the requirements, built it, and validated it against the people
-        who have to use it. This is the part of the job I have been doing for twelve years, most of
-        it as the person between an insurance business and the team building its systems.
+        who have to use it.
       </p>
 
       <div className="decision">
@@ -65,7 +78,7 @@ export default function VersatilePage() {
 
       <h2 className="sec">What I would say about it honestly</h2>
       <p className="body">
-        The site is live and the hub is deployed and used. What I will not claim is adoption. I know
+        The site is live and the hub is deployed. What I will not claim is adoption. I know
         what was built and what it was built for; how much of it has become habit is not something
         anyone has measured, and a number I have not measured is not a number I will put on a page.
       </p>

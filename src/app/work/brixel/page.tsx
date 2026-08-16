@@ -9,10 +9,11 @@ export const metadata = {
  * and the first draft lost eight of them. Three are worth naming here so nobody writes them back:
  *
  *  - "Brixel signed both sides." It did not. 00_Company/Contracts_Master/Builders/ and Contractors/
- *    are both EMPTY, and 06_Contracts/SOW_Goldies_Stettler_v1.md has blank signature lines. The
+ *    are both EMPTY, and the project SOW under 06_Contracts/ has blank signature lines. The
  *    templates exist; executed agreements do not. This page describes the design, not a signature.
  *  - "The templates existed before the first job did." They did not. The templates are dated
- *    2026-03-22 and Todd accepted the scope by text on 2026-03-11. Any ordering claim here is wrong.
+ *    2026-03-22 and the builder accepted the scope by text on 2026-03-11. The ordering claim is
+ *    wrong in both directions and is gone.
  *  - "Live at brixelcorp.com." Removed. The root of that domain serves Brixel Tech, a software
  *    offer, and the trades pages under it are noindex internal demos. A construction lede over a
  *    link to a software page is a lie a reader finds in one click.

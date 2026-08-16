@@ -33,12 +33,12 @@ export default function KitchenStoryPage() {
       </p>
 
       <p className="body">
-        The second batch of beef had no heat setting, because the first one did and nothing said to
+        The second batch of chicken had no heat setting, because the first one did and nothing said to
         set it again. Nothing mentioned that the sauce goes brown before the butter goes in, so I
-        thought I had ruined it. Nothing tied the flour I had dredged the meat in to the sauce
+        thought I had ruined it. Nothing tied the flour I had dredged the cutlets in to the sauce
         thickening later, so I did not know what I was waiting for. Absences, all of them. A checker
         cannot see an absence it was not told to look for, which is why six sources and eighteen
-        careful reads found nothing.
+        careful reads found none of them.
       </p>
 
       <h2 className="sec">What I changed</h2>
@@ -73,7 +73,7 @@ export default function KitchenStoryPage() {
       </p>
 
       <p className="body">
-        One line did it. The ingredient parser treated ground, minced and frozen as noise and
+        Nearly all of it was one line. The ingredient parser treated ground, minced and frozen as noise and
         stripped them, so &ldquo;ground chicken&rdquo; became &ldquo;chicken&rdquo; and a whole
         roasting bird in the freezer matched. Those words are not noise. They are the product.
       </p>
