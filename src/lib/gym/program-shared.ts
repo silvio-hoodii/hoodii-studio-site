@@ -48,11 +48,14 @@ export function dayMinutes(day: Day): number {
   );
 }
 
-function exPriority(block: { type: string; label: string }, idx: number): number {
-  if (/^Main\b/.test(block.label || '')) return idx === 0 ? 1 : 2;
-  if (block.type === 'main') return 2; // Power Primer, Handstand Skill
-  if (block.type === 'superset') return idx === 0 ? 2 : 3;
-  return 3;
+/* Priority now reads `role`, which says what a block is FOR, instead of sniffing the label with a
+ * regex. The old version tested /^Main\b/ against the label text, so renaming a block from "Main
+ * Lift" to "Main Lift: Back Squat" would have silently demoted the squat out of priority 1 and let
+ * a 45-minute budget drop it. A label is a display string; it should never have been load-bearing. */
+function exPriority(block: { role: string }, idx: number, isLeadMain: boolean): number {
+  if (block.role === 'main') return idx === 0 && isLeadMain ? 1 : 2;
+  if (block.role === 'primer') return 2;
+  return idx === 0 ? 2 : 3;
 }
 
 /** Which exercise ids survive a time budget. Priority 1 (the main lift) is unconditional: a short
@@ -61,10 +64,15 @@ function exPriority(block: { type: string; label: string }, idx: number): number
  *  just for being short). Ported verbatim from HealthOS/gym.html's budgetKeep(). */
 export function budgetKeep(day: Day, minutes: number | null): Set<string> | null {
   if (!day || !minutes) return null; // null budget = run the whole day
+  /* Only the FIRST `main` block of the day is unconditional. Since 2026-08-16 each day carries two
+   * main blocks, the heavy pattern and a light second exposure of the complementary one (squat
+   * heavy + hinge light, and vice versa). Both are "main" in role, but on a 45-minute day the heavy
+   * lift is the one that must survive; the light technical exposure is the first thing to lose. */
+  const leadMainIdx = day.blocks.findIndex((b) => b.role === 'main');
   const items: { id: string; pri: number; mins: number; order: number }[] = [];
   day.blocks.forEach((block, bi) =>
     block.exercises.forEach((ex, i) => {
-      items.push({ id: ex.id, pri: exPriority(block, i), mins: exMinutes(ex), order: bi * 100 + i });
+      items.push({ id: ex.id, pri: exPriority(block, i, bi === leadMainIdx), mins: exMinutes(ex), order: bi * 100 + i });
     }),
   );
   const keep = new Set<string>();

@@ -1,0 +1,272 @@
+{
+  "$schema": "./schema/EQUIPMENT-SCHEMA.md",
+  "$comment": [
+    "What is actually in the gym, and WHERE, so a pairing rule has something to check against.",
+    "",
+    "Why this file exists. Until 2026-08-15 an exercise carried id, name, sets, reps, rest, timed,",
+    "log, cue, alts and nothing else. There was no equipment field and no station field, so nothing",
+    "could ever have caught 'lat pulldown supersetted with dead bug' or 'two machines at once'.",
+    "Every superset in program.json paired a station lift with a floor or band exercise somewhere",
+    "else, and Silvio found all five of them by standing in the gym holding a phone.",
+    "",
+    "The rule this file makes checkable, in one line:",
+    "",
+    "    A SUPERSET MAY OCCUPY AT MOST ONE STATION.",
+    "",
+    "A station is a fixture another member could want: a rack, a bench, a cable stack, one machine,",
+    "the preacher seat, the TRX bar, a treadmill. The partner exercise must occupy NO station",
+    "(floor, mat, unanchored band, pure bodyweight) AND be performable in the zone you are already",
+    "standing in, which is what `floor` on each zone is for.",
+    "",
+    "This rule is not new. It was written into HealthOS/HANDOFF.md on 2026-05-23, after Silvio",
+    "rejected a bench-plus-row superset for exactly this reason, as: 'superset partners must be",
+    "(a) same equipment, (b) bodyweight/floor partner of the main lift, or (c) adjacent equipment in",
+    "arm's reach.' It was prose, nothing executed it, and program.json broke it five times. Per",
+    "ENGINEERING.md, a rule that does not execute is decoration. content/gym/validate.mjs executes",
+    "this one and fails the build.",
+    "",
+    "Unknowns default to the SAFE direction, not the convenient one. An unverified `floor` is false",
+    "and an unverified item is confidence:'unknown', because a false 'you have this' sends him to a",
+    "machine that is not there, while a false 'you lack this' only costs a swap."
+  ],
+
+  "lastConfirmed": "2026-08-15",
+  "poolLengthM": 25,
+  "weightUnit": "lb",
+
+  "confidenceLevels": {
+    "logged": "He has recorded working sets on it in gym_set. Cannot be wrong.",
+    "stated": "He described it in session on 2026-08-15.",
+    "archive": "Recorded in HealthOS/HANDOFF.md during the 2026-05-23 intake.",
+    "unknown": "Not established. Never prescribe as if it exists."
+  },
+
+  "zones": {
+    "rack": {
+      "name": "Rack section",
+      "floor": true,
+      "floorConfidence": "stated",
+      "floorNote": "He brings a mat out and lies down next to whatever he is using. Not the cable section.",
+      "bandAnchor": true,
+      "stations": {
+        "rack": {
+          "name": "Squat rack",
+          "count": "unknown",
+          "confidence": "logged",
+          "evidence": "Back squat to 185, BB bench to 185, BB row to 185, RDL to 225, BB OHP 115, front squat 115"
+        },
+        "rack-pullup-bar": {
+          "name": "Pull-up bar on top of the rack uprights",
+          "confidence": "stated",
+          "evidence": "'All these sections also have sort of spaces with these bars on top that you can use as a pull-up bar'"
+        },
+        "trx": {
+          "name": "TRX straps",
+          "confidence": "stated",
+          "evidence": "'There are also the TRX things with one of the pull-up bars'",
+          "note": "Hangs off one pull-up bar, so it occupies that bar. Unused so far. Opens rows, fallouts and single-leg work with no floor and no machine."
+        }
+      }
+    },
+
+    "benchDb": {
+      "name": "Dumbbell and bench area",
+      "floor": true,
+      "floorConfidence": "stated",
+      "floorNote": "His own worked example: 'I could do dead bugs maybe when I'm doing bench press on dumbbells because I will use the bench'.",
+      "bandAnchor": false,
+      "stations": {
+        "bench": {
+          "name": "Bench, flat and incline",
+          "count": "unknown",
+          "confidence": "logged",
+          "evidence": "DB bench to 75/hand; chest-supported row 65 needs an incline"
+        },
+        "box": {
+          "name": "Plyo box",
+          "confidence": "logged",
+          "evidence": "He has swapped broad jump to box jump on every single Lower B session"
+        }
+      }
+    },
+
+    "cable": {
+      "name": "Cable section",
+      "floor": false,
+      "floorConfidence": "stated",
+      "floorNote": "THE constraint. 'There's no way I can do a lat pulldown and a dead bug. I'm not going to lay on the floor at that cable machine.' No floor partner is legal here.",
+      "bandAnchor": true,
+      "bandAnchorNote": "A cable stack frame will take a band, but anchoring to it occupies the stack, so it is not a free partner.",
+      "stations": {
+        "cable-pulldown": {
+          "name": "Lat pulldown / high pulley",
+          "confidence": "logged",
+          "evidence": "Lat pulldown to 200, straight-arm pulldown 65, tricep pushdown 87.5"
+        },
+        "cable-row": {
+          "name": "Seated cable row / low pulley",
+          "confidence": "archive",
+          "evidence": "Seeded as a sub in the 2026-05-23 exercise set"
+        },
+        "cable-adjustable": {
+          "name": "Adjustable-height cable column",
+          "confidence": "unknown",
+          "note": "Needed for cable Pallof, cable external rotation and any standing rotation work. NOT established. Do not prescribe until confirmed."
+        }
+      }
+    },
+
+    "machines": {
+      "name": "Selectorised machine bank",
+      "floor": false,
+      "floorConfidence": "unknown",
+      "floorNote": "Not established. Defaulted to false, which is the safe direction: it forbids pairings rather than inventing space.",
+      "bandAnchor": false,
+      "note": "Each machine is its own station. Two machines is never a legal superset, which is his 'you're saying on the fore exercise I should use two machines' complaint.",
+      "stations": {
+        "leg-press": { "name": "Leg press", "confidence": "archive", "evidence": "2026-05-23 intake: 'leg press + leg ext both strong'; restated 2026-08-15" },
+        "leg-extension": { "name": "Leg extension", "confidence": "archive", "evidence": "Same" },
+        "leg-curl": { "name": "Leg curl", "confidence": "stated", "evidence": "Listed 2026-08-15. The only direct knee-flexion hamstring option in the building." },
+        "chest-press": { "name": "Chest press machine", "confidence": "archive", "evidence": "Seeded as a sub in May; restated 2026-08-15" },
+        "shoulder-press": { "name": "Shoulder press machine", "confidence": "stated", "evidence": "'a shoulder press machine for chest press'. The phrasing was ambiguous, read as two machines. Confirm before it carries a main lift." },
+        "pec-deck": { "name": "Chest fly / rear delt fly machine", "confidence": "stated", "evidence": "'a machine for flies, like a chest fly and rear delt fly machine'. One machine, both directions." },
+        "assisted-pullup": { "name": "Assisted pull-up", "confidence": "archive", "evidence": "Seeded as a sub in May; restated 2026-08-15" },
+        "assisted-dip": { "name": "Assisted dip", "confidence": "stated", "evidence": "Listed 2026-08-15. He had 5 strict dips at the May intake." },
+        "back-extension": { "name": "45-degree back extension", "confidence": "logged", "evidence": "Glute-biased back extension logged 40 to 50" },
+        "calf-raise": { "name": "Standing calf raise", "confidence": "logged", "evidence": "Logged 2026-06-09, and 'that's a machine' on 2026-08-15" }
+      }
+    },
+
+    "smith": {
+      "name": "Smith machine",
+      "floor": true,
+      "floorConfidence": "unknown",
+      "floorNote": "Assumed to have floor beside it like the rack section. Assumption, not observation.",
+      "bandAnchor": true,
+      "stations": {
+        "smith": {
+          "name": "Smith machine",
+          "confidence": "archive",
+          "evidence": "Smith squat, Smith hip thrust and 'Smith bar at hip height' all seeded as subs in May; restated 2026-08-15"
+        },
+        "smith-pullup-bar": {
+          "name": "Pull-up bar over the Smith section",
+          "confidence": "stated",
+          "evidence": "'All these sections also have sort of spaces with these bars on top'"
+        }
+      }
+    },
+
+    "ezPreacher": {
+      "name": "EZ bar and preacher bench",
+      "floor": false,
+      "floorConfidence": "unknown",
+      "bandAnchor": false,
+      "stations": {
+        "preacher": {
+          "name": "EZ bar with preacher seat",
+          "confidence": "stated",
+          "evidence": "'The EZ bar has the seat too so you can do preacher curls there'",
+          "note": "Never recorded anywhere before today, which is why bicep-curl has exactly one alternative."
+        }
+      }
+    },
+
+    "cardio": {
+      "name": "Cardio floor",
+      "floor": false,
+      "floorConfidence": "unknown",
+      "bandAnchor": false,
+      "stations": {
+        "treadmill": { "name": "Treadmill", "confidence": "stated", "note": "Where the run progression starts. His call: 'I don't want to risk anything.'" },
+        "bike": { "name": "Stationary bike", "confidence": "stated", "note": "He listed it and does not know what to do on it. No resistance scale recorded yet." },
+        "elliptical": { "name": "Elliptical", "confidence": "stated" },
+        "stairmaster": { "name": "Stairmaster", "confidence": "stated" }
+      }
+    },
+
+    "pool": {
+      "name": "Pool",
+      "floor": false,
+      "bandAnchor": false,
+      "stations": {
+        "pool": {
+          "name": "25 m pool, same building",
+          "confidence": "logged",
+          "evidence": "Every swim session in the lap data reads poolLength: 25. 'The pool is there of course, 25 m. It's all in the same place.'"
+        }
+      }
+    }
+  },
+
+  "portable": {
+    "$comment": [
+      "Occupies NO station, so these carry `station: null` in program.json. They are the only legal",
+      "superset partners for a station lift, and a floor-needing one is only legal in a zone whose",
+      "`floor` is true.",
+      "",
+      "Dumbbells and kettlebells live here, NOT in `stations`. They are carried away from the rack",
+      "and nobody is blocked while you hold them, so two dumbbell exercises pair freely and a",
+      "dumbbell exercise pairs freely with a machine. The BENCH is the station in a dumbbell",
+      "exercise that uses one."
+    ],
+    "dumbbells": {
+      "name": "Dumbbells",
+      "needsFloor": false,
+      "confidence": "stated",
+      "range": { "maxLb": 90 },
+      "evidence": "'Dumbbells, I think they're up to like 90 lbs'. Logged to 75/hand."
+    },
+    "kettlebells": {
+      "name": "Kettlebells",
+      "needsFloor": false,
+      "confidence": "stated",
+      "range": { "minLb": 20, "maxLb": 50, "pairsOfEach": 2 },
+      "evidence": "'There are kettlebells from like 20 up to 50, two of each'",
+      "note": "Never used, never prescribed before 2026-08-16. The only loadable implement here that swings, which is why it now appears as a hinge-power and carry alternative."
+    },
+    "floor-mat": {
+      "name": "Mat",
+      "needsFloor": true,
+      "confidence": "stated",
+      "evidence": "'I can bring out a mat and just lay on the floor there when I'm doing something else'"
+    },
+    "band-handheld": {
+      "name": "Band, held in both hands, no anchor",
+      "needsFloor": false,
+      "confidence": "logged",
+      "evidence": "Band pull-apart and band external rotation are both logged",
+      "note": "Legal anywhere, including the cable section, because it anchors to nothing."
+    },
+    "band-anchored": {
+      "name": "Band anchored to a fixture",
+      "needsFloor": false,
+      "needsAnchor": true,
+      "confidence": "logged",
+      "note": "NOT free. Anchoring to a rack post occupies that rack, which is why bulgarian-split-squat plus band-pallof failed: 'I'm using a bench. I'm not gonna go ahead and use a band from the squat rack that I'm not using.'"
+    },
+    "bodyweight": {
+      "name": "Pure bodyweight, standing",
+      "needsFloor": false,
+      "confidence": "logged"
+    }
+  },
+
+  "absent": {
+    "hip-thrust-machine": {
+      "name": "Hip thrust machine",
+      "confidence": "archive",
+      "evidence": "2026-05-23 seed note: 'BB hip thrust on floor (no machine at gym)'",
+      "workaround": "smith-hip-thrust, already in program.json as an alt"
+    }
+  },
+
+  "unexplored": {
+    "accessory-boxes": {
+      "name": "Bins of accessories on the gym floor",
+      "confidence": "unknown",
+      "evidence": "'I know there's a bunch of boxes that we can take equipment out of but I haven't really used those'",
+      "note": "Likely to hold the cheapest fixes for the missing categories: slides, med balls, hurdles, agility ladder, ab wheel, jump rope. Every one of those is a portable, no-station, non-floor-hungry way to train the frontal and transverse plane work he is asking for. Worth one look on the next visit, and the single highest-value unknown in this file."
+    }
+  }
+}

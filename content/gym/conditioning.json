@@ -1,0 +1,157 @@
+{
+  "$comment": [
+    "Run, bike and swim. Separate from program.json because it is not organised by gym day and does",
+    "not have a set/rep/rest shape. Evidence for every number is in",
+    "HealthOS/knowledge/training-programme-evidence.md.",
+    "",
+    "THE SCHEDULING RULE THAT MAKES THIS FIT, and the reason nothing he already does had to be",
+    "traded away: Robineau 2016 found strength gains were LOWER when the aerobic piece followed the",
+    "lift immediately (0 h) than at 6 h or 24 h. So the running goes in a morning slot he is not",
+    "currently using, against a 9 pm swim that is 12+ hours away.",
+    "",
+    "His lift-then-swim stack on the same evening is inside that 6 h window and STAYS ANYWAY. He has",
+    "done it for months and the back squat went 135 to 180 lb across that period. His own log",
+    "outranks a guideline derived from rugby players doing a different pairing."
+  ],
+
+  "slots": {
+    "$comment": "Where each thing lives in a week. Pool times are his, given 2026-08-15.",
+    "morning": {
+      "name": "Morning, before work",
+      "what": "Run or bike, alternating. About 25 to 45 minutes.",
+      "why": "The only genuinely new time in the week. Nothing already happening moves to make room."
+    },
+    "evening": {
+      "name": "Evening",
+      "what": "Lift, then swim, as now. Lift first.",
+      "why": "Unchanged. Held trends favour lifting before the aerobic piece, and this stack is already producing squat progress."
+    },
+    "poolTimes": {
+      "weekdayEarly": "Weekday early: ~6 am",
+      "weekdayLate": "Weekday late: ~9 pm, the one you normally use",
+      "saturday": "Saturday: ~noon or ~2 pm",
+      "sunday": "Sunday: ~noon or ~2 pm"
+    }
+  },
+
+  "run": {
+    "title": "Run",
+    "surface": "Treadmill",
+    "sessionsPerWeek": 3,
+    "startedFrom": "Effectively zero. 3 runs in all of 2025, the last on 2025-08-16. But 65 minutes of walking a day averaged over 60 days, so the engine is there and only the tissue tolerance is missing.",
+    "why": [
+      "Bertelsen 2018 randomised 56 novice runners at BMI 30 to 35, which is your band. The arm that",
+      "started at 3 km/week had 2 injuries in 29 people (6.9%). The arm that started at 6 km/week had",
+      "5 in 27 (18.5%). Same people, same weeks, double the dose, triple the injuries.",
+      "",
+      "This plan IS the 3 km arm, including its week-1 session verbatim. It will feel absurdly easy.",
+      "That is the entire point and the reason it is written down rather than left to feel."
+    ],
+    "howHard": {
+      "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down. There is no version of this plan where running harder is better.",
+      "secondary": "If you want a number, keep your heart rate below about 140. Your swims run 130 to 155, so this should feel EASIER than a swim.",
+      "startingSpeed": "Start the belt around 7.0 km/h and adjust on the first run until the talk test passes. Whatever number that turns out to be is your number, and it does not matter what it is."
+    },
+    "weeks": [
+      { "week": 1, "runKm": 1.0, "session": "500 m walk · 500 m run · 200 m walk · 500 m run", "note": "Verbatim from the trial arm that got hurt least." },
+      { "week": 2, "runKm": 1.1, "session": "500 m walk · 550 m run · 200 m walk · 550 m run" },
+      { "week": 3, "runKm": 1.2, "session": "500 m walk · 600 m run · 200 m walk · 600 m run" },
+      { "week": 4, "runKm": 1.3, "session": "500 m walk · 650 m run · 200 m walk · 650 m run" },
+      { "week": 5, "runKm": 1.45, "session": "500 m walk · 725 m run · 200 m walk · 725 m run" },
+      { "week": 6, "runKm": 1.6, "session": "500 m walk · 800 m run · 200 m walk · 800 m run" },
+      { "week": 7, "runKm": 1.75, "session": "500 m walk · 875 m run · 200 m walk · 875 m run" },
+      { "week": 8, "runKm": 1.9, "session": "500 m walk · 950 m run · 200 m walk · 950 m run", "note": "5.7 km/week total. Reassess here before deciding whether to keep climbing or hold." }
+    ],
+    "rules": [
+      "Never add more than 10% in a week, and never add distance and speed in the same week.",
+      "A missed week means repeat the last week you completed, not jump to where the calendar says.",
+      "Any pain that changes how you walk means stop and say so. Shin and knee are the two to watch, and the hip abduction work on lower days is the insurance against exactly those."
+    ]
+  },
+
+  "bike": {
+    "title": "Bike",
+    "surface": "Stationary bike",
+    "sessionsPerWeek": 1,
+    "why": [
+      "This answers 'I don't know what to do on them', and the bike earns its place for one specific",
+      "reason. Wilson 2012 is the only meta-analysis that separates the endurance MODALITY: running,",
+      "but NOT cycling, produced significant decrements in strength and hypertrophy.",
+      "",
+      "So the bike is where hard aerobic work can go for free, which is exactly what lets the running",
+      "stay short and easy. It is not filler. It is the thing protecting both other goals."
+    ],
+    "protocol": {
+      "name": "Norwegian 4x4",
+      "structure": "10 min easy · then 4 rounds of [4 min hard, 3 min easy] · then 5 min easy",
+      "totalMinutes": 43,
+      "shortVersion": "If the morning is tight: 5 min easy · 3 rounds of [4 min hard, 3 min easy] · 5 min easy. 31 minutes.",
+      "evidenceNote": "The 4x4 itself is well established and has been replicated on cycling as well as running. The commonly quoted 10 to 15% VO2max improvement in untrained adults comes from secondary summaries rather than a primary paper read end to end, so treat the protocol as sourced and that percentage as indicative."
+    },
+    "howHard": {
+      "hardPiece": "By the end of each 4 minutes you should only be able to get out two or three words at a time. Not a sprint: a sprint dies at 90 seconds and this has to last 4 minutes. Pick a resistance you could hold for 5 minutes but would not want to.",
+      "heartRate": "Aim to finish each hard piece somewhere around 150 to 165. Your highest recorded swim heart rate is 175, so that band is derived from what your watch has actually seen, not from a formula.",
+      "easyPiece": "Genuinely easy. Keep pedalling, get your breath fully back before the next one."
+    },
+    "rules": [
+      "Same morning slot as the run, alternating: run, bike, run, run, bike across a fortnight.",
+      "Never on the morning before a heavy lower day if you can avoid it.",
+      "The first two sessions, deliberately undercook the hard pieces. You have not done intervals and the first honest 4 minutes is a shock."
+    ]
+  },
+
+  "swim": {
+    "title": "Swim",
+    "sessionsPerWeek": "3 to 4, unchanged",
+    "baseline": {
+      "continuousUnassisted": "200 m",
+      "confirmedBy": "Your answer on 2026-08-16: without the pull buoy.",
+      "typicalSession": "1,000 m total, in pieces of 100 to 150 m, with 50 to 90 seconds standing between them.",
+      "movingPace": "1:48 to 2:05 per 100 m",
+      "matchesTheData": "Longest unbroken piece in the lap data since July: median 150 m, best 250 m. You said 200. Your felt sense and the watch agree."
+    },
+    "theGoal": {
+      "target": "1,000 m without stopping",
+      "whatThatActuallyIs": "About 19 minutes of continuous swimming at your pace. Your current best continuous effort is around 3 minutes. That is the honest size of the gap, and it is a build measured in months, not weeks.",
+      "whyItIsAchievable": "You already do the distance and you already do it at a decent clip. Nothing about your fitness or your stroke is the limiter. The limiter is that you have never practised swimming SLOWLY, because 50s and 100s train the opposite skill."
+    },
+    "theOneTechniqueChange": {
+      "what": "Swim the continuity piece 10 to 15 seconds per 100 m SLOWER than your normal 100 repeats. Around 2:05 to 2:10 per 100 m.",
+      "why": "This is the single thing that decides whether a long continuous swim works. Almost everyone who fails a distance swim fails it by starting at repeat pace. Going out slower is not cheating, it is the skill being trained.",
+      "howToKnow": "Breathe every 3 strokes and keep it there. If you find yourself switching to every 2 to get more air, you are going too fast: slow down rather than changing the breathing."
+    },
+    "onDrills": "Not prescribed, deliberately. Your strokes per length run 8.5 to 9.3 in a 25 m pool and your SWOLF is 35.6 to 39, which is a reasonable stroke, and the evidence that isolated drills improve adult freestyle endurance is thin. Pacing is the higher-value target. If you want drills later, they are a separate conversation with a real reason attached.",
+    "structure": {
+      "note": "The continuity piece goes FIRST, while you are fresh and unassisted. Everything after it is yours: 50s, 100s, paddles, buoy, whatever you enjoy. Total stays around 1,000 to 1,200 m.",
+      "ladder": [
+        { "weeks": "1 to 2", "piece": "3 x 200 m", "rest": "60 s", "note": "Same distance you can already do, three times, slower than usual. The point is the pace, not the distance." },
+        { "weeks": "3 to 4", "piece": "2 x 300 m", "rest": "60 s" },
+        { "weeks": "5 to 6", "piece": "400 m · 300 m · 200 m", "rest": "45 s" },
+        { "weeks": "7 to 8", "piece": "2 x 400 m", "rest": "45 s" },
+        { "weeks": "9 to 10", "piece": "500 m · 300 m", "rest": "45 s" },
+        { "weeks": "11 to 12", "piece": "600 m · 400 m", "rest": "30 s", "note": "600 m matches your best unbroken swim of the year, from 2026-06-27. Past here it is all new ground." },
+        { "weeks": "13 to 14", "piece": "700 m · 300 m", "rest": "30 s" },
+        { "weeks": "15 to 16", "piece": "800 m · 200 m", "rest": "30 s" },
+        { "weeks": "17 to 18", "piece": "900 m", "rest": "none", "note": "Unbroken, then swim easy for whatever you have left in the session." },
+        { "weeks": "19", "piece": "1,000 m", "rest": "none", "note": "The whole thing, unbroken. This is the goal." }
+      ]
+    },
+    "paddleRule": {
+      "rule": "Paddles at most twice a week, at most 200 m in a session, and never in the continuity piece.",
+      "why": [
+        "This is the one genuine risk flag in the whole rebuild. Schorn 2018, 193 amateur triathletes:",
+        "paddle users sustained overuse injuries at 24% versus 10% for non-users (p = 0.014), and",
+        "paddles were an independent risk factor in regression (p = 0.038). Swim training DURATION was",
+        "not predictive (p = 0.428). It is the paddles, not the hours.",
+        "",
+        "Separately in the same study, heavier weekly weight training was a risk factor for acute",
+        "shoulder injury (p = 0.007). You do both, on the same shoulder, in the same week: paddles",
+        "three times and 200 lb pulldowns plus rows plus pressing four times.",
+        "",
+        "Nothing has gone wrong yet. The cheap insurance is cutting paddle volume, not swim volume,",
+        "which is why the swim frequency you like is untouched and only the paddles are capped."
+      ]
+    },
+    "pullBuoyRule": "Never in the continuity piece, so the number means something. Useful afterwards to overreach: once 400 m unassisted is comfortable, a 500 m with the buoy teaches the pacing for a distance you cannot yet hold on your own."
+  }
+}

@@ -461,17 +461,18 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const warmupList = warmups[day.warmup] || [];
   const cooldownList = day.cooldown.map((k) => cooldowns[k]).filter(Boolean) as CooldownItem[];
 
-  /* How to actually run a block, derived from its type. Nothing in the UI distinguished a superset
-   * from a straight block, so two exercises sharing one rest window looked identical to two done
-   * in sequence. The data always knew (validate.mjs enforces exactly 2 per superset/pair); the
-   * screen just never said it. */
-  function howToRun(block: { type: string; exercises: unknown[] }): string | null {
+  /* How to actually run a block, now read from `pairing` rather than the old conflated `type`.
+   *
+   * The old version had three branches producing two distinct strings: 'superset' and 'pair' both
+   * returned the IDENTICAL sentence, and 'main' returned "Do the second between sets of the first",
+   * which describes a superset while being the only paired block the UI did not draw a bracket
+   * around. He worked that out from the screen on 2026-08-15 without seeing the code: "I also think
+   * 2 is a superset. It's just that it doesn't have that line or I have no idea really if it's a
+   * superset." He was right, and the fix was the data model, not the CSS. */
+  function howToRun(block: { pairing: string; exercises: unknown[] }): string | null {
     if (block.exercises.length < 2) return null;
-    if (block.type === 'superset' || block.type === 'pair') {
-      return 'Superset: alternate the two, rest once after both.';
-    }
-    if (block.type === 'main') return 'Do the second between sets of the first.';
-    return null;
+    if (block.pairing === 'alternate') return 'Superset: alternate the two, rest once after both.';
+    return 'Finish all sets of the first, then start the second.';
   }
 
   return (
@@ -543,7 +544,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         * in. The bracket wraps the EXERCISES rather than the whole block, so it groups the two
         * things that are actually tied instead of swallowing the label as well. */}
       {blocks.map((block, bi) => (
-        <div className={`exgroup${block.type === 'superset' || block.type === 'pair' ? ' tied' : ''}`} key={bi}>
+        <div className={`exgroup${block.pairing === 'alternate' ? ' tied' : ''}`} key={bi}>
           <div className="exgroup-label">
             <span className="exgroup-n tnum">{bi + 1}/{blocks.length}</span>
             {block.label} <span className="tag">{block.tag}</span>
@@ -556,7 +557,7 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
             const p = plan[eff.id];
             const showPlate = PLATE_IDS.has(eff.id);
             const targetW = p?.suggestion.weight ?? null;
-            const ramp = block.type === 'main' && targetW != null ? warmupRamp(targetW) : null;
+            const ramp = block.role === 'main' && targetW != null ? warmupRamp(targetW) : null;
             return (
               /* The slot in the program and the exercise actually filling it. They differ only
                  after a swap, which is exactly when everything here has gone wrong before, and the

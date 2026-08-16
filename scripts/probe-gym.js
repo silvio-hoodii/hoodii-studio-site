@@ -513,10 +513,29 @@
       return { pass: (label || '').startsWith(shown), detail: { nameOnScreen: shown, timerSays: label } };
     },
 
+    /* Builds its own precondition rather than inheriting one, the same way
+       swappedExerciseRestTimerNamesIt does above.
+
+       It used to require that finishIsRefusedWhileAWriteIsOwed had just run. That test ends with
+       `state.mode = 'ok'`, and swappedExerciseRestTimerNamesIt runs between the two and clicks a
+       done-toggle, whose write then SUCCEEDS and clears the banner. So a full `run()` reported this
+       as failed every single time while it passed whenever it was run by hand, which is the worst
+       thing a gate can do: a permanent false red teaches you to read the failure list and shrug. */
     async unlockingFlushesEverythingAndFinishes() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
-      const banner = $('.save-blocked');
-      if (!banner) return { pass: false, detail: 'no banner up, run finishIsRefusedWhileAWriteIsOwed first' };
+      let banner = $('.save-blocked');
+      if (!banner) {
+        state.mode = 'locked';
+        const [row, w] = liveRow();
+        if (!row) return { pass: false, detail: 'no set row with an enabled weight box' };
+        type(w, '36'); blur(w); await sleep(300);
+        const finish = $$('button.primary').find((b) => /finish workout/i.test(text(b)));
+        if (!finish) return { pass: false, detail: 'no finish button' };
+        finish.click();
+        await sleep(600);
+        banner = $('.save-blocked');
+        if (!banner) return { pass: false, detail: 'could not raise the save-blocked banner' };
+      }
       state.mode = 'ok';
       state.unlockOk = true;
       const grab = since();
