@@ -3,7 +3,6 @@
   "source": "KITCHEN.md",
   "confirmed": "2026-08-01, amended 2026-08-08",
   "note": "Canonical equipment vocabulary. Every recipe equipment ref must resolve to a key here. Keys with present:false are hard failures, not warnings: a recipe may not be written around gear this kitchen does not have. This file is what makes 'What baking sheet, this wasn't on the list' structurally impossible.",
-
   "equipment": {
     "oven": {
       "name": "oven",
@@ -16,18 +15,35 @@
       "class": "heat",
       "present": true,
       "tech": "induction",
-      "notes": "INDUCTION, confirmed 2026-08-08. Responds almost instantly with none of the lag a gas or coil burner has. Dial numbers are NOT consistent across burners: some run 1 to 120, some 1 to 10, some low/medium/high.",
+      "notes": "INDUCTION, confirmed 2026-08-08. Responds almost instantly with none of the lag a gas or coil burner has. Dial numbers are NOT consistent across burners: some run 1 to 120, some 1 to 10, some low/medium/high. AND IT HEATS A RING, NOT A BASE: only the metal directly over the coil gets hot, so any pan wider than the coil has a hot band and two cooler zones. This is the mechanism behind 'it is either too hot or too low', reported after three separate cooks.",
       "hardRule": "Never reference a notch, a number, or 'the lowest setting'. Describe what the pot should be doing and have him adjust to match, then check again in two minutes.",
-      "blamedFor": ["2026-08-05 bulgogi rice failure", "2026-08-08 arroz tapado rice failure"]
+      "blamedFor": [
+        "2026-08-05 bulgogi rice failure",
+        "2026-08-08 arroz tapado rice failure",
+        "2026-08-16 honey garlic chicken, black patches on some pieces while others stayed raw"
+      ]
     },
-    "airfryer": { "name": "air fryer", "class": "heat", "present": true },
+    "airfryer": {
+      "name": "air fryer",
+      "class": "heat",
+      "present": true,
+      "goodFor": [
+        "chicken pieces",
+        "anything that browns unevenly in a pan on this hob"
+      ],
+      "notes": "No hot band by construction, which makes it the reliable answer for small pieces here. He moved the chicken to it mid-cook on 2026-08-16 when the stainless pan started blackening patches, and it worked. Capacity in litres still unrecorded."
+    },
     "paninipress": {
       "name": "panini press",
       "class": "heat",
       "present": true,
       "notes": "Two-sided contact heat, cooks both faces at once. Cooks a butterflied chicken breast in roughly half the time of a pan. Treat as a cooking surface, not a sandwich tool."
     },
-    "microwave": { "name": "microwave", "class": "heat", "present": true },
+    "microwave": {
+      "name": "microwave",
+      "class": "heat",
+      "present": true
+    },
     "ricecooker": {
       "name": "rice cooker",
       "class": "heat",
@@ -47,7 +63,6 @@
       "supersedes": "stovetop rice",
       "history": "Two errors here, both fixed 2026-08-11 and both worth keeping. (1) The model number read ORIC-00BK6C-GB24, taken off the box cover on 08-08. It was never a model number and no search on it returns this appliance. (2) A recipe converted the rice into 1 1/2 US CUPS because the listing implied no measuring cup was included. The cup existed. Standing in front of the cooker mid-cook, he had a cup marked in quarters and in millilitres, a pot marked 1/2/3, and an instruction in US cups, and said: I do not understand how everything is so contradictory. Nothing about the appliance was contradictory. The conversion was."
     },
-
     "bakingtray": {
       "name": "baking tray",
       "class": "vessel",
@@ -56,9 +71,21 @@
       "notes": "The original, plus two KitchenAid 9x13x1 rimmed sheets bought secondhand 2026-08-02. One rocks very slightly on a corner press, which has no practical effect under parchment.",
       "history": "Omitted from step 9 of Brown the Beef and Split It on 2026-08-04. He wrote 'What baking sheet this wasn't on the list wtf'. That is why equipment is a declared list now."
     },
-    "pot_small": { "name": "small pot", "class": "vessel", "present": true },
-    "pot_medium": { "name": "medium pot", "class": "vessel", "present": true },
-    "pot_large": { "name": "large pot", "class": "vessel", "present": true },
+    "pot_small": {
+      "name": "small pot",
+      "class": "vessel",
+      "present": true
+    },
+    "pot_medium": {
+      "name": "medium pot",
+      "class": "vessel",
+      "present": true
+    },
+    "pot_large": {
+      "name": "large pot",
+      "class": "vessel",
+      "present": true
+    },
     "pot_ovensafe_lid": {
       "name": "oven-safe pot with a lid",
       "class": "vessel",
@@ -69,23 +96,62 @@
       "name": "large non-stick pan",
       "class": "vessel",
       "present": true,
-      "goodFor": ["eggs", "anything low and slow", "anything that must not grip"],
-      "badFor": ["fond", "sauces built on fond"]
+      "goodFor": [
+        "eggs",
+        "anything low and slow",
+        "anything that must not grip"
+      ],
+      "badFor": [
+        "fond",
+        "sauces built on fond"
+      ]
     },
     "pan_stainless_large": {
       "name": "large stainless steel pan",
       "class": "vessel",
       "present": true,
-      "goodFor": ["browning meat", "searing", "any sauce built on fond"],
+      "goodFor": [
+        "browning meat",
+        "searing",
+        "any sauce built on fond"
+      ],
       "notes": "Heat empty and dry on medium 2 to 3 min, flick in a few drops of water: hissing and vanishing means NOT ready, a bead rolling like mercury means ready. Then oil, then food. The water test is safe on a dry pan and dangerous in oil.",
-      "history": "Went unused for weeks because food sticks to it, and so was reported as not existing. A skill gap presenting as an equipment gap."
+      "history": "Went unused for weeks because food sticks to it, and so was reported as not existing. A skill gap presenting as an equipment gap.",
+      "badFor": [
+        "browning small pieces on this induction hob, until the hot ring is mapped"
+      ],
+      "inductionCaution": "An induction coil is a RING roughly 14 to 18 cm across and it heats ONLY the metal directly over it. This pan is wider than that, so a band of its base runs far hotter than its centre and rim, and a thin stainless base does not spread the difference sideways. Small pieces blacken on the band while pieces an inch away stay raw, which is not something a dial setting can cause and is not a mistake he is making. Signature seen on piccata 2026-08-09 and Honey Garlic Chicken 2026-08-16. Until the hot zone is mapped (flour test in KitchenOS/KITCHEN.md), a recipe browning SMALL PIECES should say to move food between the band and the rim rather than to change the heat, or use the air fryer."
     },
-    "pan_stainless_small": { "name": "small stainless steel pan", "class": "vessel", "present": true, "goodFor": ["small quantities", "one portion"] },
-    "canopener": { "name": "can opener", "class": "vessel", "present": true },
-    "jars": { "name": "empty jars", "class": "vessel", "present": true, "notes": "Enough for pickling." },
-    "plates": { "name": "plates", "class": "vessel", "present": true },
-    "cups": { "name": "cups and glasses", "class": "vessel", "present": true },
-
+    "pan_stainless_small": {
+      "name": "small stainless steel pan",
+      "class": "vessel",
+      "present": true,
+      "goodFor": [
+        "small quantities",
+        "one portion"
+      ]
+    },
+    "canopener": {
+      "name": "can opener",
+      "class": "vessel",
+      "present": true
+    },
+    "jars": {
+      "name": "empty jars",
+      "class": "vessel",
+      "present": true,
+      "notes": "Enough for pickling."
+    },
+    "plates": {
+      "name": "plates",
+      "class": "vessel",
+      "present": true
+    },
+    "cups": {
+      "name": "cups and glasses",
+      "class": "vessel",
+      "present": true
+    },
     "blender_bullet": {
       "name": "bullet blender",
       "class": "prep",
@@ -93,11 +159,37 @@
       "capacityMl": 470,
       "notes": "Ninja style, ~16 oz. Small-batch high-shear. Enough for blending cottage cheese smooth. Too small for a 620 ml crepe batter."
     },
-    "slicer_multiblade": { "name": "multi-blade slicer", "class": "prep", "present": true, "notes": "Interchangeable blades swapped by pressing. One blade grates. Covers slicing and shredding." },
-    "mixingbowl_large": { "name": "large mixing bowl", "class": "prep", "present": true, "count": 2 },
-    "bowlset": { "name": "prep bowls", "class": "prep", "present": true, "notes": "8-piece bowl set plus 2 loose bowls bought 2026-08-08. Small and medium prep bowls are now covered for mise-en-place." },
-    "rollingpin": { "name": "rolling pin", "class": "prep", "present": true, "acquired": "2026-08-08" },
-    "pastrymat": { "name": "silicone pastry mat", "class": "prep", "present": true, "acquired": "2026-08-08", "notes": "A marked surface for rolling dough." },
+    "slicer_multiblade": {
+      "name": "multi-blade slicer",
+      "class": "prep",
+      "present": true,
+      "notes": "Interchangeable blades swapped by pressing. One blade grates. Covers slicing and shredding."
+    },
+    "mixingbowl_large": {
+      "name": "large mixing bowl",
+      "class": "prep",
+      "present": true,
+      "count": 2
+    },
+    "bowlset": {
+      "name": "prep bowls",
+      "class": "prep",
+      "present": true,
+      "notes": "8-piece bowl set plus 2 loose bowls bought 2026-08-08. Small and medium prep bowls are now covered for mise-en-place."
+    },
+    "rollingpin": {
+      "name": "rolling pin",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-08"
+    },
+    "pastrymat": {
+      "name": "silicone pastry mat",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-08",
+      "notes": "A marked surface for rolling dough."
+    },
     "strainer": {
       "name": "fine mesh strainer",
       "class": "prep",
@@ -105,18 +197,46 @@
       "acquired": "2026-08-08",
       "notes": "3pc set. Finer mesh than the colander, so this is the right tool for rinsing rice. Rice grains fall through a colander's holes."
     },
-    "colander": { "name": "colander, 6 qt", "class": "prep", "present": true, "acquired": "2026-08-02", "badFor": ["rinsing rice"] },
-    "knife_sharp": { "name": "sharp knife", "class": "prep", "present": true },
-    "cuttingboard": { "name": "cutting board", "class": "prep", "present": true },
+    "colander": {
+      "name": "colander, 6 qt",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-02",
+      "badFor": [
+        "rinsing rice"
+      ]
+    },
+    "knife_sharp": {
+      "name": "sharp knife",
+      "class": "prep",
+      "present": true
+    },
+    "cuttingboard": {
+      "name": "cutting board",
+      "class": "prep",
+      "present": true
+    },
     "knifesharpener": {
       "name": "knife sharpener",
       "class": "prep",
       "present": true,
       "notes": "Pull-through slot type. Pull only, heel to tip, never saw. Coarse slot sparingly, fine slot to finish, light pressure, rinse the blade after."
     },
-    "spatula": { "name": "spatula", "class": "prep", "present": true },
-    "fork": { "name": "fork", "class": "prep", "present": true },
-    "woodenspoon": { "name": "wooden spoon", "class": "prep", "present": true },
+    "spatula": {
+      "name": "spatula",
+      "class": "prep",
+      "present": true
+    },
+    "fork": {
+      "name": "fork",
+      "class": "prep",
+      "present": true
+    },
+    "woodenspoon": {
+      "name": "wooden spoon",
+      "class": "prep",
+      "present": true
+    },
     "whisk": {
       "name": "hand whisk",
       "class": "prep",
@@ -124,35 +244,118 @@
       "confirmed": "2026-08-04",
       "history": "Part of a multi-piece utensil set nobody had ever named. The crepe recipe was written around this kitchen not having one. An item missing from KITCHEN.md is not evidence it is missing from the kitchen."
     },
-    "ovenmitts": { "name": "oven mitts", "class": "prep", "present": true },
-    "scale_digital": { "name": "digital kitchen scale", "class": "prep", "present": true, "acquired": "2026-08-02", "capacity": "5 kg", "notes": "Portioning no longer falls back to package fractions." },
-    "thermometer": { "name": "instant-read thermometer", "class": "prep", "present": true, "acquired": "2026-08-02", "notes": "Chicken doneness is 165F, not colour." },
-    "measuringcups": { "name": "measuring cups", "class": "prep", "present": true, "acquired": "2026-08-02" },
-    "measuringspoons": { "name": "measuring spoons", "class": "prep", "present": true, "acquired": "2026-08-02" },
-    "teatowel": { "name": "tea towel", "class": "prep", "present": true, "notes": "Small. Too small to cover a rising bowl. Use an inverted second bowl instead." },
-    "parchment": { "name": "parchment paper", "class": "prep", "present": true, "notes": "No, there is no correct side. One face looks glossier because of how it is silicone-coated and calendered, but both faces are coated and either works. Asked 2026-08-02 during Chicken Crust Pizza, step 2." },
-    "papertowel": { "name": "paper towel", "class": "prep", "present": true, "notes": "Always in stock. Never put on a shopping list." },
-    "freezerbag_large": { "name": "large freezer bag", "class": "prep", "present": true, "size": "26.8 x 27.3 cm", "notes": "12-week freezer rated. Use for raw meat portions." },
-    "freezerbag_medium": { "name": "medium freezer bag", "class": "prep", "present": true, "size": "17.7 x 18.8 cm", "notes": "Use for sauce portions, they lay flatter and thaw faster. Restocked 2026-08-08." },
-    "freezerbag_xl": { "name": "extra large freezer bag", "class": "prep", "present": true, "count": 1, "notes": "Exactly one. Treat as a one-shot, not a supply." },
-    "sharpie": { "name": "sharpie", "class": "prep", "present": true, "acquired": "2026-08-08", "notes": "For labelling freezer bags with contents and date. Bought specifically because two unlabelled beef bags had to be re-weighed on 2026-08-08." },
-
+    "ovenmitts": {
+      "name": "oven mitts",
+      "class": "prep",
+      "present": true
+    },
+    "scale_digital": {
+      "name": "digital kitchen scale",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-02",
+      "capacity": "5 kg",
+      "notes": "Portioning no longer falls back to package fractions."
+    },
+    "thermometer": {
+      "name": "instant-read thermometer",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-02",
+      "notes": "Chicken doneness is 165F, not colour."
+    },
+    "measuringcups": {
+      "name": "measuring cups",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-02"
+    },
+    "measuringspoons": {
+      "name": "measuring spoons",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-02"
+    },
+    "teatowel": {
+      "name": "tea towel",
+      "class": "prep",
+      "present": true,
+      "notes": "Small. Too small to cover a rising bowl. Use an inverted second bowl instead."
+    },
+    "parchment": {
+      "name": "parchment paper",
+      "class": "prep",
+      "present": true,
+      "notes": "No, there is no correct side. One face looks glossier because of how it is silicone-coated and calendered, but both faces are coated and either works. Asked 2026-08-02 during Chicken Crust Pizza, step 2."
+    },
+    "papertowel": {
+      "name": "paper towel",
+      "class": "prep",
+      "present": true,
+      "notes": "Always in stock. Never put on a shopping list."
+    },
+    "freezerbag_large": {
+      "name": "large freezer bag",
+      "class": "prep",
+      "present": true,
+      "size": "26.8 x 27.3 cm",
+      "notes": "12-week freezer rated. Use for raw meat portions."
+    },
+    "freezerbag_medium": {
+      "name": "medium freezer bag",
+      "class": "prep",
+      "present": true,
+      "size": "17.7 x 18.8 cm",
+      "notes": "Use for sauce portions, they lay flatter and thaw faster. Restocked 2026-08-08."
+    },
+    "freezerbag_xl": {
+      "name": "extra large freezer bag",
+      "class": "prep",
+      "present": true,
+      "count": 1,
+      "notes": "Exactly one. Treat as a one-shot, not a supply."
+    },
+    "sharpie": {
+      "name": "sharpie",
+      "class": "prep",
+      "present": true,
+      "acquired": "2026-08-08",
+      "notes": "For labelling freezer bags with contents and date. Bought specifically because two unlabelled beef bags had to be re-weighed on 2026-08-08."
+    },
     "foodprocessor": {
       "name": "food processor",
       "class": "prep",
       "present": false,
-      "insteadUse": ["blender_bullet", "slicer_multiblade"],
+      "insteadUse": [
+        "blender_bullet",
+        "slicer_multiblade"
+      ],
       "notes": "Nothing here can grind raw meat or make large-batch doughs. Shredding and slicing are covered by the multi-blade slicer."
     },
     "plasticwrap": {
       "name": "plastic wrap",
       "class": "prep",
       "present": false,
-      "insteadUse": ["plates", "mixingbowl_large"],
+      "insteadUse": [
+        "plates",
+        "mixingbowl_large"
+      ],
       "notes": "Confirmed absent 2026-08-02. A plate or an inverted second bowl covers rising dough."
     },
-    "slowcooker": { "name": "slow cooker", "class": "heat", "present": false },
-    "pressurecooker": { "name": "pressure cooker", "class": "heat", "present": false },
-    "standmixer": { "name": "stand mixer", "class": "prep", "present": false }
+    "slowcooker": {
+      "name": "slow cooker",
+      "class": "heat",
+      "present": false
+    },
+    "pressurecooker": {
+      "name": "pressure cooker",
+      "class": "heat",
+      "present": false
+    },
+    "standmixer": {
+      "name": "stand mixer",
+      "class": "prep",
+      "present": false
+    }
   }
 }

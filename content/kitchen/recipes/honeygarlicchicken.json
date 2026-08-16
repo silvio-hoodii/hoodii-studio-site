@@ -1,7 +1,7 @@
 {
   "id": "honeygarlicchicken",
   "name": "Honey Garlic Chicken",
-  "build": "2026-08-16c",
+  "build": "2026-08-16d",
   "form": "dish",
   "meal": [
     "dinner"
@@ -345,14 +345,14 @@
       "minutes": 3,
       "heat": {
         "surface": "stovetop",
-        "target": "Bubbles breaking across the whole surface of the sauce, not only around the edge, and not a violent rolling boil. The sauce has to actually bubble or the cornstarch will never thicken it.",
-        "recheck": "Straight after the sauce goes in. It is cold and it will silence the pan for a moment, so give it thirty seconds and look again before deciding the heat is wrong."
+        "target": "Bubbles breaking gently across the surface, not a violent roll. If the sauce ROARS and spits the moment it lands, the pan is too hot: LIFT IT OFF THE BURNER for thirty seconds, then put it back. Turning the dial down does nothing fast enough, because on induction the burner obeys instantly and the metal does not.",
+        "recheck": "BEFORE the sauce goes in, not after. The pan has just cooked two batches of chicken at medium-high and it is still holding that heat whatever the dial now says. Her step 4 asks for medium-low, and on this hob the way to actually reach medium-low is to take the pan off the burner for half a minute. Cooked 2026-08-16: it was not off long enough, the sauce boiled hard the moment it hit the pan and went past thick in seconds."
       },
       "doneness": {
-        "test": "Drag the spoon across the bottom of the pan and watch the bare stripe of metal it leaves. While the sauce is still thin it floods back instantly. When it has thickened the stripe stays open for about a second before closing. That, not the clock, is the endpoint.",
+        "test": "Drag the spoon across the bottom of the pan and watch the bare stripe of metal it leaves. While the sauce is still thin it floods back instantly. When it has thickened the stripe stays open for about a second. THAT is the endpoint, and it can arrive in well under her 2 minutes on a hot pan. GONE TOO FAR is easy to fix: a tablespoon of water stirred in loosens it straight back, and you can do that as many times as you like.",
         "kind": "look"
       },
-      "look": "GIVE THE SAUCE ANOTHER BRIEF STIR is not a throwaway line. The cornstarch has been settling on the bottom of that bowl since step 1 and it is all sitting there now. Stir it back in or you will pour clear liquid into the pan and leave the thickener behind in the bowl.\n\nBROWNED BITS stuck to the bottom are called fond, and they are cooked chicken and flour, not burnt-on damage. They are where most of the flavour of this sauce comes from. The liquid loosens them: push the spoon along the metal and they lift off in a few seconds and dissolve.\n\nIf any of them are BLACK rather than brown, that is the piccata failure and it will make the whole sauce bitter. Fish them out with the spoon before the sauce goes in.\n\nSIMMER means gently bubbling, not boiling hard.\n\nABOUT 2 MINUTES is her time and the spoon test above is what actually decides it. It may be quicker: how fast cornstarch thickens depends on how hot the pan is, and yours has just cooked two batches of chicken."
+      "look": "GIVE THE SAUCE ANOTHER BRIEF STIR is not a throwaway line. The cornstarch has been settling on the bottom of that bowl since step 1. Stir it back in or you pour clear liquid into the pan and leave the thickener behind.\n\nGET THE PAN OFF THE HEAT FIRST. Thirty seconds off the burner before the sauce goes anywhere near it. This is the one thing that went wrong on 2026-08-16: the pan was still carrying the chicken heat, the sauce erupted, and it went from liquid to thick almost instantly.\n\nBROWNED BITS stuck to the bottom are called fond: cooked chicken and flour, not burnt-on damage, and where most of the flavour comes from. The liquid loosens them in seconds. Anything BLACK rather than brown gets fished out first, or it makes the whole sauce bitter.\n\nSIMMER means gently bubbling, not boiling hard.\n\nABOUT 2 MINUTES is her time. The spoon test decides, and on a hot pan it will be quicker. Too thick is not a failure: a tablespoon of water fixes it."
     },
     {
       "n": 6,
@@ -380,7 +380,7 @@
         "test": "Every piece is glossy and dark with sauce, with no pale floury patches left showing. The sauce clings to the chicken and coats the back of the spoon rather than running off it like water.",
         "kind": "look"
       },
-      "look": "ALL THE JUICE ON THE PLATE goes in too. Tip it in with the chicken; it is chicken juice and it belongs in the sauce.\n\nEVENLY COATED is her test and it is the one in the doneness box above.\n\n1 TO 2 MINUTES is only long enough to warm the chicken back up. It was already cooked through in step 3 and the thermometer said so. Leaving it in longer past that dries it out, so this is a step to end early rather than late.\n\nIf the sauce has gone too thick to coat by now, that is normal on a hot pan: a tablespoon of water stirred in loosens it straight back. Nothing else needs changing."
+      "look": "ALL THE JUICE ON THE PLATE goes in too. Tip it in with the chicken; it is chicken juice and it belongs in the sauce.\n\nEVENLY COATED is her test and it is the one in the doneness box above.\n\n1 TO 2 MINUTES is only long enough to warm the chicken back up. It was already cooked through in step 3 and the thermometer said so. Leaving it in longer past that dries it out, so this is a step to end early rather than late."
     },
     {
       "n": 7,
@@ -414,8 +414,8 @@
   ],
   "provenance": {
     "tier": "sourced",
-    "cooked": false,
-    "readAt": "2026-08-16c",
+    "cooked": true,
+    "readAt": "2026-08-16d",
     "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the vinegar: she says rice, the cupboard has distilled white, and he made that call himself after being told the difference. Everything else is her page, word for word.",
     "sources": [
       {
@@ -425,6 +425,7 @@
         "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
       }
     ],
-    "readHash": "e4bba56a"
+    "readHash": "e2170e4c",
+    "cookedResult": "worked"
   }
 }
