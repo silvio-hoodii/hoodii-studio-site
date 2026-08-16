@@ -39,7 +39,8 @@
 /* 44px, the site's tap floor. These were 35: four day tabs, at the top of the page he opens with
    one hand between sets, under the floor every other control on the site keeps. Found the same way
    the chips were, by measuring rather than looking, because 35px and 44px look identical. */
-.gym .tab {
+.gym .tab,
+.gym .surf-tab {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -55,7 +56,8 @@
   color: var(--muted-foreground);
   cursor: pointer;
 }
-.gym .tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+.gym .tab.on,
+.gym .surf-tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
 
 /* ---- budget selector ---- */
 .gym .budgets { display: flex; gap: 6px; margin-top: 14px; }
@@ -355,3 +357,38 @@
 .gym .note-actions { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
 .gym .note-actions .btn { min-height: 44px; }
 .gym .note-actions .btn:disabled { opacity: 0.45; cursor: default; }
+
+/* ---- surface nav: the gym is two pages ----
+ *
+ * Reuses .tab so it reads as the same kind of control as the day tabs, but sits above the h1 so the
+ * hierarchy is page -> title -> day rather than two identical rows meaning different things.
+ * Constrained to --measure like everything else so it lines up with the column below it. */
+.gym .surface-nav {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 14px var(--pad) 0;
+  display: flex;
+  gap: 6px;
+}
+.gym .surface-nav .surf-tab { text-decoration: none; }
+
+/* ---- inline links inside prose ----
+ *
+ * The systemic half of the 2026-08-16 report. /gym/conditioning shipped with its only entrance
+ * being the word "conditioning" in a sentence, and inline links on this surface inherited the
+ * paragraph's colour with no underline: "it's not evident that it's a clickable piece of text."
+ * They were, in the strictest sense, invisible.
+ *
+ * Scoped to prose, so it cannot touch .tab, .btn, .eyebrow or the site header, all of which are
+ * links that already announce themselves by shape. */
+.gym .lede a,
+.gym .ex-cue a,
+.gym ul.rules a,
+.gym .plan-table a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.gym .lede a:hover,
+.gym .ex-cue a:hover { text-decoration-thickness: 2px; }

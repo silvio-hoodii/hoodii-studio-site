@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
 
 export const dynamic = 'force-dynamic';
@@ -26,13 +25,10 @@ export default async function ConditioningPage() {
 
   return (
     <div className="wrap">
-      <p className="lede" style={{ marginBottom: 6 }}>
-        <Link href="/gym">← Gym</Link>
-      </p>
       <h1>Conditioning</h1>
       <p className="lede">
-        Run, bike and swim. The lifting is at <Link href="/gym">/gym</Link>. Nothing here replaces a
-        swim: the running lives in a morning slot that is currently empty.
+        Run, bike and swim. The lifting is on the workout tab. Nothing here replaces a swim: the
+        running lives in a morning slot that is currently empty.
       </p>
 
       {/* ---- when things happen ---- */}
