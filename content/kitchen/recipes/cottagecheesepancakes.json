@@ -223,7 +223,7 @@
   ],
   "provenance": {
     "tier": "sourced",
-    "cooked": false,
+    "cooked": true,
     "readAt": "2026-08-16a",
     "statement": "Every instruction is BBC Good Food's own sentence, in her order, with her times, her amounts and her scale of 2. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. Her vanilla extract is marked optional ON HER PAGE and there is none in the house, so nothing was substituted and nothing is missing. What this app adds is the layer a printed page cannot: which of his equipment she means, that the bullet blender needs two goes at this volume, an observable for the induction hob where she writes medium, and the note that his berries are frozen rather than fresh. The protein figure is hers, off her own nutrition panel, and is the first number on any card here that is not an estimate.",
     "sources": [
@@ -234,6 +234,7 @@
         "note": "Cottage cheese pancakes. Serves 2, 10 minutes prep and 10 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All ten ingredient lines and all four instructions taken verbatim. Nutrition panel on the same page gives 469 cal and 21 g protein per serving."
       }
     ],
-    "readHash": "33a8885d"
+    "readHash": "33a8885d",
+    "cookedResult": "worked"
   }
 }
