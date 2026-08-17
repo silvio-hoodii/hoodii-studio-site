@@ -58,7 +58,20 @@ export function isOptionalLine(raw) {
    * serve" usually means "for serving alongside" and sometimes means "this is the starch", and
    * nothing in the text distinguishes them. So only an explicit optional marker counts. */
   const s = String(raw);
-  if (/\boptional\b|\bif (?:using|desired|you like|you have)\b|\bfor garnish\b/i.test(s)) return true;
+  /* THE MARKER HAS TO ATTACH TO THE INGREDIENT AND NOT TO A SECOND HELPING OF IT. Found 2026-08-17 on
+   * BBC's "1 red chilli deseeded and finely chopped, plus extra to serve (optional)": the whole line
+   * read as optional, so Tuna, caper & chilli spaghetti said "you can make this now" in a kitchen with
+   * no fresh chilli of any colour, and named no gap at all. A false "you have it" is the worse
+   * direction of error, per law 5 in `.agents/ENGINEERING.md`.
+   *
+   * The discriminator is the one already used below: the amount decides. A "plus extra ..." tail is a
+   * second serving of something the line has ALREADY quantified, so an optional marker sitting in that
+   * tail is about the extra, not about the ingredient. Cut the tail before asking, but only when the
+   * head kept a quantity: "... and more grated Parmesan, to serve (optional)" has no amount anywhere
+   * and is a topping suggestion in full. 29 corpus lines carry this shape. */
+  const head = s.replace(/,?\s+(?:plus|and|with)\s+(?:a little\s+)?(?:extra|more)\b.*$/i, '');
+  const asked = /[0-9¼½¾⅓⅔⅛⅜⅝⅞]/.test(head) ? head : s;
+  if (/\boptional\b|\bif (?:using|desired|you like|you have)\b|\bfor garnish\b/i.test(asked)) return true;
   /* THE DISCRIMINATOR THE 2026-08-12 VERSION WAS MISSING, added 2026-08-16. "nothing in the text
    * distinguishes them" was not true: the amount does. A line that is a serving suggestion carries no
    * quantity ("green vegetables to serve", "crusty bread to serve"), and a line that is part of the

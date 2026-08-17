@@ -32,7 +32,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { matchToItem, parseIngredient } from './match.mjs';
+import { matchToItem, parseIngredient, isOptionalLine } from './match.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const A = JSON.parse(readFileSync(join(HERE, 'stock', 'aliases.json'), 'utf8'));
@@ -108,6 +108,49 @@ for (const s of STAPLES) {
       'Harmless today because both mean he has it, but it makes the item look unused on the shop page.',
     ]);
   }
+}
+
+/* ---- 4. `isOptionalLine` must agree with what the published line actually says ---- *
+ *
+ * Added 2026-08-17. That function decides whether a recipe line can be ignored, so a wrong `true` is a
+ * dish reported cookable with an ingredient missing and NO gap named anywhere on the screen. It went
+ * wrong on "1 red chilli deseeded and finely chopped, plus extra to serve (optional)", where the marker
+ * belongs to the extra and the chilli is required: Tuna, caper & chilli spaghetti read "you can make
+ * this now" in a kitchen with no fresh chilli.
+ *
+ * Both directions are pinned here, and the wrong-direction ones (`false` where the source did mark it
+ * optional) matter too: that is the app arguing with a source about its own garnish, which is what the
+ * 2026-08-12 gyudon fix was for. The reasoning lives in `match.mjs`; this table is what makes it hold.
+ */
+const OPTIONAL_CASES = [
+  // The marker sits in a "plus extra" tail, so the quantified ingredient itself is required.
+  ['1 red chilli deseeded and finely chopped, plus extra to serve (optional)', false],
+  ['½ tsp chilli flakes plus extra to serve (optional)', false],
+  ['50g parmesan grated, plus extra to serve (optional)', false],
+  ['2 tsp  garam masala plus a little extra to serve (optional)', false],
+  ['4 tbsp Greek yogurt plus more for the top if you like', false],
+  // No amount anywhere on the line, so the whole line is a topping suggestion.
+  ['jar of pesto canned tuna, shredded ham, shredded cooked chicken and more grated Parmesan, to serve (optional)', true],
+  // The marker sits on the ingredient, wherever else the line goes afterwards.
+  ['Japanese red pickled ginger (benishoga) (optional), to serve', true],
+  ['1 tbsp pesto (optional), plus extra to serve', true],
+  ['⅛ tsp cayenne pepper, optional', true],
+  ['1 tsp vanilla extract (optional)', true],
+  // "to serve" with no amount is a serving suggestion; with an amount it is the dish.
+  ['green vegetables to serve', true],
+  ['crusty bread to serve', true],
+  ['4 cups short-grain white rice, to serve', false],
+];
+for (const [line, want] of OPTIONAL_CASES) {
+  const got = isOptionalLine(line);
+  if (got === want) continue;
+  fails.push([
+    'optional-verdict',
+    `isOptionalLine returned ${got} for "${line}"`,
+    want === false
+      ? 'The source asks for this ingredient, so a true here makes a dish read as cookable with nothing named as short. Fix `isOptionalLine`, not this table.'
+      : 'The source itself calls this optional, so a false here blocks a dish over a garnish. Fix `isOptionalLine`, not this table.',
+  ]);
 }
 
 for (const [rule, msg, hint] of warns) {
