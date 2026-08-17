@@ -128,6 +128,27 @@ export interface SwimLadderStep {
   note?: string;
 }
 
+/** A technique cue. Added 2026-08-16, because the plan said how hard and how long and never how,
+ *  and he has never run or cycled.
+ *
+ *  `test` is not optional and it is the whole design: a cue has to be something he PERFORMS with a
+ *  yes-or-no answer, never a sense he has to have. Same rule as `doneness.test` on a recipe, learned
+ *  the same way.
+ *
+ *  `confidence` is rendered on the page rather than kept in a file. `convention` means good coaching
+ *  practice with no study behind it, and labelling that honestly is what makes the `evidence` rows
+ *  worth anything. */
+export interface Cue {
+  name: string;
+  cue: string;
+  test: string;
+  why?: string | null;
+  confidence: 'evidence' | 'convention' | 'contested';
+  /** A real citation with the URL that was fetched, or the literal word CONVENTION. */
+  grounding?: string | null;
+  url?: string | null;
+}
+
 export interface Conditioning {
   slots: {
     morning: { name: string; what: string; why: string };
@@ -143,6 +164,9 @@ export interface Conditioning {
     howHard: { primary: string; secondary: string; startingSpeed: string };
     weeks: ConditioningWeek[];
     rules: string[];
+  cues?: Cue[];
+    /** What was dropped from the cue set and why, which is the more useful half. */
+    cuesNote?: string | null;
   };
   bike: {
     title: string;
@@ -152,6 +176,9 @@ export interface Conditioning {
     protocol: { name: string; structure: string; totalMinutes: number; shortVersion: string; evidenceNote: string };
     howHard: { hardPiece: string; heartRate: string; easyPiece: string };
     rules: string[];
+  cues?: Cue[];
+    /** What was dropped from the cue set and why, which is the more useful half. */
+    cuesNote?: string | null;
   };
   swim: {
     title: string;
@@ -163,6 +190,9 @@ export interface Conditioning {
     structure: { note: string; ladder: SwimLadderStep[] };
     paddleRule: { rule: string; why: Prose };
     pullBuoyRule: string;
+  cues?: Cue[];
+    /** What was dropped from the cue set and why, which is the more useful half. */
+    cuesNote?: string | null;
   };
 }
 

@@ -415,3 +415,71 @@
 .gym a.ex { display: block; text-decoration: none; color: inherit; }
 .gym a.ex:hover .ex-name { text-decoration: underline; }
 .gym a.ex:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+
+/* ---- technique cues ----
+   The confidence badge is rendered rather than hidden. "convention" means nobody has studied it and
+   saying so out loud is what makes the "evidence" rows worth anything. Monochrome by default; only
+   `contested` gets a colour, because that is the one that should make him pause. */
+.gym .conf {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border: 1px solid var(--border-strong);
+  color: var(--muted-foreground);
+  vertical-align: 2px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+.gym .conf.evidence { color: var(--foreground); border-color: var(--foreground); }
+.gym .conf.contested { color: var(--destructive); border-color: var(--destructive); }
+
+/* The test is the operative half of a cue, so it gets a rule down its side rather than being a
+   third paragraph of grey. */
+.gym .cue-test {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 10px;
+  margin-top: 8px;
+  color: var(--foreground);
+}
+
+.gym details.src { margin-top: 8px; }
+.gym details.src > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+.gym details.src > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.gym .src-body {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  padding: 4px 0 6px;
+}
+.gym .src-body a { color: var(--foreground); }
+
+/* Collapsed cue rows. A rule between siblings, no cards, matching everything else here. */
+.gym .cuelist { border-top: 1px solid var(--border); }
+.gym details.cue { border-bottom: 1px solid var(--border); }
+.gym details.cue > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 6px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.gym details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+.gym details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.gym .cue-name { flex: 1; min-width: 0; }
+.gym .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }

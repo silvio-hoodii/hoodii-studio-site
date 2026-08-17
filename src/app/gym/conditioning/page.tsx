@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
+import type { Cue } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +42,70 @@ function Prose({ text }: { text: string | string[] }) {
             {p}
           </p>
         ))}
+    </>
+  );
+}
+
+/* THE CUES. Added 2026-08-16: "also cues and techinique remember that ive never run or bike".
+ *
+ * The plan told him how hard and how long and never how, which is a gap when the athlete has never
+ * done the sport. Each cue is a TEST WITH A BINARY RESULT, per the same house rule the kitchen runs
+ * on: a doneness cue must be something he performs, never a sense he has to have.
+ *
+ * `confidence` is rendered, not hidden. "convention" means good coaching practice with no study
+ * behind it, and saying so is the point: a plan that labels its guesses can be trusted about the
+ * rest. The citation sits behind a tap because he needs the cue at the gym and the source only when
+ * he doubts it. */
+function Cues({ cues, note }: { cues: Cue[]; note?: string | null }) {
+  if (!cues?.length) return null;
+  return (
+    <>
+      <div className="exgroup-label" style={{ marginTop: 22 }}>
+        How to actually do it <span className="tag">({cues.length})</span>
+      </div>
+      <p className="lede" style={{ marginBottom: 6 }}>
+        Each one is a test you perform, not a feeling you have to have. Tap to open.
+      </p>
+      {/* COLLAPSED BY DEFAULT, and measured before and after rather than guessed. Rendering all
+          seven open took the Run tab to 8,536 px, which is TALLER than the 6,287 px page he
+          complained about in the first place. Fixing one wall of text by building a bigger one is
+          not a fix. Collapsed, the seven names are a scannable checklist and each opens on its own,
+          which is also how he would use them at the gym. */}
+      <div className="cuelist">
+        {cues.map((c) => (
+          <details className="cue" key={c.name}>
+            <summary>
+              <span className="cue-name">{c.name}</span>
+              <span className={`conf ${c.confidence}`}>{c.confidence}</span>
+            </summary>
+            <div className="cue-body">
+              <div className="ex-cue">{c.cue}</div>
+              <div className="ex-meta cue-test"><b>The test.</b> {c.test}</div>
+              {c.why && <div className="ex-cue quiet">{c.why}</div>}
+              {c.grounding && (
+                <details className="src">
+                  <summary>{c.confidence === 'convention' ? 'No study behind this' : 'Where this comes from'}</summary>
+                  <div className="src-body">
+                    {c.grounding}
+                    {c.url && (
+                      <>
+                        {' '}
+                        <a href={c.url} target="_blank" rel="noreferrer">open the source</a>
+                      </>
+                    )}
+                  </div>
+                </details>
+              )}
+            </div>
+          </details>
+        ))}
+      </div>
+      {note && (
+        <details className="src">
+          <summary>What was thrown out, and why</summary>
+          <div className="src-body" style={{ whiteSpace: 'pre-line' }}>{note}</div>
+        </details>
+      )}
     </>
   );
 }
@@ -167,6 +232,7 @@ export default async function ConditioningPage({
               <li key={r}>{r}</li>
             ))}
           </ul>
+          <Cues cues={c.run.cues ?? []} note={c.run.cuesNote} />
         </div>
       )}
 
@@ -195,6 +261,7 @@ export default async function ConditioningPage({
               <li key={r}>{r}</li>
             ))}
           </ul>
+          <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
         </div>
       )}
 
@@ -267,6 +334,7 @@ export default async function ConditioningPage({
               <div className="ex-cue">{c.swim.onDrills}</div>
             </div>
           </div>
+          <Cues cues={c.swim.cues ?? []} note={c.swim.cuesNote} />
         </div>
       )}
     </div>
