@@ -155,6 +155,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    * it; two notes on one evening are two separate things he said and neither replaces the other. */
   const noteSeq = useRef(0);
   const finishWantedRef = useRef(false);
+  /* Which ending he chose, so a finish that lands LATER through the banner's unlock is still the
+   * ending he picked rather than a plain finish. Same reasoning as finishWantedRef above. */
+  const endingRef = useRef<'finished' | 'cutshort'>('finished');
   const finishLandedRef = useRef(false);
   const countSets = () => [...pendingRef.current.keys()].filter((k) => k.startsWith('set:')).length;
 
@@ -455,14 +458,15 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    *    session is recorded, the screen says nothing, and he presses Finish again.
    *  - It must not post twice. `finishLanded` is set by `write` itself on the finish key, so a
    *    finish that went out as part of a queue flush is not re-sent here. */
-  async function flushAndFinish(): Promise<boolean> {
+  async function flushAndFinish(status: 'finished' | 'cutshort' = 'finished'): Promise<boolean> {
     finishWantedRef.current = true;
+    endingRef.current = status;
     if (pendingRef.current.size > 0 && !(await retryPending())) {
       setFinishBlocked(true);
       return false;
     }
     if (!finishLandedRef.current) {
-      if (!(await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay }))) {
+      if (!(await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay, status: endingRef.current }))) {
         setFinishBlocked(true);
         return false;
       }
@@ -520,6 +524,15 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         <span>{totals.done}/{totals.total} sets</span>
         {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ', consider a rest day' : ''}</span>}
       </div>
+
+      {/* Says WHY the same day came round again. Re-offering it silently would read as the app
+        * having lost its place, which is the bug this feature exists to prevent. */}
+      {nextUp.cutShort && !nextUp.todayDay && (
+        <p className="lede" style={{ marginTop: 6 }}>
+          You cut {program.days[nextUp.nextDay]?.title ?? 'the last session'} short on {nextUp.lastDate},
+          so it comes round again rather than the next day in the rotation.
+        </p>
+      )}
 
       {/* Sticky, because the set he just typed is most of a screen below this line and a warning
         * that scrolls away is a warning he does not get. */}
@@ -732,11 +745,28 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
       <div style={{ marginTop: 30, marginBottom: 30 }}>
         {finished ? (
-          <p className="lede">Session saved. {totals.done}/{totals.total} sets logged.</p>
+          <p className="lede">
+            Session saved. {totals.done}/{totals.total} sets logged.
+            {endingRef.current === 'cutshort' && ' Cut short, so this day comes round again next time rather than the next one.'}
+          </p>
         ) : (
           <>
-            <button className="primary" style={{ width: '100%' }} onClick={() => void flushAndFinish()}>
+            <button className="primary" style={{ width: '100%' }} onClick={() => void flushAndFinish('finished')}>
               Finish workout ({totals.done}/{totals.total})
+            </button>
+            {/* THE SECOND ENDING, added 2026-08-16. Until now Finish was the only way out, so a day
+              * he barely started and a day he completed left exactly the same trace, and the
+              * rotation in cycle.ts moved on from both. His note after doing two sets of a
+              * five-block Lower A: "Didn't have that much time so can we just restart from here
+              * next session whats the best approach". This is the answer, and it is a button rather
+              * than something to remember. Secondary styling on purpose: finishing is still the
+              * normal ending and this must not read as the easy way out. */}
+            <button
+              className="ghost"
+              style={{ width: '100%', marginTop: 8 }}
+              onClick={() => void flushAndFinish('cutshort')}
+            >
+              Ran out of time, keep this day for next session
             </button>
             {/* Said at the button, not only in the banner at the top of the page. He pressed a
               * thing down here, so this is where "it did not work" has to appear. */}

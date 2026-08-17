@@ -125,9 +125,21 @@ export async function getRecentSessions(exerciseId: string, beforeDate: string, 
   return out;
 }
 
-export async function finishSession(opts: { date: string; day?: string | null }) {
+/* TWO WAYS TO END A SESSION, added 2026-08-16.
+ *
+ * There was one, and the note box got this the same evening: "Didn't have that much time so can we
+ * just restart from here next session whats the best approach". He had done two sets of back squat
+ * out of a Lower A day holding eight exercises, pressed Finish because that is the only button, and
+ * the rotation in cycle.ts duly advanced him to Upper A. The programme is a rotation rather than a
+ * calendar, so the day he barely started was simply gone.
+ *
+ * `cutshort` records what actually happened, and `computeNextUp` re-offers the same day rather than
+ * moving on. Nothing is lost and nothing has to be remembered: he does not have to work out that
+ * pressing Finish costs him the day, and he does not have to hunt for a way to repeat it. */
+export async function finishSession(opts: { date: string; day?: string | null; status?: 'finished' | 'cutshort' }) {
+  const status = opts.status === 'cutshort' ? 'cutshort' : 'finished';
   await sql`
-    update gym_session set status = 'finished', finished_at = now()
+    update gym_session set status = ${status}, finished_at = now()
     where date = ${opts.date} and day = ${opts.day ?? null}
   `;
 }
@@ -147,12 +159,12 @@ export async function getSessionDay(date: string): Promise<string | null> {
 }
 
 /** Rolling schedule: the most recent date with real logged work, and its program day. */
-export async function getLastTrainingRow(): Promise<{ date: string; day: string | null } | null> {
+export async function getLastTrainingRow(): Promise<{ date: string; day: string | null; status: string | null } | null> {
   const rows = await sql`
-    select date, day from gym_session
+    select date, day, status from gym_session
     where date = (select max(date) from gym_set where done = true and reps is not null and reps > 0)
   `;
-  return (rows[0] as { date: string; day: string | null } | undefined) ?? null;
+  return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
 }
 
 /** Distinct training dates, newest first, powers the consecutive-day streak. */

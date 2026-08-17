@@ -392,3 +392,19 @@
 }
 .gym .lede a:hover,
 .gym .ex-cue a:hover { text-decoration-thickness: 2px; }
+
+/* The second ending. Deliberately quieter than `.primary`: finishing is still the normal way out of
+   a session and "ran out of time" must not read as the easy option. */
+.gym .ghost {
+  width: 100%;
+  background: transparent;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+.gym .ghost:hover { color: var(--foreground); border-color: var(--foreground); }
+.gym .ghost:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
