@@ -1,0 +1,239 @@
+{
+  "id": "cottagecheesepancakes",
+  "name": "Cottage Cheese Pancakes",
+  "build": "2026-08-16a",
+  "form": "dish",
+  "meal": [
+    "breakfast"
+  ],
+  "why": "This is the oat-flour idea you had, already written down by someone else. The oats go in the blender with the cottage cheese and the eggs and come out as the batter, so there is no flour and no separate step to make any. Four ingredients that matter, twenty minutes, and it is cooked in the NON-STICK pan rather than the stainless one, which takes the pan you have been fighting out of the picture entirely. It also finally spends the cottage cheese, which has been sitting in the fridge since the start.",
+  "source": "https://www.bbcgoodfood.com/recipes/cottage-cheese-pancakes",
+  "image": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/CottageCheesePancakes-f4e9480.jpg?resize=768,713",
+  "time": {
+    "activeMin": 20,
+    "totalMin": 20,
+    "note": "her numbers: 10 prep, 10 cook"
+  },
+  "serves": {
+    "count": 2,
+    "unit": "plate",
+    "proteinPerUnit": 21,
+    "proteinMath": "NOT AN ESTIMATE FOR ONCE. 21 g per serving is printed on her own page, in the nutrition panel BBC Good Food publishes with the recipe, alongside 469 cal, 18 g fat, 53 g carbohydrate and 6 g fibre. Her figure, her serving, at her scale of 2. It counts the pancakes only and not whatever goes on top: a poached egg adds about 6 g, and the berries and maple syrup add nothing worth counting."
+  },
+  "ingredients": [
+    {
+      "ref": "cottagecheese",
+      "stock": "cottagecheese",
+      "display": "cottage cheese",
+      "qty": 100,
+      "unit": "g",
+      "prep": "weigh it. The tub is 750 g, so this is about an eighth of it",
+      "defining": true
+    },
+    {
+      "ref": "oats",
+      "stock": "oats",
+      "display": "porridge oats",
+      "qty": 150,
+      "unit": "g",
+      "prep": "the rolled oats in the cupboard are porridge oats. They go in whole and the blender turns them into the flour",
+      "defining": true
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "eggs",
+      "qty": 2,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "milk",
+      "qty": 50,
+      "unit": "ml",
+      "defining": false
+    },
+    {
+      "ref": "bakingpowder",
+      "display": "baking powder",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": true
+    },
+    {
+      "ref": "maple",
+      "display": "maple syrup",
+      "qty": 2,
+      "unit": "tsp",
+      "staple": true,
+      "optional": true,
+      "prep": "only if you want them sweet. She marks it optional and so is this",
+      "defining": false
+    },
+    {
+      "ref": "oil",
+      "display": "flavourless oil",
+      "qty": 2,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "the plain vegetable oil, not the olive oil. Olive oil has a taste and she asks for one that does not",
+      "defining": false
+    },
+    {
+      "ref": "berries",
+      "stock": "fruit",
+      "display": "berries, to serve",
+      "qty": 1,
+      "unit": "handful",
+      "optional": true,
+      "prep": "she says fresh. Yours are frozen, so thaw a handful in a bowl or warm them thirty seconds in the microwave. They will be softer and wetter than fresh, which on a pancake is no loss",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "blender_bullet",
+    "pan_nonstick_large",
+    "stovetop",
+    "spatula",
+    "scale_digital",
+    "measuringspoons",
+    "measuringcups",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Put all the pancake ingredients, except the oil, in a blender, but only use the vanilla and maple syrup if you want to make sweet pancakes. Blitz to make a smooth batter. Alternatively, pour the ingredients into a jug and use a stick blender.",
+      "sourceText": "Put all the pancake ingredients, except the oil, in a blender, but only use the vanilla and maple syrup if you want to make sweet pancakes. Blitz to make a smooth batter. Alternatively, pour the ingredients into a jug and use a stick blender.",
+      "uses": [
+        {
+          "ref": "cottagecheese",
+          "amount": 100,
+          "unit": "g"
+        },
+        {
+          "ref": "oats",
+          "amount": 150,
+          "unit": "g"
+        },
+        {
+          "ref": "eggs",
+          "amount": 2,
+          "unit": "each"
+        },
+        {
+          "ref": "milk",
+          "amount": 50,
+          "unit": "ml"
+        },
+        {
+          "ref": "bakingpowder",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "maple",
+          "amount": 2,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "blender_bullet",
+        "scale_digital",
+        "measuringspoons",
+        "measuringcups"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "look": "THIS IS THE WHOLE OAT FLOUR IDEA AND IT NEEDS NO EXTRA STEP. The oats go in dry and whole with everything else, and the blender turns them into the flour on the way past. Nothing has to be ground first.\n\nYOUR BLENDER IS THE BULLET, about 470 ml. This batter is roughly 400 ml, which is close enough to the top that it will not move. BLEND IT IN TWO GOES: half the ingredients, blitz, tip into a bowl, then the other half, and stir the two together. Overfilling a bullet just spins the blade in a hole while the top half sits there dry.\n\nSMOOTH BATTER is the endpoint and it means no whole oats left visible. Stop, tip the jar, look at it against the light. Rolled oats are stubborn, so this takes longer than it feels like it should: think a minute of blitzing in bursts, not ten seconds.\n\nSHE SAYS VANILLA AND IT IS OPTIONAL, which is lucky because there is none in the house. Nothing is lost; it is a flavour, not structure. The maple syrup is also optional and is the only thing making these sweet.\n\nA STICK BLENDER is her alternative and there is not one here. The bullet is the blender she means."
+    },
+    {
+      "n": 2,
+      "text": "Heat a little of the oil or butter in a nonstick frying pan over a medium heat, and add a few tablespoons of the batter to the pan to make small pancakes. Cook in batches if needed.",
+      "sourceText": "Heat a little of the oil or butter in a nonstick frying pan over a medium heat, and add a few tablespoons of the batter to the pan to make small pancakes. Cook in batches if needed.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 2,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A drop of batter should sizzle quietly and start setting at the edge within a few seconds. If it spits or the oil smokes it is too hot and the outside will colour before the middle cooks. If nothing happens for ten seconds it is too cold and the pancake will soak up oil.",
+        "recheck": "After the first pancake, always. The first one out of the pan is the test pancake in every kitchen: if it browned before it set, come down; if it sat there pale, come up. Adjust once and leave it alone."
+      },
+      "doneness": {
+        "test": "Test the pan before the batter goes in, with the batter. Drop in half a teaspoon of it. Sizzles quietly and the edge starts to set within about five seconds means ready, and the rest can go in. Silent means wait. Spitting, or it browns while you watch, means lift the pan off the burner for twenty seconds and test again.",
+        "kind": "look"
+      },
+      "look": "SHE ASKS FOR THE NON-STICK PAN BY NAME, and for once the recipe and this kitchen agree. This is not a job for the stainless one: pancake batter grips it, and the whole difficulty you have had with that pan is absent here.\n\nA LITTLE OF THE OIL means roughly a teaspoon for the first batch out of the two she gives you, spread with a folded piece of paper towel so the pan is filmed rather than puddled. Too much oil fries the outside of a pancake instead of cooking it.\n\nA FEW TABLESPOONS PER PANCAKE gives you something about the size of your palm. Leave a finger's gap between them; they spread a little and they need room for the spatula.\n\nCOOK IN BATCHES IF NEEDED, and it will be needed: this batter makes about six of that size and the pan holds three or four at a time. The rest of the oil goes in before the second batch."
+    },
+    {
+      "n": 3,
+      "text": "Cook the pancakes for 2-3 mins until bubbles come to the surface, and the top looks set. Flip and cook for another 1-2 min mins until golden brown on both sides. Keep the pancakes warm while you cook the remaining batches.",
+      "sourceText": "Cook the pancakes for 2-3 mins until bubbles come to the surface, and the top looks set. Flip and cook for another 1-2 min mins until golden brown on both sides. Keep the pancakes warm while you cook the remaining batches.",
+      "uses": [],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula",
+        "plates"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The same as the last step: a quiet steady sizzle, no spitting and no smoke. If the second batch browns faster than the first, the pan has crept up, so lift it off the burner for twenty seconds before pouring more batter.",
+        "recheck": "Before every batch after the first. An empty pan sitting on a burner between batches climbs, and on induction it climbs fast."
+      },
+      "doneness": {
+        "test": "Her test, and it is a good one: holes open on the wet top surface and stay open instead of filling back in, and the surface stops looking liquid. That is when it flips. After the flip, lift a corner with the spatula and look at the underside: golden brown, the colour of a digestive biscuit, not dark.",
+        "kind": "look"
+      },
+      "look": "BUBBLES COME TO THE SURFACE is the classic pancake test and it works because the baking powder is releasing gas from the bottom up. When the holes it leaves stop closing over, the batter underneath has set enough to hold together through a flip.\n\nDO NOT FLIP EARLY. This is the one way to ruin these. Too soon and half the pancake stays in the pan. If the spatula meets resistance, it is not ready; give it another thirty seconds.\n\nFLIP ONCE. Pancakes flipped back and forth go tough and flat.\n\nGOLDEN BROWN is her word and here it means the colour of a digestive biscuit, not the dark crust you were chasing on the chicken. These are pale and soft by nature.\n\nKEEP THEM WARM: a plate under an upside-down bowl holds heat for the few minutes the second batch takes. There is no oven step in this recipe and none is needed."
+    },
+    {
+      "n": 4,
+      "text": "Serve the pancakes topped with a poached egg each and some roasted tomatoes, or top with fresh berries and a drizzle of maple syrup.",
+      "sourceText": "Serve the pancakes topped with a poached egg each and some roasted tomatoes, or top with fresh berries and a drizzle of maple syrup.",
+      "uses": [
+        {
+          "ref": "berries",
+          "amount": 1,
+          "unit": "handful"
+        }
+      ],
+      "equipment": [
+        "plates"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "look": "SHE GIVES YOU TWO WAYS AND THEY ARE OPPOSITE DISHES. Poached egg and roasted tomatoes makes it a savoury breakfast and adds about 6 g of protein. Berries and maple syrup makes it the sweet one, and that is the version the optional maple syrup in the batter is for.\n\nFRESH BERRIES is what she says and yours are frozen. Thaw a handful in a bowl on the counter while you cook, or thirty seconds in the microwave. They come out softer and wetter than fresh, which on a pancake is no loss at all.\n\nTHE 21 G OF PROTEIN A PLATE is her own published figure and it counts the pancakes only. Whatever goes on top is extra."
+    }
+  ],
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-16a",
+    "statement": "Every instruction is BBC Good Food's own sentence, in her order, with her times, her amounts and her scale of 2. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. Her vanilla extract is marked optional ON HER PAGE and there is none in the house, so nothing was substituted and nothing is missing. What this app adds is the layer a printed page cannot: which of his equipment she means, that the bullet blender needs two goes at this volume, an observable for the induction hob where she writes medium, and the note that his berries are frozen rather than fresh. The protein figure is hers, off her own nutrition panel, and is the first number on any card here that is not an estimate.",
+    "sources": [
+      {
+        "name": "BBC Good Food",
+        "url": "https://www.bbcgoodfood.com/recipes/cottage-cheese-pancakes",
+        "primary": true,
+        "note": "Cottage cheese pancakes. Serves 2, 10 minutes prep and 10 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All ten ingredient lines and all four instructions taken verbatim. Nutrition panel on the same page gives 469 cal and 21 g protein per serving."
+      }
+    ],
+    "readHash": "33a8885d"
+  }
+}

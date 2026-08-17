@@ -22,21 +22,23 @@ function href(f: Filters, patch: Partial<Filters>) {
   if (next.q) p.set('q', next.q);
   if (next.uses) p.set('uses', next.uses);
   if (next.cuisine) p.set('cuisine', next.cuisine);
+  if (next.course) p.set('course', next.course);
   if (next.max !== undefined) p.set('max', String(next.max));
   const s = p.toString();
   return s ? `/kitchen/find?${s}` : '/kitchen/find';
 }
 
 export function FilterBar({
-  filters, usesFacets, cuisineFacets, matched, total,
+  filters, usesFacets, courseFacets, cuisineFacets, matched, total,
 }: {
   filters: Filters;
   usesFacets: { id: string; name: string; count: number }[];
+  courseFacets: { id: string; label: string; count: number }[];
   cuisineFacets: { name: string; count: number }[];
   matched: number;
   total: number;
 }) {
-  const active = Boolean(filters.q || filters.uses || filters.cuisine || filters.max !== undefined);
+  const active = Boolean(filters.q || filters.uses || filters.cuisine || filters.course || filters.max !== undefined);
 
   return (
     <div className="filters">
@@ -52,6 +54,7 @@ export function FilterBar({
         {/* Carried through so searching does not silently discard the other filters. */}
         {filters.uses && <input type="hidden" name="uses" value={filters.uses} />}
         {filters.cuisine && <input type="hidden" name="cuisine" value={filters.cuisine} />}
+        {filters.course && <input type="hidden" name="course" value={filters.course} />}
         {filters.max !== undefined && <input type="hidden" name="max" value={String(filters.max)} />}
         <button type="submit" className="primary">Search</button>
       </form>
@@ -68,6 +71,29 @@ export function FilterBar({
           up to 2 missing
         </Link>
       </div>
+
+      {/* WHAT KIND OF FOOD, first, because it is the question a person asks before any other.
+          Added 2026-08-16: "where is all this i dont see it in the app". The oat and baking recipes
+          were in the corpus, scored, and reachable only by guessing the word "oat" in a search box.
+          Same rule as the ingredient chips below: counted over cookable dishes, and the chip pins
+          max=0 so the number on it is the number of rows it produces. */}
+      {courseFacets.length > 0 && (
+        <div className="chiprow" role="group" aria-label="What kind of food">
+          <span className="chiplabel">Kind</span>
+          {courseFacets.map((c) => (
+            <Link
+              key={c.id}
+              className={`chip ${filters.course === c.id ? 'on' : ''}`}
+              href={href(filters, {
+                course: filters.course === c.id ? undefined : c.id,
+                max: filters.max ?? 0,
+              })}
+            >
+              {c.label} <i>{c.count}</i>
+            </Link>
+          ))}
+        </div>
+      )}
 
       {usesFacets.length > 0 && (
         <div className="chiprow" role="group" aria-label="Show dishes you can cook with one thing you have">

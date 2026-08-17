@@ -116,7 +116,7 @@ function Group({
 export default async function Find({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; uses?: string; cuisine?: string; max?: string }>;
+  searchParams: Promise<{ q?: string; uses?: string; cuisine?: string; course?: string; max?: string }>;
 }) {
   const sp = await searchParams;
   const maxRaw = sp.max === undefined ? undefined : Number(sp.max);
@@ -124,6 +124,7 @@ export default async function Find({
     q: sp.q,
     uses: sp.uses,
     cuisine: sp.cuisine,
+    course: sp.course,
     max: Number.isFinite(maxRaw) ? maxRaw : undefined,
   });
 
@@ -178,6 +179,7 @@ export default async function Find({
       <FilterBar
         filters={d.filters}
         usesFacets={d.usesFacets}
+        courseFacets={d.courseFacets}
         cuisineFacets={d.cuisineFacets}
         matched={d.matched}
         total={d.total}

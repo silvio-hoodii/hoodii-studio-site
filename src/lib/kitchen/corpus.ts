@@ -35,6 +35,8 @@ export interface Candidate {
    *  than cuisine: the real question is "what can I make with the chicken thighs", not "show me
    *  Italian". Derived from the match, so it needs no tagging and cannot drift from the scoring. */
   usesIds: string[];
+  /** Which of the six course buckets this dish falls in. Several, usually. */
+  courses: string[];
   /* WHAT IS STILL IN THE FREEZER, by name.
    *
    * `usableIds` counts frozen food as available, which is right for "do I need to shop" and wrong for
@@ -49,7 +51,39 @@ export interface Filters {
   q?: string;
   uses?: string;
   cuisine?: string;
+  course?: string;
   max?: number;
+}
+
+/* WHAT KIND OF FOOD IT IS, which the page could not ask until 2026-08-16.
+ *
+ * He asked what sweet things he could make with 4.5 kg of oats, got an answer in chat, and then:
+ * "where is all this i dont see it in the app". Fair. The corpus carries a `category` off every
+ * page's JSON-LD, 102 of them Dessert and 25 Treat, and the only facets offered were CUISINE (by
+ * country) and USES (by ingredient). "Show me sweet things" was reachable only by guessing that
+ * typing "oat" into a search box would work.
+ *
+ * Publishers' categories are messy and overlapping (Dinner, Main course, Supper and Lunch all sit on
+ * the same recipe), so they are grouped into the six a person actually picks between. Name matching
+ * backs up the category for baking, because a lot of cake is filed under Snack. */
+const COURSES: { id: string; label: string; cats: RegExp; names?: RegExp }[] = [
+  { id: 'dinner',    label: 'Dinner',          cats: /^(Dinner|Main course|Supper)$/i },
+  { id: 'sweet',     label: 'Sweet & baking',  cats: /^(Dessert|Treat|Afternoon tea)$/i,
+    names: /cookie|brownie|muffin|cake|scone|flapjack|granola|crumble|pancake|pudding|shortbread|biscuit|banana bread|energy ball|energy bite/i },
+  { id: 'breakfast', label: 'Breakfast',       cats: /^(Breakfast|Brunch)$/i },
+  { id: 'lunch',     label: 'Lunch',           cats: /^(Lunch)$/i },
+  { id: 'soup',      label: 'Soup',            cats: /^(Soup)$/i },
+  { id: 'side',      label: 'Sides & snacks',  cats: /^(Side dish|Side|Snack|Starter|Canapes|Buffet)$/i },
+];
+
+function coursesOf(meal: CorpusMeal): string[] {
+  const cats = String(meal.category ?? '').split(/,\s*/).map((x) => x.trim()).filter(Boolean);
+  const out = new Set<string>();
+  for (const c of COURSES) {
+    if (cats.some((cat) => c.cats.test(cat))) out.add(c.id);
+    if (c.names && c.names.test(meal.name)) out.add(c.id);
+  }
+  return [...out];
 }
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
@@ -197,7 +231,7 @@ export async function findCandidates(filters: Filters = {}) {
     const usesIds = [...new Set(hits.map((h) => h.item).filter((x): x is string => !!x))];
     const needsThaw = [...new Set(usesIds.filter((id) => frozen.has(id)).map((id) => nameOf(stock, id)))];
     const cardId = meal.source ? cardByUrl.get(meal.source.replace(/\/+$/, '')) ?? null : null;
-    return { meal, score, usesExpiring, usesIds, needsThaw, cardId };
+    return { meal, score, usesExpiring, usesIds, needsThaw, cardId, courses: coursesOf(meal) };
   });
 
   const byName = (a: Candidate, b: Candidate) => a.meal.name.localeCompare(b.meal.name);
@@ -232,6 +266,17 @@ export async function findCandidates(filters: Filters = {}) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 12);
 
+  /* Counted over COOKABLE dishes and the chip pins max=0, same rule as the ingredient chips: the
+   * number on a chip has to be the number of rows tapping it produces. */
+  const courseCount = new Map<string, number>();
+  for (const c of all) {
+    if (c.score.missing.length > 0) continue;
+    for (const id of c.courses) courseCount.set(id, (courseCount.get(id) ?? 0) + 1);
+  }
+  const courseFacets = COURSES
+    .map((c) => ({ id: c.id, label: c.label, count: courseCount.get(c.id) ?? 0 }))
+    .filter((c) => c.count > 0);
+
   const cuisineCount = new Map<string, number>();
   for (const c of all) if (c.meal.area) cuisineCount.set(c.meal.area, (cuisineCount.get(c.meal.area) ?? 0) + 1);
   const cuisineFacets = [...cuisineCount.entries()]
@@ -247,6 +292,7 @@ export async function findCandidates(filters: Filters = {}) {
     if (filters.max !== undefined && c.score.missing.length > filters.max) return false;
     if (filters.uses && !c.usesIds.includes(filters.uses)) return false;
     if (filters.cuisine && c.meal.area !== filters.cuisine) return false;
+    if (filters.course && !c.courses.includes(filters.course)) return false;
     if (q) {
       /* Ingredients are in the haystack because "cumin" or "sweet potato" is what he would type, and a
        * name-only search returned nothing for hundreds of dishes that use them while the page was
@@ -263,7 +309,7 @@ export async function findCandidates(filters: Filters = {}) {
     return true;
   });
 
-  const isFiltered = Boolean(q || filters.uses || filters.cuisine || filters.max !== undefined);
+  const isFiltered = Boolean(q || filters.uses || filters.cuisine || filters.course || filters.max !== undefined);
 
   /* Ranked flat list for the filtered view. Fewest missing first, then whatever rescues food soonest,
    * then confidence, then name. A single ordered list beats five sections once a filter is applied,
@@ -285,6 +331,7 @@ export async function findCandidates(filters: Filters = {}) {
     isFiltered,
     filters,
     usesFacets,
+    courseFacets,
     cuisineFacets,
     matched: filtered.length,
     results: [...filtered].sort(rank),
