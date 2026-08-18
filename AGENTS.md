@@ -106,6 +106,18 @@ printed page cannot: stock, definitions, equipment, timers, protein. `validate.m
 single primary source, `sourceText` on every step, and refuses any number in a step that is not in
 that step's source text.
 
+**You do not retype her method either.** `content/kitchen/import.mjs` captures one published recipe
+verbatim into `content/kitchen/imported/<id>.json`, hashed, and `validate.mjs` asserts every
+`sourceText` on a card appears in that capture. Before 2026-08-17 the verbatim check compared a step's
+`text` to its `sourceText`, both typed by the same agent, so it verified that an agent agreed with
+itself. Build the card from the capture. A quote the page does not carry now fails the build.
+
+**Touching `/kitchen`? Run `node scripts/probe-kitchen.mjs <base-url>`.** Same argument as the gym
+probe: the static gates all pass on a page that renders a stale ingredient row, and both bugs found on
+2026-08-16 needed a browser. It drives real Chrome over raw CDP with no new dependency, at 390px, and
+writes nothing. Adding a case that would POST to `/kitchen/api` is forbidden: there is no development
+database and a probe writing into his stock or his cook log is worse than no probe.
+
 Two other gates worth knowing before you edit anything under `content/kitchen/`:
 
 - `provenance.readAt` is the build at which every step was read AS RENDERED. Change one word and the
