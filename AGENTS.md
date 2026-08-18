@@ -112,6 +112,14 @@ verbatim into `content/kitchen/imported/<id>.json`, hashed, and `validate.mjs` a
 `text` to its `sourceText`, both typed by the same agent, so it verified that an agent agreed with
 itself. Build the card from the capture. A quote the page does not carry now fails the build.
 
+**Check what is already on the port before you trust a local probe run.** On 2026-08-18 four
+`next start` servers from earlier sessions were still listening on 3002, 3007, 3009 and 3011, all
+serving old builds of this repo. A `pnpm start -p 3007` failed with the port in use, the
+wait-for-server loop was satisfied by the stale one instantly, and the probe printed nine confident
+failures about code that had already been replaced. `probe-kitchen.mjs` now compares the served build
+against `.next/BUILD_ID` and refuses to run rather than reporting, so this costs a message instead of
+an hour. Pick a port nothing holds: `netstat -ano | grep LISTENING | grep :30`.
+
 **Touching `/kitchen`? Run `node scripts/probe-kitchen.mjs <base-url>`.** Same argument as the gym
 probe: the static gates all pass on a page that renders a stale ingredient row, and both bugs found on
 2026-08-16 needed a browser. It drives real Chrome over raw CDP with no new dependency, at 390px, and
