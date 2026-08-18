@@ -1,0 +1,464 @@
+{
+  "id": "creamytomatochicken",
+  "name": "Creamy Tomato Chicken",
+  "build": "2026-08-18a",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The chicken went into the fridge to thaw on the evening of 2026-08-17 for this. It is Budget Bytes' recipe, her nine steps in her order, and it is the first card in this app built from a stored copy of the publisher's own page rather than retyped: every sentence below is checked against that copy by the build, so a paraphrase cannot reach you. One pan, thirty-five minutes, and the only thing swapped is the tomato, which you chose. Two things it teaches that nothing you have cooked here does yet: a flour-and-milk sauce, and cutting a breast into two thin halves so it cooks in five minutes a side instead of fifteen.",
+  "source": "https://www.budgetbytes.com/creamy-tomato-chicken/",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2026/08/Creamy-Tomato-Chicken-Overhead-Wide.jpg",
+  "time": {
+    "activeMin": 35,
+    "totalMin": 35,
+    "note": "her numbers: 15 prep, 20 cook. The per-step timers split those two figures across the steps and are the only times here that are not hers"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 30,
+    "proteinMath": "30 g is HER figure, off her own nutrition panel, per serving at her scale of four. It is not an estimate and it is not ours. Our own arithmetic comes out HIGHER, which is why hers is the one printed: her chicken line says about 1.5 lb, that is 680 g of raw boneless skinless breast at about 23 g of protein per 100 g, so 156 g for the pan and 39 g a portion from the chicken alone, plus about 16 g from the two cups of milk, which is another 4 g a portion. Around 43 g by that route against her 30. Two published numbers disagreeing means the assumptions differ, not that one is a lie: her panel also reads 336 calories where the same ingredients count nearer 445, so she is costing a smaller breast or a leaner milk than the arithmetic above. The lower number is the one that cannot overclaim. WEIGH THE TWO BREASTS before they are cut and tell the app what they came to, and this stops being two numbers and becomes one."
+  },
+  "ingredients": [
+    {
+      "ref": "chicken",
+      "stock": "chickenbreast",
+      "display": "chicken breasts",
+      "qty": 2,
+      "unit": "each",
+      "prep": "thawed since the evening of 2026-08-17. Weigh them before cutting: she costs about 1.5 lb, which is 680 g, and that is what the protein figure rests on",
+      "defining": true
+    },
+    {
+      "ref": "oil",
+      "display": "vegetable oil",
+      "qty": 3,
+      "unit": "tbsp",
+      "staple": true,
+      "prep": "goes in as 2 tbsp for the chicken and 1 tbsp with the flour later, which is her split",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 1.25,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "half a teaspoon on the chicken, the remaining three quarters into the sauce. Her split",
+      "defining": false
+    },
+    {
+      "ref": "pepper",
+      "display": "black pepper",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "half a teaspoon on the chicken, half into the sauce. Her split",
+      "defining": false
+    },
+    {
+      "ref": "onion",
+      "stock": "yellowonion",
+      "display": "half an onion",
+      "qty": 160,
+      "unit": "g",
+      "prep": "small dice. Her own line gives the weight and the volume: 160 g, about 1 cup",
+      "defining": false
+    },
+    {
+      "ref": "garlic",
+      "stock": "garlic",
+      "display": "cloves of garlic",
+      "qty": 2,
+      "unit": "clove",
+      "prep": "minced, meaning chopped as small as you can get them. Her line says that is about 1 tbsp once chopped",
+      "defining": false
+    },
+    {
+      "ref": "tomatopaste",
+      "stock": "tomatopaste",
+      "display": "tomato paste",
+      "qty": 3,
+      "unit": "tbsp",
+      "prep": "the open tin in the fridge",
+      "defining": true
+    },
+    {
+      "ref": "flour",
+      "display": "all-purpose flour",
+      "qty": 2,
+      "unit": "tbsp",
+      "staple": true,
+      "prep": "her line gives the weight too: 20 g",
+      "defining": true
+    },
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "milk",
+      "qty": 2,
+      "unit": "cup",
+      "prep": "she costs 16 oz, which is 475 ml. You confirmed on 2026-08-18 that there is at least that much in the jug",
+      "defining": true
+    },
+    {
+      "ref": "seasoning",
+      "stock": "seasoning",
+      "display": "Italian seasoning",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "garlicpowder",
+      "display": "garlic powder",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "tomatoes",
+      "stock": "tomatoes_round",
+      "display": "fresh tomatoes",
+      "qty": 300,
+      "unit": "g",
+      "prep": "medium dice. Her line reads 3 Roma tomatoes, 300 g, 1 and a half cups diced, so weigh out 300 g of the round ones rather than counting three",
+      "standsIn": "She says ROMA. The fridge has 5 round tomatoes and the pantry has 680 g of grape tomatoes, and you chose the round ones on 2026-08-18. A Roma is drier and meatier than a round tomato, so 300 g of round will release a little more water into the sauce near the end. That is the whole difference, and it lands in the last step where the sauce is already thick.",
+      "defining": true
+    }
+  ],
+  "equipment": [
+    "pan_stainless_large",
+    "stovetop",
+    "knife_sharp",
+    "cuttingboard",
+    "scale_digital",
+    "thermometer",
+    "whisk",
+    "woodenspoon",
+    "measuringcups",
+    "measuringspoons",
+    "bowlset",
+    "plates",
+    "papertowel"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Gather and prepare all ingredients.",
+      "sourceText": "Gather and prepare all ingredients.",
+      "uses": [],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "scale_digital",
+        "measuringcups",
+        "measuringspoons",
+        "bowlset"
+      ],
+      "minutes": 12,
+      "heat": null,
+      "look": "DO THIS ONE PROPERLY AND THE REST IS EASY. Once the chicken hits the pan in step 4 there are five more steps in about twelve minutes, and every one of them wants something already chopped. This is the step that decides whether that feels calm or frantic.\n\nWhat PREPARE means here, item by item:\n\nWEIGH THE TWO BREASTS on the digital scale, before anything else and before they are cut. Write the number down or put it in the app. It is the only thing standing between the protein figure on this card and a guess.\n\nHALF AN ONION, SMALL DICE, 160 g. Small dice means pieces about the size of a corn kernel. Weigh it: half an onion is roughly 160 g but onions vary and she gave the weight for a reason.\n\nTWO CLOVES OF GARLIC, MINCED. Minced means chopped as fine as you can manage, finer than the onion. It should look like wet grit, not chunks. She says it comes to about a tablespoon.\n\n300 g OF TOMATOES, MEDIUM DICE. Medium dice is roughly fingernail-sized cubes, bigger than the onion. Weigh to 300 g on the scale rather than counting tomatoes. Cut them on a different board from the raw chicken, or cut them FIRST and wash the board after.\n\nMEASURE INTO PREP BOWLS: the 3 tbsp of tomato paste, the 2 tbsp of flour, the 2 cups of milk, the teaspoon of Italian seasoning, the half teaspoon of garlic powder. Salt and pepper you can measure as you go, but her amounts are split across two steps, so read the two split lines in the ingredient list before you start shaking.\n\nRAW CHICKEN RULE: wash hands, board and knife with soap after the chicken and before anything else touches them. Cooked chicken never goes back onto the raw board or the raw plate."
+    },
+    {
+      "n": 2,
+      "text": "Take each chicken breast and cut it evenly down the middle, lengthwise.",
+      "sourceText": "Take each chicken breast and cut it evenly down the middle, lengthwise.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 2,
+          "unit": "each"
+        }
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "scale_digital"
+      ],
+      "minutes": 4,
+      "heat": null,
+      "look": "THIS IS THE MOST IMPORTANT CUT IN THE RECIPE and her ingredient line has a word for it: fileted. You end up with four thin flat pieces from two breasts.\n\nLENGTHWISE, not across. Lay the breast flat on the board. Put your palm flat on top of it to hold it down. Bring the knife in from the long side, parallel to the board, and cut through the middle of its thickness from one long edge to the other, as if you were splitting a bread roll open. You are halving its THICKNESS, not its length.\n\nWHY IT MATTERS: a whole breast is about 3 cm thick at one end and 1 cm at the other, so by the time the fat end is cooked the thin end is dry. Two thin halves are an even thickness all the way across, which is exactly why her times of 4 to 5 minutes and 5 minutes work at all. Skip this cut and 165F in the middle arrives with the outside burnt.\n\nEVENLY is her word and it is a look: hold each half up and check it is about the same thickness at both ends, roughly 1.5 cm. If one half came out much thicker, lay it flat and press it down with your palm.\n\nA SHARP KNIFE ONLY. A blunt knife tears rather than slices, and it slips. Long smooth strokes, do not saw.\n\nIf you have not weighed the breasts yet, do it now. In thirty seconds they will be four pieces and the number is gone."
+    },
+    {
+      "n": 3,
+      "text": "Heat 2 tablespoons of vegetable oil in a large skillet over medium-high heat. Pat the chicken breasts dry and season both sides with ½ teaspoon each of salt and ½ teaspoon of pepper.",
+      "sourceText": "Heat 2 tablespoons of vegetable oil in a large skillet over medium-high heat. Pat the chicken breasts dry and season both sides with ½ teaspoon each of salt and ½ teaspoon of pepper.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "measuringspoons",
+        "papertowel"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The oil is thin and runs like water when you tilt the pan, and it shimmers, meaning the surface moves in faint ripples. It must not smoke. If it smokes, lift the pan off the burner for thirty seconds and start the check again: smoking oil is past the point where chicken browns and into the point where it blackens.",
+        "recheck": "Two minutes after the oil goes in. This is an induction hob, so the burner obeys the dial in about two seconds while the metal takes far longer, which means the pan keeps climbing after you stop turning anything up."
+      },
+      "doneness": {
+        "test": "Flick two or three drops of water into the DRY pan before the oil goes in. If they hiss and vanish the pan is not ready. If a drop rolls around like a bead of mercury it is ready, and the oil goes in then. Do this only while the pan is dry, never once there is oil in it.",
+        "kind": "look"
+      },
+      "look": "HER SKILLET IS A FRYING PAN. Use the LARGE STAINLESS one, not the non-stick. The whole sauce is built in this same pan through to the last step, and this is the heat that damages a non-stick coating.\n\nMEDIUM-HIGH is a dial position and this hob has three different dial scales, so it is not usable as written. Use the heat box above instead: shimmering oil that runs like water, no smoke.\n\nPAT THE CHICKEN DRY with paper towel, both sides, until the surface looks matte instead of wet. This is not a hygiene step, it is the browning step: a wet surface has to boil its water off before it can colour, and while that happens the pan cools and the chicken goes grey.\n\nSEASON BOTH SIDES: sprinkle from about a foot up so it lands spread out instead of in one patch. Half a teaspoon of salt and half a teaspoon of pepper is what goes on the chicken. THE REST OF THE SALT AND PEPPER IS NOT FOR THE CHICKEN, it goes into the sauce in step 8, which is what she means by divided.\n\nWHAT HALF A TEASPOON LOOKS LIKE: use the measuring spoon. Across four thin pieces it is a light even dusting, not a crust.\n\nSTAINLESS ONLY STICKS IF YOU RUSH IT. Heat it empty and dry for two to three minutes, run the water-drop test in the doneness box, then oil, then chicken."
+    },
+    {
+      "n": 4,
+      "text": "Once hot, carefully lay the chicken in the pan. Let them sear for 4-5 minutes, then flip and continue cooking for an additional 5 minutes. Remove them from the pan and set aside. Make sure the chicken reaches an internal temperature of 165°F and continue cooking if needed.",
+      "sourceText": "Once hot, carefully lay the chicken in the pan. Let them sear for 4-5 minutes, then flip and continue cooking for an additional 5 minutes. Remove them from the pan and set aside. Make sure the chicken reaches an internal temperature of 165°F and continue cooking if needed.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "thermometer",
+        "plates"
+      ],
+      "minutes": 10,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A steady loud sizzle from the moment the chicken lands, holding for the whole four to five minutes. If it goes quiet the pan is too cool and the chicken is stewing in its own juice instead of browning. If it spits hard and the oil starts to smoke it is too hot: LIFT THE PAN OFF THE BURNER for thirty seconds rather than turning the dial down, because on induction the burner drops instantly and the metal does not.",
+        "recheck": "About one minute after the chicken goes in, and again right after the flip. Four cold pieces of chicken pull a lot of heat out of the pan on landing and then it climbs back."
+      },
+      "doneness": {
+        "test": "Push the instant-read thermometer sideways into the thickest part of the thickest piece, not down through it, because these are thin. 165F and it is done. Under that, it goes back in the pan. THIS ends the step, not the timer, and her own sentence says so: continue cooking if needed.",
+        "kind": "probe"
+      },
+      "look": "LAY THE CHICKEN AWAY FROM YOU, the far edge down first, then lower the near edge. Oil spits back at whatever side you drop it from.\n\nCAREFULLY is her word and it means use tongs or a spatula, not fingers.\n\nDO NOT MOVE IT for the whole first four to five minutes. Not to peek, not to nudge. Browning is the pan drying and colouring one face, and every time you lift the piece that face cools and starts over. If it resists when you go to flip it, give it another thirty seconds and it will release on its own.\n\nSEAR here means colour on the outside: pale raw goes deep golden. Not black anywhere. Not the mahogany crust of a steak.\n\nFOUR PIECES IN ONE PAN, in a single layer with a gap between them. If they touch, the steam they give off has nowhere to go and they poach instead of browning. If your pan will not hold four with gaps, do two and two: the second pair goes in after the first comes out, and the pan is hotter by then, so run the heat check again before they land. That was the exact failure of 2026-08-16 on the honey garlic chicken, second batch, black outside and pink inside.\n\nSET ASIDE means onto a clean plate, never the raw one. Keep the plate: the juice that collects on it goes back into the pan in step 9 and it is her instruction, not ours.\n\n165F IS THE RULE FOR CHICKEN and the thermometer is the only thing that knows. Colour does not."
+    },
+    {
+      "n": 5,
+      "text": "Turn the heat down to medium and add the onions and garlic. Cook for 3 minutes to soften the onions, stirring occasionally.",
+      "sourceText": "Turn the heat down to medium and add the onions and garlic. Cook for 3 minutes to soften the onions, stirring occasionally.",
+      "uses": [
+        {
+          "ref": "onion",
+          "amount": 160,
+          "unit": "g"
+        },
+        {
+          "ref": "garlic",
+          "amount": 2,
+          "unit": "clove"
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The onion sizzles steadily but nothing spits, and it stays that way for the full three minutes. No smoke. The garlic must not go brown at any point: brown garlic is bitter through the entire sauce and there is no fixing it afterwards.",
+        "recheck": "Immediately, before the onion goes in. The pan has just cooked chicken and it is still holding that heat whatever the dial says, so TAKE THE PAN OFF THE BURNER for thirty seconds first, then put it back and add the onion. On this hob that is what actually reaches medium; turning the dial down does nothing fast enough."
+      },
+      "doneness": {
+        "test": "The onion pieces go from opaque white to see-through at the edges and they flop rather than hold their shape when you push one with the spoon. That is what softened means. They should not be brown.",
+        "kind": "look"
+      },
+      "look": "TURN THE HEAT DOWN TO MEDIUM is a dial position, so it is unusable as written on this hob. Use the recheck line above: pan off the burner for thirty seconds, then back on. That is the move that gets you there.\n\nDO NOT WASH THE PAN, and she does not ask you to. The brown film on the bottom is chicken stuck to hot metal, and the milk in step 8 loosens it. No claim is made here about what it does for the taste: that claim was invented once before in this app, for the piccata, and the recipe it was invented for never said it.\n\nANYTHING BLACK, as opposed to brown, gets fished out with the spoon now. Black is burnt and it turns the whole sauce bitter.\n\nSTIRRING OCCASIONALLY means every thirty seconds or so, not constantly. Push everything around, then leave it.\n\nTHE GARLIC IS THE RISK, not the onion. It is cut far smaller and it burns in seconds. If the pan looks too hot when the garlic goes in, lift the pan.\n\nThree minutes is her time and the look above is the endpoint. If the onion is still crunchy at three minutes, give it another minute."
+    },
+    {
+      "n": 6,
+      "text": "Add the tomato paste and cook for 1-2 minutes, stirring into the onions.",
+      "sourceText": "Add the tomato paste and cook for 1-2 minutes, stirring into the onions.",
+      "uses": [
+        {
+          "ref": "tomatopaste",
+          "amount": 3,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The paste sizzles quietly at the edges where it touches the pan. It must not stick and blacken, which it will do fast if the pan is too hot, so keep it moving. Same heat as the step before.",
+        "recheck": "Thirty seconds in. Tomato paste is thick and it scorches on the pan bottom far more easily than the onion did."
+      },
+      "doneness": {
+        "test": "The paste stops looking like it came out of a tin and coats the onions like thick red gloss, and its colour goes from bright red to a deeper brick red. Keep it moving the whole one to two minutes.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE STEP THAT MAKES THE SAUCE TASTE COOKED rather than of raw tomato tin. Two minutes of it in a hot pan is doing real work.\n\n3 TABLESPOONS OF TOMATO PASTE. Use the measuring spoon and level it off with a finger or a knife back, because paste heaps up and a heaped spoon is nearly two.\n\nSTIRRING INTO THE ONIONS means work it around until no separate red blobs are left and every onion piece is coated. It is stiff, so you are pressing and smearing more than stirring.\n\nIT WILL LOOK ALARMINGLY DRY AND THICK at this point. That is correct and it is about to become a sauce. Do not add liquid to fix it: the flour goes in next and then the milk.\n\nThis is the open tin from the fridge, which sat untracked until 2026-08-17."
+    },
+    {
+      "n": 7,
+      "text": "Drizzle in the remaining oil, and sprinkle in the flour. Cook for 1 minute, stirring to combine.",
+      "sourceText": "Drizzle in the remaining oil, and sprinkle in the flour. Cook for 1 minute, stirring to combine.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "flour",
+          "amount": 2,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "minutes": 1,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A faint steady sizzle, and the flour stays pale. Anything more than that and the flour catches on the pan bottom in under a minute. If it starts to smell toasty and look tan, lift the pan off the burner and keep stirring.",
+        "recheck": "Straight away, as the flour goes in. Dry flour in hot fat is the fastest-burning thing in this recipe."
+      },
+      "doneness": {
+        "test": "No dry white flour is visible anywhere. It has gone into a thick paste with the oil and the tomato paste, and it looks matte rather than powdery. One minute, stirring the whole time.",
+        "kind": "look"
+      },
+      "look": "THE REMAINING OIL is the third tablespoon. Two went in with the chicken in step 3, this is the last one. That is what divided meant on her ingredient line.\n\nSPRINKLE means scatter it across the surface with your fingers or shake it off the spoon a bit at a time, not tipped in as one lump. A lump of flour in a hot pan becomes a lump you cannot stir out.\n\nWHAT THIS STEP ACTUALLY IS: flour cooked in fat is what thickens the milk in the next step. It is the same trick as the dredge on the honey garlic chicken, except there the flour came off the chicken and here you add it directly. Skip it or hurry it and the sauce stays thin milk with tomato in it, which is the exact failure the piccata rebuild had.\n\nSTIRRING TO COMBINE is her phrase and it means keep the spoon moving for the entire minute. Do not walk away from this one.\n\nONE MINUTE MATTERS: raw flour tastes like paste, and a minute in hot fat is what removes that. It is also all it takes."
+    },
+    {
+      "n": 8,
+      "text": "Whisk in the milk, Italian seasoning, garlic powder, and remaining salt and pepper. Continue cooking until thickened, about 2 minutes. Taste and adjust for seasoning, if needed.",
+      "sourceText": "Whisk in the milk, Italian seasoning, garlic powder, and remaining salt and pepper. Continue cooking until thickened, about 2 minutes. Taste and adjust for seasoning, if needed.",
+      "uses": [
+        {
+          "ref": "milk",
+          "amount": 2,
+          "unit": "cup"
+        },
+        {
+          "ref": "seasoning",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "garlicpowder",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "salt",
+          "amount": 0.75,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper",
+          "amount": 0.5,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Bubbles breaking gently across the surface once the milk is warm, never a hard rolling boil. Milk boiled hard splits into grainy curds and watery liquid and it does not come back. If it starts to climb the pan sides, lift the pan off the burner for thirty seconds.",
+        "recheck": "As soon as the milk stops being cold, roughly a minute in. Two cups of fridge-cold milk drops the pan a long way and then it comes back up fast."
+      },
+      "doneness": {
+        "test": "Drag the whisk or the spoon across the bottom of the pan and watch the bare stripe of metal it leaves behind. While the sauce is thin it floods back instantly. When it has thickened the stripe stays open for about a second. THAT is the endpoint, and on a hot pan it can arrive well inside her two minutes. Gone too far is easy to undo: a tablespoon of milk or water stirred in loosens it straight back, as many times as you like.",
+        "kind": "look"
+      },
+      "look": "POUR THE MILK IN A STEADY STREAM WHILE WHISKING, not all at once. The pan currently holds a stiff paste of flour, oil, onion and tomato paste; the whisking is what turns that into a smooth sauce instead of lumps floating in milk. If lumps do form, keep whisking, they mostly break up.\n\nUSE THE WHISK, not the wooden spoon, for this one step. A spoon pushes lumps around and a whisk breaks them.\n\nREMAINING SALT AND PEPPER is three quarters of a teaspoon of salt and half a teaspoon of pepper. Half a teaspoon of each went on the chicken in step 3. Her 1 and a quarter teaspoons of salt total minus that half leaves three quarters, and this is the step it goes in.\n\nUNTIL THICKENED is the spoon-stripe test above, not a guess.\n\nTASTE AND ADJUST FOR SEASONING IS HER SENTENCE, and this app normally refuses it, because season to taste tells a beginner nothing. Here is what it means in practice: take a clean spoon, take a little sauce, blow on it, taste it. You are asking one question only, is it salty enough. If it tastes flat, add salt a QUARTER teaspoon at a time, stir, taste again. Salt cannot be removed once it is in, so small steps. If it already tastes good, add nothing. Her measured amounts are the recipe; this sentence of hers is permission, not an instruction.\n\nSMOOTH IS NOT REQUIRED for the dish to work. Small flecks of onion and tomato paste belong there. What you are checking is that there are no white flour lumps."
+    },
+    {
+      "n": 9,
+      "text": "Add the chopped tomatoes and return the chicken and any drippings to the pan to warm through.",
+      "sourceText": "Add the chopped tomatoes and return the chicken and any drippings to the pan to warm through.",
+      "uses": [
+        {
+          "ref": "tomatoes",
+          "amount": 300,
+          "unit": "g"
+        },
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "stovetop",
+        "woodenspoon",
+        "plates"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Still bubbling gently, the same as the step before. Nothing needs to cook now: the chicken is already at 165F and the tomatoes are going in raw on purpose. If the sauce stops moving entirely the pan has gone too cool to warm the chicken through.",
+        "recheck": "Just after the chicken goes back in. Four cooled pieces plus 300 g of cold tomato drops the pan again."
+      },
+      "doneness": {
+        "test": "Push the thermometer sideways into the thickest piece of chicken again. It reads 165F or above and the tomatoes have gone glossy and slightly slumped but still hold their shape. That is warmed through and it is the end of the recipe.",
+        "kind": "probe"
+      },
+      "look": "ANY DRIPPINGS means every drop of juice on the plate the chicken was resting on. Tip it in. It is chicken juice, it is the most concentrated flavour in the kitchen right now, and she asks for it by name.\n\nTHE TOMATOES GO IN RAW AND STAY THAT WAY. They are not being cooked down into the sauce, they are pieces of fresh tomato warmed in it. That is why they go in last.\n\nTHE ROUND TOMATOES ARE YOUR SWAP, decided 2026-08-18. A round tomato carries more water than the Roma she names, so if the sauce looks looser at the end than it did a minute ago, that is why and that is the whole cost of the swap. Her recipe ends here either way.\n\nWARM THROUGH is the shortest instruction in the recipe. One to two minutes is enough. The chicken was cooked in step 4 and everything past 165F is drying it out, so this is a step to end early rather than late.\n\nSERVING: her recipe stops here and no side is invented for it. If you want rice with it, the rice cooker takes its own cup of long grain and water to the matching line, and starting it before step 1 lands it at the same time. That is your addition, not hers.\n\nAFTERWARDS, tell the app what happened. The note box at the bottom of the cook screen is the only record of what actually occurred at the stove, and the next card is built out of it."
+    }
+  ],
+  "deviations": [
+    {
+      "what": "Round tomatoes from the fridge instead of the 3 Roma tomatoes she names, weighed to her 300 g",
+      "why": "He chose them on 2026-08-18, asked which of the two tomatoes in the kitchen should go in. The alternative was 680 g of grape tomatoes in the pantry, and the third option was buying Roma and cooking a day later while the chicken sat thawed.",
+      "consequence": "A Roma is drier and meatier. A round tomato of the same weight carries more water, so it releases a little more liquid into the sauce in the final step, where the sauce is already thickened. The sauce reads slightly looser and nothing else changes.",
+      "decidedBy": "silvio",
+      "toldHim": "That a Roma is drier and meatier than a round tomato, that 300 g of round will release a little more water into the sauce, that it lands in the last step where the sauce is already thick, and that the grape tomatoes were the other option and are further from a Roma still: sweeter, thinner walled, mostly juice and seed."
+    }
+  ],
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-18a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her temperatures, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped, including her first step of gathering everything. The sentences are checked by the build against content/kitchen/imported/creamytomatochicken.json, a stored copy of her page fetched 2026-08-17, so a paraphrase fails the deploy rather than reaching the stove. What this app adds is the layer a printed page cannot: which of his pans she means, what every technique word means in place, an observable for the induction hob at each of the two points where she names a dial position, the water-drop and spoon-stripe tests, a thermometer reading where she says 165F, and the protein arithmetic with both figures shown and its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the tomato: she says Roma, the fridge has round ones, and he made that call himself on 2026-08-18 after being told what the difference does.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/creamy-tomato-chicken/",
+        "primary": true,
+        "note": "Creamy Tomato Chicken. 4 servings, 15 minutes prep and 20 minutes cook, 35 total. 30 g of protein and 336 calories a serving off her own nutrition panel. Captured 2026-08-17 from the page's own JSON-LD into content/kitchen/imported/creamytomatochicken.json, capture hash 2977f6a63c15. All twelve ingredient lines and all nine instructions taken verbatim from that capture."
+      }
+    ],
+    "readHash": "34de2cef",
+    "cookedResult": null
+  }
+}

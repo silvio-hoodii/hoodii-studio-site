@@ -355,55 +355,55 @@ function substituteFor(requirement, availableIds) {
   return { via: s.have, note: s.note };
 }
 
+/** The ONE way a published ingredient line becomes an answer. Returns `{ hit, shown }`.
+ *
+ * `hit` is '__STAPLE__', '__GAP__<name>', a stock id, or null for "our table has a gap". `shown` is
+ * the reading that produced it, which is what a report prints so a wrong answer is traceable to the
+ * parse that made it.
+ *
+ * Extracted from `scoreRecipe` on 2026-08-18, because `import.mjs` had its own one-line version
+ * (`matchToItem(parseIngredient(line), line)`) and the two answered differently the moment the
+ * alternation reading landed: capturing A Cozy Kitchen's arroz con pollo, the importer called
+ * "1 cup medium or long-grain white rice" UNRECOGNISED while every page in the app called it rice he
+ * owns. Two implementations of one question agree right up until one of them is edited. */
+export function resolveLine(line) {
+  const name = parseIngredient(line);
+  /* An alternation reading is tried BEFORE the plain parse, because the plain parse of such a line is
+   * a truncation rather than a reading: it keeps "flour" out of "flour or corn tortillas" and that
+   * fragment resolves, so nothing downstream ever ran. A more complete reading of the same sentence
+   * beats a fragment of it. */
+  for (const cand of alternationReadings(line)) {
+    const alt = matchToItem(cand, line);
+    if (alt !== null) return { hit: alt, shown: cand };
+  }
+  const plain = matchToItem(name, line);
+  if (plain !== null) return { hit: plain, shown: name };
+  for (const cand of [
+    parseIngredient(line, { keepAfterComma: true }),
+    parseIngredient(line, { keepOr: true }),
+    parseIngredient(line, { keepAfterComma: true, keepOr: true }),
+  ]) {
+    const alt = matchToItem(cand, line);
+    if (alt !== null) return { hit: alt, shown: cand };
+  }
+  /* Split compounds and alternatives into parts and try each. Needed because staples match the WHOLE
+   * name: "vegetable or sunflower oil" can never equal "sunflower oil", so the keepOr parse alone did
+   * not rescue those 40 mentions. Splitting does. Same for "salt and pepper", 48. */
+  const parts = parseIngredient(line, { keepAfterComma: true, keepOr: true })
+    .split(/ and | or |, /)
+    .map((x) => x.trim())
+    .filter((x) => x.length > 2);
+  for (const part of parts) {
+    const alt = matchToItem(part, line);
+    if (alt !== null) return { hit: alt, shown: part };
+  }
+  return { hit: null, shown: name };
+}
+
 export function scoreRecipe(ingredientLines, availableIds) {
   const have = [], haveVia = [], missing = [], unknown = [], staples = [], optional = [];
   for (const line of ingredientLines) {
-    const name = parseIngredient(line);
-    /* Try the full line too. "200g bag frozen, shelled cooked prawn defrosted" reduces to just "bag"
-     * once everything after the comma is dropped, which lost the prawns entirely and let a prawn pasta
-     * look cookable. Prefer whichever parse actually resolves, and prefer a real answer over silence. */
-    /* Four ways to read one line, tried in order of how much they trust the punctuation. Published
-     * ingredient lines are prose, and each of these fallbacks exists because a specific real line was
-     * being lost:
-     *   1. the plain parse
-     *   2. keep text after the first comma  ("200g bag frozen, shelled cooked prawn" was just "bag")
-     *   3. keep text after "or"            ("vegetable or sunflower oil" was just "vegetable", 40x)
-     *   4. split an "and" compound         ("salt and pepper to taste", 48x)
-     * First one that resolves wins, and a resolved answer always beats silence. */
-    /* An alternation reading is tried BEFORE the plain parse, because the plain parse of such a line
-     * is a truncation rather than a reading: it keeps "flour" out of "flour or corn tortillas" and
-     * that fragment resolves, so nothing downstream ever ran. A more complete reading of the same
-     * sentence beats a fragment of it. */
-    let hit = null;
-    let shown = name;
-    for (const cand of alternationReadings(line)) {
-      const alt = matchToItem(cand, line);
-      if (alt !== null) { hit = alt; shown = cand; break; }
-    }
-    if (hit === null) { hit = matchToItem(name, line); shown = name; }
-    if (hit === null) {
-      for (const cand of [
-        parseIngredient(line, { keepAfterComma: true }),
-        parseIngredient(line, { keepOr: true }),
-        parseIngredient(line, { keepAfterComma: true, keepOr: true }),
-      ]) {
-        const alt = matchToItem(cand, line);
-        if (alt !== null) { hit = alt; shown = cand; break; }
-      }
-    }
-    /* Split compounds and alternatives into parts and try each. Needed because staples match the
-     * WHOLE name: "vegetable or sunflower oil" can never equal "sunflower oil", so the keepOr parse
-     * alone did not rescue those 40 mentions. Splitting does. Same for "salt and pepper", 48. */
-    if (hit === null) {
-      const parts = parseIngredient(line, { keepAfterComma: true, keepOr: true })
-        .split(/ and | or |, /)
-        .map((x) => x.trim())
-        .filter((x) => x.length > 2);
-      for (const part of parts) {
-        const alt = matchToItem(part, line);
-        if (alt !== null) { hit = alt; shown = part; break; }
-      }
-    }
+    const { hit, shown } = resolveLine(line);
     // A garnish the source itself calls optional must never block a dish or count against it.
     if (isOptionalLine(line) && !(hit && !hit.startsWith('__') && availableIds.has(hit))) {
       optional.push({ line, shown, item: hit && !hit.startsWith('__') ? hit : null });

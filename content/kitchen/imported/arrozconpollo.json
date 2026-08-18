@@ -1,0 +1,193 @@
+{
+  "id": "arrozconpollo",
+  "fetchedAt": "2026-08-18",
+  "via": "url",
+  "source": {
+    "name": "Peruvian Green Arroz con Pollo Recipe",
+    "url": "https://www.acozykitchen.com/peruvian-green-arroz-con-pollo",
+    "provider": "acozykitchen.com"
+  },
+  "yield": [
+    "4",
+    "4 to 6"
+  ],
+  "totalTime": "PT65M",
+  "prepTime": "PT15M",
+  "cookTime": "PT40M",
+  "nutrition": {
+    "carbohydrateContent": "32 g",
+    "proteinContent": "15 g",
+    "fatContent": "16 g",
+    "saturatedFatContent": "6 g",
+    "cholesterolContent": "71 mg",
+    "sodiumContent": "61 mg",
+    "fiberContent": "1 g",
+    "sugarContent": "1 g",
+    "calories": "334 kcal",
+    "servingSize": "1 serving"
+  },
+  "rating": "4.95",
+  "ratingCount": "18",
+  "image": "https://www.acozykitchen.com/wp-content/uploads/2018/03/PeruvianGreenArrozconPollo-4.jpg",
+  "cuisine": "American",
+  "category": "Dinner",
+  "ingredients": [
+    "1/2 yellow onion",
+    "3 garlic cloves (peeled )",
+    "1 bunch of cilantro leaves",
+    "1/2 jalapeño pepper",
+    "2 teaspoons ground cumin",
+    "1/2 teaspoon ground paprika",
+    "3 cups of chicken stock or water (divided)",
+    "2 bone-in thighs",
+    "3 bone-in drumsticks",
+    "Kosher salt",
+    "Pepper",
+    "1 tablespoon neutral oil",
+    "1 cup medium or long-grain white rice",
+    "1/2 red onion (thinly sliced)",
+    "Juice from 2 limes",
+    "1/2 jalapeño (diced)",
+    "1 tablespoon minced cilantro",
+    "Kosher salt"
+  ],
+  "instructions": [
+    "To Make the Green Arroz con Pollo:",
+    "To a blender, add the onion, garlic cloves, cilantro, jalapeño, cumin, paprika and about 1 1/2 cups of chicken broth. Pulse until completely smooth. It will smell crazy spicy—don’t worry! It’ll mellow out as it cooks. Set aside.",
+    "Sprinkle the chicken with a liberal amount of salt and pepper. In a Dutch oven or medium pot, heat oil over medium-high heat. When oil is hot, add chicken, skin side down, until browned, about 5 minutes. If you have a screen guard for the pot, use it because the oil may jump out of the pot. Flip the chicken, using tongs, and cook on opposite side until golden brown, about 5 to 7 minutes. You want to practically cook it all the way through. Remove the chicken and transfer to a plate or cutting board.",
+    "To the pot, add the rice and toast it for about 1 to 2 minutes, stirring regularly. Next, pour in the cilantro mixture. And then pour in about an additional cup of broth/water. Place chicken atop of rice mixture. Bring the pot to a simmer and then reduce heat to low. Cook, covered, for about 45 to 50 minutes, and until rice is tender. Note: Throughout the cooking process, I checked on it every 15-20 minutes or so and topped it off with about 1/4 cup of stock each time, if needed. In the end, I added 3 cups of chicken stock total. Also, in the last 15 minutes, I salted to taste, adding about 1 teaspoon more of salt.",
+    "To Make the Salsa Criolla:",
+    "To a medium bowl, mix together the red onion, juice from 2 limes, jalapeño and minced cilantro. Add a few pinches of salt and let marinate for about 10 to 15 minutes. Give it a taste just before serving and adjust the salt to your liking.",
+    "To Serve:",
+    "Divide the arroz con pollo amongst bowls and top with a spoonful of salsa criolla."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1/2 yellow onion",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 garlic cloves (peeled )",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 bunch of cilantro leaves",
+      "item": null,
+      "staple": false,
+      "gap": "fresh coriander",
+      "optional": false
+    },
+    {
+      "line": "1/2 jalapeño pepper",
+      "item": null,
+      "staple": false,
+      "gap": "fresh chilli",
+      "optional": false
+    },
+    {
+      "line": "2 teaspoons ground cumin",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 teaspoon ground paprika",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 cups of chicken stock or water (divided)",
+      "item": "stock",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 bone-in thighs",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 bone-in drumsticks",
+      "item": "chickendrumsticks",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "Kosher salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "Pepper",
+      "item": "peppers",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tablespoon neutral oil",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 cup medium or long-grain white rice",
+      "item": "longgrainrice",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 red onion (thinly sliced)",
+      "item": "onion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "Juice from 2 limes",
+      "item": "limes",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 jalapeño (diced)",
+      "item": null,
+      "staple": false,
+      "gap": "fresh chilli",
+      "optional": false
+    },
+    {
+      "line": "1 tablespoon minced cilantro",
+      "item": null,
+      "staple": false,
+      "gap": "fresh coriander",
+      "optional": false
+    },
+    {
+      "line": "Kosher salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "96becc830106"
+}

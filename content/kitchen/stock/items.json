@@ -542,7 +542,19 @@
       "state": "none",
       "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
     },
-    "tomatoes_grape": {
+    "tomatoes_round": {
+    "n": "fresh tomatoes",
+    "where": "fridge",
+    "state": "none",
+    "note": "Round slicing tomatoes on the vine, 5 of them, receipt photo 20260814_121315 and the count stated by Silvio. Distinct from the grape tomatoes and from anything tinned. Catalogued 2026-08-18: it had existed only as stock_event 74, so validate.mjs refused a recipe pointing at it and the app printed the raw id where a name belongs."
+  },
+  "beanmedley": {
+    "n": "canned bean medley",
+    "where": "pantry",
+    "state": "none",
+    "note": "UNCERTAIN COUNT, per stock_event 71: two receipt photos seven seconds apart may be one can twice or two cans, recorded as 1. Ask before a recipe leans on two. Catalogued 2026-08-18 for the same reason as tomatoes_round, and because burrito and chilli recipes are rejected for kidney beans while this sits in the pantry unmatched."
+  },
+  "tomatoes_grape": {
       "n": "grape tomatoes",
       "where": "pantry",
       "state": "none",

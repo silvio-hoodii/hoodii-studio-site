@@ -44,7 +44,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractRecipe, matchToItem, parseIngredient, isOptionalLine, splitPaste } from './match.mjs';
+import { extractRecipe, resolveLine, isOptionalLine, splitPaste } from './match.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const CAPTURE_DIR = join(HERE, 'imported');
@@ -114,7 +114,14 @@ export function parsePastedText(raw) {
  * both as "unrecognised" hands him a shopping list with our bugs mixed into it. */
 function stockView(ingredients) {
   return ingredients.map((line) => {
-    const hit = matchToItem(parseIngredient(line), line);
+    /* `resolveLine` and not `matchToItem(parseIngredient(...))`, since 2026-08-18. This function had
+     * its own one-line reading of a line while every page in the app used scoreRecipe's five-step
+     * chain, and the two diverged the moment that chain gained an alternation reading: capturing
+     * A Cozy Kitchen's arroz con pollo, this printed "1 cup medium or long-grain white rice" as
+     * unrecognised while the app called it rice he owns. The capture summary is the thing an agent
+     * reads before deciding whether a dish is buildable, so it must answer the same question the app
+     * answers. */
+    const { hit } = resolveLine(line);
     const isMarker = typeof hit === 'string' && hit.startsWith('__');
     return {
       line,
