@@ -1,0 +1,197 @@
+{
+  "_": "Observed prices, one row per thing he could put in a basket. NEVER a guess: every row carries where it was read, when, and from WHICH surface, because on 2026-08-18 two Walmart search tiles disagreed with their own product pages by $4.66 and $10.28 and both were load-bearing protein lines. `readFrom` is the honesty field: `product-page` was opened and read, `tile` came off a search result and has been wrong before. Anything older than 14 days renders as stale rather than as fact, per PRICE_STALE_DAYS in src/lib/kitchen/list.ts.",
+  "_rule": "A price comes from a receipt or a live lookup or it does not appear. Standing rule since 2026-08-02, when guessed pasta prices produced a confidently wrong buy recommendation.",
+  "prices": [
+    {
+      "item": "chickenthighs",
+      "label": "Maple Leaf bone-in chicken thighs, 10 to 12 thighs",
+      "price": 12.29,
+      "size": "1.20 to 2.14 kg",
+      "unitPrice": "$1.02/100 g",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/ip/maple-leaf-bone-in-chicken-thighs/6000200218222",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "Its search tile said $7.63. The page says $12.29."
+    },
+    {
+      "item": "chickendrumsticks",
+      "label": "Maple Leaf chicken drumsticks value pack, 18",
+      "price": 16.15,
+      "size": "1.35 to 2.02 kg",
+      "unitPrice": "$1.14/100 g",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/ip/maple-leaf-chicken-drumsticks-value-pack/6000200219175",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "Its search tile said $5.87. The page says $16.15."
+    },
+    {
+      "item": "eggs",
+      "label": "Great Value large eggs, 30",
+      "price": 10.27,
+      "size": "30 count",
+      "unitPrice": "$0.34 each",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/ip/great-value-large-white-30-eggs/0WJMA4AGQHKX",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "19 g of protein per dollar off the label's 13 g per 2-egg serving, third on the protein-per-dollar table. The 12-pack is $4.17."
+    },
+    {
+      "item": "milk",
+      "label": "Dairyland microfiltered 2%",
+      "price": 6.88,
+      "size": "size not stated on the page",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=milk%204%20L%202%25",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "The 4 L he actually buys was $6.35 on the 2026-08 receipt. This row is not settled: no page stated a size."
+    },
+    {
+      "item": "honey",
+      "label": "Great Value pure liquid honey",
+      "price": 6.97,
+      "unitPrice": "$1.39/100 g",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=liquid%20honey",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "The larger jar is $10.97 at $1.10/100 g, so it is cheaper per gram."
+    },
+    {
+      "item": "blackvinegar",
+      "label": "Gold Plum Chinkiang vinegar",
+      "price": 2.99,
+      "size": "554 ml",
+      "unitPrice": "$0.54/100 ml",
+      "store": "Real Canadian Superstore",
+      "url": "https://www.realcanadiansuperstore.ca/search?search-bar=chinkiang%20vinegar",
+      "readAt": "2026-08-18",
+      "readFrom": "listing",
+      "note": "T&T Zhenjiang 580 ml is the same $2.99. No Calgary store was confirmed selected in that session. Walmart's only listing is Hengshun at $3.97 on a marketplace-pattern SKU."
+    },
+    {
+      "item": "driedchilli",
+      "label": "Tastie dried red chili",
+      "price": 2.29,
+      "size": "120 g",
+      "unitPrice": "$1.91/100 g",
+      "store": "Real Canadian Superstore",
+      "url": "https://www.realcanadiansuperstore.ca/search?search-bar=dried%20whole%20red%20chilies",
+      "readAt": "2026-08-18",
+      "readFrom": "listing",
+      "note": "Sold as neither Chinese nor Korean, which is what Omnivore's Cookbook asks for. Suraj Lal Mirch 100 g is $1.25. Substituting is his call."
+    },
+    {
+      "item": "brownsugar",
+      "label": "Redpath golden yellow sugar",
+      "price": 3.77,
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=Great%20Value%20golden%20yellow%20sugar",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "Golden yellow is light brown sugar in Canada. It unblocks Mongolian Ground Beef, a card that is already built and read."
+    },
+    {
+      "item": "gap:fresh coriander",
+      "label": "Cilantro, sold in bunches",
+      "price": 1.47,
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=fresh%20cilantro%20bunch",
+      "readAt": "2026-08-18",
+      "readFrom": "tile"
+    },
+    {
+      "item": "gap:fresh chilli",
+      "label": "Jalapeno hot peppers, Your Fresh Market",
+      "price": 2.97,
+      "size": "225 g",
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=jalapeno%20peppers%20fresh",
+      "readAt": "2026-08-18",
+      "readFrom": "tile"
+    },
+    {
+      "item": "onion",
+      "label": "Red onions, sold in singles",
+      "price": 2.45,
+      "size": "0.16 to 0.45 kg",
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=red%20onion",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "Bagged 1.36 kg is $4.47. 13 corpus dishes name a red onion."
+    },
+    {
+      "item": "gap:bread",
+      "label": "Tia Rosa large white flour tortillas",
+      "price": 3.98,
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=flour%20tortillas%20burrito%20size",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "Dempster's Original Large is $3.78 on rollback, Wonder 10-inch 10-count is $4.98."
+    },
+    {
+      "item": "gap:ham",
+      "label": "Cooked ham by Maple Leaf, about 450 g",
+      "price": 6.57,
+      "unitPrice": "$1.45/100 g",
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=cooked%20ham",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "Sliced 175 g packs are $2.98, dearer per gram."
+    },
+    {
+      "item": "gap:kidney beans",
+      "label": "Great Value no salt added black beans",
+      "price": 1.44,
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=black%20beans%20canned%20540ml",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "There is already a tin of bean medley in the pantry and nobody has confirmed whether it is one tin or two."
+    },
+    {
+      "item": "gap:other spices",
+      "label": "Great Value ground cayenne pepper",
+      "price": 2.27,
+      "unitPrice": "$1.82/100 g",
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=cayenne%20pepper%20ground",
+      "readAt": "2026-08-18",
+      "readFrom": "tile"
+    },
+    {
+      "item": "gap:wine",
+      "label": "Great Value apple cider vinegar",
+      "price": 1.57,
+      "store": "Walmart",
+      "url": "https://www.walmart.ca/en/search?q=apple%20cider%20vinegar",
+      "readAt": "2026-08-18",
+      "readFrom": "tile",
+      "note": "For the 1 tbsp of wine or cider vinegar BBC's beef burritos ask for. The cupboard has distilled white, a different product."
+    },
+    {
+      "item": "eggwhites",
+      "label": "Naturegg Simply Egg Whites",
+      "price": 5.47,
+      "size": "500 ml",
+      "unitPrice": "$1.09/100 g",
+      "store": "Walmart, W. Calgary Westbrook",
+      "seller": "Walmart",
+      "url": "https://www.walmart.ca/en/ip/naturegg-simply-egg-whites-free-run-burnbrae-farms/6000195508423",
+      "readAt": "2026-08-18",
+      "readFrom": "product-page",
+      "note": "About 10 g of protein per dollar against 19 for whole eggs. Wins only on protein per calorie, where whey already sits. $5.39 at Superstore, and the 1 kg carton is about $1.00/100 g."
+    }
+  ]
+}

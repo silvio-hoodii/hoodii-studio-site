@@ -86,7 +86,30 @@ const proc = spawn(CHROME, [
 
 async function openTab(url) {
   for (let i = 0; i < 60; i++) {
-    try {
+    /* IS THE SERVER UNDER TEST EVEN THIS BUILD? Added 2026-08-18, after a probe run reported 9 failures
+ * against a `next start` from an earlier session that was still squatting on port 3007. Four of them
+ * were, on 3002, 3007, 3009 and 3011, all serving old builds of this repo, and the `until curl` loop
+ * that waited for "the server" was satisfied by the stale one instantly. Every failure it printed was
+ * about code that had already been replaced.
+ *
+ * `.next/BUILD_ID` changes on every build, and Next serves that build's manifest under a path
+ * containing it. If the server is running something else, that path 404s. So this is one request, and
+ * it turns the worst failure mode of this file, a confident report about the wrong code, into a refusal
+ * to start. It is skipped for a remote base, where the local BUILD_ID is not what is deployed. */
+async function assertSameBuild(base) {
+  if (!/^https?:\/\/localhost|^https?:\/\/127\.0\.0\.1/.test(base)) return;
+  const { readFileSync } = await import('node:fs');
+  let id = '';
+  try { id = readFileSync(new URL('../.next/BUILD_ID', import.meta.url), 'utf8').trim(); } catch { return; }
+  const res = await fetch(base + '/_next/static/' + id + '/_buildManifest.js').catch(() => null);
+  if (res && res.ok) return;
+  console.error('REFUSING TO PROBE. ' + base + ' is not serving this build (' + id + ').');
+  console.error('Something else is on that port. `netstat -ano | grep LISTENING | grep :PORT` and use a free one.');
+  process.exit(2);
+}
+await assertSameBuild(BASE);
+
+try {
       const r = await fetch('http://127.0.0.1:' + PORT + '/json/new?' + encodeURIComponent(url), { method: 'PUT' });
       if (r.ok) return r.json();
     } catch { /* not up yet */ }
@@ -263,7 +286,58 @@ try {
     const wide = await c2.evaluate('document.documentElement.scrollWidth > window.innerWidth + 1');
     check(path + ' renders something', tall > 300, tall + 'px tall');
     check(path + ' fits a 390px screen', tall > 300 && !wide, wide ? 'the page scrolls sideways' : '');
+
+    /* THE NAV MUST NOT WRAP. Added 2026-08-18, and it is the only check here that came from him
+     * looking at the thing rather than from a crash: "are those 4 pages/section making sense i dont
+     * think so", and before that "i dont know how navigation works". Four sentence-length labels
+     * wrapped onto two lines at 390px, which is what turned a set of tabs into four loose links.
+     * Height, not label text, because the failure was geometric and a future fifth tab would
+     * reintroduce it silently. */
+    /* Count the distinct top edges of the nav's children. That is the exact question, and the first
+     * version of this check was not it: it divided the strip's height by its line-height, read 2.6 on
+     * a nav that sits on a single row, and called it a wrap. The 47px is three 44px tap targets, which
+     * is deliberate. A check that is true and about nothing is this repo's oldest failure mode, and it
+     * got written into the harness built to catch it. */
+    const nav = JSON.parse(await c2.evaluate(
+      'JSON.stringify((function(){var n=document.querySelector(".kosnav");'
+      + 'if(!n)return {rows:0,tabs:0};var tops={};var k=n.children;'
+      + 'for(var i=0;i<k.length;i++){tops[Math.round(k[i].getBoundingClientRect().top)]=1;}'
+      + 'return {rows:Object.keys(tops).length,tabs:k.length};})())',
+    ) || '{}');
+    check(path + ' nav sits on one line', nav.rows === 1, nav.tabs + ' tabs across ' + nav.rows + ' rows');
     c2.ws.close();
+  }
+
+  /* ---- the shopping list is a list, not an essay ----
+   * `/kitchen/shop` was an analysis of what would unlock the most dishes, and he went to it looking for
+   * a shopping list. This asserts that the page now opens on rows with a tick-off, above the analysis.
+   * It never PRESSES the button: the write guard would block it and report the attempt, which is the
+   * correct outcome and not a test. */
+  {
+    const t3 = await openTab(BASE + '/kitchen/shop');
+    const c3 = connect(t3);
+    await c3.ready;
+    await guarded(c3);
+    let shape = { rows: 0, got: 0, addBox: 0, foldBeforeList: true };
+    for (let i = 0; i < 40; i++) {
+      shape = JSON.parse(await c3.evaluate(
+        'JSON.stringify((function(){'
+        + 'var rows=document.querySelectorAll(".meallist .mealrow").length;'
+        + 'var got=[].filter.call(document.querySelectorAll("button"),function(b){return /got it/i.test(b.textContent||"");}).length;'
+        + 'var addBox=[].filter.call(document.querySelectorAll("input"),function(i){return i.getAttribute("aria-label")==="Add to the shopping list";}).length;'
+        + 'var fold=document.querySelector("details.fold");'
+        + 'var firstRow=document.querySelector(".meallist .mealrow");'
+        + 'var foldBeforeList=!!(fold&&firstRow&&fold.compareDocumentPosition(firstRow)&Node.DOCUMENT_POSITION_FOLLOWING);'
+        + 'return {rows:rows,got:got,addBox:addBox,foldBeforeList:foldBeforeList};})())',
+      ) || '{}');
+      if (shape.rows > 0 && shape.addBox > 0) break;
+      await sleep(500);
+    }
+    check('the shopping list has rows', shape.rows > 0, shape.rows + ' rows');
+    check('every open row can be ticked off', shape.got > 0, shape.got + ' Got it buttons');
+    check('he can add something himself', shape.addBox === 1, shape.addBox + ' add boxes');
+    check('the list comes before the analysis', !shape.foldBeforeList, shape.foldBeforeList ? 'the fold is above the first row' : '');
+    c3.ws.close();
   }
   /* ---- 5. nothing tried to write, and the guard is the thing saying so ----
    * Reported rather than assumed. If a future check does POST to a write route this goes red and

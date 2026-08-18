@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import KitchenNav from '../KitchenNav';
 import { shoppingView } from '@/lib/kitchen/shop';
+import { shoppingList } from '@/lib/kitchen/list';
+import ListClient from './ListClient';
 import { dueInText } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -21,23 +23,33 @@ export const dynamic = 'force-dynamic';
  */
 
 export default async function Shop() {
-  const d = await shoppingView();
+  const [d, list] = await Promise.all([shoppingView(), shoppingList()]);
 
   return (
     <div className="wrap">
       <KitchenNav here="shop" />
-      <h1>Worth buying, and worth using up</h1>
-      <p className="lede">
-        {d.cookableNow} of {d.total} dishes need nothing bought at all. What follows is what a single
-        purchase would add to that, and what is already in the kitchen that none of it touches.
-      </p>
+      <h1>Shopping</h1>
 
+      {/* THE LIST COMES FIRST because it is the page. Until 2026-08-18 this route opened on an
+          analysis of which single purchase would unlock the most dishes, and he went looking for a
+          shopping list, could not find one, and was right: there wasn't one. */}
+      <ListClient
+        open={list.open}
+        got={list.got}
+        pricedTotal={list.pricedTotal}
+        pricedCount={list.pricedCount}
+        unpricedCount={list.unpricedCount}
+      />
 
-      <h2 className="sec">Buy one thing, unlock this many</h2>
+      <hr className="divider" style={{ marginTop: 26 }} />
+
+      <details className="fold">
+        <summary>What one purchase would unlock the most dishes ({d.unlocks.length} counted)</summary>
       <p className="lede" style={{ marginBottom: 8 }}>
-        Counted only over dishes that are short of nothing else, so the number means it rather than
-        meaning &ldquo;would help with&rdquo;. No prices here: a price comes from a receipt or a live
-        lookup, never from a guess.
+        {d.cookableNow} of {d.total} dishes need nothing bought at all. Counted only over dishes that
+        are short of nothing else, so the number means it rather than meaning &ldquo;would help
+        with&rdquo;. These are groups, and a group heading is not a thing you can put in a basket, so
+        each row carries the ingredients the recipes actually asked for.
       </p>
 
       <ul className="meallist">
@@ -73,6 +85,7 @@ export default async function Shop() {
           </li>
         ))}
       </ul>
+      </details>
       <hr className="divider" style={{ marginTop: 30 }} />
 
       {/* FOLDED, 2026-08-16. These two sat ABOVE the buying list, with a paragraph each, on a page

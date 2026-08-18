@@ -135,9 +135,36 @@ export default async function Find({
        this element follows it. */
     <div className="wrap wide">
       <KitchenNav here="find" />
-      <h1>What could I make</h1>
-      <p className="lede">
-        {d.total} dishes checked against what is actually in the kitchen. A menu to pick from, not a
+      <h1>Dishes</h1>
+
+      {/* THE SEARCH IS HERE NOW, 2026-08-18. It used to be the whole of /kitchen/want, a separate nav
+          tab called "I want a specific dish", which asked the same question this page answers from the
+          other end: both finish at "this dish needs X". Two tabs for one question, and neither label
+          said where the search box was. `/kitchen/want` still exists and still does the work of reading
+          a pasted link, it is just no longer somewhere he has to know to go. */}
+      <form action="/kitchen/want" method="get" className="searchrow">
+        <input
+          type="search"
+          name="q"
+          placeholder="name a dish: beef stroganoff"
+          aria-label="Name a dish you want to make"
+          enterKeyHint="search"
+        />
+        <button type="submit" className="primary">Check</button>
+      </form>
+      <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 8 }}>
+        <input
+          type="url"
+          name="url"
+          placeholder="or paste a recipe link, including one behind your own subscription"
+          aria-label="Paste a recipe web address"
+          enterKeyHint="go"
+        />
+        <button type="submit" className="primary">Read it</button>
+      </form>
+
+      <p className="lede" style={{ marginTop: 14 }}>
+        Or pick from the {d.total} below, checked against what is actually in the kitchen. A menu, not a
         set of recipes: nothing here has been read or cooked, and every name links to the original
         published recipe. Pick one and it gets turned into a proper card first.
       </p>

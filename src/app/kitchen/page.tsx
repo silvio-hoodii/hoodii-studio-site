@@ -3,7 +3,6 @@ import KitchenNav from './KitchenNav';
 import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
 import { lastCookedMap, proteinToday } from '@/lib/kitchen/cook';
-import { corpusCount } from '@/lib/kitchen/corpus';
 import { dueInText } from '@/lib/format';
 import { getProteinTarget } from '@/lib/kitchen/protein';
 
@@ -80,7 +79,6 @@ export default async function KitchenHome() {
   const stock = await deriveStock();
   const recipes = await allRecipes();
   const cooked = await lastCookedMap();
-  const browsable = await corpusCount();
   const [proteinLogged, proteinTarget] = await Promise.all([proteinToday(), getProteinTarget()]);
 
   const all: Cookable[] = recipes.map((r) => {
@@ -165,13 +163,21 @@ export default async function KitchenHome() {
   return (
     <div className="wrap">
       <KitchenNav here="home" />
-      <h1>What you can cook right now</h1>
-      <p className="lede">
-        From what is actually in this kitchen. Nothing here needs a shop first, and nothing asks you
-        to cook two things at once.
-      </p>
+      {/* THE CARDS COME FIRST. Until 2026-08-18 this page opened with a heading, a two-line
+          explanation, a stock receipt and THREE prose links that repeated three of the four nav tabs
+          in different words, so on a 390px screen the answer he came for started below the fold. His
+          verdict on the four sections: "are those 4 pages/section making sense i dont think so".
 
-      {/* The receipt. One line, and it stays one line. */}
+          What went, and why: the "Browse N dishes" and "say what you feel like" links are now the
+          DISHES tab, and "what is worth buying" is the SHOPPING tab. A destination named twice, in two
+          different sets of words, is harder to learn than one named once. The stock receipt moved to
+          the bottom of the cookable list, where it belongs: it qualifies the list rather than
+          introducing it. */}
+      <h1>Cook</h1>
+
+
+      {/* The receipt, MOVED BELOW THE LIST on 2026-08-18. It qualifies the dishes above rather than
+          introducing them, and at the top it was one more line between him and the answer. */}
       {lastRead && readAgeDays != null && (
         <p className="quiet" style={{ marginTop: 10 }}>
           {readAgeDays === 0
@@ -181,28 +187,6 @@ export default async function KitchenHome() {
               : `Stock last read ${readAgeDays} days ago, on ${lastRead}. Everything below assumes nothing has changed since.`}
         </p>
       )}
-
-      {/* The door to the menu. It used to sit in `.quiet`, the smallest type on the page, and it
-          hardcoded "625" when the real figure was already 2,586. A page offering one dish was burying
-          the way to thousands in its smallest font and misreporting the count on the way. Counted now,
-          never typed. */}
-      <p className="lede" style={{ marginTop: 14 }}>
-        {/* "dishes you could make" was an 18x overclaim in the largest bold type on a page headed
-            "What you can cook right now": 139 of the 2,586 are missing nothing. The count was honestly
-            computed and the sentence around it was not, which is the harder half to notice. */}
-        <Link href="/kitchen/find"><b>Browse {browsable.toLocaleString()} dishes, scored against the fridge &#8594;</b></Link>
-      </p>
-      <p className="lede" style={{ marginTop: 4 }}>
-        Scored against the fridge, with photos. A menu to pick from, not recipes: nothing there has
-        been read or cooked.
-      </p>
-      <p className="lede" style={{ marginTop: 10 }}>
-        <Link href="/kitchen/want"><b>Or say what you feel like and see what it needs →</b></Link>
-      </p>
-      <p className="quiet" style={{ marginTop: 8 }}>
-        <Link href="/kitchen/shop">What is worth buying, and what is sitting here unused →</Link>
-      </p>
-
 
       {/* What today's cooking has actually put in, and nothing more than that.
         *

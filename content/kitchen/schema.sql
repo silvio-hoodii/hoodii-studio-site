@@ -102,3 +102,28 @@ create table if not exists cook_run (
   build     text
 );
 create index if not exists cook_run_dish on cook_run (dish, started desc);
+
+-- ---------------------------------------------------------------------------------------------
+-- The shopping list, added 2026-08-18. Silvio: "i dont understand where the shopping list is in
+-- the app, worth buying section is not it, so i dont know how navigation works".
+--
+-- He was right twice. There was no list, and `KitchenOS/SHOPPING.md` claimed there was one in the
+-- app "with tick-off that survives a reload", which described the retired laptop page. Two sections
+-- were appended under that false sentence the same day nobody checked it.
+--
+-- Append-only, like every other table here. Ticking something off inserts `got`; it never updates a
+-- row. `item_id` is a stock id where one exists, a `gap:<name>` for a hole in the vocabulary that has
+-- no stock row yet (tortillas, ham), or a free label for anything he adds himself (beer, dish soap).
+-- The generated part of the list is not stored at all: it is folded at read time from stock rows that
+-- are low or out and from what the recipes are short of, exactly like stock state. A stored list is a
+-- list that goes stale, and this project has thirteen dead hand-maintained tables on record.
+create table if not exists shop_item (
+  id      bigserial primary key,
+  at      timestamptz not null default now(),
+  item_id text        not null,
+  ev      text        not null,   -- add|got|drop
+  label   text,                   -- what he typed, when he added it himself
+  src     text,                   -- tap|seed|dish
+  note    text
+);
+create index if not exists shop_item_item_at on shop_item (item_id, at desc);
