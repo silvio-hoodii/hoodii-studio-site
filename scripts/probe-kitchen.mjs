@@ -153,12 +153,29 @@ const WRITE_GUARD = `
   })()
 `;
 
+/* `Page.addScriptToEvaluateOnNewDocument`, NOT a plain evaluate.
+ *
+ * The first version evaluated the guard straight after connecting, which put it into a JS context the
+ * page then threw away when its own document loaded. On localhost that raced in our favour and the
+ * probe read as green; against production it lost the race and `window.__probeGuard` was undefined.
+ *
+ * A guard that is present or absent depending on how fast a server answers is worse than no guard,
+ * because it reads as protection. This registers it as a document-start script, so every document in
+ * the tab, including after any navigation, gets it before a single page script runs.
+ *
+ * It was caught by the check that reports what the guard blocked. A guarantee nothing verifies is the
+ * thing this whole file exists to argue against, and it very nearly shipped inside the guard itself. */
 async function guarded(c) {
-  const state = await c.evaluate(WRITE_GUARD);
-  if (state !== 'installed' && state !== 'already') {
-    throw new Error('write guard did not install; refusing to run against a real database');
+  await c.send('Page.enable');
+  await c.send('Page.addScriptToEvaluateOnNewDocument', { source: WRITE_GUARD });
+  // Reload so the just-registered script actually runs against this document.
+  await c.send('Page.reload', { ignoreCache: false });
+  for (let i = 0; i < 40; i++) {
+    const state = await c.evaluate('window.__probeGuard ? "installed" : "no"');
+    if (state === 'installed') return c;
+    await sleep(500);
   }
-  return c;
+  throw new Error('write guard did not install; refusing to run against a real database');
 }
 
 const target = await openTab(BASE + '/kitchen/want');
