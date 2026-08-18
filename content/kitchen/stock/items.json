@@ -542,7 +542,19 @@
       "state": "none",
       "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
     },
-    "tomatoes_round": {
+    "blackvinegar": {
+    "n": "Chinkiang black vinegar",
+    "where": "pantry",
+    "state": "none",
+    "note": "Catalogued 2026-08-18, not owned. Chinkiang, also spelled Zhenjiang, is a dark malty rice vinegar and it is NOT the distilled white vinegar in the cupboard: it is the sour note in General Tso and in most northern Chinese sauces. Gold Plum 554 ml was $2.99 at Superstore on 2026-08-18. Walmart lists Hengshun at $3.97 on an alphanumeric SKU, which is the marketplace pattern, so the shelf is unproven there."
+  },
+  "driedchilli": {
+    "n": "whole dried red chillies",
+    "where": "pantry",
+    "state": "none",
+    "note": "Catalogued 2026-08-18, not owned. Distinct from the fresh chilli gap, from chili powder and from crushed red pepper: these are whole dried pods that go into hot oil for aroma. Omnivore Cookbook General Tso wants 7 to 8 and her footnote says they add aroma rather than heat. Tastie Dried Red Chili 120 g was $2.29 at Superstore on 2026-08-18, and it is not sold as Chinese or Korean, which is his call to make."
+  },
+  "tomatoes_round": {
     "n": "fresh tomatoes",
     "where": "fridge",
     "state": "none",
