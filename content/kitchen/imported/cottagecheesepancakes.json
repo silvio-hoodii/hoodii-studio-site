@@ -1,0 +1,120 @@
+{
+  "id": "cottagecheesepancakes",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Cottage cheese pancakes",
+    "url": "https://www.bbcgoodfood.com/recipes/cottage-cheese-pancakes",
+    "provider": "bbcgoodfood.com"
+  },
+  "yield": 2,
+  "totalTime": "PT20M",
+  "prepTime": "PT10M",
+  "cookTime": "PT10M",
+  "nutrition": {
+    "calories": "469 calories",
+    "fatContent": "18 grams fat",
+    "saturatedFatContent": "5 grams saturated fat",
+    "carbohydrateContent": "53 grams carbohydrates",
+    "sugarContent": "3 grams sugar",
+    "fiberContent": "6 grams fiber",
+    "proteinContent": "21 grams protein",
+    "sodiumContent": "0.84 milligram of sodium"
+  },
+  "rating": null,
+  "ratingCount": null,
+  "image": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/CottageCheesePancakes-f4e9480.jpg?resize=768,713",
+  "cuisine": null,
+  "category": "Breakfast, Brunch",
+  "ingredients": [
+    "100g cottage cheese",
+    "150g porridge oats (gluten free if needed)",
+    "2 eggs",
+    "50ml milk (any kind)",
+    "½ tsp  baking powder (gluten free if needed)",
+    "1 tsp  vanilla extract (optional)",
+    "2 tsp  maple syrup (optional)",
+    "2 tsp  flavourless oil or unsalted butter, to cook",
+    "poached egg and roasted tomatoes, or",
+    "fresh berries and maple syrup"
+  ],
+  "instructions": [
+    "Put all the pancake ingredients, except the oil, in a blender, but only use the vanilla and maple syrup if you want to make sweet pancakes. Blitz to make a smooth batter. Alternatively, pour the ingredients into a jug and use a stick blender.",
+    "Heat a little of the oil or butter in a nonstick frying pan over a medium heat, and add a few tablespoons of the batter to the pan to make small pancakes. Cook in batches if needed.",
+    "Cook the pancakes for 2-3 mins until bubbles come to the surface, and the top looks set. Flip and cook for another 1-2 min mins until golden brown on both sides. Keep the pancakes warm while you cook the remaining batches.",
+    "Serve the pancakes topped with a poached egg each and some roasted tomatoes, or top with fresh berries and a drizzle of maple syrup."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "100g cottage cheese",
+      "item": "cottagecheese",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "150g porridge oats (gluten free if needed)",
+      "item": "oats",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 eggs",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "50ml milk (any kind)",
+      "item": "milk",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp  baking powder (gluten free if needed)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp  vanilla extract (optional)",
+      "item": null,
+      "staple": false,
+      "gap": "vanilla",
+      "optional": true
+    },
+    {
+      "line": "2 tsp  maple syrup (optional)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": true
+    },
+    {
+      "line": "2 tsp  flavourless oil or unsalted butter, to cook",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "poached egg and roasted tomatoes, or",
+      "item": "tomatoes_grape",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "fresh berries and maple syrup",
+      "item": "fruit",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "26df7daee6e0"
+}

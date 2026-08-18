@@ -2,6 +2,7 @@ import Link from 'next/link';
 import KitchenNav from '../KitchenNav';
 import { wantByName, wantByUrl, nameOfItem, type WantHit } from '@/lib/kitchen/want';
 import { thumb } from '@/lib/kitchen/corpus';
+import PasteBox from './PasteBox';
 
 export const dynamic = 'force-dynamic';
 
@@ -127,6 +128,7 @@ export default async function Want({
           />
           <button type="submit" className="primary">Read it</button>
         </form>
+        <PasteBox />
       </div>
 
       <hr className="divider" />

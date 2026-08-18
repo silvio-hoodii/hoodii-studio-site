@@ -1,0 +1,111 @@
+{
+  "id": "tunacaperspaghetti",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Tuna, caper & chilli spaghetti",
+    "url": "https://www.bbcgoodfood.com/recipes/tuna-caper-chilli-spaghetti",
+    "provider": "bbcgoodfood.com"
+  },
+  "yield": 2,
+  "totalTime": "PT25M",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "nutrition": {
+    "calories": "409 calories",
+    "fatContent": "9 grams fat",
+    "saturatedFatContent": "1 grams saturated fat",
+    "carbohydrateContent": "57 grams carbohydrates",
+    "sugarContent": "2 grams sugar",
+    "fiberContent": "5 grams fiber",
+    "proteinContent": "23 grams protein",
+    "sodiumContent": "0.4 milligram of sodium"
+  },
+  "rating": null,
+  "ratingCount": null,
+  "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Tuna-Caper-Chilli-Spaghetti-0d409ad.jpg?resize=768,713",
+  "cuisine": null,
+  "category": "Dinner, Supper",
+  "ingredients": [
+    "150g spaghetti or linguine",
+    "1 tbsp olive oil",
+    "1 garlic clove sliced",
+    "1 red chilli deseeded and finely chopped, plus extra to serve (optional)",
+    "1 tbsp drained capers",
+    "small bunch of parsley finely chopped (stalks included)",
+    "145g tuna in spring water, drained",
+    "90g rocket or baby spinach leaves",
+    "½ lemon juiced"
+  ],
+  "instructions": [
+    "Cook the spaghetti for 9-11 mins in a large pan of well-salted water until al dente.",
+    "Heat the oil in a wide frying pan over a very low heat, and gently cook the garlic and chilli to infuse the oil. Remove from the heat if the garlic is turning past light golden, as this will make it bitter.",
+    "Drain the pasta, keeping a cupful of the cooking water, and tip the spaghetti into the frying pan. Toss the pasta in the oil over a low heat, adding a little of the pasta water to emulsify into a sauce that coats the pasta, then fold in the capers, parsley, tuna and some seasoning. Don’t stir too vigorously – you want to keep larger chunks of tuna. Toss the rocket and lemon juice through the spaghetti, and serve with extra chilli scattered over, if you like."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "150g spaghetti or linguine",
+      "item": "spaghetti",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tbsp olive oil",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 garlic clove sliced",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 red chilli deseeded and finely chopped, plus extra to serve (optional)",
+      "item": null,
+      "staple": false,
+      "gap": "fresh chilli",
+      "optional": false
+    },
+    {
+      "line": "1 tbsp drained capers",
+      "item": "capers",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "small bunch of parsley finely chopped (stalks included)",
+      "item": "parsley",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "145g tuna in spring water, drained",
+      "item": "tuna",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "90g rocket or baby spinach leaves",
+      "item": "arugula",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ lemon juiced",
+      "item": "lemon_fresh",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "a7c02e3d0440"
+}

@@ -426,6 +426,38 @@ export function unreachableStock(items) {
 
 /* ---------------- JSON-LD extraction ---------------- */
 
+/** Flatten schema.org `recipeInstructions` into an ordered list of published sentences.
+ *
+ * The field is a union in practice and every shape below is live on a site this kitchen reads:
+ * a bare string with newlines, an array of strings, an array of `HowToStep`, or an array of
+ * `HowToSection` each holding its own `itemListElement`. BBC Good Food uses HowToStep, Budget Bytes
+ * uses HowToStep, TheMealDB gives one newline-joined string, and several Taste of Home pages use
+ * HowToSection. Handling only the shape in front of you is how a step silently goes missing, and a
+ * MISSING step is the exact defect class `SOURCING.md` was written about: not a wrong number, a gap
+ * between the numbers.
+ *
+ * Section names are kept as their own entry rather than dropped, because "For the sauce" is
+ * information about what the next steps belong to.
+ */
+export function flattenInstructions(v, depth = 0) {
+  if (v === null || v === undefined || depth > 4) return [];
+  if (typeof v === 'string') {
+    return v.split(/\r?\n/).map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  }
+  if (Array.isArray(v)) return v.flatMap((x) => flattenInstructions(x, depth + 1));
+  if (typeof v === 'object') {
+    const type = String(v['@type'] || '');
+    if (type.includes('HowToSection')) {
+      const head = String(v.name || '').trim();
+      const kids = flattenInstructions(v.itemListElement ?? v.steps ?? v.itemList, depth + 1);
+      return head ? [head, ...kids] : kids;
+    }
+    const t = v.text ?? v.name ?? v.description;
+    return typeof t === 'string' ? flattenInstructions(t, depth + 1) : [];
+  }
+  return [];
+}
+
 export function extractRecipe(html) {
   const out = [];
   const re = /<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g;
@@ -448,6 +480,25 @@ export function extractRecipe(html) {
         yield: o.recipeYield,
         image: typeof o.image === 'string' ? o.image : (o.image?.url || o.image?.[0]?.url || o.image?.[0]),
         totalTime: o.totalTime,
+        prepTime: o.prepTime ?? null,
+        cookTime: o.cookTime ?? null,
+        /* INSTRUCTIONS AND NUTRITION, added 2026-08-17, and they are the point of `import.mjs`.
+         *
+         * This function has always read ingredients and thrown the method away, because the only
+         * caller wanted "can he make it". So the one part of a published recipe that a cook card is
+         * REQUIRED to copy verbatim, per `schema/SOURCING.md`, was the one part that arrived by an
+         * agent retyping it. `sourceText` was then checked against `text`, both typed by the same
+         * agent, which checks that an agent agrees with itself.
+         *
+         * Reading the method here makes the publisher's sentences a fetched artefact with a hash, so
+         * "did you invent this" becomes a diff instead of a promise. */
+        instructions: flattenInstructions(o.recipeInstructions),
+        /* Verbatim, and never recomputed. Her protein figure is the only one on a card that is not an
+         * estimate, which is what made Cottage Cheese Pancakes the first dish here to print a number
+         * nobody had to caveat. */
+        nutrition: o.nutrition && typeof o.nutrition === 'object'
+          ? Object.fromEntries(Object.entries(o.nutrition).filter(([k]) => k !== '@type'))
+          : null,
         cuisine: str(o.recipeCuisine) ? String(str(o.recipeCuisine)).trim() : null,
         category: str(o.recipeCategory) ? String(str(o.recipeCategory)).trim() : null,
         keywords: typeof o.keywords === 'string'
@@ -529,4 +580,70 @@ if (isEntry) {
     }
     console.log('');
   }
+}
+
+/* ---------------- pasted text ----------------
+ *
+ * ONE implementation, used by `import.mjs` (strict, builds a capture) and by `wantByPaste` in
+ * `src/lib/kitchen/want.ts` (lenient, answers "what would this need"). They were written as two
+ * near-identical parsers on 2026-08-17 and merged the same hour, because this repo has already paid
+ * for that mistake three times: the corpus loader was reimplemented three ways and only one of them
+ * deduped, so /kitchen/find and /kitchen/shop disagreed about how many dishes exist. Two callers of
+ * one function cannot disagree. Two functions always eventually do.
+ *
+ * The strictness difference stays a caller's decision and is not duplicated logic: `splitPaste`
+ * reports what it found, and the caller decides whether a missing heading is fatal.
+ */
+
+const PASTE_ING_HEAD = /^(?:ingredients?|what you(?:'| )?ll need|you will need)\s*:?$/i;
+const PASTE_METHOD_HEAD = /^(?:instructions?|method|directions?|steps?|how to make(?:\s+it)?|preparation)\s*:?$/i;
+const PASTE_TAIL_HEAD = /^(?:notes?|nutrition|nutritional info|tips?|storage|variations?)\s*:?$/i;
+/* Lines a publisher prints around a recipe that are not part of it. Scoring "Servings 4" as an
+ * ingredient produces a "not sure about servings 4" row, which makes a correct answer look broken. */
+const PASTE_NOISE = /^(?:(?:prep|cook|total|active|rest(?:ing)?|chill(?:ing)?)\s*time\b|servings?\b|yields?\b|course\b|cuisine\b|calories\b|author\b|print\b|jump to\b|rate this\b|share\b|save\b|equipment\b|notes?\b|nutrition\b)/i;
+
+/** Strip the publisher's list formatting, leaving the sentence. Bullets and step numbers only. */
+export function stripListMarker(line) {
+  return String(line).replace(/^[-*•●▪]\s*/, '').replace(/^(?:step\s*)?\d+[.)]\s+/i, '').trim();
+}
+
+/**
+ * Partition pasted recipe text into its title, ingredients and method.
+ *
+ * Returns `{ name, ingredients, instructions, foundIngredientsHeading, foundMethodHeading }`. It
+ * NEVER infers which lines are method: without a method heading, `instructions` comes back empty and
+ * every line is offered as a candidate ingredient. Guessing there is how a step goes missing, and a
+ * missing step is the defect class `schema/SOURCING.md` exists for. The caller that needs a method
+ * (a cook card) checks the flags and refuses; the caller that only needs ingredients does not care.
+ */
+export function splitPaste(raw) {
+  const lines = String(raw ?? '').split(/\r?\n/).map((l) => l.replace(/\s+/g, ' ').trim());
+  const iIng = lines.findIndex((l) => PASTE_ING_HEAD.test(l));
+  const iMet = lines.findIndex((l, k) => k > iIng && PASTE_METHOD_HEAD.test(l));
+
+  const clean = (arr) => arr.filter(Boolean).filter((l) => !PASTE_NOISE.test(l)).map(stripListMarker).filter((l) => l.length > 1);
+
+  let ingredientLines;
+  if (iIng !== -1 && iMet !== -1) ingredientLines = lines.slice(iIng + 1, iMet);
+  else if (iIng !== -1) ingredientLines = lines.slice(iIng + 1);
+  else ingredientLines = lines;
+
+  let instructionLines = [];
+  if (iMet !== -1) {
+    const after = lines.slice(iMet + 1);
+    const stop = after.findIndex((l) => PASTE_TAIL_HEAD.test(l));
+    instructionLines = stop === -1 ? after : after.slice(0, stop);
+  }
+
+  // The title is whatever real line came before the ingredients, which is where publishers put it.
+  const head = iIng > 0 ? lines.slice(0, iIng) : [];
+  const name = head.find((l) => l && !PASTE_NOISE.test(l) && l.length > 2) ?? null;
+
+  return {
+    name,
+    ingredients: clean(ingredientLines),
+    instructions: clean(instructionLines),
+    foundIngredientsHeading: iIng !== -1,
+    foundMethodHeading: iMet !== -1,
+  };
 }

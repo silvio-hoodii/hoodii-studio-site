@@ -149,3 +149,60 @@ Dishes with no good published source do not get made, rather than getting invent
    else it passes
 
 Rules 1 to 3 are the new ones and they are what make this different from a promise.
+
+---
+
+# 2026-08-17: the verbatim rule was checking that an agent agreed with itself
+
+Everything above stands. This is the mechanism it was missing.
+
+`validate.mjs` enforced "follow one published recipe verbatim" by comparing each step's `text` against
+its `sourceText` and refusing any number in the first that is not in the second. Both of those fields
+are typed by the same agent in the same edit. **The check verifies that an agent agrees with itself,
+and an agent that paraphrases a sentence paraphrases it into both fields.** Every one of the five
+inventions that reached the stove on 2026-08-11 would have passed it.
+
+Silvio arrived at the same place from the other end, asking why every session finished at the same
+three dishes:
+
+> *"Is Budget Bites going to be a good place to find actual recipes, or is it just going to be simple
+> recipes? ... if it's the source then I'll personally go and open a website and copy paste all the
+> information. I don't care."*
+
+## `content/kitchen/import.mjs`
+
+Fetches one page, or takes text he pasted, and writes `content/kitchen/imported/<id>.json`: the
+publisher's ingredient lines and method, verbatim, with the yield, the times and the nutrition panel,
+stamped with the date and hashed over the two lists.
+
+`validate.mjs` then asserts that **every `sourceText` on a card appears in that capture**. Quoting a
+sentence the page does not carry is now a build failure, so "did you invent this" is a diff against
+the publisher rather than a promise. Proved by paraphrasing one clause of Honey Garlic Chicken's step
+3 into exactly the shape that failed on 2026-08-11: exit 1.
+
+Both cards that have been cooked, Honey Garlic Chicken and Cottage Cheese Pancakes, pass it untouched.
+That is the useful result: they really were verbatim, and now something says so that is not an agent.
+
+## What the capture is for, and what it is not
+
+**It is evidence.** `imported/` is excluded from the prose linter for the same reason `corpus/` is:
+BBC Good Food uses an en dash in her own tuna spaghetti method, and editing a captured sentence to
+satisfy a punctuation rule about OUR writing would corrupt the one artefact whose entire value is
+being exactly what the page said. It would also break the hash, which is the point of the hash.
+
+**It is not a card.** Captures never go in `recipes/`, so an unfinished one cannot be offered and
+cannot break `pnpm build`. Turning a capture into a card is still the judgement work this file has
+always described: which of his pans she means, what a technique word means, an observable for the
+induction hob, the protein arithmetic with its assumptions stated. That layer is unchanged. What has
+changed is that the sentences underneath it are no longer retyped from memory.
+
+## The corpus was never going to be the answer
+
+Checked by name on 2026-08-17: Serious Eats, Simply Recipes, Allrecipes, Epicurious and Food.com all
+list `ClaudeBot`, `anthropic-ai` or `Claude-User` under `Disallow: /`. Serious Eats spells out in a
+comment that it covers retrieval as well as training. **That is theirs to decide and it is not worked
+around.** The Kitchn and King Arthur Baking permit crawling and are worth adding.
+
+So the corpus stays four or six sites, and it stays a menu rather than a source of cards. The route to
+any other recipe on the internet is the one he named: he opens the page and hands the text over.
+`--paste` on the importer, and the paste box on `/kitchen/want`, are that route.

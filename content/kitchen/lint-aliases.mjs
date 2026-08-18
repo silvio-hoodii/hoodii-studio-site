@@ -32,7 +32,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { matchToItem, parseIngredient, isOptionalLine } from './match.mjs';
+import { matchToItem, parseIngredient, isOptionalLine, splitPaste } from './match.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const A = JSON.parse(readFileSync(join(HERE, 'stock', 'aliases.json'), 'utf8'));
@@ -151,6 +151,55 @@ for (const [line, want] of OPTIONAL_CASES) {
       ? 'The source asks for this ingredient, so a true here makes a dish read as cookable with nothing named as short. Fix `isOptionalLine`, not this table.'
       : 'The source itself calls this optional, so a false here blocks a dish over a garnish. Fix `isOptionalLine`, not this table.',
   ]);
+}
+
+/* ---- 5. `splitPaste` must partition, never infer ----
+ *
+ * Added 2026-08-17 with the paste path. This is the function that turns text he copied off a page
+ * into ingredients and a method, and it has two callers with different strictness: `import.mjs`
+ * refuses a paste with no method heading, the web paste box does not. Both read the same partition,
+ * so a change here moves both at once, which is the point of it being one function and the reason it
+ * needs a gate.
+ *
+ * The load-bearing case is the last one. Given text with no headings it must return NO instructions
+ * and say so, rather than deciding that some of those lines look like steps. Every failure this
+ * kitchen has had at the stove came from a gap between the numbers rather than a wrong number, and a
+ * step inferred out of a blog paragraph is that gap with extra confidence on top.
+ */
+const PASTE_CASES = [
+  {
+    what: 'headings, bullets, step numbers and a trailing notes block',
+    text: 'Skillet Thighs\nPrep time: 10 minutes\nServes 4\n\nIngredients\n- 8 chicken thighs\n* 1 tbsp olive oil\n1 lemon, halved\n\nMethod\n1. Pat the thighs dry.\nStep 2. Sear 12 minutes.\n\nNotes\nKeeps 3 days.',
+    name: 'Skillet Thighs',
+    ingredients: ['8 chicken thighs', '1 tbsp olive oil', '1 lemon, halved'],
+    instructions: ['Pat the thighs dry.', 'Sear 12 minutes.'],
+  },
+  {
+    what: 'no headings at all',
+    text: 'my grandmother used to make this\n8 chicken thighs\n2 tsp salt\nCook them until done.',
+    name: null,
+    // Every line is offered as a candidate ingredient and NOTHING is called a step.
+    ingredients: ['my grandmother used to make this', '8 chicken thighs', '2 tsp salt', 'Cook them until done.'],
+    instructions: [],
+  },
+];
+for (const c of PASTE_CASES) {
+  const got = splitPaste(c.text);
+  const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  if (!eq(got.ingredients, c.ingredients)) {
+    fails.push(['paste-split', `splitPaste ingredients wrong for ${c.what}`,
+      `expected ${JSON.stringify(c.ingredients)}, got ${JSON.stringify(got.ingredients)}`]);
+  }
+  if (!eq(got.instructions, c.instructions)) {
+    fails.push(['paste-split', `splitPaste instructions wrong for ${c.what}`,
+      `expected ${JSON.stringify(c.instructions)}, got ${JSON.stringify(got.instructions)}. `
+      + 'Inferring a step nobody labelled is how a step goes missing, and a missing step is the defect '
+      + 'class schema/SOURCING.md exists for.']);
+  }
+  if (got.name !== c.name) {
+    fails.push(['paste-split', `splitPaste name wrong for ${c.what}`,
+      `expected ${JSON.stringify(c.name)}, got ${JSON.stringify(got.name)}`]);
+  }
 }
 
 for (const [rule, msg, hint] of warns) {

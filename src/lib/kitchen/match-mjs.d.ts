@@ -39,11 +39,34 @@ declare module '*/match.mjs' {
     items: { id: string; n?: string; level?: string }[],
   ): { id: string; n: string }[];
   export function scoreRecipe(lines: string[], availableIds: Set<string>): Score;
+  /** Flatten schema.org `recipeInstructions` (string, string[], HowToStep[] or HowToSection[]). */
+  export function flattenInstructions(v: unknown, depth?: number): string[];
+  /** Strip a publisher's bullet or step number, leaving the sentence. */
+  export function stripListMarker(line: string): string;
+  /** Partition pasted recipe text. NEVER infers which lines are method: without a method heading,
+   *  `instructions` is empty and `foundMethodHeading` is false, and the caller decides whether that
+   *  is fatal. The importer refuses; the web paste box does not, because it renders no method. */
+  export function splitPaste(raw: string): {
+    name: string | null;
+    ingredients: string[];
+    instructions: string[];
+    foundIngredientsHeading: boolean;
+    foundMethodHeading: boolean;
+  };
   export function extractRecipe(html: string): {
     name?: string;
     yield?: unknown;
     image?: string;
     totalTime?: string;
+    prepTime?: string | null;
+    cookTime?: string | null;
+    /** The published method, flattened out of schema.org's four different shapes for it. Captured
+     *  since 2026-08-17 because a cook card must quote it verbatim and, until then, the only route
+     *  from the page to the card was an agent retyping it. */
+    instructions: string[];
+    /** The publisher's own nutrition panel, verbatim. Her protein figure is the only number on a
+     *  card that is not an estimate. */
+    nutrition?: Record<string, unknown> | null;
     /** recipeCuisine and recipeCategory from JSON-LD. Not captured on the first ingest, which is why
      *  2,215 of 2,626 dishes had no cuisine and the cuisine filter covered 13% of the corpus. */
     cuisine?: string | null;

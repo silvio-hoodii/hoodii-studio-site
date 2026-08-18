@@ -2,7 +2,7 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock } from './stock';
-import { scoreRecipe, extractRecipe, type Score } from '../../../content/kitchen/match.mjs';
+import { scoreRecipe, extractRecipe, splitPaste, type Score } from '../../../content/kitchen/match.mjs';
 import { loadCorpus, type CorpusMeal } from './corpus';
 
 /* "I want a stroganoff. What do I need?"
@@ -102,6 +102,57 @@ export async function wantByName(q: string, limit = 12) {
   }));
 
   return { hits, stock };
+}
+
+/** Score a recipe he PASTED, when no fetch can reach it.
+ *
+ * Added 2026-08-17, and it keeps a promise the app had been making for days without a way to honour
+ * it: `wantByUrl` answers a 403 or 404 with "copy the ingredient list here instead and I will read
+ * it", and there was no box to copy it into. The Kitchn answers 403 to anything that is not a
+ * browser. Budget Bytes 404s some of its own recipe URLs. Every good site that blocks `ClaudeBot` by
+ * name blocks it here too, and that is theirs to decide.
+ *
+ * He named this himself: "if it's the source then I'll personally go and open a website and copy
+ * paste all the information. I don't care." Text he has already read, handed over deliberately, is
+ * not a crawl of anybody's site.
+ *
+ * DELIBERATELY MORE LENIENT THAN `import.mjs`. That one refuses to guess which lines are method,
+ * because a dropped step is a defect at the stove. Here there is no method at all: this answers "what
+ * would this need", every line is a candidate ingredient, and the worst case is a stray line reading
+ * as an unknown ingredient, which the page already renders honestly as "not sure about". Building a
+ * cook card from pasted text stays a job for the CLI, where the refusal lives.
+ */
+export async function wantByPaste(text: string): Promise<{ hit: WantHit | null; error: string | null; stock: Awaited<ReturnType<typeof deriveStock>> }> {
+  const { stock, ids } = await usableStock();
+  const raw = String(text ?? '').trim();
+  if (!raw) return { hit: null, error: null, stock };
+
+  /* ONE parser, shared with `content/kitchen/import.mjs` via `match.mjs`. These were written as two
+   * near-identical functions and merged within the hour: this repo has already paid for a duplicated
+   * parser, when the corpus loader existed in three versions and only one of them deduped, so
+   * /kitchen/find and /kitchen/shop disagreed about how many dishes exist.
+   *
+   * The strictness difference is a DECISION here, not a second implementation. The importer refuses a
+   * paste with no method heading, because a capture missing a step becomes a cook card missing a step.
+   * This path never renders a method, so a missing heading only means every line is a candidate
+   * ingredient, and the worst case is a stray line appearing under "our list does not recognise
+   * these", which the page already reports honestly. */
+  const parsed = splitPaste(raw);
+  const ingredients = parsed.ingredients.slice(0, 60);
+
+  if (!ingredients.length) {
+    return { hit: null, stock, error: 'Nothing in that looked like an ingredient list.' };
+  }
+
+  const name = parsed.name ?? 'Pasted recipe';
+  const sc = scoreRecipe(ingredients, ids);
+  for (const v of sc.haveVia) if (v.via) v.via = nameOfItem(stock, v.via);
+
+  return {
+    stock,
+    error: null,
+    hit: { name, source: null, image: null, area: null, category: null, provider: 'pasted by you', ingredients, score: sc },
+  };
 }
 
 /** Fetch and score ONE page he pointed at. Works for any site publishing recipe markup. */

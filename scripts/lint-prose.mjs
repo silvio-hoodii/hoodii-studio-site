@@ -24,12 +24,22 @@ import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
 const ROOTS = ['src', 'content', 'scripts'];
-const SKIP_DIR = new Set(['node_modules', '.next', '.git', 'corpus']);
+const SKIP_DIR = new Set(['node_modules', '.next', '.git', 'corpus', 'imported']);
 const EXT = /\.(tsx?|jsx?|mjs|cjs|css|md|json|sql|html)$/;
 
 /* corpus/ is skipped: it is scraped data, not prose we wrote, and BBC Good Food uses em dashes in its
  * own ingredient names. Rewriting a source's text would be a provenance violation, which matters more
- * than a punctuation rule about OUR writing. The stripping happens at render time instead. */
+ * than a punctuation rule about OUR writing. The stripping happens at render time instead.
+ *
+ * imported/ is skipped for the same reason and a sharper one. Those files are captures written by
+ * `content/kitchen/import.mjs`: one publisher's ingredient lines and method, fetched, stamped and
+ * HASHED, and `validate.mjs` checks every quote on a cook card against them. Editing a captured
+ * sentence to satisfy a punctuation rule would break the hash, and it would corrupt the one artefact
+ * in this repo whose entire value is being exactly what the page said. BBC Good Food's tuna spaghetti
+ * is the live example: "Don't stir too vigorously" is followed by an en dash on her own page.
+ *
+ * Neither directory reaches a screen unaltered. The dash stripping happens at render time, which is
+ * where a rule about what HE reads belongs. */
 
 const EM = '\u2014';   // from escapes, so this detector cannot trip over itself
 const EN = '\u2013';

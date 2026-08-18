@@ -16,9 +16,29 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, basename } from 'node:path';
 import { renderHash } from './render.mjs';
 import { heatEvidence, NO_HEAT_FORMS } from './heat-evidence.mjs';
+import { loadCaptures, captureHash } from './import.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const RECIPES = join(HERE, 'recipes');
+
+/* Captures written by `import.mjs`: the publisher's own ingredient and method lines, fetched and
+ * hashed. Indexed by primary source URL so a card can be checked against the page it names. */
+const CAPTURES = new Map();
+for (const c of loadCaptures()) {
+  if (c.source?.url) CAPTURES.set(String(c.source.url).replace(/\/+$/, ''), c);
+}
+
+/* Quotes, dashes and spacing differ between a page's markup and anything that has been through a
+ * clipboard, and none of those differences is a paraphrase. Everything else is left alone: this
+ * normalises typography, not words. */
+const normQuote = (s) => String(s)
+  .replace(/[‘’ʼ]/g, "'")
+  .replace(/[“”]/g, '"')
+  .replace(/[‐-―]/g, '-')
+  .replace(/ /g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim()
+  .toLowerCase();
 const EQUIP = JSON.parse(readFileSync(join(HERE, 'schema', 'equipment.json'), 'utf8')).equipment;
 const STOCK = existsSync(join(HERE, 'stock', 'items.json'))
   ? JSON.parse(readFileSync(join(HERE, 'stock', 'items.json'), 'utf8'))
@@ -431,6 +451,47 @@ function validate(r, file) {
         }
       }
     }
+  }
+
+  /* ---- sourceText must match the CAPTURED page, not just the step beside it ----
+   *
+   * Added 2026-08-17, and it closes the last hole in the verbatim rule.
+   *
+   * The check above compares `text` to `sourceText`. Both are typed by the same agent, so it verifies
+   * that an agent agrees with itself, and every one of the five inventions that reached the stove on
+   * 2026-08-11 would have passed it: an agent that paraphrases a sentence paraphrases it into both
+   * fields. `content/kitchen/import.mjs` fetches the publisher's own method and hashes it, so the
+   * question "did you invent this" is now a diff against the page rather than a promise.
+   *
+   * A card step may quote PART of a published step (splitting one long paragraph into two screens is
+   * annotation, not invention) so the test is containment, not equality. The reverse, one card step
+   * spanning two published ones, is caught because the join would not appear in either.
+   *
+   * Missing capture is a WARNING rather than a failure, and deliberately so: `_stockAtCapture` aside,
+   * a capture is a network fetch, and a rule that fails the build when a site is down would get
+   * disabled the first time it fired. Present-and-disagreeing is the case that means something.
+   */
+  const primaryUrl = (r.provenance?.sources || []).find((s) => s.primary)?.url;
+  const cap = primaryUrl ? CAPTURES.get(String(primaryUrl).replace(/\/+$/, '')) : null;
+  if (cap) {
+    if (captureHash(cap) !== cap.captureHash) {
+      fail(id, 'capture', `the capture for ${cap.id} has been edited by hand`,
+        'imported/*.json is evidence. Its hash is over the ingredient and method lines, so editing '
+        + 'either breaks it. Re-run content/kitchen/import.mjs rather than correcting the page here.');
+    }
+    const published = cap.instructions.map(normQuote);
+    for (const s of r.steps) {
+      const src = normQuote(s.sourceText || '');
+      if (!src) continue;   // already failed above where sourceText is required
+      if (published.some((p) => p.includes(src))) continue;
+      fail(id, 'capture', `step ${s.n} quotes a sentence that is not on the source page`,
+        `Its sourceText does not appear in imported/${cap.id}.json, which was fetched from `
+        + `${cap.source.url} on ${cap.fetchedAt}. Either it was retyped from memory, or the page has `
+        + 'changed since capture. Re-run import.mjs to see which.');
+    }
+  } else if (r.provenance?.tier === 'sourced' && primaryUrl) {
+    warn(id, 'capture', 'offered recipe has no captured source',
+      `Nothing can check its quotes against the publisher. Run: node content/kitchen/import.mjs ${primaryUrl} --id ${id}`);
   }
 
   if (r.provenance?.readAt && r.provenance.readAt !== r.build) {
