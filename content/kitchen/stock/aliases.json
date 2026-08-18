@@ -538,9 +538,6 @@
       "gnocchi",
       "vermicelli",
       "angel hair",
-      "lasagne sheets",
-      "lasagna noodles",
-      "lasagne",
       "egg noodles",
       "noodles",
       "soba noodles",
@@ -977,7 +974,9 @@
       "spaghetti squash",
       "taco shell",
       "lasagne sheet",
-      "lasagna sheet"
+      "lasagna sheet",
+      "lasagne",
+      "lasagna"
     ],
     "beef-raw": [
       "cooked",

@@ -32,7 +32,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { matchToItem, parseIngredient, isOptionalLine, splitPaste } from './match.mjs';
+import { matchToItem, parseIngredient, isOptionalLine, splitPaste, scoreRecipe } from './match.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const A = JSON.parse(readFileSync(join(HERE, 'stock', 'aliases.json'), 'utf8'));
@@ -200,6 +200,72 @@ for (const c of PASTE_CASES) {
     fails.push(['paste-split', `splitPaste name wrong for ${c.what}`,
       `expected ${JSON.stringify(c.name)}, got ${JSON.stringify(got.name)}`]);
   }
+}
+
+/* ---- 6. published lines that must NOT resolve to a stock item ----
+ *
+ * Added 2026-08-18. Every check above asks whether an alias reaches the row that declares it. This one
+ * asks the opposite question, which is the one that has cost dinners: does a real published line reach a
+ * row that is NOT that food. A false "you have this" makes a wrong dish; a false "you are missing this"
+ * costs a shop. Only the first direction is pinned here.
+ *
+ * The case that opened this table: `_vetoes.peppers` carries "chili pepper", the veto regex demanded a
+ * non-letter after the term, and Omnivore's Cookbook writes "7 to 8 dried Chinese chili peppers". So
+ * General Tso's Chicken counted the two fresh red bell peppers in the fridge as its dried chillies and
+ * read as one ingredient short of cookable. Every veto term in the file was singular-only, so this was
+ * one instance of a whole class. The other rows are the earlier finds of the same shape, pinned so a
+ * future edit to the veto matcher cannot quietly reopen them.
+ */
+const NOT_ITEM_CASES = [
+  ['7 to 8 dried Chinese chili peppers', 'peppers'],
+  ['2 dried red chillies', 'peppers'],
+  ['1 tsp crushed red pepper flakes', 'peppers'],
+  ['4 cups short-grain white rice', 'longgrainrice'],
+  ['145g tuna in spring water, drained', 'water'],
+  ['1 tbsp ground ginger', 'ginger'],
+];
+for (const [line, forbidden] of NOT_ITEM_CASES) {
+  const got = matchToItem(parseIngredient(line), line);
+  if (got !== forbidden) continue;
+  fails.push([
+    'false-have',
+    `"${line}" resolves to ${forbidden}, which is not that food`,
+    'This is the direction that makes a wrong dish rather than costing a shop. Fix the veto matcher or '
+    + 'the alias phrase, not this table.',
+  ]);
+}
+
+/* ---- 7. an "A or B" line must be read, not truncated ----
+ *
+ * Added 2026-08-18 with `alternationReadings`. `parseIngredient` cuts at "or" and keeps the head,
+ * which is correct for two named foods and wrong when the head is a modifier: "8 flour or corn
+ * tortillas" became "flour", the staple table answered "he has flour", and BBC's easy beef burritos
+ * reported nothing at all about tortillas. A burrito with no tortilla is not a shop away, it is a
+ * different dish.
+ *
+ * Both directions are pinned. The first two rows are the fix; the rest are lines the old truncation
+ * got RIGHT, and they are here because the obvious way to fix the first two breaks them.
+ */
+const ALTERNATION_CASES = [
+  ['8 flour or corn tortillas', 'bread'],
+  ['2 tbsp vegetable or sunflower oil', '__STAPLE__'],
+  ['salt or pepper to taste', '__STAPLE__'],
+  ['400g can black beans or kidney beans, with the can water', 'kidney beans'],
+  ['50g parmesan or pecorino, grated', 'parmesan'],
+];
+for (const [line, want] of ALTERNATION_CASES) {
+  const s = scoreRecipe([line], new Set());
+  const got = s.staples.length ? '__STAPLE__'
+    : s.missing.length ? String(s.missing[0].item)
+      : s.have.length ? String(s.have[0].item)
+        : s.unknown.length ? `unknown:${s.unknown[0].shown}` : 'nothing';
+  if (got === want) continue;
+  fails.push([
+    'alternation',
+    `"${line}" resolved to ${got}, expected ${want}`,
+    'Reading only the head of an "A or B noun" line drops the noun, and the noun is the food. Fix '
+    + '`alternationReadings` or the alias phrase, not this table.',
+  ]);
 }
 
 for (const [rule, msg, hint] of warns) {

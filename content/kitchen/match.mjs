@@ -231,7 +231,21 @@ const VETO_LC = Object.fromEntries(
     k,
     (Array.isArray(v) ? v : []).map((x) => {
       const t = String(x).toLowerCase();
-      return { t, re: new RegExp(`(?:^|[^a-z])${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[^a-z]|$)`) };
+      /* The trailing `(?:e?s)?` is load-bearing, added 2026-08-18. Without it a veto term matched the
+       * singular only, because the boundary that follows it refuses a letter: `_vetoes.peppers`
+       * carries "chili pepper", and Omnivore's Cookbook writes "7 to 8 dried Chinese chili peppers",
+       * so General Tso's Chicken reported the two fresh red bell peppers in the fridge as its dried
+       * chillies. Same class as the tuna-spaghetti chilli of 2026-08-17 and the short-grain rice of
+       * 2026-08-12: a false "you have this", which makes a wrong dish rather than costing a shop.
+       * Fixing it by typing the plural into the list would have left every other veto term singular,
+       * which is validating instances rather than eliminating the class. "chilli" + "es" also gives
+       * "chillies", which is the spelling BBC Good Food uses. */
+      /* A space in a veto term matches a hyphen too. `_vetoes.longgrainrice` carries "short grain",
+       * and the bug it was written for on 2026-08-12 is documented in this very file using the
+       * spelling "short-grain white rice". The term never matched that line, so the fix had been
+       * decorative for six days: gyudon's short-grain rice scored as his long grain. */
+      const body = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ +/g, '[\\s-]+');
+      return { t, re: new RegExp(`(?:^|[^a-z])${body}(?:e?s)?(?:[^a-z]|$)`) };
     }),
   ]),
 );
@@ -305,6 +319,32 @@ export function matchAllItems(name, raw = name) {
   return out;
 }
 
+/** Both foods an "A or B noun" line offers, when A is a modifier of B's noun rather than a food.
+ *
+ * `parseIngredient` cuts at "or" and keeps the head, which is right for "parmesan or pecorino" and
+ * wrong for "8 flour or corn tortillas": the head there is "flour", the staple table says he has
+ * flour, and BBC's easy beef burritos therefore reported its tortillas as a pantry staple he owns.
+ * The single most load-bearing ingredient in a burrito, gone from the report without appearing in
+ * any bucket. Found 2026-08-18.
+ *
+ * The tell is grammatical, not a list of special cases: when the last alternative carries MORE words
+ * than the head, the extra words are the noun and the head is a modifier of it. So "flour or corn
+ * tortillas" reads as "flour tortillas" or "corn tortillas", and "vegetable or sunflower oil" reads
+ * as "vegetable oil" or "sunflower oil", which is the same shape and 40 mentions in the corpus.
+ * Equal-length alternatives ("salt or pepper", "black beans or kidney beans") name two foods and are
+ * left exactly as they were. */
+export function alternationReadings(line) {
+  const full = parseIngredient(line, { keepAfterComma: true, keepOr: true });
+  const parts = full.split(/\bor\b/).map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  if (parts.length !== 2) return [];
+  const [a = '', b = ''] = parts;
+  const aw = a.split(' ').filter(Boolean);
+  const bw = b.split(' ').filter(Boolean);
+  if (!aw.length || bw.length <= aw.length) return [];
+  const noun = bw.slice(aw.length).join(' ');
+  return [`${a} ${noun}`, b];
+}
+
 /** availableIds: Set of stock ids usable now (level have/low). */
 const SUBS = ALIASES._substitutes || {};
 
@@ -330,8 +370,17 @@ export function scoreRecipe(ingredientLines, availableIds) {
      *   3. keep text after "or"            ("vegetable or sunflower oil" was just "vegetable", 40x)
      *   4. split an "and" compound         ("salt and pepper to taste", 48x)
      * First one that resolves wins, and a resolved answer always beats silence. */
-    let hit = matchToItem(name, line);
+    /* An alternation reading is tried BEFORE the plain parse, because the plain parse of such a line
+     * is a truncation rather than a reading: it keeps "flour" out of "flour or corn tortillas" and
+     * that fragment resolves, so nothing downstream ever ran. A more complete reading of the same
+     * sentence beats a fragment of it. */
+    let hit = null;
     let shown = name;
+    for (const cand of alternationReadings(line)) {
+      const alt = matchToItem(cand, line);
+      if (alt !== null) { hit = alt; shown = cand; break; }
+    }
+    if (hit === null) { hit = matchToItem(name, line); shown = name; }
     if (hit === null) {
       for (const cand of [
         parseIngredient(line, { keepAfterComma: true }),
@@ -591,6 +640,19 @@ if (isEntry) {
     if (score.have.length) {
       console.log('\nHAVE');
       for (const h of score.have) console.log(`  ok ${h.item.padEnd(18)} <- "${h.line.trim()}"`);
+    }
+    /* `haveVia` was computed and never printed here, so a substitution the matcher FOUND read as a
+     * line that vanished: not have, not missing, not unknown, not a staple. Every web surface has
+     * rendered it since it existed; only the CLI dropped it, and the CLI is what an agent reads.
+     * Found 2026-08-18 scoring arroz con pollo, where "2 cups chicken stock" left no trace and the
+     * matcher had in fact matched it to the Knorr cubes. An absence is the one thing a reader
+     * cannot question. */
+    if (score.haveVia.length) {
+      console.log('\nHAVE, BY SUBSTITUTION');
+      for (const v of score.haveVia) {
+        console.log(`  ok ${String(v.item ?? v.shown).padEnd(18)} <- "${v.line.trim()}"  via your ${v.via}`);
+        if (v.note) console.log(`      ${v.note}`);
+      }
     }
     if (score.staples.length) console.log(`\nSTAPLES assumed present: ${score.staples.map((s) => s.shown).join(', ')}`);
     if (score.unknown.length) {
