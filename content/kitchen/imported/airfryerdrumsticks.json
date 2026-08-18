@@ -1,0 +1,113 @@
+{
+  "id": "airfryerdrumsticks",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Air Fryer Chicken Drumsticks Recipe",
+    "url": "https://www.budgetbytes.com/air-fryer-chicken-drumsticks/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "5",
+    "5 pieces"
+  ],
+  "totalTime": "PT27M",
+  "prepTime": "PT5M",
+  "cookTime": "PT22M",
+  "nutrition": {
+    "servingSize": "1 piece",
+    "calories": "329 kcal",
+    "carbohydrateContent": "1 g",
+    "proteinContent": "32 g",
+    "fatContent": "21 g",
+    "sodiumContent": "422 mg",
+    "fiberContent": "0.3 g"
+  },
+  "rating": "4.74",
+  "ratingCount": "15",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2025/01/Air-Fryer-Chicken-Drumsticks-Basket.jpg",
+  "cuisine": "General",
+  "category": "Dinner",
+  "ingredients": [
+    "1 tsp smoked paprika ($0.10)",
+    "½ tsp garlic powder ($0.05)",
+    "¼ tsp onion powder ($0.03)",
+    "½ tsp dried oregano ($0.05)",
+    "½ tsp salt ($0.02)",
+    "¼ tsp black pepper (freshly cracked, $0.05)",
+    "⅛ tsp cayenne pepper (optional, $0.02*)",
+    "2 lbs. chicken drumsticks (about 5-6 pieces, $2.54**)",
+    "1½ Tbsp olive oil ($0.24)"
+  ],
+  "instructions": [
+    "Preheat the air fryer to 400ºF. Combine the smoked paprika, garlic powder, onion powder, oregano, salt, and pepper in a bowl.",
+    "Place the chicken drumsticks in a bowl and drizzle the oil over top. Sprinkle the prepared seasoning over the drumsticks, then toss until they're evenly coated in oil and spices.",
+    "Place the seasoned drumsticks in the air fryer basket in a single layer, making sure no pieces overlap. Air fry for 12 minutes on the first side. Flip the drumsticks over and air fry for another 10 minutes or until they reach an internal temperature of 175°F.*** Serve hot with your favorite sides and enjoy!"
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1 tsp smoked paprika ($0.10)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp garlic powder ($0.05)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "¼ tsp onion powder ($0.03)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp dried oregano ($0.05)",
+      "item": "oregano",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp salt ($0.02)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "¼ tsp black pepper (freshly cracked, $0.05)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "⅛ tsp cayenne pepper (optional, $0.02*)",
+      "item": null,
+      "staple": false,
+      "gap": "other spices",
+      "optional": true
+    },
+    {
+      "line": "2 lbs. chicken drumsticks (about 5-6 pieces, $2.54**)",
+      "item": "chickendrumsticks",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1½ Tbsp olive oil ($0.24)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "81390aeec3f6"
+}

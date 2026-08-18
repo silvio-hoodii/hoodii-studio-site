@@ -1,0 +1,149 @@
+{
+  "id": "onepotchilimac",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "One Pot Chili Mac",
+    "url": "https://www.budgetbytes.com/chili-cheese-beef-n-mac/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "6",
+    "6 (1 cup each)"
+  ],
+  "totalTime": "PT35M",
+  "prepTime": "PT5M",
+  "cookTime": "PT30M",
+  "nutrition": {
+    "servingSize": "1 cup",
+    "calories": "471 kcal",
+    "carbohydrateContent": "36 g",
+    "proteinContent": "25 g",
+    "fatContent": "25 g",
+    "sodiumContent": "825 mg",
+    "fiberContent": "3 g"
+  },
+  "rating": "4.8",
+  "ratingCount": "149",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2024/01/Chili-Mac-Bowl.jpg",
+  "cuisine": "American",
+  "category": "Dinner",
+  "ingredients": [
+    "1  yellow onion ($0.70)",
+    "2 cloves garlic ($0.08)",
+    "1 Tbsp olive oil ($0.22)",
+    "1 lb. ground beef (see notes, $4.98)",
+    "2 Tbsp all-purpose flour ($0.03)",
+    "1 Tbsp chili powder ($0.30)",
+    "1/2 tsp smoked paprika ($0.05)",
+    "1/2 tsp garlic powder ($0.05)",
+    "1/2 tsp dried oregano ($0.05)",
+    "8 oz. tomato sauce ($0.56)",
+    "3 cups beef broth (see notes, $0.39)",
+    "1/2 lb. uncooked macaroni  (about 2 cups, $0.59)",
+    "1 cup shredded cheddar ($0.98)"
+  ],
+  "instructions": [
+    "Dice the yellow onion and mince the garlic. Add the onion and garlic to a large deep skillet or Dutch oven with the olive oil and sauté over medium heat until the onions are soft and translucent (about 5 minutes).",
+    "Add the ground beef to the skillet and continue to stir and cook until the beef is cooked through. If using a higher fat content ground beef, you may want to drain off the excess fat at this point.",
+    "Add the flour, chili powder, smoked paprika, garlic powder, and oregano to the skillet with the beef and onions. Continue to cook and stir for about two minutes, allowing the flour and spices to coat the bottom of the skillet, but not burn.",
+    "Add the tomato sauce and beef broth to the skillet and stir well to combine, making sure to scrape and dissolve any browned bits off the bottom of the skillet.",
+    "Add the uncooked macaroni and stir to combine. Place a lid on the skillet and turn the heat up to medium-high. Allow the broth to come up to a full boil. Once boiling, give the pasta a quick stir to loosen any that is stuck to the bottom, turn the heat down to medium-low, and place the lid back on top.",
+    "Allow the macaroni to simmer, stirring every few minutes and always replacing the lid, until the macaroni is tender and the broth has reduced to a rich red gravy (about 10 minutes).",
+    "Stir half of the shredded cheese into the sauce until melted, and sprinkle the remainder on top. Place a lid on the pot, turn the heat off, and allow the residual heat to melt the cheese on top. Serve hot and enjoy!"
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1  yellow onion ($0.70)",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cloves garlic ($0.08)",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp olive oil ($0.22)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 lb. ground beef (see notes, $4.98)",
+      "item": "beef-raw",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp all-purpose flour ($0.03)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp chili powder ($0.30)",
+      "item": "chilipowder",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 tsp smoked paprika ($0.05)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 tsp garlic powder ($0.05)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 tsp dried oregano ($0.05)",
+      "item": "oregano",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "8 oz. tomato sauce ($0.56)",
+      "item": "tomatosauce",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 cups beef broth (see notes, $0.39)",
+      "item": "beefconsomme",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 lb. uncooked macaroni  (about 2 cups, $0.59)",
+      "item": "rotini",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 cup shredded cheddar ($0.98)",
+      "item": null,
+      "staple": false,
+      "gap": "cheddar",
+      "optional": false
+    }
+  ],
+  "captureHash": "ce6429f00031"
+}

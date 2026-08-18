@@ -39,6 +39,22 @@ const normQuote = (s) => String(s)
   .replace(/\s+/g, ' ')
   .trim()
   .toLowerCase();
+/* A SECOND normaliser, for one job: is this run of WORDS inside that run of words.
+ *
+ * Extracting text out of HTML loses boundaries that were carried by markup rather than by characters.
+ * Leitesculinaria wraps "If you have plain, unsauced spaghetti" in a <strong> immediately followed by
+ * "Heat enough oil", so its own JSON-LD reads "spaghettiHeat", while the card copied off the rendered
+ * page reads "spaghetti: heat". Neither is an invention and comparing them literally reports five.
+ *
+ * So this drops everything that is not a letter or a digit, spaces included, and the containment test
+ * becomes: do the card's letters appear, in order, inside the publisher's letters.
+ *
+ * WHAT THAT CATCHES: any word added, removed or changed. Which is the whole of the invention problem.
+ * WHAT IT DOES NOT: punctuation and spacing. A comma cannot tell him to cook something for 8 minutes.
+ * Stated plainly here because a gate whose reach is not written down gets believed for more than it
+ * does, which is exactly what the digit-only rule was believed for. */
+const normLetters = (s) => String(s).toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '');
+
 const EQUIP = JSON.parse(readFileSync(join(HERE, 'schema', 'equipment.json'), 'utf8')).equipment;
 const STOCK = existsSync(join(HERE, 'stock', 'items.json'))
   ? JSON.parse(readFileSync(join(HERE, 'stock', 'items.json'), 'utf8'))
@@ -480,18 +496,103 @@ function validate(r, file) {
         + 'either breaks it. Re-run content/kitchen/import.mjs rather than correcting the page here.');
     }
     const published = cap.instructions.map(normQuote);
+
+    /* ---- NO INVENTION. What he READS has to be inside what she WROTE. ----
+     *
+     * Added 2026-08-17, hours after the capture check, because an adversary pointed at the hole the
+     * capture check left wide open: `text` is the field `CookClient` renders as the instruction, and
+     * NOTHING compared it to anything. The digit rule below compares numbers. The capture rule above
+     * compares `sourceText`. Both of those can pass while `text` says something she never wrote,
+     * because an agent supplies both fields in the same edit.
+     *
+     * That is not hypothetical. THREE OF THE FIVE INVENTIONS THAT REACHED THE STOVE ON 2026-08-11
+     * CARRY NO DIGITS: the note calling the pot's browned bits "most of the flavour", "mostly brown"
+     * replacing her "80 percent cooked", and "coats the back of the spoon and holds the line" for a
+     * sauce she calls "just a little sticky". Every one would pass a validator built in their name.
+     *
+     * Containment rather than equality, so one long published paragraph can still be split across two
+     * screens: each step quotes the whole published step as `sourceText` and shows its own slice.
+     * Adding a word is impossible, changing one is impossible.
+     *
+     * The teaching voice does not go away. It lives in `look`, `heat` and `doneness`, which are
+     * separate fields that the cook screen already renders as visibly not-her-sentence. That was
+     * always the design; this is what makes it true. */
     for (const s of r.steps) {
-      const src = normQuote(s.sourceText || '');
+      const txt = normLetters(s.text || '');
+      const src = normLetters(s.sourceText || '');
+      if (!txt || !src) continue;
+      if (src.includes(txt)) continue;
+      fail(id, 'sourcing', `step ${s.n} shows an instruction that is not inside its sourceText`,
+        'What he reads has to be her sentence or part of it. Adding to it, or rewording it, is the '
+        + 'invention that burnt the first dish this app ever cooked. Teaching goes in `look`, `heat` '
+        + 'and `doneness`, which render as visibly ours.');
+    }
+
+    /* ---- NO OMISSION. Every sentence she published has to reach the screen. ----
+     *
+     * The other half, and the harder one. `SOURCING.md` says the defects are "gaps BETWEEN the
+     * numbers" and "a check cannot see an absence it was not told to look for". This tells it to look.
+     *
+     * Found live by the same pass: Leftover Pasta Frittata step 2 drops "If you have plain, unsauced
+     * spaghetti:" from the front of her sentence, turning a CONDITIONAL into an unconditional
+     * instruction, on a dish that is offered. Under containment alone that is legal, because a
+     * shorter slice is still a slice.
+     *
+     * Structural steps a publisher writes for the page rather than the pan ("Mix the eggs.",
+     * "Prep the pasta.") are the reason this is a warning and not a failure: dropping a heading is
+     * fine and dropping a condition is not, and nothing in the text tells them apart. So it reports
+     * every published sentence no step shows, and a human decides. That is honest about what it can
+     * and cannot know, which beats a rule that fails on headings and gets switched off. */
+    const shown = normLetters(r.steps.map((s) => s.text || '').join(' '));
+    for (const p of cap.instructions) {
+      const whole = normLetters(p);
+      if (!whole || whole.length < 12) continue;
+      if (shown.includes(whole)) continue;
+      // Sentence by sentence, so a long published step is not reported whole over one missing clause.
+      const missing = p.split(/(?<=[.!?])\s+/).filter((x) => normLetters(x).length >= 12 && !shown.includes(normLetters(x)));
+      if (!missing.length) continue;
+      warn(id, 'sourcing', `${missing.length} published sentence(s) reach no step`,
+        `She wrote: "${missing[0].slice(0, 120)}". If that is a heading for the page, fine. If it is a `
+        + 'condition, a temperature or a step, he never sees it, and an absence is the defect class '
+        + 'this whole schema exists for.');
+    }
+
+    /* Against the WHOLE method joined, not entry by entry. Publishers using schema.org HowToSection
+     * emit the section name and its step as separate entries ("Mix the eggs", then "Crack the 6 large
+     * eggs..."), and a card that quotes both as one step is re-chunking, not inventing. Order is still
+     * enforced, because containment in a joined string is containment in sequence. */
+    const publishedAll = normLetters(cap.instructions.join(' '));
+    for (const s of r.steps) {
+      const src = normLetters(s.sourceText || '');
       if (!src) continue;   // already failed above where sourceText is required
-      if (published.some((p) => p.includes(src))) continue;
+      if (publishedAll.includes(src)) continue;
       fail(id, 'capture', `step ${s.n} quotes a sentence that is not on the source page`,
         `Its sourceText does not appear in imported/${cap.id}.json, which was fetched from `
         + `${cap.source.url} on ${cap.fetchedAt}. Either it was retyped from memory, or the page has `
         + 'changed since capture. Re-run import.mjs to see which.');
     }
   } else if (r.provenance?.tier === 'sourced' && primaryUrl) {
-    warn(id, 'capture', 'offered recipe has no captured source',
-      `Nothing can check its quotes against the publisher. Run: node content/kitchen/import.mjs ${primaryUrl} --id ${id}`);
+    /* PROMOTED FROM WARN TO FAIL, 2026-08-17, the same day it was written. It shipped as a warning on
+     * the reasoning that a capture is a network fetch and a gate that fails when a site is down gets
+     * disabled the first time it fires. An adversarial pass found what that actually bought: two
+     * `sourced` recipes were OFFERED with no capture at all, so half the catalogue carried a warning
+     * nobody reads while three separate documents told the reader that a quote the page does not
+     * carry fails the build.
+     *
+     * The objection was about RE-fetching, and this does not re-fetch. It requires the capture to
+     * EXIST, which is a file on disk, checked offline. */
+    fail(id, 'capture', `tier is "sourced" and there is no captured source`,
+      `Nothing can check its quotes against the publisher, so "verbatim" is an agent's word for it. `
+      + `Run: node content/kitchen/import.mjs ${primaryUrl} --id ${id}`);
+  }
+
+  /* SOURCING.md's enforcement list says "provenance.readAt still required" and this file never
+   * required it: the check below is guarded on the field EXISTING, so a sourced recipe with no readAt
+   * validated clean. A binding document listing a rule its enforcement layer does not contain is the
+   * worst kind of decoration, because it reads as covered. Found 2026-08-17. */
+  if (r.provenance?.tier === 'sourced' && !r.provenance.readAt) {
+    fail(id, 'read', 'tier is "sourced" and there is no provenance.readAt',
+      'Nobody has recorded reading this as it renders. Read it, then stamp the build you read.');
   }
 
   if (r.provenance?.readAt && r.provenance.readAt !== r.build) {
@@ -511,8 +612,13 @@ function validate(r, file) {
         `The words he would read have changed since anyone checked them. Run: node content/kitchen/render.mjs ${id}`);
     }
   } else if (r.provenance?.tier === 'sourced') {
-    warn(id, 'read', 'offered recipe has no provenance.readHash',
-      `readAt alone is two hand-typed strings agreeing. Run: node content/kitchen/render.mjs ${id}`);
+    /* PROMOTED FROM WARN TO FAIL, 2026-08-17. The comment above has said "promote to fail once all
+     * offered recipes carry one" since the field was added, and an adversarial pass checked: all of
+     * them do, and have for a while. The condition was met and nobody came back to do it, which is
+     * how a warning becomes permanent. Meanwhile AGENTS.md told its reader that changing one word
+     * makes the deploy die, which was true only for recipes that had opted in. */
+    fail(id, 'read', 'tier is "sourced" and there is no provenance.readHash',
+      `readAt alone is two hand-typed strings agreeing, and one agent types both. Run: node content/kitchen/render.mjs ${id}`);
   }
 
   /* ---- protein arithmetic must be shown ---- */
@@ -612,7 +718,23 @@ for (const f of files) {
   // printing oven temperatures were migrated ones, so skipping them is precisely how this stayed
   // invisible. It only ever fails on a false claim, so it cannot deadlock the migration backlog.
   checkHeatClaim(r, rid, !!r._migration);
-  if (STRICT && r._migration) { unmigrated.push(rid); continue; }
+  /* THE EXEMPTION IS A FROZEN LIST, NOT A FIELD AN AGENT CAN SET. Added 2026-08-17.
+   *
+   * `_migration: true` used to skip the ENTIRE validator under --strict, and nothing stopped a brand
+   * new file from carrying it. Three separate documents say "a broken recipe cannot deploy"; what was
+   * true is "a recipe that does not claim the exemption cannot deploy", and the exemption was one key
+   * an agent types. That is opt-out validation described as mandatory validation.
+   *
+   * These 21 ids are the machine-extracted recipes that genuinely predate the schema. The list is
+   * closed. A new file claiming `_migration` now fails, which is the only way this backlog shrinks
+   * instead of growing. */
+  const MIGRATION_BACKLOG = new Set(["arroztapado", "bankbeef", "bolognese", "bread", "brownsplit", "bulgogi", "chaufa", "chicken", "crepes", "gyudon", "knifeonion", "meatballs", "pasta", "pickledonion", "pickles", "quarters", "roast", "roastveg", "stuffedpeppers", "tilapia", "tzatziki"]);
+  if (r._migration && !MIGRATION_BACKLOG.has(rid)) {
+    fail(rid, 'structure', '`_migration: true` on a recipe that is not in the frozen backlog',
+      'That flag skips every other check in this file and the backlog is closed. Fix the recipe '
+      + 'against schema/RECIPE-SCHEMA.md rather than opting it out of the schema.');
+  }
+  if (STRICT && r._migration && MIGRATION_BACKLOG.has(rid)) { unmigrated.push(rid); continue; }
   validate(r, path);
 }
 

@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "lint:classnames": "node scripts/lint-classnames.mjs",
-    "lint:proberoutes": "node scripts/lint-probe-routes.mjs"
+    "lint:proberoutes": "node scripts/lint-probe-routes.mjs",
+    "verify": "node scripts/verify.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

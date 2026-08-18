@@ -1,0 +1,143 @@
+{
+  "id": "creamytomatochicken",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Creamy Tomato Chicken",
+    "url": "https://www.budgetbytes.com/creamy-tomato-chicken/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "4",
+    "4 servings"
+  ],
+  "totalTime": "PT35M",
+  "prepTime": "PT15M",
+  "cookTime": "PT20M",
+  "nutrition": {
+    "servingSize": "1 serving",
+    "calories": "336 kcal",
+    "carbohydrateContent": "15 g",
+    "proteinContent": "30 g",
+    "fatContent": "17 g",
+    "sodiumContent": "1003 mg",
+    "fiberContent": "2 g"
+  },
+  "rating": null,
+  "ratingCount": null,
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2026/08/Creamy-Tomato-Chicken-Overhead-Wide.jpg",
+  "cuisine": "American",
+  "category": "Main Course",
+  "ingredients": [
+    "2  chicken breasts (fileted, (about 1.5 lbs.) $3.86*)",
+    "3 Tbsp vegetable oil (divided, $0.12)",
+    "1¼ tsp salt (divided, $0.05)",
+    "1 tsp black pepper (divided, $0.16)",
+    "½  onion (small dice, (160g, 1 cup) $0.41)",
+    "2  garlic cloves (minced, (1 Tbsp) $0.12)",
+    "3 Tbsp tomato paste ($0.21)",
+    "2 Tbsp all-purpose flour (20g, $0.03)",
+    "2 cups milk (16oz., $0.37**)",
+    "1 tsp Italian seasoning ($0.05)",
+    "½ tsp garlic powder ($0.02)",
+    "3  Roma tomatoes (medium dice, (300g, 1½ cups) $0.75***)"
+  ],
+  "instructions": [
+    "Gather and prepare all ingredients.",
+    "Take each chicken breast and cut it evenly down the middle, lengthwise.",
+    "Heat 2 tablespoons of vegetable oil in a large skillet over medium-high heat. Pat the chicken breasts dry and season both sides with ½ teaspoon each of salt and ½ teaspoon of pepper.",
+    "Once hot, carefully lay the chicken in the pan. Let them sear for 4-5 minutes, then flip and continue cooking for an additional 5 minutes. Remove them from the pan and set aside. Make sure the chicken reaches an internal temperature of 165°F and continue cooking if needed.",
+    "Turn the heat down to medium and add the onions and garlic. Cook for 3 minutes to soften the onions, stirring occasionally.",
+    "Add the tomato paste and cook for 1-2 minutes, stirring into the onions.",
+    "Drizzle in the remaining oil, and sprinkle in the flour. Cook for 1 minute, stirring to combine.",
+    "Whisk in the milk, Italian seasoning, garlic powder, and remaining salt and pepper. Continue cooking until thickened, about 2 minutes. Taste and adjust for seasoning, if needed.",
+    "Add the chopped tomatoes and return the chicken and any drippings to the pan to warm through."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "2  chicken breasts (fileted, (about 1.5 lbs.) $3.86*)",
+      "item": "chickenbreast",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 Tbsp vegetable oil (divided, $0.12)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1¼ tsp salt (divided, $0.05)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp black pepper (divided, $0.16)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½  onion (small dice, (160g, 1 cup) $0.41)",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2  garlic cloves (minced, (1 Tbsp) $0.12)",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 Tbsp tomato paste ($0.21)",
+      "item": "tomatopaste",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp all-purpose flour (20g, $0.03)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cups milk (16oz., $0.37**)",
+      "item": "milk",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp Italian seasoning ($0.05)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp garlic powder ($0.02)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3  Roma tomatoes (medium dice, (300g, 1½ cups) $0.75***)",
+      "item": "tomatoes_grape",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "2977f6a63c15"
+}

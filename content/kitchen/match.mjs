@@ -439,10 +439,29 @@ export function unreachableStock(items) {
  * Section names are kept as their own entry rather than dropped, because "For the sauce" is
  * information about what the next steps belong to.
  */
+/* JSON-LD is embedded in HTML and plenty of publishers leave HTML entities inside its string values.
+ * Leitesculinaria's frittata method carries the numeric entity for a space, plus quote and apostrophe
+ * entities, inside its own recipeInstructions. A capture taken raw then does not match a card whose
+ * sourceText was copied off the rendered page, and validate.mjs reported six inventions that were
+ * really six entities. A gate that cries wolf is a gate somebody switches off, so decoding is part of
+ * capturing rather than something every caller has to remember. */
+export function decodeEntities(str) {
+  return String(str)
+    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(Number(d)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    // LAST, always. Decode it first and an escaped entity becomes a character never on the page.
+    .replace(/&amp;/g, '&');
+}
+
 export function flattenInstructions(v, depth = 0) {
   if (v === null || v === undefined || depth > 4) return [];
   if (typeof v === 'string') {
-    return v.split(/\r?\n/).map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+    return decodeEntities(v).split(/\r?\n/).map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
   }
   if (Array.isArray(v)) return v.flatMap((x) => flattenInstructions(x, depth + 1));
   if (typeof v === 'object') {
@@ -504,7 +523,7 @@ export function extractRecipe(html) {
         keywords: typeof o.keywords === 'string'
           ? o.keywords.split(',').map((k) => k.trim()).filter(Boolean).slice(0, 12)
           : (Array.isArray(o.keywords) ? o.keywords.map(String).slice(0, 12) : []),
-        ingredients: (o.recipeIngredient || []).map((x) => String(x)),
+        ingredients: (o.recipeIngredient || []).map((x) => decodeEntities(x).replace(/\s+/g, ' ').trim()),
         rating: o.aggregateRating?.ratingValue ?? null,
         ratingCount: o.aggregateRating?.ratingCount ?? o.aggregateRating?.reviewCount ?? null,
       });

@@ -1,0 +1,60 @@
+{
+  "id": "summertraybake",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Summer traybake chicken",
+    "url": "https://www.bbcgoodfood.com/recipes/summer-traybake-chicken",
+    "provider": "bbcgoodfood.com"
+  },
+  "yield": 4,
+  "totalTime": "PT15M",
+  "prepTime": null,
+  "cookTime": "PT15M",
+  "nutrition": null,
+  "rating": null,
+  "ratingCount": null,
+  "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-338668_12-033f966.jpg?resize=440,400",
+  "cuisine": "Italian",
+  "category": "Dinner, Lunch, Main course, Supper",
+  "ingredients": [
+    "4 chicken breasts",
+    "1 tbsp olive oil",
+    "250g cherry tomatoes",
+    "4 tbsp pesto"
+  ],
+  "instructions": [
+    "Put the chicken breasts in a large, shallow roasting tray and drizzle with olive oil. Grill for 10 mins, then add cherry tomatoes and grill for another 5 mins until chicken is cooked. Drizzle pesto over the top and serve."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "4 chicken breasts",
+      "item": "chickenbreast",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tbsp olive oil",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "250g cherry tomatoes",
+      "item": "tomatoes_grape",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "4 tbsp pesto",
+      "item": "pesto",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "5c7339178129"
+}

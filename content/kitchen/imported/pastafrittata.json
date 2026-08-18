@@ -1,0 +1,103 @@
+{
+  "id": "pastafrittata",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Leftover Pasta Frittata",
+    "url": "https://leitesculinaria.com/98925/recipes-leftover-pasta-frittata.html",
+    "provider": "leitesculinaria.com"
+  },
+  "yield": [
+    "4",
+    "4 servings"
+  ],
+  "totalTime": "PT25M",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "nutrition": {
+    "servingSize": "1 portion",
+    "calories": "301 kcal",
+    "carbohydrateContent": "22 g",
+    "proteinContent": "15 g",
+    "fatContent": "16 g",
+    "saturatedFatContent": "4 g",
+    "transFatContent": "0.03 g",
+    "cholesterolContent": "284 mg",
+    "sodiumContent": "290 mg",
+    "fiberContent": "1 g",
+    "sugarContent": "1 g",
+    "unsaturatedFatContent": "10 g"
+  },
+  "rating": "4.69",
+  "ratingCount": "22",
+  "image": "https://leitesculinaria.com/wp-content/uploads/2020/06/leftover-pasta-frittata.jpg",
+  "cuisine": "American",
+  "category": "Mains",
+  "ingredients": [
+    "6 large eggs",
+    "1/4 cup grated Parmesan or pecorino cheese",
+    "2 tablespoons olive oil (plus more oil or butter for coating the skillet)",
+    "1/8 teaspoon salt",
+    "Freshly ground black pepper",
+    "4 ounces cold leftover spaghetti"
+  ],
+  "instructions": [
+    "Mix the eggs",
+    "Crack the 6 large eggs into a bowl and whisk very well. Mix in the 1/4 cup grated Parmesan or pecorino cheese, 2 tablespoons olive oil, 1/8 teaspoon salt, and a grind of pepper.",
+    "Prep the pasta",
+    "☞ If you have sauced spaghettiHeat the 4 ounces cold leftover spaghetti and two tablespoons of water in a large nonstick skillet over medium-high heat. Once warm (but before it sizzles), drain any excess liquid and stir the pasta into the egg mixture. Wipe the skillet clean. Add enough oil or butter to slick the bottom and sides of the skillet. Add the pasta-egg mixture, distributing the spaghetti evenly if it clumps. ☞ If you have plain, unsauced spaghettiHeat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
+    "Cook the frittata",
+    "When the edges of the frittata look set and the center is still somewhat liquid, about 8 minutes, run a thin metal spatula around the skillet to loosen the sides of the frittata, then carefully slip it underneath to loosen the bottom.",
+    "Flip the frittata",
+    "Invert a dinner plate over the skillet. With one hand on the plate and the other on the handle, flip the frittata onto the plate in one confident \"up-and-over\" motion.",
+    "Cook the other side",
+    "Quickly slick the skillet with a little more oil or butter. Then, using a spatula, slide the frittata back into the pan. Don’t worry if things are looking a little Humpty Dumpty—just fit it all back together again and keep it over low heat until it's cooked through, about 7 minutes more.",
+    "Cool and serve",
+    "Poke a hole in the middle of the frittata with the tip of the spatula to check that the egg is set. When it's ready, slide the frittata onto a plate. Let it cool a bit, then slice into wedges and serve. ☞ TESTER TIP: A frittata tastes good hot, better after it has cooled for half an hour or so, and possibly best after it has had a chance to regroup on the countertop for an afternoon. Just sayin'."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "6 large eggs",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/4 cup grated Parmesan or pecorino cheese",
+      "item": "parmesan",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 tablespoons olive oil (plus more oil or butter for coating the skillet)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/8 teaspoon salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "Freshly ground black pepper",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "4 ounces cold leftover spaghetti",
+      "item": "spaghetti_cooked",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "98b8d62042c9"
+}

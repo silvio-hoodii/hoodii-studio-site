@@ -2,7 +2,7 @@
   "id": "pastafrittata",
   "image": "https://leitesculinaria.com/wp-content/uploads/2020/06/leftover-pasta-frittata-fp.jpg",
   "name": "Leftover Pasta Frittata",
-  "build": "2026-08-12a",
+  "build": "2026-08-17a",
   "form": "dish",
   "meal": [
     "lunch",
@@ -130,8 +130,8 @@
     },
     {
       "n": 2,
-      "text": "Heat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
-      "sourceText": "Prep the pasta. If you have plain, unsauced spaghetti: Heat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
+      "text": "If you have plain, unsauced spaghetti: Heat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
+      "sourceText": "If you have plain, unsauced spaghettiHeat enough oil or butter to slick the bottom and sides of a large nonstick skillet over medium-high heat. Add the spaghetti. Let it get crisp and browned on the bottom, pressing down the pasta once or twice with a spatula. Reduce the heat to low and stir in the egg mixture.",
       "uses": [
         {
           "ref": "spaghetti_cold",
@@ -266,7 +266,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": false,
-    "readAt": "2026-08-12a",
+    "readAt": "2026-08-17a",
     "statement": "Every instruction is Leite's Culinaria's own sentence, in her order, with her times and her amounts, at her scale of 4 servings. Nothing was scaled, substituted, re-panned or re-heated. Her step 2 is written as two branches, one for sauced pasta and one for plain; the plain branch appears here verbatim because the pasta is plain, and choosing between two branches the author wrote is not a change to the recipe. Parmesan is one of the two cheeses she names. Everything this app adds (what a word means, which of his pans, protein arithmetic, timers, heat observables) is annotation attached to her sentences and is rendered as visibly separate from them.",
     "sources": [
       {
@@ -276,6 +276,6 @@
         "note": "Leftover Pasta Frittata. 4.69 out of 5 from 22 ratings, 25 minutes total, serves 4. Fetched 2026-08-12; the recipe's structured data omits the instructions, so the step text was taken from the rendered page and the two branches of step 2 were read in full before choosing one."
       }
     ],
-    "readHash": "9f46a1fa"
+    "readHash": "7f753c25"
   }
 }

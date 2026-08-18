@@ -1,0 +1,95 @@
+{
+  "id": "bbcbakeddrumsticks",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "Baked chicken drumsticks",
+    "url": "https://www.bbcgoodfood.com/recipes/baked-chicken-drumsticks",
+    "provider": "bbcgoodfood.com"
+  },
+  "yield": 4,
+  "totalTime": "PT45M",
+  "prepTime": "PT5M",
+  "cookTime": "PT40M",
+  "nutrition": {
+    "calories": "282 calories",
+    "fatContent": "17 grams fat",
+    "saturatedFatContent": "4 grams saturated fat",
+    "carbohydrateContent": "0.6 grams carbohydrates",
+    "sugarContent": "0.4 grams sugar",
+    "fiberContent": "2 grams fiber",
+    "proteinContent": "31 grams protein",
+    "sodiumContent": "0.4 milligram of sodium"
+  },
+  "rating": null,
+  "ratingCount": null,
+  "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Baked-chicken-drumsticks-d17cde0.png?resize=768,713",
+  "cuisine": null,
+  "category": "Dinner",
+  "ingredients": [
+    "1 kg chicken drumsticks",
+    "2 tbsp olive oil",
+    "1 tbsp ground cumin",
+    "1 tbsp smoked paprika",
+    "2 tsp dried oregano",
+    "2 tsp garlic granules",
+    "1 tsp ground black pepper"
+  ],
+  "instructions": [
+    "Heat the oven to 200C/180C fan/gas 6. Tip the chicken drumsticks into a large bowl and pour in the oil. Season with lots of salt, then add all the remaining ingredients and toss well to coat.",
+    "Put the drumsticks into a large roasting tin, along with any oil and spices from the bowl, ensuring there is plenty of space around each drumstick.",
+    "Bake in the oven for 20 mins, then flip each drumstick and bake for a further 20-25 mins until cooked through and caramelised."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1 kg chicken drumsticks",
+      "item": "chickendrumsticks",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 tbsp olive oil",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tbsp ground cumin",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tbsp smoked paprika",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 tsp dried oregano",
+      "item": "oregano",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 tsp garlic granules",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp ground black pepper",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "ffdcf64865fe"
+}

@@ -31,10 +31,10 @@
     "150g porridge oats (gluten free if needed)",
     "2 eggs",
     "50ml milk (any kind)",
-    "½ tsp  baking powder (gluten free if needed)",
-    "1 tsp  vanilla extract (optional)",
-    "2 tsp  maple syrup (optional)",
-    "2 tsp  flavourless oil or unsalted butter, to cook",
+    "½ tsp baking powder (gluten free if needed)",
+    "1 tsp vanilla extract (optional)",
+    "2 tsp maple syrup (optional)",
+    "2 tsp flavourless oil or unsalted butter, to cook",
     "poached egg and roasted tomatoes, or",
     "fresh berries and maple syrup"
   ],
@@ -74,28 +74,28 @@
       "optional": false
     },
     {
-      "line": "½ tsp  baking powder (gluten free if needed)",
+      "line": "½ tsp baking powder (gluten free if needed)",
       "item": null,
       "staple": true,
       "gap": null,
       "optional": false
     },
     {
-      "line": "1 tsp  vanilla extract (optional)",
+      "line": "1 tsp vanilla extract (optional)",
       "item": null,
       "staple": false,
       "gap": "vanilla",
       "optional": true
     },
     {
-      "line": "2 tsp  maple syrup (optional)",
+      "line": "2 tsp maple syrup (optional)",
       "item": null,
       "staple": true,
       "gap": null,
       "optional": true
     },
     {
-      "line": "2 tsp  flavourless oil or unsalted butter, to cook",
+      "line": "2 tsp flavourless oil or unsalted butter, to cook",
       "item": null,
       "staple": false,
       "gap": null,
@@ -116,5 +116,5 @@
       "optional": false
     }
   ],
-  "captureHash": "26df7daee6e0"
+  "captureHash": "4eff2d4d1170"
 }

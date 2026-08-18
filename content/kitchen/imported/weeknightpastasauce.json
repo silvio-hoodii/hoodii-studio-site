@@ -1,0 +1,107 @@
+{
+  "id": "weeknightpastasauce",
+  "fetchedAt": "2026-08-17",
+  "via": "url",
+  "source": {
+    "name": "The Best Weeknight Pasta Sauce",
+    "url": "https://www.budgetbytes.com/the-best-weeknight-pasta-sauce/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "6",
+    "6 (about ¾ cups each)"
+  ],
+  "totalTime": "PT45M",
+  "prepTime": "PT5M",
+  "cookTime": "PT40M",
+  "nutrition": {
+    "servingSize": "0.75 Cups",
+    "calories": "198 kcal",
+    "carbohydrateContent": "11 g",
+    "proteinContent": "9 g",
+    "fatContent": "14 g",
+    "fiberContent": "3 g",
+    "sodiumContent": "234 mg"
+  },
+  "rating": "4.64",
+  "ratingCount": "47",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2018/04/weeknight-pasta-pot.jpg",
+  "cuisine": "American",
+  "category": "Dinner",
+  "ingredients": [
+    "½ lb. ground beef ($3.16)",
+    "1 Tbsp  olive oil ($0.19)",
+    "1 small onion ($0.39)",
+    "2 Tbsp butter ($0.24)",
+    "28 oz. can crushed tomatoes (1 can, $1.52)",
+    "½ tsp Italian seasoning blend ($0.05)",
+    "black pepper (freshly cracked, $0.05)",
+    "salt (to taste, $0.02)"
+  ],
+  "instructions": [
+    "Add the ground beef and olive oil to a pot and sauté over medium until the beef is cooked through (about 5 minutes). If you're using a higher fat content beef (10% or higher), you may want to drain the excess fat once the beef has browned.",
+    "While the beef is cooking, finely dice the onion. Add the diced onion and butter to the cooked beef. Continue to sauté until the onion is soft and translucent (about 5 minutes).",
+    "Next, add the crushed tomatoes, Italian seasoning blend, and some freshly cracked pepper (10-15 cranks of a pepper mill). Stir everything to combine.",
+    "Place a lid on the pot and allow it to come up to a simmer. Once simmering, reduce the heat to low and let the sauce simmer for 30 minutes.",
+    "After a minimum of 30 minutes simmering, add about ½ tsp salt, stir to combine, then taste and add more if needed. The flavor of the sauce will deepen and the complexities will pop once the salt is added. Serve over pasta or your favorite roasted vegetables."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "½ lb. ground beef ($3.16)",
+      "item": "beef-raw",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp  olive oil ($0.19)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 small onion ($0.39)",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp butter ($0.24)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "28 oz. can crushed tomatoes (1 can, $1.52)",
+      "item": null,
+      "staple": false,
+      "gap": "tinned tomatoes",
+      "optional": false
+    },
+    {
+      "line": "½ tsp Italian seasoning blend ($0.05)",
+      "item": "seasoning",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "black pepper (freshly cracked, $0.05)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "salt (to taste, $0.02)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "9c2543763140"
+}

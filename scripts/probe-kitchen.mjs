@@ -14,11 +14,19 @@
  * Both were found by opening the page. Neither was reachable from a static gate, for the same reason
  * scripts/probe-gym.js exists: the gates check that the code is consistent with itself.
  *
- * NO WRITES, AND THAT IS STRUCTURAL RATHER THAN CAREFUL. Everything here is a GET or the `checkPaste`
- * server action, which reads the stock fold and returns a score. Nothing under /kitchen/api is
- * touched and nothing here needs the unlock cookie. If you add a case that would POST to a write
- * route, stop: there is no development database, KITCHEN_DATABASE_URL is the real Neon store, and a
- * probe writing into his stock or his cook log is worse than no probe at all.
+ * NO WRITES, AND IT IS ENFORCED IN THE PAGE RATHER THAN PROMISED IN THIS COMMENT.
+ *
+ * The first version of this file said the guarantee was "structural rather than careful" and it was
+ * neither: it patched nothing, and three POST routes exist under /kitchen/api, one of which
+ * (`/finish`) consumes stock. `scripts/lint-probe-routes.mjs` walks only the gym. The gym had exactly
+ * this incident, got a build gate for it, and the kitchen got a sentence. By this project's own
+ * definition that is decoration, and an adversarial pass said so on the day it was written.
+ *
+ * `installWriteGuard` below replaces window.fetch in every tab before any check runs, and any POST,
+ * PUT, PATCH or DELETE to /kitchen/api throws instead of leaving the browser. There is no development
+ * database: KITCHEN_DATABASE_URL is the real Neon store, so an unguarded probe writes into his actual
+ * stock and cook log. A check that cannot run without the guard is the only version of this that is
+ * worth the sentence above it.
  *
  * NO DEPENDENCY. It drives Chrome over raw CDP with node's built-in WebSocket. Adding playwright to
  * this repo for one script would put a browser download into the deploy path.
@@ -125,9 +133,39 @@ const PASTE = [
 
 const FIND_BOX = '[...document.querySelectorAll("details")].find(x => x.textContent.indexOf("Or paste the recipe") !== -1)';
 
+/* Installed on every tab, and every check goes through a helper that refuses to proceed without it.
+ * Returns the guard's own report so a test can assert that nothing was even attempted. */
+const WRITE_GUARD = `
+  (() => {
+    if (window.__probeGuard) return 'already';
+    window.__probeGuard = { blocked: [] };
+    const real = window.fetch;
+    window.fetch = function (input, init) {
+      const url = String(typeof input === 'string' ? input : (input && input.url) || '');
+      const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
+      if (method !== 'GET' && method !== 'HEAD' && url.indexOf('/kitchen/api') !== -1) {
+        window.__probeGuard.blocked.push(method + ' ' + url);
+        return Promise.reject(new Error('probe write guard: refused ' + method + ' ' + url));
+      }
+      return real.apply(this, arguments);
+    };
+    return 'installed';
+  })()
+`;
+
+async function guarded(c) {
+  const state = await c.evaluate(WRITE_GUARD);
+  if (state !== 'installed' && state !== 'already') {
+    throw new Error('write guard did not install; refusing to run against a real database');
+  }
+  return c;
+}
+
 const target = await openTab(BASE + '/kitchen/want');
-const { ws, ready, evaluate } = connect(target);
-await ready;
+const conn = connect(target);
+await conn.ready;
+const { ws, evaluate } = conn;
+await guarded(conn);
 await sleep(2500);
 
 try {
@@ -185,6 +223,7 @@ try {
     const t2 = await openTab(BASE + path);
     const c2 = connect(t2);
     await c2.ready;
+    await guarded(c2);
 
     /* WAIT FOR CONTENT BEFORE JUDGING LAYOUT, and assert that it arrived.
      *
@@ -197,7 +236,10 @@ try {
      * So height is now an assertion rather than a detail printed beside one. */
     let tall = 0;
     for (let i = 0; i < 40; i++) {
-      tall = await c2.evaluate('document.body.scrollHeight');
+      /* `document.body` is null until the document is parsed, and the write guard now installs the
+       * instant the tab connects, which is EARLIER than the first version measured. Read it defensively
+       * and let the loop wait, rather than throwing on a page that is merely still arriving. */
+      tall = await c2.evaluate('document.body ? document.body.scrollHeight : 0');
       if (tall > 300) break;
       await sleep(500);
     }
@@ -206,6 +248,12 @@ try {
     check(path + ' fits a 390px screen', tall > 300 && !wide, wide ? 'the page scrolls sideways' : '');
     c2.ws.close();
   }
+  /* ---- 5. nothing tried to write, and the guard is the thing saying so ----
+   * Reported rather than assumed. If a future check does POST to a write route this goes red and
+   * names it, instead of the write silently landing in his stock log. */
+  const blocked = await evaluate('JSON.stringify(window.__probeGuard.blocked)');
+  const list = JSON.parse(blocked || '[]');
+  check('no check attempted a write to /kitchen/api', list.length === 0, list.join(', '));
 } finally {
   ws.close();
   proc.kill();
