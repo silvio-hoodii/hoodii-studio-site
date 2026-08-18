@@ -543,30 +543,30 @@
       "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
     },
     "blackvinegar": {
-    "n": "Chinkiang black vinegar",
-    "where": "pantry",
-    "state": "none",
-    "note": "Catalogued 2026-08-18, not owned. Chinkiang, also spelled Zhenjiang, is a dark malty rice vinegar and it is NOT the distilled white vinegar in the cupboard: it is the sour note in General Tso and in most northern Chinese sauces. Gold Plum 554 ml was $2.99 at Superstore on 2026-08-18. Walmart lists Hengshun at $3.97 on an alphanumeric SKU, which is the marketplace pattern, so the shelf is unproven there."
-  },
-  "driedchilli": {
-    "n": "whole dried red chillies",
-    "where": "pantry",
-    "state": "none",
-    "note": "Catalogued 2026-08-18, not owned. Distinct from the fresh chilli gap, from chili powder and from crushed red pepper: these are whole dried pods that go into hot oil for aroma. Omnivore Cookbook General Tso wants 7 to 8 and her footnote says they add aroma rather than heat. Tastie Dried Red Chili 120 g was $2.29 at Superstore on 2026-08-18, and it is not sold as Chinese or Korean, which is his call to make."
-  },
-  "tomatoes_round": {
-    "n": "fresh tomatoes",
-    "where": "fridge",
-    "state": "none",
-    "note": "Round slicing tomatoes on the vine, 5 of them, receipt photo 20260814_121315 and the count stated by Silvio. Distinct from the grape tomatoes and from anything tinned. Catalogued 2026-08-18: it had existed only as stock_event 74, so validate.mjs refused a recipe pointing at it and the app printed the raw id where a name belongs."
-  },
-  "beanmedley": {
-    "n": "canned bean medley",
-    "where": "pantry",
-    "state": "none",
-    "note": "UNCERTAIN COUNT, per stock_event 71: two receipt photos seven seconds apart may be one can twice or two cans, recorded as 1. Ask before a recipe leans on two. Catalogued 2026-08-18 for the same reason as tomatoes_round, and because burrito and chilli recipes are rejected for kidney beans while this sits in the pantry unmatched."
-  },
-  "tomatoes_grape": {
+      "n": "Chinkiang black vinegar",
+      "where": "pantry",
+      "state": "none",
+      "note": "Catalogued 2026-08-18, not owned. Chinkiang, also spelled Zhenjiang, is a dark malty rice vinegar and it is NOT the distilled white vinegar in the cupboard: it is the sour note in General Tso and in most northern Chinese sauces. Gold Plum 554 ml was $2.99 at Superstore on 2026-08-18. Walmart lists Hengshun at $3.97 on an alphanumeric SKU, which is the marketplace pattern, so the shelf is unproven there."
+    },
+    "driedchilli": {
+      "n": "whole dried red chillies",
+      "where": "pantry",
+      "state": "none",
+      "note": "Catalogued 2026-08-18, not owned. Distinct from the fresh chilli gap, from chili powder and from crushed red pepper: these are whole dried pods that go into hot oil for aroma. Omnivore Cookbook General Tso wants 7 to 8 and her footnote says they add aroma rather than heat. Tastie Dried Red Chili 120 g was $2.29 at Superstore on 2026-08-18, and it is not sold as Chinese or Korean, which is his call to make."
+    },
+    "tomatoes_round": {
+      "n": "fresh tomatoes",
+      "where": "fridge",
+      "state": "none",
+      "note": "Round slicing tomatoes on the vine, 5 of them, receipt photo 20260814_121315 and the count stated by Silvio. Distinct from the grape tomatoes and from anything tinned. Catalogued 2026-08-18: it had existed only as stock_event 74, so validate.mjs refused a recipe pointing at it and the app printed the raw id where a name belongs."
+    },
+    "beanmedley": {
+      "n": "canned bean medley",
+      "where": "pantry",
+      "state": "none",
+      "note": "UNCERTAIN COUNT, per stock_event 71: two receipt photos seven seconds apart may be one can twice or two cans, recorded as 1. Ask before a recipe leans on two. Catalogued 2026-08-18 for the same reason as tomatoes_round, and because burrito and chilli recipes are rejected for kidney beans while this sits in the pantry unmatched."
+    },
+    "tomatoes_grape": {
       "n": "grape tomatoes",
       "where": "pantry",
       "state": "none",
@@ -620,6 +620,18 @@
       "where": "pantry",
       "note": "NOT the white sugar. Added to the catalogue 2026-08-14 because it is the single thing standing between this kitchen and a published Mongolian ground beef recipe it otherwise satisfies exactly (Salt & Lavender, 4.92 from 25 ratings). Her sauce is a third of a cup of it. White sugar, honey and maple syrup are all in the cupboard and any of them is a substitution, which only Silvio may decide.",
       "src": "doc"
+    },
+    "vanilla": {
+      "n": "artificial vanilla extract",
+      "where": "pantry",
+      "state": "none",
+      "note": "Compliments ARTIFICIAL Vanilla Extract, 250 mL, read off the label in photo 20260817_222001. Artificial means vanillin rather than bean extract: in the 31 corpus lines that bake it, that is a flavour difference and not a functional one. Bought 2026-08-17 at a Sobeys or Safeway, since Compliments is their brand."
+    },
+    "chocolatechips": {
+      "n": "dark chocolate chips",
+      "where": "pantry",
+      "state": "none",
+      "note": "Compliments Dark Chocolate Chips, 225 g, read off the label in photo 20260817_222004. CHIPS, not a bar: chips carry stabilisers that hold their shape, so a recipe asking for chopped chocolate to melt smoothly is a substitution rather than a match. Bought 2026-08-17."
     }
   }
 }

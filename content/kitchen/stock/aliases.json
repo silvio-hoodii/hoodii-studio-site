@@ -810,6 +810,20 @@
     "cinnamon": [
       "cinnamon",
       "ground cinnamon"
+    ],
+    "vanilla": [
+      "vanilla extract",
+      "vanilla essence",
+      "artificial vanilla",
+      "pure vanilla",
+      "vanilla"
+    ],
+    "chocolatechips": [
+      "chocolate chips",
+      "chocolate chunks",
+      "dark chocolate chips",
+      "chocolate morsels",
+      "chocolate chip"
     ]
   },
   "_knownGaps": {
@@ -855,7 +869,6 @@
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
     "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing and sesame oil are the ones that ARE here.",
     "sour cream": "No soured cream, creme fraiche, buttermilk or yogurt substitute for cooking. There is Greek yogurt, which splits if boiled, so it is not a swap in a hot sauce.",
-    "vanilla": "No vanilla extract, paste or pods.",
     "beans": "No tinned beans of any kind: kidney, pinto, cannellini, black, chickpeas or butter beans.",
     "tinned sweetcorn": "No tinned sweetcorn or green chiles. There IS frozen corn.",
     "salsa": "No salsa, barbecue sauce or taco sauce.",
@@ -873,9 +886,10 @@
     "wine and cider vinegar": "No white wine, red wine, cider or balsamic vinegar. The two vinaigrettes in the fridge are dressings, not vinegar. Split off the `vinegar` row 2026-08-16 for the same reason as rice vinegar.",
     "wholewheat flour": "No wholemeal or wholewheat flour. The 2.5 kg bag is plain white all-purpose. Added 2026-08-16 with the baking ingest.",
     "golden syrup": "No golden syrup. It is a British invert-sugar syrup and it is what holds a flapjack together. Honey and maple syrup are both here.",
-    "chocolate": "No chocolate of any kind: no bar, no chips, no chunks. There IS natural cocoa powder, which is not a substitute anywhere the recipe wants chocolate to MELT.",
+    "chocolate": "NARROWED 2026-08-17. A 225 g bag of Compliments DARK CHOCOLATE CHIPS arrived and is the stock item chocolatechips. Still missing: any chocolate in bar form, white and milk chocolate, and cooking chocolate. Chips hold their shape on purpose, so a recipe that wants chocolate chopped and melted smooth is not the same ask.",
     "mixed spice": "No mixed spice or pumpkin pie spice, the pre-blended warm-spice mixes. Ground cinnamon arrived 2026-08-16 and is the only one of their components here.",
-    "bananas": "No bananas. They are the whole structure of a banana bread or a banana oat muffin, not a flavour, so nothing stands in."
+    "bananas": "No bananas. They are the whole structure of a banana bread or a banana oat muffin, not a flavour, so nothing stands in.",
+    "vanillapod": "No vanilla pods, beans or paste. There IS a 250 mL bottle of Compliments artificial vanilla extract since 2026-08-17, which is what almost every recipe means by vanilla."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -1290,6 +1304,23 @@
       "cinnamon stick",
       "cinnamon sticks",
       "cinnamon quill"
+    ],
+    "vanilla": [
+      "vanilla pod",
+      "vanilla bean",
+      "vanilla paste",
+      "vanilla sugar",
+      "vanilla ice cream",
+      "vanilla yogurt",
+      "vanilla protein",
+      "vanilla whey"
+    ],
+    "chocolatechips": [
+      "white chocolate",
+      "chocolate bar",
+      "cocoa",
+      "chocolate spread",
+      "hot chocolate"
     ]
   },
   "_gapAliases": {
@@ -1726,13 +1757,6 @@
       "buttermilk",
       "quark"
     ],
-    "vanilla": [
-      "vanilla extract",
-      "vanilla essence",
-      "vanilla paste",
-      "vanilla pod",
-      "vanilla bean"
-    ],
     "beans": [
       "kidney beans",
       "pinto beans",
@@ -1928,8 +1952,6 @@
       "chocolate",
       "dark chocolate",
       "milk chocolate",
-      "chocolate chips",
-      "chocolate chunks",
       "white chocolate",
       "chocolate bar",
       "cooking chocolate",
@@ -1947,6 +1969,11 @@
       "ripe bananas",
       "overripe bananas",
       "mashed banana"
+    ],
+    "vanillapod": [
+      "vanilla paste",
+      "vanilla pod",
+      "vanilla bean"
     ]
   },
   "_substitutes": {
