@@ -1,0 +1,151 @@
+{
+  "id": "arrozconpolloaji",
+  "fetchedAt": "2026-08-19",
+  "via": "url",
+  "source": {
+    "name": "Arroz con Pollo, Peruvian Chicken with Cilantro Rice",
+    "url": "https://eatatourtable.com/peruvian-arroz-con-pollo/",
+    "provider": "eatatourtable.com"
+  },
+  "yield": null,
+  "totalTime": null,
+  "prepTime": null,
+  "cookTime": null,
+  "nutrition": null,
+  "rating": "4.21",
+  "ratingCount": "34",
+  "image": "https://eatatourtable.com/wp-content/uploads/2015/11/arroz-con-pollo_2-1.png",
+  "cuisine": null,
+  "category": null,
+  "ingredients": [
+    "1/2 cup vegetable oil",
+    "1 12 oz gluten-free beer",
+    "1 medium onion",
+    "2 large bunches of cilantro",
+    "8-10 chicken thighs or legs (trimmed)",
+    "2 tsp aji amarillo",
+    "1 tsp garlic",
+    "1 cup frozen mixed vegetables (traditionally peas and carrots)",
+    "3 cups washed jasmine rice",
+    "3 cups gluten-free chicken broth",
+    "1 tsp salt",
+    "salt",
+    "pepper",
+    "lime wedges (optional)"
+  ],
+  "instructions": [
+    "Heat oil in large pot.",
+    "Lightly salt and pepper chicken and brown, once browned, remove and set aside.",
+    "Saute onion, garlic and aji amarillo until fragrant.",
+    "Blend cilantro and beer (a magic or nutribullet is great for this).",
+    "Add cilantro/beer blend, chicken stock and salt to pot and stir.",
+    "Return chicken and bring to boil.",
+    "Reduce heat to medium and let simmer until chicken is cooked (about 30 minutes).",
+    "Remove chicken, there should be approximately 6 cups of liquid, add more water if needed.",
+    "Add washed rice and frozen mixed vegetables.",
+    "Bring to boil, cover and reduce to low.",
+    "Cook rice for 25 minutes or until done.",
+    "Serve with chicken and lime wedges."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1/2 cup vegetable oil",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 12 oz gluten-free beer",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 medium onion",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 large bunches of cilantro",
+      "item": null,
+      "staple": false,
+      "gap": "fresh coriander",
+      "optional": false
+    },
+    {
+      "line": "8-10 chicken thighs or legs (trimmed)",
+      "item": "chickenthighs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 tsp aji amarillo",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp garlic",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 cup frozen mixed vegetables (traditionally peas and carrots)",
+      "item": "frozenveg",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 cups washed jasmine rice",
+      "item": "longgrainrice",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 cups gluten-free chicken broth",
+      "item": "stock",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "pepper",
+      "item": "peppers",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "lime wedges (optional)",
+      "item": "limes",
+      "staple": false,
+      "gap": null,
+      "optional": true
+    }
+  ],
+  "captureHash": "0790eafd98fc"
+}

@@ -532,8 +532,7 @@
       "long-grain rice",
       "white rice",
       "rice",
-      "basmati rice",
-      "jasmine rice"
+      "basmati rice"
     ],
     "shortgrainrice": [
       "short grain rice",
@@ -824,6 +823,69 @@
       "dark chocolate chips",
       "chocolate morsels",
       "chocolate chip"
+    ],
+    "cilantro": [
+      "cilantro",
+      "fresh cilantro",
+      "coriander",
+      "fresh coriander",
+      "coriander leaves",
+      "cilantro leaves",
+      "bunch of cilantro",
+      "bunches of cilantro",
+      "culantro",
+      "cilantro stems",
+      "fresh coriander leaves",
+      "minced cilantro",
+      "chopped cilantro"
+    ],
+    "jalapeno": [
+      "jalapeno",
+      "jalapenos",
+      "jalapeno pepper",
+      "jalapeno peppers",
+      "fresh jalapeno",
+      "green chilli",
+      "green chili",
+      "green chillies",
+      "serrano",
+      "serrano pepper"
+    ],
+    "ajiamarillo": [
+      "aji amarillo",
+      "aji amarillo paste",
+      "aji amarillo en pasta",
+      "pasta de aji amarillo",
+      "yellow pepper paste",
+      "peruvian yellow chili paste",
+      "aji amarillo chili paste"
+    ],
+    "beer": [
+      "beer",
+      "lager",
+      "dark beer",
+      "pale ale",
+      "gluten free beer",
+      "gluten-free beer",
+      "cerveza",
+      "cerveza rubia",
+      "cerveza negra",
+      "malty beer",
+      "light beer",
+      "bottle of beer",
+      "can of beer"
+    ],
+    "asparagus": [
+      "asparagus",
+      "asparagus spears",
+      "bunch of asparagus",
+      "asparagus spear"
+    ],
+    "jasminerice": [
+      "jasmine rice",
+      "thai jasmine rice",
+      "washed jasmine rice",
+      "jasmine"
     ]
   },
   "_knownGaps": {
@@ -840,8 +902,6 @@
     "heavy cream": "No cream. Milk is not a substitute in anything that reduces.",
     "pickled ginger": "Benishoga, garnish on gyudon. Marked optional by its own recipe.",
     "potatoes": "NARROWED 2026-08-16. Nine RED potatoes arrived 08-14 and are now the stock item `potatoes_red`, so plain 'potatoes', 'new potatoes' and 'baby potatoes' are no longer a gap. Red-skinned potatoes are waxy: good boiled, roasted, in a stew or a salad. What is still missing is a FLOURY potato, so mash, baked potatoes and chips still do not work.",
-    "fresh coriander": "Also sold as cilantro. None in the kitchen. Parsley looks similar and tastes nothing like it, so it is not a swap.",
-    "fresh chilli": "No fresh chillies of any colour, scotch bonnet and thai chilli included. The crushed red pepper and crushed jalapeno bring heat but not the fresh fruity flavour.",
     "fish sauce": "No fish sauce. Soy sauce is saltier and not funky, so it changes a Thai or Vietnamese dish substantially.",
     "fresh mint": "No mint.",
     "coconut milk": "No coconut milk. Nothing here substitutes for it in a curry.",
@@ -914,7 +974,10 @@
       "cauliflower rice",
       "basmati and wild",
       "risotto rice",
-      "paella rice"
+      "paella rice",
+      "jasmine rice",
+      "thai jasmine",
+      "jasmine"
     ],
     "rice": [
       "short grain",
@@ -1321,6 +1384,45 @@
       "cocoa",
       "chocolate spread",
       "hot chocolate"
+    ],
+    "cilantro": [
+      "coriander seed",
+      "coriander seeds",
+      "ground coriander",
+      "coriander powder",
+      "whole coriander",
+      "toasted coriander"
+    ],
+    "jalapeno": [
+      "crushed jalapeno",
+      "jalapeno powder",
+      "pickled jalapeno",
+      "jalapeno flakes",
+      "canned jalapeno",
+      "canned green chilies",
+      "diced green chiles",
+      "can of green chiles"
+    ],
+    "ajiamarillo": [
+      "aji panca",
+      "aji panca paste",
+      "aji limo",
+      "aji rocoto",
+      "rocoto",
+      "panca"
+    ],
+    "beer": [
+      "root beer",
+      "ginger beer",
+      "beer batter mix",
+      "non-alcoholic beer",
+      "beer can chicken"
+    ],
+    "jasminerice": [
+      "jasmine tea",
+      "jasmine green tea",
+      "jasmine flower",
+      "brown jasmine rice"
     ]
   },
   "_gapAliases": {
@@ -1403,36 +1505,6 @@
       "russet potatoes",
       "mashed potato",
       "floury potatoes"
-    ],
-    "fresh coriander": [
-      "coriander",
-      "fresh coriander",
-      "cilantro",
-      "fresh cilantro",
-      "coriander leaves",
-      "coriander seeds",
-      "ground coriander"
-    ],
-    "fresh chilli": [
-      "red chilli",
-      "green chilli",
-      "chilli",
-      "chili",
-      "red chili",
-      "green chili",
-      "scotch bonnet",
-      "birds eye chilli",
-      "jalapeno",
-      "serrano",
-      "thai chilli",
-      "fresh chilli",
-      "chilli pepper",
-      "red chillies",
-      "green chillies",
-      "chillies",
-      "chilies",
-      "long red chillies",
-      "red chilli peppers"
     ],
     "fish sauce": [
       "fish sauce",
@@ -1686,8 +1758,6 @@
       "broccoli florets",
       "tenderstem broccoli",
       "purple sprouting broccoli",
-      "asparagus",
-      "asparagus spears",
       "green beans",
       "fine beans",
       "cauliflower",
@@ -1715,8 +1785,7 @@
       "runner beans",
       "green bean",
       "sugar snap pea",
-      "broccoli floret",
-      "asparagus spear"
+      "broccoli floret"
     ],
     "avocado": [
       "avocado",

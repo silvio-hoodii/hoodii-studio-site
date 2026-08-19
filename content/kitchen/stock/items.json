@@ -632,6 +632,48 @@
       "where": "pantry",
       "state": "none",
       "note": "Compliments Dark Chocolate Chips, 225 g, read off the label in photo 20260817_222004. CHIPS, not a bar: chips carry stabilisers that hold their shape, so a recipe asking for chopped chocolate to melt smoothly is a substitution rather than a match. Bought 2026-08-17."
+    },
+    "cilantro": {
+      "n": "fresh cilantro",
+      "where": "fridge",
+      "state": "none",
+      "note": "Catalogued 2026-08-18, the evening a bunch arrived (photo 20260818_181607). Sold as cilantro here and as coriander in British recipes, and the SAME plant as Peruvian culantro in every recipe this kitchen will meet, though true culantro (Eryngium foetidum) is a different, stronger leaf. It is what makes Peruvian arroz con pollo green. Stems carry more flavour than leaves and Peruvian recipes blend both. Parsley looks identical and tastes nothing like it, so it is never a swap. Lasts about a week standing in water in the fridge, three days loose."
+    },
+    "jalapeno": {
+      "n": "jalapeno peppers",
+      "where": "fridge",
+      "state": "none",
+      "note": "Your Fresh Market, 225 g bag, product of Mexico, bought 2026-08-18 (photo 20260818_181512). Rated MEDIUM on the pack. Distinct from the crushed jalapeno in the spice rack and from crushed red pepper: this is the fresh fruit, and the fresh fruity note is the thing the dried forms cannot give. Most of the heat is in the white pith, not the seeds, so deseeding-and-depithing is the volume control."
+    },
+    "ajiamarillo": {
+      "n": "aji amarillo paste",
+      "where": "fridge",
+      "state": "none",
+      "note": "The backbone chilli of Peruvian cooking, from the yellow Peruvian chilli. Fruity and mildly hot rather than sharp, and it is a COLOUR as much as a flavour. Jalapeno is not a substitute in either direction: Peruvian recipes written for North American shops swap ají amarillo OUT for jalapeno because it is hard to find, never the reverse. Bought 2026-08-18. Quantity small, stated by Silvio as \"not much but should be enough\". Paste keeps months in the fridge once opened."
+    },
+    "beer": {
+      "n": "beer",
+      "where": "fridge",
+      "state": "none",
+      "note": "Catalogued 2026-08-18 for Peruvian arroz con pollo, where beer is a real ingredient rather than a drink: cilantro is blended INTO it and the whole thing becomes the braising liquid. Classic Peruvian recipes name a dark malty beer (Cusquena Negra) and America’s Test Kitchen allows any smooth malty beer. The eatatourtable recipe this kitchen matched just says \"1 12 oz beer\" with no style, so whatever he bought satisfies her line exactly. STYLE NOT YET READ: a can is visible in the background of photo 20260818_181612 and its label was not legible."
+    },
+    "asparagus": {
+      "n": "asparagus",
+      "where": "fridge",
+      "state": "none",
+      "note": "Ocean Mist Farms, 1 bunch, product of Mexico, bought 2026-08-18 (photo 20260818_181521). Nothing in the recipe catalogue asks for it yet, so it arrived unassigned. Highly perishable: 3 to 4 days, and it keeps best standing upright in a little water like cut flowers."
+    },
+    "limes": {
+      "n": "fresh limes",
+      "where": "fridge",
+      "state": "none",
+      "note": "Catalogued 2026-08-18. Events for it existed from 2026-08-08, when a 1.5 lb bag came home on clearance at $1.97, and there was never a row here to hang them on, so the id resolved to nothing. NOT the same as the bottled ReaLime, which is item `lemon`: bottled juice cannot be cut into a wedge and squeezed over a bowl, and every recipe that says \"lime wedges\" means the fruit."
+    },
+    "jasminerice": {
+      "n": "Thai jasmine rice",
+      "where": "pantry",
+      "state": "none",
+      "note": "Great Value Thai Jasmine Rice, 2 kg bag, bought 2026-08-18 (photo 20260818_215127). Catalogued as its own item on the same day, because `jasmine rice` had been an alias of `longgrainrice` and the two are not the same thing on the plate: jasmine is aromatic and cooks slightly softer and stickier, plain long grain stays neutral with the grains separate. Folding them together meant a recipe naming jasmine was answered from the long grain bag with nothing said about the difference. validate.mjs already knew they were different and carried separate RICE_RATIO entries for both."
     }
   }
 }

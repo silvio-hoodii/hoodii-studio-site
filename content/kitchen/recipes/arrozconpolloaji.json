@@ -1,0 +1,568 @@
+{
+  "id": "arrozconpolloaji",
+  "name": "Peruvian Arroz con Pollo",
+  "build": "2026-08-18c",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "He asked for this one himself and then asked the right question about it: whether jalapeno is really what they use in Peru. It is not. The Peruvian chilli is aji amarillo, and the recipes that call for jalapeno are Peruvian recipes rewritten for North American shops where aji amarillo is hard to find. He went and bought aji amarillo, a bunch of cilantro and a beer before anything was written, so this card follows the one published recipe that uses all three. The green is blended cilantro, not herbs stirred in at the end, and the rice cooks in that green liquid rather than beside it. That is the dish.",
+  "time": {
+    "activeMin": 35,
+    "totalMin": 90,
+    "note": "SHE PUBLISHES NO TIMES AT ALL, no prep, no cook, no total. The only two numbers here that are hers are the 30 minute simmer in step 7 and the 25 minutes of rice in step 11. Everything else, including both figures in this box, is this app's estimate of how long her twelve steps take."
+  },
+  "serves": {
+    "count": 6,
+    "unit": "portion",
+    "proteinPerUnit": 40,
+    "proteinMath": "ESTIMATE, and the biggest one on any card here. SHE PUBLISHES NO NUTRITION PANEL AND NO YIELD, so unlike Creamy Tomato Chicken there is no number of hers to fall back on. Both figures below are ours. THE CHICKEN: 1.427 kg of bone-in skin-on thighs, weighed off the label. Bone is roughly a fifth of that weight and skin another tenth, so about 1.0 kg is meat at roughly 18.6 g of protein per 100 g raw, which is 186 g, plus about 19 g from the skin, giving 205 g. Against the pack weight that is 14 g per 100 g. An earlier note in STOCK.md used 16 g per 100 g for this same cut, which would give 228 g instead. The lower route is printed because it cannot overclaim. THE RICE: 3 cups of dry long grain is about 555 g at 7 g per 100 g, so 39 g. THE REST: about 4 g from a cup of frozen peas and carrots, about 2 g from the beer, about 3 g from three cups of broth. TOTAL IN THE POT: about 250 g. SIX IS OUR NUMBER, NOT HERS. She gives no yield, and 8 to 10 thighs with 3 cups of dry rice is a large pot, so six generous bowls is the estimate and eight is plausible. At six that is 41 g a bowl, printed as 40. DO NOT TRUST THE PER-BOWL FIGURE HARDER THAN IT DESERVES: the honest instruction is the one this project already learned, weigh what you actually get and divide, and tell the app how many bowls it made."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-18c",
+    "statement": "Every instruction is Amanda's own sentence from Eat At Our Table, in her order, with her two times and her amounts. Nothing was rewritten, rescaled, reordered, added or dropped. The sentences are checked by the build against content/kitchen/imported/arrozconpolloaji.json, a copy of her page fetched 2026-08-18, so a paraphrase fails the deploy rather than reaching the stove. What this app adds is the layer a printed page cannot: which of his pots and which blender she means, what every technique word means in place, an observable for the induction hob at each of the three points where she names a dial position, a performable test where she says the rice is done, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. HER PAGE CARRIES NO NUTRITION PANEL, NO YIELD AND NO TIMES, which is the honest cost of choosing this source over the better-written jalapeno version, and it is why the serves box says out loud that both of its numbers are ours. THERE ARE NO DEPARTURES. An earlier build of this card ran on the long grain white in the cupboard against her jasmine line, recorded as a deviation he decided himself. He then bought Thai jasmine on the evening of 2026-08-18 and chose to use it, so that entry is retired and every ingredient is now the one she names. Her beer and broth lines both say gluten-free, which is her own coeliac requirement rather than a cooking property, so ordinary beer and ordinary broth satisfy them and that was never recorded as a change.",
+    "sources": [
+      {
+        "name": "Eat At Our Table",
+        "url": "https://eatatourtable.com/peruvian-arroz-con-pollo/",
+        "primary": true,
+        "note": "Arroz con Pollo, Peruvian Chicken with Cilantro Rice, by Amanda, whose husband is Peruvian and cooked this for her through graduate school. 4.21 from 34 ratings. NO yield, NO prep or cook time, NO nutrition panel. Captured 2026-08-18 from the page's own JSON-LD into content/kitchen/imported/arrozconpolloaji.json, capture hash 0790eafd98fc. All fourteen ingredient lines and all twelve instructions taken verbatim from that capture. Chosen over A Cozy Kitchen's better documented green arroz con pollo, which is also captured here, because that one uses jalapeno and no beer and would have left the aji amarillo and the beer he bought for this dish unused."
+      }
+    ],
+    "readHash": "57f0e362",
+    "cookedResult": null
+  },
+  "deviations": [],
+  "equipment": [
+    "pot_large",
+    "stovetop",
+    "blender_bullet",
+    "knife_sharp",
+    "cuttingboard",
+    "scale_digital",
+    "thermometer",
+    "strainer",
+    "measuringcups",
+    "measuringspoons",
+    "woodenspoon",
+    "bowlset",
+    "plates",
+    "papertowel",
+    "ovenmitts",
+    "fork"
+  ],
+  "ingredients": [
+    {
+      "ref": "oil",
+      "display": "vegetable oil",
+      "qty": 0.5,
+      "unit": "cup",
+      "staple": true,
+      "prep": "half a cup is a lot of oil and it is her amount. It is there to brown eight to ten pieces of chicken, not to be eaten",
+      "defining": false
+    },
+    {
+      "ref": "chicken",
+      "stock": "chickenthighs",
+      "display": "chicken thighs",
+      "qty": 8,
+      "unit": "each",
+      "prep": "bone-in and skin-on, confirmed 2026-08-18. The tray is 1.427 kg, which is about eight thighs. Her line says 8 to 10, so the tray is her amount. Trimmed means cut off any loose flap of fat hanging past the meat, and leave the skin on. WEIGH THE TRAY before anything is cut and tell the app the number",
+      "defining": true
+    },
+    {
+      "ref": "salt_chicken",
+      "display": "salt, for the chicken",
+      "staple": true,
+      "prep": "HER LINE CARRIES NO AMOUNT, it is just the word salt. One teaspoon across eight thighs is this app's reading of her word \"lightly\" and it is not her number. What it looks like: a visible even dusting on both faces, not a crust. Sprinkle from about a foot up so it lands spread out.",
+      "defining": false,
+      "qty": 1,
+      "unit": "tsp"
+    },
+    {
+      "ref": "pepper",
+      "display": "black pepper",
+      "staple": true,
+      "prep": "HER LINE CARRIES NO AMOUNT either. Half a teaspoon across eight thighs is this app's reading, not hers. Same dusting as the salt, and it goes on at the same moment.",
+      "defining": false,
+      "qty": 0.5,
+      "unit": "tsp"
+    },
+    {
+      "ref": "onion",
+      "stock": "yellowonion",
+      "display": "a medium onion",
+      "qty": 1,
+      "unit": "each",
+      "prep": "diced, meaning cut into pieces roughly the size of your smallest fingernail. From the 3 lb bag of sweet onions",
+      "defining": false
+    },
+    {
+      "ref": "garlic",
+      "stock": "garlic",
+      "display": "garlic",
+      "qty": 1,
+      "unit": "tsp",
+      "prep": "one teaspoon once minced, which is about two fat cloves from the fresh bulbs. Minced means chopped as small as you can get it",
+      "defining": false
+    },
+    {
+      "ref": "ajiamarillo",
+      "stock": "ajiamarillo",
+      "display": "aji amarillo",
+      "qty": 2,
+      "unit": "tsp",
+      "prep": "the paste. This is the ingredient the dish is named for in every Peruvian kitchen, and it is why this recipe was chosen over the jalapeno one",
+      "defining": true
+    },
+    {
+      "ref": "cilantro",
+      "stock": "cilantro",
+      "display": "large bunches of cilantro",
+      "qty": 2,
+      "unit": "bunch",
+      "prep": "STEMS AND ALL. The stems carry more flavour than the leaves and they blend away to nothing. TWO FULL BUNCHES IS HER AMOUNT and this card runs at it rather than short. One older bunch in the fridge has gone partly black, so sort everything before it is measured and bin any stem or leaf that is black, yellow or slimy. That part is spoiled and washing will not fix it. Take the two best bunches as the two she asks for. WEIGH what goes in and tell the app: a bunch is not a measurement, and a weight is the only thing that makes this repeatable next time",
+      "defining": true
+    },
+    {
+      "ref": "beer",
+      "stock": "beer",
+      "display": "beer",
+      "qty": 12,
+      "unit": "oz",
+      "prep": "one twelve ounce can, which is 355 ml. Her line says gluten-free because she has coeliac disease; that is a requirement of hers and not a cooking property, so any beer satisfies it. It goes in the blender with the cilantro, not in a glass",
+      "defining": false
+    },
+    {
+      "ref": "stock",
+      "stock": "stock",
+      "display": "chicken broth",
+      "qty": 3,
+      "unit": "cup",
+      "prep": "the Campbell's ready-to-use carton. If it is short, a Knorr cube per two cups of water is the stand-in, and it is saltier, so go easier on her teaspoon of salt",
+      "defining": false
+    },
+    {
+      "ref": "salt_pot",
+      "display": "salt, for the pot",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "her measured teaspoon, and it is a different line from the salt on the chicken. Use the measuring spoon",
+      "defining": false
+    },
+    {
+      "ref": "rice",
+      "stock": "jasminerice",
+      "display": "washed jasmine rice",
+      "qty": 3,
+      "unit": "cup",
+      "prep": "Great Value Thai Jasmine, 2 kg bag, bought 2026-08-18. Measured with the MEASURING CUPS, not with the rice cooker's cup, because those are two different sizes. Washed means rinsed under cold water in the fine mesh strainer until the water running off it is no longer cloudy, usually four or five changes. Do this immediately before it goes in the pot, never hours ahead",
+      "defining": true
+    },
+    {
+      "ref": "frozenveg",
+      "stock": "frozenveg",
+      "display": "frozen mixed vegetables",
+      "qty": 1,
+      "unit": "cup",
+      "prep": "her line says traditionally peas and carrots, which is exactly what is in the freezer. Straight from frozen, no thawing",
+      "defining": false
+    },
+    {
+      "ref": "limes",
+      "stock": "limes",
+      "display": "lime wedges",
+      "optional": true,
+      "prep": "her line marks these optional and gives no count. One wedge a bowl is this app's reading at six bowls. Fresh limes from the 2026-08-08 bag; the bottled ReaLime is a different thing and cannot be squeezed over a bowl.",
+      "defining": false,
+      "qty": 6,
+      "unit": "wedge"
+    }
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Heat oil in large pot.",
+      "sourceText": "Heat oil in large pot.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 0.5,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "measuringcups"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The oil thins out and runs like water when you tilt the pot, and the surface moves in faint ripples. It must not smoke. If it smokes, lift the pot off the burner for thirty seconds and check again: smoking oil browns nothing and turns the chicken skin black.",
+        "recheck": "Two minutes after the oil goes in. This is an induction hob, so the burner obeys the dial in about two seconds while the metal takes far longer, which means the pot keeps climbing after you stop turning anything up."
+      },
+      "doneness": {
+        "test": "Tilt the pot. If the oil pools thickly and moves slowly it is still cold. When it runs thin and fast to the low side, it is hot enough for the chicken.",
+        "kind": "look"
+      },
+      "look": "LARGE POT, NOT A PAN. Everything from here to the end happens in this one pot: the chicken browns in it, the green liquid goes in it, and the rice finishes in it. Pick the biggest of the three pots and make sure its lid is nearby, because step 10 needs it.\n\nHALF A CUP OF OIL IS HER AMOUNT AND IT LOOKS LIKE TOO MUCH. It is not a mistake. Eight pieces of chicken with skin need a real layer of fat underneath them or they stick and tear. Most of it stays in the pot and becomes part of the dish.\n\nMEASURE IT with the half-cup measure rather than pouring by eye."
+    },
+    {
+      "n": 2,
+      "text": "Lightly salt and pepper chicken and brown, once browned, remove and set aside.",
+      "sourceText": "Lightly salt and pepper chicken and brown, once browned, remove and set aside.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 8,
+          "unit": "each"
+        },
+        {
+          "ref": "salt_chicken",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "pepper",
+          "amount": 0.5,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "papertowel",
+        "plates",
+        "scale_digital"
+      ],
+      "minutes": 14,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A steady loud sizzle from the moment the chicken lands, holding the whole time it is in there. If it goes quiet the pot is too cool and the chicken is stewing in its own juice instead of colouring. If it spits hard and the oil starts to smoke, LIFT THE POT OFF THE BURNER for thirty seconds rather than turning the dial down, because on induction the burner drops instantly and the metal does not.",
+        "recheck": "About one minute after the first pieces go in, and again after each flip. Cold chicken pulls a lot of heat out on landing and then it climbs back."
+      },
+      "doneness": {
+        "test": "Lift one piece with tongs and look at the face that was down. Deep golden all over means browned and it comes out. Pale or patchy means it goes back for another minute. If a piece resists when you try to lift it, it is not ready: wait thirty seconds and it will let go on its own.",
+        "kind": "look"
+      },
+      "look": "WEIGH THE TRAY FIRST, before anything is cut or seasoned, and tell the app the number. The whole protein figure on this card rests on 1.427 kg read off a label, and your own scale settles it.\n\nBROWN IS NOT COOKED. This step is colour on the outside only. She cooks the chicken through later, in step 7, for thirty minutes in the liquid. Do not chase doneness here and do not reach for the thermometer yet.\n\nPAT EVERY PIECE DRY with paper towel before it is seasoned, until the skin looks matte instead of wet. A wet surface has to boil its water off before it can colour, and while that happens the pot cools and the chicken goes grey.\n\nLIGHTLY IS HER WORD. Sprinkle from about a foot up so it lands spread out instead of in one patch, both faces, a visible dusting and no more. SHE GIVES NO AMOUNT for either the salt or the pepper. The teaspoon and half teaspoon printed above are this app reading her word \"lightly\" across eight thighs, not her numbers. There IS a measured teaspoon of salt later, in step 5, and it is a separate thing.\n\nTHEY WILL NOT ALL FIT AT ONCE and they must not touch. Eight thighs in one pot in a single layer is unlikely. Do them in two or three loads, in a single layer with a gap between the pieces, because touching pieces trap steam and steam poaches instead of browns. THE POT IS HOTTER FOR THE SECOND LOAD THAN THE FIRST, so run the heat check again before each load lands. That exact thing burnt the second batch of chicken on 2026-08-16 and again on 2026-08-09.\n\nLAY EACH PIECE AWAY FROM YOU, far edge down first, then lower the near edge. Oil spits back at whatever side you drop it from. Use tongs or a spatula, never fingers, and this is the step with half a cup of hot oil in it.\n\nSET ASIDE means onto a clean plate. Keep whatever juice collects on that plate, because the chicken goes back into the pot in step 6 and it goes back with everything on the plate."
+    },
+    {
+      "n": 3,
+      "text": "Saute onion, garlic and aji amarillo until fragrant.",
+      "sourceText": "Saute onion, garlic and aji amarillo until fragrant.",
+      "uses": [
+        {
+          "ref": "onion",
+          "amount": 1,
+          "unit": "each"
+        },
+        {
+          "ref": "garlic",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "ajiamarillo",
+          "amount": 2,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "knife_sharp",
+        "cuttingboard",
+        "woodenspoon",
+        "measuringspoons"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The onion sizzles steadily and nothing spits or smokes. The garlic must not go brown at any point: brown garlic is bitter through the whole pot and there is no fixing it afterwards.",
+        "recheck": "Immediately, before the onion goes in. The pot has just browned eight pieces of chicken and it is still holding that heat whatever the dial says, so TAKE THE POT OFF THE BURNER for thirty seconds first, then put it back and add the onion."
+      },
+      "doneness": {
+        "test": "The onion pieces go from opaque white to see-through at the edges and they flop rather than hold their shape when you push one with the spoon. That is the endpoint. They should not be brown. Three to four minutes.",
+        "kind": "look"
+      },
+      "look": "UNTIL FRAGRANT IS HER PHRASE AND IT IS NOT A TEST YOU CAN PERFORM. Knowing when something is ready by its smell is a skill, not an instruction, and cues like it have failed in this kitchen before. Use the doneness box above instead: see-through onion edges that flop when pushed, three to four minutes. Her sentence stays because it is hers; the test is what to actually go by.\n\nSAUTE means cook in a little fat over a lively heat, moving it around. Push everything around with the wooden spoon every thirty seconds or so, not constantly.\n\nTHERE IS A LOT OF OIL STILL IN THE POT and that is fine, the onion is meant to be swimming a bit. Do not pour it off, she does not ask you to.\n\nANYTHING BLACK IN THE POT from the browning gets fished out with the spoon now. Brown film on the bottom is fine and stays. Black is burnt and it turns everything bitter.\n\nTHEY GO IN TOGETHER. She names three things in one sentence, so they go in at the same time, not in stages.\n\nTWO TEASPOONS OF AJI AMARILLO, measured with the measuring spoon. It is a paste, so scrape it off the spoon with the wooden spoon rather than shaking it. It will streak the oil orange straight away, which is normal and is the colour of the dish.\n\nTHE GARLIC IS THE RISK, not the onion. It is cut far smaller and it burns in seconds. If the pot looks too hot when it goes in, lift the pot off the burner."
+    },
+    {
+      "n": 4,
+      "text": "Blend cilantro and beer (a magic or nutribullet is great for this).",
+      "sourceText": "Blend cilantro and beer (a magic or nutribullet is great for this).",
+      "uses": [
+        {
+          "ref": "cilantro",
+          "amount": 2,
+          "unit": "bunch"
+        },
+        {
+          "ref": "beer",
+          "amount": 12,
+          "unit": "oz"
+        }
+      ],
+      "equipment": [
+        "blender_bullet",
+        "strainer",
+        "bowlset",
+        "scale_digital"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "doneness": {
+        "test": "Pour a little onto a spoon. It should be a smooth dark green liquid with no recognisable leaf left in it, thin enough to pour like a milkshake. If you can still see leaf shapes, blend it again in ten second bursts.",
+        "kind": "look"
+      },
+      "look": "SHE MEANS YOUR BULLET BLENDER. NutriBullet is one brand of the tall single-serve blender she names, and the Ninja-style one in this kitchen is the same machine.\n\nIT WILL NOT ALL FIT IN ONE GO. The jar holds about 470 ml and a can of beer alone is 355 ml. Do it in two or three batches: cilantro plus a share of the beer each time, blend, tip it into a bowl, repeat. Blending in batches is a container limit, not a change to her recipe.\n\nSORT THE CILANTRO FIRST. Bin any stem or leaf that is black, yellow or slimy. That part is spoiled and washing will not bring it back. Then rinse the rest under cold water and shake it dry.\n\nSTEMS GO IN. Do not pick leaves off. The stems carry more flavour than the leaves and they disappear completely in the blender. Only the very bottom of the stalks, the tough pale ends, get cut off and thrown away.\n\nTWO BUNCHES GO IN, WHICH IS HER FULL AMOUNT. Sort first, bin the black, then take the two best bunches. Anything left over from the older bunch stays out: two is her number and there is no instruction here for going past it.\n\nWEIGH WHAT GOES IN and tell the app. Her line says two large bunches, which is not a measurement, so nobody can repeat this cook without a number. That is the only reason to weigh it: the amount itself is settled.\n\nIF IT WILL NOT MOVE IN THE BLENDER, tip in more of the beer rather than water. The beer is going in anyway, so this costs nothing.\n\nTHE COLOUR IS ALARMING AND IT IS SUPPOSED TO BE. Dark, opaque, swamp green. That is the dish."
+    },
+    {
+      "n": 5,
+      "text": "Add cilantro/beer blend, chicken stock and salt to pot and stir.",
+      "sourceText": "Add cilantro/beer blend, chicken stock and salt to pot and stir.",
+      "uses": [
+        {
+          "ref": "stock",
+          "amount": 3,
+          "unit": "cup"
+        },
+        {
+          "ref": "salt_pot",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "woodenspoon",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The same steady sizzle the onion was in. The cold liquid will silence it for a minute or two as it goes in, and that is expected: nothing needs adjusting, because the next step turns the heat up anyway.",
+        "recheck": "Not needed. Step 6 brings it to a boil and that is where the heat goes up."
+      },
+      "doneness": {
+        "test": "Scrape the bottom of the pot with the wooden spoon. When nothing is stuck to it and the liquid is one even green colour with no lighter streaks, it is stirred.",
+        "kind": "look"
+      },
+      "look": "IT WILL HISS AND STEAM WHEN THE LIQUID HITS THE HOT POT. Pour it in from close to the surface, not from height, and stand back a little.\n\nTHE SALT HERE IS THE MEASURED TEASPOON, a different line from the dusting that went on the chicken in step 2. Use the measuring spoon.\n\nIF YOU USED KNORR CUBES instead of the carton of broth, put in half a teaspoon here rather than the full one. Cubes are much saltier than ready-to-use broth.\n\nSCRAPE THE BOTTOM as you stir. The brown film left from browning the chicken lifts off into the liquid now, which is the reason nothing was washed between steps.\n\nTHREE CUPS OF BROTH, MEASURED. Do not eyeball this one: the amount of liquid against the amount of rice is what decides whether the rice comes out right, and it is the thing that has gone wrong in this kitchen twice."
+    },
+    {
+      "n": 6,
+      "text": "Return chicken and bring to boil.",
+      "sourceText": "Return chicken and bring to boil.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A full rolling boil: large bubbles breaking the whole surface continuously, not just a few rising at the edges. Turn the hob up to get there.",
+        "recheck": "Every minute or two until it boils. On induction this happens faster than expected."
+      },
+      "doneness": {
+        "test": "Look at the middle of the pot, not the edge. Bubbles must be breaking the surface across the whole width of it, and it should not stop when you stir. That is a boil.",
+        "kind": "look"
+      },
+      "look": "EVERYTHING ON THE PLATE GOES BACK IN, chicken and all the juice that came out of it while it sat. That juice is the same stuff as the liquid in the pot.\n\nSKIN SIDE UP is worth doing if the pieces will sit that way. They are about to spend thirty minutes half submerged, and the side facing up keeps more of its colour.\n\nTHE CHICKEN DOES NOT NEED TO BE COVERED by the liquid. Half submerged is what this looks like and it is fine; the lid goes on later and the steam does the rest.\n\nIF THE POT LOOKS TOO FULL, that is the sign the pot was too small. Nothing can be done about it now except to be careful, so keep the heat lower and expect it to take longer to boil."
+    },
+    {
+      "n": 7,
+      "text": "Reduce heat to medium and let simmer until chicken is cooked (about 30 minutes).",
+      "sourceText": "Reduce heat to medium and let simmer until chicken is cooked (about 30 minutes).",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "thermometer"
+      ],
+      "minutes": 30,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A steady simmer: bubbles rising and breaking constantly somewhere on the surface, but lazily, and never the rolling boil of the last step. Nothing should be spitting over the rim.",
+        "recheck": "Two minutes after you turn it down, and then every ten minutes. If it has gone completely still with no bubbles at all, it is too low and the chicken will take much longer than thirty minutes."
+      },
+      "doneness": {
+        "test": "At thirty minutes, lift out the thickest piece and push the instant-read thermometer into the thickest part of it, sideways, close to but not touching the bone. 74C or 165F and it is cooked. Under that it goes back in for another five minutes. THIS ends the step, not the timer, and her own sentence says until chicken is cooked before it says thirty minutes.",
+        "kind": "probe"
+      },
+      "look": "REDUCE HEAT TO MEDIUM IS A DIAL POSITION and this hob has three different dial scales across its burners, so it cannot be used as written. Go by the heat box above instead: lazy bubbles that never stop, no rolling boil. Her sentence stays because it is hers.\n\nON INDUCTION THE BURNER DROPS INSTANTLY AND THE METAL DOES NOT, so the pot will keep boiling for a while after you turn it down. Give it two minutes before you decide it is wrong.\n\nNO LID YET. She does not put the lid on until step 10, and the liquid level matters in step 8, so leaving it uncovered here is deliberate.\n\nTHIRTY MINUTES IS HER NUMBER. Set the timer, but the thermometer is what ends this step.\n\nTHIS IS THE LONG GAP IN THE RECIPE and there is nothing to do in it. Good moment to wash the rice, get the strainer out, and measure the cup of frozen vegetables so both are ready when step 9 arrives."
+    },
+    {
+      "n": 8,
+      "text": "Remove chicken, there should be approximately 6 cups of liquid, add more water if needed.",
+      "sourceText": "Remove chicken, there should be approximately 6 cups of liquid, add more water if needed.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "plates",
+        "measuringcups",
+        "ovenmitts"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Keep the same lazy simmer from the last step while you measure. If it is easier, lift the pot off the burner entirely for the two minutes this takes.",
+        "recheck": "When the pot goes back on, before the rice goes in."
+      },
+      "doneness": {
+        "test": "Ladle the liquid into a measuring cup one cup at a time and count, tipping each one back into the pot as you go. Six cups. Under six, top it up with water until it reads six. Over six, leave it: she gives no instruction for pouring any away and neither does this card.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE MOST IMPORTANT MEASUREMENT ON THE CARD and it is why she wrote it as a number instead of a look. Six cups of liquid to three cups of rice is what makes the rice come out right. Rice has gone wrong in this kitchen twice and both times the liquid was the cause.\n\nSIX TO THREE IS WETTER THAN PLAIN RICE. This app uses about one and a half cups of water per cup of long grain when rice is cooked on its own. Hers is two to one. That is her number for this dish and it is not an error to correct. No reason for it is given here because she gives none.\n\nMEASURING HOT LIQUID: use the oven mitts, and ladle it out with a cup or a mug rather than trying to pour a heavy pot.\n\nTHE CHICKEN COMES OUT AND STAYS OUT until step 12. Put it on a clean plate. It is already cooked, so it does not need to stay hot for the next twenty-five minutes; it goes back on top at the end.\n\nADD MORE WATER IF NEEDED is her phrase and the amount is whatever brings it to six cups. That is the number, so it is not vague here."
+    },
+    {
+      "n": 9,
+      "text": "Add washed rice and frozen mixed vegetables.",
+      "sourceText": "Add washed rice and frozen mixed vegetables.",
+      "uses": [
+        {
+          "ref": "rice",
+          "amount": 3,
+          "unit": "cup"
+        },
+        {
+          "ref": "frozenveg",
+          "amount": 1,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "strainer",
+        "measuringcups",
+        "woodenspoon"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Same lazy simmer. Cold rice and frozen vegetables will knock it back for a minute or two, which is expected and is what step 10 fixes.",
+        "recheck": "Straight away in step 10, which turns it up."
+      },
+      "doneness": {
+        "test": "Stir once and look. No dry patch of rice sitting on top and nothing clumped against the side of the pot. Every grain should be under the liquid.",
+        "kind": "look"
+      },
+      "look": "WASHED IS PART OF HER INGREDIENT LINE, so it is not optional. Put the rice in the fine mesh strainer, not the colander, because grains fall straight through a colander's holes. Run cold water through it, working it with your fingers, until the water coming out is clear instead of milky. Four or five changes of water is usual.\n\nWASH IT NOW, NOT EARLIER. Rice left sitting wet absorbs water unevenly and can sour. Doing it during the thirty minute simmer is right; doing it hours ahead is not.\n\nTHREE CUPS OF THE JASMINE, MEASURED WITH THE MEASURING CUPS. NOT the rice cooker's cup. Those are two different sizes and mixing them up is what produced four contradictory measurements in one cook on 2026-08-11. The long grain white stays in the cupboard for another day.\n\nFROZEN STRAIGHT FROM THE FREEZER. Do not thaw them. Her line says traditionally peas and carrots and that is exactly what the bag in the freezer is.\n\nSTIR ONCE, GENTLY, just enough to get everything under the liquid, then leave it alone. Stirring rice repeatedly while it cooks is what makes it gluey."
+    },
+    {
+      "n": 10,
+      "text": "Bring to boil, cover and reduce to low.",
+      "sourceText": "Bring to boil, cover and reduce to low.",
+      "uses": [
+        {
+          "ref": "rice",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "ovenmitts"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "First a full rolling boil, bubbles breaking right across the surface. Then, with the lid on, the quietest heat that still keeps it going: hold your ear near the pot and you should hear a faint intermittent bubbling, and a little steam should escape at the lid. Silence means it is too low.",
+        "recheck": "Two minutes after the lid goes on, and this one matters. Lift the lid, look, listen, put it back. If nothing at all is moving, bring it up a little. A pot that never reaches a simmer is exactly what produced hard rice on 2026-08-05."
+      },
+      "doneness": {
+        "test": "Lid on, two minutes later: lift the lid and look. Bubbles still breaking somewhere on the surface means it is right. A completely flat still surface means the heat is too low and the rice will not cook.",
+        "kind": "look"
+      },
+      "look": "REDUCE TO LOW IS A DIAL POSITION and it is the exact instruction that ruined a pot of rice in this kitchen on 2026-08-05, because the lowest setting on that burner sat below a simmer and nobody could see it. Go by the heat box: the quietest heat that still bubbles, checked again after two minutes. Her sentence stays because it is hers.\n\nGET IT TO A FULL BOIL FIRST, before the lid goes on. That is the order she wrote and it matters: the boil is what gets the whole pot up to temperature so the low heat afterwards only has to hold it there.\n\nTHE LID GOES ON AND STAYS ON for the twenty-five minutes of step 11, apart from the one check two minutes in. Every time it comes off, the steam that is doing the cooking leaves.\n\nUSE THE OVEN MITTS for the lid. The handle of a lid on a boiling pot gets hot fast."
+    },
+    {
+      "n": 11,
+      "text": "Cook rice for 25 minutes or until done.",
+      "sourceText": "Cook rice for 25 minutes or until done.",
+      "uses": [
+        {
+          "ref": "rice",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "stovetop",
+        "fork",
+        "ovenmitts"
+      ],
+      "minutes": 25,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Unchanged from step 10: the quietest heat that still bubbles faintly under the lid, with a little steam escaping.",
+        "recheck": "At fifteen minutes and again at twenty-five. Nothing else needs touching in between."
+      },
+      "doneness": {
+        "test": "TILT THE POT at twenty-five minutes, then read TWO things in this order. FIRST, does liquid pool and run to the low side? SECOND, push a fork to the bottom in the middle, lift a little rice and bite one grain: soft the whole way through, or is there a hard chalky speck in the middle? NO LIQUID AND SOFT GRAIN means it is done. LIQUID AND HARD GRAIN means it needs longer: lid back on, five more minutes, tilt again. LIQUID AND SOFT GRAIN means it is cooked but wet: take the lid OFF and give it a few minutes so the steam can leave. NO LIQUID AND HARD GRAIN is the only one that needs water: half a cup of hot water, lid back on, five more minutes.",
+        "kind": "look"
+      },
+      "look": "OR UNTIL DONE IS HER PHRASE AND IT IS NOT A TEST. Done is exactly the thing a beginner cannot see, and this app has been caught out by cues like it before. Use the doneness box: tilt the pot for standing liquid, then a fork to the bottom, then bite a grain. Her sentence stays because it is hers.\n\nTWENTY-FIVE MINUTES IS HER NUMBER, and the tilt test is what actually ends it. This rice is cooking in twice its volume of liquid, so running past twenty-five minutes is likely and is not a sign anything went wrong.\n\nTHE TILT ALONE DOES NOT TELL YOU WHAT TO DO, which is why the box above asks for two readings and not one. Standing liquid can mean undercooked or it can mean cooked and wet, and those want opposite fixes. Bite a grain before deciding.\n\nWHEN YOU CANNOT TELL, ADD TIME AND HEAT RATHER THAN WATER. Water added cannot be taken out; heat turned up can be turned down in thirty seconds. Only the dry-and-hard reading gets water, and only half a cup. That is the rule this kitchen learned the hard way on 2026-08-05.\n\nDO NOT STIR IT during these twenty-five minutes. Rice cooks by steam and stirring collapses it into paste. The fork at the end is for looking, not mixing."
+    },
+    {
+      "n": 12,
+      "text": "Serve with chicken and lime wedges.",
+      "sourceText": "Serve with chicken and lime wedges.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        },
+        {
+          "ref": "limes",
+          "amount": 6,
+          "unit": "wedge"
+        }
+      ],
+      "equipment": [
+        "pot_large",
+        "plates",
+        "fork",
+        "scale_digital"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "Every bowl has rice and at least one piece of chicken on it, and nothing is left in the pot except what is going into the fridge.",
+        "kind": "look"
+      },
+      "look": "FLUFF THE RICE FIRST with the fork, lifting from the bottom rather than stirring in circles, so the grains separate instead of packing down.\n\nTHE CHICKEN HAS BEEN OUT OF THE POT for twenty-five minutes and will be warm rather than hot. Sitting it back on top of the rice in the covered pot for two minutes brings it back up.\n\nCOUNT THE BOWLS and tell the app. The 40 g of protein on this card is divided by six, and six is this app's guess, not hers. The number stops being a guess the moment you say how many bowls it actually made.\n\nLIME IS OPTIONAL IN HER RECIPE and it is the thing that lifts a rich green rice dish. Fresh wedges squeezed over at the table, not the bottled juice.\n\nLEFTOVERS: cooked chicken and rice keep three to four days in the fridge, which is the hard limit in this kitchen. Get it into containers within an hour of eating rather than leaving the pot on the hob. Cooked rice left sitting warm for hours is the one leftover that genuinely makes people ill."
+    }
+  ]
+}
