@@ -15,11 +15,30 @@ import type { MetadataRoute } from 'next';
  * 2026-08-14. One rule: if a page should not be indexed, it says so itself, and the crawler is let
  * in to read it saying so.
  */
+/* ADDENDUM, 2026-08-20. One exception to "nothing is disallowed," and the reasoning above still
+ * holds for why it is an exception rather than a reversal.
+ *
+ * /kitchen/find already declares `noindex, nofollow` at the layout level (src/app/kitchen/
+ * layout.tsx) and always has, so it was never at risk of the 2026-08-14 problem: there is no
+ * indexed URL under it that a Disallow could orphan, because there is nothing to orphan. noindex
+ * only speaks to SEARCH crawlers deciding what to index. It says nothing to an AI-training
+ * scraper, which isn't building a search index and has no reason to read or honour a page's own
+ * meta tags before deciding to fetch it. `robots.txt Disallow` is the one signal both kinds of bot
+ * actually check before requesting a URL.
+ *
+ * Found 2026-08-20 via `vercel logs`: in one ~28-minute window, 136 of 200 sampled requests to
+ * hoodii.studio were GET /kitchen/find, arriving every 150-300ms, which is not a person clicking.
+ * Every filter chip on that page is a real crawlable <Link>, and the page recomputes candidate
+ * scoring over the ~2,600-dish corpus on every hit with no cache -- exactly the shape a bot walking
+ * the combinatorial filter-URL space would turn into real, billed CPU time on Vercel's Fluid
+ * compute model, which is what actually drove that day's usage spike.
+ */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: '/kitchen/find',
     },
     sitemap: 'https://hoodii.studio/sitemap.xml',
     host: 'https://hoodii.studio',
