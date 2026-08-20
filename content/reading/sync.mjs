@@ -67,12 +67,27 @@ try {
   const acquireByKey = new Map((acquire?.entries ?? []).map((e) => [e.key, e]));
   acquireGenerated = acquire?.generated ?? null;
 
+  // queue.json's own array order is the SELECTION order (which pass picked each book), not the
+  // order QUEUE.md actually renders. refill.mjs computes a separate `displayed` sort for the
+  // page a human reads -- reading-status first, then gentlest-pace-first so slot 2 is never a
+  // brick -- and never writes that order back into queue.json. Mirroring queue.json's raw array
+  // order here reproduced that mismatch: /reading kept showing Middlesex first by array position
+  // even after its status changed back to unread, while QUEUE.md had already re-sorted it lower.
+  // Same sort, copied from refill.mjs, so /reading matches what he actually sees in Obsidian.
+  const paceRank = { propulsive: 0, steady: 1, demanding: 2 };
+  const heavy = (e) => (e.pages ?? 0) >= 600 || e.pace === 'demanding';
+  const displayed = [...entries].sort((a, b) =>
+    (a.status === 'reading' ? 0 : 1) - (b.status === 'reading' ? 0 : 1)
+    || (heavy(a) ? 1 : 0) - (heavy(b) ? 1 : 0)
+    || (paceRank[a.pace] ?? 1) - (paceRank[b.pace] ?? 1)
+    || (a.pages ?? 400) - (b.pages ?? 400));
+
   if (!DRY) {
     await client.query('begin');
     await client.query('delete from reading_acquisition_entry');
     await client.query('delete from reading_queue_entry');
 
-    for (const [i, e] of entries.entries()) {
+    for (const [i, e] of displayed.entries()) {
       await client.query(
         `insert into reading_queue_entry
            (key, position, title, author, year, status, track, score, categories, lists, pace,
