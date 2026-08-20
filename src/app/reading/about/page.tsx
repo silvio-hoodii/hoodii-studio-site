@@ -36,7 +36,7 @@ export default async function ReadingAbout() {
       <ul className="lines">
         <li><strong>Next up</strong>: the ten books actually queued. Refills itself when one gets finished.</li>
         <li><strong>All books</strong>: everything else scored. A book disappears from here the moment it enters the ten, which is why a book on Next up (The Correspondent, for example) will not also show up here.</li>
-        <li><strong>Finished</strong>: recall decks. Most are for books actually finished. A few are pre-read primers for books owned but not started, built from outside sources rather than from having read them, and marked as such.</li>
+        <li><strong>Finished</strong>: recall decks, one per book actually finished. Nothing here for a book owned but not started, or one I&apos;m planning to trade rather than read. There is no reason for a recall deck to exist for a book that was never read and never will be.</li>
       </ul>
 
       <h2 className="sec">What the score means</h2>

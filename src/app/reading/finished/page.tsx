@@ -40,10 +40,6 @@ export default async function ReadingFinished() {
           <span className="ba">{p.author} · {p.year}</span>
           <span className="bm">
             <span className="tnum">{p.cards.length}</span> cards · {kindLabel[p.kind]}
-            {/* Confirmed 2026-08-20, not inferred: finished_on is null on several books he HAS
-                read (just no exact date on record), so it can't drive this on its own. Can't Hurt
-                Me is the one book here he's actually confirmed he never read. */}
-            {p.slug === 'cant-hurt-me' && <> · owned, not actually read, a primer built from outside sources</>}
           </span>
         </Link>
       ))}
