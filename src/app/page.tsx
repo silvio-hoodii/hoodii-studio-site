@@ -13,6 +13,7 @@ import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import { getSummary as getMusicSummary } from '@/lib/music/db';
 import { getSummary as getSwimSummary, getLiveness as getSwimLiveness, shortPool } from '@/lib/swim/db';
 import { allPacks } from '@/lib/reading/packs';
+import { getAcquisitionMap, getQueue } from '@/lib/reading/queue-db';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -169,22 +170,25 @@ async function frenchRow(): Promise<Row> {
 
 async function readingRow(): Promise<Row> {
   try {
-    const packs = await allPacks();
-    if (!packs.length) throw new Error('no packs');
-    const cards = packs.reduce((n, p) => n + p.cards.length, 0);
-    /* Counted off the files, like every other row that has data behind it. The hand-written version
-       said "The shelf, the queue, and whether a book is worth keeping", which is not what the app
-       is or has ever been, and it sat there reading perfectly plausibly until somebody opened the
-       deployed page. */
+    const [packs, queue, acquisitionMap] = await Promise.all([allPacks(), getQueue(), getAcquisitionMap()]);
+    if (!packs.length && !queue.length) throw new Error('no packs, no queue');
+    const borrowNowAtHome = [...acquisitionMap.values()].filter((a) => a.homeBranchNow).length;
+    /* Counted off the files and the mirror, like every other row that has data behind it. This
+       row's own history is why: the hand-written version once said "The shelf, the queue, and
+       whether a book is worth keeping" before there was any queue feature at all, and it sat there
+       reading perfectly plausibly until somebody opened the deployed page. Writing a fact down
+       here that a script did not just compute is the exact mistake that comment is about. */
     return {
       label: 'Reading',
-      line: <><span className="tnum">{packs.length}</span> books finished, and <span className="tnum">{cards}</span> cards to find out whether any of it stuck</>,
-      sub: 'miss one and it hands back a recap of just that stretch',
+      line: borrowNowAtHome > 0
+        ? <><span className="tnum">{borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{packs.length}</span> finished with recall cards</>
+        : <><span className="tnum">{queue.length}</span> queued to read next, <span className="tnum">{packs.length}</span> finished with recall cards</>,
+      sub: 'miss a recall card and it hands back a recap of just that stretch',
       href: '/reading',
     };
   } catch {
-    // A filesystem hiccup must not take the front door down with it.
-    return { label: 'Reading', line: 'Recall cards and a debrief for books I have finished', href: '/reading' };
+    // A filesystem or Neon hiccup must not take the front door down with it.
+    return { label: 'Reading', line: 'The next ten to read, and a debrief for what I have finished', href: '/reading' };
   }
 }
 

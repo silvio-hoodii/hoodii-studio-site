@@ -269,3 +269,216 @@
 
 .reading .none { font-family: var(--font-mono), ui-monospace, monospace; padding: 14px 0; }
 .reading .src { margin-top: 34px; max-width: 62ch; }
+
+/* ---- next-up / finished nav ----
+ *
+ * The gym learned this the hard way (gym.css .surf-tab, 2026-08-16): a surface nav rendered as
+ * small inline text was measured at 35px and read as prose, not as a control, on a page opened
+ * one-handed. Same recipe here rather than the underline-link version this route had a first draft
+ * of: 44px, a real border, the active one filled solid rather than just coloured differently, so
+ * it survives a glance and not just a close look. */
+.reading .surf-nav {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.reading .rtab {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--muted-foreground);
+  text-decoration: none;
+}
+
+.reading .rtab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+
+.reading .rtab:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+
+/* ---- staleness, same shape as /swim's .wrong and /health's .stale: a left rule, a mono kicker,
+   the error (if any) as a quiet mono line underneath. --destructive because this is a claim that
+   may already be false, not a fact that is true right now. */
+.reading .stale {
+  border-left: 3px solid var(--destructive);
+  padding: 10px 0 10px 14px;
+  margin-top: 20px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  max-width: 58ch;
+}
+
+.reading .stale .k {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--destructive);
+  margin-bottom: 5px;
+}
+
+.reading .stale .why {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  word-break: break-word;
+}
+
+/* Absence, not wrongness: no acquisition data at all is an honest gap, not a stale claim, so it
+   gets the quiet muted treatment /reading .src already uses rather than a bordered alarm. */
+.reading .note {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin-top: 16px;
+  max-width: 56ch;
+}
+
+.reading .note .why {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  word-break: break-word;
+}
+
+/* ---- the queue ---- */
+
+.reading .qrow { border-top: 1px solid var(--border); }
+
+.reading .qrow > summary {
+  cursor: pointer;
+  list-style: none;
+  min-height: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 14px;
+  padding: 12px 0;
+}
+
+.reading .qrow > summary::-webkit-details-marker { display: none; }
+.reading .qrow[open] > summary { color: var(--foreground); }
+
+/* Native <summary> is keyboard-focusable and the deck's own .sect/.more never got a visible ring
+   for it (checked while building this: neither has one). Not fixing those here, out of scope for
+   this page, but new code does not get to ship the same gap. Same values as kitchen.css's
+   details.fold, the one place on the site that already solved this. */
+.reading .qrow > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+.reading .qmain { display: flex; flex-direction: column; }
+.reading .qt { font-size: 16px; line-height: 1.3; }
+.reading .qa { font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
+
+.reading .qmeta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.reading .qtrack {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* A verdict is a fact about today. `.now` is the one case that is TRUE right now (a home-branch
+   copy on the shelf), which is the only thing on this page that gets --signal, same rule /swim
+   uses for "open now" and /reading .result uses for a score you just earned. */
+.reading .verdict {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px 8px;
+}
+
+.reading .verdict.now { color: var(--signal); border-color: var(--signal); }
+.reading .verdict.owned { color: var(--muted-foreground); border-style: dashed; }
+
+.reading .qbody { padding-bottom: 16px; }
+
+.reading .qwhy {
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 58ch;
+  margin: 0;
+}
+
+.reading .qpicked,
+.reading .qtags {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-top: 10px;
+}
+
+.reading .qacq { margin-top: 14px; }
+
+.reading .qacq-detail {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  max-width: 56ch;
+  margin: 0;
+}
+
+.reading .qacq-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  margin: 10px 0 4px;
+}
+
+.reading .qbranch {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.reading .qbranch:last-child { border-bottom: 0; }
+.reading .qb-status { font-family: var(--font-mono), ui-monospace, monospace; font-size: 11.5px; color: var(--muted-foreground); }
+
+.reading .qpricegroup {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.reading .qpricegroup:last-child { border-bottom: 0; }
+
+.reading .qp-channel {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.reading .qp-line {
+  display: block;
+  font-size: 13.5px;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reading .qp-failed { color: var(--muted-foreground); font-style: italic; }

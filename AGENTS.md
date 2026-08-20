@@ -78,6 +78,9 @@ always lose to the thing that exists.
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
 | `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
+| `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
+| `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
+| `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
 | `/kitchen/login`, `/gym/login`, `/health/login`, `/french/login` | The gate, one cookie for all | public |
 
@@ -93,6 +96,16 @@ endpoint that makes four Spotify calls per hit.
 quiet evening. That is why `src/lib/music/spotify.ts` exists as a separate client that **throws**,
 why every run writes a `music_sync` row, and why `/music` and the hub row both shout when the last
 successful run is over 36 hours old. Do not add a catch that returns a default to that file.
+
+**`/reading`'s queue is `force-dynamic` on purpose.** It reads Neon at request time, same as
+`/swim`. Without that directive Next prerenders it once at build time and it never looks at the
+mirror again, which was caught 2026-08-20 by checking the build's own route table (`ƒ` vs `○`)
+rather than trusting that a page which fetches from a DB must be dynamic by default. It is not.
+Refreshing the data: run `refill.mjs` and/or `acquire.mjs` in `ReadingOS/`, then
+`node content/reading/sync.mjs` here, then redeploy nothing (Neon updates immediately, no rebuild
+needed). The green `.verdict.now` badge is the one case that earns `--signal` on this page: a copy
+on the shelf at Westbrook or Central today, not just "BORROW NOW" system-wide, which is a
+different and much less useful fact.
 
 **Recipes are data, and `pnpm build` runs `content/kitchen/validate.mjs --strict`.** A broken recipe
 cannot deploy. Read `content/kitchen/schema/RECIPE-SCHEMA.md` before touching a recipe.
