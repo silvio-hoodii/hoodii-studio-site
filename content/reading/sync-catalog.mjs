@@ -59,9 +59,13 @@ try {
 
   // Highest-scoring row per key wins, across all four masters, same as add.mjs.
   const byKey = new Map();
+  const sources = [];
   for (const [track, masterPath, tagDir] of MASTERS) {
     const master = readJSON(masterPath, null);
     if (!master) continue;
+    for (const s of master.sources ?? []) {
+      sources.push({ slug: s.slug, track, name: s.name, category: s.category, url: s.url ?? null, count: s.count ?? null, status: s.status ?? null });
+    }
     const tags = new Map();
     if (existsSync(tagDir)) {
       for (const f of readdirSync(tagDir).filter((x) => x.endsWith('.json'))) {
@@ -89,6 +93,8 @@ try {
   // Refuses to write on zero, the way content/swim/sync.mjs and content/reading/sync.mjs do.
   if (!rows.length) throw new Error('0 catalog rows resolved (masters unreadable or all excluded), refusing to write');
 
+  if (!sources.length) throw new Error('0 source lists resolved, refusing to write');
+
   if (!DRY) {
     await client.query('begin');
     await client.query('delete from reading_catalog_entry');
@@ -105,6 +111,16 @@ try {
     }
     const [{ n }] = (await client.query('select count(*)::int n from reading_catalog_entry')).rows;
     if (n !== rowCount) throw new Error(`${rowCount} rows built but ${n} written: ${rowCount - n} collided on key.`);
+
+    await client.query('delete from reading_source_list');
+    for (const s of sources) {
+      await client.query(
+        `insert into reading_source_list (slug, track, name, category, url, count, status)
+         values ($1,$2,$3,$4,$5,$6,$7)
+         on conflict (slug) do update set track = excluded.track`,
+        [s.slug, s.track, s.name, s.category, s.url, s.count, s.status],
+      );
+    }
     await client.query('commit');
   } else {
     rowCount = rows.length;

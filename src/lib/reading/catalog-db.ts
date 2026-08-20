@@ -45,9 +45,26 @@ export async function getCatalogPage(f: CatalogFilters): Promise<{ entries: Cata
 
 export async function getCatalogTrackCounts(): Promise<Record<Track, number>> {
   const rows = (await sql`select track, count(*)::int n from reading_catalog_entry group by track`) as Array<{ track: Track; n: number }>;
-  const out = { canon: 0, current: 0, nonfiction: 0, genre: 0 } as Record<Track, number>;
+  const out: Record<Track, number> = { canon: 0, current: 0, nonfiction: 0, genre: 0, spanish: 0 };
   for (const r of rows) out[r.track] = r.n;
   return out;
+}
+
+export interface SourceList {
+  slug: string;
+  track: Track;
+  name: string;
+  category: string;
+  url: string | null;
+  count: number | null;
+  status: string | null;
+}
+
+export async function getSourceLists(): Promise<SourceList[]> {
+  return (await sql`
+    select slug, track, name, category, url, count, status from reading_source_list
+     order by track, category, name
+  `) as SourceList[];
 }
 
 export interface CatalogLiveness {

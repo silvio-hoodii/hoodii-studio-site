@@ -97,6 +97,22 @@ create index if not exists reading_catalog_entry_score on reading_catalog_entry 
 create index if not exists reading_catalog_entry_track on reading_catalog_entry (track);
 create index if not exists reading_catalog_entry_tagged on reading_catalog_entry (tagged);
 
+-- The 33 actual named lists the scores are built from (Modern Library 100, Booker winners, NYT
+-- current bestsellers, etc.) -- each master.json carries these at the top level, one row per
+-- list, not per book. Synced alongside the catalog since they come from the same five files.
+-- `count` is the list's own real size (1001 Books really does carry 1,305 titles); `status` says
+-- whether the whole list was captured ('ok') or only part of it ('partial').
+create table if not exists reading_source_list (
+  slug      text primary key,
+  track     text not null,
+  name      text not null,
+  category  text not null,   -- critic | award | popular
+  url       text,
+  count     integer,
+  status    text
+);
+create index if not exists reading_source_list_track on reading_source_list (track);
+
 -- Every run of content/reading/sync.mjs writes a row here, successful or not -- same two-alarm
 -- shape as swim_sync. `queue_updated` and `acquire_generated` are the source files' own timestamps,
 -- not the mirror-write time, so a sync that keeps re-pushing a stale queue.json still reads as

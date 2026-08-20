@@ -65,9 +65,9 @@ export default async function ReadingCatalog({
 
       <h1>All books</h1>
       <p className="blurb">
-        Everything the canon and current engines have scored that I haven&apos;t queued or read yet.
-        Ranked, searchable, and honest about which ones aren&apos;t detailed enough to actually
-        queue.
+        Everything scored, minus the ten already on <Link href="/reading">Next up</Link> and
+        anything finished. Ranked, searchable, honest about what&apos;s not detailed enough to
+        queue yet.
       </p>
       {liveness.totalRows != null && (
         <p className="stat">
@@ -127,6 +127,8 @@ export default async function ReadingCatalog({
           {filters.page < totalPages && <Link className="chip" href={catalogHref(filters, { page: filters.page + 1 })}>Next</Link>}
         </nav>
       )}
+
+      <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
     </div>
   );
 }

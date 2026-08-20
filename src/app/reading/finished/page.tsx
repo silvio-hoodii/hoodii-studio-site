@@ -40,15 +40,15 @@ export default async function ReadingFinished() {
           <span className="ba">{p.author} · {p.year}</span>
           <span className="bm">
             <span className="tnum">{p.cards.length}</span> cards · {kindLabel[p.kind]}
+            {/* Confirmed 2026-08-20, not inferred: finished_on is null on several books he HAS
+                read (just no exact date on record), so it can't drive this on its own. Can't Hurt
+                Me is the one book here he's actually confirmed he never read. */}
+            {p.slug === 'cant-hurt-me' && <> · owned, not actually read, a primer built from outside sources</>}
           </span>
         </Link>
       ))}
 
-      <p className="src">
-        Every fact in these was written from study guides and source texts fetched and saved at the
-        time, never from a model&apos;s memory of the book. The saved pages are the reason I trust
-        them, and each one lists what it was built from.
-      </p>
+      <p className="src">Built from study guides and source texts, never a model&apos;s memory of the book.</p>
     </div>
   );
 }

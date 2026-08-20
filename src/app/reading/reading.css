@@ -31,6 +31,7 @@
   max-width: 52ch;
   margin: 14px 0 0;
 }
+.reading .blurb a { color: var(--foreground); text-decoration: underline; text-underline-offset: 3px; }
 
 .reading .stat {
   font-family: var(--font-mono), ui-monospace, monospace;
@@ -269,6 +270,8 @@
 
 .reading .none { font-family: var(--font-mono), ui-monospace, monospace; padding: 14px 0; }
 .reading .src { margin-top: 34px; max-width: 62ch; }
+.reading .src a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.reading .src a:hover { color: var(--foreground); }
 
 /* ---- next-up / finished nav ----
  *

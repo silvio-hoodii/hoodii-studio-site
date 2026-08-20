@@ -75,11 +75,7 @@ export default async function ReadingQueue() {
         <QueueRow key={entry.key} entry={entry} acquisition={acquisitionMap.get(entry.key)} />
       ))}
 
-      <p className="src">
-        Ranking comes from ReadingOS&apos;s canon + current engines (critic / award / popular list
-        coverage). Acquisition status comes from live CPL, Internet Archive and retail lookups:
-        never a guess, and a channel that fails to resolve says so rather than going quiet.
-      </p>
+      <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
     </div>
   );
 }
