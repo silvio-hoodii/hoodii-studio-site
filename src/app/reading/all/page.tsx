@@ -21,7 +21,7 @@ export const metadata = {
  * default filters in at build time and every other query would 404 into stale HTML. */
 export const dynamic = 'force-dynamic';
 
-const TRACKS: Track[] = ['canon', 'current', 'nonfiction', 'genre'];
+const TRACKS: Track[] = ['canon', 'current', 'nonfiction', 'genre', 'spanish'];
 
 /* The 3,600-plus books the ranking engines know about that are not in the ten and not already
  * read -- everything QUEUE.md deliberately does not show you at once. README's own words: "You are

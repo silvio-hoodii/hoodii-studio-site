@@ -11,11 +11,12 @@
 -- One book in the live ten. `key` is queue.json's own dedup key (e.g. "clarke|piranesi"), already
 -- stable across runs, so no manufactured id is needed the way swim_session needed one.
 --
--- `position` preserves queue.json's own array order, which is NOT a sort by score (Middlesex is
--- score 1 and sits first because it is the owned/reading book; The Underground Railroad is score
--- 8.4 and sits near the end). Re-sorting by score in SQL would show a different book first than
--- QUEUE.md does, which is confusing for no reason -- the page should show the same ten in the same
--- order Silvio already sees in Obsidian.
+-- `position` is NOT queue.json's own array order -- that order is the SELECTION order (which
+-- refill.mjs pass picked each book), not the order a human reads. sync.mjs computes the same
+-- reading-first-then-gentlest-first sort refill.mjs uses to render QUEUE.md, so this matches what
+-- Silvio actually sees in Obsidian rather than an internal bookkeeping order (found 2026-08-20:
+-- Middlesex kept showing first here by array position even after its status flipped back to
+-- unread, while QUEUE.md had already resorted it down).
 create table if not exists reading_queue_entry (
   key         text primary key,
   position    integer not null,
@@ -23,7 +24,7 @@ create table if not exists reading_queue_entry (
   author      text not null,
   year        integer,
   status      text not null,   -- unread | reading | finished
-  track       text not null,   -- canon | current | nonfiction | genre
+  track       text not null,   -- canon | current | nonfiction | genre | spanish
   score       numeric,
   categories  text[] not null default '{}',
   lists       text[] not null default '{}',
@@ -76,7 +77,7 @@ create index if not exists reading_acquisition_entry_verdict on reading_acquisit
 -- rather than a book appearing to compete with itself.
 create table if not exists reading_catalog_entry (
   key         text primary key,
-  track       text not null,   -- canon | current | nonfiction | genre
+  track       text not null,   -- canon | current | nonfiction | genre | spanish
   title       text not null,
   author      text not null,
   year        integer,

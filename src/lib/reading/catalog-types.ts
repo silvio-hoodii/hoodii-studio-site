@@ -2,7 +2,7 @@
  * and ./types: this file can be imported by a client component later without dragging the DB
  * client with it. */
 
-export type Track = 'canon' | 'current' | 'nonfiction' | 'genre';
+export type Track = 'canon' | 'current' | 'nonfiction' | 'genre' | 'spanish';
 
 export interface CatalogEntry {
   key: string;
@@ -24,7 +24,7 @@ export interface CatalogEntry {
 }
 
 export const trackLabel: Record<Track, string> = {
-  canon: 'canon', current: '🔥 current', nonfiction: 'non-fiction', genre: 'genre',
+  canon: 'canon', current: '🔥 current', nonfiction: 'non-fiction', genre: 'genre', spanish: 'Spanish',
 };
 
 export interface CatalogFilters {

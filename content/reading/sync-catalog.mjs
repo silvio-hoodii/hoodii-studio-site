@@ -40,6 +40,10 @@ const MASTERS = [
   ['current', rp('data', 'current', 'master.json'), rp('data', 'current', 'tags')],
   ['nonfiction', rp('data', 'nonfiction', 'master.json'), rp('data', 'nonfiction', 'tags')],
   ['genre', rp('data', 'genre', 'master.json'), rp('data', 'genre', 'tags')],
+  // Missing from the first build of this sync entirely -- 156 books, no tags directory (there is
+  // no Hispanophone public-vote list to cross-validate against, per README's "Spanish track"),
+  // so every one of these lands honestly marked tagged:false rather than being left out.
+  ['spanish', rp('data', 'spanish', 'master.json'), rp('data', 'spanish', 'tags')],
 ];
 
 const client = new Client(url);
