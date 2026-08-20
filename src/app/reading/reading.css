@@ -413,7 +413,11 @@
 }
 
 .reading .verdict.now { color: var(--signal); border-color: var(--signal); }
-.reading .verdict.owned { color: var(--muted-foreground); border-style: dashed; }
+/* .owned (queue page: already in hand) and .unset (catalog: not tagged yet) are two different
+   facts that share one visual: dashed rather than solid, because both are a status NOTE, not a
+   verdict about what to do today. Two class names on purpose, so neither reads as the other. */
+.reading .verdict.owned,
+.reading .verdict.unset { color: var(--muted-foreground); border-style: dashed; }
 
 .reading .qbody { padding-bottom: 16px; }
 
@@ -482,3 +486,52 @@
 }
 
 .reading .qp-failed { color: var(--muted-foreground); font-style: italic; }
+
+/* ---- /reading/all: search, filters, pagination ----
+ *
+ * Same mechanism as /kitchen/find's FilterBar: links and one GET form, no client JS, so it works
+ * before hydration and every result is a bookmarkable URL. .chip is the shared global control,
+ * declared once and already used by /kitchen and /gym; this reuses it rather than inventing a
+ * fourth filter pill. */
+.reading .csearch { display: flex; gap: 8px; margin-top: 18px; }
+
+.reading .csearch input[type="search"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;   /* 16px or iOS zooms the whole page on focus, same fix kitchen's searchrow needed */
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: var(--radius);
+}
+
+.reading .chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.reading .cscore {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.reading .qwhy-muted { color: var(--muted-foreground); font-size: 13.5px; }
+.reading .qlists { margin-top: 6px; }
+
+.reading .pager {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.reading .pager-pos {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}

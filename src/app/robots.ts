@@ -32,13 +32,17 @@ import type { MetadataRoute } from 'next';
  * scoring over the ~2,600-dish corpus on every hit with no cache -- exactly the shape a bot walking
  * the combinatorial filter-URL space would turn into real, billed CPU time on Vercel's Fluid
  * compute model, which is what actually drove that day's usage spike.
+ *
+ * /reading/all gets the same Disallow, added the same day and BEFORE it ever shipped: same shape
+ * (search + filter chips over thousands of rows, freshly queried every hit, no cache), so it gets
+ * the fix at the same time it's built rather than after a bot finds it first.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/kitchen/find',
+      disallow: ['/kitchen/find', '/reading/all'],
     },
     sitemap: 'https://hoodii.studio/sitemap.xml',
     host: 'https://hoodii.studio',

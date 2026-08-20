@@ -62,6 +62,40 @@ create table if not exists reading_acquisition_entry (
 );
 create index if not exists reading_acquisition_entry_verdict on reading_acquisition_entry (verdict);
 
+-- Every book in the four masters (canon, current, nonfiction, genre) that is NOT already in the
+-- live ten or in ReadingOS/data/finished.json -- everything the ranking engines know about that
+-- Silvio has neither queued nor read. Source: ReadingOS/data/master.json + data/current/master.json
+-- + data/nonfiction/master.json + data/genre/master.json, cross-referenced against data/tags/ for
+-- which ones have the rich metadata (pace, mood, why) that makes a book queue-eligible at all --
+-- see ReadingOS/README.md "Deepening (the tagging bottleneck)": only a few hundred of ~2,934+ are
+-- tagged. Untagged books still get a row here, honestly marked `tagged = false`, rather than being
+-- hidden -- a book add.mjs would refuse to queue is still a real fact about the catalog.
+--
+-- A book that exists in more than one master (canon AND current both list some books) keeps only
+-- its higher-scoring row, same tie-break scripts/add.mjs already uses, so there is one row per key
+-- rather than a book appearing to compete with itself.
+create table if not exists reading_catalog_entry (
+  key         text primary key,
+  track       text not null,   -- canon | current | nonfiction | genre
+  title       text not null,
+  author      text not null,
+  year        integer,
+  score       numeric not null,
+  categories  text[] not null default '{}',
+  lists       text[] not null default '{}',   -- source list names, for "why is this ranked here"
+  tagged      boolean not null default false,
+  pace        text,
+  pace_note   text,
+  pages       integer,
+  era         text,
+  language    text,
+  mood        text[] not null default '{}',
+  why         text
+);
+create index if not exists reading_catalog_entry_score on reading_catalog_entry (score desc);
+create index if not exists reading_catalog_entry_track on reading_catalog_entry (track);
+create index if not exists reading_catalog_entry_tagged on reading_catalog_entry (tagged);
+
 -- Every run of content/reading/sync.mjs writes a row here, successful or not -- same two-alarm
 -- shape as swim_sync. `queue_updated` and `acquire_generated` are the source files' own timestamps,
 -- not the mirror-write time, so a sync that keeps re-pushing a stale queue.json still reads as
@@ -78,3 +112,15 @@ create table if not exists reading_sync (
 );
 create index if not exists reading_sync_ran on reading_sync (ran_at desc);
 create index if not exists reading_sync_ok on reading_sync (ok, ran_at desc);
+
+-- Same idea as reading_sync, separate table because the catalog syncs on a different cadence --
+-- the masters only change when a new source list gets added, not every time a book is finished --
+-- so its own staleness has nothing to do with the queue's.
+create table if not exists reading_catalog_sync (
+  id       bigserial primary key,
+  ran_at   timestamptz not null default now(),
+  ok       boolean     not null,
+  rows     integer,
+  error    text
+);
+create index if not exists reading_catalog_sync_ran on reading_catalog_sync (ran_at desc);
