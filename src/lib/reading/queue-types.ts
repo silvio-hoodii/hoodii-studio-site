@@ -88,6 +88,33 @@ export const trackLabel: Record<Track, string> = {
   genre: 'genre',
 };
 
+/** picked_via is refill.mjs's own audit trail (README: "for auditability"), not reader-facing
+ *  vocabulary -- so this translates its exact strings, plus the two patterns it builds
+ *  dynamically ("relaxed: x+y" when a cap was loosened to fill the ten, "added by hand (...)"
+ *  for a manual add), into a sentence a reader who has never opened refill.mjs can follow. */
+export function pickedViaLabel(via: string | null): string {
+  if (!via) return 'not recorded';
+  const known: Record<string, string> = {
+    'language floor': 'filling the non-English minimum',
+    'fresh floor': 'filling the just-published minimum',
+    'current quota': 'filling the talked-about-now slots',
+    'spread: non-fiction': 'filling the non-fiction minimum',
+    'spread: genre': 'filling the genre minimum',
+    'spread: short': 'filling the short-book minimum',
+    score: 'highest score left in canon',
+  };
+  if (known[via]) return known[via];
+  if (via.startsWith('relaxed: ')) {
+    const caps = via.slice('relaxed: '.length).split('+').join(' and ');
+    return `highest score left, once the ${caps} cap was loosened to fill the ten`;
+  }
+  if (via.startsWith('added by hand')) {
+    const detail = via.match(/\(([^)]+)\)/)?.[1];
+    return detail ? `added by hand (${detail})` : 'added by hand';
+  }
+  return via;
+}
+
 export const verdictLabel: Record<Verdict, string> = {
   'BORROW NOW': 'Borrow now',
   'HOLD NOW': 'Hold now',

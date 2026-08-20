@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { getAcquisitionMap, getLiveness, getQueue } from '@/lib/reading/queue-db';
 import {
-  dedupePriceItems, formatPriceLine, priceChannelLabel, priceChannelOrder, trackLabel, verdictLabel,
+  dedupePriceItems, formatPriceLine, pickedViaLabel, priceChannelLabel, priceChannelOrder, trackLabel,
+  verdictLabel,
 } from '@/lib/reading/queue-types';
 import type { AcquisitionEntry, QueueEntry } from '@/lib/reading/queue-types';
 
@@ -103,8 +104,12 @@ function QueueRow({ entry, acquisition }: { entry: QueueEntry; acquisition?: Acq
       <div className="body qbody">
         {entry.why && <p className="qwhy">{entry.why}</p>}
         <p className="qpicked">
-          {entry.score != null && <><span className="tnum">{entry.score}</span> · </>}
-          picked via: {entry.pickedVia ?? 'unstated'}
+          {entry.score != null && (
+            <><span className="tnum" title="Breadth of critic/award/popular agreement, not a rating out of 10">
+              {entry.score} score
+            </span> · </>
+          )}
+          Here for {pickedViaLabel(entry.pickedVia)}.
         </p>
         <p className="qtags">
           {[entry.pace, entry.era, entry.language, entry.pages ? `${entry.pages}pp` : null]

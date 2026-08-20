@@ -79,6 +79,8 @@ always lose to the thing that exists.
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
 | `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
 | `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
+| `/reading/all` | The full catalog (~3,700 rows) the ranking engines know about, minus the ten and anything finished. Search + track filter + queue-eligibility filter, GET form, no client JS. `noindex,nofollow` AND in `robots.ts`'s Disallow -- same bot-cost shape as `/kitchen/find`, so it ships with both from day one. Read-only mirror pushed by `content/reading/sync-catalog.mjs` | no writes |
+| `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists the 33 real source lists behind the scores. Static-shaped, reads `reading_source_list` | no writes |
 | `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |

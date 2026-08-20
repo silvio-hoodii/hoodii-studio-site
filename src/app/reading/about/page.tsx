@@ -43,7 +43,7 @@ export default async function ReadingAbout() {
       <p className="qwhy">
         Not a quality verdict. It counts how many <em>kinds</em> of list agree on a book: critic,
         award, popular. One prize win alone scores lower than being shortlisted for three different
-        kinds of recognition, because the point is breadth of agreement, not any single win.
+        kinds of recognition.
       </p>
 
       <h2 className="sec">The five tracks</h2>

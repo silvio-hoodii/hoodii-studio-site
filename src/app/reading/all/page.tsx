@@ -106,7 +106,7 @@ export default async function ReadingCatalog({
       </div>
       <div className="chiprow" role="group" aria-label="Detail filter">
         <Link className={`chip ${filters.tagged ? 'on' : ''}`} href={catalogHref(filters, { tagged: !filters.tagged })}>
-          detailed only
+          queue-eligible only
         </Link>
       </div>
 
@@ -144,13 +144,13 @@ function CatalogRow({ entry }: { entry: CatalogEntry }) {
         <span className="qmeta">
           <span className="qtrack">{trackLabel[entry.track]}</span>
           <span className="tnum cscore">{entry.score}</span>
-          {!entry.tagged && <span className="verdict unset">Not detailed yet</span>}
+          {!entry.tagged && <span className="verdict unset">Not queue-eligible yet</span>}
         </span>
       </summary>
       <div className="body qbody">
         {entry.why
           ? <p className="qwhy">{entry.why}</p>
-          : <p className="qwhy qwhy-muted">Not tagged yet. scripts/add.mjs would refuse to queue this until it is: tag it in ReadingOS/data/tags/ to unlock pace, mood, and the actual case for it.</p>}
+          : <p className="qwhy qwhy-muted">Not tagged yet. See <Link href="/reading/about">how this works</Link>.</p>}
         {entry.tagged && (
           <p className="qtags">
             {[entry.pace, entry.era, entry.language, entry.pages ? `${entry.pages}pp` : null]
