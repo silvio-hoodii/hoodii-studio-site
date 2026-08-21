@@ -6,7 +6,7 @@ import type { Track } from '@/lib/reading/catalog-types';
 
 export const metadata = {
   title: 'Reading: How this works',
-  description: 'What the score means, what the three pages are for, and the actual lists behind it.',
+  description: 'What the score means, what the four pages are for, and the actual lists behind it.',
   alternates: { canonical: '/reading/about' },
 };
 
