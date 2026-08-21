@@ -629,3 +629,39 @@
   font-size: 12px; line-height: 1.4; color: var(--muted-foreground);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+
+/* Tier chips carry the same colour as the badge they select, so the control and the thing it
+ * filters read as one idea rather than two vocabularies. */
+.reading .chip-grab.on { background: var(--signal); border-color: var(--signal); color: var(--background); }
+.reading .chip-maybe { color: var(--muted-foreground); }
+
+.reading .tiernote {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-left: 2px solid var(--border);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+.reading .tiernote strong {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--foreground); margin-right: 6px;
+}
+
+/* The legend is a definition list because that is what it is: three terms and what they mean.
+ * It sits at the bottom of every view so the badge never has to be guessed at. */
+.reading .tierlegend { margin: 26px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+.reading .tierlegend > div { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 10px; margin-bottom: 8px; }
+.reading .tierlegend dt { margin: 0; }
+.reading .tierlegend dd { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
+.reading .tierlegend .tierbadge {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  text-align: center; padding: 3px 0; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.reading .tierlegend .t-grab { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 45%, transparent); }
+.reading .tierlegend .t-good { color: var(--foreground); }
+.reading .tierlegend .t-maybe { color: var(--muted-foreground); opacity: 0.75; }

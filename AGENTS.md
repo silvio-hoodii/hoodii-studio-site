@@ -80,6 +80,7 @@ always lose to the thing that exists.
 | `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
 | `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
 | `/reading/all` | The full catalog (~3,700 rows) the ranking engines know about, minus the ten and anything finished. Search + track filter + queue-eligibility filter, GET form, no client JS. `noindex,nofollow` AND in `robots.ts`'s Disallow -- same bot-cost shape as `/kitchen/find`, so it ships with both from day one. Read-only mirror pushed by `content/reading/sync-catalog.mjs` | no writes |
+| `/reading/shelf` | The shop-floor spine lookup, built 2026-08-21 in a second-hand shop. Section, then author letter, then tier and era, because that is the order the aisles are walked. Counts on every letter so an empty one can be skipped from across the room. Same GET-form, no-client-JS shape as `/reading/all`, and the same `noindex` + `robots.ts` Disallow pair. Read-only mirror of `reading_shelf_entry`, pushed by `content/reading/sync-shelf.mjs` | no writes |
 | `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists the 33 real source lists behind the scores. Static-shaped, reads `reading_source_list` | no writes |
 | `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
@@ -98,6 +99,21 @@ endpoint that makes four Spotify calls per hit.
 quiet evening. That is why `src/lib/music/spotify.ts` exists as a separate client that **throws**,
 why every run writes a `music_sync` row, and why `/music` and the hub row both shout when the last
 successful run is over 36 hours old. Do not add a catch that returns a default to that file.
+
+**The scoring was rebuilt on 2026-08-21 and every reading surface now reads ONE pool.** It used
+to be five separately-scored corpora, each with its own ceiling (nonfiction and genre topped out
+near 1.5 off three or four source lists, canon reached 10.8 off thirteen), and `refill.mjs` blended
+those incomparable numbers into one ten-book queue behind eight variety quotas. Seven of the ten
+scored under 4 while The Grapes of Wrath sat outside it. The quotas are gone, only the two anti-slog
+caps remain, and `ReadingOS/scripts/lib/score.mjs` holds the whole formula in one readable table:
+per-source weights, same-prize deduplication, rank inside a ranked list, and winner detection for
+the archives that list winners and nominees together. **Do not add a score constant anywhere else.**
+
+**Refreshing reading data is four commands, in order**, from `ReadingOS/` then here:
+`node scripts/ingest.mjs all` → `node scripts/build-shelf-finder.mjs` → then in this repo
+`node content/reading/sync-catalog.mjs` and `node content/reading/sync-shelf.mjs`. Run
+`scripts/refill.mjs` in between if the queue itself should re-rank. `refill.mjs` re-ranks rather
+than tops up: an unread book has no tenure, but anything he has started is pinned.
 
 **`/reading`'s queue is `force-dynamic` on purpose.** It reads Neon at request time, same as
 `/swim`. Without that directive Next prerenders it once at build time and it never looks at the

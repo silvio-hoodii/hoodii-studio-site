@@ -1,5 +1,6 @@
 import 'server-only';
 import { sql } from './queue-db';
+import { ERA_SPLIT } from './shelf-types';
 import type { Shelf, ShelfEntry, ShelfFilters, Tier } from './shelf-types';
 
 type Row = {
@@ -26,30 +27,47 @@ const toEntry = (r: Row): ShelfEntry => ({
 const where = (f: ShelfFilters) => {
   const like = f.q ? `%${f.q}%` : null;
   const searching = !!f.q;
-  return { like, searching, letter: searching ? null : (f.letter ?? null) };
+  return {
+    like,
+    searching,
+    letter: searching ? null : (f.letter ?? null),
+    // Era is a year range, not a stored column, so the 96 books with no recorded year match
+    // neither side rather than being silently swept into one.
+    yearMax: f.era === 'classic' ? ERA_SPLIT - 1 : null,
+    yearMin: f.era === 'contemporary' ? ERA_SPLIT : null,
+    // An explicit tier wins. With none set, browsing shows grab + good and a search shows
+    // everything, because at the shelf "it is on no list at all" is still a real answer.
+    tier: f.tier ?? null,
+    hideLongShots: !f.tier && !searching,
+  };
 };
 
 export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEntry[]; total: number }> {
-  const { like, searching, letter } = where(f);
-  const includeLong = f.long || searching;
+  const w = where(f);
 
   const rows = (await sql`
     select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status
       from reading_shelf_entry
-     where (${like}::text is null or title ilike ${like} or author ilike ${like} or file_under ilike ${like})
+     where (${w.like}::text is null or title ilike ${w.like} or author ilike ${w.like} or file_under ilike ${w.like})
        and (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
-       and (${letter}::text is null or letter = ${letter})
-       and (${includeLong} = true or tier <> 'maybe')
+       and (${w.letter}::text is null or letter = ${w.letter})
+       and (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      order by file_under, title
      limit 400
   `) as Row[];
 
   const [countRow] = (await sql`
     select count(*)::int n from reading_shelf_entry
-     where (${like}::text is null or title ilike ${like} or author ilike ${like} or file_under ilike ${like})
+     where (${w.like}::text is null or title ilike ${w.like} or author ilike ${w.like} or file_under ilike ${w.like})
        and (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
-       and (${letter}::text is null or letter = ${letter})
-       and (${includeLong} = true or tier <> 'maybe')
+       and (${w.letter}::text is null or letter = ${w.letter})
+       and (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
   `) as { n: number }[];
 
   return { entries: rows.map(toEntry), total: countRow?.n ?? 0 };
@@ -60,29 +78,70 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
  *  Deliberately ignores `letter` itself: the rail must not collapse to the letter already
  *  selected. Ignores `q` too, since during a search the rail is not what he is using. */
 export async function getLetterCounts(f: ShelfFilters): Promise<Record<string, number>> {
+  const w = where({ ...f, q: undefined, letter: undefined });
   const rows = (await sql`
     select letter, count(*)::int n
       from reading_shelf_entry
      where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
-       and (${f.long ?? false} = true or tier <> 'maybe')
+       and (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      group by letter
   `) as { letter: string; n: number }[];
   return Object.fromEntries(rows.map((r) => [r.letter, r.n]));
+}
+
+/** Counts for the tier chips, under the current section and era but ignoring tier itself, so a
+ *  chip always shows what selecting it would give rather than collapsing to the current pick. */
+export async function getTierCounts(f: ShelfFilters): Promise<Record<string, number>> {
+  const w = where({ ...f, q: undefined, tier: undefined });
+  const rows = (await sql`
+    select tier, count(*)::int n
+      from reading_shelf_entry
+     where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
+     group by tier
+  `) as { tier: string; n: number }[];
+  return Object.fromEntries(rows.map((r) => [r.tier, r.n]));
+}
+
+/** Counts for the era chips, ignoring era itself for the same reason. */
+export async function getEraCounts(f: ShelfFilters): Promise<{ classic: number; contemporary: number }> {
+  const w = where({ ...f, q: undefined, era: undefined });
+  const [r] = (await sql`
+    select
+      count(*) filter (where year is not null and year < ${ERA_SPLIT})::int  as classic,
+      count(*) filter (where year is not null and year >= ${ERA_SPLIT})::int as contemporary
+      from reading_shelf_entry
+     where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
+       and (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+  `) as { classic: number; contemporary: number }[];
+  return { classic: r?.classic ?? 0, contemporary: r?.contemporary ?? 0 };
 }
 
 /** Counts for the section chips, under the current long-shot setting only. A book can sit on
  *  two shelves (a Pulitzer-winning crime novel is in both), so these deliberately sum to more
  *  than the total and the page must not present them as a partition. */
 export async function getShelfCounts(f: ShelfFilters): Promise<{ all: number; byShelf: Record<string, number> }> {
+  const w = where({ ...f, q: undefined, shelf: undefined });
   const rows = (await sql`
     select s as shelf, count(*)::int n
       from reading_shelf_entry, unnest(shelves) s
-     where (${f.long ?? false} = true or tier <> 'maybe')
+     where (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      group by s
   `) as { shelf: string; n: number }[];
   const [allRow] = (await sql`
     select count(*)::int n from reading_shelf_entry
-     where (${f.long ?? false} = true or tier <> 'maybe')
+     where (${w.tier}::text is null or tier = ${w.tier})
+       and (${w.hideLongShots} = false or tier <> 'maybe')
+       and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
+       and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
   `) as { n: number }[];
   return { all: allRow?.n ?? 0, byShelf: Object.fromEntries(rows.map((r) => [r.shelf, r.n])) };
 }

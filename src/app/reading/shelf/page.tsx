@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { getLetterCounts, getShelfCounts, getShelfLiveness, getShelfPage } from '@/lib/reading/shelf-db';
-import { LETTERS, SHELVES, shelfHref, shelfLabel, tierLabel } from '@/lib/reading/shelf-types';
-import type { Shelf, ShelfEntry, ShelfFilters } from '@/lib/reading/shelf-types';
+import { getEraCounts, getLetterCounts, getShelfCounts, getShelfLiveness, getShelfPage, getTierCounts } from '@/lib/reading/shelf-db';
+import { ERAS, LETTERS, SHELVES, eraLabel, shelfHref, shelfLabel, tierChip, tierLabel, tierMeaning, TIERS } from '@/lib/reading/shelf-types';
+import type { Era, Shelf, ShelfEntry, ShelfFilters, Tier } from '@/lib/reading/shelf-types';
 
 /* noindex,nofollow and in robots.ts's Disallow, same pair /reading/all and /kitchen/find carry:
  * this is a filter surface over thousands of rows, queried fresh on every hit, and a crawler
@@ -26,7 +26,7 @@ export const dynamic = 'force-dynamic';
 export default async function ShelfCheck({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; long?: string }>;
+  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string }>;
 }) {
   const sp = await searchParams;
   const letter = sp.letter && LETTERS.includes(sp.letter) ? sp.letter : undefined;
@@ -34,11 +34,13 @@ export default async function ShelfCheck({
     q: sp.q?.trim() || undefined,
     shelf: SHELVES.includes(sp.shelf as Shelf) ? (sp.shelf as Shelf) : undefined,
     letter,
-    long: sp.long === '1',
+    tier: TIERS.includes(sp.tier as Tier) ? (sp.tier as Tier) : undefined,
+    era: ERAS.includes(sp.era as Era) ? (sp.era as Era) : undefined,
   };
 
-  const [{ entries, total }, letterCounts, shelfCounts, liveness] = await Promise.all([
-    getShelfPage(filters), getLetterCounts(filters), getShelfCounts(filters), getShelfLiveness(),
+  const [{ entries, total }, letterCounts, shelfCounts, tierCounts, eraCounts, liveness] = await Promise.all([
+    getShelfPage(filters), getLetterCounts(filters), getShelfCounts(filters),
+    getTierCounts(filters), getEraCounts(filters), getShelfLiveness(),
   ]);
 
   const searching = !!filters.q;
@@ -74,7 +76,8 @@ export default async function ShelfCheck({
           enterKeyHint="search"
         />
         {filters.shelf && <input type="hidden" name="shelf" value={filters.shelf} />}
-        {filters.long && <input type="hidden" name="long" value="1" />}
+        {filters.tier && <input type="hidden" name="tier" value={filters.tier} />}
+        {filters.era && <input type="hidden" name="era" value={filters.era} />}
         <button type="submit" className="btn primary">Search</button>
       </form>
 
@@ -113,11 +116,39 @@ export default async function ShelfCheck({
         })}
       </div>
 
-      <div className="chiprow" role="group" aria-label="Depth">
-        <Link className={`chip ${filters.long ? 'on' : ''}`} href={shelfHref(filters, { long: !filters.long })}>
-          include long shots
+      <div className="chiprow" role="group" aria-label="How well vetted">
+        <Link className={`chip ${!filters.tier ? 'on' : ''}`} href={shelfHref(filters, { tier: undefined })}>
+          worth pulling ({((tierCounts.grab ?? 0) + (tierCounts.good ?? 0)).toLocaleString()})
         </Link>
+        {TIERS.map((t) => (
+          <Link
+            key={t}
+            className={`chip chip-${t} ${filters.tier === t ? 'on' : ''}`}
+            href={shelfHref(filters, { tier: filters.tier === t ? undefined : t })}
+          >
+            {tierChip[t]} ({(tierCounts[t] ?? 0).toLocaleString()})
+          </Link>
+        ))}
       </div>
+
+      <div className="chiprow" role="group" aria-label="Era">
+        <Link className={`chip ${!filters.era ? 'on' : ''}`} href={shelfHref(filters, { era: undefined })}>
+          any year
+        </Link>
+        {ERAS.map((e) => (
+          <Link
+            key={e}
+            className={`chip ${filters.era === e ? 'on' : ''}`}
+            href={shelfHref(filters, { era: filters.era === e ? undefined : e })}
+          >
+            {eraLabel[e]} ({eraCounts[e].toLocaleString()})
+          </Link>
+        ))}
+      </div>
+
+      {/* The badge is the page's whole verdict, so what it means is on the page rather than
+          buried at the bottom, and it names the tier currently being filtered. */}
+      {filters.tier && <p className="tiernote"><strong>{tierLabel[filters.tier]}</strong> {tierMeaning[filters.tier]}</p>}
 
       <p className="stat">
         <span className="tnum">{total.toLocaleString()}</span>
@@ -126,7 +157,8 @@ export default async function ShelfCheck({
           : filters.letter
             ? ` under ${filters.letter}${filters.shelf ? ` in ${shelfLabel[filters.shelf].toLowerCase()}` : ''}`
             : ' worth pulling'}
-        {!filters.long && !searching && <span className="why"> · long shots hidden</span>}
+        {filters.era && <span className="why"> · {eraLabel[filters.era].toLowerCase()}</span>}
+        {!filters.tier && !searching && <span className="why"> · long shots hidden</span>}
         {total > 400 && <span className="why"> · showing the first 400, pick a letter to narrow it</span>}
       </p>
 
@@ -134,7 +166,7 @@ export default async function ShelfCheck({
         <h2 className="sec">
           {searching
             ? `nothing matches "${filters.q}" in the ${(liveness.rows ?? 0).toLocaleString()} books on record`
-            : 'nothing here, try another letter or switch on long shots'}
+            : 'nothing here. Try another letter, or widen it with the long shots chip.'}
         </h2>
       )}
 
@@ -145,11 +177,19 @@ export default async function ShelfCheck({
         </section>
       ))}
 
+      <dl className="tierlegend">
+        {TIERS.map((t) => (
+          <div key={t}>
+            <dt><span className={`tierbadge t-${t}`}>{tierLabel[t]}</span></dt>
+            <dd>{tierMeaning[t]}</dd>
+          </div>
+        ))}
+      </dl>
       <p className="src">
-        <strong>grab</strong> cleared several different kinds of vetting, a jury and critics and
-        readers landing on it separately. <strong>good</strong> cleared more than one honour.
-        <strong> long shot</strong> cleared exactly one, usually a broad nominee archive, so it is
-        a punt rather than a recommendation.
+        Ranked within a section, not across them: general fiction is covered by thirteen source
+        lists and crime by one, so a crime novel competing against literary fiction on one scale
+        made every Edgar winner look like a long shot. A <strong>grab</strong> in mystery means
+        best of the mysteries.
       </p>
       <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
     </div>
