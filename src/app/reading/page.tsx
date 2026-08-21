@@ -23,10 +23,16 @@ export const dynamic = 'force-dynamic';
  * needs Silvio's own logged-in Chrome over CDP for CPL branch lookups and retail prices, so it can
  * never run here. Read-only: there is no /reading/api for the queue, the same as /swim.
  *
- * `position` is queue.json's own order, not a re-sort by score -- Middlesex (score 1, owned) sits
- * first because it's the one being read, and The Underground Railroad (score 8.4) sits near the
- * end. Showing a different order than QUEUE.md would be a second, disagreeing "the queue" existing
- * at the same time, which is the exact drift this whole app is built to avoid.
+ * `position` preserves QUEUE.md's rendered order and is never a re-sort by score. That order is
+ * gentlest-first, the on-ramp, which is deliberately not the pick order: The Catcher in the Rye
+ * (7.07) sits first while The Grapes of Wrath (9.10) sits fifth. Showing a different order than
+ * QUEUE.md would be a second, disagreeing "the queue" existing at the same time, which is the
+ * exact drift this whole app is built to avoid.
+ *
+ * The old example here was Middlesex, "score 1, owned, the one being read". It stopped being true
+ * on 2026-08-21 when the scoring was rebuilt and refill.mjs started re-ranking instead of topping
+ * up. A comment naming specific data goes stale on its own; check it against queue.json before
+ * trusting it.
  */
 export default async function ReadingQueue() {
   const [queue, acquisitionMap, liveness] = await Promise.all([
@@ -106,7 +112,7 @@ function QueueRow({ entry, acquisition }: { entry: QueueEntry; acquisition?: Acq
         {entry.why && <p className="qwhy">{entry.why}</p>}
         <p className="qpicked">
           {entry.score != null && (
-            <><span className="tnum" title="Breadth of critic/award/popular agreement, not a rating out of 10">
+            <><span className="tnum" title="How much independent evidence there is: a jury, a curated list, a reader vote, and what is being read right now. Each list weighted by how selective it is. Not a rating out of 10.">
               {entry.score} score
             </span> · </>
           )}
