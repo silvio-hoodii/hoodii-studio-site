@@ -60,6 +60,7 @@ export default async function ReadingCatalog({
       <p className="surf-nav">
         <Link className="rtab" href="/reading">Next up</Link>
         <span className="rtab on">All books</span>
+        <Link className="rtab" href="/reading/shelf">Shelf check</Link>
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 

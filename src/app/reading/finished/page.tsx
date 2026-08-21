@@ -20,6 +20,7 @@ export default async function ReadingFinished() {
       <p className="surf-nav">
         <Link className="rtab" href="/reading">Next up</Link>
         <Link className="rtab" href="/reading/all">All books</Link>
+        <Link className="rtab" href="/reading/shelf">Shelf check</Link>
         <span className="rtab on">Finished</span>
       </p>
 

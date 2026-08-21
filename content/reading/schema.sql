@@ -141,3 +141,41 @@ create table if not exists reading_catalog_sync (
   error    text
 );
 create index if not exists reading_catalog_sync_ran on reading_catalog_sync (ran_at desc);
+
+-- The store-shelf finder behind /reading/shelf. Separate from reading_catalog_entry on purpose:
+-- that table mirrors the five per-corpus masters and is keyed for "rank everything I have not
+-- read"; this one mirrors ReadingOS/data/all/master.json, the single unified pool, and is keyed
+-- for a different question asked in a different place. Standing in a second-hand shop that
+-- shelves by section and then alphabetically by author surname, the query is "I am at the M's in
+-- Mystery, what should I pull", so the columns that matter are file_under, letter and shelves.
+--
+-- file_under is NOT the join key's surname. ReadingOS/scripts/lib/keys.mjs surname() takes
+-- everything after the first word, which is correct for matching and wrong for filing: it put
+-- Louisa May Alcott under M and T. H. White under H. fileUnder() there is the shop's version.
+create table if not exists reading_shelf_entry (
+  key         text primary key,
+  title       text not null,
+  author      text not null,
+  file_under  text not null,                  -- the name a shop files it under
+  letter      text not null,                  -- first letter of file_under, '#' if not A-Z
+  year        integer,
+  score       numeric not null,
+  honours     integer not null default 0,     -- distinct honours, after same-prize dedup
+  tier        text not null,                  -- grab | good | maybe
+  shelves     text[] not null default '{}',   -- store sections: fiction | scifi | mystery | nonfiction
+  lists       text[] not null default '{}',   -- named lists, for "why is this here"
+  status      text                            -- read | queued | seen, else null
+);
+create index if not exists reading_shelf_entry_letter on reading_shelf_entry (letter);
+create index if not exists reading_shelf_entry_tier on reading_shelf_entry (tier);
+create index if not exists reading_shelf_entry_file on reading_shelf_entry (file_under, title);
+create index if not exists reading_shelf_entry_shelves on reading_shelf_entry using gin (shelves);
+
+create table if not exists reading_shelf_sync (
+  id       bigserial primary key,
+  ran_at   timestamptz not null default now(),
+  ok       boolean     not null,
+  rows     integer,
+  error    text
+);
+create index if not exists reading_shelf_sync_ran on reading_shelf_sync (ran_at desc);

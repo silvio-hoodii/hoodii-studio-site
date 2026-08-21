@@ -38,6 +38,7 @@ export default async function ReadingQueue() {
       <p className="surf-nav">
         <span className="rtab on">Next up</span>
         <Link className="rtab" href="/reading/all">All books</Link>
+        <Link className="rtab" href="/reading/shelf">Shelf check</Link>
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 

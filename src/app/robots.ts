@@ -42,7 +42,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/kitchen/find', '/reading/all'],
+      disallow: ['/kitchen/find', '/reading/all', '/reading/shelf'],
     },
     sitemap: 'https://hoodii.studio/sitemap.xml',
     host: 'https://hoodii.studio',
