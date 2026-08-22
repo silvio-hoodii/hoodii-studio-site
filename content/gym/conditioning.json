@@ -577,6 +577,46 @@
         "thing that turns a clean week into a five-day block. That is the trade the rule is there to",
         "make visible, not to forbid."
       ]
+    },
+    "howItFits": {
+      "$comment": [
+        "Added 2026-08-22. He asked twice and it had never been answered anywhere he could see it:",
+        "\"If this translates into the swimming, how does the running on the bike complement that?\"",
+        "",
+        "The answer was already sourced in HealthOS/knowledge/training-programme-evidence.md section 2,",
+        "and had simply never reached a page. That is its own lesson: the reasoning lived in a file he",
+        "had never opened, which is exactly why he said the programme reads as arbitrary."
+      ],
+      "title": "Why four things and not one",
+      "lead": "Lifting, swimming, running and the bike are not four hobbies competing for the week. Three of them are free and one has a price, and the plan is built around which is which.",
+      "points": [
+        {
+          "claim": "Swimming and cycling cost your lifts nothing.",
+          "detail": "A meta-analysis that separated the endurance MODALITY found running, but not cycling, produced significant losses in both strength and size. Swimming carries no eccentric loading either. So the aerobic base can grow on those two without paying for it at the rack.",
+          "source": "Wilson 2012, 21 studies, 422 effect sizes"
+        },
+        {
+          "claim": "Running is the one that costs, so it is kept short rather than rare.",
+          "detail": "In the same analysis, endurance DURATION correlated more strongly with losses than frequency did. Short and frequent beats long and occasional, which is also exactly what the injury evidence for a novice runner at your bodyweight says.",
+          "source": "Wilson 2012, plus Bertelsen 2018 on novice runners"
+        },
+        {
+          "claim": "Doing all of it beats doing one of them, on both scoreboards.",
+          "detail": "Against lifting alone, adding endurance left strength, power and size statistically unchanged and improved aerobic capacity. Against endurance alone, adding lifting improved strength substantially. There is no version of this where dropping one makes the others better.",
+          "source": "Held 2026 umbrella review, 17 meta-analyses, 144 studies"
+        },
+        {
+          "claim": "Lift first when both happen the same day.",
+          "detail": "No significant effect either way, but the trend favours lifting before the aerobic piece. You already stack the swim after the gym, so this one is a description of what you do rather than a change.",
+          "source": "Held 2026"
+        },
+        {
+          "claim": "And what the bike is actually for.",
+          "detail": "It is not filler. It is the aerobic volume that running would otherwise have to supply, at a price running charges and the bike does not. That is the whole reason it is in the week.",
+          "source": "Wilson 2012"
+        }
+      ],
+      "sourceNote": "Full citations and the numbers behind each line are in HealthOS/knowledge/training-programme-evidence.md, section 2."
     }
   }
 }

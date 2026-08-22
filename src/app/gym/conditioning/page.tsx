@@ -717,6 +717,30 @@ export default async function ConditioningPage({
             <ActualDays week={week} />
           </div>
 
+          {/* WHY FOUR THINGS AND NOT ONE. He asked twice and it had never been answered anywhere he
+              could see: "If this translates into the swimming, how does the running on the bike
+              complement that?" The answer was already sourced in the evidence file and had simply
+              never reached a page, which is the same reason he said the programme reads as
+              arbitrary. Behind a tap because it is read once and then believed, not consulted. */}
+          {c.week?.howItFits && (
+            <details className="exgroup ladder-all">
+              <summary className="exgroup-label">
+                {c.week.howItFits.title} <span className="tag">({c.week.howItFits.points.length})</span>
+              </summary>
+              <p className="ex-cue">{c.week.howItFits.lead}</p>
+              <div className="exlist">
+                {c.week.howItFits.points.map((pt) => (
+                  <div className="ex" key={pt.claim}>
+                    <div className="ex-name">{pt.claim}</div>
+                    <div className="ex-cue">{pt.detail}</div>
+                    <div className="ex-cue quiet-inline">{pt.source}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="ex-cue">{c.week.howItFits.sourceNote}</p>
+            </details>
+          )}
+
           <div className="exgroup">
             <div className="exgroup-label">The rest rule</div>
             <div className="exlist">

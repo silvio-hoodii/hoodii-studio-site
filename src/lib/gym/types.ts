@@ -244,8 +244,18 @@ export interface RestRule {
   theHonestCaveat: string;
 }
 
+/** Why the week holds four activities rather than one. Sourced from the concurrent-training
+ *  evidence, and on the page because it had lived only in a file he had never opened. */
+export interface HowItFits {
+  title: string;
+  lead: string;
+  points: { claim: string; detail: string; source: string }[];
+  sourceNote: string;
+}
+
 export interface ConditioningWeekPlan {
   restRule: RestRule;
+  howItFits?: HowItFits;
   /** Slot name to weekday keys. Extra keys are tolerated so a new slot needs no type change. */
   assignedDays: Record<string, string[] | string | undefined> & { why?: Prose };
 }
