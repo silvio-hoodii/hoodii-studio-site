@@ -249,6 +249,16 @@ harmless, and PSN is not surfaced on the hub.
 - Production deploys from `main`.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
   All four, before any push.
+- **Touching `content/gym/program.json`? Run `node scripts/check-ladder.mjs`.** It reads his real
+  working weights out of Neon and asks one question of every logged lift: does maxing out the rep
+  range actually earn the next weight? Double progression is a ladder, and a rung that cannot be
+  reached from the one below means the app asks for a jump he fails, drops back from, and repeats.
+  On 2026-08-22 eight of fifteen lifts were in that state, all dumbbell or cable, and it is why the
+  overhead press was the only main lift flat all year: at 65 lb, three sets of ten banks an
+  estimated max of 86.7 and the jump to 70 demands 88.7. Fixed by a 2.5 lb increment on the cable
+  stack (evidenced by the 72.5 and 87.5 he has logged on it) and a per-exercise `rangeWidth` on the
+  dumbbell lifts. It cannot live in `validate.mjs`, which is offline by design, so the 07:15 sync
+  task runs it daily: the check depends on his current loads and can break with no file edited.
 - **Touching `/gym`? Run `node scripts/gym-notes.mjs` FIRST.** There is a note box at the bottom of
   the workout, added 2026-08-16 at his request, and it writes to `gym_note`. It is the only place
   the app records anything in his own words: everything else is numbers typed into boxes, and a

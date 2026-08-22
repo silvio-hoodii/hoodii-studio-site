@@ -42,6 +42,9 @@ export interface Alt {
   timed?: boolean;
   bodyweight?: boolean;
   increment?: number;
+  /** Widens the double-progression rep range so the next load step is actually reachable from the
+   *  top of it. See the RANGE_WIDTH note in progression.ts. Default 2. */
+  rangeWidth?: number;
   log?: boolean;
 }
 
@@ -61,6 +64,9 @@ export interface Exercise {
   bodyweight?: boolean;
   timed?: boolean;
   increment?: number;
+  /** Widens the double-progression rep range so the next load step is actually reachable from the
+   *  top of it. See the RANGE_WIDTH note in progression.ts. Default 2. */
+  rangeWidth?: number;
   alts?: Alt[];
 }
 

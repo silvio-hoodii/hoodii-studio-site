@@ -3,7 +3,7 @@
  * Direct port of HealthOS server/progression.mjs: the algorithm itself is unchanged, only the
  * language. See that file's own comments (kept below) for the reasoning; this is not a redesign.
  *
- * Rep range = [targetReps, targetReps + RANGE_WIDTH].
+ * Rep range = [targetReps, targetReps + rangeWidth], default width 2.
  *   Hit top on all working sets  -> +increment, reset to bottom reps
  *   Anything below top           -> hold weight, build reps toward top
  *
@@ -28,6 +28,9 @@ export interface PlanInput {
   targetReps?: number;
   type?: ExerciseType;
   increment?: number;
+  /** Width of the rep range above targetReps. Default 2. See RANGE_WIDTH below for why some
+   *  exercises need a wider one. */
+  rangeWidth?: number;
   today?: string;
   recent?: LastSession[] | null;
 }
@@ -38,6 +41,28 @@ export interface Suggestion {
   reason: string;
 }
 
+/* THE LADDER HAS TO CLOSE. Default 2, overridable per exercise, and the reason is arithmetic.
+ *
+ * Double progression says: hold the weight until you hit the TOP of the range on every working
+ * set, then add one increment and drop back to the BOTTOM. That only works if the strength banked
+ * climbing bottom to top is at least what the next load step demands. Using Epley (e1RM = w *
+ * (1 + reps/30)):
+ *
+ *   banked   = w * (1 + top/30)
+ *   demanded = (w + increment) * (1 + bottom/30)
+ *
+ * If banked < demanded, completing the range STILL does not earn the jump. You take it, fail it,
+ * fall back, and oscillate forever.
+ *
+ * Measured 2026-08-22 across the whole programme: eight of fifteen logged lifts were in that state,
+ * and every one of them was a dumbbell or cable movement where 5 lb is a large fraction of the
+ * load. The overhead press is the proof: 60x10x10x10, then 65x8x8x8, then back to 60, then 65
+ * again, then back to 60. Six sessions in three months and an estimated max of 80, 82, 80, 82, 80,
+ * 76. At 65 lb, three sets of ten banks 86.7 and the jump to 70 demands 88.7, so even doing
+ * everything the app asked, the next rung was out of reach. Meanwhile every barbell lift, where
+ * 5 lb is 3% rather than 8%, climbed: squat 135x10 to 185x6, RDL 165x8 to 225x4.
+ *
+ * content/gym/validate.mjs computes this for every logged exercise and fails the build on a gap. */
 const RANGE_WIDTH = 2;
 const GAP_DAYS = 21;
 
@@ -73,7 +98,7 @@ export function workingWeight(sets: SetRecord[]): number | null {
 export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggestion {
   const type = plan.type || 'weighted';
   const bottom = Number(plan.targetReps) || (type === 'bodyweight' ? 8 : 6);
-  const top = bottom + RANGE_WIDTH;
+  const top = bottom + (plan.rangeWidth != null ? Number(plan.rangeWidth) : RANGE_WIDTH);
   const increment = plan.increment != null ? Number(plan.increment) : 5;
 
   const sets = last && Array.isArray(last.sets) ? last.sets.filter((s) => (s.reps ?? 0) > 0) : [];

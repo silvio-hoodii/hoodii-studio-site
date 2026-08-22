@@ -386,7 +386,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 6
             },
             {
               "id": "suitcase-carry",
@@ -557,7 +558,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 3
             },
             {
               "id": "dead-bug",
@@ -693,7 +695,7 @@
               "zone": "cable",
               "station": "cable-row",
               "log": true,
-              "increment": 5,
+              "increment": 2.5,
               "progression": "weight",
               "cue": "Sit tall, knees soft, chest up. Start with your arms straight and let the weight pull your shoulder blades forward, then pull your ELBOWS back past your ribs and squeeze the shoulder blades together at the end. Do not lean back to move it: your torso stays where it started. Let it back out slowly until the arms are straight again.",
               "alts": [
@@ -782,7 +784,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 3
             },
             {
               "id": "plank-shoulder-taps",
@@ -859,7 +862,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "increment": 2.5
             },
             {
               "id": "db-hammer-curl",
@@ -1176,7 +1180,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 6
             },
             {
               "id": "dead-bug",
@@ -1253,7 +1258,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 5
             },
             {
               "id": "copenhagen-plank",
@@ -1627,7 +1633,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "increment": 2.5
             },
             {
               "id": "db-overhead-tricep-extension",
@@ -1704,7 +1711,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "rangeWidth": 3
             },
             {
               "id": "farmer-carry",

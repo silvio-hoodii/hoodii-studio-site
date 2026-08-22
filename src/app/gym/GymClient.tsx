@@ -344,7 +344,10 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   const planTargets = useMemo(
     () => blocks.flatMap((b) => b.exercises.filter((e) => e.log).map((e) => {
       const eff = effOf(e);
-      return { id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff), increment: eff.increment };
+      return {
+        id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff),
+        increment: eff.increment, rangeWidth: eff.rangeWidth,
+      };
     })),
     [blocks, effOf],
   );
