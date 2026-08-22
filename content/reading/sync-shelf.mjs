@@ -39,6 +39,21 @@ if (!existsSync(SRC)) {
 }
 const db = JSON.parse(readFileSync(SRC, 'utf8'));
 
+/* Open Library enrichment, optional. It is a separate file because it is fetched on a different
+ * rhythm from the masters: the award lists change when a prize is announced, the enrichment only
+ * when a new book enters the browse tier. Absent, every book simply ships without a cover or a
+ * description rather than the sync failing. */
+const ENRICH = resolve(import.meta.dirname, '..', '..', '..', 'ReadingOS', 'data', 'all', 'enrichment.json');
+const enrich = existsSync(ENRICH) ? (JSON.parse(readFileSync(ENRICH, 'utf8')).books ?? {}) : {};
+
+/* Open Library's page count is crowd-sourced from whichever edition someone catalogued, so it
+ * occasionally records a placeholder. "How to Say Babylon" came back as 1pp and promptly sorted
+ * to the top of "shortest first", which is the one sort where a bad low number does maximum
+ * damage. Anything under 20 pages is not a book in this corpus, it is a bad record, so it is
+ * dropped rather than shown. Nothing is guessed in its place. */
+const sanePages = (n) => (typeof n === 'number' && n >= 20 && n <= 5000 ? n : null);
+console.log(`enrichment: ${Object.keys(enrich).length} books`);
+
 /* The builder emits human section labels; the page needs stable slugs for its URLs. Mapping here
  * rather than in the builder keeps the labels editable, but an unmapped label must be a hard
  * failure: silently dropping a section would empty a whole tab and look like "no books". */
@@ -68,12 +83,21 @@ for (const b of db.books ?? []) {
   const key = `${(b.s || '').toLowerCase()}|${(b.t || '').toLowerCase()}`;
   if (seen.has(key)) continue;
   seen.add(key);
+  const e = b.key ? enrich[b.key] : null;
   rows.push({
     key,
     title: b.t, author: b.a, file_under: b.s, letter: letterOf(b.s),
     year: b.y ?? null, score: b.sc, honours: b.h ?? 0, tier: b.k,
     shelves, lists: b.w ?? [], status: b.st ?? null,
     pages: b.pg ?? null, pace: b.pc ?? null,
+    ol_key: e?.ol_key ?? null,
+    cover_url: e?.cover ?? null,
+    description: e?.description ?? null,
+    rating: e?.rating ?? null,
+    rating_count: e?.rating_count ?? null,
+    subjects: e?.subjects ?? [],
+    // Open Library's page count is better than nothing where a tag has none.
+    ...(b.pg ? {} : { pages: sanePages(e?.pages) }),
   });
 }
 
@@ -96,13 +120,13 @@ try {
       const values = [];
       const params = [];
       slice.forEach((r, j) => {
-        const b = j * 14;
-        values.push(`(${Array.from({ length: 14 }, (_, k) => `$${b + k + 1}`).join(',')})`);
-        params.push(r.key, r.title, r.author, r.file_under, r.letter, r.year, r.score, r.honours, r.tier, r.shelves, r.lists, r.status, r.pages, r.pace);
+        const b = j * 20;
+        values.push(`(${Array.from({ length: 20 }, (_, k) => `$${b + k + 1}`).join(',')})`);
+        params.push(r.key, r.title, r.author, r.file_under, r.letter, r.year, r.score, r.honours, r.tier, r.shelves, r.lists, r.status, r.pages, r.pace, r.ol_key, r.cover_url, r.description, r.rating, r.rating_count, r.subjects);
       });
       await client.query(
         `insert into reading_shelf_entry
-           (key,title,author,file_under,letter,year,score,honours,tier,shelves,lists,status,pages,pace)
+           (key,title,author,file_under,letter,year,score,honours,tier,shelves,lists,status,pages,pace,ol_key,cover_url,description,rating,rating_count,subjects)
          values ${values.join(',')}`,
         params,
       );

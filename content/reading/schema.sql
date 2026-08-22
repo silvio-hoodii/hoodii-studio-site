@@ -185,3 +185,29 @@ create index if not exists reading_shelf_sync_ran on reading_shelf_sync (ran_at 
 -- Both are null for about 95% of the pool, since they come from hand-written tags.
 alter table reading_shelf_entry add column if not exists pages integer;
 alter table reading_shelf_entry add column if not exists pace  text;
+
+-- Open Library enrichment, added 2026-08-21. Award lists give evidence that a book is good and
+-- nothing about what it IS: no length, no description, no cover. Chosen over Google Books by
+-- measurement, not reputation: probed against a mixed sample of this corpus, Open Library found
+-- 11 of 12 with no API key while Google Books returned HTTP 429 on every call without one.
+-- Every column is nullable. A book Open Library does not have keeps its award evidence and shows
+-- nothing else, rather than showing "unknown" on every line.
+alter table reading_shelf_entry add column if not exists ol_key       text;
+alter table reading_shelf_entry add column if not exists cover_url    text;
+alter table reading_shelf_entry add column if not exists description  text;
+alter table reading_shelf_entry add column if not exists rating       numeric;
+alter table reading_shelf_entry add column if not exists rating_count integer;
+alter table reading_shelf_entry add column if not exists subjects     text[] not null default '{}';
+
+-- The want list: books he wants but has not committed to reading. The queue is ten books he IS
+-- reading next; this is "remember this for the next shop trip", which is a different promise and
+-- must not push anything out of the ten. Writes are cookie-gated, the same gate /kitchen and
+-- /gym use, because a public unauthenticated write endpoint is not a want list, it is a guestbook.
+create table if not exists reading_want (
+  key        text primary key,
+  title      text not null,
+  author     text not null,
+  added_at   timestamptz not null default now(),
+  note       text
+);
+create index if not exists reading_want_added on reading_want (added_at desc);

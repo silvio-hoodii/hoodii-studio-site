@@ -62,7 +62,11 @@ export function proxy(req: NextRequest) {
   if (pathname === '/gym/api/plan' || pathname === '/gym/api/session') return NextResponse.next();
 
   // Writes to the event logs / set log / card store.
-  if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api') || pathname.startsWith('/french/api')) {
+  /* /reading/api joined this on 2026-08-21 with the want list. Every /reading PAGE stays public,
+   * the same as the rest of the site; only the write is gated. An unauthenticated POST that adds
+   * books to a want list is not a want list, it is a guestbook. */
+  if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
+      || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
     return NextResponse.json(
       { ok: false, error: 'locked', hint: 'Sign in once and this device stays signed in.' },
@@ -84,4 +88,4 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/kitchen/:path*', '/gym/:path*', '/health/:path*', '/french/:path*'] };
+export const config = { matcher: ['/kitchen/:path*', '/gym/:path*', '/health/:path*', '/french/:path*', '/reading/api/:path*'] };

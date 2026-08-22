@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { getEraCounts, getLetterCounts, getShelfCounts, getShelfLiveness, getShelfPage, getTierCounts } from '@/lib/reading/shelf-db';
+import { getWantKeys } from '@/lib/reading/want-db';
+import WantButton from './WantButton';
 import {
   activeFilterCount, ERAS, LETTERS, SHELVES, SORTS,
   eraLabel, shelfHref, shelfLabel, sortLabel, sortNote, tierChip, tierLabel, tierMeaning, TIERS,
@@ -39,7 +41,7 @@ export const dynamic = 'force-dynamic';
 export default async function ShelfCheck({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string; sort?: string; open?: string }>;
+  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string; sort?: string; open?: string; pick?: string }>;
 }) {
   const sp = await searchParams;
   const filters: ShelfFilters = {
@@ -53,18 +55,26 @@ export default async function ShelfCheck({
   };
   const sort = filters.sort ?? 'author';
 
-  const [{ entries, total }, letterCounts, shelfCounts, tierCounts, eraCounts, liveness] = await Promise.all([
+  const [{ entries, total }, letterCounts, shelfCounts, tierCounts, eraCounts, liveness, wantKeys] = await Promise.all([
     getShelfPage(filters), getLetterCounts(filters), getShelfCounts(filters),
-    getTierCounts(filters), getEraCounts(filters), getShelfLiveness(),
+    getTierCounts(filters), getEraCounts(filters), getShelfLiveness(), getWantKeys(),
   ]);
+
+  /* Surprise me. Picks one book from whatever is currently filtered, which is the point: "give me
+   * something" is only useful if it respects "something SHORT, in non-fiction". The seed rides in
+   * the URL so the pick is stable on refresh and shareable, and re-rolling is a new link rather
+   * than a button that quietly changes what the page said a second ago. */
+  const seed = Number(sp.pick) || 0;
+  const picked = seed && entries.length ? entries[seed % entries.length] : null;
+  const shown = picked ? [picked] : entries;
 
   const searching = !!filters.q;
   const nFilters = activeFilterCount(filters);
   const byLetter = sort === 'author' && !searching;
 
   const groups: { letter: string; books: ShelfEntry[] }[] = [];
-  if (byLetter) {
-    for (const e of entries) {
+  if (byLetter && !picked) {
+    for (const e of shown) {
       const last = groups[groups.length - 1];
       if (last && last.letter === e.letter) last.books.push(e);
       else groups.push({ letter: e.letter, books: [e] });
@@ -84,6 +94,9 @@ export default async function ShelfCheck({
       <p className="blurb">
         Is this spine worth pulling? Search what is in your hand, or sort by what you are in the
         mood for.
+        {wantKeys.size > 0 && (
+          <> <Link href="/reading/want">{wantKeys.size} saved to your want list</Link>.</>
+        )}
       </p>
 
       <form action="/reading/shelf" method="get" className="csearch">
@@ -202,6 +215,15 @@ export default async function ShelfCheck({
 
       {filters.tier && <p className="tiernote"><strong>{tierLabel[filters.tier]}</strong> {tierMeaning[filters.tier]}</p>}
 
+      {total > 1 && (
+        <p className="pickline">
+          <Link className="pickbtn" href={pickHref(filters, seed)}>
+            {picked ? 'Pick another' : 'Surprise me'}
+          </Link>
+          {picked && <Link className="pickclear" href={shelfHref(filters, {})}>show all {total.toLocaleString()}</Link>}
+        </p>
+      )}
+
       {entries.length === 0 && (
         <h2 className="sec">
           {searching
@@ -210,14 +232,14 @@ export default async function ShelfCheck({
         </h2>
       )}
 
-      {byLetter
+      {byLetter && !picked
         ? groups.map((g) => (
           <section key={g.letter}>
             <h2 className="sec shelfletter">{g.letter}</h2>
-            {g.books.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
+            {g.books.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} wanted={wantKeys.has(b.key)} />)}
           </section>
         ))
-        : entries.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
+        : shown.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} wanted={wantKeys.has(b.key)} expanded={!!picked} />)}
 
       <dl className="tierlegend">
         {TIERS.map((t) => (
@@ -238,9 +260,19 @@ export default async function ShelfCheck({
   );
 }
 
+/* Advancing the seed with a linear congruential step rather than Math.random(), for three
+ * reasons that all point the same way: rendering must be pure, a pick that changes on refresh is
+ * a pick you cannot show anyone, and "Pick another" should be a link you can middle-click. Each
+ * press lands somewhere new; the same URL always shows the same book. */
+const nextSeed = (s: number) => ((s || 1) * 1103515245 + 12345) % 2147483647;
+const pickHref = (f: ShelfFilters, seed: number) => {
+  const base = shelfHref(f, {});
+  return `${base}${base.includes('?') ? '&' : '?'}pick=${nextSeed(seed)}`;
+};
+
 const STATUS_LABEL = { read: 'read it', queued: 'on your queue', seen: 'seen in a shop' } as const;
 
-function ShelfRow({ entry, showShelf }: { entry: ShelfEntry; showShelf: boolean }) {
+function ShelfRow({ entry, showShelf, wanted = false, expanded = false }: { entry: ShelfEntry; showShelf: boolean; wanted?: boolean; expanded?: boolean }) {
   /* The facts line is what both reference catalogues put under the title and we did not: how long
    * it is and how it reads. Only about 5% of the pool carries those, so each part is omitted when
    * absent rather than rendered as "unknown" on nearly every row. */
@@ -248,10 +280,13 @@ function ShelfRow({ entry, showShelf }: { entry: ShelfEntry; showShelf: boolean 
     entry.pages ? `${entry.pages}pp` : null,
     entry.pace,
     entry.year ? String(entry.year) : null,
+    // Reader ratings, kept apart from the score on purpose: one is what juries and critics
+    // decided, the other is what readers felt. Below five ratings the average is noise.
+    entry.rating && (entry.ratingCount ?? 0) >= 5 ? `${entry.rating.toFixed(1)}/5` : null,
   ].filter(Boolean);
 
   return (
-    <div className="shelfrow">
+    <div className={`shelfrow ${expanded ? 'expanded' : ''}`}>
       <span className={`tierbadge t-${entry.tier}`}>{tierLabel[entry.tier]}</span>
       <span className="shelftitle">
         {entry.title}
@@ -261,11 +296,17 @@ function ShelfRow({ entry, showShelf }: { entry: ShelfEntry; showShelf: boolean 
         <strong>{entry.fileUnder}</strong> · {entry.author}
         {facts.length > 0 && <span className="facts"> · {facts.join(' · ')}</span>}
       </span>
+      {entry.description && (
+        <p className={`shelfdesc ${expanded ? 'full' : ''}`}>{entry.description}</p>
+      )}
       <span className="shelfmeta">
         {showShelf && entry.shelves.map((s) => (
           <span key={s} className="shelfchip">{shelfLabel[s]}</span>
         ))}
         {entry.lists.length > 0 && <span className="shelfwhy">{entry.lists.join(' / ')}</span>}
+      </span>
+      <span className="shelfact">
+        <WantButton bookKey={entry.key} title={entry.title} author={entry.author} initial={wanted} />
       </span>
     </div>
   );

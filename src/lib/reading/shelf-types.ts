@@ -27,6 +27,15 @@ export interface ShelfEntry {
    *  when not, rather than rendering "unknown" on nearly every row. */
   pages: number | null;
   pace: string | null;
+  /* Open Library. Award lists say a book is good and nothing about what it IS, which is fine at a
+   * shelf with the spine in your hand and useless when browsing from the sofa. All nullable: a
+   * book Open Library does not have keeps its evidence and shows nothing else. */
+  cover: string | null;
+  description: string | null;
+  rating: number | null;
+  ratingCount: number | null;
+  subjects: string[];
+  wanted?: boolean;
 }
 
 /* Section names as a second-hand shop signs them, not as the engine slugs them. "General
@@ -76,12 +85,13 @@ export const LETTERS = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
  * author order, so it renders only in that sort and disappears in the others rather than sitting
  * there as furniture. Both the StoryGraph and the library catalogue put one sort control at the
  * top of the results and nothing else; this follows them. */
-export type Sort = 'author' | 'best' | 'short' | 'new' | 'old';
-export const SORTS: Sort[] = ['author', 'best', 'short', 'new', 'old'];
+export type Sort = 'author' | 'best' | 'short' | 'new' | 'old' | 'loved';
+export const SORTS: Sort[] = ['author', 'best', 'short', 'new', 'old', 'loved'];
 export const sortLabel: Record<Sort, string> = {
   author: 'Author A to Z',
   best: 'Best evidenced first',
   short: 'Shortest first',
+  loved: 'Best rated by readers',
   new: 'Newest first',
   old: 'Oldest first',
 };
@@ -89,6 +99,7 @@ export const sortNote: Record<Sort, string> = {
   author: 'the order the spines are in',
   best: 'most independent evidence',
   short: 'the ones you will actually finish',
+  loved: 'Open Library readers, not juries',
   new: 'published most recently',
   old: 'published longest ago',
 };

@@ -8,6 +8,8 @@ type Row = {
   year: number | null; score: string; honours: number; tier: Tier;
   shelves: Shelf[]; lists: string[]; status: ShelfEntry['status'];
   pages: number | null; pace: string | null;
+  cover_url: string | null; description: string | null;
+  rating: string | null; rating_count: number | null; subjects: string[];
 };
 
 const toEntry = (r: Row): ShelfEntry => ({
@@ -15,6 +17,9 @@ const toEntry = (r: Row): ShelfEntry => ({
   year: r.year, score: Number(r.score), honours: r.honours, tier: r.tier,
   shelves: r.shelves, lists: r.lists, status: r.status,
   pages: r.pages, pace: r.pace,
+  cover: r.cover_url, description: r.description,
+  rating: r.rating == null ? null : Number(r.rating),
+  ratingCount: r.rating_count, subjects: r.subjects ?? [],
 });
 
 /* Every query here shares one predicate, so it lives in one place. Getting the browse list and
@@ -53,7 +58,8 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
   const sort: Sort = f.sort ?? 'author';
 
   const rows = (await sql`
-    select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status, pages, pace
+    select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status,
+           pages, pace, cover_url, description, rating, rating_count, subjects
       from reading_shelf_entry
      where (${w.like}::text is null or title ilike ${w.like} or author ilike ${w.like} or file_under ilike ${w.like})
        and (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
@@ -66,6 +72,7 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
        case when ${sort} = 'author' then file_under end asc nulls last,
        case when ${sort} = 'best'   then score      end desc nulls last,
        case when ${sort} = 'short'  then pages      end asc  nulls last,
+       case when ${sort} = 'loved' and rating_count >= 5 then rating end desc nulls last,
        case when ${sort} = 'new'    then year       end desc nulls last,
        case when ${sort} = 'old'    then year       end asc  nulls last,
        title
