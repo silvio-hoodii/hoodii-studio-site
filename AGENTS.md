@@ -79,8 +79,10 @@ always lose to the thing that exists.
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
 | `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
 | `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
-| `/reading/all` | The full catalog (~3,700 rows) the ranking engines know about, minus the ten and anything finished. Search + track filter + queue-eligibility filter, GET form, no client JS. `noindex,nofollow` AND in `robots.ts`'s Disallow -- same bot-cost shape as `/kitchen/find`, so it ships with both from day one. Read-only mirror pushed by `content/reading/sync-catalog.mjs` | no writes |
-| `/reading/shelf` | The shop-floor spine lookup, built 2026-08-21 in a second-hand shop. Section, then author letter, then tier and era, because that is the order the aisles are walked. Counts on every letter so an empty one can be skipped from across the room. Same GET-form, no-client-JS shape as `/reading/all`, and the same `noindex` + `robots.ts` Disallow pair. Read-only mirror of `reading_shelf_entry`, pushed by `content/reading/sync-shelf.mjs` | no writes |
+| `/reading/shelf` | **The browse surface, and the main one.** Every scored book, for two moments: in a shop (search a spine, or walk the alphabet by author surname) and at home (sort by best, shortest, best-rated, newest, oldest). One collapsed Filters control and one Sort control, copied in shape from the StoryGraph and the Calgary library catalogue after screenshotting both; the sort doubles as a MODE, so the 27-letter rail renders only in author order. Covers, descriptions and reader ratings from Open Library. `noindex` + robots Disallow. Mirror of `reading_shelf_entry`, pushed by `content/reading/sync-shelf.mjs` | no writes |
+| `/reading/want` | Books saved for the next shop trip. NOT the queue: a want costs nothing and evicts nothing, where adding to the ten pushes something out. Reads `reading_want` | via `/reading/api/want` |
+| `/reading/api/want` | The only write under `/reading`. Cookie-gated in `src/proxy.ts` like `/kitchen/api` and `/gym/api` | **cookie** |
+| ~~`/reading/all`~~ | **Retired 2026-08-21**, 307s to `/reading/shelf`. Both browsed the same pool and the shelf page does everything it did plus covers, sorts, tiers, want and surprise. Its two unique features, Spanish books and pagination, moved across first. `src/lib/reading/catalog-*.ts` survive because `/reading/about` still uses them to list the sources | n/a |
 | `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists the 33 real source lists behind the scores. Static-shaped, reads `reading_source_list` | no writes |
 | `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
@@ -109,11 +111,25 @@ caps remain, and `ReadingOS/scripts/lib/score.mjs` holds the whole formula in on
 per-source weights, same-prize deduplication, rank inside a ranked list, and winner detection for
 the archives that list winners and nominees together. **Do not add a score constant anywhere else.**
 
-**Refreshing reading data is four commands, in order**, from `ReadingOS/` then here:
-`node scripts/ingest.mjs all` → `node scripts/build-shelf-finder.mjs` → then in this repo
-`node content/reading/sync-catalog.mjs` and `node content/reading/sync-shelf.mjs`. Run
-`scripts/refill.mjs` in between if the queue itself should re-rank. `refill.mjs` re-ranks rather
-than tops up: an unread book has no tenure, but anything he has started is pinned.
+**Refreshing reading data**, from `ReadingOS/` then here:
+
+```
+node scripts/ingest.mjs all            # THE one that ranks. After any source change.
+node scripts/build-shelf-finder.mjs    # sections, per-section tiers, ownership flags
+node scripts/enrich-openlibrary.mjs    # covers, descriptions, pages. Cached, so re-runs are free
+node scripts/refill.mjs                # only if the queue should re-rank
+cd ../hoodii-studio-site
+node content/reading/sync-shelf.mjs && node content/reading/sync-catalog.mjs && node content/reading/sync.mjs
+```
+
+Neon updates immediately; no redeploy for data-only changes. `refill.mjs` re-ranks rather than
+tops up: an unread book has no tenure, but anything he has STARTED or OWNS is pinned.
+
+**Two guards in that pipeline exist because they caught something.** `sync-shelf.mjs` throws on an
+unmapped section label rather than silently dropping the books (it fired the day Spanish was added,
+which would otherwise have put 156 books in no section). `fetch-award-sources.mjs` refuses to write
+a source whose parse dropped more rows than it kept, because a half-read award list under-credits
+every book it missed while looking like full coverage.
 
 **`/reading`'s queue is `force-dynamic` on purpose.** It reads Neon at request time, same as
 `/swim`. Without that directive Next prerenders it once at build time and it never looks at the

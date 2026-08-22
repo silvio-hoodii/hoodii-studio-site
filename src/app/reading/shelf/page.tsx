@@ -12,7 +12,7 @@ import type { Era, Shelf, ShelfEntry, ShelfFilters, Sort, Tier } from '@/lib/rea
  * this is a filter surface over thousands of rows, queried fresh on every hit, and a crawler
  * walking its section-by-letter link grid would burn real Fluid CPU doing it. */
 export const metadata = {
-  title: 'Reading: Shelf check',
+  title: 'Reading: Browse',
   description: 'Look up a spine in a shop or a library, or browse for something to read next.',
   alternates: { canonical: '/reading/shelf' },
   robots: { index: false, follow: false },
@@ -93,10 +93,11 @@ export default async function ShelfCheck({
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 
-      <h1>Shelf check</h1>
+      <h1>Browse</h1>
       <p className="blurb">
-        Is this spine worth pulling? Search what is in your hand, or sort by what you are in the
-        mood for.
+        Every book on record, for two different moments. In a shop or a library: search the spine
+        in your hand, or walk the alphabet by author. At home: sort by best, shortest or best
+        rated and see what turns up.
         {wantKeys.size > 0 && (
           <> <Link href="/reading/want">{wantKeys.size} saved to your want list</Link>.</>
         )}
