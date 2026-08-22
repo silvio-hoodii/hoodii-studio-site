@@ -247,19 +247,37 @@
       };
     },
 
-    async budgetFilters() {
-      const full = $$('.budgets button').find((b) => text(b) === 'Full');
-      const short = $$('.budgets button').find((b) => text(b) !== 'Full');
-      if (!full || !short) return { pass: false, detail: 'no budget buttons' };
-      full.click(); await sleep(250);
-      const fullCount = $$('.ex').length;
-      short.click(); await sleep(250);
-      const shortCount = $$('.ex').length;
-      full.click(); await sleep(250);
-      const restored = $$('.ex').length;
+    /* THE WHOLE DAY IS ALWAYS SHOWN. Replaced budgetFilters on 2026-08-22.
+     *
+     * The old test drove the 25/45/60 chips and asserted that a short budget HID exercises. That
+     * behaviour is gone: he pointed out the cap only ever removed everything after the main lift,
+     * and that it made him predict a session length before starting it, which he gets wrong both
+     * ways. The day is one ordered list now and he ticks what he did.
+     *
+     * So this asserts the opposite of what it used to: nothing on this page hides an exercise, and
+     * the sentence naming what to cut first names exercises that are actually rendered. A drop
+     * order that names a block the page does not show would be the same class of lie the cap was. */
+    async wholeDayIsShown() {
+      if ($('.budgets')) return { pass: false, detail: 'the time-budget chips are back' };
+      const before = $$('.ex').length;
+      const line = text($('.drop-order'));
+      if (!before) return { pass: false, detail: 'no exercises rendered at all' };
+      if (!line) return { pass: false, detail: { rendered: before, dropOrder: null, note: 'no .drop-order sentence' } };
+      /* Every name after the colon must be on the page. Split on the comma list the page builds. */
+      const named = (line.split('cut from the bottom:')[1] || '')
+        .split('. The first')[0]
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
+      const onPage = new Set(cardNames());
+      const missing = named.filter((n) => !onPage.has(n));
+      /* Nothing may collapse the list. Waiting a beat and recounting catches a late effect that
+         filters blocks after hydration, which is exactly how the budget used to arrive. */
+      await sleep(400);
+      const after = $$('.ex').length;
       return {
-        pass: shortCount < fullCount && restored === fullCount,
-        detail: { full: fullCount, [`budget_${text(short)}`]: shortCount, restoredToFull: restored },
+        pass: missing.length === 0 && after === before && named.length > 0,
+        detail: { rendered: before, afterSettle: after, namedInDropOrder: named, missingFromPage: missing },
       };
     },
 

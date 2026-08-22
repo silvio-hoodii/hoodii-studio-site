@@ -24,6 +24,30 @@ const out = [];
 function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
 
 const REQUIRED_EX_FIELDS = ['id', 'name', 'sets', 'reps', 'rest', 'cue', 'zone', 'station'];
+
+/* IF IT IS IN THE LOG, THE THING THAT CHANGES MUST BE RECORDED. Added 2026-08-22.
+ *
+ * Silvio, reading his own programme: "I still don't understand why band pull apart is an exercise
+ * inside the program. How is that actually something that I can progressively overload? Okay so
+ * I'm gonna do 15 this week. Is it a big deal that I do 16 next week? Is this how programs are
+ * designed actually?" and "Why would I track D reps on band external rotation or band pull apart".
+ *
+ * He is right, and the programme admitted it in its own notes ("no study behind it", "Neither is
+ * sourced") while still asking him to type three sets of it. The defect is not the exercise, it is
+ * that it was LOGGED. These are the only three things this app records:
+ *
+ *   weight  a number in the weight box moves.
+ *   reps    bodyweight, and the rep count moves.
+ *   time    a timed hold, and the seconds move.
+ *
+ * A band is none of them. What separates an easy band set from a hard one is the band, and there
+ * is nowhere to record which band, so 3x15 on a light one and 3x15 on a heavy one are the same row
+ * forever. Anything in that position belongs in warmups.json, where nothing pretends to progress.
+ *
+ * Declared rather than sniffed, because a band is `bodyweight: true` and would sail through any
+ * rule that inferred "bodyweight means reps progress". An author adding one now has to write down
+ * which number moves, and for a band there is no true answer to write. */
+const PROGRESSION = new Set(['weight', 'reps', 'time']);
 const REQUIRED_ALT_FIELDS = ['id', 'name', 'cue', 'zone', 'station'];
 const ROLES = new Set(['primer', 'main', 'accessory']);
 // 'fill' added 2026-08-21: the partner is done inside the lift's rest gaps. It is bound by the SAME
@@ -101,6 +125,16 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     }
 
     for (const ex of block.exercises) {
+      /* See PROGRESSION above. `log !== false` because logging is the default. */
+      if (ex.log !== false && !PROGRESSION.has(ex.progression)) {
+        fail(
+          where,
+          `"${ex.id}" is logged but its progression is ${JSON.stringify(ex.progression ?? null)}. ` +
+            `It must be one of weight | reps | time: the number he types has to be able to mean ` +
+            `something next week. If nothing about it progresses (a band, whose resistance this app ` +
+            `cannot record), it belongs in warmups.json rather than in the log.`,
+        );
+      }
       for (const f of REQUIRED_EX_FIELDS) {
         if (ex[f] === undefined || ex[f] === '') fail(where, `exercise missing "${f}": ${JSON.stringify(ex).slice(0, 60)}`);
       }
@@ -125,6 +159,13 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       }
 
       for (const alt of ex.alts || []) {
+        /* An alt IS the logged exercise the moment he swaps to it, so it answers the same question.
+           Falls back to the parent's axis, because most alts are a different way to do the same
+           movement and repeating `progression` on all 47 of them would be a copy that drifts. */
+        const altProg = alt.progression ?? ex.progression;
+        if ((alt.log ?? ex.log) !== false && !PROGRESSION.has(altProg)) {
+          fail(where, `alt "${alt.id}" of "${ex.id}" is logged but its progression is ${JSON.stringify(altProg ?? null)}. Same rule as the parent: weight | reps | time, or it is warmup content.`);
+        }
         for (const f of REQUIRED_ALT_FIELDS) {
           if (alt[f] === undefined || alt[f] === '') fail(where, `alt of "${ex.id}" missing "${f}": ${JSON.stringify(alt).slice(0, 60)}`);
         }

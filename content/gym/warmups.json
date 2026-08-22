@@ -40,6 +40,11 @@
       "cue": "Back to the wall, arms in a goal-post, slide them up keeping wrists and elbows on the wall. Opens the shoulders for pressing and the swim catch."
     },
     {
+      "name": "Band External Rotation x15/side",
+      "search": "band external rotation shoulder cuff",
+      "cue": "Elbow pinned to your side and bent 90 degrees, band across your body, rotate the forearm out without letting the elbow drift off your ribs. Small movement. This is cuff work for a shoulder that swims four times a week: common practice, no trial behind it, and it is here rather than in the log because there is no honest way to progress it."
+    },
+    {
       "name": "Band Straight-Arm Pulldown x15",
       "search": "straight arm pulldown band",
       "media": "band-straight-arm-pulldown",
@@ -49,16 +54,6 @@
       "name": "Arm Circles + Thoracic Rotation x8/side",
       "search": "thoracic rotation warm up",
       "cue": "Big slow arm circles, then on all fours rotate one arm up to the ceiling, following your hand with your eyes."
-    },
-    {
-      "name": "Wrist Circles + Rocks x10 each way",
-      "search": "wrist warm up handstand prep",
-      "cue": "Circle the wrists both ways, then on all fours with hands flat and fingers spread, rock your weight forward over the fingers and back. Non-negotiable before any handstand work: your wrists carry your whole bodyweight up there."
-    },
-    {
-      "name": "Palm Pulses x10",
-      "search": "handstand wrist conditioning palm pulse",
-      "cue": "Still on all fours, press through the fingertips and knuckles to lift the heel of the palm slightly off the floor, then lower. Builds the forearm strength that protects the wrists."
     }
   ]
 }
