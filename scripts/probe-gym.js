@@ -53,7 +53,7 @@
      the note box went out over the network. It was refused, but only because the browser had no
      unlock cookie: with one, a test would have written a fake note into his actual log. Adding a
      write route means adding it here in the same change. */
-  const WRITE_ROUTES = ['/gym/api/set', '/gym/api/finish', '/gym/api/note'];
+  const WRITE_ROUTES = ['/gym/api/set', '/gym/api/finish', '/gym/api/note', '/gym/api/swim-baseline'];
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has
      said yes, not whether the server says yes; that is the unlock route's own business. */

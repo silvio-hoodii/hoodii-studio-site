@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { loadConditioning, loadProgram, loadSwimTeaching } from '@/lib/gym/program';
 import { getTrainingWeek, KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
+import { getSwimBaseline } from '@/lib/gym/db';
+import SwimBaselineForm from '../SwimBaselineForm';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
@@ -621,6 +623,24 @@ function SwimTeach({ t }: { t: SwimTeaching }) {
   );
 }
 
+
+/* Turns "Your number plus 100 m" into "500 m" once the calibration swim has happened.
+ *
+ * Text substitution rather than a restructured data model, deliberately: the rung wording is prose
+ * that changes with the plan, and the alternative is a schema of operations that has to be kept in
+ * step with sentences somebody rewrites. If a phrase stops matching, the reader sees the original
+ * relative wording, which is still true and still followable. It degrades to correct. */
+function resolvePiece(piece: string, base: number | null): string {
+  if (!base) return piece;
+  return piece
+    .replace(/your number plus (\d+) m/gi, (_m, n) => `${base + Number(n)} m`)
+    /* Floored at 100 m, four lengths, the smallest piece worth writing down in a 25 m pool. A
+       200 m baseline made the week 7 to 8 rung resolve to "0 m", which is not a prescription. The
+       ladder's own note already covers what a small baseline means for the later rungs. */
+    .replace(/your number minus (\d+) m/gi, (_m, n) => `${Math.max(100, base - Number(n))} m`)
+    .replace(/your number/gi, `${base} m`);
+}
+
 export default async function ConditioningPage({
   searchParams,
 }: {
@@ -644,6 +664,7 @@ export default async function ConditioningPage({
     ? await getLastSession(KIND_FOR_TAB[tab] ?? 'strength')
     : null;
   const teaching = tab === 'swim' && sub === 'teach' ? await loadSwimTeaching() : null;
+  const baseline = tab === 'swim' && sub === 'plan' ? await getSwimBaseline() : null;
   const swim = tab === 'swim' ? await (async () => {
     const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
     return { standards, standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)) };
@@ -937,6 +958,12 @@ export default async function ConditioningPage({
 
           <p className="lede">{c.swim.structure.note}</p>
 
+          {/* THE SLOT FOR THE NUMBER. Added 2026-08-22: every rung below reads "your number plus
+              100 m" and there was nowhere to put the number, so the plan could not be followed as
+              written. Above the calibration card, because once the number exists the card is
+              history and the ladder is the thing he reads. */}
+          <SwimBaselineForm current={baseline} />
+
           {/* THE CALIBRATION SWIM SITS ABOVE THE TABLE, because every row in the table is measured
               from the number it returns and the table is unreadable without it. It is not styled as
               a row of the ladder: it is a gate on the ladder. */}
@@ -974,8 +1001,12 @@ export default async function ConditioningPage({
                     {/* NOT .nowrap any more. The rungs stopped being "2 x 400 m" on 2026-08-21 and
                         became sentences relative to his measured number, and nowrap on a sentence is
                         how you force a phone to scroll sideways. */}
+                    {/* "Your number plus 100 m" becomes "500 m" the moment the number exists.
+                        The relative wording stays in the DATA, because the ladder has to be
+                        readable before the calibration swim and correct after it, and a stored
+                        absolute would be wrong for whoever reads it first. */}
                     <td>
-                      {s.piece}
+                      {resolvePiece(s.piece, baseline?.metres ?? null)}
                       {s.note && <div className="quiet">{s.note}</div>}
                     </td>
                     <td>{s.rest}</td>
