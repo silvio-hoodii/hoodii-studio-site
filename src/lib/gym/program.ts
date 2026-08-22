@@ -7,8 +7,31 @@ export * from './program-shared';
 
 const CONTENT = join(process.cwd(), 'content', 'gym');
 
+/* `$comment` is stripped on the way in, at every level.
+ *
+ * These files carry their provenance in a `$comment` array: which trial, which incident, what was
+ * tried and rejected. program.json's is 60 lines and conditioning.json's is 50, and every one of
+ * them was being serialised into the RSC payload and shipped to his phone on each load, because
+ * /gym hands the whole program object to a client component. It reads harmlessly (the retractions
+ * quote the old wording, so a grep of the live page still finds "75-85 min" inside a sentence
+ * saying it was wrong) but it is developer text and it has no business on a mobile connection at
+ * the gym. Recursive, because the nested `slots.$comment` in conditioning.json would otherwise
+ * survive. */
+function stripComments<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(stripComments) as unknown as T;
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (k === '$comment') continue;
+      out[k] = stripComments(v);
+    }
+    return out as T;
+  }
+  return value;
+}
+
 async function readJson<T>(file: string): Promise<T> {
-  return JSON.parse(await readFile(join(CONTENT, file), 'utf8')) as T;
+  return stripComments(JSON.parse(await readFile(join(CONTENT, file), 'utf8')) as T);
 }
 
 export async function loadProgram(): Promise<Program> {

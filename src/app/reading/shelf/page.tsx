@@ -44,6 +44,10 @@ export default async function ShelfCheck({
   ]);
 
   const searching = !!filters.q;
+  /* A letter or a search is the intended path in a shop. Anything else only lists when the filters
+     have already cut it to something a thumb can get through. */
+  const BROWSABLE = 50;
+  const showRows = searching || !!filters.letter || total <= BROWSABLE;
   const groups: { letter: string; books: ShelfEntry[] }[] = [];
   for (const e of entries) {
     const last = groups[groups.length - 1];
@@ -170,12 +174,23 @@ export default async function ShelfCheck({
         </h2>
       )}
 
-      {groups.map((g) => (
-        <section key={g.letter}>
-          <h2 className="sec shelfletter">{g.letter}</h2>
-          {g.books.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
-        </section>
-      ))}
+      {/* NO ROWS UNTIL SOMETHING IS CHOSEN. Measured at 390px on 2026-08-21: the unfiltered landing
+          rendered 400 rows and stood 51,387px tall, sixty-one phone screens, on a page whose own
+          copy already said "pick a letter to narrow it". The rails above ARE the page in the shop:
+          section, then author letter, the order the aisles are walked. A search or a letter is the
+          intended path, and a filter that happens to leave a browsable number is fine too. */}
+      {showRows ? (
+        groups.map((g) => (
+          <section key={g.letter}>
+            <h2 className="sec shelfletter">{g.letter}</h2>
+            {g.books.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
+          </section>
+        ))
+      ) : (
+        <h2 className="sec">
+          {`Pick a letter above, or a section, to see the ${total.toLocaleString()} spines. Searching the author or the title works too.`}
+        </h2>
+      )}
 
       <dl className="tierlegend">
         {TIERS.map((t) => (

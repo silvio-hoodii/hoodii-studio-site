@@ -90,7 +90,7 @@
     "howHard": {
       "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down. There is no version of this plan where running harder is better.",
       "secondary": "If you want a number, keep your heart rate below about 140. Your swims run 130 to 155, so this should feel EASIER than a swim.",
-      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph) and let the talk test move it from there. That number is not a guess: on 2026-08-19 you averaged 7.8 km/h at a mean heart rate of 113, which passes the talk test comfortably, so 8.0 is roughly where you already run. Adjust up or down until a full spoken sentence is easy, and whatever number that turns out to be is your number."
+      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph), then let the talk test move it. Not a guess: on 2026-08-19 you averaged 7.8 km/h at mean heart rate 113, which passes the talk test comfortably. Whatever number it settles at is your number."
     },
     "weeks": [
       {
@@ -226,19 +226,14 @@
     "beltSettings": {
       "run": "8.0 km/h, which is 5.0 mph.",
       "walk": "5.0 km/h, which is 3.1 mph.",
-      "theUnitTest": "Set the belt for the run, then read the speed display once. A number near 8 means the console is metric, so the km figure in the last column is the one to check afterwards. A number near 5 means it is in miles and you read the miles figure. You settle this once, on the first session, and never think about it again.",
-      "whyBothUnits": "You have said you do not trust the console and think it is in miles. Printing both means the plan is correct either way, and the clock on the wall is correct in every unit."
+      "theUnitTest": "Read the speed display once, on the first run. Near 8 means km/h, so check the km figure below. Near 5 means miles. Settled for good.",
+      "whyBothUnits": "Both units printed, because you have said you think the console is in miles."
     },
     "whyTheClockNotTheConsole": [
-      "The doses here are prescribed as MINUTES, not metres, and that is the one thing that changed on",
-      "2026-08-21. Week 1 asks for two run blocks of 500 m. On 2026-08-19 you ran 3,121 m, which is 3.1",
-      "times the prescription, and nothing about how you ran it was wrong: the SPEED was fine at",
-      "7.8 km/h and a mean heart rate of 113. The distance ran away because a distance target on a",
-      "console you cannot read is not a target at all.",
-      "",
-      "A clock cannot be in the wrong unit. Run for the time, and the distance takes care of itself. The",
-      "km and miles figures in the last column exist only so you can confirm afterwards that the console",
-      "agrees, and when it does not, the clock wins."
+      "Minutes, not metres. On 2026-08-19 you ran 3,121 m against a 500 m prescription, 3.1 times it, at",
+      "a speed that was fine: 7.8 km/h, mean heart rate 113. The distance ran away because the target",
+      "lived on a console you cannot read. A clock cannot be in the wrong unit. The km and miles below",
+      "are an after-the-fact check, and when they disagree the clock wins."
     ]
   },
   "bike": {
@@ -343,46 +338,46 @@
     "baseline": [
       {
         "label": "Longest unbroken piece in the lap data",
-        "value": "600 m, twice in the same session, in 11:36 and 12:11, on 2026-05-22. Then 500 m on four separate days: 8 April, 22 April, 26 June and 14 August. Those are local dates, not the watch UTC dates."
+        "value": "600 m twice in one session, 11:36 and 12:11, on 2026-05-22. Then 500 m on 8 April, 22 April, 26 June and 14 August. Local dates, not the watch UTC dates."
       },
       {
-        "label": "What you said your unassisted limit was",
-        "value": "On 2026-08-16, 200 m without the pull buoy. Both figures can be true at once if the buoy was in on the long pieces, and asked directly on 2026-08-21 you did not remember which swims used it. The export does not record a buoy. The week-0 swim below settles it, and until it does, no opening distance is written down."
+        "label": "What you said your limit was",
+        "value": "200 m without the buoy, on 2026-08-16. Both can be true if the buoy was in on the long ones, and on 2026-08-21 you did not remember which. Nothing in the export records a buoy, so the week-0 swim settles it."
       },
       {
         "label": "What you actually do most swims",
-        "value": "About 1,000 m in total, in pieces of 50 to 150 m. Longest unbroken piece in each of your last ten swims: 100, 100, 100, 500, 125, 250, 150, 100 and 150 m, with one session carrying no lap data. The 500 was 14 August. The long piece happens roughly once a month, not once a week."
+        "value": "About 1,000 m in pieces of 50 to 150 m. Longest piece in your last ten swims: 100, 100, 100, 500, 125, 250, 150, 100, 150 m. The long one happens monthly, not weekly. That is the gap, not fitness."
       },
       {
         "label": "Moving pace",
-        "value": "1:48 to 2:05 per 100 m on repeats. The 600 m pieces came in at 1:56 and 2:02 per 100 m, and the 500 m on 14 August at 1:55, so your pace on a long piece is barely slower than on a 100. Pacing is not what stops you.",
+        "value": "1:48 to 2:05 per 100 m on repeats. The 600s came in at 1:56 and 2:02, the 14 August 500 at 1:55. Pace is not what stops you.",
         "secondary": true
       },
       {
-        "label": "Paddles are ruled out",
-        "value": "Stroke count on the 600 m pieces was 8.9 to 9.0 per 25 m length, against 8.5 to 9.0 on your ordinary 50s and 100s. Paddles add surface area and visibly drop that count, so those long swims were not paddle-assisted, whatever else was going on.",
+        "label": "Paddles ruled out",
+        "value": "Stroke count on the 600s was 8.9 to 9.0 per length against 8.5 to 9.0 on your 50s and 100s. Paddles would drop that visibly, so those swims were unpaddled.",
         "secondary": true
       }
     ],
     "theGoal": {
       "target": "1,000 m without stopping",
-      "whatThatActuallyIs": "About 19 minutes of continuous swimming at your pace, and 40 lengths of a 25 m pool. The gap is far smaller than this file used to claim. It said your best continuous effort was \"around 3 minutes\"; the lap data has you unbroken at 600 m twice on 2026-05-22, in 11:36 and 12:11, so on that day you covered nearly two thirds of the goal in one piece and then went and did it again. Whether the buoy was in is the open question, not whether you can swim for eleven minutes.",
-      "whyItIsAchievable": "You already do the distance, you already do it at a decent clip, and on at least one day you have already held more than half of it unbroken. Nothing about your fitness or your stroke is the limiter. The limiter is frequency: the long piece happens about once a month, so the skill never compounds."
+      "whatThatActuallyIs": "About 19 minutes, and 40 lengths of a 25 m pool. This file used to say your best continuous effort was \"around 3 minutes\". It is 11:36, and you did it twice in one session on 2026-05-22. The open question is whether the buoy was in, not whether you can swim for eleven minutes.",
+      "whyItIsAchievable": "You already cover the distance, at a decent pace, and have held more than half of it unbroken. The limiter is frequency: the long piece happens about monthly, so the skill never compounds."
     },
     "theOneTechniqueChange": {
       "what": "Swim the continuity piece 10 to 15 seconds per 100 m SLOWER than your normal 100 repeats. Around 2:05 to 2:10 per 100 m.",
       "why": "This is the single thing that decides whether a long continuous swim works. Almost everyone who fails a distance swim fails it by starting at repeat pace. Going out slower is not cheating, it is the skill being trained.",
-      "howToKnow": "Set the pace from your last session length times, per the calibration cue below, and check length 1 of the continuous swim against that target afterwards. Do not use your breathing to judge the pace. If you need more air, take it: the breathing cue says start on every 3rd stroke and drop to every 2nd the moment a breath comes up short, and that drop is written into the plan rather than being evidence you went out too fast."
+      "howToKnow": "Set the pace off last session length times, per the calibration cue, and check length 1 afterwards. Do not judge pace by your breathing. If you need air, take it: dropping to every 2nd stroke is written into the plan, not a sign you went out fast."
     },
     "onDrills": "Not prescribed, deliberately. Your strokes per length run 8.5 to 9.3 in a 25 m pool and your SWOLF is 35.6 to 39, which is a reasonable stroke, and the evidence that isolated drills improve adult freestyle endurance is thin. Pacing is the higher-value target. If you want drills later, they are a separate conversation with a real reason attached.",
     "structure": {
-      "note": "The continuity piece goes FIRST, while you are fresh and unassisted. Everything after it is yours: 50s, 100s, buoy, whatever you enjoy. Total stays around 1,000 to 1,200 m. Every row below is written relative to YOUR NUMBER from the week-0 swim, because the honest answer to how far you can swim without stopping is not yet known.",
+      "note": "Continuity piece FIRST, fresh and unassisted. After it the session is yours, around 1,000 to 1,200 m total. Every row below is measured from YOUR NUMBER, because how far you can swim unbroken is not yet known.",
       "ladder": [
         {
           "weeks": "1 to 2",
           "piece": "Your number, then your number minus 100 m",
           "rest": "60 s",
-          "note": "Nothing new is being asked of you here. This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of once a month. If your number came back at 150 m, the second piece is 50 m, and that is fine."
+          "note": "Nothing new is being asked. This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of monthly."
         },
         {
           "weeks": "3 to 4",
@@ -403,41 +398,36 @@
           "weeks": "9 to 10",
           "piece": "Your number plus 400 m, unbroken, then easy swimming with whatever is left",
           "rest": "none",
-          "note": "If your number came back at 600 m, this row IS the goal and the ladder is finished here. If it came back at 200 m, this row is 600 m, which the lap data already shows you holding on a good day."
+          "note": "If your number was 600 m this row IS the goal. If it was 200 m this row is 600 m, which the data already shows you holding on a good day."
         },
         {
           "weeks": "11 on",
           "piece": "Add 100 m a fortnight until the piece is 1,000 m",
           "rest": "none",
-          "note": "A fortnight, not a week. Never add distance in a fortnight where you missed swims: repeat the last one you actually completed instead of jumping to where the calendar says you should be."
+          "note": "A fortnight, not a week. Never add distance after a fortnight where you missed swims: repeat the last one you completed."
         }
       ],
       "calibration": {
-        "name": "Week 0: the one swim that sets every number below",
-        "what": "First thing in the session, before anything else, one continuous piece. No pull buoy and no paddles, both left up on the deck where you can see them. Set the pace with the calibration length from the cues. Then swim until the stop rule fires, stop at that wall, and read the distance off the watch. Round it DOWN to the nearest 25 m. That is your number, and every row in the table below is measured from it.",
-        "test": "Two yes-or-no questions when you get out. Was the buoy on the deck for the whole piece? And did you write the distance down before you left the building? If the buoy was between your legs, the number does not count and the swim has to be done again.",
-        "why": "The lap data says 600 m unbroken and you said 200 m, and both are credible, because the buoy explains the whole difference and nothing in the export records it. A fixed opening rung would therefore be wrong by up to 400 m in a direction nobody can predict. Written at 3 x 200 m it spends two months rebuilding a capacity you already have; written at 2 x 400 m it hands a novice a piece he may not be able to hold. One swim removes the guess instead of hedging it, which is why there is no default rung in the table at all."
+        "name": "Week 0: the swim that sets every number below",
+        "what": "First thing in the session, one continuous piece. No buoy and no paddles, both left on the deck. Set the pace with the calibration length. Swim until the stop rule fires, stop at that wall, read the distance and round DOWN to the nearest 25 m. That is your number.",
+        "test": "Was the buoy on the deck the whole time, and did you write the distance down before you left? If the buoy was between your legs the number does not count.",
+        "why": "The data says 600 m, you said 200 m, and the buoy explains the gap but is not recorded. A fixed rung would be wrong by up to 400 m in either direction: written at 3 x 200 m it spends two months on a capacity you have, at 2 x 400 m it may not hold. One swim removes the guess."
       }
     },
     "paddleRule": {
-      "rule": "DORMANT since the rebuild, because you told me on 2026-08-21 that you have not used paddles at all. Kept here rather than deleted, because it re-activates the day you pick them up: at most twice a week, at most 200 m in a session, and never in the continuity piece.",
+      "rule": "DORMANT: on 2026-08-21 you said you have not used paddles at all. Kept because it returns the day you pick them up: twice a week max, 200 m max, never in the continuity piece.",
       "why": [
-        "This was the one genuine injury flag in the rebuild and it is no longer live. The shoulder",
-        "overuse concern needed paddles and heavy pulling in the same week, and the paddles are not",
-        "happening, so the flag is WITHDRAWN as a current constraint. The evidence stays on the page for",
-        "the day that changes.",
+        "Withdrawn as a live constraint. The shoulder flag needed paddles and heavy pulling together, and",
+        "the paddles are not happening.",
         "",
-        "Schorn 2018, 193 amateur triathletes: paddle users sustained overuse injuries at 24% versus 10%",
-        "for non-users (p = 0.014), and paddles were an independent risk factor in regression (p = 0.038).",
-        "Swim training DURATION was not predictive (p = 0.428). It is the paddles, not the hours.",
-        "",
-        "Separately in the same study, heavier weekly weight training was a risk factor for acute shoulder",
-        "injury (p = 0.007). That half still applies to you: pulldowns, rows and pressing four times a",
-        "week on the same shoulder. It is the reason the cap comes back automatically rather than being",
-        "renegotiated, if paddles ever return."
+        "Schorn 2018, 193 amateur triathletes: paddle users had 24% overuse injuries against 10% for",
+        "non-users (p = 0.014), and paddles were an independent risk factor (p = 0.038) while swim",
+        "DURATION was not (p = 0.428). Heavier weekly weight training was a separate risk factor for acute",
+        "shoulder injury (p = 0.007), and that half still applies: pulldowns, rows and pressing four times",
+        "a week. Which is why the cap comes back on its own rather than being renegotiated."
       ]
     },
-    "pullBuoyRule": "Never in the continuity piece, so that the number means something. That is not a new rule, but as of 2026-08-21 it is the rule the whole ladder rests on: the buoy is the only explanation for a lap history that says 600 m and an athlete who says 200 m, and it leaves no trace in the export. Buoy on the deck for the week-0 swim and for every continuity piece after it. Useful afterwards to overreach: once your number is comfortable, a longer piece WITH the buoy teaches the pacing for a distance you cannot yet hold on your own.",
+    "pullBuoyRule": "Never in the continuity piece, so the number means something. The buoy is the only thing that explains 600 m in the data against the 200 m you reported, and nothing records it. Useful afterwards: a longer piece WITH the buoy teaches the pacing for a distance you cannot yet hold alone.",
     "cues": [
       {
         "name": "The stop",
