@@ -72,7 +72,7 @@ always lose to the thing that exists.
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
 | `/gym` | Lifting log + a note box. `content/gym/` + `gym_*` tables | yes |
-| `/gym/conditioning` | Run, bike and swim progressions. Read-only, `content/gym/conditioning.json` | no writes |
+| `/gym/conditioning` | **The whole week**, not just conditioning, since 2026-08-21: the four lifting days from `program.json` plus the run/bike/swim slots, the consecutive-day count from `health_watch_session`, and the max-3-in-a-row rest rule he chose. Run, bike and swim plans are the other three tabs. `content/gym/conditioning.json` + `src/lib/gym/week.ts`. The route keeps its name so his bookmarks live; the h1 and the nav say "The week" | no writes |
 | `/health` | Body composition, read-only from `healthos.db` | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
@@ -196,13 +196,26 @@ harmless, and PSN is not surfaced on the hub.
   an unstubbed write route means a test posts into his actual training log. `/gym/api/note` was
   added without it and the first probe went out over the network. `scripts/lint-probe-routes.mjs`
   now fails the build on it, so this is a description of a gate rather than a thing to remember.
-- **Touching `/gym`? Run `scripts/probe-gym.js` as well.** The four gates are static: they all passed
-  on a build whose swap control silently reset on every page load, whose logged sets then became
-  invisible, whose write recorded one exercise's id next to another's name, and which opened on the
-  wrong day the moment the first set of a session landed. Silvio found all of that by training with
-  it. The probe drives the real interactions in a real browser and stubs every write, so nothing
-  reaches his log. Usage is in the file's header. It is the only test on this repo that presses a
-  button.
+- **Touching `/gym`? Run `node scripts/run-probe-gym.mjs <base-url>` as well**, and the reload pair
+  with `node scripts/run-probe-gym.mjs <base-url> swapSurvivesReload`. Together that is 24 checks;
+  it exits non-zero on any failure. The four other gates are static: they all passed on a build
+  whose swap control silently reset on every page load, whose logged sets then became invisible,
+  whose write recorded one exercise's id next to another's name, and which opened on the wrong day
+  the moment the first set of a session landed. Silvio found all of that by training with it. The
+  probe drives the real interactions in a real browser and stubs every write, so nothing reaches his
+  log. It is the only test on this repo that presses a button.
+
+  **The driver is in the repo now because a gate nobody can run is not a gate.** `agent-browser`,
+  which the probe's header documents, hangs on this machine, so for two sessions the probe was
+  driven by a throwaway script rewritten from scratch each time. On 2026-08-21 one of those opened a
+  background tab, and Chrome fires no focus or blur events for a document without system focus:
+  `el.focus()` moved `document.activeElement` while emitting no `focusout`, React's delegated
+  `onBlur` never ran, and five write-path tests reported zero writes. That was written up as "the
+  repo's only interaction test is dark on the write path" and queued as its own session. **The app
+  was correct the whole time.** `run()` now measures whether the page can produce a blur at all and
+  refuses to run rather than blaming the app, and `run-probe-gym.mjs` sets
+  `Emulation.setFocusEmulationEnabled`. Verified both directions on one build: 5 failed without the
+  flag, 0 with it.
 - **The lockfile check is not optional and `pnpm build` cannot substitute for it.** On 2026-08-09 a
   dep was removed by editing `package.json` directly instead of running `pnpm remove`. Every local
   command passed, because `node_modules` was already correct and install never re-ran. Vercel
@@ -210,7 +223,7 @@ harmless, and PSN is not surfaced on the hub.
   ever reaching the build. Change a dependency only through `pnpm add` / `pnpm remove`.
 - Lint catches `react-hooks/rules-of-hooks` on plain functions named `use*`. Rename them rather than
   disabling the rule.
-- Dev server: `pnpm dev` (port 3001). **Test on `localhost`, not `127.0.0.1`** — the dev server
+- Dev server: `pnpm dev` (port 3001). **Test on `localhost`, not `127.0.0.1`**. The dev server
   blocks cross-origin dev resources from the bare IP and the page silently will not hydrate.
 - **Do not run `pnpm build` while `pnpm dev` is up.** They share `.next`, and the build leaves the
   dev server serving a stale CSS chunk under the SAME hashed filename. It cost two false readings on
@@ -223,7 +236,7 @@ harmless, and PSN is not surfaced on the hub.
 
 `hoodii.studio` serves this repo as of 2026-08-10. `hoodii-platform/apps/hoodii-site/` (the old
 monorepo app, 2D portfolio) is retired and should be archived, not edited. This repo is also public
-on GitHub as of 2026-08-10 (`silvio-hoodii/hoodii-studio-site`) — git history was scanned clean of
+on GitHub as of 2026-08-10 (`silvio-hoodii/hoodii-studio-site`). Git history was scanned clean of
 secrets first; keep it that way: dependency/API keys go in `.env.local` (gitignored) or Vercel env
 vars, never inline.
 

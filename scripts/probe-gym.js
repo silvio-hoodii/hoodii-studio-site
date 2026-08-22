@@ -34,6 +34,14 @@
  * finished state persist, so poking at the page by hand first makes three of these fail with
  * "session already saved" and look like app defects. They are not.
  *
+ * THE PAGE MUST HAVE FOCUS, and `run()` now refuses to start if it does not. Chrome fires no focus
+ * or blur events for an unfocused document, so in a background tab `el.focus()` moves
+ * `document.activeElement` while emitting no `focusout`, React's delegated `onBlur` never runs, and
+ * five write-path tests report zero writes. That reads exactly like an app that has stopped saving.
+ * It happened: those five were carried into a handoff on 2026-08-21 as a real defect and queued for
+ * their own session, and the app had been correct all along. Driving over CDP, send
+ * `Emulation.setFocusEmulationEnabled {enabled:true}` before navigating.
+ *
  * Some tests reload the page. After a reload the harness is gone, so re-eval the file and call the
  * named test: `__probe.run('swapSurvivesReload:after')`. `run()` with no argument runs everything
  * that does not need a reload and tells you which ones it skipped.
@@ -659,8 +667,64 @@
 
   const NEEDS_RELOAD = new Set(['swapSurvivesReload:before', 'swapSurvivesReload:after']);
 
+  /* CAN THIS PAGE EVEN PRODUCE A BLUR? Asked before any test runs, and the answer is measured, not
+   * assumed.
+   *
+   * Chrome does not dispatch focus or blur for a document that lacks system focus. A driver that
+   * opens a background tab therefore gets a page where `el.focus()` still moves
+   * `document.activeElement`, so everything LOOKS focused, but no `focusout` is ever emitted,
+   * React's delegated `onBlur` never runs, and every test that types into a set records zero
+   * writes. That is indistinguishable from an app that has stopped saving.
+   *
+   * It cost this project a week. Five tests were reported as failing on a clean HEAD on 2026-08-21,
+   * were written into a handoff as "the repo's only interaction test is dark on the write path",
+   * and were queued as their own session. The app was correct the whole time. With focus emulation
+   * on, all 22 pass.
+   *
+   * So the class is eliminated rather than documented: a harness that cannot blur REFUSES TO RUN.
+   * The alternative, a note in the header telling the next driver to remember, is exactly the kind
+   * of rule HOODII/.agents/ENGINEERING.md records as never having held.
+   *
+   * The check is empirical and not `document.hasFocus()`, because hasFocus reports the document and
+   * this needs to know about the EVENT, which is the thing the tests actually depend on. */
+  async function canBlur() {
+    const probeInput = document.createElement('input');
+    probeInput.setAttribute('aria-hidden', 'true');
+    probeInput.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0';
+    document.body.appendChild(probeInput);
+    let sawFocusOut = false;
+    const onFocusOut = () => { sawFocusOut = true; };
+    probeInput.addEventListener('focusout', onFocusOut);
+    try {
+      probeInput.focus();
+      probeInput.blur();
+      await sleep(60);
+    } finally {
+      probeInput.removeEventListener('focusout', onFocusOut);
+      probeInput.remove();
+    }
+    return { ok: sawFocusOut, hasFocus: document.hasFocus() };
+  }
+
   async function run(only) {
     install();
+    const focus = await canBlur();
+    if (!focus.ok) {
+      /* Returned in the same shape as a result set so a driver that only prints the JSON still
+         shows it, and `ran: 0` so nothing can read this as a pass. */
+      return JSON.stringify({
+        ran: 0,
+        failed: ['HARNESS: this page cannot fire blur'],
+        refusedToRun:
+          'focus()+blur() on a scratch input produced no focusout event, so React onBlur will never fire and every ' +
+          'write-path test would report zero writes and look like an app bug. The page does not have system focus. ' +
+          'Fix the DRIVER, not the app: over CDP send Emulation.setFocusEmulationEnabled {enabled:true} (or ' +
+          'Page.bringToFront) before navigating. With agent-browser, use a visible session and keep its window ' +
+          'frontmost. Verified 2026-08-21: 5 failed without it, 0 failed with it, same build.',
+        documentHasFocus: focus.hasFocus,
+        totalWritesIntercepted: state.calls.length,
+      });
+    }
     const names = only ? [only] : Object.keys(tests).filter((n) => !NEEDS_RELOAD.has(n));
     const out = {};
     for (const n of names) {
@@ -680,6 +744,6 @@
     });
   }
 
-  window.__probe = { install, run, tests, state, helpers: { type, blur, text, card, cardNames, waitFor, sleep, $, $$ } };
+  window.__probe = { install, run, canBlur, tests, state, helpers: { type, blur, text, card, cardNames, waitFor, sleep, $, $$ } };
   return install();
 })();
