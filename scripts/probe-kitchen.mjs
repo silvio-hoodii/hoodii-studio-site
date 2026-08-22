@@ -244,22 +244,33 @@ try {
    *   capers: he said out loud that the piccata rebuild used the whole jar. Nothing wrote it down and
    *     the app kept offering caper dishes for eight days afterwards. */
   check('a pasted recipe is scored', Boolean(out), out ? '' : 'no result box ever rendered');
-  /* REPOINTED 2026-08-21, and the reason matters more than the assertion.
+  /* ---- REMOVED 2026-08-21: this check was untestable at this surface, in both of its forms ----
    *
-   * This asserted the words "fresh chilli" appeared in the output, meaning "reported as missing". It
-   * had been FAILING, and neither half of it was right any more. There is no `fresh chilli` term in
-   * `stock/aliases.json` at all, in any version, so "1 red chilli" resolved to UNKNOWN rather than to
-   * missing and the phrase could never appear. And the premise had expired underneath it: he bought a
-   * 225 g bag of jalapenos on 2026-08-19, a jalapeno is a fresh chilli, so "a kitchen with no chilli"
-   * stopped being true. `red chilli` now maps to `jalapeno`, which is the honest answer.
+   * It began as `/fresh chilli/i.test(out)`, meaning "the red chilli was reported as missing", and it
+   * was RED before any of today's work. Two independent reasons, and neither was a bug in the app:
    *
-   * The invariant the check was really protecting survives all of that, and it is stated directly
-   * now: an ingredient line must be ACCOUNTED FOR somewhere in the output, as have, as missing or as
-   * unsure. The original bug was not that chilli was called optional, it was that the line vanished
-   * and the dish claimed ready while naming no gap at all. Silence is the failure. This holds whether
-   * or not he happens to own one, which is what the old form did not. */
-  check('every ingredient line is accounted for, never silently dropped', /chilli/i.test(out),
-    /chilli/i.test(out) ? '' : 'the red chilli line appears nowhere: not had, not missing, not unsure');
+   *   1. There is no `fresh chilli` term in `stock/aliases.json`, in any version. Diffed `_knownGaps`
+   *      against the commit before today's: byte-identical. So "1 red chilli" resolved to UNKNOWN and
+   *      that phrase could never appear no matter what the matcher did.
+   *   2. The premise expired. He bought a 225 g bag of jalapenos on 2026-08-19 and a jalapeno is a
+   *      fresh chilli, so "a kitchen with no chilli" stopped being true. `red chilli` now maps to
+   *      `jalapeno`, which is the honest answer, and the line is correctly HAD.
+   *
+   * It was then repointed to assert the weaker invariant, that the line is accounted for SOMEWHERE.
+   * That is the right invariant and this is the wrong place to assert it: `/kitchen/want`'s result box
+   * renders `missing` and `haveVia` only. It never lists `have` or `unknown`, so an ingredient the
+   * matcher resolves correctly is legitimately absent from the text, and the check cannot tell a
+   * silently dropped line from a correctly matched one. It went red for a passing app.
+   *
+   * Deleted rather than left failing. This repo has already recorded how a permanent warning trains
+   * its reader to ignore the harness, and a red check that is about nothing is the same defect as a
+   * green one that is about nothing, which is its oldest failure mode.
+   *
+   * WHAT IS STILL UNGUARDED, said out loud so it is not mistaken for covered: nothing asserts that
+   * every ingredient line reaches one of have / missing / unknown. The original 2026-08-12 bug was a
+   * line vanishing while the dish claimed ready and named no gap. Closing this properly needs the
+   * accounting on screen, which is a want-page change (`counted` is already computed by
+   * scoreRecipe and rendered nowhere), not a probe change. */
   check('a stock row he emptied out loud is respected', /capers/i.test(out),
     /capers/i.test(out) ? '' : 'capers were not reported as missing');
 
