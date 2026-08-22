@@ -310,3 +310,32 @@ export interface Conditioning {
  * I'm not gonna do that." He had never logged a single set of it in 427 sets. Nothing imported the
  * ladder JSON either, so it was a five-step progression that existed only on disk. Recoverable from
  * git history if it is ever wanted back. */
+
+/** The handbook for when somebody at the pool asks him what to work on.
+ *
+ *  Reuses `Cue`, because a teaching point and a training cue are the same shape: a thing to do, a
+ *  TEST with a binary answer, and where it came from. The test matters more here than anywhere else
+ *  on this site: he is standing on a pool deck looking at another person, so the cue has to be
+ *  something he can SEE rather than something they have to feel. */
+export interface TeachingStage {
+  id: string;
+  n: number;
+  name: string;
+  /** Who this stage is for, so he can pick one by recognising the person in front of him. */
+  who: string;
+  sourceId?: string;
+  cues: Cue[];
+}
+
+export interface SwimTeaching {
+  meta: { builtOn: string; stroke: string; who: string };
+  /** The safety line. First thing on the page, deliberately. */
+  beforeYouStart: { title: string; body: Prose };
+  stages: TeachingStage[];
+  whatToLookFor: {
+    title: string;
+    intro: string;
+    items: { see: string; say: string; stage: string }[];
+  };
+  sources: { id: string; label: string; url: string; note?: string }[];
+}

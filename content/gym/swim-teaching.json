@@ -1,0 +1,189 @@
+{
+  "$comment": [
+    "THE TEACHING HANDBOOK. Built 2026-08-22 from his own problem, in his words:",
+    "",
+    "  'Sometimes people approach me when I'm swimming or just outside the pool, or just friends,",
+    "  and ask me if I can teach them how to swim, which I can't... I have no idea how to explain",
+    "  principles that I'm already familiar with but not sure how to explain.'",
+    "",
+    "  'There are a lot of people that I've met at the pool that I go to that ask me some stuff. I'm",
+    "  not really sure how to tell them what to work on or what to improve.'",
+    "",
+    "AGENTS DO NOT WRITE SWIM INSTRUCTION FROM MEMORY. The same rule the kitchen learned the hard",
+    "way on 2026-08-09: every failure there came from a sentence an agent wrote, and not one came",
+    "from a figure a source gave. Somebody could get hurt taking bad water advice, so every stage",
+    "and every fix below traces to a named source, and the two that do not say so on the page.",
+    "",
+    "THE BACKBONE is Swim England's Learn to Swim framework, which teaches nine core aquatic skills",
+    "rather than strokes: entry, exit, floatation, rotation, streamlining, breathing, travel and",
+    "coordination, water safety, and fitness. That ordering is why the first two stages here contain",
+    "no swimming at all. Someone who cannot float and cannot breathe out underwater does not have a",
+    "stroke problem.",
+    "",
+    "THE FREESTYLE HALF is US Masters Swimming's own coaching guides: body position, breathing, pull",
+    "and kick. A governing body's coaching resource, not a blog, and the phrasing that is quoted is",
+    "quoted rather than paraphrased.",
+    "",
+    "EVERY FIX IS A TEST HE CAN WATCH, not a feeling the other person has to have. Same house rule",
+    "the kitchen runs on: 'wait until it sizzles rather than hisses' failed, and 'tilt the pan, if",
+    "liquid runs it is not ready' replaced it. He is standing on a pool deck looking at somebody. He",
+    "needs something he can SEE.",
+    "",
+    "AND THE FIRST PAGE IS A REFUSAL. The most useful thing he can tell a nervous non-swimmer is",
+    "that he is not a teacher and deep water is where people drown. That is not modesty, it is the",
+    "single highest-stakes sentence in this file."
+  ],
+  "meta": {
+    "builtOn": "2026-08-22",
+    "stroke": "freestyle",
+    "who": "Adults who already get in the water, asking what to work on."
+  },
+  "beforeYouStart": {
+    "title": "Say this first",
+    "body": [
+      "You are not a swimming teacher and this is not a lesson. What follows is for someone who can",
+      "already get in and move, and wants to know what to work on.",
+      "",
+      "If they cannot float, cannot put their face in, or are frightened, send them to a class. Do it",
+      "in shallow water, do not take a nervous person into deep water to demonstrate anything, and do",
+      "not hold anyone up. Drowning is quiet and it is fast."
+    ]
+  },
+  "stages": [
+    {
+      "id": "comfort",
+      "n": 1,
+      "name": "Comfortable, before anything else",
+      "who": "They can stand in the pool but do not put their face in, or hold their breath and rush.",
+      "sourceId": "swim-england",
+      "cues": [
+        {
+          "name": "Breathe OUT under the water",
+          "cue": "Face in, and hum or blow a steady stream of bubbles out through the mouth and nose the whole time the face is down. Come up only to breathe in.",
+          "test": "Stand next to them and watch for bubbles. Continuous bubbles means they are breathing out. No bubbles means they are holding their breath, which is the thing to fix before anything else.",
+          "why": "Holding the breath is what makes people panic and rush. USMS lists it as a common error and prescribes the opposite: exhale while the mouth is underwater, inhale when it is out.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Breathing. Drills named there include Bobs and Blowout Bobs, which are exactly this.",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing"
+        },
+        {
+          "name": "Float on the front, then on the back",
+          "cue": "Face in, arms out, let the legs come up on their own. Do nothing. Then roll over and do the same on the back.",
+          "test": "Do they stay up without moving? If the legs sink the moment they stop kicking, they are not floating yet and there is no point talking about a stroke.",
+          "why": "Floating on the front and on the back is Stage 1 of the Swim England framework, alongside submerging the face and blowing bubbles. It comes before travel, not after.",
+          "confidence": "sourced",
+          "grounding": "Swim England Learn to Swim Framework, Stage 1.",
+          "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/"
+        }
+      ]
+    },
+    {
+      "id": "position",
+      "n": 2,
+      "name": "Flat, not climbing",
+      "who": "They can swim a length but it looks like hard work, and their legs drag.",
+      "sourceId": "usms-position",
+      "cues": [
+        {
+          "name": "Press the chest down and the hips come up",
+          "cue": "Lean on the chest, as if pressing it gently into the water. The lungs are a float in the top half of the body, so leaning on them lifts the other end.",
+          "test": "Watch from the side at the wall. Are the hips near the surface or a foot under it? If the feet are deep and the head is high, they are swimming uphill and everything else they do is fighting that.",
+          "why": "USMS: press your head and chest down into the water to leverage lung buoyancy and elevate your hips. It is the single biggest drag problem in adult freestyle.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Body Position. 'Move through the water like a torpedo.'",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position"
+        },
+        {
+          "name": "The head does not lift to breathe, it turns",
+          "cue": "Roll the whole body a little and turn the head with it, so one goggle stays in the water. Lift only as much as it takes to get air.",
+          "test": "Watch the head from the side. If it comes UP and forward to breathe, the hips drop every single breath. If it rolls, they stay flat.",
+          "why": "USMS names both errors: lifting the head upward sinks the hips, and pulling the head to the side breaks the shoulder and hip line and adds drag.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Breathing. 'Keep your head in the same position, lifting only as much as necessary to get a good breath.'",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing"
+        }
+      ]
+    },
+    {
+      "id": "catch",
+      "n": 3,
+      "name": "Holding the water",
+      "who": "They are flat and relaxed, and want to go faster without working harder.",
+      "sourceId": "usms-pull",
+      "cues": [
+        {
+          "name": "Enter about shoulder width, reaching forward",
+          "cue": "The hand goes in roughly in front of its own shoulder, moving forward and slightly down, flat. Not across the head, not out wide.",
+          "test": "Stand at the end of the lane and look straight down the swimmer. Do the hands go in inside the shoulders, crossing the middle? Do they slap in wide? Either one costs the catch before it starts.",
+          "why": "USMS: too wide disrupts rotation and weakens the pull, too narrow makes them pull across the body, and entering straight down eliminates the catch entirely.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Pull. 'Approximately shoulder-width apart and moving forward and slightly down.'",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull"
+        },
+        {
+          "name": "Bend the elbow and point the palm backwards",
+          "cue": "From the reach, let the hand drop down and in while the elbow bends and points out to the side, until the hand AND the forearm face the way they came from. Then move the body past it. Think about repositioning the arm rather than yanking on it.",
+          "test": "Ask them to swim a length with closed fists. If they slow down only slightly, the forearm is doing work and the catch is decent. If they nearly stop, they were pulling with the hand alone.",
+          "why": "USMS calls the catch a repositioning rather than a pull, and names Closed Fist as the drill that forces the forearm to take over.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Pull. 'Drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.'",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull"
+        },
+        {
+          "name": "The kick starts at the hip, not the knee",
+          "cue": "Small, fast, from the hip, feet staying just under the surface. The knee bends a little on the way down and stays almost straight on the way up.",
+          "test": "Watch the water. Big white splashing means the feet are coming out of the water and the knees are driving it. A small steady boil at the surface is what you want.",
+          "why": "USMS calls knee-driven kicking the most common kicking mistake, and notes that feet leaving the water look powerful while pushing no water at all.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Kick. 'Your down-kick begins at your hip, your knee moves second, and your ankle moves third.'",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick"
+        }
+      ]
+    },
+    {
+      "id": "keepgoing",
+      "n": 4,
+      "name": "Keeping it going",
+      "who": "The stroke is fine for a length and falls apart over four.",
+      "sourceId": "usms-breathing",
+      "cues": [
+        {
+          "name": "Breathe on a rhythm you chose before you started",
+          "cue": "Pick every two, or every three, and hold it for the whole length. Breathing whenever it gets uncomfortable is what makes a swim ragged.",
+          "test": "Count their breaths over one length, twice. If the number is different each time, they are breathing on panic rather than on a plan.",
+          "why": "USMS ties breathing frequency to the length of the effort and names gasping or breathing without a plan as an error that disrupts body position.",
+          "confidence": "sourced",
+          "grounding": "US Masters Swimming, Freestyle: Breathing. Every 2 to 4 strokes for efforts of 30 to 75 seconds, every 2 to 3 for longer.",
+          "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing"
+        },
+        {
+          "name": "Count strokes per length and keep the count honest",
+          "cue": "Count arm strokes for one length. Then try to swim it in one fewer, at the same speed. Then hold that count for four lengths in a row.",
+          "test": "The count is the test. A count that climbs over four lengths is the stroke falling apart, and it shows up before they feel it.",
+          "why": "Stroke counting is standard coaching practice and it is the same idea as SWOLF, which is length time plus stroke count. No trial is being cited for it.",
+          "confidence": "convention",
+          "grounding": "Common coaching practice. Named here rather than dressed up as evidence.",
+          "url": null
+        }
+      ]
+    }
+  ],
+  "whatToLookFor": {
+    "title": "If they just ask what to work on",
+    "intro": "Watch one length from the side and one from the end. Almost every adult freestyle problem is one of these four, and they are in the order worth fixing.",
+    "items": [
+      { "see": "Legs low, head high, lots of effort", "say": "Lean on your chest, let the hips come up", "stage": "position" },
+      { "see": "Head lifts forward to breathe", "say": "Roll and turn instead of lifting, keep one goggle in", "stage": "position" },
+      { "see": "Big splashing kick, feet out of the water", "say": "Smaller and faster, from the hip, feet just under the surface", "stage": "catch" },
+      { "see": "Straight arm pulling, hand slipping through", "say": "Bend the elbow early and face the palm backwards", "stage": "catch" },
+      { "see": "Fine for one length, wrecked by four", "say": "Pick a breathing rhythm and count your strokes", "stage": "keepgoing" }
+    ]
+  },
+  "sources": [
+    { "id": "swim-england", "label": "Swim England Learn to Swim Framework", "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/", "note": "Teaches nine core aquatic skills rather than strokes: entry, exit, floatation, rotation, streamlining, breathing, travel and coordination, water safety, fitness. That ordering is why stage 1 here has no swimming in it." },
+    { "id": "usms-position", "label": "US Masters Swimming, Freestyle: Body Position", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position" },
+    { "id": "usms-breathing", "label": "US Masters Swimming, Freestyle: Breathing", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing" },
+    { "id": "usms-pull", "label": "US Masters Swimming, Freestyle: Pull", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull" },
+    { "id": "usms-kick", "label": "US Masters Swimming, Freestyle: Kick", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick" }
+  ]
+}

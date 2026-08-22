@@ -19,6 +19,7 @@ const cooldowns = readJson('cooldowns.json');
 const equipment = readJson('equipment.json');
 const conditioning = readJson('conditioning.json');
 const swimStandards = readJson('swim-standards.json');
+const swimTeaching = readJson('swim-teaching.json');
 
 let FAIL = 0;
 const out = [];
@@ -367,6 +368,57 @@ const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'third-party', 'c
     }
   }
   out.push(`ok    [swim-standards.json] ${tiers.length} tiers over ${dists.length} distances, provenance on all of them`);
+}
+
+// ---------------------------------------------------------------------------------------------
+// SWIM TEACHING: nothing goes in the handbook without a source or an admission. 2026-08-22.
+//
+// This is the one surface on the site where being wrong could hurt somebody who is not him. He
+// is going to read these lines out to a stranger in a swimming pool. The kitchen already proved
+// what happens when an agent writes instructions from memory: on 2026-08-09 every one of the
+// four failures came from a sentence an agent wrote, and not one came from a figure a source
+// gave. In a kitchen that burnt dinner.
+//
+// So each cue must carry a TEST, and each must declare a confidence. `sourced` must name a URL.
+// `convention` may not, and that is exactly what it is for: it is how a line admits that nobody
+// studied it.
+// ---------------------------------------------------------------------------------------------
+const TEACH_CONF = new Set(['sourced', 'convention']);
+
+{
+  const stages = swimTeaching.stages || [];
+  if (!stages.length) fail('swim-teaching.json', 'no stages');
+  if (!swimTeaching.beforeYouStart?.body?.length) {
+    fail('swim-teaching.json', 'beforeYouStart is missing. That block is the safety line and it is the first thing on the page: he is being handed a script to read to a stranger in deep water.');
+  }
+  const srcIds = new Set((swimTeaching.sources || []).map((x) => x.id));
+  const stageIds = new Set(stages.map((x) => x.id));
+  for (const st of stages) {
+    const where = `swim-teaching.json/${st.id || "?"}`;
+    if (!st.name || !st.who) fail(where, 'a stage needs a name and a `who` so he can pick it by recognising the person in front of him');
+    if (st.sourceId && !srcIds.has(st.sourceId)) fail(where, `sourceId "${st.sourceId}" is not in sources[]`);
+    if (!st.cues?.length) fail(where, 'a stage with no cues teaches nothing');
+    for (const c of st.cues || []) {
+      const w2 = `${where}/${c.name || "?"}`;
+      if (!c.cue) fail(w2, 'no cue');
+      if (!c.test || c.test.length < 20) {
+        fail(w2, 'every teaching point needs a TEST of at least 20 characters. He is on a pool deck looking at somebody: it has to be something he can SEE, not something they have to feel.');
+      }
+      if (!TEACH_CONF.has(c.confidence)) {
+        fail(w2, `confidence must be ${[...TEACH_CONF].join(" | ")}, got ${JSON.stringify(c.confidence ?? null)}`);
+      }
+      if (c.confidence === 'sourced' && !c.url) {
+        fail(w2, 'confidence is "sourced" but there is no url. A sourced claim about what to do in water has to name where it came from, or it is an agent writing swim instruction from memory.');
+      }
+    }
+  }
+  for (const i of swimTeaching.whatToLookFor?.items || []) {
+    if (!stageIds.has(i.stage)) {
+      fail('swim-teaching.json', `whatToLookFor points at stage "${i.stage}", which does not exist`);
+    }
+  }
+  const nCues = stages.reduce((a, x) => a + (x.cues?.length || 0), 0);
+  out.push(`ok    [swim-teaching.json] ${stages.length} stages, ${nCues} cues, all with a test and a stated confidence`);
 }
 
 console.log(out.join('\n'));

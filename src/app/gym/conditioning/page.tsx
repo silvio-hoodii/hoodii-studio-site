@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { loadConditioning, loadProgram } from '@/lib/gym/program';
+import { loadConditioning, loadProgram, loadSwimTeaching } from '@/lib/gym/program';
 import { getTrainingWeek, KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
@@ -7,7 +7,7 @@ import {
 } from '@/lib/gym/swim-level';
 import { getLastSession, sessionVerdict, type SessionDetail, type SessionKind } from '@/lib/gym/session';
 import { Trace, LengthBars, SessionStats } from '../SessionCharts';
-import type { Cue } from '@/lib/gym/types';
+import type { Cue, SwimTeaching } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -392,15 +392,19 @@ function Prose({ text }: { text: string | string[] }) {
  * behind it, and saying so is the point: a plan that labels its guesses can be trusted about the
  * rest. The citation sits behind a tap because he needs the cue at the gym and the source only when
  * he doubts it. */
-function Cues({ cues, note }: { cues: Cue[]; note?: string | null }) {
+function Cues({ cues, note, heading, intro }: { cues: Cue[]; note?: string | null; heading?: string; intro?: string }) {
   if (!cues?.length) return null;
   return (
     <>
       <div className="exgroup-label" style={{ marginTop: 22 }}>
-        How to actually do it <span className="tag">({cues.length})</span>
+        {heading ?? 'How to actually do it'} <span className="tag">({cues.length})</span>
       </div>
+      {/* The default copy says "a test YOU perform", which is right on the run, bike and swim tabs
+          and wrong on the teaching tab, where the test is one he performs on somebody else while
+          standing on the deck. Same component, because a teaching point and a training cue are the
+          same shape; different sentence, because the person doing the looking is different. */}
       <p className="lede" style={{ marginBottom: 6 }}>
-        Each one is a test you perform, not a feeling you have to have. Tap to open.
+        {intro ?? 'Each one is a test you perform, not a feeling you have to have. Tap to open.'}
       </p>
       {/* COLLAPSED BY DEFAULT, and measured before and after rather than guessed. Rendering all
           seven open took the Run tab to 8,536 px, which is TALLER than the 6,287 px page he
@@ -472,6 +476,7 @@ const SUB_TABS: Record<string, { id: string; label: string }[]> = {
     { id: 'now', label: 'Now' },
     { id: 'plan', label: 'Plan' },
     { id: 'how', label: 'How' },
+    { id: 'teach', label: 'Teach' },
   ],
   run: [
     { id: 'now', label: 'Now' },
@@ -553,6 +558,69 @@ function LastSession({ s }: { s: SessionDetail | null }) {
   );
 }
 
+
+/* THE HANDBOOK, for when somebody at the pool asks him what to work on.
+ *
+ * "I have no idea how to explain principles that I'm already familiar with but not sure how to
+ * explain... I'm not really sure how to tell them what to work on or what to improve."
+ *
+ * The safety line is first and it is not decoration. The most valuable thing he can say to a
+ * frightened non-swimmer is that he is not a teacher, and every fix here is a TEST HE CAN SEE from
+ * the side of the pool rather than a sensation the other person has to report. Nothing in this file
+ * was written from an agent's memory: the staging is Swim England's and the freestyle is US Masters
+ * Swimming's, and the one line that has no source says so on its own card. */
+function SwimTeach({ t }: { t: SwimTeaching }) {
+  return (
+    <>
+      <div className="exgroup">
+        <div className="stale">
+          <span className="k">{t.beforeYouStart.title}</span>
+          <Prose text={t.beforeYouStart.body} />
+        </div>
+      </div>
+
+      <div className="exgroup">
+        <div className="exgroup-label">{t.whatToLookFor.title}</div>
+        <p className="ex-cue">{t.whatToLookFor.intro}</p>
+        <div className="lookfor">
+          {t.whatToLookFor.items.map((i) => (
+            <div className="lf" key={i.see}>
+              <div className="lf-see">{i.see}</div>
+              <div className="lf-say">{i.say}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {t.stages.map((st) => (
+        <div className="exgroup" key={st.id}>
+          <div className="exgroup-label">
+            {st.n}. {st.name}
+          </div>
+          <p className="ex-cue"><b>Who this is for.</b> {st.who}</p>
+          <Cues
+            cues={st.cues}
+            heading="What to say, and what to watch for"
+            intro="Each one is something you can SEE from the side of the pool, not something they have to feel and tell you about. Tap to open."
+          />
+        </div>
+      ))}
+
+      <div className="exgroup">
+        <div className="exgroup-label">Where all of this comes from</div>
+        <div className="tierlist">
+          {t.sources.map((src) => (
+            <div className="tier" key={src.id}>
+              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+              {src.note && <div className="ex-cue">{src.note}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default async function ConditioningPage({
   searchParams,
 }: {
@@ -575,6 +643,7 @@ export default async function ConditioningPage({
   const lastSession = sub === 'now' || tab === 'week'
     ? await getLastSession(KIND_FOR_TAB[tab] ?? 'strength')
     : null;
+  const teaching = tab === 'swim' && sub === 'teach' ? await loadSwimTeaching() : null;
   const swim = tab === 'swim' ? await (async () => {
     const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
     return { standards, standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)) };
@@ -806,6 +875,8 @@ export default async function ConditioningPage({
           <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
         </div>
       )}
+
+      {tab === 'swim' && sub === 'teach' && teaching && <SwimTeach t={teaching} />}
 
       {tab === 'swim' && sub === 'now' && <LastSession s={lastSession} />}
 
