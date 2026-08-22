@@ -10,7 +10,9 @@ export const metadata = {
   alternates: { canonical: '/reading/about' },
 };
 
-export const dynamic = 'force-dynamic';
+/* ISR, one hour. Explains the scoring and lists the sources; it changes when a source list is
+ * added, which happens a few times a year. */
+export const revalidate = 3600;
 
 const TRACK_ORDER: Track[] = ['canon', 'current', 'nonfiction', 'genre', 'spanish'];
 

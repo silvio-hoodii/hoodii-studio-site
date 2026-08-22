@@ -1,6 +1,6 @@
 /** Pure program helpers, no filesystem access, safe to import from client components too.
  *  Split out of program.ts (which is 'server-only' because it reads content/gym/*.json off disk)
- *  so GymClient.tsx can share the exact same budget/plate-math/swap logic instead of reimplementing
+ *  so GymClient.tsx can share the exact same plate-math/swap logic instead of reimplementing
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
@@ -16,15 +16,18 @@ export function splitName(d: { title: string; name: string }): string {
   const head = d.title.split(/:\s/)[0]?.trim();
   return head || d.name;
 }
-/** The session lengths he said on 2026-08-21 he would actually defend: 45 default, 25 floor,
- *  60 ceiling. It was [45, 60, 90] with a "Full" default of no cap at all, on a programme whose days
- *  this model puts at 100 to 106 minutes and whose real sessions ran 81 to 120. An uncapped default
- *  is not a default, it is the absence of one. */
-export const BUDGETS = [25, 45, 60] as const;
-
-/** Selected on load. The floor is what a bad day looks like, so the streak survives it; the ceiling
- *  exists so a 90-minute session reads as a failure rather than as a good day. */
-export const DEFAULT_BUDGET = 45;
+/* THE TIME BUDGET IS DELETED, 2026-08-22. BUDGETS, DEFAULT_BUDGET, exPriority, budgetKeep and
+ * budgetedBlocks all lived here and all went together.
+ *
+ * They asked him to predict the length of a session before starting it, and he gets that wrong in
+ * both directions. He also worked out what the cap was actually doing: "what you do between the
+ * full and the 25 is just you're taking out everything that comes after the main lift. Why don't
+ * you just have one and I'll check everything that I will do?"
+ *
+ * The block ORDER and `role` already carry that priority, so the page states the drop direction in
+ * one sentence and shows the whole day. Deleted rather than left unused, because dead code that
+ * still typechecks is how a "budget" reappears in a payload nobody meant to send.
+ * Recoverable from git history: this file at ba3385c. */
 
 export function exType(ex: Exercise | Alt): ExerciseType {
   return ex.timed ? 'timed' : ex.bodyweight ? 'bodyweight' : 'weighted';
@@ -68,9 +71,10 @@ export function exMinutes(ex: Exercise): number {
  *    fit-session-time.mjs summed rest when it fitted the constant. Changing the shape of the sum
  *    here without re-fitting the constant would silently invalidate it.
  *
- *  budgetKeep = PRESCRIPTIVE. What fits in a cap if he runs it as written, which includes doing the
- *    fill partner inside the lead's rest. There the partner costs NOTHING, because the rest window
- *    is being paid for either way. That is the whole reason 'fill' exists. */
+ *  The prescriptive half of this pair, budgetKeep, is gone with the time budget it served (see the
+ *    note above). What it knew is still true and still worth knowing: a 'fill' partner is done
+ *    inside the lead's rest and costs NOTHING, because that window is paid for either way. That is
+ *    the whole reason 'fill' exists, and it is why the page can show the day as one list. */
 export function dayMinutes(day: Day): number {
   return Math.round(
     FIXED_MIN + day.blocks.reduce((a, b) => a + b.exercises.reduce((x, e) => x + exMinutes(e), 0), 0),
@@ -100,79 +104,6 @@ export function dayTimeBreakdown(day: Day): {
     overheadMin: Math.round((sets * SET_OVERHEAD_SEC) / 60),
     sets,
   };
-}
-
-/* Priority now reads `role`, which says what a block is FOR, instead of sniffing the label with a
- * regex. The old version tested /^Main\b/ against the label text, so renaming a block from "Main
- * Lift" to "Main Lift: Back Squat" would have silently demoted the squat out of priority 1 and let
- * a 45-minute budget drop it. A label is a display string; it should never have been load-bearing. */
-function exPriority(block: { role: string }, idx: number, isLeadMain: boolean): number {
-  if (block.role === 'main') return idx === 0 && isLeadMain ? 1 : 2;
-  if (block.role === 'primer') return 2;
-  return idx === 0 ? 2 : 3;
-}
-
-/** Which exercise ids survive a time budget. Priority 1 (the main lift) is unconditional: a short
- *  session that skips it is worse than no session. Then fill by priority, program order, and STOP at
- *  the first thing that doesn't fit (never let a cheap accessory displace something more important
- *  just for being short). Ported verbatim from HealthOS/gym.html's budgetKeep(). */
-export function budgetKeep(day: Day, minutes: number | null): Set<string> | null {
-  if (!day || !minutes) return null; // null budget = run the whole day
-  /* Only the FIRST `main` block of the day is unconditional. Since 2026-08-16 each day carries two
-   * main blocks, the heavy pattern and a light second exposure of the complementary one (squat
-   * heavy + hinge light, and vice versa). Both are "main" in role, but on a 45-minute day the heavy
-   * lift is the one that must survive; the light technical exposure is the first thing to lose. */
-  const leadMainIdx = day.blocks.findIndex((b) => b.role === 'main');
-  const items: { id: string; pri: number; mins: number; order: number; ridesWith?: string }[] = [];
-  day.blocks.forEach((block, bi) =>
-    block.exercises.forEach((ex, i) => {
-      /* A 'fill' partner is done inside the lead's rest, so it costs only its own overhead and it
-       * RIDES WITH the lead rather than competing against it for the budget. Before 2026-08-21 it
-       * was priced at full rest and ranked at priority 3, so it was both the most expensive and the
-       * first thing dropped, and a 45-minute Tuesday came out as a bench press and a dead bug with
-       * no pulling anywhere in it. The partner is the rotator-cuff and anti-valgus work; dropping it
-       * to save time it does not take is the wrong trade in both directions.
-       *
-       * It costs ZERO, not its own overhead. Three sets of dead bug at 30 to 45 seconds fit inside
-       * four squat rests of three minutes with ten minutes to spare, so the time is already spent.
-       * Pricing it at overhead instead made a 45-minute cap estimate 57 minutes, which is a cap
-       * that does not cap. */
-      const isFillPartner = block.pairing === 'fill' && i === 1;
-      const lead = block.exercises[0];
-      items.push({
-        id: ex.id,
-        pri: exPriority(block, i, bi === leadMainIdx),
-        mins: isFillPartner ? 0 : exMinutes(ex),
-        order: bi * 100 + i,
-        ridesWith: isFillPartner && lead ? lead.id : undefined,
-      });
-    }),
-  );
-  const keep = new Set<string>();
-  let spent = FIXED_MIN;
-  const take = (it: { id: string; mins: number }) => {
-    keep.add(it.id);
-    spent += it.mins;
-  };
-  for (const it of items.filter((x) => x.pri === 1)) take(it);
-  for (const it of items.filter((x) => x.pri > 1 && !x.ridesWith).sort((a, b) => a.pri - b.pri || a.order - b.order)) {
-    if (spent + it.mins > minutes) break;
-    take(it);
-  }
-  // Riders come along after the fact: a partner is kept if and only if its lead survived, whatever
-  // the clock says, because it consumes rest that is being spent either way.
-  for (const it of items.filter((x) => x.ridesWith)) {
-    if (keep.has(it.ridesWith!)) take(it);
-  }
-  return keep;
-}
-
-export function budgetedBlocks(day: Day, budgetMinutes: number | null) {
-  const keep = budgetKeep(day, budgetMinutes);
-  if (!keep) return day.blocks;
-  return day.blocks
-    .map((b) => ({ ...b, exercises: b.exercises.filter((e) => keep.has(e.id)) }))
-    .filter((b) => b.exercises.length > 0);
 }
 
 // ---- plate math + warmup ramp ----

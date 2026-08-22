@@ -16,7 +16,10 @@ export const metadata = {
  * sync.mjs runs, with no redeploy in between. Static prerendering would bake the queue in at
  * build time and then never look at it again, which is exactly the staleness /swim already
  * solved once. */
-export const dynamic = 'force-dynamic';
+/* ISR, five minutes. The queue is a hand-run mirror: refill.mjs then sync.mjs, both deliberate
+ * acts. Five minutes between a sync and the page catching up is not a staleness problem, and it
+ * is not the build-time bake AGENTS.md warns about, because ISR regenerates against Neon. */
+export const revalidate = 300;
 
 /* The queue is DATA, mirrored from ReadingOS/data/queue.json + data/acquire.json by
  * content/reading/sync.mjs, run by hand after refill.mjs / acquire.mjs on the laptop -- acquire.mjs

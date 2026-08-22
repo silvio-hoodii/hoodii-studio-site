@@ -2,7 +2,9 @@ import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSumm
 import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
 import { daysAgoText } from '@/lib/format';
 
-export const dynamic = 'force-dynamic';
+/* ISR, thirty minutes. Body composition changes when a measurement is taken, not per request.
+ * CURRENT.md's own staleness flag is measured in DAYS, so half an hour costs nothing. */
+export const revalidate = 1800;
 
 function msToPace(ms: number | null): string {
   if (!ms) return 'N/A';

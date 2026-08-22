@@ -1,12 +1,12 @@
-import { fetchSpotify } from '@/lib/fetchers';
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { today } from '@/lib/day';
-import { daysAgoText, timeAgo } from '@/lib/format';
+import { daysAgoText } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import SiteFooter from '@/components/SiteFooter';
+import NowPlaying from '@/components/NowPlaying';
 import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
@@ -18,7 +18,17 @@ import { getShelfStats } from '@/lib/reading/shelf-db';
 import { getWantKeys } from '@/lib/reading/want-db';
 import './hub.css';
 
-export const dynamic = 'force-dynamic';
+/* ISR, 60 seconds. Added 2026-08-22 after Active CPU passed the Hobby allowance.
+ *
+ * This is the front door and it makes ten data calls per render, so it took the full weight of
+ * every crawler. force-dynamic meant one render per request forever; at 60s a thousand bot hits
+ * cost about sixteen renders instead of a thousand.
+ *
+ * The one thing this trades is Spotify now-playing, which is server-rendered here and can now be
+ * up to a minute stale. That is imperceptible for a footer element and the right trade against a
+ * hard cap that stops the site serving. It does NOT reintroduce the build-time staleness problem
+ * AGENTS.md warns about: ISR regenerates against Neon, it does not bake the page at build. */
+export const revalidate = 60;
 
 /* Declared here rather than in the root layout, where it would be inherited by every route and
  * would tell a crawler the whole site is a duplicate of this page. */
@@ -437,8 +447,8 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [spotify, kitchen, gym, health, french, curio, music, swim, reading] = await Promise.all([
-    fetchSpotify(), kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(), readingRow(),
+  const [kitchen, gym, health, french, curio, music, swim, reading] = await Promise.all([
+    kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(), readingRow(),
   ]);
   const rows = [kitchen, gym, health, french, curio, music, swim, reading, ...STATIC_ROWS];
 
@@ -505,27 +515,7 @@ export default async function Home() {
         * is actually playing, which is what that colour is reserved for. A last-played track is a
         * fact about the past and gets a plain label and its own age instead. */}
       <SiteFooter home={false}>
-        {spotify.title && (
-          <span className="np">
-            {spotify.isPlaying ? (
-              <>
-                <span className="eq" aria-hidden="true"><i /><i /><i /></span>
-                <span className="npk">Now playing</span>
-              </>
-            ) : (
-              <span className="npk">
-                Last played{spotify.playedAt ? `, ${timeAgo(spotify.playedAt)}` : ''}
-              </span>
-            )}
-            {spotify.url ? (
-              <a href={spotify.url} target="_blank" rel="noreferrer">
-                {spotify.title}{spotify.artist ? ` · ${spotify.artist}` : ''}
-              </a>
-            ) : (
-              <span>{spotify.title}</span>
-            )}
-          </span>
-        )}
+        <NowPlaying />
       </SiteFooter>
     </div>
   );

@@ -7,7 +7,7 @@ import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } fr
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
-  DAY_ORDER, BUDGETS, DEFAULT_BUDGET, budgetedBlocks, dayTimeBreakdown, exType, findExercise,
+  DAY_ORDER, dayTimeBreakdown, exType, findExercise,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
@@ -129,10 +129,18 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
   const [activeDay, setActiveDay] = useState<DayKey>(nextUp.todayDay ?? nextUp.nextDay);
-  /* Starts CAPPED at 45, the length he said on 2026-08-21 he would defend. It used to start at
-   * null, meaning the whole day, on days this model puts at 100 to 106 minutes. A cap you have to
-   * go and select is not a cap. "Full" is still one tap away. */
-  const [budget, setBudget] = useState<number | null>(DEFAULT_BUDGET);
+  /* THE TIME BUDGET IS GONE, 2026-08-22, and he designed the replacement.
+   *
+   * It made him predict his own session before starting it, which he said he gets wrong in both
+   * directions: "even if I pick 45, maybe I didn't have 45 minutes, I thought I hadn't and I didn't
+   * really so I want to switch to 25." Then he noticed what the cap actually does: "what you do
+   * between the full and the 25 is just you're taking out everything that comes after the main
+   * lift. Why don't you just have one and I'll check everything that I will do?"
+   *
+   * He is right, and the ordering already encodes it. The day is one list in priority order, every
+   * block always visible, and he ticks what he did. A short session is now a fact recorded after
+   * the fact instead of a prediction made before it, which is also the only version that can be
+   * true. budgetKeep and the chips are deleted rather than hidden. */
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
   const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
@@ -212,7 +220,9 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    * Calgary. Two answers to "what day is it" on one dish of data. */
   const date = today();
 
-  const blocks = useMemo(() => budgetedBlocks(day, budget), [day, budget]);
+  /* The whole day, always. See the note on the deleted budget state above: the list is the plan
+     and what he ticks is the session. */
+  const blocks = day.blocks;
 
   const effOf = useCallback((ex: Exercise) => effectiveExercise(ex, swaps[ex.id]), [swaps]);
 
@@ -531,41 +541,19 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         })()}
       </p>
 
-      <div className="budgets">
-        <span className="quiet" style={{ alignSelf: 'center', marginRight: 4 }}>I have</span>
-        {BUDGETS.map((m) => (
-          <button key={m} className={`chip${budget === m ? ' on' : ''}`} onClick={() => setBudget(budget === m ? null : m)}>{m}</button>
-        ))}
-        <button className={`chip${budget === null ? ' on' : ''}`} onClick={() => setBudget(null)}>Full</button>
-      </div>
-
-      {/* WHAT THE CAP LEFT OUT, named. A budget used to just make blocks disappear, so a 45-minute
-        * day looked like a two-block day and there was no way to tell a short session from a short
-        * PROGRAMME. Silent truncation reads as "this is all there was". Everything droppable is an
-        * accessory by role, which is the same thing the `optional` tag says at Full. */}
+      {/* WHAT TO DROP, said once, instead of a cap that decides for him.
+        *
+        * The list is already in priority order and the roles already say which end is which, so the
+        * only thing missing was a sentence naming the direction. Everything from the first
+        * `accessory` block down is the tail. The two `main` blocks and the primer are the spine. */}
       {(() => {
-        const shown = new Set(blocks.flatMap((b) => b.exercises.map((e) => e.id)));
-        const dropped: { name: string; spine: boolean }[] = [];
-        for (const b of day.blocks) {
-          for (const e of b.exercises) {
-            if (!shown.has(e.id)) dropped.push({ name: effOf(e).name, spine: b.role !== 'accessory' });
-          }
-        }
-        if (!dropped.length) return null;
-        /* "All optional" was WRONG and it was caught by driving the chips rather than reading the
-         * code: at 25 minutes the budget also drops Lat Pulldown, which is a `main` block, the
-         * week's second pull. Only the FIRST main block of a day is unconditional. A line that
-         * calls the week's second pull optional is the same kind of false claim this whole pass
-         * exists to remove, so the sentence is built from `role` instead of assumed. */
-        const spine = dropped.filter((d) => d.spine).map((d) => d.name);
-        const tail = spine.length
-          ? `${spine.join(' and ')} ${spine.length > 1 ? 'are' : 'is'} part of the spine rather than an accessory, so at this length the session is the main lift and little else.`
-          : dropped.length > 1
-            ? 'All optional.'
-            : 'Optional.';
+        const firstAccessory = day.blocks.findIndex((b) => b.role === 'accessory');
+        const spineCount = firstAccessory < 0 ? day.blocks.length : firstAccessory;
+        const tail = day.blocks.slice(spineCount).flatMap((b) => b.exercises.map((e) => effOf(e).name));
+        if (!tail.length) return null;
         return (
-          <p className="lede quiet" style={{ marginTop: 6 }}>
-            {`At ${budget} min this leaves out ${dropped.map((d) => d.name).join(', ')}. ${tail} Tap Full for the whole day.`}
+          <p className="lede quiet drop-order" style={{ marginTop: 6 }}>
+            {`Do it in this order. Short on time, cut from the bottom: ${tail.join(', ')}. The first ${spineCount} blocks are the session.`}
           </p>
         );
       })()}

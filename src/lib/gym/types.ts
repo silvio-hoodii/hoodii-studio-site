@@ -14,10 +14,23 @@ export type ZoneKey = 'rack' | 'benchDb' | 'cable' | 'machines' | 'smith' | 'ezP
  *  content/gym/equipment.json for the rule this makes checkable. */
 export type Station = string | null;
 
+/** Which number moves week to week. Required on anything logged, and validate.mjs fails the build
+ *  without it.
+ *
+ *  Added 2026-08-22 because he read his own programme and asked the question nobody had:
+ *  "why band pull apart is an exercise inside the program. How is that actually something that I
+ *  can progressively overload? Okay so I'm gonna do 15 this week. Is it a big deal that I do 16
+ *  next week?" A band's resistance is what separates an easy set from a hard one, this app has
+ *  nowhere to record which band, and so 3x15 on a light one and 3x15 on a heavy one were the same
+ *  row forever. Anything with no honest answer here belongs in warmups.json. */
+export type Progression = 'weight' | 'reps' | 'time';
+
 export interface Alt {
   id: string;
   name: string;
   cue: string;
+  /** Defaults to the parent exercise's axis when absent. See Progression. */
+  progression?: Progression;
   zone: ZoneKey;
   station: Station;
   /** True if it needs to be done lying, sitting or kneeling on the ground. Only legal in a zone
@@ -39,6 +52,8 @@ export interface Exercise {
   reps: string;
   rest: string;
   cue: string;
+  /** Required whenever `log` is not false. See Progression. */
+  progression?: Progression;
   zone: ZoneKey;
   station: Station;
   needsFloor?: boolean;
@@ -74,7 +89,7 @@ export type BlockRole = 'primer' | 'main' | 'accessory';
  *
  *  That is not a demotion of the partner. Sessions run 81 to 120 minutes with 45 to 75% of the time
  *  below 110 bpm, so filling the rest is the mechanism that shortens them. It is also why a 'fill'
- *  partner does not consume a time budget: see budgetKeep in program-shared.ts. */
+ *  partner is free in time: it happens inside a rest window that is being paid for anyway. */
 export type BlockPairing = 'alternate' | 'sequence' | 'fill';
 
 export interface Block {

@@ -5,7 +5,9 @@ import {
   type SwimSession,
 } from '@/lib/swim/db';
 
-export const dynamic = 'force-dynamic';
+/* ISR, one hour. The schedule is pushed once a day by the 05:30 laptop task, so this page cannot
+ * be fresher than daily however often it renders. */
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Swim',

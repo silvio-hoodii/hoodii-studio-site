@@ -1,7 +1,9 @@
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
 import type { CurioDigest, CurioItem } from '@/lib/curio/db';
 
-export const dynamic = 'force-dynamic';
+/* ISR, one hour. A one-way mirror of CuriosityOS/log.md that only changes when a sync runs, so a
+ * render per request was pure waste. */
+export const revalidate = 3600;
 
 /* "Curio", not "Curio · Silvio Neyra": the root layout's title template appends the name now, and
  * this read "Curio · Silvio Neyra · Silvio Neyra" for as long as it took to notice. */
