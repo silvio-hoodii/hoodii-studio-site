@@ -97,6 +97,20 @@
   margin-bottom: 10px;
 }
 .gym .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+/* "optional" on every accessory block. Boxed rather than just dimmer, because the point is that it
+   is a STATE of the block and not an aside: the main lifts are the session and these are not. Kept
+   monochrome. --signal is reserved for a value that is true right now, and "optional" is neither. */
+.gym .exgroup-label .tag.opt {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1px 5px;
+  margin-left: 7px;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+  white-space: nowrap;
+}
 /* Where he is, and how much is left, on a page that is six screens long. Full ink, because it is
    the one part of the label that is a value rather than a name. */
 .gym .exgroup-n {

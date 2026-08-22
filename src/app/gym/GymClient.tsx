@@ -7,8 +7,8 @@ import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } fr
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
-  DAY_ORDER, BUDGETS, budgetedBlocks, exType, findExercise, parseTargetReps, restSeconds,
-  effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
+  DAY_ORDER, BUDGETS, DEFAULT_BUDGET, budgetedBlocks, dayTimeBreakdown, exType, findExercise,
+  parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
 interface Props {
@@ -129,7 +129,10 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
   const [activeDay, setActiveDay] = useState<DayKey>(nextUp.todayDay ?? nextUp.nextDay);
-  const [budget, setBudget] = useState<number | null>(null);
+  /* Starts CAPPED at 45, the length he said on 2026-08-21 he would defend. It used to start at
+   * null, meaning the whole day, on days this model puts at 100 to 106 minutes. A cap you have to
+   * go and select is not a cap. "Full" is still one tap away. */
+  const [budget, setBudget] = useState<number | null>(DEFAULT_BUDGET);
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
   const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
@@ -496,6 +499,13 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
   function howToRun(block: { pairing: string; exercises: unknown[] }): string | null {
     if (block.exercises.length < 2) return null;
     if (block.pairing === 'alternate') return 'Superset: alternate the two, rest once after both.';
+    /* Added 2026-08-21. Eleven of the thirteen paired blocks were a real lift plus a band, plank,
+     * bridge or carry, and this line used to call them supersets. He said they were not, and he was
+     * right. This says the true thing, and it is the one instruction on the page that makes the
+     * session SHORTER rather than longer: the rest is being spent either way. */
+    if (block.pairing === 'fill') {
+      return 'Do the second one during the first one’s rest, not after it. It adds no time to the session.';
+    }
     return 'Finish all sets of the first, then start the second.';
   }
 
@@ -510,7 +520,16 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       </div>
 
       <div className="count" style={{ marginTop: 22 }}>{day.title}</div>
-      <p className="lede" style={{ marginTop: 4 }}>{day.desc} · {day.time}</p>
+      {/* COMPUTED, not typed. program.json used to carry time: "75-85 min" on days this model puts
+        * at 100 to 106 and whose real sessions ran 81 to 120. The split is the point: the work is
+        * not what makes the session long. */}
+      <p className="lede" style={{ marginTop: 4 }}>{day.desc}</p>
+      <p className="lede quiet" style={{ marginTop: 2 }}>
+        {(() => {
+          const t = dayTimeBreakdown(day);
+          return `The whole day is about ${t.total} min at the pace you have actually been working: ${t.sets} sets, ${t.restMin} min of that prescribed rest and ${t.overheadMin} min of standing around at 2.5 min a set. The standing around is the part worth attacking.`;
+        })()}
+      </p>
 
       <div className="budgets">
         <span className="quiet" style={{ alignSelf: 'center', marginRight: 4 }}>I have</span>
@@ -519,6 +538,37 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         ))}
         <button className={`chip${budget === null ? ' on' : ''}`} onClick={() => setBudget(null)}>Full</button>
       </div>
+
+      {/* WHAT THE CAP LEFT OUT, named. A budget used to just make blocks disappear, so a 45-minute
+        * day looked like a two-block day and there was no way to tell a short session from a short
+        * PROGRAMME. Silent truncation reads as "this is all there was". Everything droppable is an
+        * accessory by role, which is the same thing the `optional` tag says at Full. */}
+      {(() => {
+        const shown = new Set(blocks.flatMap((b) => b.exercises.map((e) => e.id)));
+        const dropped: { name: string; spine: boolean }[] = [];
+        for (const b of day.blocks) {
+          for (const e of b.exercises) {
+            if (!shown.has(e.id)) dropped.push({ name: effOf(e).name, spine: b.role !== 'accessory' });
+          }
+        }
+        if (!dropped.length) return null;
+        /* "All optional" was WRONG and it was caught by driving the chips rather than reading the
+         * code: at 25 minutes the budget also drops Lat Pulldown, which is a `main` block, the
+         * week's second pull. Only the FIRST main block of a day is unconditional. A line that
+         * calls the week's second pull optional is the same kind of false claim this whole pass
+         * exists to remove, so the sentence is built from `role` instead of assumed. */
+        const spine = dropped.filter((d) => d.spine).map((d) => d.name);
+        const tail = spine.length
+          ? `${spine.join(' and ')} ${spine.length > 1 ? 'are' : 'is'} part of the spine rather than an accessory, so at this length the session is the main lift and little else.`
+          : dropped.length > 1
+            ? 'All optional.'
+            : 'Optional.';
+        return (
+          <p className="lede quiet" style={{ marginTop: 6 }}>
+            {`At ${budget} min this leaves out ${dropped.map((d) => d.name).join(', ')}. ${tail} Tap Full for the whole day.`}
+          </p>
+        );
+      })()}
 
       <div className="progress-row">
         <span>{totals.done}/{totals.total} sets</span>
@@ -577,12 +627,25 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         * in. The bracket wraps the EXERCISES rather than the whole block, so it groups the two
         * things that are actually tied instead of swallowing the label as well. */}
       {blocks.map((block, bi) => (
-        <div className={`exgroup${block.pairing === 'alternate' ? ' tied' : ''}`} key={bi}>
+        <div className={`exgroup${block.pairing === 'alternate' || block.pairing === 'fill' ? ' tied' : ''}`} key={bi}>
           <div className="exgroup-label">
             <span className="exgroup-n tnum">{bi + 1}/{blocks.length}</span>
             {block.label} <span className="tag">{block.tag}</span>
+            {/* THE SPINE, SAID OUT LOUD. The main lifts are what the session is; everything after
+              * them is optional and always was, but nothing on screen said so, so a session cut
+              * short read as a session failed. Derived from `role` rather than a second flag that
+              * could disagree with it. */}
+            {block.role === 'accessory' && <span className="tag opt">optional</span>}
           </div>
           {howToRun(block) && <div className="exgroup-how">{howToRun(block)}</div>}
+          {/* WHY THIS BLOCK IS HERE, behind a tap. He said the programme reads as arbitrary because
+            * he had never seen the evidence file, and judged this the highest-value change in the
+            * whole audit: a programme he does not believe is one he stops finishing. Collapsed,
+            * because eighteen of these open would rebuild the wall of text the tabs removed. */}
+          <details className="src">
+            <summary>Why this is here</summary>
+            <div className="src-body">{block.why}</div>
+          </details>
           <div className="exlist">
           {block.exercises.map((ex) => {
             const swap = swaps[ex.id];

@@ -64,14 +64,33 @@ export type BlockRole = 'primer' | 'main' | 'accessory';
  *  idea really if it's a superset."
  *
  *  Splitting the two makes "a main lift that is supersetted" expressible, which it previously was
- *  not. */
-export type BlockPairing = 'alternate' | 'sequence';
+ *  not.
+ *
+ *  'fill' was added 2026-08-21 and is now the commonest of the three. Eleven of the thirteen
+ *  'alternate' blocks were one real lift plus a band, plank, bridge or carry, while the app told him
+ *  "Superset: alternate the two, rest once after both". His instinct that this was not a superset
+ *  was right, and the honest description is the third state: the partner is done INSIDE the lift's
+ *  rest gaps and adds no time to the session.
+ *
+ *  That is not a demotion of the partner. Sessions run 81 to 120 minutes with 45 to 75% of the time
+ *  below 110 bpm, so filling the rest is the mechanism that shortens them. It is also why a 'fill'
+ *  partner does not consume a time budget: see budgetKeep in program-shared.ts. */
+export type BlockPairing = 'alternate' | 'sequence' | 'fill';
 
 export interface Block {
   role: BlockRole;
   pairing: BlockPairing;
   label: string;
   tag?: string;
+  /** One line on why this block is in the programme, and where that comes from. NOT optional, and
+   *  validate.mjs fails the build without it.
+   *
+   *  He said the whole programme reads as arbitrary because he had never seen
+   *  HealthOS/knowledge/training-programme-evidence.md, and a programme he does not believe is one
+   *  he stops finishing. Where a block has nothing behind it (calf raise, rotator cuff, Copenhagen
+   *  plank, biceps) the line says so, because that admission is what makes the sourced lines worth
+   *  reading. */
+  why: string;
   exercises: Exercise[];
 }
 
@@ -88,11 +107,14 @@ export interface CooldownItem {
   cue: string;
 }
 
+/** `time` was removed 2026-08-21. It was a typed string saying "75-85 min" on days the app's own
+ *  budget model puts at 100 to 106, while the watch says his real sessions run 81 to 120. Three
+ *  numbers for one quantity, and the typed one was the only one nothing could check. The page
+ *  computes it from the sets and rest now, and shows what the total is made of. */
 export interface Day {
   name: string;
   title: string;
   desc: string;
-  time: string;
   warmup: 'lower' | 'upper';
   cooldown: string[];
   blocks: Block[];

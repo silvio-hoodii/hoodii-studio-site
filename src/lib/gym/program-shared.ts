@@ -16,7 +16,15 @@ export function splitName(d: { title: string; name: string }): string {
   const head = d.title.split(/:\s/)[0]?.trim();
   return head || d.name;
 }
-export const BUDGETS = [45, 60, 90] as const;
+/** The session lengths he said on 2026-08-21 he would actually defend: 45 default, 25 floor,
+ *  60 ceiling. It was [45, 60, 90] with a "Full" default of no cap at all, on a programme whose days
+ *  this model puts at 100 to 106 minutes and whose real sessions ran 81 to 120. An uncapped default
+ *  is not a default, it is the absence of one. */
+export const BUDGETS = [25, 45, 60] as const;
+
+/** Selected on load. The floor is what a bad day looks like, so the streak survives it; the ceiling
+ *  exists so a 90-minute session reads as a failure rather than as a good day. */
+export const DEFAULT_BUDGET = 45;
 
 export function exType(ex: Exercise | Alt): ExerciseType {
   return ex.timed ? 'timed' : ex.bodyweight ? 'bodyweight' : 'weighted';
@@ -33,19 +41,65 @@ export function restSeconds(rest: string | undefined): number {
   return m[2]!.toLowerCase() === 'min' ? Math.round(parseFloat(m[1]!) * 60) : parseFloat(m[1]!);
 }
 
-// WORK_SEC is fitted from real session timing data, not guessed: see HealthOS/gym.html's own
-// comment pointing at server/fit-session-time.mjs. Kept as the same constant, not re-derived.
-const WORK_SEC = 150;
+/** Everything a set costs that is NOT prescribed rest: setup, plate changes, walking between zones,
+ *  waiting for equipment, and the set itself. Fitted from his real logged sessions by
+ *  HealthOS/server/fit-session-time.mjs, not guessed, and kept at the same value rather than
+ *  re-derived here.
+ *
+ *  TWO THINGS TO KNOW BEFORE TRUSTING IT. It is 2.5 minutes PER SET, which is the dawdling
+ *  quantified: the watch export shows 45 to 75% of every session below 110 bpm and a 28-minute hole
+ *  inside Thursday 20 August. And the fit is stale, because fit-session-time.mjs reads gym.html and
+ *  the local SQLite `sets` table, both retired: the table stopped being written on 2026-08-09 when
+ *  the app moved to Neon. So this predicts how long a session HAS taken him, which is exactly what
+ *  the page claims when it prints it, and it is not a claim about how long the work needs. */
+const SET_OVERHEAD_SEC = 150;
 const FIXED_MIN = 10; // warmup + cooldown
 
 export function exMinutes(ex: Exercise): number {
-  return ((ex.sets || 1) * (restSeconds(ex.rest) + WORK_SEC)) / 60;
+  return ((ex.sets || 1) * (restSeconds(ex.rest) + SET_OVERHEAD_SEC)) / 60;
 }
 
+/* TWO MODELS, ON PURPOSE, AND THEY ANSWER DIFFERENT QUESTIONS. Conflating them is a mistake I made
+ * and then measured: charging a fill partner nothing in the DESCRIPTIVE total made Tuesday come out
+ * at 63 minutes on a day the watch says took him about 100.
+ *
+ *  dayMinutes / dayTimeBreakdown  = DESCRIPTIVE. How long this day HAS taken him. Every set is
+ *    charged its own prescribed rest plus SET_OVERHEAD_SEC, because that is precisely how
+ *    fit-session-time.mjs summed rest when it fitted the constant. Changing the shape of the sum
+ *    here without re-fitting the constant would silently invalidate it.
+ *
+ *  budgetKeep = PRESCRIPTIVE. What fits in a cap if he runs it as written, which includes doing the
+ *    fill partner inside the lead's rest. There the partner costs NOTHING, because the rest window
+ *    is being paid for either way. That is the whole reason 'fill' exists. */
 export function dayMinutes(day: Day): number {
   return Math.round(
     FIXED_MIN + day.blocks.reduce((a, b) => a + b.exercises.reduce((x, e) => x + exMinutes(e), 0), 0),
   );
+}
+
+/** The total, and what it is made of. Printed on the page instead of the typed "75-85 min" string
+ *  that used to sit in program.json, because the split is the finding: the sessions are long because
+ *  of rest and overhead, not because of the amount of work in them. */
+export function dayTimeBreakdown(day: Day): {
+  total: number;
+  restMin: number;
+  overheadMin: number;
+  sets: number;
+} {
+  let restSec = 0;
+  let sets = 0;
+  for (const block of day.blocks) {
+    for (const ex of block.exercises) {
+      sets += ex.sets || 1;
+      restSec += (ex.sets || 1) * restSeconds(ex.rest);
+    }
+  }
+  return {
+    total: dayMinutes(day),
+    restMin: Math.round(restSec / 60),
+    overheadMin: Math.round((sets * SET_OVERHEAD_SEC) / 60),
+    sets,
+  };
 }
 
 /* Priority now reads `role`, which says what a block is FOR, instead of sniffing the label with a
@@ -69,22 +123,46 @@ export function budgetKeep(day: Day, minutes: number | null): Set<string> | null
    * heavy + hinge light, and vice versa). Both are "main" in role, but on a 45-minute day the heavy
    * lift is the one that must survive; the light technical exposure is the first thing to lose. */
   const leadMainIdx = day.blocks.findIndex((b) => b.role === 'main');
-  const items: { id: string; pri: number; mins: number; order: number }[] = [];
+  const items: { id: string; pri: number; mins: number; order: number; ridesWith?: string }[] = [];
   day.blocks.forEach((block, bi) =>
     block.exercises.forEach((ex, i) => {
-      items.push({ id: ex.id, pri: exPriority(block, i, bi === leadMainIdx), mins: exMinutes(ex), order: bi * 100 + i });
+      /* A 'fill' partner is done inside the lead's rest, so it costs only its own overhead and it
+       * RIDES WITH the lead rather than competing against it for the budget. Before 2026-08-21 it
+       * was priced at full rest and ranked at priority 3, so it was both the most expensive and the
+       * first thing dropped, and a 45-minute Tuesday came out as a bench press and a dead bug with
+       * no pulling anywhere in it. The partner is the rotator-cuff and anti-valgus work; dropping it
+       * to save time it does not take is the wrong trade in both directions.
+       *
+       * It costs ZERO, not its own overhead. Three sets of dead bug at 30 to 45 seconds fit inside
+       * four squat rests of three minutes with ten minutes to spare, so the time is already spent.
+       * Pricing it at overhead instead made a 45-minute cap estimate 57 minutes, which is a cap
+       * that does not cap. */
+      const isFillPartner = block.pairing === 'fill' && i === 1;
+      const lead = block.exercises[0];
+      items.push({
+        id: ex.id,
+        pri: exPriority(block, i, bi === leadMainIdx),
+        mins: isFillPartner ? 0 : exMinutes(ex),
+        order: bi * 100 + i,
+        ridesWith: isFillPartner && lead ? lead.id : undefined,
+      });
     }),
   );
   const keep = new Set<string>();
   let spent = FIXED_MIN;
-  for (const it of items.filter((x) => x.pri === 1)) {
+  const take = (it: { id: string; mins: number }) => {
     keep.add(it.id);
     spent += it.mins;
-  }
-  for (const it of items.filter((x) => x.pri > 1).sort((a, b) => a.pri - b.pri || a.order - b.order)) {
+  };
+  for (const it of items.filter((x) => x.pri === 1)) take(it);
+  for (const it of items.filter((x) => x.pri > 1 && !x.ridesWith).sort((a, b) => a.pri - b.pri || a.order - b.order)) {
     if (spent + it.mins > minutes) break;
-    keep.add(it.id);
-    spent += it.mins;
+    take(it);
+  }
+  // Riders come along after the fact: a partner is kept if and only if its lead survived, whatever
+  // the clock says, because it consumes rest that is being spent either way.
+  for (const it of items.filter((x) => x.ridesWith)) {
+    if (keep.has(it.ridesWith!)) take(it);
   }
   return keep;
 }

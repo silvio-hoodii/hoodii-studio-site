@@ -26,14 +26,44 @@
     "is exactly what the banded lateral walk was. It is now insurance for the running, not a hobby.",
     "",
     "Conditioning (run, bike, swim) is NOT in this file. It lives in conditioning.json because it is",
-    "not organised by gym day and does not share the set/rep/rest shape."
+    "not organised by gym day and does not share the set/rep/rest shape.",
+    "",
+    "REBUILT 2026-08-21, after a per-session read of the watch export. Sessions run 81 to 120 minutes",
+    "with 45 to 75% of every one below 110 bpm, and Thursday 20 August contains a 28-minute hole",
+    "between squat set 3 and the next logged set. The sessions are long because of REST, not work:",
+    "roughly 4 to 5 minutes of actual lifting inside 81 minutes.",
+    "",
+    "THE SUPERSETS WERE NOT SUPERSETS, and he said so himself. Eleven of the thirteen \"alternate\"",
+    "blocks were one real lift plus a band, a plank, a bridge or a carry, while the app told him",
+    "\"Superset: alternate the two, rest once after both\". They are now `pairing: \"fill\"`, which says",
+    "the true thing: do the partner IN the lift rest gaps, it adds no time. That is not a demotion,",
+    "it is the mechanism that shortens the session, and it is why these partners no longer consume a",
+    "time budget.",
+    "",
+    "THE TWO \"REAL PAIRS\" THE ANALYSIS ASKED FOR ARE PHYSICALLY IMPOSSIBLE and were not built. It",
+    "called for chest press with row, and overhead press with pulldown. In this gym the row holds a",
+    "rack and the chest press holds a machine; the overhead press is at the dumbbells and the pulldown",
+    "at the cable stack. validate.mjs already refuses an alternate block that spans two zones or",
+    "occupies two fixtures, a gate written after the programme made that mistake five times. The",
+    "analysis was produced without the equipment model. Every existing pair is a lift plus a",
+    "fixture-free partner because that is the ONLY pair this gym physically permits, so the shape was",
+    "a constraint being obeyed rather than a defect. Two blocks are genuine loaded alternates and were",
+    "left alone: Monday split-squat with suitcase carry, and Monday lateral lunge with calf raise.",
+    "",
+    "THE TYPED `time` FIELD IS GONE. It said \"75-85 min\" on days the app own budget model puts at 100",
+    "to 106, and the watch says his real sessions run 81 to 120. The typed string was the only one of",
+    "the three that nothing could check. It is computed and decomposed on the page now.",
+    "",
+    "EVERY BLOCK CARRIES `why`, one line, required by the validator. He said the programme reads as",
+    "arbitrary because he had never seen the evidence file, and a programme he does not believe is one",
+    "he stops finishing. Where a block has no evidence behind it (calf raise, rotator cuff, Copenhagen",
+    "plank, biceps) the line says so rather than dressing it up."
   ],
   "days": {
     "monday": {
       "name": "Monday",
       "title": "Lower A: Squat",
       "desc": "Squat heavy, hinge light, sideways loaded",
-      "time": "75-85 min",
       "warmup": "lower",
       "cooldown": [
         "pigeon",
@@ -81,11 +111,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Jumps first, while you are fresh. Deng 2024, 21 studies in untrained people, found 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week, and two lower days nearly meet that dose. Box jump rather than broad jump because you step down instead of absorbing a landing, which is the right call at your bodyweight."
         },
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Main Lift: Back Squat",
           "tag": "(rack)",
           "exercises": [
@@ -160,7 +191,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The squat is one of the four patterns that earns twice a week. Pelland 2025, 67 studies and 2,058 people, found strength gains rise with frequency at matched volume (posterior probability 100%) while size does not care about the split. The glute bridge is hip work done in the squat rest, not extra work on top."
         },
         {
           "role": "main",
@@ -202,7 +234,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The week second hinge exposure, deliberately light. Frequency is what helps strength at matched volume, so this is the cheap half of the hinge two sessions rather than a second hard one."
         },
         {
           "role": "accessory",
@@ -277,7 +310,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Single-leg strength, and resisting sideways lean under load. Both are loaded and both live at the dumbbells, so these two genuinely alternate."
         },
         {
           "role": "accessory",
@@ -346,7 +380,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Frontal-plane hip strength is injury insurance for the running: abductor weakness feeds pelvic drop, which feeds knee valgus, a documented path into shin and knee trouble in novice runners. The calf raise is not sourced anywhere and does not need twice a week."
         }
       ]
     },
@@ -354,7 +389,6 @@
       "name": "Tuesday",
       "title": "Upper A: Press",
       "desc": "Press heavy, pull moderate, shoulders looked after",
-      "time": "70-80 min",
       "warmup": "upper",
       "cooldown": [
         "thoracic"
@@ -362,7 +396,7 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Main Lift: DB Bench Press",
           "tag": "(bench, floor right there)",
           "exercises": [
@@ -435,11 +469,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Pressing twice a week, heavy here and moderate on Friday. The dead bug goes in the press rest gaps, and it is in the programme for a specific reason rather than because core is good: core training moved knee valgus by d = -1.25 to -1.44, which is the same running-injury insurance as the sideways work on lower days."
         },
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Second Pattern: Vertical Pull",
           "tag": "(cable, band in hand)",
           "exercises": [
@@ -505,11 +540,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The week vertical pull. Band pull-aparts in the rest gaps, upper-back work that needs no fixture and so costs nothing to slot in."
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Overhead",
           "tag": "(dumbbells, floor right there)",
           "exercises": [
@@ -582,11 +618,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Overhead pressing, which reached 65x8 in July and is back at 60x8, so it is the pattern with the least to show. Plank with taps in the rest gaps."
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Triceps + Rotator Cuff",
           "tag": "(cable, band in hand)",
           "exercises": [
@@ -645,7 +682,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Arms do not need twice a week on the frequency evidence, which is why this is the first block to lose. The band external rotation is rotator-cuff work for a shoulder that also swims four times a week, and it has no study behind it in the evidence file, only common practice."
         }
       ]
     },
@@ -653,7 +691,6 @@
       "name": "Thursday",
       "title": "Lower B: Hinge",
       "desc": "Hinge heavy, squat light, sideways explosive",
-      "time": "75-85 min",
       "warmup": "lower",
       "cooldown": [
         "pigeon",
@@ -701,11 +738,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Same reasoning as Monday jumps and the same 2 to 3 a week dose, done sideways. First and fresh, and progressed by quality and contact count rather than by distance."
         },
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Main Lift: Romanian Deadlift",
           "tag": "(rack, floor right there)",
           "exercises": [
@@ -774,7 +812,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The heavy hinge, the one that actually gets progressed. Squat went 135x10 to 185x6 since May on this pattern of heavy-then-light. Hip bridge in the rest gaps."
         },
         {
           "role": "main",
@@ -816,11 +855,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The week second squat exposure, light and technical. Same frequency argument as Monday light hinge."
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Lunge + Core",
           "tag": "(dumbbells, floor right there)",
           "exercises": [
@@ -886,11 +926,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Single-leg work, with dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Single-Leg Hinge + Groin",
           "tag": "(dumbbell, then the bench)",
           "exercises": [
@@ -957,7 +998,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Single-leg hinge, and the Copenhagen plank for the groin. The Copenhagen appears nowhere in the evidence file: it is here on common practice, not on a trial."
         }
       ]
     },
@@ -965,7 +1007,6 @@
       "name": "Friday",
       "title": "Upper B: Pull",
       "desc": "Pull heavy, press moderate, swim catch",
-      "time": "70-80 min",
       "warmup": "upper",
       "cooldown": [
         "thoracic"
@@ -973,7 +1014,7 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Main Lift: BB Row",
           "tag": "(rack, floor right there)",
           "exercises": [
@@ -1043,11 +1084,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Pulling twice a week, heavy here and moderate on Tuesday. Six loaded pulling sets in the whole week is the thinnest part of the programme, which is why this block is the spine of the day and not the chest press."
         },
         {
           "role": "main",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Second Pattern: Horizontal Press",
           "tag": "(machine, band in hand)",
           "exercises": [
@@ -1113,11 +1155,12 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "The week second press exposure. It CANNOT be supersetted with the row, and that is a fact about the gym rather than a preference: the row holds a rack and the chest press holds a machine, so alternating them would mean occupying two fixtures at once. Band pull-aparts fill the rest instead."
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
+          "pairing": "fill",
           "label": "Swim Catch + Rotator Cuff",
           "tag": "(cable, band in hand)",
           "exercises": [
@@ -1176,7 +1219,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Straight-arm pulldown for the catch position in the water, and rotator-cuff work. Neither is sourced in the evidence file."
         },
         {
           "role": "accessory",
@@ -1260,7 +1304,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "why": "Arms do not need twice a week. The farmer carry is the dedicated grip work of the week, held bare-handed, which is exactly why using straps on Thursday heavy RDL costs you nothing."
         }
       ]
     }

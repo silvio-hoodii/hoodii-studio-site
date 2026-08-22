@@ -25,7 +25,12 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
 const REQUIRED_EX_FIELDS = ['id', 'name', 'sets', 'reps', 'rest', 'cue', 'zone', 'station'];
 const REQUIRED_ALT_FIELDS = ['id', 'name', 'cue', 'zone', 'station'];
 const ROLES = new Set(['primer', 'main', 'accessory']);
-const PAIRINGS = new Set(['alternate', 'sequence']);
+// 'fill' added 2026-08-21: the partner is done inside the lift's rest gaps. It is bound by the SAME
+// physical rule as 'alternate' below, and more strictly if anything, because you are standing at the
+// lift's own fixture while you do it.
+const PAIRINGS = new Set(['alternate', 'sequence', 'fill']);
+// Pairings whose two halves are in the gym AT THE SAME TIME, and so must fit in one place.
+const CONCURRENT = new Set(['alternate', 'fill']);
 
 // ---------------------------------------------------------------------------------------------
 // The equipment map, flattened once. `station: null` is legal and means "occupies no fixture".
@@ -78,13 +83,20 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     if (!ROLES.has(block.role)) fail(where, `role must be one of ${[...ROLES].join('|')}, got "${block.role}"`);
     if (!PAIRINGS.has(block.pairing)) fail(where, `pairing must be one of ${[...PAIRINGS].join('|')}, got "${block.pairing}"`);
 
+    // Every block says WHY it is in the programme. He stopped believing the programme because he had
+    // never seen the evidence behind it, and a block added later with no reason attached is how that
+    // comes back. 40 chars is not a quality bar, it just refuses "because" and an empty string.
+    if (typeof block.why !== 'string' || block.why.trim().length < 40) {
+      fail(where, `block needs a "why" of at least 40 characters, got ${JSON.stringify(block.why ?? null)}`);
+    }
+
     if (!Array.isArray(block.exercises) || !block.exercises.length) {
       fail(where, 'empty exercises[]');
       continue;
     }
     // `alternate` means the two share one rest window, which only makes sense for exactly two.
-    if (block.pairing === 'alternate' && block.exercises.length !== 2) {
-      fail(where, `alternate block has ${block.exercises.length} exercises, expected exactly 2`);
+    if (CONCURRENT.has(block.pairing) && block.exercises.length !== 2) {
+      fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);
     }
 
     for (const ex of block.exercises) {
@@ -142,7 +154,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     // `sequence` blocks are exempt by definition: you finish the first exercise and walk away
     // before starting the second, so occupying two stations in turn is fine.
     // -----------------------------------------------------------------------------------------
-    if (block.pairing === 'alternate' && block.exercises.length === 2) {
+    if (CONCURRENT.has(block.pairing) && block.exercises.length === 2) {
       const [a, b] = block.exercises;
 
       // DISTINCT stations, because two exercises that use the same bench occupy one bench. Counting
@@ -150,11 +162,11 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       // bench, which is the one arrangement that is obviously fine.
       const stations = [...new Set([a.station, b.station].filter((s) => s != null))];
       if (stations.length > 1) {
-        fail(where, `alternate block occupies ${stations.length} stations (${stations.join(' + ')}). A superset may occupy at most one: the partner must need no fixture (floor, handheld band, bodyweight, dumbbells).`);
+        fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one: the partner must need no fixture (floor, handheld band, bodyweight, dumbbells).`);
       }
 
       if (a.zone !== b.zone) {
-        fail(where, `alternate block spans two zones ("${a.zone}" and "${b.zone}"). Alternating means walking back and forth between them every set.`);
+        fail(where, `${block.pairing} block spans two zones ("${a.zone}" and "${b.zone}"). Doing both in one window means walking back and forth between them every set.`);
       }
 
       for (const ex of [a, b]) {
