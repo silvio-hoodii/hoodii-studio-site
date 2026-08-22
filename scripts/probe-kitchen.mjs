@@ -244,8 +244,22 @@ try {
    *   capers: he said out loud that the piccata rebuild used the whole jar. Nothing wrote it down and
    *     the app kept offering caper dishes for eight days afterwards. */
   check('a pasted recipe is scored', Boolean(out), out ? '' : 'no result box ever rendered');
-  check('an optional garnish does not make its own ingredient optional', /fresh chilli/i.test(out),
-    /fresh chilli/i.test(out) ? '' : 'the red chilli was not reported as missing');
+  /* REPOINTED 2026-08-21, and the reason matters more than the assertion.
+   *
+   * This asserted the words "fresh chilli" appeared in the output, meaning "reported as missing". It
+   * had been FAILING, and neither half of it was right any more. There is no `fresh chilli` term in
+   * `stock/aliases.json` at all, in any version, so "1 red chilli" resolved to UNKNOWN rather than to
+   * missing and the phrase could never appear. And the premise had expired underneath it: he bought a
+   * 225 g bag of jalapenos on 2026-08-19, a jalapeno is a fresh chilli, so "a kitchen with no chilli"
+   * stopped being true. `red chilli` now maps to `jalapeno`, which is the honest answer.
+   *
+   * The invariant the check was really protecting survives all of that, and it is stated directly
+   * now: an ingredient line must be ACCOUNTED FOR somewhere in the output, as have, as missing or as
+   * unsure. The original bug was not that chilli was called optional, it was that the line vanished
+   * and the dish claimed ready while naming no gap at all. Silence is the failure. This holds whether
+   * or not he happens to own one, which is what the old form did not. */
+  check('every ingredient line is accounted for, never silently dropped', /chilli/i.test(out),
+    /chilli/i.test(out) ? '' : 'the red chilli line appears nowhere: not had, not missing, not unsure');
   check('a stock row he emptied out loud is respected', /capers/i.test(out),
     /capers/i.test(out) ? '' : 'capers were not reported as missing');
 
@@ -305,6 +319,36 @@ try {
       + 'return {rows:Object.keys(tops).length,tabs:k.length};})())',
     ) || '{}');
     check(path + ' nav sits on one line', nav.rows === 1, nav.tabs + ' tabs across ' + nav.rows + ' rows');
+
+    /* ---- THE HOME PAGE MUST BE READING THE ENGINE ----
+     *
+     * Added 2026-08-21. For ten days /kitchen scored the 36 hand-built cook cards and announced
+     * "2 ready to cook" while /kitchen/find scored 2,835 corpus recipes against the same fridge and
+     * found hundreds. One tap apart. His verdict: "I might as well just search for a recipe online
+     * and go by that then. What's the point of all this?"
+     *
+     * This is the second time two kitchen surfaces have answered one question from their own code.
+     * `isOfferable()` was extracted into lib after they disagreed by 14x; that fix unified the gate
+     * and left them reading different LIBRARIES, so it returned at 85x and nothing noticed for ten
+     * days. A prose rule saying "the home page should use the corpus" would not have caught it
+     * either, because the code looked deliberate and every comment on it was true.
+     *
+     * Two assertions, because either one alone is fakeable. The corpus rows must be PRESENT, and the
+     * headline number must be too large to have come from a 36-card library. 20 is chosen well below
+     * the real figure and well above anything the card path could ever reach: only 7 cards are
+     * offerable and the ceiling is 36. */
+    if (path === '/kitchen') {
+      const rows = Number(await c2.evaluate('document.querySelectorAll(".mealrow").length'));
+      check('/kitchen shows dishes from the corpus, not only cook cards', rows > 0,
+        rows + ' corpus rows');
+      const head = Number(await c2.evaluate(
+        '(function(){var e=document.querySelector(".sec .live");'
+        + 'return e?parseInt(e.textContent.replace(/[^0-9]/g,""),10)||0:0;})()',
+      ));
+      check('/kitchen headline counts the corpus, not the card library', head > 20,
+        head + ' claimed cookable now'
+        + (head > 20 ? '' : ', which is card-library scale and means the front page regressed'));
+    }
     c2.ws.close();
   }
 
