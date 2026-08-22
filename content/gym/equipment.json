@@ -30,7 +30,7 @@
     "machine that is not there, while a false 'you lack this' only costs a swap."
   ],
 
-  "lastConfirmed": "2026-08-15",
+  "lastConfirmed": "2026-08-22",
   "poolLengthM": 25,
   "weightUnit": "lb",
 
@@ -110,8 +110,9 @@
         },
         "cable-adjustable": {
           "name": "Adjustable-height cable column",
-          "confidence": "unknown",
-          "note": "Needed for cable Pallof, cable external rotation and any standing rotation work. NOT established. Do not prescribe until confirmed."
+          "confidence": "stated",
+          "evidence": "2026-08-22, in his words: 'all the cables are adjustable so if that was the limitation, it doesn't really exist because all the cable columns are adjustable for bottom and for top.'",
+          "note": "This was 'unknown' from 2026-08-15 to 2026-08-22 and it was load-bearing: it is why the Pallof press was cut, and cutting the Pallof press is why the week had no rotational or anti-rotation work at all. An unverified NO cost a whole movement pattern for a week. Worth remembering the next time something is marked unknown: the safe default protects against prescribing what is not there, and it does nothing about the training that quietly goes missing."
         }
       }
     },

@@ -619,6 +619,15 @@
               "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
               "alts": [
                 {
+                  "id": "half-kneeling-sa-press",
+                  "name": "Half-Kneeling Single-Arm DB Overhead Press",
+                  "zone": "benchDb",
+                  "station": null,
+                  "needsFloor": true,
+                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. It is two exercises at once: a press, and your trunk refusing to bend sideways under a load held on one side. Lighter than the two-dumbbell version by a lot, and that is the point. From The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 4-day Day 2 Upper, \"C1. Overhead Pressing Variations\".",
+                  "progression": "weight"
+                },
+                {
                   "id": "bb-ohp",
                   "name": "BB Overhead Press",
                   "zone": "rack",
@@ -897,6 +906,75 @@
             }
           ],
           "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
+        },
+        {
+          "role": "accessory",
+          "pairing": "fill",
+          "label": "Anti-Rotation + Rear Delts",
+          "tag": "(cable, dumbbells in hand)",
+          "exercises": [
+            {
+              "id": "cable-pallof",
+              "name": "Cable Pallof Press",
+              "sets": 3,
+              "reps": "10/side",
+              "rest": "45s",
+              "zone": "cable",
+              "station": "cable-adjustable",
+              "increment": 2.5,
+              "log": true,
+              "cue": "Set the cable at chest height. Stand SIDEWAYS to the machine, feet shoulder width, and hold the handle at your breastbone with both hands. The cable is now trying to twist you toward it. Press your hands straight out in front of your chest until the arms are locked, hold for two seconds, and come back to your chest. The whole exercise is refusing to rotate: your shoulders and hips stay square to the wall in front of you. Success looks like: someone standing behind you could not tell which side the cable is on from the way your body is facing. If your ribs twist toward the machine, stand closer or go lighter. Do all reps one side, then turn around. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"C2. Multi-Planar / Anti-Rotation\".",
+              "alts": [
+                {
+                  "id": "band-pallof",
+                  "name": "Band Pallof Press",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Band anchored at chest height on a rack post, stand sideways, both hands on the band at your chest. Press straight out and resist the twist, hold 2 seconds. Only if every cable column is taken: there is no way to record which band you used, so the number cannot move."
+                },
+                {
+                  "id": "half-kneeling-pallof",
+                  "name": "Half-Kneeling Cable Pallof Press",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "Same press, kneeling on the knee CLOSEST to the machine with the other foot forward. Kneeling takes the legs out of it, so the only thing that can stop the twist is your trunk. Harder at the same weight.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight"
+            },
+            {
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "chest-supported-reverse-fly",
+                  "name": "Chest-Supported Reverse Fly",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "pec-deck-rear-delt",
+                  "name": "Rear Delt Machine",
+                  "zone": "machines",
+                  "station": "pec-deck",
+                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "cable",
+              "station": null,
+              "log": true
+            }
+          ],
+          "why": "The week trained the trunk to resist bending forward (dead bugs, planks) and sideways (carries, Copenhagen) and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running."
         }
       ]
     },
@@ -1302,6 +1380,77 @@
             }
           ],
           "why": "Single-leg hinge, and the Copenhagen for the groin. The Copenhagen appears nowhere in the evidence file: common practice, not a trial."
+        },
+        {
+          "role": "accessory",
+          "pairing": "fill",
+          "label": "Hamstrings + Calves",
+          "tag": "(machine, dumbbells in hand)",
+          "exercises": [
+            {
+              "id": "leg-curl",
+              "name": "Leg Curl Machine",
+              "sets": 3,
+              "reps": "10",
+              "rest": "60s",
+              "zone": "machines",
+              "station": "leg-curl",
+              "log": true,
+              "cue": "Lying or seated depending on which machine is free. Set the pad so it sits just ABOVE your heels, on the Achilles, not on your calf. Lie or sit with your knees lined up with the machine pivot, the bolt the arm turns on. Curl your heels toward your bum as far as the machine allows, pause for one second at the tightest point, then lower slowly, taking about twice as long down as up. Success looks like: your hips stay flat on the pad and do not lift as you curl. If they lift, go lighter. This is the only exercise in the week that bends the knee against resistance: every other hamstring movement here is a hinge, where the hamstring works at the hip instead. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 4-day Day 1 Lower, \"D1. Isolation Hamstrings\".",
+              "alts": [
+                {
+                  "id": "stability-ball-ham-curl",
+                  "name": "Stability Ball Hamstring Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "needsFloor": true,
+                  "bodyweight": true,
+                  "cue": "The version their programme actually names, if the machine is taken and a ball is free. On your back, heels on the ball, hips lifted, roll the ball in toward you by bending the knees, then roll it back out slowly without letting the hips drop.",
+                  "progression": "reps"
+                },
+                {
+                  "id": "glute-back-extension-alt",
+                  "name": "Back Extension",
+                  "zone": "machines",
+                  "station": "back-extension",
+                  "cue": "On the 45 degree pad, hugging a plate. Not the same movement, it works the hamstring at the hip like everything else here, but it is the closest thing if the leg curl is taken.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight"
+            },
+            {
+              "id": "standing-calf-raise",
+              "name": "DB Standing Calf Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "zone": "machines",
+              "station": null,
+              "log": true,
+              "cue": "Done holding dumbbells at the machine bank, standing, so it needs no fixture of its own. Stand on the edge of a step or a plate if you have one, heels hanging. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
+              "alts": [
+                {
+                  "id": "machine-calf-raise",
+                  "name": "Machine Calf Raise",
+                  "zone": "machines",
+                  "station": "calf-raise",
+                  "cue": "The standing calf machine, if nothing else in this block is running at the same time. Same full stretch and full squeeze.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "single-leg-calf-raise",
+                  "name": "Single-Leg Calf Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "One leg at a time holding one dumbbell, full range. Harder, and closer to what running actually asks of the ankle. 3x12/leg.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight"
+            }
+          ],
+          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs and the glute bridge; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves were once a week against a programme whose rule is twice. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the deadlift on a lower day, which is the same reasoning."
         }
       ]
     },
@@ -1314,6 +1463,81 @@
         "thoracic"
       ],
       "blocks": [
+        {
+          "role": "primer",
+          "pairing": "fill",
+          "label": "Upper Primer",
+          "tag": "(floor, first and fresh)",
+          "exercises": [
+            {
+              "id": "pushup",
+              "name": "Pushup",
+              "sets": 3,
+              "reps": "8",
+              "rest": "60s",
+              "zone": "rack",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "cue": "On the floor beside the rack, first thing, while you are fresh. Hands slightly wider than your shoulders, body in one straight line from head to heels, and it STAYS that way: squeeze your bum and your stomach before you lower. Lower until your chest is a fist off the floor, elbows going back at about 45 degrees from your body rather than straight out sideways. Push back up. Success looks like: your hips arrive at the top at the same time as your chest. If your hips sag or lead, put your hands on a bench and do the same thing from there. THEIR VERSION IS A PLYO PUSHUP, where you push hard enough to leave the floor. That is not prescribed here: you weigh 105 kg and have never done either, and landing on your hands from a jump is not something to try because a PDF said so. Get to three clean sets of ten first, then ask. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"B2. Pushup Variations\", whose own instruction is to choose the variation you can perform 10 to 12 reps of.",
+              "alts": [
+                {
+                  "id": "incline-pushup",
+                  "name": "Incline Pushup",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "bodyweight": true,
+                  "cue": "The same pushup with your hands on a bench instead of the floor. Higher hands make it easier. Use this one if the hips sag on the floor version.",
+                  "progression": "reps"
+                },
+                {
+                  "id": "assisted-dip",
+                  "name": "Assisted Dip",
+                  "zone": "machines",
+                  "station": "assisted-dip",
+                  "cue": "The machine version of the same pushing pattern, with a counterweight so you pick the difficulty. He had 5 strict dips at the May intake. Lower until the upper arms are parallel to the floor, no further.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "reps"
+            },
+            {
+              "id": "single-leg-glute-bridge",
+              "name": "Single-Leg Glute Bridge",
+              "sets": 2,
+              "reps": "12/leg",
+              "rest": "60s",
+              "zone": "rack",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "cue": "Done on the floor next to the rack while you rest between squat sets. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
+              "alts": [
+                {
+                  "id": "frog-pump",
+                  "name": "Frog Pump",
+                  "zone": "rack",
+                  "station": null,
+                  "needsFloor": true,
+                  "cue": "On your back, soles of the feet together, knees fallen wide, heels close to you. Push the hips up and squeeze. 2x20.",
+                  "progression": "reps"
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "zone": "rack",
+                  "station": null,
+                  "cue": "Short band above the knees, seated on a bench or standing. Push the knees apart against the band and hold two seconds. 2x20.",
+                  "progression": "reps"
+                }
+              ],
+              "progression": "reps"
+            }
+          ],
+          "why": "Both upper days had no power or bodyweight work at all while both lower days opened with jumps, and The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) opens every one of its upper days with a pushup variation. This is the first bodyweight pushing in the programme, it is free, and it is the one thing here that gets easier as he gets lighter rather than heavier. First and fresh for the same reason the jumps are: Deng 2024. Its partner is the glute bridge rather than another dead bug: Friday already runs dead bugs with the row, and a pushup uses nothing below the waist."
+        },
         {
           "role": "main",
           "pairing": "fill",
