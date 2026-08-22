@@ -72,7 +72,8 @@ always lose to the thing that exists.
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
 | `/gym` | Lifting log + a note box. `content/gym/` + `gym_*` tables | yes |
-| `/gym/conditioning` | **The whole week**, not just conditioning, since 2026-08-21: the four lifting days from `program.json` plus the run/bike/swim slots, the consecutive-day count from `health_watch_session`, and the max-3-in-a-row rest rule he chose. Run, bike and swim plans are the other three tabs. `content/gym/conditioning.json` + `src/lib/gym/week.ts`. The route keeps its name so his bookmarks live; the h1 and the nav say "The week" | no writes |
+| `/gym/conditioning` | **The whole week**, and since 2026-08-22 it has TWO levels of tabs. Discipline across the top (Overview, Run, Bike, Swim), then sub-tabs by WHEN YOU ASK: **Now** (what is true today, changes on its own), **Plan** (the coming weeks), **How** (technique, barely changes), plus **Teach** on swim. That split took the worst view from 7.9 phone screens to 2.2. Every view is a URL: `?p=swim&s=teach`. Sources: `conditioning.json`, `swim-standards.json`, `swim-teaching.json`, `program.json`, and `health_session_detail` / `health_swim_pb` / `health_watch_session` in Neon | `/gym/api/swim-baseline` only |
+| `/gym/api/swim-baseline` | The one number the swim ladder is measured from. Every rung reads "your number plus 100 m" and for a month there was nowhere to put it. Writes `gym_swim_baseline`, a history not a value, and records whether the pull buoy was out | **cookie** |
 | `/health` | Body composition, read-only from `healthos.db` | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
@@ -180,6 +181,37 @@ Two other gates worth knowing before you edit anything under `content/kitchen/`:
   content/kitchen/render.mjs <id>` to read one in seconds, which is the reason nobody ever did.
 - `provenance.cookedResult: "failed"` drops a dish from the offered list whatever else it passes.
   Piccata is currently `failed` and is being rewritten from a source.
+
+## THE GYM DATA PIPELINE, and what each activity actually holds
+
+Everything under `/gym` that is not a plan comes from the Samsung Health export on the laptop, via
+`healthos.db`, via `content/health/sync.mjs`, into Neon. The 07:15 scheduled task
+(`HealthOS/sync/run-health-sync.ps1`) runs the whole chain: pull the newest export from Drive, unzip
+it, `import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
+
+**The four activities are NOT equal and no page should pretend otherwise.** Audited 2026-08-22:
+
+| Activity | What the watch records | What a page can honestly say |
+|---|---|---|
+| Swimming | HR per second, and per LENGTH: duration, stroke cycles, stroke type, rest | Everything. SWOLF, pace, stroke rate, the shape of the swim |
+| Treadmill | HR, **cadence**, speed, distance per second | Cadence IS measured indoors. Real form feedback |
+| Lifting | HR only | The shape of the hour. 54% of his sessions sit under 110 bpm. It cannot judge a lift |
+| Bike | HR only | Nothing. No rpm, no power, no resistance, and the page says so |
+
+**`stroke_count` is CYCLES, not arm strokes.** His median is 9 per 25 m; as single arm strokes that
+would be 2.78 m per stroke, which is not physically possible. Every stroke-rate number depends on
+this.
+
+**Samsung does not label the swim PB distances.** `best_records` stores a numeric type and a
+duration. The mapping 13/14/15/16 = 100/200/400/1500 is DERIVED and re-tested on every import by
+requiring pace per 100 m to rise with distance. A firmware renumbering exits non-zero rather than
+silently relabelling his personal bests.
+
+**Two things that failed silently and were found by counting, not by reading the success line.** An
+unrounded 117.5 into an integer column killed the Neon mirror mid-run after 108 of 151 rows, so the
+table looked populated and stopped three weeks short, and it aborted before `swim_session` and
+`health_target` too. And before 2026-08-21 the mirror carried only `strength` and `swimming`, so no
+run or bike had ever reached the site. Compare row counts across the two stores, not the log line.
 
 ## Illustrations
 
