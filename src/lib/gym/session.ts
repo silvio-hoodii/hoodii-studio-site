@@ -18,7 +18,14 @@ import { sql } from '../health/db';
  * So each kind gets the panel its data can support, and the two that have only a heart rate say so
  * rather than being padded out to look equally analysed. */
 
-export type SessionKind = 'swimming' | 'treadmill' | 'running' | 'strength' | 'cycling' | 'other';
+export type SessionKind =
+  | 'swimming' | 'treadmill' | 'running' | 'strength' | 'cycling'
+  /** He started a workout on the watch and picked "Other workout" instead of a named sport. */
+  | 'other'
+  /** The watch's own detection fired, could not name the movement, and backfilled a session he
+   *  never started. Ten minutes of the heart-rate trace are missing from the front of every one,
+   *  because that is how long the watch took to decide. See HealthOS/server/import-watch-sessions.mjs. */
+  | 'other-auto';
 
 export interface LengthRow {
   /** Seconds for the length. */
@@ -130,6 +137,12 @@ export function sessionVerdict(s: SessionDetail): string | null {
   }
   if (s.kind === 'swimming' && s.avgSwolf != null && s.strokeRate != null) {
     return `SWOLF ${s.avgSwolf} at ${s.strokeRate} cycles a minute. SWOLF is seconds plus strokes for a length, so it drops when you get faster OR more efficient. Your stroke rate is the low half of that pair.`;
+  }
+  if (s.kind === 'other-auto') {
+    return 'The watch started this one by itself, about ten minutes after you did, and it could not tell what the movement was. The heart rate is real; the sport is not recorded anywhere, and neither is whether you meant this as training.';
+  }
+  if (s.kind === 'other') {
+    return 'You started this on the watch and picked "Other workout" rather than a sport, so the only thing recorded is heart rate.';
   }
   if ((s.kind === 'treadmill' || s.kind === 'running') && s.avgCadence) {
     return `${Math.round(s.avgCadence)} steps a minute average. Cadence is measured on the treadmill, so this is real: most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;

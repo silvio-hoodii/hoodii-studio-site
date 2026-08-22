@@ -125,6 +125,26 @@ for (const r of watchSessions) {
   wsWritten++;
 }
 
+/* A SESSION RENAMED IS A SESSION DUPLICATED, because the key is (start_time, kind) and an upsert
+   under a new name inserts beside the old row rather than replacing it. Nothing here ever deleted,
+   so the mirror could only grow.
+   Found 2026-08-22, splitting Samsung's type 0 into `other` (he pressed start and picked "Other
+   workout") and `other-auto` (the watch invented it ten minutes in). sqlite held 1787 rows and the
+   run reported 1787 written; Postgres came out at 1874. Every one of those 87 sessions was in the
+   week strip twice. The run's own success line said nothing, which is why the two stores are
+   compared below rather than trusted. */
+if (watchSessions.length) {
+  const res = await q(
+    `delete from health_watch_session hws
+      where exists (
+        select 1 from unnest($1::text[], $2::text[]) as s(start_time, kind)
+         where s.start_time = hws.start_time and s.kind <> hws.kind
+      )`,
+    [watchSessions.map((r) => r.start_time), watchSessions.map((r) => r.kind)],
+  );
+  if (res?.rowCount) console.log(`watch_session: dropped ${res.rowCount} rows filed under a kind this build no longer gives them`);
+}
+
 /* --- recovery freshness ----------------------------------------------------------------------
  * One row per metric, and the week surface refuses to present its rest-day arithmetic as a recovery
  * judgment while these are old. `if exists` rather than a hard read: an older healthos.db that
@@ -265,6 +285,21 @@ const checks = await Promise.all([
   client.query('select count(*)::int n from health_swim_session'),
 ]);
 console.log('Postgres row counts now:', checks.map((c) => c.rows[0].n));
+
+/* THE COUNT IS A GATE, NOT A LOG LINE. Both failures this mirror has had were visible in these two
+   numbers and invisible in every success message: an unrounded 117.5 into an integer column stopped
+   it three weeks short after 108 of 151 rows, and a kind rename left 87 sessions duplicated. The
+   mirror is a copy of sqlite, so more rows in Postgres than sqlite holds means something is stale
+   in there, and fewer means the run did not finish. Only asserted on a real run. */
+if (!DRY && !failure) {
+  const pgWatch = checks[1].rows[0].n;
+  if (pgWatch !== watchSessions.length) {
+    failure = `mirror disagrees with sqlite: health_watch_session has ${pgWatch} rows, sqlite has ${watchSessions.length}. ` +
+      (pgWatch > watchSessions.length
+        ? 'Postgres is holding rows sqlite no longer has, so something was renamed or deleted upstream without being deleted here.'
+        : 'The run did not finish writing.');
+  }
+}
 if (DRY && before) console.log('Postgres row counts before:', before, '(unchanged, nothing was written)');
 
 /* The run is recorded even when it failed, and especially then: a sync that throws every night is

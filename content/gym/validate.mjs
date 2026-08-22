@@ -59,6 +59,45 @@ const PAIRINGS = new Set(['alternate', 'sequence', 'fill']);
 // Pairings whose two halves are in the gym AT THE SAME TIME, and so must fit in one place.
 const CONCURRENT = new Set(['alternate', 'fill']);
 
+/* THE HEADER MAY NOT PROMISE WHAT THE BLOCK DOES NOT CONTAIN. Added 2026-08-22.
+ *
+ * Silvio, reading Tuesday on his phone: "also this have no superset ... happens accros the session,
+ * so whats the point". Four block headers were describing a second exercise that had been deleted
+ * the day before. "Triceps + Rotator Cuff (cable, band in hand)" held one cable pushdown; "Swim
+ * Catch + Rotator Cuff (cable, band in hand)" held one straight-arm pulldown; two "Second Pattern"
+ * blocks still said "band in hand" with no band anywhere in them. The band work had been moved to
+ * warmups.json in e0b029c because a band cannot be progressively loaded, and the labels were left
+ * behind. Three more headers were the exercise's own name printed a second time.
+ *
+ * `label` and `tag` are the only free text on a block that makes a factual claim about its
+ * contents, and nothing checked them, so the header could say anything. Now:
+ *
+ *   - a one-exercise block may not use a conjunction that promises a second one
+ *   - a one-exercise block's label may not just repeat that exercise's name
+ *   - every EQUIPMENT noun in a tag must be verifiable against the block's exercises
+ *   - a word in a tag that is neither known equipment nor known prose FAILS, rather than passing
+ *     unchecked, because an unrecognised noun is exactly how "band in hand" got in
+ *
+ * The prose list is deliberately short. A tag is a three-word chip under a heading on a phone; if
+ * it wants a sentence it is a `why`, and a `why` is already required and already read. */
+const PAIR_PROMISE = [' + ', ' & ', ' then ', ', then '];
+/** Equipment a tag may name, each with the test that proves the block actually uses it. */
+const TAG_EQUIPMENT = {
+  band: (ex) => /band/i.test(ex.id) || /band/i.test(ex.name),
+  cable: (ex) => ex.zone === 'cable' || (ex.station || '').startsWith('cable'),
+  machine: (ex) => ex.zone === 'machines',
+  rack: (ex) => ex.zone === 'rack' || ex.station === 'rack',
+  bench: (ex) => ex.station === 'bench',
+  preacher: (ex) => ex.station === 'preacher',
+  box: (ex) => ex.station === 'box',
+};
+/** Words a tag may use that claim nothing about equipment. */
+const TAG_PROSE = new Set([
+  'a', 'and', 'first', 'fresh', 'never', 'tired', 'same', 'technique', 'only', 'its', 'own',
+  'dumbbell', 'dumbbells', 'on', 'the', 'floor', 'right', 'there', 'sideways', 'then', 'seat',
+  'walk', 'in', 'hand', 'at', 'to', 'no', 'kit', 'up', 'of', 'per', 'side', 'light', 'heavy',
+]);
+
 // ---------------------------------------------------------------------------------------------
 // The equipment map, flattened once. `station: null` is legal and means "occupies no fixture".
 // Anything else must name a station that equipment.json actually lists, so a typo cannot invent a
@@ -124,6 +163,30 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     // `alternate` means the two share one rest window, which only makes sense for exactly two.
     if (CONCURRENT.has(block.pairing) && block.exercises.length !== 2) {
       fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);
+    }
+
+    // ------ THE HEADER MAY NOT PROMISE WHAT THE BLOCK DOES NOT CONTAIN. See PAIR_PROMISE above.
+    const label = String(block.label || '');
+    if (block.exercises.length === 1) {
+      const promise = PAIR_PROMISE.find((c) => label.toLowerCase().includes(c));
+      if (promise) {
+        fail(where, `one-exercise block, but its label "${label}" contains "${promise.trim()}", which reads as a pair. Either add the second exercise or say what is actually there.`);
+      }
+      if (label.trim().toLowerCase() === String(block.exercises[0].name || '').trim().toLowerCase()) {
+        fail(where, `label "${label}" is the name of its only exercise, printed a second time. A block label says why the slot exists ("Second Vertical Pull"); the exercise says what fills it.`);
+      }
+    }
+    for (const raw of String(block.tag || '').toLowerCase().match(/[a-z]+/g) || []) {
+      const test = TAG_EQUIPMENT[raw];
+      if (test) {
+        if (!block.exercises.some(test)) {
+          fail(where, `tag "${block.tag}" names "${raw}" but no exercise in this block uses one (${block.exercises.map((e) => e.name).join(', ')}). A header that names kit he has to bring is a header he acts on.`);
+        }
+        continue;
+      }
+      if (!TAG_PROSE.has(raw)) {
+        fail(where, `tag "${block.tag}" contains "${raw}", which the validator does not know. Teach it: add "${raw}" to TAG_EQUIPMENT with the test that proves the block uses one, or to TAG_PROSE if it claims nothing. Unrecognised nouns are how "band in hand" survived a day with no band in the block.`);
+      }
     }
 
     for (const ex of block.exercises) {

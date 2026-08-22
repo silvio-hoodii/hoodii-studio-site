@@ -202,6 +202,23 @@ it, `import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
 would be 2.78 m per stroke, which is not physically possible. Every stroke-rate number depends on
 this.
 
+**Samsung exercise type 0 is not a sport, and it is two things at once.** It is the generic "other
+workout" bucket, 301 sessions, and until 2026-08-22 the pipeline gave both halves one name. 213 of
+them he started himself and picked "Other workout" from the watch's list; 87 the watch's automatic
+detection invented, roughly ten minutes after the fact. They import as `other` and `other-auto`, and
+the evidence for the split is written out in `HealthOS/server/import-watch-sessions.mjs`: source
+type 4 appears only on activities Samsung's detection supports and never once on strength, treadmill
+or stationary bike, and its heart-rate trace starts ten minutes in where a manual one starts at
+five seconds. Both still count as a training day. **What the 36 minutes at 151 bpm on 2026-07-25
+actually was is not recoverable** and no further digging will change that: nobody chose it, and the
+watch stored heart rate and nothing else.
+
+**A kind rename duplicates every session it touches**, in both stores, because each keys on
+(start_time, kind) and an upsert under a new name inserts beside the old row. Both importers and
+`content/health/sync.mjs` now delete the stale row, and the mirror asserts its Postgres count
+against sqlite's rather than printing both and moving on. That split left 87 sessions in the week
+strip twice while every log line read healthy.
+
 **Samsung does not label the swim PB distances.** `best_records` stores a numeric type and a
 duration. The mapping 13/14/15/16 = 100/200/400/1500 is DERIVED and re-tested on every import by
 requiring pace per 100 m to rise with distance. A firmware renumbering exits non-zero rather than

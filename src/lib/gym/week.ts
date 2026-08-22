@@ -295,7 +295,12 @@ export const KIND_LABEL: Record<string, string> = {
   treadmill: 'run',
   running: 'run',
   cycling: 'bike',
-  other: 'unlabelled session',
+  /* Two different things, and one word for both was wrong. See the split in
+     HealthOS/server/import-watch-sessions.mjs: 'other' is a workout he started and did not name,
+     'other-auto' is one the watch invented ten minutes in and could not name either. Both count as
+     a training day; only one of them is a session he decided to do. */
+  other: 'workout, unnamed',
+  'other-auto': 'movement the watch noticed',
 };
 
 export const SLOT_LABEL: Record<string, string> = {

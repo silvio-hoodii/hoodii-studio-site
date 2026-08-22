@@ -513,7 +513,7 @@
           "role": "main",
           "pairing": "sequence",
           "label": "Second Pattern: Vertical Pull",
-          "tag": "(cable, band in hand)",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -554,12 +554,13 @@
               "progression": "weight"
             }
           ],
-          "why": "The only vertical pull in the week, and the heavy pull is Friday. Nothing shares this rest window: the band that used to sit here is in the warmup now, where it is not a set anybody pretends to progress."
+          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. Nothing shares this rest window: the band that used to sit here is in the warmup now, where it is not a set anybody pretends to progress."
         },
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Seated Cable Row",
+          "label": "Second Horizontal Pull",
+          "tag": "(cable, on its own)",
           "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, on a programme whose stated rule is that every main pattern happens twice (Pelland 2025, strength rises with frequency at matched volume). This is the slot the band pull-apart was occupying without loading anything.",
           "exercises": [
             {
@@ -676,8 +677,8 @@
         {
           "role": "accessory",
           "pairing": "sequence",
-          "label": "Triceps + Rotator Cuff",
-          "tag": "(cable, band in hand)",
+          "label": "Triceps",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "tricep-pushdown",
@@ -1152,7 +1153,7 @@
           "role": "main",
           "pairing": "sequence",
           "label": "Second Pattern: Horizontal Press",
-          "tag": "(machine, band in hand)",
+          "tag": "(machine, on its own)",
           "exercises": [
             {
               "id": "machine-chest-press",
@@ -1198,7 +1199,8 @@
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Assisted Pull-Up",
+          "label": "Second Vertical Pull",
+          "tag": "(machine, on its own)",
           "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up.",
           "exercises": [
             {
@@ -1230,7 +1232,8 @@
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Machine Shoulder Press",
+          "label": "Second Overhead Press",
+          "tag": "(machine, on its own)",
           "why": "The second overhead press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap and lets the dumbbells stay the day that gets pushed.",
           "exercises": [
             {
@@ -1262,8 +1265,8 @@
         {
           "role": "accessory",
           "pairing": "sequence",
-          "label": "Swim Catch + Rotator Cuff",
-          "tag": "(cable, band in hand)",
+          "label": "Swim Catch",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "straight-arm-pulldown",
