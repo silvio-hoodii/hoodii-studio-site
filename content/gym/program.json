@@ -531,7 +531,7 @@
               "zone": "benchDb",
               "station": "bench",
               "log": true,
-              "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang.",
+              "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "alts": [
                 {
                   "id": "bench-press",
@@ -605,6 +605,91 @@
         {
           "role": "main",
           "pairing": "fill",
+          "label": "Overhead",
+          "tag": "(dumbbells, floor right there)",
+          "exercises": [
+            {
+              "id": "db-overhead-press",
+              "name": "Standing DB Overhead Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
+              "alts": [
+                {
+                  "id": "bb-ohp",
+                  "name": "BB Overhead Press",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Barbell from the rack at collarbone height. Push your head slightly back so the bar clears your face, then forward under it at the top.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "machine-shoulder-press",
+                  "name": "Machine Shoulder Press",
+                  "zone": "machines",
+                  "station": "shoulder-press",
+                  "cue": "Seat height so the handles start level with your shoulders. Same lockout, no balancing.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "db-seated-ohp",
+                  "name": "Seated DB Overhead Press",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Bench upright, back supported. Takes the lower back out of it entirely.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "rangeWidth": 4
+            },
+            {
+              "id": "plank-shoulder-taps",
+              "name": "Plank w/ Shoulder Taps",
+              "sets": 3,
+              "reps": "30",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "cue": "On the floor beside the dumbbells, in the rest between press sets. High plank on your hands, feet wide apart for balance. Slowly lift one hand and tap the opposite shoulder, then put it back, then the other hand. COUNT THE TAPS, both sides together, and type that number: 30 taps is the target. It used to ask for 30 seconds, which was a mistake, because you cannot start a timer with one hand off the floor. The point is that your HIPS DO NOT ROTATE. Success looks like: if someone put a glass of water on your lower back it would not spill. If your hips twist toward the hand that is lifting, widen your feet or slow down.",
+              "alts": [
+                {
+                  "id": "side-plank",
+                  "name": "Side Plank",
+                  "zone": "benchDb",
+                  "station": null,
+                  "needsFloor": true,
+                  "timed": true,
+                  "bodyweight": true,
+                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held. Drop to the knees if the hips sag. 3x30s per side.",
+                  "progression": "time"
+                },
+                {
+                  "id": "suitcase-carry-upper",
+                  "name": "Suitcase Carry",
+                  "zone": "benchDb",
+                  "station": null,
+                  "timed": true,
+                  "bodyweight": false,
+                  "cue": "One heavy dumbbell in one hand, walk tall and refuse to lean toward it. Use this when the floor is busy. 3x30s per side.",
+                  "progression": "time"
+                }
+              ],
+              "progression": "reps"
+            }
+          ],
+          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, and second also means he never walks back to the dumbbells: bench, then this, then everything else is at the cables."
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
           "label": "Second Pattern: Vertical Pull",
           "tag": "(cable, dumbbells in hand)",
           "exercises": [
@@ -650,7 +735,7 @@
               "id": "db-overhead-tricep-extension",
               "name": "DB Overhead Tricep Extension",
               "sets": 3,
-              "reps": "12",
+              "reps": "8",
               "rest": "45s",
               "cue": "Standing, in the rest between sets of the lift above. ONE dumbbell held in both hands, cupping the top end like a mug. Press it straight overhead, then bend only your elbows to lower it behind your head until you feel a stretch down the back of your arms, about level with the base of your skull. Your upper arms stay pointing at the ceiling and DO NOT drift forward: that is the whole exercise. Straighten the arms to come back up. Success looks like: your elbows stay the same distance apart the whole time and your ribs do not flare forward. If your back arches, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "alts": [
@@ -674,7 +759,8 @@
               "progression": "weight",
               "zone": "cable",
               "station": null,
-              "log": true
+              "log": true,
+              "rangeWidth": 4
             }
           ],
           "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank."
@@ -684,7 +770,7 @@
           "pairing": "fill",
           "label": "Second Horizontal Pull",
           "tag": "(cable, dumbbells in hand)",
-          "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). Calves go in the rest because a row uses nothing below the waist, and because the calf is the shock absorber for the running that is being added.",
+          "why": "The second horizontal pull of the week; before 2026-08-22 BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a calf raise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -711,27 +797,27 @@
               ]
             },
             {
-              "id": "db-standing-calf-raise",
-              "name": "DB Standing Calf Raise",
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
               "sets": 3,
-              "reps": "15",
+              "reps": "12",
               "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides. Stand tall with your feet hip width, then push all the way up onto the balls of your feet, as high as you can go, and hold for one full second at the top. Lower slowly until your heels touch the floor. Success looks like: you pause at the top rather than bouncing, and you feel it in the meat of the calf. The calf is the shock absorber for the running you are starting, and it is loaded here rather than stretched because a stretch does not make it stronger. First time out, pick a weight you are sure you could lift 20 times and stop at 15.",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "alts": [
                 {
-                  "id": "standing-calf-raise-machine",
-                  "name": "Calf Raise Machine",
-                  "zone": "machines",
-                  "station": "calf-raise",
-                  "cue": "The machine version, if it is free and you are already in the machine bank.",
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
                   "progression": "weight"
                 },
                 {
-                  "id": "single-leg-calf-raise",
-                  "name": "Single-Leg Calf Raise",
+                  "id": "kb-lateral-raise",
+                  "name": "Kettlebell Lateral Raise",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "One dumbbell, one leg at a time, other foot hooked behind. Harder with less weight, and it stops the strong side carrying the weak one. 3x12 per side.",
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
                   "progression": "weight"
                 }
               ],
@@ -741,92 +827,6 @@
               "log": true
             }
           ]
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
-          "label": "Overhead",
-          "tag": "(dumbbells, floor right there)",
-          "exercises": [
-            {
-              "id": "db-overhead-press",
-              "name": "DB Overhead Press",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "cue": "Moved earlier in the session because it has not moved in three months sitting at the back. Standing, dumbbells at shoulder height. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs cannot flare and your back cannot arch backward. Press straight up until your arms are locked and the dumbbells are over the middle of your head, breathing out. If you have to lean back to finish, it is too heavy.",
-              "alts": [
-                {
-                  "id": "bb-ohp",
-                  "name": "BB Overhead Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Barbell from the rack at collarbone height. Push your head slightly back so the bar clears your face, then forward under it at the top.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "machine-shoulder-press",
-                  "name": "Machine Shoulder Press",
-                  "zone": "machines",
-                  "station": "shoulder-press",
-                  "cue": "Seat height so the handles start level with your shoulders. Same lockout, no balancing.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "db-seated-ohp",
-                  "name": "Seated DB Overhead Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench upright, back supported. Takes the lower back out of it entirely.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "rangeWidth": 3
-            },
-            {
-              "id": "plank-shoulder-taps",
-              "name": "Plank w/ Shoulder Taps",
-              "sets": 3,
-              "reps": "30",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "needsFloor": true,
-              "timed": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor beside the dumbbells. High plank on your hands, feet wide apart for balance. Slowly lift one hand and tap the opposite shoulder, then put it back. The point is that your HIPS DO NOT ROTATE: if you filmed yourself from above, the belt line would stay square the whole time. Widen your feet if the hips twist. No weight on this one, it is bodyweight.",
-              "alts": [
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "needsFloor": true,
-                  "timed": true,
-                  "bodyweight": true,
-                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held. Drop to the knees if the hips sag. 3x30s per side.",
-                  "progression": "time"
-                },
-                {
-                  "id": "suitcase-carry-upper",
-                  "name": "Suitcase Carry",
-                  "zone": "benchDb",
-                  "station": null,
-                  "timed": true,
-                  "bodyweight": false,
-                  "cue": "One heavy dumbbell in one hand, walk tall and refuse to lean toward it. Use this when the floor is busy. 3x30s per side.",
-                  "progression": "time"
-                }
-              ],
-              "progression": "time"
-            }
-          ],
-          "why": "Overhead pressing, the pattern with the least to show: 65x8 in July, back to 60x8 now. Plank in the rest gaps."
         },
         {
           "role": "accessory",
@@ -869,7 +869,7 @@
               "id": "db-hammer-curl",
               "name": "DB Hammer Curl",
               "sets": 3,
-              "reps": "12",
+              "reps": "8",
               "rest": "45s",
               "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "alts": [
@@ -893,7 +893,8 @@
               "progression": "weight",
               "zone": "cable",
               "station": null,
-              "log": true
+              "log": true,
+              "rangeWidth": 5
             }
           ],
           "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
@@ -1444,7 +1445,7 @@
               "id": "db-hammer-curl",
               "name": "DB Hammer Curl",
               "sets": 3,
-              "reps": "12",
+              "reps": "8",
               "rest": "45s",
               "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "alts": [
@@ -1468,7 +1469,8 @@
               "progression": "weight",
               "zone": "machines",
               "station": null,
-              "log": true
+              "log": true,
+              "rangeWidth": 5
             }
           ],
           "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a pair of dumbbells, which you carry in. Biceps do nothing during a chest press, so that is what goes there."
@@ -1640,7 +1642,7 @@
               "id": "db-overhead-tricep-extension",
               "name": "DB Overhead Tricep Extension",
               "sets": 3,
-              "reps": "12",
+              "reps": "8",
               "rest": "45s",
               "cue": "Standing, in the rest between sets of the lift above. ONE dumbbell held in both hands, cupping the top end like a mug. Press it straight overhead, then bend only your elbows to lower it behind your head until you feel a stretch down the back of your arms, about level with the base of your skull. Your upper arms stay pointing at the ceiling and DO NOT drift forward: that is the whole exercise. Straighten the arms to come back up. Success looks like: your elbows stay the same distance apart the whole time and your ribs do not flare forward. If your back arches, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "alts": [
@@ -1664,7 +1666,8 @@
               "progression": "weight",
               "zone": "cable",
               "station": null,
-              "log": true
+              "log": true,
+              "rangeWidth": 4
             }
           ],
           "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."

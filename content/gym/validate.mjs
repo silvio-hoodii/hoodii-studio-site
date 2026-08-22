@@ -160,6 +160,57 @@ function exerciseKey(name) {
     .toLowerCase().replace(/[^a-z]/g, '');
 }
 
+/* WALK THE GYM ONCE. Added 2026-08-22, from the session he actually did rather than the one he was
+ * given.
+ *
+ * He said it like this: "if I'm already on the bench, I should take advantage of the bench as much
+ * as I can ... then I have to use the bench, go do something else, and then come back. Maybe I lost
+ * the bench already."
+ *
+ * The log proves it. Tuesday was prescribed benchDb, cable, cable, benchDb, cable: four zone changes
+ * and a walk back to the dumbbells for the fourth block. What he actually did was bench, then the
+ * overhead press, then all three cable blocks. One trip. He also ran out of time and never reached
+ * the lat pulldown, and while he blamed himself for arriving late, the prescribed route was making
+ * him pay for it twice.
+ *
+ * So: once a day's blocks LEAVE a zone, they may not go back to it. Ordering the blocks costs
+ * nothing and the walking is real.
+ *
+ * The primer's zone is exempt, and only the primer's. It is pinned first because it has to be done
+ * fresh (Deng 2024), it occupies a plyo box or nothing at all, and it holds no fixture anybody needs
+ * later, so coming back past it costs nothing. Every other return is somebody else taking the bench
+ * while you were at the cables.
+ *
+ * This does NOT say which zone to start in, and it must not: that is what `role` and the exercise
+ * order evidence decide (Nunes 2021, 11 studies: strength gains are largest in the exercises done at
+ * the beginning of a session). This rule only forbids the route from doubling back. */
+function checkZoneRoute(dayKey, day) {
+  const blocks = (day.blocks || []).filter((b) => Array.isArray(b.exercises) && b.exercises.length);
+  if (blocks.length < 2) return;
+  const primerZone = blocks[0].role === 'primer' ? blocks[0].exercises[0].zone : null;
+  const route = blocks.map((b) => ({ zone: b.exercises[0].zone, label: b.label }));
+  const left = new Set();
+  for (let i = 1; i < route.length; i++) {
+    const prev = route[i - 1].zone;
+    const here = route[i].zone;
+    if (here === prev) continue;
+    left.add(prev);
+    if (left.has(here) && here !== primerZone) {
+      fail(
+        `${dayKey}/${route[i].label}`,
+        `the route doubles back. This day goes ${route.map((r) => r.zone).join(' -> ')}, and this block returns to "${here}" after leaving it. `
+        + `Reorder the blocks so each zone is visited once: whatever he is standing at, he finishes with before walking away. `
+        + (primerZone ? `(The primer's zone "${primerZone}" is exempt; it is pinned first and holds nothing.)` : ''),
+      );
+      return;
+    }
+  }
+}
+
+for (const [dayKey, day] of Object.entries(program.days)) {
+  checkZoneRoute(dayKey, day);
+}
+
 for (const [dayKey, day] of Object.entries(program.days)) {
   const prep = [
     ...(warmups[day.warmup] || []).map((w) => ({ where: 'the warmup', name: w.name })),
