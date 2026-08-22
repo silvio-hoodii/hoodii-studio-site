@@ -232,7 +232,9 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
               <div className="tier" key={t.id}>
                 <div className="tier-head">
                   <span className="tier-name">{t.name}</span>
-                  {at100 != null && <span className="tier-time tnum">{fmtTime(at100)} <span className="quiet-inline">/100 m</span></span>}
+                  {/* "/100 m" read as a PACE. It is the tier's time FOR the 100, which is a different number
+                      and the one place on this page a reader could quietly take away the wrong figure. */}
+                  {at100 != null && <span className="tier-time tnum">{fmtTime(at100)} <span className="quiet-inline">at 100 m</span></span>}
                   <span className={`prov ${t.provenance}`}>
                     {t.provenance === 'sourced' ? 'sourced'
                       : t.provenance === 'sourced-other-course' ? 'sourced, other course'
