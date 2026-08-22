@@ -127,3 +127,35 @@ create table if not exists shop_item (
   note    text
 );
 create index if not exists shop_item_item_at on shop_item (item_id, at desc);
+
+-- ---------------------------------------------------------------------------------------------
+-- "Stop showing me this." Added 2026-08-22.
+--
+-- Until now the app had exactly two signals about a dish: he OWNS the ingredients, and he has COOKED
+-- it. Both are reasons to show something and neither is a reason not to. So Mongolian Ground Beef led
+-- the home page from the day it was written, for three weeks, and every session he said so:
+--
+--   "Why is the fucking Mongolian ground beef thing here? I've been telling you that I don't even
+--   understand why it is there... The fact that I cook something doesn't mean that I want to eat it
+--   forever."
+--
+-- Both halves need this table. A dish he does not want is not distinguishable from one he has not got
+-- round to, and a dish he cooked last week is not distinguishable from one he wants weekly, and no
+-- amount of ranking can invent the difference. It has to be a tap.
+--
+-- Append-only, like every other table here: hiding inserts `hide`, changing his mind inserts `show`,
+-- and nothing ever updates or deletes. The fold takes the last event per dish, so a dish can come
+-- back without losing the record that it was once hidden.
+--
+-- `dish` is namespaced, `card:<recipe id>` or `meal:<corpus id>`, because the two libraries are
+-- separate id spaces and an unqualified id would eventually collide. `name` is stored alongside it
+-- purely so the undo list can be rendered without loading the corpus.
+create table if not exists dish_veto (
+  id    bigserial primary key,
+  at    timestamptz not null default now(),
+  dish  text        not null,
+  ev    text        not null,   -- hide|show
+  name  text,
+  note  text
+);
+create index if not exists dish_veto_dish_at on dish_veto (dish, at desc);

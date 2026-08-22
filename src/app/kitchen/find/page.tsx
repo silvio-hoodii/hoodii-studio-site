@@ -75,57 +75,16 @@ export default async function Find({
       <KitchenNav here="find" />
       <h1>Dishes</h1>
 
-      {/* THE SEARCH IS HERE NOW, 2026-08-18. It used to be the whole of /kitchen/want, a separate nav
-          tab called "I want a specific dish", which asked the same question this page answers from the
-          other end: both finish at "this dish needs X". Two tabs for one question, and neither label
-          said where the search box was. `/kitchen/want` still exists and still does the work of reading
-          a pasted link, it is just no longer somewhere he has to know to go. */}
-      <form action="/kitchen/want" method="get" className="searchrow">
-        <input
-          type="search"
-          name="q"
-          placeholder="name a dish: beef stroganoff"
-          aria-label="Name a dish you want to make"
-          enterKeyHint="search"
-        />
-        <button type="submit" className="primary">Check</button>
-      </form>
-      <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 8 }}>
-        <input
-          type="url"
-          name="url"
-          placeholder="or paste a recipe link, including one behind your own subscription"
-          aria-label="Paste a recipe web address"
-          enterKeyHint="go"
-        />
-        <button type="submit" className="primary">Read it</button>
-      </form>
+      {/* CUT TO ONE LINE, 2026-08-22. This was four paragraphs before the first dish: an explanation
+          of what a menu is, the provider breakdown with four counts, and 90 words on how many links
+          were dead, deduped or unchecked and why "checked" has to mean checked. All of it true, none
+          of it what he came for. His words, pasting the page back: "There's so much text here. It
+          doesn't make sense... so much fluff that doesn't add value. Just go straight to the point."
 
+          The honesty it was carrying does not disappear, it moves into the fold at the bottom next to
+          the attribution, which is where a reader goes when they want to know where this came from. */}
       <p className="lede" style={{ marginTop: 14 }}>
-        Or pick from the {d.total} below, checked against what is actually in the kitchen. A menu, not a
-        set of recipes: nothing here has been read or cooked, and every name links to the original
-        published recipe. Pick one and it gets turned into a proper card first.
-      </p>
-      <p className="quiet" style={{ marginTop: 10 }}>
-        From {d.providers.map((p) => `${p.provider} (${p.count})`).join(', ')}. Ingested straight from
-        each site&apos;s own published sitemap, and only from sites whose robots.txt permits it.
-      </p>
-      <p className="lede" style={{ marginTop: 6 }}>
-        {d.hiddenNoSource} of {d.totalKnown} are hidden because their link does not lead to a real
-        recipe, each one fetched and checked on {d.sourceCheckedAt}, and {d.dupesDropped} more were
-        exact duplicates. A link offered as a recipe has to be one.
-        {/* Both spaces are explicit `{' '}` and not typed spaces. Written the obvious way, as
-            `<> {n} have not been checked...`, this shipped "31have not been checked" to the live
-            page: the compiler dropped the space between the expression and the word after it. The
-            source looks correct, which is why it survived. Found by reading the rendered page. */}
-        {d.uncheckedCount > 0 && (
-          <>
-            {' '}
-            {d.uncheckedCount}
-            {' '}have not been checked either way yet and are also held back, because
-            &ldquo;checked&rdquo; has to mean checked.
-          </>
-        )}
+        {d.total} dishes, scored against the kitchen. Every name links to the original recipe.
       </p>
 
       {/* Says out loud when food in the kitchen is invisible to the matcher, because on 2026-08-16 it
@@ -159,7 +118,6 @@ export default async function Find({
         ) : (
           <Group
             title="Matches"
-            note="Fewest things missing first, and anything that saves food about to go off is lifted."
             list={d.results}
             limit={60}
             label={d.nameOf}
@@ -169,7 +127,7 @@ export default async function Find({
         <>
           <Group
             title="Cook one of these and nothing goes to waste"
-            note="Cookable now, and each one uses something already on a clock. Soonest first."
+            note="Each uses something about to go off."
             list={d.rescue}
             limit={12}
             label={d.nameOf}
@@ -177,7 +135,6 @@ export default async function Find({
 
           <Group
             title="Ready"
-            note="Every ingredient recognised and in the kitchen."
             list={d.ready}
             limit={12}
             label={d.nameOf}
@@ -187,7 +144,7 @@ export default async function Find({
               green badge, which is a promise the kitchen cannot keep until the afternoon. */}
           <Group
             title="Ready, once something thaws"
-            note="Nothing to buy, but this needs something out of the freezer first. Decide these in the morning, not at six."
+            note="Nothing to buy. Something needs thawing first."
             list={d.thaw}
             limit={12}
             label={d.nameOf}
@@ -195,7 +152,7 @@ export default async function Find({
 
           <Group
             title="Probably ready"
-            note="Nothing known to be missing, but one or two ingredients are not in the kitchen's vocabulary yet, so this is a maybe rather than a yes."
+            note="One or two ingredients the app does not recognise, so this is a maybe."
             list={d.probably}
             limit={8}
             label={d.nameOf}
@@ -205,7 +162,7 @@ export default async function Find({
               sections added to 135. A dish in no group is unreachable without guessing a filter. */}
           <Group
             title="Nothing missing, but too much unrecognised to promise"
-            note="No known gaps, yet several ingredients are not in the kitchen's vocabulary, so the app cannot honestly say yes. Read the list before you commit."
+            note="Several ingredients the app does not recognise. Read the list first."
             list={d.unclear}
             limit={8}
             label={d.nameOf}
@@ -213,7 +170,7 @@ export default async function Find({
 
           <Group
             title="One thing short"
-            note="Everything else is here. What is missing is named, and some of it you may decide you can skip or swap."
+            note="What is missing is named."
             list={d.missingOne}
             limit={12}
             label={d.nameOf}
@@ -223,31 +180,76 @@ export default async function Find({
 
       {d.unlocks.length > 0 && (
         <>
-          <h2 className="sec">One purchase, most dishes</h2>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Counted only over dishes missing nothing but this, so the number means it.
-          </p>
+          <h2 className="sec">One thing to buy, most dishes</h2>
           <ul className="plainlist stack">
             {d.unlocks.map((u) => (
               <li key={u.item}>
-                <b>{u.count}</b> dishes need only {d.nameOf(u.item)}
-                {u.reason && <span className="quiet"> · {u.reason}</span>}
+                {/* The words the recipes use, same as the home page. `nameOf` returns the matcher's
+                    bucket name and nothing in a shop is called "green vegetables". */}
+                <b>{u.count}</b> dishes need only{' '}
+                {u.examples.length > 0 ? u.examples.join(', ') : d.nameOf(u.item)}
+                {u.note && <span className="quiet"> · {u.note}</span>}
               </li>
             ))}
           </ul>
         </>
       )}
 
+      {/* MOVED BELOW THE RESULTS, 2026-08-22. These two boxes ask a DIFFERENT question from the page:
+          "I want a dish, what would it need", where this page answers "what can I make". Both are
+          useful and only one of them is why he opened this tab, and sitting at the top they pushed the
+          dishes off a 390px screen, alongside the page's own search box, which made three text inputs
+          above the first result. His words: "There's so much text here. It doesn't make sense."
+
+          Folded rather than removed. It is the only route to a site this app will not crawl, so it has
+          to stay reachable, and "Not here?" is where you look when the list did not have it. */}
+      <hr className="divider" style={{ marginTop: 30 }} />
+      <details className="fold">
+        <summary>Not here? Name it, or paste a link</summary>
+        <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 10 }}>
+          <input
+            type="search"
+            name="q"
+            placeholder="name a dish: beef stroganoff"
+            aria-label="Name a dish you want to make"
+            enterKeyHint="search"
+          />
+          <button type="submit" className="primary">Check</button>
+        </form>
+        <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 8 }}>
+          <input
+            type="url"
+            name="url"
+            placeholder="or paste a recipe link"
+            aria-label="Paste a recipe web address"
+            enterKeyHint="go"
+          />
+          <button type="submit" className="primary">Read it</button>
+        </form>
+      </details>
+
+      {/* FOLDED, 2026-08-22. The attribution is owed to the publishers and the crawling position is
+          worth stating, and neither is worth 120 words of standing text under a list of dinners. Both
+          are one tap away and unchanged. The counts of dead links, duplicates and unchecked rows moved
+          in here too, from four paragraphs above the first dish. */}
       <hr className="divider" style={{ marginTop: 34 }} />
-      <p className="quiet">
-        {d.providers.map((p) => p.attribution).join(' · ')}
-      </p>
-      <p className="lede" style={{ marginTop: 6 }}>
-        Ingredient lists and photos only: instructions are never copied here, they stay at the original
-        recipe, which is also the one thing a cook card may be built from. Sites that ask AI agents not
-        to crawl them are not crawled, which is why there is no NYT Cooking, Serious Eats, Maangchi or
-        Woks of Life here.
-      </p>
+      <details className="fold">
+        <summary>Where these came from</summary>
+        <p className="lede" style={{ marginTop: 8 }}>
+          {d.providers.map((p) => `${p.provider} (${p.count})`).join(', ')}, from each site&apos;s own
+          sitemap, and only from sites whose robots.txt permits it. Ingredient lists and photos only:
+          instructions stay at the original recipe. That is why there is no NYT Cooking, Serious Eats,
+          Maangchi or Woks of Life here.
+        </p>
+        <p className="lede" style={{ marginTop: 6 }}>
+          {d.hiddenNoSource} of {d.totalKnown} are held back because their link does not lead to a real
+          recipe, checked on {d.sourceCheckedAt}, and {d.dupesDropped} were exact duplicates.
+          {d.uncheckedCount > 0 && <> {d.uncheckedCount} have not been checked either way.</>}
+        </p>
+        <p className="quiet" style={{ marginTop: 6 }}>
+          {d.providers.map((p) => p.attribution).join(' · ')}
+        </p>
+      </details>
     </div>
   );
 }

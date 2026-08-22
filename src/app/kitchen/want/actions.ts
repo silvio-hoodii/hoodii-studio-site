@@ -18,7 +18,9 @@ export interface PasteResult {
   ok: boolean;
   error?: string;
   name?: string;
-  missing?: { what: string; line: string; reason?: string }[];
+  /** `note` is the short screen clause from `_shopNotes`. The long `_knownGaps` write-up is
+   *  deliberately not carried across this boundary at all. */
+  missing?: { what: string; line: string; note?: string }[];
   via?: { what: string; via: string }[];
   have?: string[];
   unknown?: string[];
@@ -44,7 +46,7 @@ export async function checkPaste(_prev: PasteResult | null, form: FormData): Pro
     missing: s.missing.map((m) => ({
       what: m.item ? label(m.item) : m.shown,
       line: m.line.trim(),
-      reason: m.reason,
+      note: m.note,
     })),
     via: s.haveVia.map((v) => ({ what: v.item ? label(v.item) : v.shown, via: String(v.via ?? '') })),
     have: s.have.map((h) => (h.item ? label(h.item) : h.shown)),

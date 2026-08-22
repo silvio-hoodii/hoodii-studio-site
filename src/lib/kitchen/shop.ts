@@ -46,7 +46,9 @@ const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
 export interface Unlock {
   item: string;
   count: number;
-  reason?: string;
+  /** One short clause from `_shopNotes`, written for the screen. The long `_knownGaps` write-up is
+   *  deliberately NOT carried here: on 2026-08-22 this page printed one verbatim under a row. */
+  note?: string;
   /** The ingredient lines the recipes actually asked for, most requested first. */
   asks: { name: string; n: number }[];
   examples: { name: string; source: string | null }[];
@@ -79,13 +81,13 @@ export async function shoppingView() {
 
   /* ONE purchase, and it has to mean one. Counted only over dishes missing nothing else, because
    * "would help with" is not "would unlock" and he has been told inflated numbers before. */
-  const byItem = new Map<string, { reason?: string; asks: Map<string, number>; ex: { name: string; source: string | null }[] }>();
+  const byItem = new Map<string, { note?: string; asks: Map<string, number>; ex: { name: string; source: string | null }[] }>();
   for (const x of scored) {
     if (x.s.missing.length !== 1) continue;
     const m = x.s.missing[0]!;
     const key = m.item ?? m.shown;
     const row = byItem.get(key) ?? {
-      reason: m.reason,
+      note: m.note,
       asks: new Map<string, number>(),
       ex: [] as { name: string; source: string | null }[],
     };
@@ -100,7 +102,7 @@ export async function shoppingView() {
     .map(([item, v]) => ({
       item,
       count: [...v.asks.values()].reduce((a, b) => a + b, 0),
-      reason: v.reason,
+      note: v.note,
       asks: [...v.asks.entries()].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n).slice(0, 6),
       examples: v.ex,
     }))

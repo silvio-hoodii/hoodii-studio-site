@@ -22,9 +22,7 @@ export default function PasteBox() {
       <summary>Or paste the recipe itself, for a page that will not open</summary>
 
       <p className="lede" style={{ marginTop: 8 }}>
-        Some sites answer a program differently from a person, and some ask not to be read by one at
-        all. Copy the ingredient list off the page and put it here. Headings and step numbers are
-        fine, they get stripped.
+        Copy the ingredient list off the page and put it here. Headings and step numbers get stripped.
       </p>
 
       <form action={action}>
@@ -67,7 +65,7 @@ export default function PasteBox() {
                 <div key={k} style={{ marginBottom: 6 }}>
                   <b>{m.what}</b>
                   <span className="quiet"> for &ldquo;{m.line}&rdquo;</span>
-                  {m.reason && <div className="quiet">{m.reason}</div>}
+                  {m.note && <div className="quiet">{m.note}</div>}
                 </div>
               ))}
             </div>
@@ -95,8 +93,7 @@ export default function PasteBox() {
               <span className="k">Our list does not recognise these, {state.unknown!.length}</span>
               <div>{state.unknown!.join(', ')}</div>
               <div className="lede" style={{ marginTop: 4 }}>
-                Not the same as missing. It means the kitchen&apos;s vocabulary has a hole here, so
-                check these yourself rather than trusting either answer.
+                Not missing, just unrecognised. Check these yourself.
               </div>
             </div>
           )}

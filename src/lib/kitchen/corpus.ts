@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock, expiringSoon } from './stock';
+import { vetoed, mealKey } from './veto';
 import { allRecipes } from './recipes';
 import type { Recipe } from './types';
 // One matcher implementation, in .mjs, so the CLI and the app can never disagree. See match-mjs.d.ts.
@@ -236,8 +237,8 @@ export function nameOf(stock: Awaited<ReturnType<typeof deriveStock>>, id: strin
 }
 
 export async function findCandidates(filters: Filters = {}) {
-  const [{ meals, providers, hiddenNoSource, uncheckedCount, dupesDropped, totalKnown, sourceCheckedAt }, stock] =
-    await Promise.all([loadCorpus(), deriveStock()]);
+  const [{ meals, providers, hiddenNoSource, uncheckedCount, dupesDropped, totalKnown, sourceCheckedAt }, stock, veto] =
+    await Promise.all([loadCorpus(), deriveStock(), vetoed()]);
   const cards: Recipe[] = await allRecipes();
 
   /* WHICH OF THESE ALREADY HAS A COOK CARD, keyed by the source url the card cites.
@@ -272,7 +273,18 @@ export async function findCandidates(filters: Filters = {}) {
     Object.values(stock.items).filter((it) => it.where === 'freezer').map((it) => it.id),
   );
 
-  const all: Candidate[] = meals.map((meal) => {
+  /* DISHES HE HAS SAID NO TO, out before anything is scored.
+   *
+   * Filtered here rather than per-bucket so no bucket can be added later that forgets: the facet
+   * counts, the unlock ranking and every group are all derived from `all`, and on 2026-08-16 a bucket
+   * that was computed and rendered nowhere put four dishes in no group at all. One filter, upstream of
+   * everything, is the only version of this that stays true.
+   *
+   * They are still reachable: the home page lists them in a Hidden fold with an undo, because
+   * 2026-08-09 settled that not offering a dish is ranking and hiding it is a navigation bug. */
+  const visible = meals.filter((m) => !veto.ids.has(mealKey(m.id)));
+
+  const all: Candidate[] = visible.map((meal) => {
     const score = scoreRecipe(meal.ingredients.map((i) => `${i.measure} ${i.name}`), available);
     const hits = [...score.have, ...score.haveVia];
     const usesExpiring = hits
@@ -342,24 +354,63 @@ export async function findCandidates(filters: Filters = {}) {
 
   /* THE FILTER. He has 2,586 dishes and said: "some of these dishes seem to be extremely niche or
    * really random country cuisine. I wouldn't know how to filter those out." */
-  const q = (filters.q ?? '').trim().toLowerCase();
+  /* `&` AND `and` ARE THE SAME WORD to anyone typing. Publishers write "Easy pea & mint soup"; he
+   * typed "pea and mint" and the page said nothing matches, on a dish that was sitting in the thaw
+   * list on the home screen at the time. Both sides get flattened so neither spelling can hide a
+   * dish. Punctuation goes the same way, so "chicken, sweet potato" still finds the stew. */
+  const flat = (t: string) => t.toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+  const q = flat(filters.q ?? '');
+
+  /* WHERE THE MATCH LANDED, and it has to outrank everything else.
+   *
+   * Ingredients are in the haystack on purpose: "cumin" or "sweet potato" is what he would type, and a
+   * name-only search returned nothing for hundreds of dishes that use them. That part was right. What
+   * was missing is that a hit in the NAME and a hit in an ingredient line were treated as the same
+   * event, and the ranking then sorted by fewest-missing, so a pancake recipe that happens to list a
+   * banana and needs nothing beat a banana bread that needs one thing.
+   *
+   * Searching `banana` on 2026-08-22 returned Easy beef and pancakes first, baby pancakes second, and
+   * two or three actual banana dishes in the top ten. His words: "Why when I search banana, the first
+   * match is easy beef and pancakes... From the first 10 results the only one that has banana is like
+   * 2 or 3. It's stupid, doesn't make sense."
+   *
+   * Tiers, and they are ordered the way a person means the words:
+   *   0  the name STARTS with what he typed        banana bread
+   *   1  the name contains it as a whole word      easy banana muffins
+   *   2  the name contains it anywhere             bananas foster trifle
+   *   3  a keyword, category or cuisine            (BBC's own tags)
+   *   4  an ingredient line only                   pancakes that list a banana
+   *
+   * A tier always beats a smaller shopping list, which is the whole correction: he searched for a
+   * word, so dishes ABOUT that word come first even if one of them needs an egg. */
+  /** Escape whatever he typed before it becomes a pattern: a search box is user input and
+   *  "chicken (roast)" must not throw. */
+  const esc = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const word = q ? new RegExp(`\\b${esc(q)}`) : null;
+  const qTier = new Map<string, number>();
+  const tierOf = (c: Candidate): number => {
+    const name = flat(c.meal.name);
+    if (name.startsWith(q)) return 0;
+    if (word?.test(name)) return 1;
+    if (name.includes(q)) return 2;
+    const tags = flat([c.meal.area ?? '', c.meal.category ?? '', (c.meal.keywords ?? []).join(' ')].join(' '));
+    if (tags.includes(q)) return 3;
+    if (flat(c.meal.ingredients.map((i) => i.name).join(' ')).includes(q)) return 4;
+    return -1;
+  };
+
   const filtered = all.filter((c) => {
     if (filters.max !== undefined && c.score.missing.length > filters.max) return false;
     if (filters.uses && !c.usesIds.includes(filters.uses)) return false;
     if (filters.cuisine && c.meal.area !== filters.cuisine) return false;
     if (filters.course && !c.courses.includes(filters.course)) return false;
     if (q) {
-      /* Ingredients are in the haystack because "cumin" or "sweet potato" is what he would type, and a
-       * name-only search returned nothing for hundreds of dishes that use them while the page was
-       * telling him to narrow it with the search box. */
-      const hay = [
-        c.meal.name,
-        c.meal.area ?? '',
-        c.meal.category ?? '',
-        (c.meal.keywords ?? []).join(' '),
-        c.meal.ingredients.map((i) => i.name).join(' '),
-      ].join(' ').toLowerCase();
-      if (!hay.includes(q)) return false;
+      const t = tierOf(c);
+      if (t < 0) return false;
+      qTier.set(c.meal.id, t);
     }
     return true;
   });
@@ -370,7 +421,10 @@ export async function findCandidates(filters: Filters = {}) {
    * then confidence, then name. A single ordered list beats five sections once a filter is applied,
    * because the whole point of filtering is that the result is short enough to read. */
   const rank = (a: Candidate, b: Candidate) =>
-    a.score.missing.length - b.score.missing.length
+    /* Match quality FIRST when he typed something. Everything below it is a tiebreak among dishes
+     * that are equally about the thing he asked for. */
+    (qTier.get(a.meal.id) ?? 0) - (qTier.get(b.meal.id) ?? 0)
+    || a.score.missing.length - b.score.missing.length
     || (b.usesExpiring.length > 0 ? 1 : 0) - (a.usesExpiring.length > 0 ? 1 : 0)
     || a.score.unknown.length - b.score.unknown.length
     || byName(a, b);
@@ -398,6 +452,10 @@ export async function findCandidates(filters: Filters = {}) {
     totalKnown,
     sourceCheckedAt,
     nameOf: (id: string) => nameOf(stock, id),
+    /* What he has said no to, so one surface can offer the undo. The count is the honest one: it is
+     * the fold of the log, not the number filtered out of this corpus, because a hidden dish whose
+     * source link later goes dead would otherwise vanish from the undo list too. */
+    vetoed: veto.list,
     /* THE ONE NUMBER A HEADLINE MAY USE, added 2026-08-21.
      *
      * Nothing missing, nothing unrecognised, nothing frozen. `scoreRecipe` only returns verdict
@@ -463,14 +521,14 @@ export async function findCandidates(filters: Filters = {}) {
        * lines that were counted. No new vocabulary, no guessing what he ought to buy: it is what the
        * recipes literally say, deduped and shortest first so the common word wins over one page's
        * florid phrasing. */
-      const n = new Map<string, { count: number; reason?: string; names: Set<string> }>();
+      const n = new Map<string, { count: number; note?: string; names: Set<string> }>();
       for (const c of all) {
         if (c.score.missing.length !== 1) continue;
         const m = c.score.missing[0]!;
         const k = m.item ?? m.shown;
-        const cur = n.get(k) ?? { count: 0, reason: m.reason, names: new Set<string>() };
+        const cur = n.get(k) ?? { count: 0, note: m.note, names: new Set<string>() };
         cur.count += 1;
-        if (cur.reason === undefined) cur.reason = m.reason;
+        if (cur.note === undefined) cur.note = m.note;
         /* `shown` is what resolveLine matched on, so it is already stripped of quantity and prep.
          * Guarded anyway: anything long enough to be a whole sentence is not a shopping word. */
         const nm = (m.shown || '').trim().toLowerCase();
@@ -481,7 +539,9 @@ export async function findCandidates(filters: Filters = {}) {
         .map(([item, v]) => ({
           item,
           count: v.count,
-          reason: v.reason,
+          /* The SHORT one. `reason` is deliberately not carried out of here, so no surface can render
+           * a `_knownGaps` write-up by reaching for the wrong field. */
+          note: v.note,
           examples: [...v.names].sort((a, b) => a.length - b.length || a.localeCompare(b)).slice(0, 4),
         }))
         .sort((a, b) => b.count - a.count).slice(0, 8);

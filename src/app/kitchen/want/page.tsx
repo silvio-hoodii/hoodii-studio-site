@@ -32,7 +32,7 @@ function Ingredients({ hit, label }: { hit: WantHit; label: (id: string) => stri
             <div key={k} style={{ marginBottom: 6 }}>
               <b>{m.item ? label(m.item) : m.shown}</b>
               <span className="quiet"> for &ldquo;{m.line.trim()}&rdquo;</span>
-              {m.reason && <div className="quiet">{m.reason}</div>}
+              {m.note && <div className="quiet">{m.note}</div>}
             </div>
           ))}
         </div>
@@ -62,8 +62,7 @@ function Ingredients({ hit, label }: { hit: WantHit; label: (id: string) => stri
           <span className="k">Our list does not recognise these, {s.unknown.length}</span>
           <div>{s.unknown.map((u) => u.shown || u.line.trim()).join(', ')}</div>
           <div className="lede" style={{ marginTop: 4 }}>
-            Not the same as missing. It means the kitchen&apos;s vocabulary has a hole here, so check
-            these yourself rather than trusting either answer.
+            Not missing, just unrecognised. Check these yourself.
           </div>
         </div>
       )}
@@ -101,8 +100,7 @@ export default async function Want({
       <KitchenNav here="want" />
       <h1>What would I need?</h1>
       <p className="lede">
-        Name a dish you want, or paste the address of any recipe page. It gets read and checked against
-        what is actually in the kitchen, and you get told exactly what is short.
+        Name a dish, or paste a recipe link. You get told what is short.
       </p>
 
       <div className="filters">
@@ -213,9 +211,7 @@ export default async function Want({
             ))}
           </ul>
           <p className="lede" style={{ marginTop: 14 }}>
-            A pasted link works for sites this app will not crawl, which includes NYT Cooking, Serious
-            Eats, Maangchi and The Woks of Life. All of them ask AI crawlers to stay out of their
-            catalogues, so it does. Handing over one page you are reading is a different thing.
+            A pasted link works for sites this app will not crawl, like NYT Cooking or Serious Eats.
           </p>
         </>
       )}

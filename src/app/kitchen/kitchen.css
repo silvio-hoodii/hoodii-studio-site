@@ -771,3 +771,39 @@
 }
 .kos details.fold[open] > summary { margin-bottom: 10px; color: var(--foreground); }
 .kos details.fold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
+/* ---- a quiet control that lives on a dish row ----
+ *
+ * The shared button in globals.css is 16px sans with 13px of padding, which is right for "Unlock and
+ * save" and wrong fourteen times down a list: the page would read as a column of buttons with dishes
+ * between them. This is the "not this" tap, and it has to be findable without competing with the dish
+ * name above it.
+ *
+ * Mono, muted, no border, because the split this site declares is that mono carries labels and state
+ * and sans carries prose. It sits in the meta block under the dish, so it inherits that column and
+ * needs no layout of its own.
+ *
+ * `min-height: 0` is deliberate and is the same trap the base rule documents: a min-height here would
+ * beat the 2px on the cook screen's step dots. The vertical padding gives it a ~30px target, which is
+ * under the 44px a primary action should have and is correct for a secondary one on a row whose
+ * primary action is the whole title. */
+.kos .rowaction {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  padding: 7px 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--muted-foreground);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-strong);
+}
+.kos .rowaction:hover {
+  color: var(--foreground);
+  border-color: transparent;
+  text-decoration-color: var(--muted-foreground);
+}

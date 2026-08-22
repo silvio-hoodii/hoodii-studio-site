@@ -187,6 +187,13 @@ export type StockWhere = 'fridge' | 'freezer' | 'pantry' | string;
 export interface StockItem {
   id: string;
   n: string;
+  /** FALSE means it comes out of his own kitchen, not out of a shop: browned beef, cooked rice,
+   *  pickles, a sauce he made. Such a thing running out must never generate a shopping row, because
+   *  what he would buy is whatever it is made FROM and that has its own row. A property of the item
+   *  rather than a name pattern, because `beef` is browned beef and `beef-raw` is the thing you buy,
+   *  and no rule reading the id could tell them apart. Absent means buyable, which is nearly all of
+   *  the catalogue. */
+  buyable?: boolean;
   label?: string;
   where: StockWhere;
   level: StockLevel;

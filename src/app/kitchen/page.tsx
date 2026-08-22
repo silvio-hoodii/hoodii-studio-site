@@ -28,6 +28,8 @@ import { getProteinTarget } from '@/lib/kitchen/protein';
  * dish, shown as a badge, rather than the universe the question is asked over. */
 import { findCandidates, type Candidate } from '@/lib/kitchen/corpus';
 import { MealRow } from './MealRow';
+import HideDish from './HideDish';
+import { vetoed, cardKey } from '@/lib/kitchen/veto';
 
 export const dynamic = 'force-dynamic';
 
@@ -130,6 +132,20 @@ function Dish({ c }: { c: Cookable }) {
   );
 }
 
+/* The card row's own "not this", OUTSIDE the Link. A button inside an anchor is invalid HTML and the
+ * browser resolves it by firing the navigation, so the tap would open the recipe instead of hiding it.
+ * Cheap to get wrong and invisible in review, since the markup reads fine. */
+function DishRow({ c }: { c: Cookable }) {
+  return (
+    <div>
+      <Dish c={c} />
+      <div className="mealmeta" style={{ marginTop: -6, marginBottom: 10 }}>
+        <HideDish dish={cardKey(c.recipe.id)} name={c.recipe.name} />
+      </div>
+    </div>
+  );
+}
+
 export default async function KitchenHome() {
   const stock = await deriveStock();
   const recipes = await allRecipes();
@@ -138,8 +154,12 @@ export default async function KitchenHome() {
   /* Unfiltered, so the buckets are the same ones /kitchen/find shows by default. Both surfaces now
    * read one function, which is what stops them drifting apart again. */
   const d = await findCandidates();
+  const veto = await vetoed();
 
-  const all: Cookable[] = recipes.map((r) => {
+  /* Same filter as the corpus side, on the same log. A card and a corpus dish are two id spaces and
+   * one decision: "stop showing me this" cannot mean two different things depending on which library
+   * the dish happens to live in. */
+  const all: Cookable[] = recipes.filter((r) => !veto.ids.has(cardKey(r.id))).map((r) => {
     const last = cooked[r.name];
     return {
       recipe: r,
@@ -323,9 +343,7 @@ export default async function KitchenHome() {
             )}
           </div>
           <p className="lede" style={{ marginTop: 2 }}>
-            Only dishes finished in this app. A shake or a tub of cottage cheese never passes
-            through here, so treat this as a floor and not as the day&apos;s total.
-            {proteinTarget?.measuredOn && ` Target computed by HealthOS from the ${proteinTarget.measuredOn} measurement.`}
+            Only what you cooked here, so it is a floor and not the day&apos;s total.
           </p>
         </>
       )}
@@ -346,9 +364,6 @@ export default async function KitchenHome() {
         <>
           <p className="sec">
             Cook one of these and nothing goes to waste <span className="quiet">{d.rescue.length}</span>
-          </p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            Nothing frozen, and each uses something on a clock. Soonest first.
           </p>
           <ul className="meallist">
             {d.rescue.slice(0, 6).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
@@ -389,9 +404,6 @@ export default async function KitchenHome() {
           <p className="sec">
             One ingredient short <span className="quiet">{d.missingOne.length}</span>
           </p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            What is missing is named. Some of it you will decide to skip or swap.
-          </p>
           <ul className="meallist">
             {mealFirst(d.missingOne).slice(0, 14).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
           </ul>
@@ -412,9 +424,6 @@ export default async function KitchenHome() {
         <>
           <p className="sec">
             Once something thaws <span className="quiet">{d.thaw.length}</span>
-          </p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            Nothing to buy. Move the named thing to the fridge tonight.
           </p>
           <ul className="meallist">
             {mealFirst(d.thaw).slice(0, 8).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
@@ -453,12 +462,8 @@ export default async function KitchenHome() {
             Written out step by step{' '}
             <span className="quiet">{now.length + thawing.length + adapting.length}</span>
           </p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            The only dishes here with instructions of their own. Everything above links to the
-            publisher.
-          </p>
           <div>
-            {[...now, ...thawing, ...adapting].map((c) => <Dish key={c.recipe.id} c={c} />)}
+            {[...now, ...thawing, ...adapting].map((c) => <DishRow key={c.recipe.id} c={c} />)}
           </div>
         </>
       )}
@@ -470,9 +475,6 @@ export default async function KitchenHome() {
       {d.unlocks.length > 0 && (
         <>
           <p className="sec">One thing to buy, most dishes</p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            Counted only over dishes missing nothing but this, so the number means it.
-          </p>
           {/* Not links. There is no filter for "dishes missing exactly this", so a link here would
               promise a screen that does not exist, and a link that lands somewhere unrelated is worse
               than plain text. Same treatment as /kitchen/find. */}
@@ -542,6 +544,31 @@ export default async function KitchenHome() {
           Every one of them stays reachable, because 2026-08-09 established that not offering a dish
           is a ranking decision and hiding it is a navigation bug. Reachable is not the same as
           unavoidable. One summary line, tap to open. */}
+      {/* WHAT HE HAS SAID NO TO, with the undo beside it.
+       *
+       * Hidden, never deleted. 2026-08-09 settled that not offering a dish is a ranking decision and
+       * hiding it is a navigation bug, after he lost a recipe off the page: "now that it's off, I
+       * can't even check what the recipe was." A veto is the strongest ranking signal in the app and
+       * it still does not get to make a dish unreachable.
+       *
+       * Renders nothing at zero, which is the normal state. */}
+      {veto.list.length > 0 && (
+        <>
+          <hr className="divider" style={{ marginTop: 30 }} />
+          <details className="fold">
+            <summary>Dishes you told it to stop showing ({veto.list.length})</summary>
+            <ul className="plainlist stack">
+              {veto.list.map((v) => (
+                <li key={v.dish}>
+                  <span>{v.name ?? v.dish}</span>
+                  <HideDish dish={v.dish} name={v.name ?? v.dish} hidden />
+                </li>
+              ))}
+            </ul>
+          </details>
+        </>
+      )}
+
       {(noRecipe.length > 0 || blocked.length > 0 || adapted.length > 0 || unread.length > 0) && (
         <>
           <hr className="divider" style={{ marginTop: 30 }} />
@@ -549,10 +576,6 @@ export default async function KitchenHome() {
           {noRecipe.length > 0 && (
             <details className="fold">
               <summary>No recipe really needed ({noRecipe.length})</summary>
-              <p className="lede" style={{ marginBottom: 8 }}>
-                Oats, a smoothie, a shake, a yogurt bowl. Nothing is heated and nothing can go wrong,
-                so they are here for the protein arithmetic rather than for the instructions.
-              </p>
               <ul className="plainlist az">
                 {noRecipe.map((c) => (
                   <li key={c.recipe.id}>
@@ -593,9 +616,7 @@ export default async function KitchenHome() {
                 <>
                   <p className="sec">Changed from the original</p>
                   <p className="lede" style={{ marginBottom: 8 }}>
-                    Scaled, or an ingredient swapped, or a different pan than the recipe says. That
-                    layer is where every failure has come from, so these are readable but not
-                    recommended.
+                    Changed from the original. Not recommended.
                   </p>
                   <ul className="plainlist az">
                     {[...adapted]
@@ -631,10 +652,8 @@ export default async function KitchenHome() {
               )}
 
               <p className="quiet" style={{ marginTop: 16 }}>
-                <b>{read.length} of {recipes.length}</b> recipes are offered. A recipe is offered only
-                if it follows one published recipe with nothing altered: its scale, its pan, its
-                ingredients, its heat. Changing any of that is where every failure has come from, so
-                the checking was replaced with having less to check.
+                <b>{read.length} of {recipes.length}</b> cook cards are offered. A card has to follow
+                one published recipe with nothing altered.
               </p>
             </details>
           )}

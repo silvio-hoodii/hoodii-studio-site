@@ -54,6 +54,8 @@ export interface ListItem {
   why: string[];
   /** Dishes waiting on it, by name. */
   dishes: string[];
+  /** Ran out, but not yet a reason on its own. Promoted to a `why` only if a dish wants it. */
+  ranOut?: boolean;
   price: PriceRow | null;
   priceAgeDays: number | null;
   priceStale: boolean;
@@ -153,15 +155,30 @@ export async function shoppingList(): Promise<ShoppingList> {
   /* 1. Stock he has flagged himself. `low` still counts as usable, so these are a heads-up rather
    *    than a blocker, and the difference is stated on the row instead of being flattened away. */
   for (const it of Object.values(stock.items)) {
+    /* NOTHING HE COOKS GOES ON A LIST OF THINGS TO BUY. Added 2026-08-22.
+     *
+     * `spaghetti_cooked` ran out, because he ate it, and the list offered him cooked spaghetti. His
+     * words: "Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense."
+     * Same for browned beef, the bolognese sauce, the pickles and the tzatziki: every one is made in
+     * his own kitchen out of something that has its own row, and it is that row which belongs here.
+     *
+     * A property of the item in `stock/items.json`, not a name pattern, because `beef` is browned beef
+     * and `beef-raw` is the thing you buy, and no rule reading the id could tell them apart. */
+    if (it.buyable === false) continue;
     if (it.level === 'low') {
       const row = touch(it.id, it.n);
       row.why.push('running low');
     } else if (it.level === 'none' && it.src !== 'seed') {
       /* `none` on a row that only ever came from the seed catalogue means never owned, which is most
        * of the catalogue and is not a shopping list. `none` on a row with events behind it means he
-       * had it and it ran out, which is. */
-      const row = touch(it.id, it.n);
-      row.why.push('ran out');
+       * had it and it ran out, which is.
+       *
+       * RAN OUT IS NOT A REASON ON ITS OWN, changed 2026-08-22. It was, and it filled the list with
+       * things nothing wanted: beer bought for one dish, capers bought for a dish cooked once. "Why
+       * would I need beer? ... Capers again for a dish that we made once." Running out of something is
+       * only a shopping item if something is waiting on it, so the row is created and the reason is
+       * added below in step 2 where dish demand is known. Marked, not pushed. */
+      touch(it.id, it.n).ranOut = true;
     }
   }
 
@@ -199,6 +216,8 @@ export async function shoppingList(): Promise<ShoppingList> {
     }
     if (row.dishes.length) {
       row.why.push(row.dishes.length === 1 ? '1 dish waiting on it' : `${row.dishes.length} dishes waiting on it`);
+      /* "ran out" earns its place once something is waiting on it, and says so in that order. */
+      if (row.ranOut) row.why.unshift('ran out');
     }
   }
 

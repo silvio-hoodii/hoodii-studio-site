@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { thumb, type Candidate } from '@/lib/kitchen/corpus';
+import HideDish from './HideDish';
+import { mealKey } from '@/lib/kitchen/veto';
 
 /* ONE ROW COMPONENT, SHARED. Extracted from find/page.tsx on 2026-08-21, and the reason is the whole
  * point of the change it is part of.
@@ -129,6 +131,12 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
             <Link href={`/kitchen/want?url=${encodeURIComponent(out)}`}>check it against the kitchen</Link>
           </div>
         )}
+        {/* "STOP SHOWING ME THIS". The third signal, and the app had only two: he owns the
+            ingredients, and he has cooked it. Both are reasons to show a dish and neither is a reason
+            not to, so nothing could ever be told no. See lib/kitchen/veto.ts. */}
+        <div className="mealmeta">
+          <HideDish dish={mealKey(c.meal.id)} name={c.meal.name} />
+        </div>
       </div>
     </li>
   );

@@ -416,7 +416,26 @@ export function scoreRecipe(ingredientLines, availableIds) {
     const sub = substituteFor(req, availableIds);
     if (sub) { haveVia.push({ line, shown, item: req, ...sub }); continue; }
 
-    if (hit.startsWith('__GAP__')) { missing.push({ line, shown, item: req, reason: ALIASES._knownGaps[req] }); continue; }
+    if (hit.startsWith('__GAP__')) {
+      /* TWO FIELDS, DELIBERATELY. `reason` is the agent-facing record in `_knownGaps` and it has grown
+       * into dated incident write-ups, which is correct for a repo and wrong for a phone. On
+       * 2026-08-22 the shopping surface printed one of them verbatim under a row: "NARROWED
+       * 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus
+       * already had its own id. Still missing: green beans, cauliflower, pak choi..." His words:
+       * "There is so much text here... so much fluff that does not add value. Just go straight to the
+       * point."
+       *
+       * `note` comes from `_shopNotes`, which holds one short clause per gap and nothing else, so the
+       * long form cannot reach a screen by construction rather than by anyone remembering. Most gaps
+       * have no entry and render nothing, which is the right default: a row already carries its own
+       * name and count. */
+      missing.push({
+        line, shown, item: req,
+        reason: ALIASES._knownGaps[req],
+        note: ALIASES._shopNotes?.[req],
+      });
+      continue;
+    }
     if (availableIds.has(hit)) have.push({ line, shown, item: hit });
     else missing.push({ line, shown, item: hit });
   }

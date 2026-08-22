@@ -400,7 +400,9 @@
       "by": "2026-08-08",
       "note": "Cooked and bagged the evening of Aug 4: 250 g, 250 g and 200 g. Browned beef gets 3 to 4 days in the fridge against 1 to 2 raw. Anything you will not cook by Friday goes in the freezer, where it keeps 3 months.",
       "src": "seed",
-      "since": "2026-08-04"
+      "since": "2026-08-04",
+      "buyable": false,
+      "buyableWhy": "Made, not bought: browned from `beef-raw` in his own pan. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
     },
     "groundchickenfrozen": {
       "n": "frozen ground chicken",
@@ -436,7 +438,9 @@
       "where": "fridge",
       "src": "seed",
       "since": "2026-08-04",
-      "made": "Big-Batch Bolognese"
+      "made": "Big-Batch Bolognese",
+      "buyable": false,
+      "buyableWhy": "Made, not bought: a sauce he cooks. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
     },
     "chickenbreast": {
       "n": "chicken breast",
@@ -522,7 +526,9 @@
       "n": "cooked spaghetti (plain, leftover)",
       "where": "fridge",
       "state": "none",
-      "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days."
+      "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days.",
+      "buyable": false,
+      "buyableWhy": "Made, not bought: boiled from the dry pasta in the pantry. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
     },
     "chickenwings": {
       "n": "chicken wings",
@@ -680,6 +686,44 @@
       "where": "freezer",
       "state": "none",
       "note": "Added 2026-08-21. Stated by Silvio that day as bought on an untracked trip along with the 30 eggs and the asparagus. Given its own id rather than being left inside the `green vegetables` known-gap, which is the reason 78 dishes stayed blocked while he owned broccoli: a gap bucket is a CATEGORY, and a category cannot be partly satisfied. Buying one of the 32 vegetables inside it moved nothing."
+    },
+    "bananas": {
+      "n": "bananas, frozen ripe",
+      "where": "freezer",
+      "state": "none",
+      "note": "Added 2026-08-22. He stated THREE RIPE BANANAS IN THE FREEZER at the start of the 08-21 session, said it again on 08-22, and it was never logged, so every banana recipe in the corpus read \"no bananas\" while they sat in his freezer. His words: \"I told you in the first moment that I opened this session that I have three ripe bananas in the freezer. If I said so already, why isnt it anywhere in the app?\" A fact he states out loud and an agent does not write down is worse than one nobody knew."
+    },
+    "rice_cooked_plain": {
+      "n": "plain cooked rice",
+      "where": "freezer",
+      "state": "none",
+      "buyable": false,
+      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+      "note": "Cooked from the dry jasmine or long grain in the pantry. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+    },
+    "pickledonion": {
+      "n": "quick pickled red onions",
+      "where": "fridge",
+      "state": "none",
+      "buyable": false,
+      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+      "note": "Made from half a red onion and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+    },
+    "cucumberpickles": {
+      "n": "refrigerator pickles",
+      "where": "fridge",
+      "state": "none",
+      "buyable": false,
+      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+      "note": "Made from cucumbers and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+    },
+    "tzatziki": {
+      "n": "tzatziki",
+      "where": "fridge",
+      "state": "none",
+      "buyable": false,
+      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+      "note": "Made from Greek yogurt, cucumber and garlic. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
     }
   }
 }

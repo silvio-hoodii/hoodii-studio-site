@@ -59,6 +59,15 @@ export function FilterBar({
         <button type="submit" className="primary">Search</button>
       </form>
 
+      {/* THE CHIPS FOLD ONCE HE IS SEARCHING, and open when he is not. Changed 2026-08-22.
+          Eighteen chips across four labelled rows is a good browse control and it is 700px of
+          furniture between a search box and its results. He typed "banana" and the first dish was
+          off the bottom of the phone, under two other search boxes and every chip on the page.
+
+          `open={!active}` is the whole rule: browsing, they are the point; filtering, the answer is.
+          They stay one tap away in both states, because hiding a control is a navigation bug. */}
+      <details className="fold" open={!active}>
+        <summary>{active ? 'Filters' : 'Narrow it down'}</summary>
       <div className="chiprow" role="group" aria-label="How much is missing">
         <span className="chiplabel">Show</span>
         <Link className={`chip ${filters.max === 0 ? 'on' : ''}`} href={href(filters, { max: filters.max === 0 ? undefined : 0 })}>
@@ -133,6 +142,8 @@ export function FilterBar({
           ))}
         </div>
       )}
+
+      </details>
 
       {active && (
         <p className="quiet" style={{ marginTop: 10 }}>

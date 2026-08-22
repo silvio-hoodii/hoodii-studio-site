@@ -15,7 +15,10 @@ declare module '*/match.mjs' {
      *  line instead leaked scraped noise like "divided ($0.02)" onto the menu. */
     shown: string;
     item?: string;
+    /** The agent-facing record from `_knownGaps`. Long, dated, historical. NEVER render this. */
     reason?: string;
+    /** One short clause from `_shopNotes`, written for the screen. This is the renderable one. */
+    note?: string;
     via?: string;
     note?: string;
   }

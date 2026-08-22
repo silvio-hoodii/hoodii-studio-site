@@ -945,6 +945,20 @@
       "unsweetened cocoa",
       "natural cocoa powder",
       "cacao powder"
+    ],
+    "bananas": [
+      "banana",
+      "bananas",
+      "ripe bananas",
+      "ripe banana",
+      "overripe bananas",
+      "overripe banana",
+      "mashed banana",
+      "mashed bananas",
+      "frozen bananas",
+      "very ripe bananas",
+      "medium bananas",
+      "large bananas"
     ]
   },
   "_knownGaps": {
@@ -1007,13 +1021,13 @@
     "golden syrup": "No golden syrup. It is a British invert-sugar syrup and it is what holds a flapjack together. Honey and maple syrup are both here.",
     "chocolate": "NARROWED 2026-08-17. A 225 g bag of Compliments DARK CHOCOLATE CHIPS arrived and is the stock item chocolatechips. Still missing: any chocolate in bar form, white and milk chocolate, and cooking chocolate. Chips hold their shape on purpose, so a recipe that wants chocolate chopped and melted smooth is not the same ask.",
     "mixed spice": "No mixed spice or pumpkin pie spice, the pre-blended warm-spice mixes. Ground cinnamon arrived 2026-08-16 and is the only one of their components here.",
-    "bananas": "No bananas. They are the whole structure of a banana bread or a banana oat muffin, not a flavour, so nothing stands in.",
     "vanillapod": "No vanilla pods, beans or paste. There IS a 250 mL bottle of Compliments artificial vanilla extract since 2026-08-17, which is what almost every recipe means by vanilla.",
     "meat-free mince": "No vegan or vegetarian mince of any kind, and no plan to buy one. Catalogued 2026-08-22 because BBC Good Food's Mushroom bolognese asks for it and the line was resolving to UNKNOWN, which reads as \"the app cannot tell\" when the honest answer is \"you do not have this\". The mushrooms, lentils and canned tomatoes in that recipe are all here; the mince is the gap.",
     "icing sugar": "No icing or powdered sugar. Catalogued 2026-08-22: it appeared 13 times across the corpus as an UNRECOGNISED ingredient, the most of anything, which reads as \"the app cannot tell\" when the honest answer is that he has granulated and not powdered. They are not interchangeable straight from the bag: powdered is milled far finer and cut with cornstarch, so it dissolves cold and granulated does not. See the substitute, which is real and uses a tool he owns.",
     "seeds": "No chia, poppy, flax or pumpkin seeds. Catalogued 2026-08-22. Sesame seeds are here and are their own item; nothing else in this family is.",
     "fresh fruit": "No apples, oranges, fresh berries or plantain. Catalogued 2026-08-22. The fruit here is frozen (berry blend, strawberries, mango, pineapple) plus lemons and limes, and each of those is its own item. A recipe asking for a fresh apple is asking for something that is not in the kitchen, which is different from the app not knowing the word.",
-    "tinned fruit": "No tinned fruit. Catalogued 2026-08-22. The frozen pineapple is not a substitute where a recipe wants the juice from the tin, which is what these lines are usually for. `pineapple chunks` on its own is deliberately NOT in this bucket: he has 1.2 kg of frozen pineapple chunks and lint-aliases.mjs refused the build for exactly that reason, which is the gate working. Only the phrase naming the tin and its juice is a gap."
+    "tinned fruit": "No tinned fruit. Catalogued 2026-08-22. The frozen pineapple is not a substitute where a recipe wants the juice from the tin, which is what these lines are usually for. `pineapple chunks` on its own is deliberately NOT in this bucket: he has 1.2 kg of frozen pineapple chunks and lint-aliases.mjs refused the build for exactly that reason, which is the gate working. Only the phrase naming the tin and its juice is a gap.",
+    "oyster mushrooms": "No oyster mushrooms. Catalogued 2026-08-22 because the matcher was reaching them by word-splitting: \"1 lb Oyster Mushrooms\" fell through to the plain `mushrooms` row and Oyster Mushroom Soup was badged READY off a tray of cremini. His words, and he was right to be suspicious: \"why is something like oyster mushroom soup not ready? Do I have oysters?\" He has neither oysters nor oyster mushrooms. They are frilly and silky where cremini is meaty, so the soup is a different soup, and the substitute below says so rather than pretending."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -2138,13 +2152,6 @@
       "apple pie spice",
       "speculaas spice"
     ],
-    "bananas": [
-      "banana",
-      "bananas",
-      "ripe bananas",
-      "overripe bananas",
-      "mashed banana"
-    ],
     "vanillapod": [
       "vanilla paste",
       "vanilla pod",
@@ -2202,6 +2209,11 @@
       "canned pineapple",
       "tinned peaches",
       "canned peaches"
+    ],
+    "oyster mushrooms": [
+      "oyster mushrooms",
+      "oyster mushroom",
+      "king oyster mushrooms"
     ]
   },
   "_substitutes": {
@@ -2249,6 +2261,10 @@
     "icing sugar": {
       "have": "sugar",
       "note": "Blitz white sugar in the bullet blender for about 30 seconds, until it looks like flour and no grains are visible. Use the same volume the recipe asks for, measured AFTER blending, because it fluffs up. Let the dust settle before opening the jar. It will not be quite as fine as shop-bought and there is no cornstarch in it, so it thickens an icing slightly less; for dusting a cake it is indistinguishable."
+    },
+    "oyster mushrooms": {
+      "have": "mushrooms",
+      "note": "Cremini work and taste meatier and less silky. Slice them thicker than the recipe says so they do not disappear into the soup."
     }
   },
   "_notAnIngredient": {
@@ -2256,5 +2272,25 @@
     "ids": [
       "jars"
     ]
+  },
+  "_shopNotes": {
+    "_": "ONE SHORT CLAUSE, for the screen. `_knownGaps` is the agent-facing record and grew into dated incident write-ups, which is right for a repo and wrong for a phone: on 2026-08-22 the shopping surface printed \"NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans...\" under a row. His words: \"There is so much text here. It does not make sense... so much fluff that does not add value. Just go straight to the point.\" The UI reads THIS map and nothing else, so the long form cannot leak again by construction. No dates, no history, no capitals. If a gap has nothing worth saying, it gets no entry and the row shows only its name and count.",
+    "heavy cream": "milk will not reduce the same way",
+    "peanuts": "peanut butter is here, whole nuts are not",
+    "bread": "flour and yeast are here, a loaf is not",
+    "green vegetables": "spinach, green beans, kale",
+    "fresh soft herbs": "thyme, rosemary, chives",
+    "warm spices": "nutmeg, turmeric, garam masala",
+    "wine": "most dishes are fine without it",
+    "feta": "no crumbly white cheese",
+    "icing sugar": "blitz white sugar in the bullet blender",
+    "tinned tomatoes": "the diced tin covers most of this",
+    "seeds": "chia, poppy, flax",
+    "fresh fruit": "apples, oranges, berries",
+    "asian pantry": "chilli oil, chilli garlic sauce",
+    "other spices": "five-spice, cayenne",
+    "oyster mushrooms": "cremini will do, they are meatier",
+    "fresh mint": "no mint of any kind",
+    "enoki mushrooms": "cremini work, they are meatier"
   }
 }

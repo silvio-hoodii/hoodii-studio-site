@@ -46,10 +46,7 @@ export default async function Shop() {
       <details className="fold">
         <summary>What one purchase would unlock the most dishes ({d.unlocks.length} counted)</summary>
       <p className="lede" style={{ marginBottom: 8 }}>
-        {d.cookableNow} of {d.total} dishes need nothing bought at all. Counted only over dishes that
-        are short of nothing else, so the number means it rather than meaning &ldquo;would help
-        with&rdquo;. These are groups, and a group heading is not a thing you can put in a basket, so
-        each row carries the ingredients the recipes actually asked for.
+        {d.cookableNow} of {d.total} dishes need nothing bought.
       </p>
 
       <ul className="meallist">
@@ -67,7 +64,7 @@ export default async function Shop() {
                   what they ask for: {u.asks.map((a) => `${a.name}${a.n > 1 ? ` (${a.n})` : ''}`).join(', ')}
                 </div>
               )}
-              {u.reason && <div className="mealmiss">{u.reason}</div>}
+              {u.note && <div className="mealmiss">{u.note}</div>}
               {u.examples.length > 0 && (
                 <div className="mealvia">
                   e.g.{' '}
@@ -104,9 +101,7 @@ export default async function Shop() {
         Already here, nothing uses it <span className="quiet">{d.idle.length}</span>
       </h2>
       <p className="lede" style={{ marginBottom: 8 }}>
-        Not one of these appears in any dish that is cookable now or one thing short. Worth a look
-        before buying anything: a list that only ever adds is how a kitchen fills with food nobody
-        eats.
+        In the kitchen, and no dish here wants it.
       </p>
       {d.idle.length === 0 ? (
         <p className="lede">Nothing idle. Everything in the kitchen is reachable by something.</p>
@@ -125,7 +120,7 @@ export default async function Shop() {
         </ul>
       )}
       <p className="lede" style={{ marginTop: 8 }}>
-        Tapping one shows every dish that uses it, including ones needing a shop.
+        Tap one to see every dish that uses it.
       </p>
 
       {d.unreachable.length > 0 && (
@@ -134,11 +129,7 @@ export default async function Shop() {
             No recipe asks for these <span className="quiet">{d.unreachable.length}</span>
           </h2>
           <p className="lede" style={{ marginBottom: 8 }}>
-            Not one of the {d.total.toLocaleString()} dishes names these, so no amount of cooking will
-            move them off this list. Some of that is honest (nothing asks for whey protein) and some is
-            us (already-browned beef is not a thing a published ingredient list ever calls for, even
-            though it is exactly what saves you a step). Either way it is ours to solve, not a thing
-            you are neglecting.
+            No recipe anywhere names these. Ours to fix, not yours.
           </p>
           <ul className="plainlist">
             {d.unreachable.map((i) => (

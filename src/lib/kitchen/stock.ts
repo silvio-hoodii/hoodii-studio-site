@@ -16,6 +16,9 @@ export type EventKind = (typeof EVENT_KINDS)[number];
 interface SeedItem {
   n: string; label?: string; where?: string; state?: string;
   by?: string; note?: string; buy?: unknown; made?: string; for?: string;
+  /** See StockItem.buyable. Read straight off the catalogue; there is no event that changes it,
+   *  because whether a thing is bought or made is a property of the thing. */
+  buyable?: boolean;
   since?: string; src?: string;
 }
 
@@ -46,7 +49,7 @@ export async function deriveStock(now = new Date()): Promise<Stock> {
     const level = (r.state === 'frozen' ? 'have' : r.state ?? 'none') as StockLevel;
     items[id] = {
       id, n: r.n, label: r.label, where: r.where ?? 'pantry', level,
-      by: r.by ?? null, note: r.note ?? null, made: r.made,
+      by: r.by ?? null, note: r.note ?? null, made: r.made, buyable: r.buyable,
       since: r.since, src: r.src ?? 'seed',
       qty: null, unit: null, portions: null,
       state: level, usableNow: false, ageDays: null, daysLeft: null, conf: 'unknown',
