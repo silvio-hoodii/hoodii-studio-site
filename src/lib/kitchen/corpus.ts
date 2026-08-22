@@ -343,16 +343,48 @@ export async function findCandidates(filters: Filters = {}) {
     totalKnown,
     sourceCheckedAt,
     nameOf: (id: string) => nameOf(stock, id),
+    /* THE ONE NUMBER A HEADLINE MAY USE, added 2026-08-21.
+     *
+     * Nothing missing, nothing unrecognised, nothing frozen. `scoreRecipe` only returns verdict
+     * 'ready' when both `missing` and `unknown` are empty, so this is the set where the app can say
+     * yes without a qualifier.
+     *
+     * It exists because the home page headline was wrong twice in one sitting, both times in the same
+     * direction. First it counted `rescue + ready` and read "193 you can cook from the fridge", while
+     * `rescue` did not exclude frozen food. Fixed, and it still read 156, because `rescue` uses
+     * `cookable()`, which is `missing.length === 0` and deliberately tolerates unrecognised
+     * ingredients: the top row of that group was a steak dish, in a kitchen with no steak, badged
+     * "4 unsure".
+     *
+     * Both mistakes came from a headline assembled out of display buckets. Display buckets are sorted
+     * and sliced for reading, and the moment a count is built by adding two of them together it means
+     * whatever their filters happen to mean today. So the claim gets its own definition, next to the
+     * buckets, and a false "you have this" stops being one refactor away. Law 5. */
+    confidentNow: all.filter((c) => c.score.verdict === 'ready' && c.needsThaw.length === 0),
     /* Cookable AND saves something. Sorted by urgency, then by how much it uses up. */
+    /* `&& needsThaw.length === 0` added 2026-08-21. This group is headed "Cook one of these and
+     * nothing goes to waste" and described as "Cookable now", and it did not exclude frozen food,
+     * so it made exactly the claim the comment below forbids `ready` from making. It mattered the
+     * moment the home page started counting: the headline read "193 you can cook from the fridge"
+     * and some of those needed several hours in the fridge first. A false "you have this" is worse
+     * than a false "you lack this", which is law 5.
+     *
+     * Nothing is lost by the exclusion: `thaw` no longer requires `usesExpiring` to be empty, so a
+     * dish that would save something AND needs a thaw lands there and sorts to the front. Checked
+     * because this codebase has already shipped a bucket that was computed and rendered nowhere. */
     rescue: all
-      .filter((c) => cookable(c) && c.usesExpiring.length > 0)
+      .filter((c) => cookable(c) && c.usesExpiring.length > 0 && c.needsThaw.length === 0)
       .sort((a, b) => a.usesExpiring[0]!.daysLeft - b.usesExpiring[0]!.daysLeft
         || b.usesExpiring.length - a.usesExpiring.length),
     /* READY NOW means the pan can go on now. A dish needing a thaw is not that, and calling it ready
      * paints the `--signal` colour on a claim that is false for the next several hours. `kitchen.css`
      * says of that colour: "the one place --signal is allowed: a value that is true right now." */
     ready: all.filter((c) => c.score.verdict === 'ready' && c.usesExpiring.length === 0 && c.needsThaw.length === 0).sort(byName),
-    thaw: all.filter((c) => cookable(c) && c.usesExpiring.length === 0 && c.needsThaw.length > 0).sort(byName),
+    /* No longer requires `usesExpiring` to be empty, so it catches the dishes `rescue` now excludes
+     * for needing a thaw. Anything on a clock sorts first, because those are the ones where the thaw
+     * has to be started tonight rather than whenever. */
+    thaw: all.filter((c) => cookable(c) && c.needsThaw.length > 0)
+      .sort((a, b) => (a.usesExpiring[0]?.daysLeft ?? 99) - (b.usesExpiring[0]?.daysLeft ?? 99) || byName(a, b)),
     probably: all.filter((c) => c.score.verdict === 'probably-ready' && c.usesExpiring.length === 0 && c.needsThaw.length === 0).sort(byName),
     /* `unclear` was computed and never rendered, so four dishes missing nothing at all belonged to no
      * group and were unreachable in the default view while the "nothing missing" chip still counted

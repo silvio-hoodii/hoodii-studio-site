@@ -5,6 +5,29 @@ import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitch
 import { lastCookedMap, proteinToday } from '@/lib/kitchen/cook';
 import { dueInText } from '@/lib/format';
 import { getProteinTarget } from '@/lib/kitchen/protein';
+/* THE ENGINE. Added 2026-08-21, and it is the whole change.
+ *
+ * This page scored `allRecipes()`, the 36 hand-built cook cards, and printed "2 ready to cook".
+ * /kitchen/find scored the 2,835-recipe corpus against the same fridge and found 62 ready, 34 once
+ * thawed and 668 one ingredient short with the ingredient named. Same app, same fridge, one tap
+ * apart, and the page titled "what you can cook right now" was reading the small library.
+ *
+ * His words, and they are the spec: "we have all these ingredients, all these tools. How come are we
+ * able to say this is something that you can make with what you have... I don't want to think about
+ * the dishes. I'm bringing the dishes because the app itself is not offering me anything." And the
+ * consequence if this is not fixed: "I might as well just search for a recipe online and go by that
+ * then. What's the point of all this?"
+ *
+ * He was right, and the thing he was asking for was already built and behind a tab called Dishes.
+ *
+ * WHY IT WAS BUILT THIS WAY, because the reasoning was sound and the conclusion was not. A cook card
+ * is the only artefact you can actually be walked through: verbatim from one publisher, every step
+ * read as rendered, hash-stamped. That machinery exists because Chicken Piccata burnt. It is right
+ * for a hard dish and absurd as the gate on "what can I eat", because building one costs an evening,
+ * so the card library can never be the answer to what is for dinner. Cards are now a PROPERTY of a
+ * dish, shown as a badge, rather than the universe the question is asked over. */
+import { findCandidates } from '@/lib/kitchen/corpus';
+import { MealRow } from './MealRow';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,6 +103,9 @@ export default async function KitchenHome() {
   const recipes = await allRecipes();
   const cooked = await lastCookedMap();
   const [proteinLogged, proteinTarget] = await Promise.all([proteinToday(), getProteinTarget()]);
+  /* Unfiltered, so the buckets are the same ones /kitchen/find shows by default. Both surfaces now
+   * read one function, which is what stops them drifting apart again. */
+  const d = await findCandidates();
 
   const all: Cookable[] = recipes.map((r) => {
     const last = cooked[r.name];
@@ -175,6 +201,20 @@ export default async function KitchenHome() {
           introducing it. */}
       <h1>Cook</h1>
 
+      {/* THE HEADLINE IS THE ENGINE'S NUMBER, not the card count. This is the one line the whole
+          change exists for: the first thing he reads must be how many dishes his kitchen can make,
+          not how many an agent has finished the paperwork on. It read "2 ready to cook" for ten days
+          while the answer was in the hundreds. */}
+      <p className="sec">
+        <span className="live">{d.confidentNow.length}</span> you can cook from the fridge
+      </p>
+      <p className="lede">
+        Out of {d.total}, scored against the fridge. Nothing missing and nothing frozen.{' '}
+        {d.thaw.length > 0 && <>{d.thaw.length} more after a thaw. </>}
+        {d.missingOne.length > 0 && <>{d.missingOne.length} one ingredient short. </>}
+        <Link href="/kitchen/find">See all, or filter by an ingredient</Link>.
+      </p>
+
 
       {/* The receipt, MOVED BELOW THE LIST on 2026-08-18. It qualifies the dishes above rather than
           introducing them, and at the top it was one more line between him and the answer. */}
@@ -241,21 +281,17 @@ export default async function KitchenHome() {
           even with a startable dish sitting directly underneath it, and he went looking on the live
           site and could not find the dish he had asked for that afternoon. A false negative in the
           loudest position on the page is worse than no status at all. */}
-      {now.length === 0 && thawing.length === 0 && adapting.length === 0 && (
-        <>
-          <p className="sec">no cook card ready tonight</p>
-          <p className="lede">
-            A cook card is a recipe written out step by step and checked against this kitchen. There
-            are only a handful, on purpose. The menu below has thousands scored against the fridge:
-            pick one and it gets turned into a card.
-          </p>
-        </>
-      )}
-
+      {/* NO MORE "nothing ready tonight". That sentence was true of the card library and false of
+          the kitchen, and it was the loudest thing on the page. The count above cannot be zero while
+          there is food in the house, so the empty state that used to live here is gone rather than
+          reworded. */}
       {now.length > 0 && (
         <>
           <p className="sec">
-            <span className="live">{now.length}</span> ready to cook
+            <span className="live">{now.length}</span> written out step by step
+          </p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            Checked against this kitchen and cooked from. Everything else links to the publisher.
           </p>
           <div>{now.map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
         </>
@@ -274,6 +310,93 @@ export default async function KitchenHome() {
         <>
           <p className="sec">With one swap</p>
           <div>{adapting.slice(0, 8).map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
+        </>
+      )}
+
+      {/* THE ACTUAL MENU. Three groups, in the order that answers "what do I make", and each one is
+          the same bucket /kitchen/find shows under the same heading, from the same function.
+          Deliberately capped short: this is the front page, and the tab is one tap away for the rest.
+
+          `rescue` leads because it is the only ranking that does two jobs at once. He has said twice
+          that food going to waste is what he most wants this app to prevent, and he has already lost
+          clearance peppers to exactly that. */}
+      {d.rescue.length > 0 && (
+        <>
+          <p className="sec">
+            Cook one of these and nothing goes to waste <span className="quiet">{d.rescue.length}</span>
+          </p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            Nothing frozen, and each uses something on a clock. Soonest first.
+          </p>
+          <ul className="meallist">
+            {d.rescue.slice(0, 6).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+          </ul>
+        </>
+      )}
+
+      {d.ready.length > 0 && (
+        <>
+          <p className="sec">
+            From the fridge, nothing to buy <span className="quiet">{d.ready.length}</span>
+          </p>
+          <ul className="meallist">
+            {d.ready.slice(0, 10).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+          </ul>
+          {d.ready.length > 10 && (
+            <p className="lede" style={{ marginTop: 8 }}>
+              and {d.ready.length - 10} more.{' '}
+              <Link href="/kitchen/find">All of them</Link>.
+            </p>
+          )}
+        </>
+      )}
+
+      {/* FROZEN IS NOT A LESSER BUCKET, and it used to read like one. His words: "I don't care about
+          the thawing and stuff like that... Why would I register what's in my freezer when it's not
+          gonna be used until it's thawed?" All of his protein is in the freezer, so a surface that
+          quietly demotes frozen food is a surface with no dinner in it. The line stays, because
+          finding out at six that dinner needed thawing at six is its own specific failure, but it is
+          a group with a count and not a footnote. */}
+      {d.thaw.length > 0 && (
+        <>
+          <p className="sec">
+            Once something thaws <span className="quiet">{d.thaw.length}</span>
+          </p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            Nothing to buy. Move the named thing to the fridge tonight.
+          </p>
+          <ul className="meallist">
+            {d.thaw.slice(0, 8).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+          </ul>
+          {d.thaw.length > 8 && (
+            <p className="lede" style={{ marginTop: 8 }}>
+              and {d.thaw.length - 8} more.{' '}
+              <Link href="/kitchen/find">All of them</Link>.
+            </p>
+          )}
+        </>
+      )}
+
+      {/* ONE PURCHASE, MOST DISHES. Was only on the Shopping tab, which is the page you open when you
+          have already decided to go out. Here it answers a different question: he is standing in the
+          kitchen deciding what to make, and the cheapest way to widen that choice belongs next to the
+          choice. */}
+      {d.unlocks.length > 0 && (
+        <>
+          <p className="sec">One thing to buy, most dishes</p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            Counted only over dishes missing nothing but this, so the number means it.
+          </p>
+          {/* Not links. There is no filter for "dishes missing exactly this", so a link here would
+              promise a screen that does not exist, and a link that lands somewhere unrelated is worse
+              than plain text. Same treatment as /kitchen/find. */}
+          <ul className="plainlist stack">
+            {d.unlocks.slice(0, 5).map((u) => (
+              <li key={u.item}>
+                <b>{u.count}</b> dishes need only {d.nameOf(u.item)}
+              </li>
+            ))}
+          </ul>
         </>
       )}
 
