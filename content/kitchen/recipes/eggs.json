@@ -1,7 +1,7 @@
 {
   "id": "eggs",
   "name": "Scrambled Eggs That Are Not Rubber",
-  "build": "2026-08-09a",
+  "build": "2026-08-21a",
   "form": "dish",
   "meal": [
     "breakfast"
@@ -273,8 +273,12 @@
   ],
   "provenance": {
     "tier": "authored",
-    "cooked": false,
+    "cooked": true,
     "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
+    "sources": [],
+    "cookedResult": "worked",
+    "readAt": "2026-08-21a",
+    "readHash": "e9dd7a90",
+    "cookedResultWhy": "COOKED TWICE AND RATED `nailed` BOTH TIMES, 2026-08-02 and 2026-08-03, and hidden from the home screen ever since. Not because of anything about the food: `tier` is `authored`, and until 2026-08-21 isOfferable() reasoned only about who wrote a card, never about whether it worked. His words that day: \"we're trapped on four or five dishes because those are the ones that I've made... it's actually just frustrating.\" This was one of the dishes he had made.\n\nSTATED PLAINLY, because it is the one soft spot: both cooks were from the OLD kitchen.html app, and this text was migrated on 2026-08-09, when the protein figure was also corrected from 37 g to 33 g (the old one credited butter with 5 g of protein). So the words he cooked from are not byte-identical to the words here. What changed is a number going more honest, and the two defects he actually reported are both fixed in this text: step 1's finish line is now browned shrivelled edges rather than a dry-looking pan (\"it got a little bit soggy when re adding the peppers even though for me they look ready\"), and step 6 now carries the cottage-cheese amount at the moment it is needed (\"the instruction was put the cottage cheese in and I didn't know how much\").\n\nAll 7 steps read as rendered on 2026-08-21 via render.mjs before this stamp went on. Every heat cue is an observable with no dial position, and every doneness test is one he can perform."
   }
 }

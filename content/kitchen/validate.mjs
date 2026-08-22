@@ -621,6 +621,18 @@ function validate(r, file) {
       `readAt alone is two hand-typed strings agreeing, and one agent types both. Run: node content/kitchen/render.mjs ${id}`);
   }
 
+  /* Same bar for the other route into the menu, added 2026-08-21 alongside the `cookedResult`
+   * clause in isOfferable(). A card he has cooked and rated good is now OFFERED whatever its tier,
+   * which means `readAt` would be the only thing standing between an edit and his screen, and
+   * `readAt` is two hand-typed strings agreeing with one agent typing both. That is the exact
+   * weakness readHash was introduced to remove, so the new door gets the same lock as the old one
+   * rather than a promise to be careful. */
+  if (r.provenance?.cookedResult === 'worked' && !r.provenance.readHash) {
+    fail(id, 'read', 'cookedResult is "worked" (so it is offered) and there is no provenance.readHash',
+      `Being cooked successfully admits a card regardless of tier, so nothing else is checking that `
+      + `the words on screen are the words anyone read. Run: node content/kitchen/render.mjs ${id}`);
+  }
+
   /* ---- protein arithmetic must be shown ---- */
   const p = r.serves?.proteinPerUnit;
   if (p && !r.serves?.proteinMath) {

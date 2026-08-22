@@ -211,6 +211,37 @@ export function isOfferable(r: Recipe): boolean {
   if (!p) return false;
   if (p.cookedResult === 'failed') return false;
   if (!p.readAt || p.readAt !== r.build) return false;
+  /* HE COOKED IT AND IT WORKED. Added 2026-08-21, and it is the missing half of the rule directly
+   * above it.
+   *
+   * Until today this function reasoned only about WHO WROTE the card. `failed` removed a dish and
+   * nothing admitted one, so the single route into the menu was agent paperwork: capture a page,
+   * build a card, read it, stamp it. That has happened six times, which is why the answer to "what
+   * can I make" was six dishes for ten days running while a freezer full of food sat behind it. His
+   * words, 2026-08-21: "we're just trapped on four or five dishes because those are the ones that
+   * I've made... it's actually just frustrating and we're just wasting time and tokens."
+   *
+   * The asymmetry was indefensible on the gate's own logic. `sourced` is a PROXY for "this will not
+   * burn your dinner", and the reason it is trusted is that three sourced cards were cooked and three
+   * worked. A dish he has already cooked, on this hob, with this pan, and rated good is not a proxy
+   * for that: it is the measurement. Requiring the proxy from something that has passed the real test
+   * is the tail wagging the dog, and it threw away the only evidence in the system that came from
+   * outside an agent.
+   *
+   * Scoped deliberately, and each clause is load-bearing:
+   *   - The read gate above still applies, so this cannot resurrect a card that was edited after he
+   *     cooked it. What he validated has to be what is on the screen.
+   *   - `failed` is checked FIRST and still wins, so this can never overturn a bad outcome.
+   *   - It admits the dish; it does NOT launder the tier. `provenance.tier` stays whatever it
+   *     honestly is and CookClient still shows that tier's warning. Offered and vouched-for are
+   *     different claims and the screen keeps making both.
+   *
+   * `cookedResult` is set from his rating in `cook_log`, never from an agent's read of how a cook
+   * went. That distinction had already been violated once: `beefmushroomrice` carried
+   * `cookedResult: "worked"` because he ate the food, while his actual rating was `wrong` and the
+   * cook_log entry says so in the first line. Corrected to `failed` in the same commit as this
+   * change, because a field that means "he liked it" cannot be populated by inference. */
+  if (p.cookedResult === 'worked') return true;
   if (p.tier === 'sourced') return true;
   return NO_HEAT_FORMS.has(r.form) && claimsNoHeat(r);
 }

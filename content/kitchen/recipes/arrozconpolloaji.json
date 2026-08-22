@@ -20,7 +20,7 @@
   },
   "provenance": {
     "tier": "sourced",
-    "cooked": false,
+    "cooked": true,
     "readAt": "2026-08-18c",
     "statement": "Every instruction is Amanda's own sentence from Eat At Our Table, in her order, with her two times and her amounts. Nothing was rewritten, rescaled, reordered, added or dropped. The sentences are checked by the build against content/kitchen/imported/arrozconpolloaji.json, a copy of her page fetched 2026-08-18, so a paraphrase fails the deploy rather than reaching the stove. What this app adds is the layer a printed page cannot: which of his pots and which blender she means, what every technique word means in place, an observable for the induction hob at each of the three points where she names a dial position, a performable test where she says the rice is done, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. HER PAGE CARRIES NO NUTRITION PANEL, NO YIELD AND NO TIMES, which is the honest cost of choosing this source over the better-written jalapeno version, and it is why the serves box says out loud that both of its numbers are ours. THERE ARE NO DEPARTURES. An earlier build of this card ran on the long grain white in the cupboard against her jasmine line, recorded as a deviation he decided himself. He then bought Thai jasmine on the evening of 2026-08-18 and chose to use it, so that entry is retired and every ingredient is now the one she names. Her beer and broth lines both say gluten-free, which is her own coeliac requirement rather than a cooking property, so ordinary beer and ordinary broth satisfy them and that was never recorded as a change.",
     "sources": [
@@ -32,7 +32,8 @@
       }
     ],
     "readHash": "57f0e362",
-    "cookedResult": null
+    "cookedResult": "worked",
+    "cookedResultWhy": "Rated `nailed` on 2026-08-19. HIS WORDS: \"Yeah it went great!\" and \"I followed the one that we have on the card\". The field was left unset at the time, which cost nothing while the card was `sourced` and offered anyway, but as of 2026-08-21 `cookedResult` is a route into the menu in its own right, so an unrecorded success is now a real omission. Set from his rating in cook_log, never from an agent's reading of how the evening went."
   },
   "deviations": [],
   "equipment": [

@@ -454,7 +454,8 @@
       }
     ],
     "readHash": "86acfa7f",
-    "cookedResult": "worked",
-    "cookedNote": "Cooked 2026-08-11 and eaten. The FOOD was fine; five ANNOTATIONS were wrong, all of them agent sentences rather than figures from the source, and all five are listed under deviations. cookedResult is \"worked\" because the dish worked. The recipe is still not offered, because it is tier adapted and adapted is no longer offered. See cook_log row 20 for the full debrief."
+    "cookedResult": "failed",
+    "cookedNote": "Cooked 2026-08-11 and eaten. The FOOD was fine; five ANNOTATIONS were wrong, all of them agent sentences rather than figures from the source, and all five are listed under deviations. cookedResult is \"worked\" because the dish worked. The recipe is still not offered, because it is tier adapted and adapted is no longer offered. See cook_log row 20 for the full debrief.",
+    "cookedResultWhy": "Corrected 2026-08-21, from `worked` to `failed`. The field was populated because he ATE the dish; his own rating in cook_log is `wrong`, entered deliberately, and its first line says why: \"Rated wrong deliberately, even though he ate it, because rating the FOOD would hide that five instructions were wrong.\" Five agent annotations reached the stove from this card. This matters beyond bookkeeping as of today: isOfferable() now admits any card with cookedResult `worked`, so a field meaning \"he liked it\" can no longer be set by inferring from the fact that dinner got eaten. It comes from his rating or it is not set."
   }
 }
