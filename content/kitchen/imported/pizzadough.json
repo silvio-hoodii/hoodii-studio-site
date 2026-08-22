@@ -1,0 +1,97 @@
+{
+  "id": "pizzadough",
+  "fetchedAt": "2026-08-22",
+  "via": "url",
+  "source": {
+    "name": "Homemade Pizza Dough",
+    "url": "https://www.budgetbytes.com/pizza-dough/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "4"
+  ],
+  "totalTime": "PT102M",
+  "prepTime": "PT90M",
+  "cookTime": "PT12M",
+  "nutrition": {
+    "servingSize": "1 serving",
+    "calories": "272.05 kcal",
+    "carbohydrateContent": "51.13 g",
+    "proteinContent": "6.85 g",
+    "fatContent": "4.05 g",
+    "sodiumContent": "591.85 mg",
+    "fiberContent": "1.98 g"
+  },
+  "rating": "4.83",
+  "ratingCount": "64",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2010/07/Classic-Homemade-Pizza-Dough-close.jpg",
+  "cuisine": "American",
+  "category": "Dinner",
+  "ingredients": [
+    "3/4 cups warm water ($0.00)",
+    "1 tsp yeast (see notes, $0.08)",
+    "1 Tbsp sugar ($0.05)",
+    "2 cups all-purpose flour ($0.30)",
+    "1 tsp salt ($0.03)",
+    "1 Tbsp olive oil ($0.16)"
+  ],
+  "instructions": [
+    "Dissolve the yeast and sugar in the warm water. Allow the yeast water to sit for about 5 minutes, or until a thick layer of foam develops on top.",
+    "While you’re waiting for the yeast, add 1 cup of the flour and the salt to a large bowl, then stir well to combine.",
+    "Add the olive oil to the yeast water, then pour the mixture into the bowl with the flour and salt. Begin adding more flour to the bowl, ¼ to ½ cup at a time, until it forms a ball of dough that can no longer be stirred with a spoon.",
+    "Turn the dough out onto a lightly floured work surface, then knead for about 5 minutes, adding a little flour as you go to keep it from sticking.",
+    "At this point you have three options: use the dough tonight (one hour after kneading), use it tomorrow (allowing it to rise in the refrigerator over night) or within a month (freezing the dough).",
+    "To Use the Pizza Dough Same Day",
+    "Place the kneaded dough back into the mixing bowl, drizzle with a little oil, then turn the dough to coat it with oil. Cover the bowl loosely and let the dough rise in a warm place for one hour, or until it is double in volume.",
+    "Once risen, stretch or roll the dough out to a 14 to 16-inch circle, place on a pizza pan, and top with your favorite sauce and toppings. Bake the pizza in a preheated 450ºF oven for 10-12 minutes or until the edges are brown and crispy.",
+    "To Use the Pizza Dough the Next Day",
+    "Allowing the dough to proof (rise) slowly in the refrigerator for 18-24 hours gives the dough even more flavor. Form the dough into a ball and coat with oil. Place the dough in a covered container and refrigerate for 18-24 hours. Allow the dough to come to room temperature before stretching, topping, and baking.",
+    "To Freeze the Dough for Future Use",
+    "Form the kneaded dough into a ball, coat it with oil, wrap tightly in plastic wrap, then place in a freezer bag and transfer to the freezer. When you are ready to use the dough, simply place it on the counter for one hour prior to use. The dough should be at room temperature before stretching, topping, and baking."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "3/4 cups warm water ($0.00)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp yeast (see notes, $0.08)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp sugar ($0.05)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cups all-purpose flour ($0.30)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp salt ($0.03)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp olive oil ($0.16)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "c740c68c3c00"
+}

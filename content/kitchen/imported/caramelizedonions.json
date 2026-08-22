@@ -1,0 +1,78 @@
+{
+  "id": "caramelizedonions",
+  "fetchedAt": "2026-08-22",
+  "via": "url",
+  "source": {
+    "name": "Caramelized Onions",
+    "url": "https://www.budgetbytes.com/caramelized-onions/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "16",
+    "16 servings, 2 Tbsp per serving (makes 2 cups total)"
+  ],
+  "totalTime": "PT60M",
+  "prepTime": "PT10M",
+  "cookTime": "PT50M",
+  "nutrition": {
+    "servingSize": "1 serving",
+    "calories": "22 kcal",
+    "carbohydrateContent": "2 g",
+    "proteinContent": "0.2 g",
+    "fatContent": "2 g",
+    "sodiumContent": "79 mg",
+    "fiberContent": "0.4 g"
+  },
+  "rating": "5",
+  "ratingCount": "3",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2024/09/Caramelized-Onions-Overhead.jpg",
+  "cuisine": "American",
+  "category": "Side Dish",
+  "ingredients": [
+    "3 medium onions ($1.80)",
+    "1 Tbsp olive oil ($0.20)",
+    "1 Tbsp butter ($0.13)",
+    "½ tsp salt ($0.03)"
+  ],
+  "instructions": [
+    "Peel and slice onions into even strips.",
+    "Melt butter and olive oil in pan over medium high heat.",
+    "Add onions and use tongs to evenly coat with oil.",
+    "Season onions with salt to help release water.",
+    "Allow onions to cook at medium high heat for 5-10 minutes, or until onions begin to soften and turn golden brown.",
+    "Once browning begins, lower heat to medium and cook at this heat for 35-40 minutes.",
+    "Stir every few minutes to prevent sticking.",
+    "When onions are a deep golden brown, they are done!"
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "3 medium onions ($1.80)",
+      "item": "yellowonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp olive oil ($0.20)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp butter ($0.13)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp salt ($0.03)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "fbd92098f52f"
+}

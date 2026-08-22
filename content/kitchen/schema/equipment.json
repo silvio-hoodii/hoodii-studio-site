@@ -325,9 +325,9 @@
     "loafpan": {
       "name": "loaf pan",
       "class": "vessel",
-      "present": false,
-      "notes": "No loaf pan and no muffin tin. Confirmed by Silvio 2026-08-22 when banana bread was scoped: the three baking trays are rimmed 9x13x1 sheets, which pour a batter flat rather than holding it in a loaf. A 9x5 non-stick is the missing piece and it is the only thing besides ground nutmeg standing between this kitchen and Budget Bytes' banana bread.",
-      "history": "Recorded as ABSENT rather than left unmentioned, on the KITCHEN.md rule that an item missing from a file is not evidence it is missing from the kitchen. That silence is what produced a crepe recipe written around having no whisk, and weeks of plans built around one pan when three were in the cupboard. Asked before assuming this time."
+      "present": true,
+      "notes": "BOUGHT 2026-08-22, 9x5 non-stick. His words: \"bought the loaf pan, 9x5. I think that is the one.\" No photo and no brand read, so the exact product is unrecorded. 9x5 inches is the standard North American loaf size and is what Budget Bytes' banana bread is written for.",
+      "history": "Recorded as present:false earlier the same day, after asking rather than assuming. It was the only thing besides ground nutmeg blocking the banana bread card, because present:false is a hard validator failure."
     },
     "muffintin": {
       "name": "muffin tin",
