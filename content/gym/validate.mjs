@@ -204,6 +204,22 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       fail(where, 'empty exercises[]');
       continue;
     }
+    /* EVERY BLOCK IS A PAIR. Added 2026-08-22, at his instruction and with the sourcing in
+     * program.json's $comment (Iversen 2021: supersets run in about half the time at matched
+     * volume, and the one 8-week loaded trial found the same strength gains).
+     *
+     * "Just pair everything. I want everything to be a superset." He had asked the same question
+     * three times in two days about blocks that ran one exercise, and each time the answer was a
+     * local excuse rather than a rule. This is the rule. A single-exercise block is now a build
+     * failure, so the question cannot come back.
+     *
+     * `sequence` is still a legal pairing for two exercises done one after the other, but a block
+     * with only one thing in it is not a design decision any more, it is an unfinished edit. */
+    if (block.exercises.length < 2) {
+      const lead = block.exercises[0] || {};
+      fail(where, `one exercise. Every block is a pair. Give "${lead.name || block.label}" a partner that uses a muscle it does not: a dumbbell or kettlebell exercise, \`station: null\`, zone "${lead.zone}", no floor needed. Dumbbells travel to any station; a mat does not.`);
+    }
+
     // `alternate` means the two share one rest window, which only makes sense for exactly two.
     if (CONCURRENT.has(block.pairing) && block.exercises.length !== 2) {
       fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);

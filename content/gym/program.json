@@ -57,7 +57,38 @@
     "EVERY BLOCK CARRIES `why`, one line, required by the validator. He said the programme reads as",
     "arbitrary because he had never seen the evidence file, and a programme he does not believe is one",
     "he stops finishing. Where a block has no evidence behind it (calf raise, rotator cuff, Copenhagen",
-    "plank, biceps) the line says so rather than dressing it up."
+    "plank, biceps) the line says so rather than dressing it up.",
+    "",
+    "EVERY BLOCK IS A SUPERSET, from 2026-08-22. Sourced, because he asked for it to be:",
+    "",
+    "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient",
+    "Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Medicine 2021.",
+    "  - \"superset training can be performed in approximately half the time as traditional training",
+    "    without compromising training volume\".",
+    "  - Robbins et al., 15 trained males, 8 weeks, bench press and bench pull at 3 to 6 reps,",
+    "    superset vs traditional. Bench press +2.4 +/- 1.8% superset vs +2.3 +/- 1.9% traditional;",
+    "    bench pull +2.2 +/- 1.1% vs +1.2 +/- 1.7%. Same strength, roughly half the time.",
+    "  - The review is honest that these techniques are \"probably better at inducing hypertrophy than",
+    "    muscular strength, and more research is needed on longitudinal training effects\". The one",
+    "    loaded 8-week trial above is the reason this is safe for a strength goal, not a claim that",
+    "    supersets BUILD more strength.",
+    "  - \"antagonist preloading potentially can facilitate increased neural activation, which acutely",
+    "    increases strength performance\". That is why the partner is always a muscle the lead lift is",
+    "    NOT using, rather than whatever fills a gap in the spreadsheet.",
+    "",
+    "Three rules decide every partner in this file, and between them there is nothing left to guess:",
+    "",
+    "  1. THE PARTNER IS A MUSCLE THE LEAD LIFT DOES NOT USE. Triceps in a pull, biceps in a press,",
+    "     side delts in anything, calves in an upper-body lift, upper body in a jump. Per the review",
+    "     this protects the lead lift and may help it.",
+    "  2. THE PARTNER IS CARRIED, NEVER FIXED. Dumbbells and kettlebells go with him to any station,",
+    "     which is his own constraint: \"everywhere that I go I can take a dumbbell or pair of",
+    "     dumbbells or kettlebell with me. It is just that I am not going to go ahead on the cable",
+    "     section and bring a mat.\" So every partner is `station: null` and needs no floor, and the",
+    "     cable section and machine bank are no longer dead ends.",
+    "  3. THE PARTNER IS LOGGED AND THE NUMBER MOVES. All five are dumbbell exercises progressed by",
+    "     weight. Nothing goes in a session that cannot be progressively overloaded; that is what put",
+    "     the bands in warmups.json on 2026-08-21 and it is not being undone."
   ],
   "days": {
     "monday": {
@@ -72,9 +103,9 @@
       "blocks": [
         {
           "role": "primer",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Power Primer",
-          "tag": "(first, fresh, never tired)",
+          "tag": "(box, dumbbells in hand)",
           "exercises": [
             {
               "id": "box-jump",
@@ -114,9 +145,39 @@
                 }
               ],
               "progression": "reps"
+            },
+            {
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "chest-supported-reverse-fly",
+                  "name": "Chest-Supported Reverse Fly",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "pec-deck-rear-delt",
+                  "name": "Rear Delt Machine",
+                  "zone": "machines",
+                  "station": "pec-deck",
+                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "benchDb",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, not broad jump, because you step down instead of absorbing a landing."
+          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, not broad jump, because you step down instead of absorbing a landing. The reverse fly rides in the rest because it is upper back: a jump does not use it, so the jump stays as fresh as it would have been standing still."
         },
         {
           "role": "main",
@@ -208,9 +269,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Pattern: Hinge, light",
-          "tag": "(same rack, technique only)",
+          "tag": "(rack, dumbbells in hand)",
           "exercises": [
             {
               "id": "romanian-deadlift",
@@ -249,9 +310,39 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "Kettlebell Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "rack",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions."
+          "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions. The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
         },
         {
           "role": "accessory",
@@ -511,9 +602,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Pattern: Vertical Pull",
-          "tag": "(cable, on its own)",
+          "tag": "(cable, dumbbells in hand)",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -552,16 +643,46 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-overhead-tricep-extension",
+              "name": "DB Overhead Tricep Extension",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. ONE dumbbell held in both hands, cupping the top end like a mug. Press it straight overhead, then bend only your elbows to lower it behind your head until you feel a stretch down the back of your arms, about level with the base of your skull. Your upper arms stay pointing at the ceiling and DO NOT drift forward: that is the whole exercise. Straighten the arms to come back up. Success looks like: your elbows stay the same distance apart the whole time and your ribs do not flare forward. If your back arches, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-skullcrusher",
+                  "name": "DB Skullcrusher",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Lying on a bench, a dumbbell in each hand, bend at the elbow to lower them beside your ears and press back up. Use this if overhead bothers your shoulder.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "tricep-pushdown-alt",
+                  "name": "Tricep Pushdown",
+                  "zone": "cable",
+                  "station": "cable-pulldown",
+                  "cue": "The cable version, only if the stack you are already standing at is free between sets.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "cable",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. Nothing shares this rest window: the band that used to sit here is in the warmup now, where it is not a set anybody pretends to progress."
+          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank."
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Horizontal Pull",
-          "tag": "(cable, on its own)",
-          "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, on a programme whose stated rule is that every main pattern happens twice (Pelland 2025, strength rises with frequency at matched volume). This is the slot the band pull-apart was occupying without loading anything.",
+          "tag": "(cable, dumbbells in hand)",
+          "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). Calves go in the rest because a row uses nothing below the waist, and because the calf is the shock absorber for the running that is being added.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -586,6 +707,36 @@
                   "cue": "Chest on an incline bench so your torso cannot swing. Row both dumbbells to your ribs, elbows close, squeeze at the top."
                 }
               ]
+            },
+            {
+              "id": "db-standing-calf-raise",
+              "name": "DB Standing Calf Raise",
+              "sets": 3,
+              "reps": "15",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides. Stand tall with your feet hip width, then push all the way up onto the balls of your feet, as high as you can go, and hold for one full second at the top. Lower slowly until your heels touch the floor. Success looks like: you pause at the top rather than bouncing, and you feel it in the meat of the calf. The calf is the shock absorber for the running you are starting, and it is loaded here rather than stretched because a stretch does not make it stronger. First time out, pick a weight you are sure you could lift 20 times and stop at 15.",
+              "alts": [
+                {
+                  "id": "standing-calf-raise-machine",
+                  "name": "Calf Raise Machine",
+                  "zone": "machines",
+                  "station": "calf-raise",
+                  "cue": "The machine version, if it is free and you are already in the machine bank.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "single-leg-calf-raise",
+                  "name": "Single-Leg Calf Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "One dumbbell, one leg at a time, other foot hooked behind. Harder with less weight, and it stops the strong side carrying the weak one. 3x12 per side.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "cable",
+              "station": null,
+              "log": true
             }
           ]
         },
@@ -676,9 +827,9 @@
         },
         {
           "role": "accessory",
-          "pairing": "sequence",
-          "label": "Triceps",
-          "tag": "(cable, on its own)",
+          "pairing": "fill",
+          "label": "Triceps + Biceps",
+          "tag": "(cable, dumbbells in hand)",
           "exercises": [
             {
               "id": "tricep-pushdown",
@@ -709,9 +860,39 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-hammer-curl",
+              "name": "DB Hammer Curl",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-curl-supinated",
+                  "name": "DB Biceps Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the palms turned UP the whole way instead of facing in. Same muscle, slightly different angle.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-hammer-curl",
+                  "name": "Kettlebell Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "cable",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. On a cable, so the number moves 5 lb at a time, which is the whole difference between this and the band that used to sit beside it."
+          "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
         }
       ]
     },
@@ -727,9 +908,9 @@
       "blocks": [
         {
           "role": "primer",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Power Primer",
-          "tag": "(first, fresh, sideways)",
+          "tag": "(dumbbells in hand)",
           "exercises": [
             {
               "id": "lateral-bound",
@@ -769,9 +950,39 @@
                 }
               ],
               "progression": "reps"
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "Kettlebell Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "benchDb",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance."
+          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest for the same reason as Monday: it is upper body, so the bound stays fresh."
         },
         {
           "role": "main",
@@ -856,9 +1067,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Pattern: Squat, light",
-          "tag": "(same rack, technique only)",
+          "tag": "(rack, dumbbells in hand)",
           "exercises": [
             {
               "id": "front-squat",
@@ -897,9 +1108,39 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "chest-supported-reverse-fly",
+                  "name": "Chest-Supported Reverse Fly",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "pec-deck-rear-delt",
+                  "name": "Rear Delt Machine",
+                  "zone": "machines",
+                  "station": "pec-deck",
+                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "rack",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge."
+          "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
         },
         {
           "role": "accessory",
@@ -1151,9 +1392,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Pattern: Horizontal Press",
-          "tag": "(machine, on its own)",
+          "tag": "(machine, dumbbells in hand)",
           "exercises": [
             {
               "id": "machine-chest-press",
@@ -1192,16 +1433,46 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-hammer-curl",
+              "name": "DB Hammer Curl",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-curl-supinated",
+                  "name": "DB Biceps Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the palms turned UP the whole way instead of facing in. Same muscle, slightly different angle.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-hammer-curl",
+                  "name": "Kettlebell Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "machines",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses the pairing."
+          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a pair of dumbbells, which you carry in. Biceps do nothing during a chest press, so that is what goes there."
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Vertical Pull",
-          "tag": "(machine, on its own)",
-          "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up.",
+          "tag": "(machine, dumbbells in hand)",
+          "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up. Side delts go in the rest because a pull-up does not use them.",
           "exercises": [
             {
               "id": "assisted-pullup",
@@ -1226,15 +1497,45 @@
                   "cue": "If the assisted machine is taken. Same job, elbows down to the ribs, all the way straight at the top."
                 }
               ]
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "Kettlebell Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "machines",
+              "station": null,
+              "log": true
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
+          "pairing": "fill",
           "label": "Second Overhead Press",
-          "tag": "(machine, on its own)",
-          "why": "The second overhead press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap and lets the dumbbells stay the day that gets pushed.",
+          "tag": "(machine, dumbbells in hand)",
+          "why": "The second overhead press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set.",
           "exercises": [
             {
               "id": "machine-shoulder-press",
@@ -1259,14 +1560,44 @@
                   "cue": "Bench upright, dumbbells at shoulder height, press up and slightly together. Ribs down, no arch."
                 }
               ]
+            },
+            {
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "chest-supported-reverse-fly",
+                  "name": "Chest-Supported Reverse Fly",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "pec-deck-rear-delt",
+                  "name": "Rear Delt Machine",
+                  "zone": "machines",
+                  "station": "pec-deck",
+                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "machines",
+              "station": null,
+              "log": true
             }
           ]
         },
         {
           "role": "accessory",
-          "pairing": "sequence",
-          "label": "Swim Catch",
-          "tag": "(cable, on its own)",
+          "pairing": "fill",
+          "label": "Swim Catch + Triceps",
+          "tag": "(cable, dumbbells in hand)",
           "exercises": [
             {
               "id": "straight-arm-pulldown",
@@ -1297,15 +1628,45 @@
                 }
               ],
               "progression": "weight"
+            },
+            {
+              "id": "db-overhead-tricep-extension",
+              "name": "DB Overhead Tricep Extension",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. ONE dumbbell held in both hands, cupping the top end like a mug. Press it straight overhead, then bend only your elbows to lower it behind your head until you feel a stretch down the back of your arms, about level with the base of your skull. Your upper arms stay pointing at the ceiling and DO NOT drift forward: that is the whole exercise. Straighten the arms to come back up. Success looks like: your elbows stay the same distance apart the whole time and your ribs do not flare forward. If your back arches, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-skullcrusher",
+                  "name": "DB Skullcrusher",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Lying on a bench, a dumbbell in each hand, bend at the elbow to lower them beside your ears and press back up. Use this if overhead bothers your shoulder.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "tricep-pushdown-alt",
+                  "name": "Tricep Pushdown",
+                  "zone": "cable",
+                  "station": "cable-pulldown",
+                  "cue": "The cable version, only if the stack you are already standing at is free between sets.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "cable",
+              "station": null,
+              "log": true
             }
           ],
-          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim."
+          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
         },
         {
           "role": "accessory",
-          "pairing": "sequence",
-          "label": "Biceps, then Carry",
-          "tag": "(preacher seat, then walk)",
+          "pairing": "fill",
+          "label": "Biceps + Carry",
+          "tag": "(preacher seat, dumbbells in hand)",
           "exercises": [
             {
               "id": "ez-preacher-curl",
@@ -1351,7 +1712,7 @@
               "sets": 3,
               "reps": "40",
               "rest": "60s",
-              "zone": "benchDb",
+              "zone": "ezPreacher",
               "station": null,
               "timed": true,
               "bodyweight": false,
@@ -1392,7 +1753,7 @@
               "progression": "time"
             }
           ],
-          "why": "Arms do not need twice a week. The farmer carry is the week grip work, held bare-handed, which is why straps on Thursday heavy RDL cost you nothing."
+          "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry goes in its rest rather than after it: it is grip and trunk, the curl is elbow, and neither slows the other down. Nothing here needs the floor."
         }
       ]
     }
