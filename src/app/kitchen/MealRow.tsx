@@ -29,12 +29,36 @@ export function Verdict({ c }: { c: Candidate }) {
 
 export function MealRow({ c, label }: { c: Candidate; label: (id: string) => string }) {
   const t = thumb(c.meal.image);
-  /* Straight to the cook card when one exists. /kitchen/want answers "what would this need", which
-     is the wrong screen for a dish already written out step by step. */
+  const missing = c.score.missing.map((m) => (m.item ? label(m.item) : m.shown));
+
+  /* WHERE A ROW GOES, and it depends on what the row is short of. Changed 2026-08-22.
+   *
+   * Every row without a card went to `/kitchen/want`, which answers "what would I need to buy". For a
+   * dish badged READY that is a screen of eleven things he already owns and nothing to buy: an answer
+   * to a question he did not ask, sitting between him and the recipe, behind a live network fetch that
+   * can 403. His words, tapping Air fryer chicken thighs: "Why aren't those options supposed to go? Is
+   * this because he needs to read the recipe, i dont really understand whats the purpose of those
+   * boxes."
+   *
+   * The purpose is real and it is just mis-targeted. "What would I need" is exactly right for a dish
+   * that is short something, and worthless for one that is not.
+   *
+   *   card exists      -> the card, because it is the only thing with instructions of its own
+   *   nothing missing  -> the publisher, because he tapped it to cook it
+   *   short something  -> /kitchen/want, because that is the question
+   *
+   * The publisher's page opens in a new tab, so the list he was reading is still behind it. The
+   * instructions are never copied here and never will be: that is SOURCING.md, and it is why the
+   * destination for a cookable dish has to be off-site. */
+  const cookable = c.score.missing.length === 0;
+  const out = c.meal.source ?? '';
   const href = c.cardId
     ? `/kitchen/${c.cardId}`
-    : `/kitchen/want?url=${encodeURIComponent(c.meal.source!)}`;
-  const missing = c.score.missing.map((m) => (m.item ? label(m.item) : m.shown));
+    : cookable && out
+      ? out
+      : `/kitchen/want?url=${encodeURIComponent(out)}`;
+  /* An off-site link has to say so and has to be safe. Internal routes keep next/link's prefetch. */
+  const external = !c.cardId && cookable && !!out;
   return (
     <li className="mealrow">
       {/* Plain img, not next/image, on purpose: 625 external photos through Vercel's optimiser would
@@ -46,17 +70,27 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
           alt="" rather than the dish name: with aria-hidden on the wrapper the name was announced
           nowhere at all, so it was carrying a promise it could not keep. The visible fallback when an
           image 404s is the empty tile plus the name in the row, which is what he actually sees. */}
-      <Link href={href} tabIndex={-1} aria-hidden="true">
-        {t
-          ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
-          : <div className="mealthumb" />}
-      </Link>
+      {external ? (
+        <a href={href} target="_blank" rel="noreferrer" tabIndex={-1} aria-hidden="true">
+          {t
+            ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
+            : <div className="mealthumb" />}
+        </a>
+      ) : (
+        <Link href={href} tabIndex={-1} aria-hidden="true">
+          {t
+            ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
+            : <div className="mealthumb" />}
+        </Link>
+      )}
       <div className="mealbody">
         <div className="mealtop">
           {/* Leads INTO the app, not out of it. Until now the only interactive thing on a row was a
               link to the publisher, so "pick one and it gets turned into a card" had no gesture behind
               it anywhere on the page. The original recipe is still one tap further on. */}
-          <Link href={href}><b>{c.meal.name}</b></Link>
+          {external
+            ? <a href={href} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>
+            : <Link href={href}><b>{c.meal.name}</b></Link>}
           {c.cardId && <span className="v ok">card</span>}
           <Verdict c={c} />
         </div>
@@ -84,6 +118,15 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
         {c.score.haveVia.length > 0 && (
           <div className="mealvia">
             {c.score.haveVia.map((v) => `${v.item} via your ${v.via}`).join(' · ')}
+          </div>
+        )}
+        {/* The ingredient audit stays REACHABLE for a cookable dish, just no longer in the way. It is
+            the right screen for "wait, do I really have everything for this", which is a question worth
+            one tap and not worth being the only destination. Not offered where it is already the main
+            link, and not offered on a card, which lists its own ingredients on the cook screen. */}
+        {external && (
+          <div className="mealmeta">
+            <Link href={`/kitchen/want?url=${encodeURIComponent(out)}`}>check it against the kitchen</Link>
           </div>
         )}
       </div>

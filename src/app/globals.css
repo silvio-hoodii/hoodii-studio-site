@@ -439,7 +439,15 @@ h1 {
  * and gets the same distinction there. `.all-external` is for a block where every single link goes
  * out and thirty markers would be noise rather than information.
  */
-a[target='_blank']:not(.row)::after {
+/* THIRD OPT-OUT, added 2026-08-22: a link that is hidden from readers. `aria-hidden` links exist in
+ * this codebase as decorative duplicates, where a picture and the heading beside it go to the same
+ * place and announcing both would read every row twice. The marker is information FOR a reader, so a
+ * link no reader is given cannot carry it, and the duplicate right next to it already does.
+ *
+ * Found on the kitchen dish rows the moment they started linking off-site: every thumbnail is an
+ * aria-hidden link wrapping an image, so a stray arrow rendered on its own line under all fourteen
+ * photos. Seen in a 390px screenshot, not in the source, because the source looks correct. */
+a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
   /* The literal glyph, not a CSS escape: written as '\2197' the backslash was eaten one layer
      up and the page printed a control character followed by "97". Seen in a screenshot of the
      footer, which is the only place it would ever have shown. */
