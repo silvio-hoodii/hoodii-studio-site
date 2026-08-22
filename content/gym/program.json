@@ -35,7 +35,10 @@
       "desc": "Squat heavy, hinge light, sideways loaded",
       "time": "75-85 min",
       "warmup": "lower",
-      "cooldown": ["pigeon", "couch"],
+      "cooldown": [
+        "pigeon",
+        "couch"
+      ],
       "blocks": [
         {
           "role": "primer",
@@ -174,7 +177,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "This is the SECOND time this week you hinge, and it is deliberately light: roughly what you did for 6 on Thursday minus 30 to 40 lb. The job is a clean groove, not a hard set. Bar touching your legs the whole way, knees slightly bent and then FROZEN. Push your hips backward toward the wall behind you until you feel a strong stretch down the back of your thighs, usually around knee height. Then squeeze your bum and drive the hips forward to stand. Stop the moment your lower back wants to round.",
+              "cue": "This is the SECOND time this week you hinge, and it is deliberately light: roughly what you did for 6 on Thursday minus 30 to 40 lb. The job is a clean groove, not a hard set. Bar touching your legs the whole way, knees slightly bent and then FROZEN. Push your hips backward toward the wall behind you until you feel a strong stretch down the back of your thighs, usually around knee height. Then squeeze your bum and drive the hips forward to stand. Stop the moment your lower back wants to round. No straps needed on this one: it is light on purpose, and if the bar is slipping at this weight the weight is wrong, not your hands.",
               "alts": [
                 {
                   "id": "db-rdl",
@@ -347,14 +350,15 @@
         }
       ]
     },
-
     "tuesday": {
       "name": "Tuesday",
       "title": "Upper A: Press",
       "desc": "Press heavy, pull moderate, shoulders looked after",
       "time": "70-80 min",
       "warmup": "upper",
-      "cooldown": ["thoracic"],
+      "cooldown": [
+        "thoracic"
+      ],
       "blocks": [
         {
           "role": "main",
@@ -645,14 +649,16 @@
         }
       ]
     },
-
     "thursday": {
       "name": "Thursday",
       "title": "Lower B: Hinge",
       "desc": "Hinge heavy, squat light, sideways explosive",
       "time": "75-85 min",
       "warmup": "lower",
-      "cooldown": ["pigeon", "couch"],
+      "cooldown": [
+        "pigeon",
+        "couch"
+      ],
       "blocks": [
         {
           "role": "primer",
@@ -712,7 +718,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down.",
+              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
               "alts": [
                 {
                   "id": "db-rdl",
@@ -955,14 +961,15 @@
         }
       ]
     },
-
     "friday": {
       "name": "Friday",
       "title": "Upper B: Pull",
       "desc": "Pull heavy, press moderate, swim catch",
       "time": "70-80 min",
       "warmup": "upper",
-      "cooldown": ["thoracic"],
+      "cooldown": [
+        "thoracic"
+      ],
       "blocks": [
         {
           "role": "main",

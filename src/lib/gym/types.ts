@@ -114,18 +114,54 @@ export interface Program {
  *  diffable. */
 type Prose = string | string[];
 
+/** `session` is a sequence of CLOCK TIMES, not distances, since 2026-08-21. He ran 3.1x the week-1
+ *  prescription on 2026-08-19 at a speed that was entirely correct, because the distance target
+ *  lived on a treadmill console he does not trust and believes is in miles. A clock cannot be in the
+ *  wrong unit, so `consoleCheck` is an after-the-fact confirmation in BOTH units and never the
+ *  target. Every one of these strings is computed in the patch script from the belt speeds and the
+ *  original Bertelsen doses, never typed. */
 export interface ConditioningWeek {
   week: number;
   runKm: number;
   session: string;
+  clockTotal: string;
+  consoleCheck: string;
   note?: string;
 }
 
+/** A labelled fact about where he currently is. An ordered ARRAY, not the `Record<string, string>`
+ *  this was until 2026-08-21, and the change is the point: the page read three fields by name
+ *  (`continuousUnassisted`, `typicalSession`, `matchesTheData`), so the data had to fit the slots,
+ *  and two false claims survived in them for weeks because there was nowhere else for the truth to
+ *  go. A list the page walks cannot be outgrown by what the lap data turns out to say. */
+export interface BaselineFact {
+  label: string;
+  value: string;
+  /** True for a fact that BACKS the headline ones rather than changing what he does next. Rendered
+   *  behind a tap. The flag lives in the data, not in the page's row order, because "the first two
+   *  are the important ones" is a coupling that breaks silently the moment a fact is inserted. */
+  secondary?: boolean;
+}
+
+/** A rung. `piece` is written RELATIVE to the number the week-0 calibration swim returns, never as
+ *  an absolute distance: the lap data says 600 m unbroken, he said 200 m unassisted, the difference
+ *  is almost certainly the pull buoy, and nothing in the watch export records a buoy. A constant
+ *  here would be wrong by up to 400 m in a direction nobody can predict. */
 export interface SwimLadderStep {
   weeks: string;
   piece: string;
   rest: string;
   note?: string;
+}
+
+/** The swim that sets the ladder. Exists because the alternative to measuring the opening rung was
+ *  guessing it, and both guesses were bad: 3 x 200 m spends two months rebuilding a capacity the
+ *  lap data already shows, and 2 x 400 m hands a novice a piece he may not hold. */
+export interface SwimCalibration {
+  name: string;
+  what: string;
+  test: string;
+  why: string;
 }
 
 /** A technique cue. Added 2026-08-16, because the plan said how hard and how long and never how,
@@ -162,6 +198,11 @@ export interface Conditioning {
     startedFrom: string;
     why: Prose;
     howHard: { primary: string; secondary: string; startingSpeed: string };
+    /** The two belt settings in km/h AND mph, plus the one-off test that tells him which unit his
+     *  console is in. Both units, because being right in either beats being right in the one he
+     *  turns out not to have. */
+    beltSettings: { run: string; walk: string; theUnitTest: string; whyBothUnits: string };
+    whyTheClockNotTheConsole: Prose;
     weeks: ConditioningWeek[];
     rules: string[];
   cues?: Cue[];
@@ -183,11 +224,11 @@ export interface Conditioning {
   swim: {
     title: string;
     sessionsPerWeek: string;
-    baseline: Record<string, string>;
+    baseline: BaselineFact[];
     theGoal: { target: string; whatThatActuallyIs: string; whyItIsAchievable: string };
     theOneTechniqueChange: { what: string; why: string; howToKnow: string };
     onDrills: string;
-    structure: { note: string; ladder: SwimLadderStep[] };
+    structure: { note: string; calibration: SwimCalibration; ladder: SwimLadderStep[] };
     paddleRule: { rule: string; why: Prose };
     pullBuoyRule: string;
   cues?: Cue[];

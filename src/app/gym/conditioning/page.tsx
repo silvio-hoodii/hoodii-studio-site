@@ -203,14 +203,32 @@ export default async function ConditioningPage({
               <div className="ex-cue">{c.run.howHard.startingSpeed}</div>
               <div className="ex-cue">{c.run.howHard.secondary}</div>
             </div>
+            {/* THE BELT, IN BOTH UNITS. Above the table on purpose: the two numbers he dials in are
+                the first thing he needs standing at the treadmill, and the unit test is what stops
+                the whole table being read wrong. */}
+            <div className="ex">
+              <div className="ex-name">The belt</div>
+              <div className="ex-meta">
+                Run at <b className="nowrap">{c.run.beltSettings.run}</b> Walk at{' '}
+                <b className="nowrap">{c.run.beltSettings.walk}</b>
+              </div>
+              <div className="ex-cue">{c.run.beltSettings.theUnitTest}</div>
+              <div className="ex-cue quiet">{c.run.beltSettings.whyBothUnits}</div>
+            </div>
           </div>
+          <Prose text={c.run.whyTheClockNotTheConsole} />
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
+                {/* THREE COLUMNS, not four. A fourth for the console reading was measured at 390px
+                    on 2026-08-21 and crushed the session column so hard that week 1's note wrapped
+                    one word per line. The console figure is a confirmation he reads AFTER the run,
+                    so it belongs under the session as a quiet line, not in a column of its own. */}
                 <tr>
                   <th className="tnum">Week</th>
-                  <th>Each session</th>
-                  <th className="tnum">Run</th>
+                  {/* "On the clock" leads, because the clock IS the prescription now. */}
+                  <th className="wide">On the clock</th>
+                  <th className="tnum">Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -219,9 +237,12 @@ export default async function ConditioningPage({
                     <td className="tnum">{w.week}</td>
                     <td>
                       {w.session}
+                      <div className="quiet">
+                        Console should read {w.consoleCheck}, {w.runKm} km of it running.
+                      </div>
                       {w.note && <div className="quiet">{w.note}</div>}
                     </td>
-                    <td className="tnum">{w.runKm} km</td>
+                    <td className="tnum">{w.clockTotal}</td>
                   </tr>
                 ))}
               </tbody>
@@ -271,13 +292,37 @@ export default async function ConditioningPage({
             {c.swim.title} <span className="tag">({c.swim.sessionsPerWeek})</span>
           </div>
           <div className="exlist">
+            {/* WALKED, NOT NAMED. Until 2026-08-21 this block read three baseline fields by name and
+                summarised them in one line, and two false claims lived in those slots for weeks:
+                "600 m on 2026-06-27" (right distance, wrong date) and a best continuous effort of
+                "around 3 minutes" when the lap data says 11:36. The data had to fit the sentence.
+                Now each fact carries its own label and the page cannot outgrow what the laps say. */}
             <div className="ex">
               <div className="ex-name">Where you are</div>
-              <div className="ex-meta">
-                {c.swim.baseline.continuousUnassisted} continuous, unassisted · {c.swim.baseline.movingPace} per 100 m
-              </div>
-              <div className="ex-cue">{c.swim.baseline.typicalSession}</div>
-              <div className="ex-cue">{c.swim.baseline.matchesTheData}</div>
+              {c.swim.baseline
+                .filter((f) => !f.secondary)
+                .map((f) => (
+                  <div className="ex-cue" key={f.label}>
+                    <b>{f.label}.</b> {f.value}
+                  </div>
+                ))}
+              {/* The backing numbers go behind a tap. Adding five labelled facts took this tab to
+                  5,821px on a 390px screen, which is the seven-screen scroll the tabs were built to
+                  kill. The data keeps every fact; the page shows the ones that change what he does. */}
+              {c.swim.baseline.some((f) => f.secondary) && (
+                <details className="src">
+                  <summary>The rest of the numbers</summary>
+                  <div className="src-body">
+                    {c.swim.baseline
+                      .filter((f) => f.secondary)
+                      .map((f) => (
+                        <p key={f.label}>
+                          <b>{f.label}.</b> {f.value}
+                        </p>
+                      ))}
+                  </div>
+                </details>
+              )}
             </div>
             <div className="ex">
               <div className="ex-name">{c.swim.theGoal.target}</div>
@@ -293,6 +338,26 @@ export default async function ConditioningPage({
           </div>
 
           <p className="lede">{c.swim.structure.note}</p>
+
+          {/* THE CALIBRATION SWIM SITS ABOVE THE TABLE, because every row in the table is measured
+              from the number it returns and the table is unreadable without it. It is not styled as
+              a row of the ladder: it is a gate on the ladder. */}
+          <div className="exlist">
+            <div className="ex">
+              <div className="ex-name">{c.swim.structure.calibration.name}</div>
+              <div className="ex-meta">{c.swim.structure.calibration.what}</div>
+              <div className="ex-meta cue-test">
+                <b>The test.</b> {c.swim.structure.calibration.test}
+              </div>
+              {/* The reasoning is why he trusts it, and it is also 90 words he does not need at the
+                  poolside. Same treatment the cues get. */}
+              <details className="src">
+                <summary>Why there is no number written here</summary>
+                <div className="src-body">{c.swim.structure.calibration.why}</div>
+              </details>
+            </div>
+          </div>
+
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
@@ -308,8 +373,11 @@ export default async function ConditioningPage({
                 {c.swim.structure.ladder.map((s) => (
                   <tr key={s.weeks}>
                     <td className="tnum">{s.weeks}</td>
+                    {/* NOT .nowrap any more. The rungs stopped being "2 x 400 m" on 2026-08-21 and
+                        became sentences relative to his measured number, and nowrap on a sentence is
+                        how you force a phone to scroll sideways. */}
                     <td>
-                      <span className="nowrap">{s.piece}</span>
+                      {s.piece}
                       {s.note && <div className="quiet">{s.note}</div>}
                     </td>
                     <td>{s.rest}</td>

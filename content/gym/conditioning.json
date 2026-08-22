@@ -26,7 +26,34 @@
     "at 104.9 kg or contradicting his own plan. It earned its keep: the run drafter called its \"Sound\"",
     "cue \"the strongest injury-reduction finding in the whole set\" and the editor dropped it after",
     "fetching the paper. 24 drafted cues became 21 survivors, after rewrites, re-grounding and",
-    "three outright deletions."
+    "three outright deletions.",
+    "",
+    "CORRECTED 2026-08-21, from the per-length lap data rather than from session totals. Three claims",
+    "in this file were false, and all three pushed the swim the same way, towards rebuilding something",
+    "he can already do:",
+    "  1. \"600 m matches your best unbroken swim of the year, from 2026-06-27.\" The DISTANCE was right",
+    "     and the DATE was wrong. 600 m happened twice in one session on 2026-05-22. The 26 June swim",
+    "     (the watch files it as the 27th, in UTC) topped out at 500 m in 9:35.",
+    "  2. \"Your current best continuous effort is around 3 minutes.\" It is 11:36.",
+    "  3. The ladder placed 500 m at weeks 9 to 10. He has passed 500 m on four separate days since",
+    "     April, and 600 m in May.",
+    "",
+    "The watch resting_time field misses wall stops, so a naive read of the laps is not enough: it",
+    "reports a 1,000 m \"unbroken\" piece on 2026-04-22 that contains a 76-second length sitting next to",
+    "a 34-second one. A piece is only counted here if it also survives splitting at any length longer",
+    "than 1.5x the median of that piece, which is this file own published test (\"any length 4 or more",
+    "seconds slower than its predecessor was a rest at the wall\") applied backwards over the history.",
+    "",
+    "THE LADDER NO LONGER CARRIES AN OPENING DISTANCE. The lap data says 600 m unbroken, he said 200 m",
+    "unassisted, the difference is almost certainly the pull buoy, and the export does not record a",
+    "buoy. Asked directly, he did not remember which swims used it. So the rungs are written relative",
+    "to a number he measures in one swim, rather than to a constant that would be wrong by up to 400 m",
+    "in an unpredictable direction.",
+    "",
+    "THE RUN IS PRESCRIBED IN MINUTES NOW, not metres. The doses are unchanged, still the Bertelsen",
+    "3 km arm. On 2026-08-19 he ran 3.1x the week-1 prescription at a speed that was entirely correct",
+    "(7.8 km/h, mean HR 113), because the distance target lived on a treadmill console he does not",
+    "trust and believes is in miles. A clock cannot be in the wrong unit."
   ],
   "slots": {
     "$comment": "Where each thing lives in a week. Pool times are his, given 2026-08-15.",
@@ -63,50 +90,66 @@
     "howHard": {
       "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down. There is no version of this plan where running harder is better.",
       "secondary": "If you want a number, keep your heart rate below about 140. Your swims run 130 to 155, so this should feel EASIER than a swim.",
-      "startingSpeed": "Start the belt around 7.0 km/h and adjust on the first run until the talk test passes. Whatever number that turns out to be is your number, and it does not matter what it is."
+      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph) and let the talk test move it from there. That number is not a guess: on 2026-08-19 you averaged 7.8 km/h at a mean heart rate of 113, which passes the talk test comfortably, so 8.0 is roughly where you already run. Adjust up or down until a full spoken sentence is easy, and whatever number that turns out to be is your number."
     },
     "weeks": [
       {
         "week": 1,
         "runKm": 1,
-        "session": "500 m walk · 500 m run · 200 m walk · 500 m run",
-        "note": "Verbatim from the trial arm that got hurt least."
+        "session": "6:00 walk · 3:45 run · 2:24 walk · 3:45 run",
+        "clockTotal": "15:54",
+        "consoleCheck": "1.70 km, or 1.06 miles",
+        "note": "Verbatim from the trial arm that got hurt least. The doses did not change on 2026-08-21; only the unit did."
       },
       {
         "week": 2,
         "runKm": 1.1,
-        "session": "500 m walk · 550 m run · 200 m walk · 550 m run"
+        "session": "6:00 walk · 4:08 run · 2:24 walk · 4:08 run",
+        "clockTotal": "16:40",
+        "consoleCheck": "1.80 km, or 1.12 miles"
       },
       {
         "week": 3,
         "runKm": 1.2,
-        "session": "500 m walk · 600 m run · 200 m walk · 600 m run"
+        "session": "6:00 walk · 4:30 run · 2:24 walk · 4:30 run",
+        "clockTotal": "17:24",
+        "consoleCheck": "1.90 km, or 1.18 miles"
       },
       {
         "week": 4,
         "runKm": 1.3,
-        "session": "500 m walk · 650 m run · 200 m walk · 650 m run"
+        "session": "6:00 walk · 4:53 run · 2:24 walk · 4:53 run",
+        "clockTotal": "18:10",
+        "consoleCheck": "2.00 km, or 1.24 miles"
       },
       {
         "week": 5,
         "runKm": 1.45,
-        "session": "500 m walk · 725 m run · 200 m walk · 725 m run"
+        "session": "6:00 walk · 5:26 run · 2:24 walk · 5:26 run",
+        "clockTotal": "19:16",
+        "consoleCheck": "2.15 km, or 1.34 miles"
       },
       {
         "week": 6,
         "runKm": 1.6,
-        "session": "500 m walk · 800 m run · 200 m walk · 800 m run"
+        "session": "6:00 walk · 6:00 run · 2:24 walk · 6:00 run",
+        "clockTotal": "20:24",
+        "consoleCheck": "2.30 km, or 1.43 miles"
       },
       {
         "week": 7,
         "runKm": 1.75,
-        "session": "500 m walk · 875 m run · 200 m walk · 875 m run"
+        "session": "6:00 walk · 6:34 run · 2:24 walk · 6:34 run",
+        "clockTotal": "21:32",
+        "consoleCheck": "2.45 km, or 1.52 miles"
       },
       {
         "week": 8,
         "runKm": 1.9,
-        "session": "500 m walk · 950 m run · 200 m walk · 950 m run",
-        "note": "5.7 km/week total. Reassess here before deciding whether to keep climbing or hold."
+        "session": "6:00 walk · 7:08 run · 2:24 walk · 7:08 run",
+        "clockTotal": "22:40",
+        "consoleCheck": "2.60 km, or 1.62 miles",
+        "note": "5.7 km a week across three sessions. Reassess here before deciding whether to keep climbing or hold."
       }
     ],
     "rules": [
@@ -179,7 +222,24 @@
         "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31877062&rettype=abstract&retmode=text"
       }
     ],
-    "cuesNote": "EVERY CITATION IN THE FINAL SET WAS FETCHED BY ME IN THIS PASS, NOT INHERITED. URLs are in each grounding field. Nothing is quoted from memory.\n\nWHAT I DROPPED, AND WHY.\n\n1. THE \"SOUND\" CUE. Dropped entirely. This is the biggest change and it inverts the draft's own ranking, which called it \"the strongest injury-reduction finding in the whole set\". I fetched Phan X, Grisbrook TL, Wernli K, Stearne SM, Davey P, Ng L. Running quietly reduces ground reaction force and vertical loading rate and alters foot strike technique. J Sports Sci. 2017;35(16):1636-1642, at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27594087&rettype=abstract&retmode=text. Two findings kill the cue. First, verbatim: \"Simple linear regressions revealed no significant relationships between impact sound and peak vGRF in the normal and quiet conditions and vertical loading rate in the normal condition\", and the authors conclude \"quieter impact sound is not directly associated with a lower peak vGRF or vertical loading rate\". So the noise he would be listening to is not a valid proxy for the force. Second, verbatim: \"During the normal running condition, 15.4% of participants utilised a non-rearfoot strike technique compared to 76.9% in the quiet condition, which was corroborated by an increased ankle plantarflexion angle at initial contact.\" Roughly three runners in four converted to landing on the forefoot. That is precisely the conversion Anderson 2020 says cannot be recommended for an uninjured heel striker because it increases ankle plantarflexor loading, and at 104.9 kg the calf and Achilles are the tissue least able to absorb it. The instruction \"do not think about which part of your foot lands\" does not prevent the switch, it only removes the chance of noticing it. The cue was also unmeasurable in practice (pass judged against whatever a given treadmill's motor sounds like) and at his mass probably unpassable, with an open-ended remedy loop whose only remaining strategy is to land on the toes. The set kept the paper warning against the outcome and prescribed the cue that reliably produces it.\n\n2. THE FOOTSTRIKE VIDEO TEST. Dropped. It put an unsecured phone on the side rail of a running treadmill next to a moving belt, and by the cue's own logic no video result changed any action, so it was a physical risk taken to generate a log entry. Standard phone video at 30 frames per second also cannot reliably resolve a touchdown that lasts about a quarter of a second. The substance survives as a prohibition inside \"One change only\".\n\n3. THE ABSOLUTE \"NEVER STOP THE BELT\" AND \"RAIL GRAB = FAIL\" RULES. Dropped. Between them they removed both abort routes from a first-time treadmill user at 104.9 kg, and scoring a stop as a failure directly contradicts the plan's own rule that pain changing how he walks means stop. Replaced with: stopping for pain, dizziness or anything wrong is always a PASS with no penalty; a balance grab is always correct; only holding on to keep up with the belt counts against him. The safety clip is now a pre-start check, which the plan did not mention at all.\n\n4. THE THREE INDEPENDENT 0.5 km/h SPEED DROPS. Dropped as written. Three separate cues each dropped the belt with no floor and no interaction rule, so a bad session could take 7.0 to 5.5 km/h and turn the run blocks into walking. Replaced with one drop per session maximum, shared across all tests, and a 6.0 km/h floor below which the plan gets revisited rather than the belt. The floor and the cap are my numbers, labelled as such.\n\n5. THE 5.0 km/h WALK FLOOR. Dropped. It was invented, it is stricter than Bertelsen's actual instruction (\"walking at an easy/comfortable pace in the pauses\"), and a brisk forced walk only 2.0 km/h below his running speed eats the recovery the pause exists for. Replaced with a pace at which the passage comes out with no breaks at all.\n\n6. THE CADENCE BAND \"150s OR LOW 160s IS NORMAL AT HIS PACE\". Dropped as an unsourced extrapolation presented under a citation. Leacox 2025's slowest condition is 2.68 m/s; his 7.0 km/h is 1.94 m/s, 27 percent slower than anything measured. The draft convicted the 1 percent incline rule for exactly this error one cue later. The myth-bust does not need the band and survives without it.\n\n7. \"THE 10 PERCENT WEEKLY RULE IS MORE AGGRESSIVE THAN THE TRIAL.\" Dropped because it is FALSE, and writing it into the evidence file would have planted a false correction. I fetched Table 1 twice. The 3 km arm is not three identical sessions per week: weeks 1 and 2 are uniform (1.0 km and 1.1 km of running per session), but weeks 3 and 4 vary session to session, and week 4 ends with a session containing a single continuous 1000 m run, double week one's longest. Weekly running totals are 3.0, 3.3, about 3.6 and 4.0 km. The paper's own text says \"The running distance was increased by ~10% per week.\" My two fetches of the same table differed slightly on one week-3 session, so I am not asserting the week-3 total to two decimal places; what is confirmed twice is that week 4 exceeds week 3 and the trial escalated roughly 10 percent weekly. THE REAL CAUTION IS DIFFERENT AND STILL WORTH RECORDING: the trial ran four weeks. Applying a clean 10 percent every week for months is an extrapolation past anything it measured.\n\n8. TWO UNSOURCED WRIST HEART-RATE FIGURES. Dropped from the notes: \"mean absolute percentage error of 3.3 to 6.2 percent\" and \"13 to 23 percent error in some devices during trail running\". I searched and could not attach either to a paper I read. The underlying meta-analysis does exist (Validity of Wrist-Worn photoplethysmography devices to measure heart rate: a systematic review and meta-analysis, J Sports Sci 2020;38(17), 44 articles, 738 effect sizes, 15 brands), but I did not verify its per-activity numbers, so none appear here. The decision not to write a wrist heart-rate cue now rests on something better: the passage cue sets the stricter gauge as the winner, so any device error can only make him go easier.\n\n9. NO CUE WRITTEN FOR: breathing pattern, arm swing, trunk lean, \"run tall\", posture, or overstriding. Nothing citable. On overstriding specifically, Baker et al. Sci Rep. 2024;14:6347 states that recent systematic reviews show a lack of consensus on the relationship between braking force and injury, and every popular guide to detecting it that I found was a blog with no measurement behind it. Usefully, the same work found overstriding falls as stride frequency rises, which is another reason step rate is the lever.\n\nMYTHS I AM CONFIDENT ENOUGH TO NAME.\n\nA. \"AIM FOR 180 STEPS PER MINUTE.\" Not his number, and the target should never be an absolute. Leacox 2025 measured EXPERIENCED runners (inclusion: 15 miles a week for a year) at 169.2 steps/min at 10 min/mile rising to 177.9 at 7 min/mile. Every one of those speeds is faster than his 7.0 km/h. Eight of thirty barely changed cadence across the whole range. Correction to the draft, which the skeptics caught and which I confirmed in the paper: those participants are experienced runners, not \"recreational\". Caveat I am keeping visible: the same paper's introduction cites prior work linking lower cadence to higher injury risk, so \"180 is not universal\" is the claim, not \"low cadence is fine\".\n\nB. \"SET THE TREADMILL TO 1 PERCENT.\" A real 1996 study on nine trained men at 10.5 to 18.0 km/h, applied far outside its range. At the two slowest speeds it tested, 0 percent matched outdoor running just as well as 1 percent. He runs slower than the slowest speed in the paper. I found no replication.\n\nC. \"HEEL STRIKING IS BAD, LAND ON YOUR FOREFOOT.\" Anderson 2020, 53 studies: prospective injury evidence is lacking, economy gets worse on an acute switch, ankle plantarflexor loading increases, and the authors state the change cannot be recommended for an uninjured rearfoot striker.\n\nD. \"RUN QUIETLY AND YOU WILL LAND SOFTER.\" The sound itself does not track the force (Phan 2017, no significant relationship), and the instruction converts about three runners in four to a forefoot landing. For him this is not merely unsupported, it is the mechanism of the thing cue 2 forbids.\n\nE. \"HEAVY RUNNERS NEED MAXIMUM CUSHIONING\", AND ITS OPPOSITE. The one large RCT found the protective effect of soft cushioning only in the lighter half of its sample. But the heavier subgroup was underpowered, not null, so \"ignore cushioning\" is equally wrong. Unsettled at his mass.\n\nWHAT THE PLAN GETS WRONG OR LEAVES OPEN.\n\na) THE 7.0 km/h BELT SPEED HAS NO SOURCE. Bertelsen prescribed distance and a talk-based intensity instruction only, outdoors, on a self-chosen route at a self-chosen speed. In the same research group's companion paper, obese novices self-selected 1.7 km/h slower than normal-weight novices (95% CI -2.0 to -1.4 km/h). The belt speed cue exists so he finds his number instead of inheriting a guess.\n\nb) THIS IS A TREADMILL PLAN BUILT ON A NON-TREADMILL TRIAL. Now cited rather than hedged. Miller JR, Van Hooren B, Bishop C, Buckley JD, Willy RW, Fuller JT. Sports Med. 2019;49:763-782, doi 10.1007/s40279-019-01087-9, fetched at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30847825&rettype=abstract&retmode=text, states verbatim: \"HR and RPE during motorised treadmill running were higher at faster submaximal speeds and lower at slower submaximal speeds than during overground running.\" At his slow speed the treadmill will read easier than the outdoor equivalent, which matters if the runs ever move outside.\n\nc) \"HEART RATE UNDER ABOUT 140\" HAS NO SOURCE and conflicts with the talk test sitting beside it. I searched and found no origin for the 140. The passage cue resolves the conflict in the safe direction (stricter gauge wins, both directions written out), which also protects the plan's architecture: hard aerobic work is supposed to live on the bike at 150 to 165 so the running stays short and easy. A run habitually cleared at 155 by the talk test alone would collapse the two sessions into one zone. The evidence file should either give the 140 an origin or mark it convention.\n\nd) NO CADENCE EVIDENCE EXISTS AT BMI 30 TO 35. I searched for it directly. Everything in the cadence literature is normal-BMI runners, and the Bertelsen trial that supplies his week one gave no technique instruction at all. The step-rate cue is the best-supported thing in the set and it is still an extrapolation to his body. It also raises total foot landings per kilometre by about 5 percent, a trade no source addresses, which is why the cue says so out loud.\n\ne) THE BEST INJURY EVIDENCE IN THIS FIELD IS NOT AVAILABLE TO HIM. Chan et al. AJSM 2018 randomised 320 novice runners and cut 12-month injury from 38 percent to 16 percent (hazard ratio 0.38, 95% CI 0.25-0.59), but the intervention was real-time VISUAL feedback of vertical impact peak on a force-instrumented treadmill, not sound and not cadence. No home substitute has been shown to reproduce it. I removed that trial from the set rather than borrow its result for a cue it did not test.\n\nf) SESSION LOAD. At 7.0 km/h a 500 m run block lasts about 4 minutes 17 seconds, so the cues have to be sequenced rather than stacked. As written: pre-start (clip, incline, log line), walk, block one (passage at the 250 m mark, then the 30-second step count), the 200 m walk (second incline glance), block two (passage at the 250 m mark). Nothing is asked of him twice at once."
+    "cuesNote": "EVERY CITATION IN THE FINAL SET WAS FETCHED BY ME IN THIS PASS, NOT INHERITED. URLs are in each grounding field. Nothing is quoted from memory.\n\nWHAT I DROPPED, AND WHY.\n\n1. THE \"SOUND\" CUE. Dropped entirely. This is the biggest change and it inverts the draft's own ranking, which called it \"the strongest injury-reduction finding in the whole set\". I fetched Phan X, Grisbrook TL, Wernli K, Stearne SM, Davey P, Ng L. Running quietly reduces ground reaction force and vertical loading rate and alters foot strike technique. J Sports Sci. 2017;35(16):1636-1642, at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27594087&rettype=abstract&retmode=text. Two findings kill the cue. First, verbatim: \"Simple linear regressions revealed no significant relationships between impact sound and peak vGRF in the normal and quiet conditions and vertical loading rate in the normal condition\", and the authors conclude \"quieter impact sound is not directly associated with a lower peak vGRF or vertical loading rate\". So the noise he would be listening to is not a valid proxy for the force. Second, verbatim: \"During the normal running condition, 15.4% of participants utilised a non-rearfoot strike technique compared to 76.9% in the quiet condition, which was corroborated by an increased ankle plantarflexion angle at initial contact.\" Roughly three runners in four converted to landing on the forefoot. That is precisely the conversion Anderson 2020 says cannot be recommended for an uninjured heel striker because it increases ankle plantarflexor loading, and at 104.9 kg the calf and Achilles are the tissue least able to absorb it. The instruction \"do not think about which part of your foot lands\" does not prevent the switch, it only removes the chance of noticing it. The cue was also unmeasurable in practice (pass judged against whatever a given treadmill's motor sounds like) and at his mass probably unpassable, with an open-ended remedy loop whose only remaining strategy is to land on the toes. The set kept the paper warning against the outcome and prescribed the cue that reliably produces it.\n\n2. THE FOOTSTRIKE VIDEO TEST. Dropped. It put an unsecured phone on the side rail of a running treadmill next to a moving belt, and by the cue's own logic no video result changed any action, so it was a physical risk taken to generate a log entry. Standard phone video at 30 frames per second also cannot reliably resolve a touchdown that lasts about a quarter of a second. The substance survives as a prohibition inside \"One change only\".\n\n3. THE ABSOLUTE \"NEVER STOP THE BELT\" AND \"RAIL GRAB = FAIL\" RULES. Dropped. Between them they removed both abort routes from a first-time treadmill user at 104.9 kg, and scoring a stop as a failure directly contradicts the plan's own rule that pain changing how he walks means stop. Replaced with: stopping for pain, dizziness or anything wrong is always a PASS with no penalty; a balance grab is always correct; only holding on to keep up with the belt counts against him. The safety clip is now a pre-start check, which the plan did not mention at all.\n\n4. THE THREE INDEPENDENT 0.5 km/h SPEED DROPS. Dropped as written. Three separate cues each dropped the belt with no floor and no interaction rule, so a bad session could take 7.0 to 5.5 km/h and turn the run blocks into walking. Replaced with one drop per session maximum, shared across all tests, and a 6.0 km/h floor below which the plan gets revisited rather than the belt. The floor and the cap are my numbers, labelled as such.\n\n5. THE 5.0 km/h WALK FLOOR. Dropped. It was invented, it is stricter than Bertelsen's actual instruction (\"walking at an easy/comfortable pace in the pauses\"), and a brisk forced walk only 2.0 km/h below his running speed eats the recovery the pause exists for. Replaced with a pace at which the passage comes out with no breaks at all.\n\n6. THE CADENCE BAND \"150s OR LOW 160s IS NORMAL AT HIS PACE\". Dropped as an unsourced extrapolation presented under a citation. Leacox 2025's slowest condition is 2.68 m/s; his 7.0 km/h is 1.94 m/s, 27 percent slower than anything measured. The draft convicted the 1 percent incline rule for exactly this error one cue later. The myth-bust does not need the band and survives without it.\n\n7. \"THE 10 PERCENT WEEKLY RULE IS MORE AGGRESSIVE THAN THE TRIAL.\" Dropped because it is FALSE, and writing it into the evidence file would have planted a false correction. I fetched Table 1 twice. The 3 km arm is not three identical sessions per week: weeks 1 and 2 are uniform (1.0 km and 1.1 km of running per session), but weeks 3 and 4 vary session to session, and week 4 ends with a session containing a single continuous 1000 m run, double week one's longest. Weekly running totals are 3.0, 3.3, about 3.6 and 4.0 km. The paper's own text says \"The running distance was increased by ~10% per week.\" My two fetches of the same table differed slightly on one week-3 session, so I am not asserting the week-3 total to two decimal places; what is confirmed twice is that week 4 exceeds week 3 and the trial escalated roughly 10 percent weekly. THE REAL CAUTION IS DIFFERENT AND STILL WORTH RECORDING: the trial ran four weeks. Applying a clean 10 percent every week for months is an extrapolation past anything it measured.\n\n8. TWO UNSOURCED WRIST HEART-RATE FIGURES. Dropped from the notes: \"mean absolute percentage error of 3.3 to 6.2 percent\" and \"13 to 23 percent error in some devices during trail running\". I searched and could not attach either to a paper I read. The underlying meta-analysis does exist (Validity of Wrist-Worn photoplethysmography devices to measure heart rate: a systematic review and meta-analysis, J Sports Sci 2020;38(17), 44 articles, 738 effect sizes, 15 brands), but I did not verify its per-activity numbers, so none appear here. The decision not to write a wrist heart-rate cue now rests on something better: the passage cue sets the stricter gauge as the winner, so any device error can only make him go easier.\n\n9. NO CUE WRITTEN FOR: breathing pattern, arm swing, trunk lean, \"run tall\", posture, or overstriding. Nothing citable. On overstriding specifically, Baker et al. Sci Rep. 2024;14:6347 states that recent systematic reviews show a lack of consensus on the relationship between braking force and injury, and every popular guide to detecting it that I found was a blog with no measurement behind it. Usefully, the same work found overstriding falls as stride frequency rises, which is another reason step rate is the lever.\n\nMYTHS I AM CONFIDENT ENOUGH TO NAME.\n\nA. \"AIM FOR 180 STEPS PER MINUTE.\" Not his number, and the target should never be an absolute. Leacox 2025 measured EXPERIENCED runners (inclusion: 15 miles a week for a year) at 169.2 steps/min at 10 min/mile rising to 177.9 at 7 min/mile. Every one of those speeds is faster than his 7.0 km/h. Eight of thirty barely changed cadence across the whole range. Correction to the draft, which the skeptics caught and which I confirmed in the paper: those participants are experienced runners, not \"recreational\". Caveat I am keeping visible: the same paper's introduction cites prior work linking lower cadence to higher injury risk, so \"180 is not universal\" is the claim, not \"low cadence is fine\".\n\nB. \"SET THE TREADMILL TO 1 PERCENT.\" A real 1996 study on nine trained men at 10.5 to 18.0 km/h, applied far outside its range. At the two slowest speeds it tested, 0 percent matched outdoor running just as well as 1 percent. He runs slower than the slowest speed in the paper. I found no replication.\n\nC. \"HEEL STRIKING IS BAD, LAND ON YOUR FOREFOOT.\" Anderson 2020, 53 studies: prospective injury evidence is lacking, economy gets worse on an acute switch, ankle plantarflexor loading increases, and the authors state the change cannot be recommended for an uninjured rearfoot striker.\n\nD. \"RUN QUIETLY AND YOU WILL LAND SOFTER.\" The sound itself does not track the force (Phan 2017, no significant relationship), and the instruction converts about three runners in four to a forefoot landing. For him this is not merely unsupported, it is the mechanism of the thing cue 2 forbids.\n\nE. \"HEAVY RUNNERS NEED MAXIMUM CUSHIONING\", AND ITS OPPOSITE. The one large RCT found the protective effect of soft cushioning only in the lighter half of its sample. But the heavier subgroup was underpowered, not null, so \"ignore cushioning\" is equally wrong. Unsettled at his mass.\n\nWHAT THE PLAN GETS WRONG OR LEAVES OPEN.\n\na) THE 7.0 km/h BELT SPEED HAS NO SOURCE. Bertelsen prescribed distance and a talk-based intensity instruction only, outdoors, on a self-chosen route at a self-chosen speed. In the same research group's companion paper, obese novices self-selected 1.7 km/h slower than normal-weight novices (95% CI -2.0 to -1.4 km/h). The belt speed cue exists so he finds his number instead of inheriting a guess.\n\nb) THIS IS A TREADMILL PLAN BUILT ON A NON-TREADMILL TRIAL. Now cited rather than hedged. Miller JR, Van Hooren B, Bishop C, Buckley JD, Willy RW, Fuller JT. Sports Med. 2019;49:763-782, doi 10.1007/s40279-019-01087-9, fetched at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30847825&rettype=abstract&retmode=text, states verbatim: \"HR and RPE during motorised treadmill running were higher at faster submaximal speeds and lower at slower submaximal speeds than during overground running.\" At his slow speed the treadmill will read easier than the outdoor equivalent, which matters if the runs ever move outside.\n\nc) \"HEART RATE UNDER ABOUT 140\" HAS NO SOURCE and conflicts with the talk test sitting beside it. I searched and found no origin for the 140. The passage cue resolves the conflict in the safe direction (stricter gauge wins, both directions written out), which also protects the plan's architecture: hard aerobic work is supposed to live on the bike at 150 to 165 so the running stays short and easy. A run habitually cleared at 155 by the talk test alone would collapse the two sessions into one zone. The evidence file should either give the 140 an origin or mark it convention.\n\nd) NO CADENCE EVIDENCE EXISTS AT BMI 30 TO 35. I searched for it directly. Everything in the cadence literature is normal-BMI runners, and the Bertelsen trial that supplies his week one gave no technique instruction at all. The step-rate cue is the best-supported thing in the set and it is still an extrapolation to his body. It also raises total foot landings per kilometre by about 5 percent, a trade no source addresses, which is why the cue says so out loud.\n\ne) THE BEST INJURY EVIDENCE IN THIS FIELD IS NOT AVAILABLE TO HIM. Chan et al. AJSM 2018 randomised 320 novice runners and cut 12-month injury from 38 percent to 16 percent (hazard ratio 0.38, 95% CI 0.25-0.59), but the intervention was real-time VISUAL feedback of vertical impact peak on a force-instrumented treadmill, not sound and not cadence. No home substitute has been shown to reproduce it. I removed that trial from the set rather than borrow its result for a cue it did not test.\n\nf) SESSION LOAD. At 7.0 km/h a 500 m run block lasts about 4 minutes 17 seconds, so the cues have to be sequenced rather than stacked. As written: pre-start (clip, incline, log line), walk, block one (passage at the 250 m mark, then the 30-second step count), the 200 m walk (second incline glance), block two (passage at the 250 m mark). Nothing is asked of him twice at once.",
+    "beltSettings": {
+      "run": "8.0 km/h, which is 5.0 mph.",
+      "walk": "5.0 km/h, which is 3.1 mph.",
+      "theUnitTest": "Set the belt for the run, then read the speed display once. A number near 8 means the console is metric, so the km figure in the last column is the one to check afterwards. A number near 5 means it is in miles and you read the miles figure. You settle this once, on the first session, and never think about it again.",
+      "whyBothUnits": "You have said you do not trust the console and think it is in miles. Printing both means the plan is correct either way, and the clock on the wall is correct in every unit."
+    },
+    "whyTheClockNotTheConsole": [
+      "The doses here are prescribed as MINUTES, not metres, and that is the one thing that changed on",
+      "2026-08-21. Week 1 asks for two run blocks of 500 m. On 2026-08-19 you ran 3,121 m, which is 3.1",
+      "times the prescription, and nothing about how you ran it was wrong: the SPEED was fine at",
+      "7.8 km/h and a mean heart rate of 113. The distance ran away because a distance target on a",
+      "console you cannot read is not a target at all.",
+      "",
+      "A clock cannot be in the wrong unit. Run for the time, and the distance takes care of itself. The",
+      "km and miles figures in the last column exist only so you can confirm afterwards that the console",
+      "agrees, and when it does not, the clock wins."
+    ]
   },
   "bike": {
     "title": "Bike",
@@ -280,100 +340,104 @@
   "swim": {
     "title": "Swim",
     "sessionsPerWeek": "3 to 4, unchanged",
-    "baseline": {
-      "continuousUnassisted": "200 m",
-      "confirmedBy": "Your answer on 2026-08-16: without the pull buoy.",
-      "typicalSession": "1,000 m total, in pieces of 100 to 150 m, with 50 to 90 seconds standing between them.",
-      "movingPace": "1:48 to 2:05 per 100 m",
-      "matchesTheData": "Longest unbroken piece in the lap data since July: median 150 m, best 250 m. You said 200. Your felt sense and the watch agree."
-    },
+    "baseline": [
+      {
+        "label": "Longest unbroken piece in the lap data",
+        "value": "600 m, twice in the same session, in 11:36 and 12:11, on 2026-05-22. Then 500 m on four separate days: 8 April, 22 April, 26 June and 14 August. Those are local dates, not the watch UTC dates."
+      },
+      {
+        "label": "What you said your unassisted limit was",
+        "value": "On 2026-08-16, 200 m without the pull buoy. Both figures can be true at once if the buoy was in on the long pieces, and asked directly on 2026-08-21 you did not remember which swims used it. The export does not record a buoy. The week-0 swim below settles it, and until it does, no opening distance is written down."
+      },
+      {
+        "label": "What you actually do most swims",
+        "value": "About 1,000 m in total, in pieces of 50 to 150 m. Longest unbroken piece in each of your last ten swims: 100, 100, 100, 500, 125, 250, 150, 100 and 150 m, with one session carrying no lap data. The 500 was 14 August. The long piece happens roughly once a month, not once a week."
+      },
+      {
+        "label": "Moving pace",
+        "value": "1:48 to 2:05 per 100 m on repeats. The 600 m pieces came in at 1:56 and 2:02 per 100 m, and the 500 m on 14 August at 1:55, so your pace on a long piece is barely slower than on a 100. Pacing is not what stops you.",
+        "secondary": true
+      },
+      {
+        "label": "Paddles are ruled out",
+        "value": "Stroke count on the 600 m pieces was 8.9 to 9.0 per 25 m length, against 8.5 to 9.0 on your ordinary 50s and 100s. Paddles add surface area and visibly drop that count, so those long swims were not paddle-assisted, whatever else was going on.",
+        "secondary": true
+      }
+    ],
     "theGoal": {
       "target": "1,000 m without stopping",
-      "whatThatActuallyIs": "About 19 minutes of continuous swimming at your pace. Your current best continuous effort is around 3 minutes. That is the honest size of the gap, and it is a build measured in months, not weeks.",
-      "whyItIsAchievable": "You already do the distance and you already do it at a decent clip. Nothing about your fitness or your stroke is the limiter. The limiter is that you have never practised swimming SLOWLY, because 50s and 100s train the opposite skill."
+      "whatThatActuallyIs": "About 19 minutes of continuous swimming at your pace, and 40 lengths of a 25 m pool. The gap is far smaller than this file used to claim. It said your best continuous effort was \"around 3 minutes\"; the lap data has you unbroken at 600 m twice on 2026-05-22, in 11:36 and 12:11, so on that day you covered nearly two thirds of the goal in one piece and then went and did it again. Whether the buoy was in is the open question, not whether you can swim for eleven minutes.",
+      "whyItIsAchievable": "You already do the distance, you already do it at a decent clip, and on at least one day you have already held more than half of it unbroken. Nothing about your fitness or your stroke is the limiter. The limiter is frequency: the long piece happens about once a month, so the skill never compounds."
     },
     "theOneTechniqueChange": {
       "what": "Swim the continuity piece 10 to 15 seconds per 100 m SLOWER than your normal 100 repeats. Around 2:05 to 2:10 per 100 m.",
       "why": "This is the single thing that decides whether a long continuous swim works. Almost everyone who fails a distance swim fails it by starting at repeat pace. Going out slower is not cheating, it is the skill being trained.",
-      "howToKnow": "Breathe every 3 strokes and keep it there. If you find yourself switching to every 2 to get more air, you are going too fast: slow down rather than changing the breathing."
+      "howToKnow": "Set the pace from your last session length times, per the calibration cue below, and check length 1 of the continuous swim against that target afterwards. Do not use your breathing to judge the pace. If you need more air, take it: the breathing cue says start on every 3rd stroke and drop to every 2nd the moment a breath comes up short, and that drop is written into the plan rather than being evidence you went out too fast."
     },
     "onDrills": "Not prescribed, deliberately. Your strokes per length run 8.5 to 9.3 in a 25 m pool and your SWOLF is 35.6 to 39, which is a reasonable stroke, and the evidence that isolated drills improve adult freestyle endurance is thin. Pacing is the higher-value target. If you want drills later, they are a separate conversation with a real reason attached.",
     "structure": {
-      "note": "The continuity piece goes FIRST, while you are fresh and unassisted. Everything after it is yours: 50s, 100s, paddles, buoy, whatever you enjoy. Total stays around 1,000 to 1,200 m.",
+      "note": "The continuity piece goes FIRST, while you are fresh and unassisted. Everything after it is yours: 50s, 100s, buoy, whatever you enjoy. Total stays around 1,000 to 1,200 m. Every row below is written relative to YOUR NUMBER from the week-0 swim, because the honest answer to how far you can swim without stopping is not yet known.",
       "ladder": [
         {
           "weeks": "1 to 2",
-          "piece": "3 x 200 m",
+          "piece": "Your number, then your number minus 100 m",
           "rest": "60 s",
-          "note": "Same distance you can already do, three times, slower than usual. The point is the pace, not the distance."
+          "note": "Nothing new is being asked of you here. This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of once a month. If your number came back at 150 m, the second piece is 50 m, and that is fine."
         },
         {
           "weeks": "3 to 4",
-          "piece": "2 x 300 m",
+          "piece": "Your number plus 100 m, then your number minus 100 m",
           "rest": "60 s"
         },
         {
           "weeks": "5 to 6",
-          "piece": "400 m · 300 m · 200 m",
+          "piece": "Your number plus 200 m, then your number minus 100 m",
           "rest": "45 s"
         },
         {
           "weeks": "7 to 8",
-          "piece": "2 x 400 m",
+          "piece": "Your number plus 300 m, then your number minus 200 m",
           "rest": "45 s"
         },
         {
           "weeks": "9 to 10",
-          "piece": "500 m · 300 m",
-          "rest": "45 s"
-        },
-        {
-          "weeks": "11 to 12",
-          "piece": "600 m · 400 m",
-          "rest": "30 s",
-          "note": "600 m matches your best unbroken swim of the year, from 2026-06-27. Past here it is all new ground."
-        },
-        {
-          "weeks": "13 to 14",
-          "piece": "700 m · 300 m",
-          "rest": "30 s"
-        },
-        {
-          "weeks": "15 to 16",
-          "piece": "800 m · 200 m",
-          "rest": "30 s"
-        },
-        {
-          "weeks": "17 to 18",
-          "piece": "900 m",
+          "piece": "Your number plus 400 m, unbroken, then easy swimming with whatever is left",
           "rest": "none",
-          "note": "Unbroken, then swim easy for whatever you have left in the session."
+          "note": "If your number came back at 600 m, this row IS the goal and the ladder is finished here. If it came back at 200 m, this row is 600 m, which the lap data already shows you holding on a good day."
         },
         {
-          "weeks": "19",
-          "piece": "1,000 m",
+          "weeks": "11 on",
+          "piece": "Add 100 m a fortnight until the piece is 1,000 m",
           "rest": "none",
-          "note": "The whole thing, unbroken. This is the goal."
+          "note": "A fortnight, not a week. Never add distance in a fortnight where you missed swims: repeat the last one you actually completed instead of jumping to where the calendar says you should be."
         }
-      ]
+      ],
+      "calibration": {
+        "name": "Week 0: the one swim that sets every number below",
+        "what": "First thing in the session, before anything else, one continuous piece. No pull buoy and no paddles, both left up on the deck where you can see them. Set the pace with the calibration length from the cues. Then swim until the stop rule fires, stop at that wall, and read the distance off the watch. Round it DOWN to the nearest 25 m. That is your number, and every row in the table below is measured from it.",
+        "test": "Two yes-or-no questions when you get out. Was the buoy on the deck for the whole piece? And did you write the distance down before you left the building? If the buoy was between your legs, the number does not count and the swim has to be done again.",
+        "why": "The lap data says 600 m unbroken and you said 200 m, and both are credible, because the buoy explains the whole difference and nothing in the export records it. A fixed opening rung would therefore be wrong by up to 400 m in a direction nobody can predict. Written at 3 x 200 m it spends two months rebuilding a capacity you already have; written at 2 x 400 m it hands a novice a piece he may not be able to hold. One swim removes the guess instead of hedging it, which is why there is no default rung in the table at all."
+      }
     },
     "paddleRule": {
-      "rule": "Paddles at most twice a week, at most 200 m in a session, and never in the continuity piece.",
+      "rule": "DORMANT since the rebuild, because you told me on 2026-08-21 that you have not used paddles at all. Kept here rather than deleted, because it re-activates the day you pick them up: at most twice a week, at most 200 m in a session, and never in the continuity piece.",
       "why": [
-        "This is the one genuine risk flag in the whole rebuild. Schorn 2018, 193 amateur triathletes:",
-        "paddle users sustained overuse injuries at 24% versus 10% for non-users (p = 0.014), and",
-        "paddles were an independent risk factor in regression (p = 0.038). Swim training DURATION was",
-        "not predictive (p = 0.428). It is the paddles, not the hours.",
+        "This was the one genuine injury flag in the rebuild and it is no longer live. The shoulder",
+        "overuse concern needed paddles and heavy pulling in the same week, and the paddles are not",
+        "happening, so the flag is WITHDRAWN as a current constraint. The evidence stays on the page for",
+        "the day that changes.",
         "",
-        "Separately in the same study, heavier weekly weight training was a risk factor for acute",
-        "shoulder injury (p = 0.007). You do both, on the same shoulder, in the same week: paddles",
-        "three times and 200 lb pulldowns plus rows plus pressing four times.",
+        "Schorn 2018, 193 amateur triathletes: paddle users sustained overuse injuries at 24% versus 10%",
+        "for non-users (p = 0.014), and paddles were an independent risk factor in regression (p = 0.038).",
+        "Swim training DURATION was not predictive (p = 0.428). It is the paddles, not the hours.",
         "",
-        "Nothing has gone wrong yet. The cheap insurance is cutting paddle volume, not swim volume,",
-        "which is why the swim frequency you like is untouched and only the paddles are capped."
+        "Separately in the same study, heavier weekly weight training was a risk factor for acute shoulder",
+        "injury (p = 0.007). That half still applies to you: pulldowns, rows and pressing four times a",
+        "week on the same shoulder. It is the reason the cap comes back automatically rather than being",
+        "renegotiated, if paddles ever return."
       ]
     },
-    "pullBuoyRule": "Never in the continuity piece, so the number means something. Useful afterwards to overreach: once 400 m unassisted is comfortable, a 500 m with the buoy teaches the pacing for a distance you cannot yet hold on your own.",
+    "pullBuoyRule": "Never in the continuity piece, so that the number means something. That is not a new rule, but as of 2026-08-21 it is the rule the whole ladder rests on: the buoy is the only explanation for a lap history that says 600 m and an athlete who says 200 m, and it leaves no trace in the export. Buoy on the deck for the week-0 swim and for every continuity piece after it. Useful afterwards to overreach: once your number is comfortable, a longer piece WITH the buoy teaches the pacing for a distance you cannot yet hold on your own.",
     "cues": [
       {
         "name": "The stop",
