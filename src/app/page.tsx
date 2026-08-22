@@ -14,6 +14,8 @@ import { getSummary as getMusicSummary } from '@/lib/music/db';
 import { getSummary as getSwimSummary, getLiveness as getSwimLiveness, shortPool } from '@/lib/swim/db';
 import { allPacks } from '@/lib/reading/packs';
 import { getAcquisitionMap, getQueue } from '@/lib/reading/queue-db';
+import { getShelfStats } from '@/lib/reading/shelf-db';
+import { getWantKeys } from '@/lib/reading/want-db';
 import './hub.css';
 
 export const dynamic = 'force-dynamic';
@@ -170,7 +172,9 @@ async function frenchRow(): Promise<Row> {
 
 async function readingRow(): Promise<Row> {
   try {
-    const [packs, queue, acquisitionMap] = await Promise.all([allPacks(), getQueue(), getAcquisitionMap()]);
+    const [packs, queue, acquisitionMap, shelf, wants] = await Promise.all([
+      allPacks(), getQueue(), getAcquisitionMap(), getShelfStats(), getWantKeys(),
+    ]);
     if (!packs.length && !queue.length) throw new Error('no packs, no queue');
     const borrowNowAtHome = [...acquisitionMap.values()].filter((a) => a.homeBranchNow).length;
     /* Counted off the files and the mirror, like every other row that has data behind it. This
@@ -181,9 +185,11 @@ async function readingRow(): Promise<Row> {
     return {
       label: 'Reading',
       line: borrowNowAtHome > 0
-        ? <><span className="tnum">{borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{packs.length}</span> finished with recall cards</>
-        : <><span className="tnum">{queue.length}</span> queued to read next, <span className="tnum">{packs.length}</span> finished with recall cards</>,
-      sub: 'miss a recall card and it hands back a recap of just that stretch',
+        ? <><span className="tnum">{borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{shelf.worth.toLocaleString()}</span> worth pulling in a shop</>
+        : <><span className="tnum">{queue.length}</span> queued to read next, <span className="tnum">{shelf.worth.toLocaleString()}</span> worth pulling in a shop</>,
+      sub: wants.size > 0
+        ? `${shelf.total.toLocaleString()} books scored, ${wants.size} saved to want, ${packs.length} finished with recall cards`
+        : `${shelf.total.toLocaleString()} books scored from 55 published lists, ${packs.length} finished with recall cards`,
       href: '/reading',
     };
   } catch {

@@ -172,3 +172,15 @@ export async function getShelfLiveness(): Promise<{ rows: number | null; ranAt: 
   `) as { rows: number | null; ran_at: string | null; error: string | null }[];
   return { rows: r?.rows ?? null, ranAt: r?.ran_at ?? null, lastError: r?.error ?? null };
 }
+
+/** Front-door numbers. Computed, never written down: the hub's reading row once carried a
+ *  hand-typed line describing a queue feature that did not exist yet, and it read perfectly
+ *  plausibly until someone opened the page. */
+export async function getShelfStats(): Promise<{ total: number; worth: number }> {
+  const [r] = (await sql`
+    select count(*)::int total,
+           count(*) filter (where tier <> 'maybe')::int worth
+      from reading_shelf_entry
+  `) as { total: number; worth: number }[];
+  return { total: r?.total ?? 0, worth: r?.worth ?? 0 };
+}
