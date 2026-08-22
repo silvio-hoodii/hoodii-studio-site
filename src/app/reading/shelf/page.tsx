@@ -287,7 +287,18 @@ function ShelfRow({ entry, showShelf, wanted = false, expanded = false }: { entr
 
   return (
     <div className={`shelfrow ${expanded ? 'expanded' : ''}`}>
-      <span className={`tierbadge t-${entry.tier}`}>{tierLabel[entry.tier]}</span>
+      {/* Cover left, content right, the layout both reference catalogues use. A plain img, not
+          next/image: these are small external thumbnails and routing 661 of them through Vercel's
+          optimiser would spend Fluid CPU to make them no better. Width and height are fixed so
+          nothing reflows as they load, and a book without one gets a labelled placeholder rather
+          than a hole. */}
+      <span className="shelfcov">
+        {entry.cover
+          ? <img src={entry.cover} alt="" width={44} height={66} loading="lazy" decoding="async" />
+          : <span className="nocov" aria-hidden="true">?</span>}
+        <span className={`tierbadge t-${entry.tier}`}>{tierLabel[entry.tier]}</span>
+      </span>
+
       <span className="shelftitle">
         {entry.title}
         {entry.status && <span className="ownflag">{STATUS_LABEL[entry.status]}</span>}

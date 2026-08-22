@@ -591,17 +591,37 @@
 
 .reading .shelfrow {
   display: grid;
-  grid-template-columns: 62px minmax(0, 1fr);
-  column-gap: 10px; row-gap: 2px;
-  padding: 10px 0;
+  grid-template-columns: 52px minmax(0, 1fr);
+  column-gap: 12px; row-gap: 2px;
+  padding: 12px 0;
   border-top: 1px solid var(--border);
 }
+/* Cover and verdict share the left column: the two things you judge a spine by before reading
+   a word of the row. */
+.reading .shelfcov {
+  grid-column: 1; grid-row: 1 / span 5;
+  display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  align-self: start;
+}
+.reading .shelfcov img {
+  width: 44px; height: 66px; object-fit: cover;
+  border: 1px solid var(--border); border-radius: 2px;
+  background: var(--accent);
+  display: block;
+}
+.reading .shelfcov .nocov {
+  width: 44px; height: 66px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--border); border-radius: 2px;
+  color: var(--muted-foreground); opacity: 0.5;
+  font-family: var(--font-mono), ui-monospace, monospace; font-size: 15px;
+}
 .reading .shelfrow .tierbadge {
-  grid-column: 1; grid-row: 1 / span 3; align-self: start; margin-top: 2px;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
   text-align: center; padding: 3px 0; border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  width: 44px;
 }
 .reading .shelfrow .t-grab { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 45%, transparent); }
 .reading .shelfrow .t-good { color: var(--foreground); }
@@ -617,7 +637,9 @@
 .reading .shelfrow .shelfby { grid-column: 2; grid-row: 2; font-size: 13px; color: var(--muted-foreground); }
 .reading .shelfrow .shelfby strong { color: var(--foreground); font-weight: 600; }
 .reading .shelfrow .shelfmeta {
-  grid-column: 2; grid-row: 3;
+  /* Below the description, not above it. What the book IS beats what prizes it won when you are
+     deciding whether to pull it; the evidence is the follow-up question. */
+  grid-column: 2; grid-row: 4;
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; margin-top: 2px;
 }
 .reading .shelfrow .shelfchip {
@@ -795,7 +817,7 @@
 
 /* ---- want, surprise me, and the description --------------------------------------------- */
 .reading .shelfrow { position: relative; }
-.reading .shelfact { grid-column: 2; grid-row: 5; margin-top: 6px; }
+.reading .shelfact { grid-column: 2; grid-row: 5; margin-top: 8px; }
 .reading .wantbtn {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
@@ -812,7 +834,7 @@
 /* Two lines is enough to decide; the surprise-me view gets the whole thing, because there the
    single book IS the page and there is nothing to scan past. */
 .reading .shelfdesc {
-  grid-column: 2; grid-row: 4;
+  grid-column: 2; grid-row: 3;
   margin: 6px 0 0;
   font-size: 13px; line-height: 1.5; color: var(--foreground);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
