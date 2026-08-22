@@ -6,12 +6,23 @@ import type { Recipe, Stock, Ingredient, Offer, StepUse, StockItem } from './typ
 
 const DIR = join(process.cwd(), 'content', 'kitchen', 'recipes');
 
+/* react's cache() dedupes within ONE render. It does not survive to the next request, so every
+ * hit re-read and re-parsed the whole recipe directory. Same fix and same reasoning as
+ * loadCorpus(): these files are bundled at build time and cannot change while the process lives,
+ * so the parse is cached for the life of the instance and a deploy is what invalidates it.
+ * Smaller than the corpus at 500 KB, but it is on /kitchen and /kitchen/[id], the pages he
+ * actually opens while cooking. */
+let recipesPromise: Promise<Recipe[]> | null = null;
+
 export const allRecipes = cache(async (): Promise<Recipe[]> => {
-  const files = (await readdir(DIR)).filter((f) => f.endsWith('.json'));
-  const out = await Promise.all(
-    files.map(async (f) => JSON.parse(await readFile(join(DIR, f), 'utf8')) as Recipe),
-  );
-  return out.sort((a, b) => a.name.localeCompare(b.name));
+  recipesPromise ??= (async () => {
+    const files = (await readdir(DIR)).filter((f) => f.endsWith('.json'));
+    const out = await Promise.all(
+      files.map(async (f) => JSON.parse(await readFile(join(DIR, f), 'utf8')) as Recipe),
+    );
+    return out.sort((a, b) => a.name.localeCompare(b.name));
+  })();
+  return recipesPromise;
 });
 
 export const getRecipe = cache(async (id: string): Promise<Recipe | null> => {

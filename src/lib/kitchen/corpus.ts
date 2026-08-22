@@ -99,7 +99,33 @@ const DIR = join(process.cwd(), 'content', 'kitchen', 'corpus');
  * about the same word by 14x. The lesson taken then was "extract isOfferable()". The lesson available
  * was "one loader", and taking the smaller one bought a second instance of the same bug six hours later.
  * Law 1: eliminate the class. Two callers of one function cannot disagree. */
-export async function loadCorpus() {
+/* PARSED ONCE PER INSTANCE, not once per request. Added 2026-08-22.
+ *
+ * The corpus is 5 MB of JSON across four files, 3,092 rows, and every request re-read it from
+ * disk, JSON.parsed it, filtered, mapped and deduped it. That is pure computation, which is
+ * exactly what Vercel bills as Active CPU: I/O waiting is free, executing code is not.
+ *
+ * Measured cost before this: /kitchen/find at 1.3 SECONDS of CPU per request, 1,400 requests in
+ * twelve hours, 31 minutes of CPU. That single route was 44% of everything the whole account
+ * burned, against a Hobby allowance of four hours a month that had already been passed. The other
+ * three callers of this function, /kitchen, /kitchen/shop and /kitchen/want, made up most of the
+ * rest.
+ *
+ * These files are bundled at build time and cannot change while the process lives, so caching the
+ * parse is not a staleness risk the way caching a database read would be. A new deploy is a new
+ * process and a fresh parse. Fluid reuses an instance across many requests, so 1,400 requests now
+ * cost a handful of parses rather than 1,400.
+ *
+ * The promise, not the value, is cached, so concurrent first requests share one parse instead of
+ * racing to do the same work several times over. */
+let corpusPromise: ReturnType<typeof readCorpusFromDisk> | null = null;
+
+export function loadCorpus() {
+  corpusPromise ??= readCorpusFromDisk();
+  return corpusPromise;
+}
+
+async function readCorpusFromDisk() {
   /* Every provider in corpus/ is merged. The directory is plural on purpose: TheMealDB was only ever
    * a seed, and it turned out to be the wrong SHAPE, not merely small. It is community-contributed,
    * so it carries 167 desserts and twelve pasta dishes, and its single bolognese had no source URL.
