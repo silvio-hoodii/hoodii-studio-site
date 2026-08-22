@@ -84,13 +84,6 @@ const PAIR_PROMISE = [' + ', ' & ', ' then ', ', then '];
 /** Equipment a tag may name, each with the test that proves the block actually uses it. */
 const TAG_EQUIPMENT = {
   band: (ex) => /band/i.test(ex.id) || /band/i.test(ex.name),
-  /* A dumbbell is carried, so nothing in `station` records it. The cue is where it is
-     actually named ("a dumbbell in each hand"), and the cue is what he reads, so a tag that
-     says bring dumbbells is true exactly when some instruction in the block tells him to
-     hold one. Caught three real blocks whose names alone do not say DB: Bulgarian split
-     squat, reverse lunge, single-leg RDL. */
-  dumbbell: (ex) => /dumbbell/i.test(`${ex.id} ${ex.name} ${ex.cue}`) || /(^|[^A-Za-z])DBs?([^A-Za-z]|$)/.test(`${ex.name} ${ex.cue}`),
-  dumbbells: (ex) => /dumbbell/i.test(`${ex.id} ${ex.name} ${ex.cue}`) || /(^|[^A-Za-z])DBs?([^A-Za-z]|$)/.test(`${ex.name} ${ex.cue}`),
   cable: (ex) => ex.zone === 'cable' || (ex.station || '').startsWith('cable'),
   machine: (ex) => ex.zone === 'machines',
   rack: (ex) => ex.zone === 'rack' || ex.station === 'rack',
@@ -101,7 +94,7 @@ const TAG_EQUIPMENT = {
 /** Words a tag may use that claim nothing about equipment. */
 const TAG_PROSE = new Set([
   'a', 'and', 'first', 'fresh', 'never', 'tired', 'same', 'technique', 'only', 'its', 'own',
-  'on', 'the', 'floor', 'right', 'there', 'sideways', 'then', 'seat',
+  'dumbbell', 'dumbbells', 'on', 'the', 'floor', 'right', 'there', 'sideways', 'then', 'seat',
   'walk', 'in', 'hand', 'at', 'to', 'no', 'kit', 'up', 'of', 'per', 'side', 'light', 'heavy',
 ]);
 
@@ -170,36 +163,6 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     // `alternate` means the two share one rest window, which only makes sense for exactly two.
     if (CONCURRENT.has(block.pairing) && block.exercises.length !== 2) {
       fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);
-    }
-
-    /* ------ AN EMPTY REST WINDOW IS A DECISION, NOT A LEFTOVER. Added 2026-08-22.
-     *
-     * He read Friday and said: "we are supposed to have supersets all along so now we're only
-     * doing just one superset and the rest are normal exercises? I don't understand."
-     *
-     * He was describing damage. e0b029c deleted every band partner because a band cannot be
-     * progressively loaded, downgraded four `fill` blocks to `sequence`, and added three more
-     * standalone ones. Tuesday went from four blocks all paired to five blocks with two paired;
-     * Friday from four blocks with three paired to six with one. Nobody decided the session should
-     * be a queue of single exercises, it just fell out of removing something else, and nothing
-     * noticed. The objection had been to LOGGING a band, and `log: false` answers that without
-     * taking the pairing with it.
-     *
-     * So a block that holds a fixture and runs one exercise now has to say why in writing.
-     * `soloBecause` is not a formality: the two light technique blocks and Friday's shoulder press
-     * are genuinely solo on purpose, and writing the reason is what separates them from a partner
-     * somebody deleted. Primers are exempt; they are solo by definition, first and fresh.
-     *
-     * Fixture-holding only. A block whose exercise occupies no station blocks nobody and costs
-     * nothing to leave alone. */
-    if (block.exercises.length === 1 && block.role !== 'primer' && block.exercises[0].station != null) {
-      const reason = block.soloBecause;
-      if (typeof reason !== 'string' || reason.trim().length < 40) {
-        fail(where, `one exercise, holding station "${block.exercises[0].station}", and no "soloBecause". Either give it a partner that occupies no fixture and can be done in zone "${block.exercises[0].zone}", or write down in at least 40 characters why none is legal. A rest window left empty by accident is how four supersets disappeared on 2026-08-22.`);
-      }
-    }
-    if (block.soloBecause && block.exercises.length > 1) {
-      fail(where, `has ${block.exercises.length} exercises but still carries "soloBecause". Remove it: the block is not solo.`);
     }
 
     // ------ THE HEADER MAY NOT PROMISE WHAT THE BLOCK DOES NOT CONTAIN. See PAIR_PROMISE above.

@@ -251,8 +251,7 @@
               "progression": "weight"
             }
           ],
-          "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions.",
-          "soloBecause": "The rest IS the point. This is the light half of the week two hinges, two sets at roughly Thursday minus 30 to 40 lb, and the job is a clean groove rather than a hard set. Filling the gap would turn a technique block into a third working block."
+          "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions."
         },
         {
           "role": "accessory",
@@ -512,9 +511,9 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Second Pattern: Vertical Pull",
-          "tag": "(cable, band in hand)",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -553,44 +552,16 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "band-pull-apart",
-              "name": "Band Pull-Apart",
-              "sets": 3,
-              "reps": "15",
-              "rest": "45s",
-              "zone": "cable",
-              "station": null,
-              "bodyweight": true,
-              "log": false,
-              "cue": "Done standing in the rest gaps, so it adds no time to the session. Legal here because the band anchors to nothing: you hold both ends. Arms straight out in front at chest height, hands about shoulder width apart on the band. Pull your hands apart until the band touches your chest, squeezing your shoulder blades together like you are trapping a pencil between them. Slow on the way back. Success looks like: your shoulders stay down and your elbows stay straight. Nothing to type here, and that is deliberate: what makes this hard is which band you picked, and there is no box for that.",
-              "alts": [
-                {
-                  "id": "band-face-pull",
-                  "name": "Band Face Pull",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band anchored at face height on a rack post. Pull toward your forehead with the elbows high, and turn your hands outward at the end."
-                },
-                {
-                  "id": "rear-delt-machine",
-                  "name": "Rear Delt Machine",
-                  "zone": "machines",
-                  "station": "pec-deck",
-                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking."
-                }
-              ]
             }
           ],
-          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The band comes back into this rest window as a partner rather than a logged set: it was deleted on 2026-08-22 because there is no honest way to progress it, and deleting it took the pairing with it. Nothing to type, and the rest was being spent anyway."
+          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. Nothing shares this rest window: the band that used to sit here is in the warmup now, where it is not a set anybody pretends to progress."
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Second Horizontal Pull",
-          "tag": "(cable, band in hand)",
-          "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). The cuff work sits in its rest because a row does not use the rotator cuff, and because the cable section has no floor, so a band held in both hands is the only partner this zone physically allows.",
+          "tag": "(cable, on its own)",
+          "why": "The second horizontal pull of the week, and until 2026-08-22 there was no second one: BB Row on Friday was the only row in seven days, on a programme whose stated rule is that every main pattern happens twice (Pelland 2025, strength rises with frequency at matched volume). This is the slot the band pull-apart was occupying without loading anything.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -613,34 +584,6 @@
                   "increment": 5,
                   "progression": "weight",
                   "cue": "Chest on an incline bench so your torso cannot swing. Row both dumbbells to your ribs, elbows close, squeeze at the top."
-                }
-              ]
-            },
-            {
-              "id": "band-external-rotation",
-              "name": "Band External Rotation",
-              "sets": 3,
-              "reps": "15/side",
-              "rest": "30s",
-              "zone": "cable",
-              "station": null,
-              "bodyweight": true,
-              "log": false,
-              "cue": "Done standing in the rest gaps. Holding a light band, no anchor needed. Tuck your elbow against your side and bend it to ninety degrees, forearm pointing straight ahead. Keeping the elbow glued to your ribs, rotate the forearm outward like a gate opening, then come back slowly. Small movement, light band, no shrugging. Success looks like: the elbow never leaves your ribs. This is the rotator cuff, and it matters more than usual for you: you swim with paddles and you pull 200 lb on the pulldown, which are two known shoulder risk factors stacked. Nothing to type.",
-              "alts": [
-                {
-                  "id": "cable-external-rotation",
-                  "name": "Cable External Rotation",
-                  "zone": "cable",
-                  "station": "cable-row",
-                  "cue": "Low cable at elbow height, same outward rotation with the elbow pinned. Only if a second cable is genuinely free."
-                },
-                {
-                  "id": "band-pull-apart-alt",
-                  "name": "Band Pull-Apart",
-                  "zone": "cable",
-                  "station": null,
-                  "cue": "Arms straight in front, pull the band apart to the chest and squeeze the shoulder blades. 3x15."
                 }
               ]
             }
@@ -733,9 +676,9 @@
         },
         {
           "role": "accessory",
-          "pairing": "fill",
-          "label": "Triceps + Biceps",
-          "tag": "(cable, dumbbells in hand)",
+          "pairing": "sequence",
+          "label": "Triceps",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "tricep-pushdown",
@@ -766,39 +709,9 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "db-hammer-curl",
-              "name": "DB Hammer Curl",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "zone": "cable",
-              "station": null,
-              "log": true,
-              "cue": "Done standing beside the stack while the pushdown rests, so it costs no extra time. Dumbbells are carried, not fixed, so nobody is blocked while you hold them. One in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "ez-bar-curl-standing",
-                  "name": "EZ Bar Curl",
-                  "zone": "ezPreacher",
-                  "station": "preacher",
-                  "cue": "Standing with the EZ bar, same elbow-pinned curl. Use this if the dumbbells you want are gone.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "db-curl-supinated",
-                  "name": "DB Biceps Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same movement with the palms turned UP the whole way instead of facing in. Hits the same muscle from a slightly different angle.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight"
             }
           ],
-          "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are opposites, which is why they share a rest window: neither tires the other. The curl is the second biceps exposure in the week, the first being the preacher curl on Friday."
+          "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. On a cable, so the number moves 5 lb at a time, which is the whole difference between this and the band that used to sit beside it."
         }
       ]
     },
@@ -986,8 +899,7 @@
               "progression": "weight"
             }
           ],
-          "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge.",
-          "soloBecause": "Same as Monday light hinge. Two sets of front squat, deliberately light, to fix the upright position that a back squat struggles with. A partner here would make it another working block instead of the technique fix it is."
+          "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge."
         },
         {
           "role": "accessory",
@@ -1239,9 +1151,9 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Second Pattern: Horizontal Press",
-          "tag": "(machine, band in hand)",
+          "tag": "(machine, on its own)",
           "exercises": [
             {
               "id": "machine-chest-press",
@@ -1280,44 +1192,16 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "band-pull-apart",
-              "name": "Band Pull-Apart",
-              "sets": 3,
-              "reps": "15",
-              "rest": "45s",
-              "zone": "machines",
-              "station": null,
-              "bodyweight": true,
-              "log": false,
-              "cue": "Done standing in the rest gaps, so it adds no time to the session. Legal here because the band anchors to nothing: you hold both ends. Arms straight out in front at chest height, hands about shoulder width apart on the band. Pull your hands apart until the band touches your chest, squeezing your shoulder blades together like you are trapping a pencil between them. Slow on the way back. Success looks like: your shoulders stay down and your elbows stay straight. Nothing to type here, and that is deliberate: what makes this hard is which band you picked, and there is no box for that.",
-              "alts": [
-                {
-                  "id": "band-face-pull",
-                  "name": "Band Face Pull",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band anchored at face height on a rack post. Pull toward your forehead with the elbows high, and turn your hands outward at the end."
-                },
-                {
-                  "id": "rear-delt-machine",
-                  "name": "Rear Delt Machine",
-                  "zone": "machines",
-                  "station": "pec-deck",
-                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking."
-                }
-              ]
             }
           ],
-          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a band held in both hands, which occupies nothing, and the machine bank has no floor so that is the only partner available here."
+          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses the pairing."
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Second Vertical Pull",
-          "tag": "(machine, dumbbells in hand)",
-          "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up. The lateral raise fills its rest because a pull-up does not use the side of the shoulder, and nothing else in the week does either.",
+          "tag": "(machine, on its own)",
+          "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up.",
           "exercises": [
             {
               "id": "assisted-pullup",
@@ -1342,36 +1226,6 @@
                   "cue": "If the assisted machine is taken. Same job, elbows down to the ribs, all the way straight at the top."
                 }
               ]
-            },
-            {
-              "id": "db-lateral-raise",
-              "name": "DB Lateral Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "zone": "machines",
-              "station": null,
-              "log": true,
-              "cue": "Done standing at the machine while it rests, so it adds no time. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, taking about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and nothing else in the week trains it: every press works the front and every row works the back.",
-              "alts": [
-                {
-                  "id": "db-lateral-raise-seated",
-                  "name": "Seated DB Lateral Raise",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "pec-deck-rear-delt",
-                  "name": "Rear Delt Machine",
-                  "zone": "machines",
-                  "station": "pec-deck",
-                  "cue": "Not the same muscle, but the closest fixed option if the dumbbells are all taken. The fly machine turned around, arms out and back.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight"
             }
           ]
         },
@@ -1406,14 +1260,13 @@
                 }
               ]
             }
-          ],
-          "soloBecause": "Nothing legal is left. The machine bank has no floor and no band anchor, so a partner here has to be carried and standing, and every carried, standing thing that does not tire an overhead press is already twice a week: side delts on the pull-up, biceps on Tuesday and on the preacher curl below, carries with the curl. An empty rest window said out loud beats a filler nobody needs."
+          ]
         },
         {
           "role": "accessory",
-          "pairing": "fill",
-          "label": "Swim Catch + Rotator Cuff",
-          "tag": "(cable, band in hand)",
+          "pairing": "sequence",
+          "label": "Swim Catch",
+          "tag": "(cable, on its own)",
           "exercises": [
             {
               "id": "straight-arm-pulldown",
@@ -1444,37 +1297,9 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "band-external-rotation",
-              "name": "Band External Rotation",
-              "sets": 3,
-              "reps": "15/side",
-              "rest": "30s",
-              "zone": "cable",
-              "station": null,
-              "bodyweight": true,
-              "log": false,
-              "cue": "Done standing in the rest gaps. Holding a light band, no anchor needed. Tuck your elbow against your side and bend it to ninety degrees, forearm pointing straight ahead. Keeping the elbow glued to your ribs, rotate the forearm outward like a gate opening, then come back slowly. Small movement, light band, no shrugging. Success looks like: the elbow never leaves your ribs. This is the rotator cuff, and it matters more than usual for you: you swim with paddles and you pull 200 lb on the pulldown, which are two known shoulder risk factors stacked. Nothing to type.",
-              "alts": [
-                {
-                  "id": "cable-external-rotation",
-                  "name": "Cable External Rotation",
-                  "zone": "cable",
-                  "station": "cable-row",
-                  "cue": "Low cable at elbow height, same outward rotation with the elbow pinned. Only if a second cable is genuinely free."
-                },
-                {
-                  "id": "band-pull-apart-alt",
-                  "name": "Band Pull-Apart",
-                  "zone": "cable",
-                  "station": null,
-                  "cue": "Arms straight in front, pull the band apart to the chest and squeeze the shoulder blades. 3x15."
-                }
-              ]
             }
           ],
-          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. The cuff work rides in its rest: second exposure in the week after Tuesday, and it is the cheapest insurance there is for a shoulder that swims four times a week with paddles."
+          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim."
         },
         {
           "role": "accessory",
