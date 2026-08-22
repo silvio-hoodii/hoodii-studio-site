@@ -690,7 +690,13 @@
       "onion powder",
       "crushed red pepper",
       "red pepper flakes",
-      "crushed jalapeno"
+      "crushed jalapeno",
+      "dried mixed herbs",
+      "mixed herbs",
+      "herbes de provence",
+      "dried basil",
+      "mixed dried herbs",
+      "dried italian herbs"
     ],
     "sriracha": [
       "sriracha",
@@ -966,7 +972,8 @@
     "chocolate": "NARROWED 2026-08-17. A 225 g bag of Compliments DARK CHOCOLATE CHIPS arrived and is the stock item chocolatechips. Still missing: any chocolate in bar form, white and milk chocolate, and cooking chocolate. Chips hold their shape on purpose, so a recipe that wants chocolate chopped and melted smooth is not the same ask.",
     "mixed spice": "No mixed spice or pumpkin pie spice, the pre-blended warm-spice mixes. Ground cinnamon arrived 2026-08-16 and is the only one of their components here.",
     "bananas": "No bananas. They are the whole structure of a banana bread or a banana oat muffin, not a flavour, so nothing stands in.",
-    "vanillapod": "No vanilla pods, beans or paste. There IS a 250 mL bottle of Compliments artificial vanilla extract since 2026-08-17, which is what almost every recipe means by vanilla."
+    "vanillapod": "No vanilla pods, beans or paste. There IS a 250 mL bottle of Compliments artificial vanilla extract since 2026-08-17, which is what almost every recipe means by vanilla.",
+    "meat-free mince": "No vegan or vegetarian mince of any kind, and no plan to buy one. Catalogued 2026-08-22 because BBC Good Food's Mushroom bolognese asks for it and the line was resolving to UNKNOWN, which reads as \"the app cannot tell\" when the honest answer is \"you do not have this\". The mushrooms, lentils and canned tomatoes in that recipe are all here; the mince is the gap."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -2051,6 +2058,15 @@
       "vanilla paste",
       "vanilla pod",
       "vanilla bean"
+    ],
+    "meat-free mince": [
+      "vegan mince",
+      "vegetarian mince",
+      "meat-free mince",
+      "soya mince",
+      "meat free mince",
+      "plant-based mince",
+      "quorn mince"
     ]
   },
   "_substitutes": {
