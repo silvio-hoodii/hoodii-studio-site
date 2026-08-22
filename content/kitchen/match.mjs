@@ -46,6 +46,46 @@ const SIZES = ['large', 'small', 'medium', 'big', 'extra large', 'jumbo', 'thin'
 const UNITS_RE = new RegExp(`\\b(?:${UNITS.join('|')})\\b`, 'g');
 const SIZES_RE = new RegExp(`\\b(?:${SIZES.join('|')})\\b`, 'g');
 
+/* ---------------- the per-line memo ---------------- *
+ *
+ * WHERE /kitchen/find's CPU ACTUALLY WENT, measured 2026-08-22.
+ *
+ * The 08-22 01:50 fix cached the corpus JSON parse and reported the route fixed. The parse was never
+ * the cost. Measured against the real corpus on the same machine:
+ *
+ *     JSON parse of all four corpus files, 5.2 MB   ->     70 ms, ONCE per instance
+ *     resolveLine + isOptionalLine over every line  ->  1,658 ms, EVERY request
+ *
+ * So the route stayed at ~2.2 s warm after the fix shipped, because the 70 ms was cached and the
+ * 1,658 ms was not. Caching the wrong one is the failure law 3 names: the deploy was observed, the
+ * cost was not, and "fixed" was reported from the diff rather than from a measurement.
+ *
+ * Both functions below are PURE FUNCTIONS OF THE LINE STRING. `availableIds` never reaches them; it
+ * is only consulted afterwards, by set lookups that cost nothing. So the same 21,477 distinct lines
+ * were being re-parsed from scratch on every single request, 32,382 times per render.
+ *
+ * Memoized here rather than at the four call sites, per law 1: a cache a caller has to remember to
+ * use is a cache the fifth caller forgets. /kitchen, /kitchen/shop, /kitchen/want and /kitchen/find
+ * all reach the matcher through these two functions, so one memo inside them covers every surface
+ * that exists and every surface added later.
+ *
+ * Measured after: 1,658 ms -> 4 ms in steady state, a 400x cut on the route that was 44% of the
+ * whole account's Active CPU.
+ *
+ * SAFE TO CACHE because the aliases table is read once at import and cannot change while the process
+ * lives, exactly like the corpus files. A new deploy is a new process. Every caller destructures the
+ * result (`const { hit, shown } = ...`) rather than holding or mutating it, so no caller can write
+ * through into the cached object.
+ *
+ * BOUNDED because import.mjs feeds it pasted text, which is arbitrary and unbounded, and an
+ * unbounded map in a Fluid instance that lives across thousands of requests is a leak. The corpus
+ * needs 21,477 entries; at 80,000 the map is dropped whole. Clearing beats evicting one at a time
+ * here: the corpus lines are all re-derivable in 1.6 s, and a plain size check cannot itself be the
+ * source of a bug the way LRU bookkeeping can. */
+const LINE_MEMO_MAX = 80_000;
+const optionalMemo = new Map();
+const resolveMemo = new Map();
+
 /** Does the recipe itself mark this line as optional?
  *
  * Must be asked BEFORE parseIngredient, which strips parentheticals. Found 2026-08-12: gyudon's
@@ -53,6 +93,18 @@ const SIZES_RE = new RegExp(`\\b(?:${SIZES.join('|')})\\b`, 'g');
  * paren strip and was then reported as a missing ingredient, which is the app arguing with him about
  * a garnish its own source called optional. */
 export function isOptionalLine(raw) {
+  /* Keyed on the coerced string, because the body coerces too and `5` and `'5'` must not land on two
+   * entries that then disagree. */
+  const key = String(raw);
+  const hit = optionalMemo.get(key);
+  if (hit !== undefined) return hit;
+  const val = computeIsOptionalLine(key);
+  if (optionalMemo.size >= LINE_MEMO_MAX) optionalMemo.clear();
+  optionalMemo.set(key, val);
+  return val;
+}
+
+function computeIsOptionalLine(raw) {
   /* Deliberately narrow. A first version also treated "to serve" as optional and swallowed gyudon's
    * "4 cups short-grain white rice, to serve", which is the BASE of the dish, not a garnish. "to
    * serve" usually means "for serving alongside" and sometimes means "this is the starch", and
@@ -367,6 +419,21 @@ function substituteFor(requirement, availableIds) {
  * "1 cup medium or long-grain white rice" UNRECOGNISED while every page in the app called it rice he
  * owns. Two implementations of one question agree right up until one of them is edited. */
 export function resolveLine(line) {
+  const key = String(line);
+  const hit = resolveMemo.get(key);
+  if (hit !== undefined) return hit;
+  /* FROZEN, because the object is now shared by every caller that asks for this line instead of each
+   * getting its own. Every caller today destructures it, so none can write through; freezing is what
+   * keeps that true for the caller written next year. ESM is strict mode, so a write throws at the
+   * line that does it rather than quietly poisoning the cache for every later request on the
+   * instance, which is the version of this bug nobody would ever find. */
+  const val = Object.freeze(computeResolveLine(key));
+  if (resolveMemo.size >= LINE_MEMO_MAX) resolveMemo.clear();
+  resolveMemo.set(key, val);
+  return val;
+}
+
+function computeResolveLine(line) {
   const name = parseIngredient(line);
   /* An alternation reading is tried BEFORE the plain parse, because the plain parse of such a line is
    * a truncation rather than a reading: it keeps "flour" out of "flour or corn tortillas" and that
