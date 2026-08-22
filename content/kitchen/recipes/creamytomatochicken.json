@@ -1,7 +1,7 @@
 {
   "id": "creamytomatochicken",
   "name": "Creamy Tomato Chicken",
-  "build": "2026-08-18a",
+  "build": "2026-08-22b",
   "form": "dish",
   "meal": [
     "dinner"
@@ -124,9 +124,9 @@
       "display": "fresh tomatoes",
       "qty": 300,
       "unit": "g",
-      "prep": "medium dice. Her line reads 3 Roma tomatoes, 300 g, 1 and a half cups diced, so weigh out 300 g of the round ones rather than counting three",
-      "standsIn": "She says ROMA. The fridge has 5 round tomatoes and the pantry has 680 g of grape tomatoes, and you chose the round ones on 2026-08-18. A Roma is drier and meatier than a round tomato, so 300 g of round will release a little more water into the sauce near the end. That is the whole difference, and it lands in the last step where the sauce is already thick.",
-      "defining": true
+      "prep": "medium dice. Her line reads 3 Roma tomatoes, 300 g, 1 and a half cups diced, so weigh out 300 g of the round ones rather than counting three. She says ROMA. The fridge has 5 round tomatoes and the pantry has 680 g of grape tomatoes, and you chose the round ones on 2026-08-18. A Roma is drier and meatier than a round tomato, so 300 g of round will release a little more water into the sauce near the end. That is the whole difference, and it lands in the last step where the sauce is already thick.",
+      "defining": true,
+      "insteadOf": "Roma tomatoes"
     }
   ],
   "equipment": [
@@ -448,7 +448,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": true,
-    "readAt": "2026-08-18a",
+    "readAt": "2026-08-22b",
     "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her temperatures, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped, including her first step of gathering everything. The sentences are checked by the build against content/kitchen/imported/creamytomatochicken.json, a stored copy of her page fetched 2026-08-17, so a paraphrase fails the deploy rather than reaching the stove. What this app adds is the layer a printed page cannot: which of his pans she means, what every technique word means in place, an observable for the induction hob at each of the two points where she names a dial position, the water-drop and spoon-stripe tests, a thermometer reading where she says 165F, and the protein arithmetic with both figures shown and its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the tomato: she says Roma, the fridge has round ones, and he made that call himself on 2026-08-18 after being told what the difference does.",
     "sources": [
       {
@@ -458,7 +458,7 @@
         "note": "Creamy Tomato Chicken. 4 servings, 15 minutes prep and 20 minutes cook, 35 total. 30 g of protein and 336 calories a serving off her own nutrition panel. Captured 2026-08-17 from the page's own JSON-LD into content/kitchen/imported/creamytomatochicken.json, capture hash 2977f6a63c15. All twelve ingredient lines and all nine instructions taken verbatim from that capture."
       }
     ],
-    "readHash": "34de2cef",
+    "readHash": "f41b3939",
     "cookedResult": "worked",
     "cookedResultWhy": "Rated `nailed` in the app on 2026-08-20. The field was left unset at the time, which cost nothing while the card was `sourced` and offered anyway, but as of 2026-08-21 `cookedResult` is a route into the menu in its own right, so an unrecorded success is now a real omission. Set from his rating in cook_log, never from an agent's reading of how the evening went."
   }

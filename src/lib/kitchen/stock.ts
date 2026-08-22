@@ -107,7 +107,22 @@ export async function deriveStock(now = new Date()): Promise<Stock> {
     }
 
     switch (e.ev) {
-      case 'bought':  it.level = 'have'; if (e.where_at) it.where = e.where_at; break;
+      /* A RESTOCK CLEARS THE OLD USE-BY. Added 2026-08-22, and it is the same argument the quantity
+       * block above already makes one field over: the thing is here again, and whatever date belonged
+       * to the last one is not a fact about this one. `it.by` is set from `e.use_by` below, so an
+       * event that carries its own date still wins; only a bare restock clears.
+       *
+       * Found by tracing the red bell pepper bought 2026-08-18. It inherited 2026-08-16 from the
+       * yellow clearance peppers that were thrown out on the 12th, so it read six days past its best,
+       * and the rot gate shipped that morning then dropped it from matching entirely. The app was
+       * hiding a pepper he owns, which is the failure this project exists to prevent, arriving by way
+       * of the fix for the opposite failure. The 4 L milk jug bought the same day carried the previous
+       * jug's date too and was one day from doing the same thing.
+       *
+       * Direction is deliberate, and it matches `out`: clearing means the app may say it does not know
+       * when something expires, which is true and which he can correct with one tap. Keeping meant the
+       * app asserted a date it had no evidence for, and hid food behind it. */
+      case 'bought':  it.level = 'have'; it.by = null; if (e.where_at) it.where = e.where_at; break;
       case 'low':     it.level = 'low'; break;
       // Gone means gone, and that includes the amount. Leaving a quantity behind on an `out` item
       // is precisely the contradiction of 2026-08-09: "gone" in one column, "250 g bag" in another.

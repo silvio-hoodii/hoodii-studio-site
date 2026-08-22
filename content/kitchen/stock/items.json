@@ -724,6 +724,32 @@
       "buyable": false,
       "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
       "note": "Made from Greek yogurt, cucumber and garlic. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+    },
+    "chickenthighs_boneless": {
+      "n": "chicken thighs, boneless skinless",
+      "where": "fridge",
+      "state": "none",
+      "note": "Catalogued 2026-08-22, not owned. Split off `chickenthighs`, which is BONE-IN SKIN-ON and whose alias list was claiming boneless as well. They are different products: boneless skinless cooks in a pan in minutes and is sold by the tray, bone-in skin-on needs longer and carries skin and bone in its weight. Budget Bytes' Easy Sesame Chicken wants 1 lb of this one."
+    },
+    "ricevinegar": {
+      "n": "rice vinegar",
+      "where": "pantry",
+      "state": "none",
+      "note": "Catalogued 2026-08-22, not owned. Made by fermenting rice wine a second time into acid: about 4% and slightly sweet, against the 5% and flatly sour of the distilled white in the cupboard. NOT the Shaoxing wine or the mirin bought 2026-08-04, both of which are rice WINES and contain no vinegar at all. Stands behind 83 corpus dishes currently answered by substituting white."
+    },
+    "nutmeg": {
+      "n": "ground nutmeg",
+      "where": "pantry",
+      "state": "none",
+      "note": "Catalogued 2026-08-22, not owned. Pulled out of the `warm spices` category gap so that buying one jar actually closes it, which is the broccoli fix of the same day. It is the single ingredient standing between this kitchen and Budget Bytes' Homemade Banana Bread."
+    },
+    "sesameseeds": {
+      "n": "sesame seeds",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-16",
+      "src": "event",
+      "note": "Catalogue row added 2026-08-22. The item has existed since a stock event on 2026-08-16 recorded 145 g, but it had no row in items.json, so any recipe declaring `stock: \"sesameseeds\"` failed validation. Identity and state are different things and this one had state without identity."
     }
   }
 }

@@ -1,0 +1,153 @@
+{
+  "id": "bananabread",
+  "fetchedAt": "2026-08-22",
+  "via": "url",
+  "source": {
+    "name": "Homemade Banana Bread",
+    "url": "https://www.budgetbytes.com/homemade-banana-bread/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "12",
+    "12 slices"
+  ],
+  "totalTime": "PT75M",
+  "prepTime": "PT15M",
+  "cookTime": "PT60M",
+  "nutrition": {
+    "servingSize": "1 slice",
+    "calories": "288 kcal",
+    "carbohydrateContent": "40 g",
+    "proteinContent": "4 g",
+    "fatContent": "13 g",
+    "sodiumContent": "233 mg",
+    "fiberContent": "2 g"
+  },
+  "rating": "4.64",
+  "ratingCount": "19",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2024/01/Banana-Bread-Close.jpg",
+  "cuisine": "American",
+  "category": "Breakfast",
+  "ingredients": [
+    "4 Tbsp salted butter, room-temperature* ($0.50)",
+    "1/4 cup cooking oil* ($0.16)",
+    "1/2 cup granulated sugar** ($0.48)",
+    "1/2 cup brown sugar** ($0.24)",
+    "1.5 cups mashed ripe bananas (about 3-4 bananas)*** ($0.78)",
+    "2 large eggs ($1.34)",
+    "1 tsp vanilla extract ($0.65)",
+    "2 cups all-purpose flour* ($0.36)",
+    "1 tsp baking soda ($0.01)",
+    "1/2 tsp salt ($0.02)",
+    "1/4 tsp ground nutmeg ($0.02)",
+    "1/4 tsp cinnamon ($0.02)",
+    "1/2 cup chopped walnuts (optional) ($1.68)"
+  ],
+  "instructions": [
+    "Preheat the oven to 350ºF/180C/160C fan or Gas Mark 4 . Add the room-temperature butter, cooking oil, granulated sugar, and brown sugar to a mixing bowl. Use a hand mixer or stand mixer to beat the ingredients together until they become light and creamy.",
+    "Mash the bananas well, then add them to the mixing bowl with the butter and sugar, along with the eggs and vanilla extract. Use the mixter again to beat the ingredients together until smooth.",
+    "In a separate mixing bowl, stir together the flour, baking soda, salt, nutmeg, and cinnamon until well combined.",
+    "Pour the flour mixture into the bowl of wet ingredients and fold them together just until combined. Do not overmix.",
+    "Add the chopped walnuts to the bowl and gently fold to combine again.",
+    "Grease an 8.5\"x4.5\" loaf pan with butter or oil, then add the batter and smooth it out evenly into the pan.",
+    "Bake the banana bread in the preheated 350ºF/180C/160C fan or Gas Mark 4 oven for 60 minutes or until it's deeply golden brown on top, has a crack down the center, and a toothpick inserted into the middle comes out clean (crumbs are okay, but wet batter is not).",
+    "Allow the loaf to cool for about 5 minutes in the pan, then gently remove it from the pan and allow it to finish cooling on a wire rack. Once cooled, slice, serve, and enjoy!",
+    "Banana Muffins Instructions",
+    "Prepare the batter as listed above, then divide it between 12 wells of a standard-size muffin tin.",
+    "Bake the banana muffins for 30 minutes in the preheated 350ºF/180C/160C fan or Gas Mark 4 oven or until they have risen all the way in the center, have browned nicely, and a toothpick inserted into the center comes out clean (crumbs are okay, but no wet batter)."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "4 Tbsp salted butter, room-temperature* ($0.50)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/4 cup cooking oil* ($0.16)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 cup granulated sugar** ($0.48)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 cup brown sugar** ($0.24)",
+      "item": "brownsugar",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1.5 cups mashed ripe bananas (about 3-4 bananas)*** ($0.78)",
+      "item": "bananas",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 large eggs ($1.34)",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp vanilla extract ($0.65)",
+      "item": "vanilla",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cups all-purpose flour* ($0.36)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp baking soda ($0.01)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 tsp salt ($0.02)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/4 tsp ground nutmeg ($0.02)",
+      "item": "nutmeg",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/4 tsp cinnamon ($0.02)",
+      "item": "cinnamon",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/2 cup chopped walnuts (optional) ($1.68)",
+      "item": null,
+      "staple": false,
+      "gap": "peanuts",
+      "optional": true
+    }
+  ],
+  "captureHash": "73b92e651381"
+}

@@ -1,7 +1,7 @@
 {
   "id": "honeygarlicchicken",
   "name": "Honey Garlic Chicken",
-  "build": "2026-08-16e",
+  "build": "2026-08-22f",
   "form": "dish",
   "meal": [
     "dinner"
@@ -49,11 +49,12 @@
     {
       "ref": "vinegar",
       "stock": "vinegar",
-      "display": "rice vinegar",
+      "display": "distilled white vinegar",
       "qty": 1,
       "unit": "tbsp",
-      "standsIn": "She says RICE vinegar. What is in the cupboard is DISTILLED WHITE vinegar, 5% acidity, and nobody has ever asked whether there is rice vinegar too. White is sharper and has none of rice vinegar's slight sweetness. Against a third of a cup of honey one tablespoon of it will be a little sharper and nothing else, but it is a different product and the swap is yours to make, not the app's.",
-      "defining": false
+      "defining": false,
+      "insteadOf": "rice vinegar",
+      "prep": "She says RICE vinegar. What is in the cupboard is DISTILLED WHITE vinegar, 5% acidity, and nobody has ever asked whether there is rice vinegar too. White is sharper and has none of rice vinegar's slight sweetness. Against a third of a cup of honey one tablespoon of it will be a little sharper and nothing else, but it is a different product and the swap is yours to make, not the app's."
     },
     {
       "ref": "sriracha",
@@ -415,7 +416,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": true,
-    "readAt": "2026-08-16e",
+    "readAt": "2026-08-22f",
     "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and the protein arithmetic with its assumptions stated. All of it renders visibly separate from her sentences. The one departure is the vinegar: she says rice, the cupboard has distilled white, and he made that call himself after being told the difference. Everything else is her page, word for word.",
     "sources": [
       {
@@ -425,7 +426,7 @@
         "note": "Honey Garlic Chicken. 4.84 out of 5 from 37 ratings, 4 servings, 10 minutes prep and 18 minutes cook. Fetched 2026-08-16 from the page's own JSON-LD. All fifteen ingredients and all seven instructions taken verbatim."
       }
     ],
-    "readHash": "508aa4e9",
+    "readHash": "65203031",
     "cookedResult": "worked"
   }
 }

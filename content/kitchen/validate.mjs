@@ -99,6 +99,14 @@ const BANNED_CUE = [
 
 /* Cups of water per cup of dry rice. Carried over from lint.mjs, but now computed from structured
  * quantities instead of regexed out of prose, which is why it can actually be trusted. */
+/* Every key an ingredient may carry, and every one of these reaches a screen. Mirrors the
+ * `Ingredient` interface in src/lib/kitchen/types.ts; change one, change the other. The check that
+ * uses this is at the bottom of the ingredient loop and explains what it caught. */
+const ING_KEYS = new Set([
+  'ref', 'stock', 'staple', 'display', 'qty', 'unit', 'prep', 'defining',
+  'frozenOk', 'thawText', 'optional', 'betterWith', 'insteadOf', 'altText', 'section',
+]);
+
 const RICE_RATIO = {
   longgrainrice: { lo: 1.4, hi: 1.9, label: 'long grain' },
   jasminerice: { lo: 1.4, hi: 1.9, label: 'jasmine' },
@@ -182,6 +190,26 @@ function validate(r, file) {
     if (ing.defining === undefined) {
       warn(id, 'ingredients', `"${ing.ref}" does not declare \`defining\``,
         'Set it. defining:true means the dish does not exist without it and will not be offered.');
+    }
+    /* A KEY NOTHING RENDERS IS A NOTE NOBODY READS. Added 2026-08-22.
+     *
+     * `honeygarlicchicken` carried `standsIn` on its vinegar: a careful paragraph explaining that she
+     * says RICE vinegar, the cupboard holds DISTILLED WHITE, and the two are different products. No
+     * surface reads that key. Not CookClient, not render.mjs, not this file. The field the app
+     * actually renders is `insteadOf`, which exists for precisely this and was added on 2026-08-11
+     * after the same confusion about cornstarch standing in for potato starch.
+     *
+     * So he cooked that dish on 2026-08-16 reading "rice vinegar" on his own prep list, holding a
+     * bottle of white, with the explanation sitting in a field that goes nowhere. He asked what rice
+     * vinegar was on 2026-08-22, six days later, and the answer had been written and never shown.
+     *
+     * An invented key is indistinguishable from a typo and both fail silently, which is the whole
+     * reason this is a gate and not a line in SOURCING.md. */
+    for (const k of Object.keys(ing)) {
+      if (!ING_KEYS.has(k)) {
+        fail(id, 'ingredients', `"${ing.ref}" has key "${k}", which nothing renders`,
+          `Known keys: ${[...ING_KEYS].join(', ')}. If this is meant to reach the screen, use one that does; if it is a note to yourself, it does not belong on the ingredient.`);
+      }
     }
   }
 

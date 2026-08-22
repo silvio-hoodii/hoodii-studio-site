@@ -1,0 +1,171 @@
+{
+  "id": "sesamechicken",
+  "fetchedAt": "2026-08-22",
+  "via": "url",
+  "source": {
+    "name": "Easy Sesame Chicken",
+    "url": "https://www.budgetbytes.com/easy-sesame-chicken/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "4"
+  ],
+  "totalTime": "PT30M",
+  "prepTime": "PT15M",
+  "cookTime": "PT15M",
+  "nutrition": {
+    "servingSize": "1 serving",
+    "calories": "530 kcal",
+    "carbohydrateContent": "60 g",
+    "proteinContent": "30 g",
+    "fatContent": "18 g",
+    "sodiumContent": "945 mg",
+    "fiberContent": "1 g"
+  },
+  "rating": "4.54",
+  "ratingCount": "484",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2018/07/Sesame-Chicken-Overhead.jpg",
+  "cuisine": "Asian",
+  "category": "Dinner",
+  "ingredients": [
+    "¼ cup soy sauce ($0.20)",
+    "2 Tbsp water ($0.00)",
+    "1 Tbsp toasted sesame oil ($0.32)",
+    "3 Tbsp brown sugar** ($0.30)",
+    "1 Tbsp rice vinegar ($0.14)",
+    "1 tsp grated fresh ginger*** ($0.10)",
+    "2 cloves garlic, minced ($0.08)",
+    "½ Tbsp cornstarch ($0.03)",
+    "1 Tbsp sesame seeds ($0.10)",
+    "2 Tbsp cooking oil ($0.08)",
+    "1 lb boneless skinless chicken thighs* ($3.48)",
+    "1 large egg ($0.67)",
+    "2 Tbsp cornstarch ($0.06)",
+    "1 pinch each salt and pepper ($0.05)",
+    "4 cups cooked jasmine rice ($0.97)",
+    "2 whole green onions ($0.20)"
+  ],
+  "instructions": [
+    "First, prepare the sauce. In a small bowl stir together the soy sauce, water, sesame oil, brown sugar, rice vinegar, fresh ginger, minced garlic, cornstarch, and sesame seeds. (Grate the ginger with a small-holed cheese grater). Set the sauce aside.",
+    "In a large bowl, whisk together the egg, 2 Tbsp cornstarch, and a pinch of salt and pepper. Trim any excess fat from the chicken thighs, then cut them into small 1 inch pieces. Toss the chicken in the egg and cornstarch mixture.",
+    "Add the cooking oil to a large skillet and heat it over medium flame. Wait until the skillet is very hot, then swirl the skillet to make sure the oil coats the entire surface. Add the batter coated chicken and spread it out into a single layer over the surface of the skillet.",
+    "Allow the chicken pieces to cook, undisturbed, until golden brown on the bottom. Then, carefully flip the chicken, breaking up the pieces into smaller clumps as you flip. Continue to cook the chicken until golden brown on the other side. Stir the chicken as little as possible to avoid breaking the egg coating from the surface of the chicken.",
+    "Once the chicken is cooked through and golden brown on all sides, pour the sauce over top. Toss the chicken to coat in the sauce. As the sauce comes up to a simmer, it will begin to thicken. Continue to gently stir the chicken in the sauce until it has thickened, then turn off the heat.",
+    "Serve the chicken over a bed of rice and sprinkle the sliced green onions over top."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "¼ cup soy sauce ($0.20)",
+      "item": "soy",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp water ($0.00)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp toasted sesame oil ($0.32)",
+      "item": "sesameoil",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 Tbsp brown sugar** ($0.30)",
+      "item": null,
+      "staple": false,
+      "gap": "brown sugar",
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp rice vinegar ($0.14)",
+      "item": null,
+      "staple": false,
+      "gap": "rice vinegar",
+      "optional": false
+    },
+    {
+      "line": "1 tsp grated fresh ginger*** ($0.10)",
+      "item": "ginger",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cloves garlic, minced ($0.08)",
+      "item": "garlic",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ Tbsp cornstarch ($0.03)",
+      "item": "cornstarch",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp sesame seeds ($0.10)",
+      "item": "sesameseeds",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp cooking oil ($0.08)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 lb boneless skinless chicken thighs* ($3.48)",
+      "item": "chickenthighs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 large egg ($0.67)",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp cornstarch ($0.06)",
+      "item": "cornstarch",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 pinch each salt and pepper ($0.05)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "4 cups cooked jasmine rice ($0.97)",
+      "item": "jasminerice",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 whole green onions ($0.20)",
+      "item": "greenonion",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "44c50ab840ac"
+}

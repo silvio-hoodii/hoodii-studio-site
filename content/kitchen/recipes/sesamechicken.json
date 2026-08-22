@@ -1,0 +1,430 @@
+{
+  "id": "sesamechicken",
+  "name": "Easy Sesame Chicken",
+  "build": "2026-08-22a",
+  "form": "dish",
+  "meal": [
+    "dinner"
+  ],
+  "why": "The closest thing to chijaukay that does not need a deep fryer. Chi jau kay is chifa, Cantonese technique cooked in a Peruvian kitchen, and stripped down it is chicken in bite-size pieces, an egg and cornstarch coating, fried, then a soy and ginger sauce poured into the same pan and thickened. That is this recipe exactly, except she does it in two tablespoons of oil in a skillet instead of a pot of it. It is built to sit next to the arroz chaufa: same pantry, soy and sesame oil and ginger and green onion, so the two dishes taste like they belong on one plate. It also finally uses the 145 g of sesame seeds that nothing else in this kitchen touches.",
+  "time": {
+    "activeMin": 30,
+    "totalMin": 30,
+    "note": "her numbers: 15 prep, 15 cook. The per-step timers split those two figures across the steps and are the only times here that are not hers"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 30,
+    "proteinMath": "HER FIGURE, not an estimate: Budget Bytes publishes 30 g of protein per serving over 4 servings, alongside 530 kcal, 60 g carbohydrate and 18 g fat. Worth knowing what carries it: 1 lb (454 g) of raw boneless skinless chicken thigh is about 18 g of protein per 100 g, so roughly 82 g for the pan, plus about 6 g from the egg, which is 88 g across 4 portions or about 22 g each from the chicken and egg alone. Her 30 counts the 4 cups of cooked rice she serves it over, which carry roughly 4 g of protein per cup. So the number holds ONLY if you eat the rice with it. Serve it over the chaufa instead and the rice contribution goes up, because the chaufa has three eggs through it."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her times, her amounts and her scale of four portions. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and her protein figure with its assumptions stated. All of it renders visibly separate from her sentences. There are two departures and both are recorded on the ingredient they belong to: the vinegar, because she says rice and the cupboard has distilled white, and the pan, because she says only 'large skillet' and this kitchen has three.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/easy-sesame-chicken/",
+        "primary": true,
+        "note": "Easy Sesame Chicken. 4.54 out of 5 from 484 ratings, 4 servings, 15 minutes prep and 15 minutes cook. Fetched 2026-08-22 from the page's own JSON-LD. All sixteen ingredients and all six instructions taken verbatim."
+      }
+    ],
+    "readHash": "97a9154f",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "chicken",
+      "stock": "chickenthighs_boneless",
+      "display": "boneless skinless chicken thighs",
+      "qty": 1,
+      "unit": "lb",
+      "prep": "about 454 g. Trimmed of loose fat and cut into 1 inch pieces at step 2. NOT the two bone-in skin-on thighs in the fridge: those are a different cut, they weigh about 285 g between them, and they have skin and bone in that weight",
+      "defining": true
+    },
+    {
+      "ref": "soy_sauce",
+      "stock": "soy",
+      "display": "soy sauce",
+      "qty": 0.25,
+      "unit": "cup",
+      "defining": true
+    },
+    {
+      "ref": "water",
+      "display": "water",
+      "qty": 2,
+      "unit": "tbsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "sesame_oil",
+      "stock": "sesameoil",
+      "display": "toasted sesame oil",
+      "qty": 1,
+      "unit": "tbsp",
+      "prep": "the dark Kadoya bottle. Toasted sesame oil is a finishing flavour, not a frying oil",
+      "defining": true
+    },
+    {
+      "ref": "brown_sugar",
+      "stock": "brownsugar",
+      "display": "brown sugar",
+      "qty": 3,
+      "unit": "tbsp",
+      "prep": "the golden yellow sugar in the Ziploc. The bag holds roughly a cup, so this takes about a fifth of it",
+      "defining": false
+    },
+    {
+      "ref": "rice_vinegar",
+      "stock": "vinegar",
+      "display": "distilled white vinegar",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": false,
+      "insteadOf": "rice vinegar",
+      "prep": "SHE SAYS RICE VINEGAR AND THIS KITCHEN HAS DISTILLED WHITE, and they are not the same thing. Rice vinegar is made by fermenting rice wine a second time until it turns to acid: about 4% and slightly sweet. The 1 L bottle in the cupboard is distilled white at 5%, sharper and with no sweetness at all. The Shaoxing wine and the mirin bought on 2026-08-04 are rice WINES and contain no vinegar whatsoever, so neither of them is a stand-in either. Against three tablespoons of brown sugar one tablespoon of white vinegar will read slightly sharper and nothing else, which is why this is offered rather than blocked. It is still a different product and the swap is yours to make, not the app's."
+    },
+    {
+      "ref": "ginger",
+      "stock": "ginger",
+      "display": "grated fresh ginger",
+      "qty": 1,
+      "unit": "tsp",
+      "prep": "grate it straight from the freezer if that is where it is. Frozen ginger grates finer than fresh and the skin does not need peeling off first",
+      "defining": false
+    },
+    {
+      "ref": "garlic",
+      "stock": "garlic",
+      "display": "garlic cloves, minced",
+      "qty": 2,
+      "unit": "each",
+      "prep": "minced means chopped as small as you can get it, roughly the size of coarse salt grains",
+      "defining": false
+    },
+    {
+      "ref": "cornstarch_sauce",
+      "stock": "cornstarch",
+      "display": "cornstarch, for the sauce",
+      "qty": 0.5,
+      "unit": "tbsp",
+      "prep": "this is the half tablespoon that thickens the sauce. There is a separate 2 tbsp for the coating and they do different jobs",
+      "defining": false
+    },
+    {
+      "ref": "sesame_seeds",
+      "stock": "sesameseeds",
+      "display": "sesame seeds",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "oil",
+      "stock": "oil",
+      "display": "cooking oil",
+      "qty": 2,
+      "unit": "tbsp",
+      "prep": "the plain vegetable oil, NOT the sesame oil. Sesame oil burns and its flavour is wanted in the sauce, not in the pan",
+      "defining": false
+    },
+    {
+      "ref": "egg",
+      "stock": "eggs",
+      "display": "large egg",
+      "qty": 1,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "cornstarch_batter",
+      "stock": "cornstarch",
+      "display": "cornstarch, for the coating",
+      "qty": 2,
+      "unit": "tbsp",
+      "prep": "the coating half. Egg plus cornstarch is the whole batter and it is what makes this fried chicken rather than stir-fried chicken",
+      "defining": true
+    },
+    {
+      "ref": "salt_pepper",
+      "display": "salt and pepper",
+      "qty": 1,
+      "unit": "pinch",
+      "staple": true,
+      "prep": "a pinch of each. A pinch is what you pick up between thumb and first two fingers",
+      "defining": false
+    },
+    {
+      "ref": "rice",
+      "stock": "rice_cooked_plain",
+      "display": "cooked jasmine rice",
+      "qty": 4,
+      "unit": "cups",
+      "prep": "cooked, so about 1 1/3 cupfuls dry in the rice cooker. THE PLAN IS TO SERVE THIS OVER THE ARROZ CHAUFA INSTEAD, which is your call and not hers. It changes nothing about the chicken: the rice is a bed, not part of the method",
+      "defining": false
+    },
+    {
+      "ref": "green_onions",
+      "stock": "greenonion",
+      "display": "green onions, sliced",
+      "qty": 2,
+      "unit": "each",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "pan_nonstick_large",
+    "stovetop",
+    "mixingbowl_large",
+    "bowlset",
+    "whisk",
+    "grater_hand",
+    "knife_sharp",
+    "cuttingboard",
+    "measuringcups",
+    "measuringspoons",
+    "scale_digital",
+    "thermometer",
+    "spatula",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "First, prepare the sauce. In a small bowl stir together the soy sauce, water, sesame oil, brown sugar, rice vinegar, fresh ginger, minced garlic, cornstarch, and sesame seeds. (Grate the ginger with a small-holed cheese grater). Set the sauce aside.",
+      "sourceText": "First, prepare the sauce. In a small bowl stir together the soy sauce, water, sesame oil, brown sugar, rice vinegar, fresh ginger, minced garlic, cornstarch, and sesame seeds. (Grate the ginger with a small-holed cheese grater). Set the sauce aside.",
+      "uses": [
+        {
+          "ref": "soy_sauce",
+          "amount": 0.25,
+          "unit": "cup"
+        },
+        {
+          "ref": "water",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "sesame_oil",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "brown_sugar",
+          "amount": 3,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "rice_vinegar",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "ginger",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "garlic",
+          "amount": 2,
+          "unit": "each"
+        },
+        {
+          "ref": "cornstarch_sauce",
+          "amount": 0.5,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "sesame_seeds",
+          "amount": 1,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "grater_hand",
+        "knife_sharp",
+        "cuttingboard",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 8,
+      "heat": null,
+      "doneness": {
+        "test": "Lift the spoon out and look at the bottom of the bowl. If there is a pale sludge sitting there that did not come up with the spoon, the cornstarch has not gone in. Keep stirring until the liquid is uniformly cloudy and nothing is settled underneath.",
+        "kind": "look"
+      },
+      "look": "THE WHOLE SAUCE IS MADE NOW AND USED AT STEP 5. Nothing gets cooked here. Doing it first is deliberate: once the chicken is in the pan there is no time to measure nine things.\n\nHER 'SMALL BOWL' is one of the prep bowls from the 8-piece set, not a mixing bowl.\n\nCORNSTARCH DOES NOT DISSOLVE, it suspends. It will settle back to the bottom within a minute of you walking away, and that is normal and not a mistake. It has to be stirred again right before it goes in the pan, which is why step 5 says so.\n\nSMALL-HOLED CHEESE GRATER is the hand grater bought 2026-08-21. Use the smallest holes on it. Ginger has long tough fibres and the small holes shred them; big holes give you stringy lumps.\n\nTHIS IS THE STEP THAT DECIDES WHETHER IT TASTES LIKE CHIJAUKAY. Soy, ginger, garlic, a sweetener and a splash of acid thickened with cornstarch is the chifa sauce. Everything after this is frying."
+    },
+    {
+      "n": 2,
+      "text": "In a large bowl, whisk together the egg, 2 Tbsp cornstarch, and a pinch of salt and pepper. Trim any excess fat from the chicken thighs, then cut them into small 1 inch pieces. Toss the chicken in the egg and cornstarch mixture.",
+      "sourceText": "In a large bowl, whisk together the egg, 2 Tbsp cornstarch, and a pinch of salt and pepper. Trim any excess fat from the chicken thighs, then cut them into small 1 inch pieces. Toss the chicken in the egg and cornstarch mixture.",
+      "uses": [
+        {
+          "ref": "egg",
+          "amount": 1,
+          "unit": "each"
+        },
+        {
+          "ref": "cornstarch_batter",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "salt_pepper",
+          "amount": 1,
+          "unit": "pinch"
+        },
+        {
+          "ref": "chicken",
+          "amount": 1,
+          "unit": "lb"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "whisk",
+        "knife_sharp",
+        "cuttingboard",
+        "scale_digital",
+        "measuringspoons"
+      ],
+      "minutes": 10,
+      "heat": null,
+      "doneness": {
+        "test": "Pick up one piece with the spatula and hold it above the bowl for three seconds. It should be wearing a thin even film that clings, and it should drip slowly rather than run clear. If liquid sheets straight off it, the pieces are wet and need another toss through the mixture.",
+        "kind": "look"
+      },
+      "look": "WEIGH THE CHICKEN before it is cut, so the protein figure is real rather than assumed. Her pound is 454 g.\n\nTRIM EXCESS FAT means the obvious soft cream-coloured pads and any loose flaps hanging off the edge. You are not trying to remove every trace. Boneless skinless thighs carry a fair amount and it will render into the pan and make the coating greasy if it stays.\n\n1 INCH PIECES is about the width of your thumb. Cut them EVEN rather than pretty. This is the single thing that decides whether they finish together, and uneven pieces are the reason a batch ends up with black outsides and raw middles, which is what happened on 2026-08-16.\n\nRAW CHICKEN, so the board and knife go straight to hot soapy water afterwards, and nothing else touches that board until they do.\n\nTHE BATTER LOOKS WRONG AND IS RIGHT. One egg and two tablespoons of cornstarch is a thin slippery slurry, not a thick coating like a fish batter. It is supposed to be barely there. That thin film is what fries into the crust."
+    },
+    {
+      "n": 3,
+      "text": "Add the cooking oil to a large skillet and heat it over medium flame. Wait until the skillet is very hot, then swirl the skillet to make sure the oil coats the entire surface. Add the batter coated chicken and spread it out into a single layer over the surface of the skillet.",
+      "sourceText": "Add the cooking oil to a large skillet and heat it over medium flame. Wait until the skillet is very hot, then swirl the skillet to make sure the oil coats the entire surface. Add the batter coated chicken and spread it out into a single layer over the surface of the skillet.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 2,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula"
+      ],
+      "minutes": 4,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The oil should shimmer and move like water when you tilt the pan, with no smoke at all. Smoke means too hot, take it off the burner for thirty seconds. To test it, drop in ONE piece of chicken: it should sizzle steadily and continuously from the moment it lands. A piece that sits quiet means the pan is not ready. A piece that spits and cracks violently means it is too hot.",
+        "recheck": "Check again two minutes after the chicken goes in. A pan full of cold chicken drops the temperature hard, and this hob puts it back faster than you expect. What you want the whole way through is a steady even sizzle you could talk over, never a roar."
+      },
+      "doneness": {
+        "test": "Look down at the pan. Every piece should be touching the metal with space around it. If pieces are sitting on top of each other, take some out and cook them in a second batch: an overloaded pan steams the coating off instead of frying it.",
+        "kind": "look"
+      },
+      "look": "USE THE NON-STICK PAN. She only says 'large skillet' and this kitchen has three, so this is the app choosing, not her. It is the non-stick for one reason: this is an EGG coating, and her own step 4 warns about the coating tearing off the chicken. Egg grips stainless harder than anything else that gets cooked here, and the stainless pan has now failed three cooks. KITCHEN.md's own rule says eggs go in the non-stick because zero grip is the whole point of that pan.\n\n'MEDIUM FLAME' IS HERS AND IT IS A GAS INSTRUCTION. This hob is induction, its burners do not agree with each other about what the numbers mean, and there is no flame to look at. Ignore the word and use the oil test above. Whatever position gives you a steady sizzle is the correct position on this hob, even if the number looks wrong.\n\nSINGLE LAYER is not a suggestion. Two tablespoons of oil in a large pan is a shallow fry, and shallow frying only works where food touches metal. A pound of chicken should just fit; if it does not, do it in two batches and turn the heat down slightly for the second one, because the pan is hotter by then. That is the mistake that burnt the second batch of piccata on 2026-08-09.\n\nSWIRL THE PAN means lift it by the handle and tip it in a circle so the oil runs to the edges. Do it before the chicken goes in, never after."
+    },
+    {
+      "n": 4,
+      "text": "Allow the chicken pieces to cook, undisturbed, until golden brown on the bottom. Then, carefully flip the chicken, breaking up the pieces into smaller clumps as you flip. Continue to cook the chicken until golden brown on the other side. Stir the chicken as little as possible to avoid breaking the egg coating from the surface of the chicken.",
+      "sourceText": "Allow the chicken pieces to cook, undisturbed, until golden brown on the bottom. Then, carefully flip the chicken, breaking up the pieces into smaller clumps as you flip. Continue to cook the chicken until golden brown on the other side. Stir the chicken as little as possible to avoid breaking the egg coating from the surface of the chicken.",
+      "uses": [
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula",
+        "thermometer"
+      ],
+      "minutes": 9,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Hold the steady continuous sizzle from step 3. If the sound climbs to a roar or the edges of the coating start going dark brown before the middle of the pan does, lift the pan off the burner for thirty seconds and put it back. On induction the burner obeys the dial instantly and the metal does not, so lifting the pan is the only fast way down.",
+        "recheck": "If you are doing a second batch, the pan is hotter than it was for the first one even at the same setting. Start the second batch lower and check the sizzle before the chicken goes in."
+      },
+      "doneness": {
+        "test": "TWO TESTS AND YOU NEED BOTH. For the crust: slide the spatula under one piece and lift. If it releases cleanly and the underside is the colour of a digestive biscuit, it is ready to turn. If it grips and wants to tear, leave it another thirty seconds, it is not done. For the inside: push the thermometer into the thickest piece you can find and read 165F. Colour alone does not tell you this, and a golden outside over a raw middle is exactly the failure of 2026-08-16.",
+        "kind": "probe"
+      },
+      "look": "UNDISTURBED IS THE WHOLE INSTRUCTION. Every time you poke it you drag coating off and it stays in the pan instead of on the chicken. Set the pieces down and leave them alone.\n\nGOLDEN BROWN HERE MEANS SEARED, not the grey-brown of cooked mince and not black. Think the colour of a digestive biscuit. Three states get called brown in this app and they are different things: COOKED is red or pink going grey, SEARED is a real crust from dry high heat, BURNT is black and bitter. This step wants seared.\n\n'BREAKING UP THE PIECES INTO SMALLER CLUMPS' means the coating will have welded some pieces together into rafts. Separate them with the edge of the spatula as you turn them. Expect this rather than treating it as a mistake.\n\nFOOD RELEASES ITSELF WHEN IT IS READY. If a piece resists the spatula it is not asking to be pried, it is telling you to wait.\n\nHOW LONG: her total cook time is 15 minutes across steps 3 to 5, so this is roughly four minutes a side. The thermometer ends it, not the clock."
+    },
+    {
+      "n": 5,
+      "text": "Once the chicken is cooked through and golden brown on all sides, pour the sauce over top. Toss the chicken to coat in the sauce. As the sauce comes up to a simmer, it will begin to thicken. Continue to gently stir the chicken in the sauce until it has thickened, then turn off the heat.",
+      "sourceText": "Once the chicken is cooked through and golden brown on all sides, pour the sauce over top. Toss the chicken to coat in the sauce. As the sauce comes up to a simmer, it will begin to thicken. Continue to gently stir the chicken in the sauce until it has thickened, then turn off the heat.",
+      "uses": [
+        {
+          "ref": "cornstarch_sauce",
+          "amount": 0,
+          "optional": true
+        },
+        {
+          "ref": "chicken",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula"
+      ],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Bubbles breaking gently across the surface, not a violent roll. If the sauce ROARS and spits the second it lands, the pan is too hot: LIFT IT OFF THE BURNER for thirty seconds, then put it back.",
+        "recheck": "BEFORE the sauce goes in, not after. Take the pan off the burner for thirty seconds first. The pan has just fried a pound of chicken and is still holding that heat whatever the dial says. This is the exact step that went wrong on Honey Garlic Chicken on 2026-08-16, same publisher and same move: the sauce hit a pan that was still roaring and went past thick in seconds."
+      },
+      "doneness": {
+        "test": "Drag the spatula across the bottom of the pan and watch the bare stripe of metal it leaves. While the sauce is still thin it floods back instantly. When it has thickened the stripe stays open for about a second. That is the endpoint, and on a hot pan it arrives well inside her time. TOO THICK IS NOT A FAILURE: a tablespoon of water stirred in loosens it straight back, as many times as you like.",
+        "kind": "look"
+      },
+      "look": "STIR THE SAUCE AGAIN BEFORE YOU POUR IT. The cornstarch has been settling on the bottom of that bowl since step 1. Skip this and you pour clear liquid into the pan and leave the thickener behind in the bowl.\n\nGET THE PAN OFF THE HEAT FIRST. Thirty seconds off the burner before the sauce goes anywhere near it. This is the one thing that went wrong the last time this kitchen cooked a Budget Bytes sauce.\n\n'COOKED THROUGH' IS HER PHRASE AND THE THERMOMETER IS THE ANSWER. 165F in the thickest piece, checked at step 4. Do not use this step to finish raw chicken: once the sauce is in, the coating is wet and it will not brown any further.\n\nSIMMER means gently bubbling, not boiling hard.\n\nGENTLY STIR, still. The coating can come off right up to the end.\n\nIT HAPPENS FAST. Half a tablespoon of cornstarch in a small volume of liquid goes from thin to thick in well under a minute on a hot pan. Watch the stripe, not the clock."
+    },
+    {
+      "n": 6,
+      "text": "Serve the chicken over a bed of rice and sprinkle the sliced green onions over top.",
+      "sourceText": "Serve the chicken over a bed of rice and sprinkle the sliced green onions over top.",
+      "uses": [
+        {
+          "ref": "rice",
+          "amount": 4,
+          "unit": "cups"
+        },
+        {
+          "ref": "green_onions",
+          "amount": 2,
+          "unit": "each"
+        }
+      ],
+      "equipment": [
+        "plates",
+        "knife_sharp",
+        "cuttingboard"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "None. It is served.",
+        "kind": "look"
+      },
+      "look": "THE PLAN IS TO SERVE THIS OVER THE ARROZ CHAUFA, not plain rice. That is your substitution and not hers, and it changes nothing about the chicken. Her sentence stands as written above.\n\nIF YOU DO USE PLAIN RICE, four cups cooked is about 1 1/3 cupfuls of the rice cooker's own cup, filled to its top line, with water to the matching line in the pot. Never convert those into US cups.\n\nSLICED GREEN ONIONS means cut across into thin rings, greens and all. Raw, added at the end, and they are there for the sharp fresh bite against a sweet sauce. Green onions are marked low in the app, so check the bunch before you start.\n\nTHIS KEEPS 3 TO 4 DAYS in the fridge. The coating softens overnight and it will not crisp up again, which is normal for any sauced fried chicken and is not a sign anything went wrong."
+    }
+  ]
+}

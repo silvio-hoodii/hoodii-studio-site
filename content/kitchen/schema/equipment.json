@@ -322,6 +322,19 @@
       "acquired": "2026-08-08",
       "notes": "For labelling freezer bags with contents and date. Bought specifically because two unlabelled beef bags had to be re-weighed on 2026-08-08."
     },
+    "loafpan": {
+      "name": "loaf pan",
+      "class": "vessel",
+      "present": false,
+      "notes": "No loaf pan and no muffin tin. Confirmed by Silvio 2026-08-22 when banana bread was scoped: the three baking trays are rimmed 9x13x1 sheets, which pour a batter flat rather than holding it in a loaf. A 9x5 non-stick is the missing piece and it is the only thing besides ground nutmeg standing between this kitchen and Budget Bytes' banana bread.",
+      "history": "Recorded as ABSENT rather than left unmentioned, on the KITCHEN.md rule that an item missing from a file is not evidence it is missing from the kitchen. That silence is what produced a crepe recipe written around having no whisk, and weeks of plans built around one pan when three were in the cupboard. Asked before assuming this time."
+    },
+    "muffintin": {
+      "name": "muffin tin",
+      "class": "vessel",
+      "present": false,
+      "notes": "Absent, confirmed with the loaf pan on 2026-08-22. Relevant because the muffin route is the usual way round a missing loaf pan and it is closed here too."
+    },
     "foodprocessor": {
       "name": "food processor",
       "class": "prep",

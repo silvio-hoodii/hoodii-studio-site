@@ -187,11 +187,10 @@
       "chicken thighs",
       "bone-in chicken thighs",
       "skin-on chicken thighs",
-      "boneless chicken thighs",
-      "chicken thigh fillets",
       "bone-in thighs",
       "bone-in thigh",
-      "bone in thighs"
+      "bone in thighs",
+      "bone-in skin-on chicken thighs"
     ],
     "chickenwings": [
       "chicken wing",
@@ -959,6 +958,37 @@
       "very ripe bananas",
       "medium bananas",
       "large bananas"
+    ],
+    "brownsugar": [
+      "brown sugar",
+      "light brown sugar",
+      "soft brown sugar",
+      "brown soft sugar",
+      "packed brown sugar",
+      "golden yellow sugar",
+      "golden sugar",
+      "dark brown sugar"
+    ],
+    "chickenthighs_boneless": [
+      "boneless chicken thighs",
+      "boneless skinless chicken thighs",
+      "boneless, skinless chicken thighs",
+      "skinless boneless chicken thighs",
+      "chicken thigh fillets",
+      "boneless thighs",
+      "boneless skinless thighs"
+    ],
+    "ricevinegar": [
+      "rice vinegar",
+      "rice wine vinegar",
+      "seasoned rice vinegar"
+    ],
+    "nutmeg": [
+      "nutmeg",
+      "ground nutmeg",
+      "grated nutmeg",
+      "freshly grated nutmeg",
+      "whole nutmeg"
     ]
   },
   "_knownGaps": {
@@ -989,12 +1019,12 @@
     "lamb": "No lamb.",
     "worcestershire sauce": "No Worcestershire sauce.",
     "feta": "No feta. This row is the whole SOFT/FRESH CHEESE bucket, not only feta: ricotta, mascarpone, cream cheese, goat's cheese, halloumi and blue cheese are all in it and none is here. The three cheeses in this kitchen are parmesan, mozzarella and Monterey Jack, and none of them behaves like any of those. Read the ingredient line, not this row's name, when a dish is rejected for it.",
-    "warm spices": "NARROWED 2026-08-16. Ground CINNAMON arrived (Great Value, 60 g) and is the stock item `cinnamon`. Still missing: nutmeg, allspice, cardamom, cloves, turmeric, saffron, garam masala and curry powder.",
+    "warm spices": "NARROWED AGAIN 2026-08-22. NUTMEG is now its own stock item `nutmeg` and is out of this bucket, on the same argument as broccoli: a category gap cannot be partly satisfied, so one jar bought against a bucket unblocks nothing. Ground CINNAMON left on 2026-08-16. Still missing: allspice, cardamom, cloves, turmeric, saffron, garam masala, curry powder, star anise, fennel seeds, caraway, juniper, ras el hanout, harissa, sumac and ground ginger.",
     "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
     "ham": "No ham or bacon.",
     "lemongrass": "No lemongrass.",
     "tinned fish": "NARROWED 2026-08-16. Three tins of flaked white tuna arrived 08-14 (two Ocean's albacore 184 g, one PC 170 g) and are now the stock item `tuna`. Still missing: tinned salmon, sardines, anchovies and mackerel. The only other fish here is frozen tilapia.",
-    "brown sugar": "No brown sugar, only white.",
+    "brown sugar": "NARROWED 2026-08-22. Brown sugar itself ARRIVED on 2026-08-18 (Redpath golden yellow, decanted into a Ziploc, roughly a cup by eye) and is the stock item `brownsugar`. This row had gone on saying \"No brown sugar, only white\" for four days, and the substitute entry went on telling him to use white sugar for a bag in his own pantry. Third instance of a gap outliving the purchase that closed it, after broccoli on 08-22. Still missing: muscovado, demerara, palm sugar, coconut sugar and jaggery, which are darker and more molasses-heavy than golden yellow and are not the same thing.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
     "fresh soft herbs": "NARROWED AGAIN 2026-08-21. Blends he already owns are out of this bucket: Italian seasoning is a mixed dried-herb blend and satisfies \"mixed herbs\", \"dried mixed herbs\" and \"herbes de provence\", and dried basil is covered by the fresh basil plus the blend. Still missing, fresh or dried: thyme, sage, rosemary, tarragon, marjoram, chervil, bay and chives. The herbs here are fresh parsley, fresh dill, fresh basil, dried oregano and Italian seasoning.",
     "green vegetables": "NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans, cauliflower, pak choi, spring greens, kale, brussels sprouts, sugar snap peas, mangetout, courgette/zucchini, leeks, spinach, chard, watercress and aubergine. The vegetables here are onion, carrot, peppers, sweet potato, potato, mushrooms, cucumber, asparagus, broccoli and the frozen mixed bag.\n\nWHY THIS ROW COST MORE THAN ANY OTHER: it bundled 32 distinct vegetables under one label, and it was the single largest blocker in the whole corpus at 78 dishes where it was the ONLY thing missing. A category gap cannot be partly satisfied, so buying broccoli unblocked nothing and the note asserting \"no broccoli, asparagus...\" went on being read as true after both had arrived. Never put a shopping CATEGORY where an ingredient belongs. Plain `lettuce` is deliberately NOT in this bucket either: lettuce is modelled as the `saladmix` stock row, so putting it here would describe the same food twice and the row would win. Named varieties he has never owned (baby gem, romaine) stay here.",
@@ -1015,7 +1045,6 @@
     "other rice and grains": "No risotto, arborio, paella, sushi, short-grain, brown or wild rice, and no quinoa, couscous, bulgur or cornmeal. Long grain white and Minute instant ARE here, and they behave differently: long grain will not go creamy for a risotto.",
     "cheddar": "No cheddar. Monterey Jack is here and melts much the same way, so it stands in wherever the cheese is melted into something. It is milder and less tangy, so anywhere the cheddar flavour is the point of the dish it will taste flat.",
     "sun dried tomatoes": "No sun-dried tomatoes, in oil or dry. Added 2026-08-16 after the 796 ml tin of DICED tomatoes was being credited for them, which put a pesto grilled cheese and a rice-noodle dish on the ready list. They are a different product entirely: chewy, concentrated and salty rather than wet, and nothing here stands in for them.",
-    "rice vinegar": "No rice vinegar. Split off the `vinegar` row 2026-08-16: that row is a 1 L bottle of DISTILLED WHITE vinegar and it was claiming rice, rice wine, white wine, cider and balsamic vinegar as well, five different products reported as a plain HAVE. Rice vinegar is about 4% and slightly sweet; distilled white is 5% and has no sweetness at all, which is a real difference in a small sauce.",
     "wine and cider vinegar": "No white wine, red wine, cider or balsamic vinegar. The two vinaigrettes in the fridge are dressings, not vinegar. Split off the `vinegar` row 2026-08-16 for the same reason as rice vinegar.",
     "wholewheat flour": "No wholemeal or wholewheat flour. The 2.5 kg bag is plain white all-purpose. Added 2026-08-16 with the baking ingest.",
     "golden syrup": "No golden syrup. It is a British invert-sugar syrup and it is what holds a flapjack together. Honey and maple syrup are both here.",
@@ -1748,7 +1777,6 @@
     ],
     "warm spices": [
       "cinnamon stick",
-      "nutmeg",
       "allspice",
       "cardamom",
       "cloves",
@@ -1810,16 +1838,10 @@
       "tuna steak"
     ],
     "brown sugar": [
-      "brown sugar",
-      "light brown sugar",
-      "dark brown sugar",
-      "soft brown sugar",
-      "brown soft sugar",
       "muscovado sugar",
       "light muscovado sugar",
       "dark muscovado",
       "demerara",
-      "golden caster sugar",
       "palm sugar",
       "coconut sugar",
       "jaggery"
@@ -2108,11 +2130,6 @@
       "semi dried tomatoes",
       "sun blush tomatoes"
     ],
-    "rice vinegar": [
-      "rice vinegar",
-      "rice wine vinegar",
-      "seasoned rice vinegar"
-    ],
     "wine and cider vinegar": [
       "white wine vinegar",
       "red wine vinegar",
@@ -2226,10 +2243,6 @@
       "have": "tomatoes_canned",
       "note": "REPOINTED 2026-08-22, from `tomatoes_grape` to `tomatoes_canned`. A 796 ml tin of diced tomatoes is the right stand-in for a 28 oz can of crushed: 796 ml is 26.9 oz, so the quantity is the same tin. Crush them against the pan with the spoon as they cook, or give them a few seconds in the bullet blender first. Diced holds its shape longer, so a sauce made from them stays chunkier unless you break them up.\n\nIt pointed at 680 g of clearance grape tomatoes, which were 6 days past their date and had been dropped from availability that morning, so the substitute silently stopped working and Budget Bytes' Bolognese went from needing one thing to needing two. That dish is the example he has raised in three separate sessions. A substitute that depends on the most perishable thing in the kitchen is a substitute that expires; prefer the shelf-stable option where one exists."
     },
-    "brown sugar": {
-      "have": "sugar",
-      "note": "White sugar works. Brown is white sugar plus molasses, so you lose a little caramel depth and the dish is very slightly less moist. In a marinade or a sauce nobody would notice. In a bake it matters more."
-    },
     "self raising flour": {
       "have": "flour",
       "note": "Plain flour plus baking powder: 2 tsp of baking powder per 150 g of flour, whisked in dry. You have both."
@@ -2241,10 +2254,6 @@
     "cheddar": {
       "have": "montereyjack",
       "note": "Monterey Jack, same weight. It melts like a mild cheddar and browns a little paler, so a gratin or a toastie works as written. What you lose is the tang: cheddar is sharp and Jack is not, so in anything where the cheese is the flavour rather than the texture, expect it to taste mild. Adding a little grated parmesan brings some of the sharpness back."
-    },
-    "rice vinegar": {
-      "have": "vinegar",
-      "note": "You have distilled white vinegar, not rice. It is stronger and has none of rice vinegar's slight sweetness, so use a little less than the recipe says and taste before adding the rest. In a sauce carrying honey or sugar the difference is small; in a dressing or a quick pickle it is the whole flavour."
     },
     "wine and cider vinegar": {
       "have": "vinegar",
@@ -2265,6 +2274,10 @@
     "oyster mushrooms": {
       "have": "mushrooms",
       "note": "Cremini work and taste meatier and less silky. Slice them thicker than the recipe says so they do not disappear into the soup."
+    },
+    "ricevinegar": {
+      "have": "vinegar",
+      "note": "You have distilled white vinegar, not rice. It is stronger and has none of rice vinegar's slight sweetness, so use a little less than the recipe says and taste before adding the rest. In a sauce carrying honey or sugar the difference is small; in a dressing or a quick pickle it is the whole flavour."
     }
   },
   "_notAnIngredient": {
