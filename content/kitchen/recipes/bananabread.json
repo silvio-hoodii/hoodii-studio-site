@@ -1,0 +1,405 @@
+{
+  "id": "bananabread",
+  "name": "Homemade Banana Bread",
+  "build": "2026-08-22a",
+  "form": "dish",
+  "meal": [
+    "project"
+  ],
+  "why": "Three ripe bananas have been in the freezer since before anyone logged them, and this is what they are for. Everything else is already in the cupboard. It is also the first bake in this kitchen with a loaf pan in it, bought 2026-08-22 specifically so this could exist.",
+  "time": {
+    "activeMin": 15,
+    "totalMin": 75,
+    "note": "her numbers: 15 prep, 60 bake. The 60 is for HER pan, which is smaller than yours. See step 7"
+  },
+  "serves": {
+    "count": 12,
+    "unit": "slice",
+    "proteinPerUnit": 4,
+    "proteinMath": "HER FIGURE: Budget Bytes publishes 4 g of protein per slice across 12 slices, alongside 288 kcal, 40 g carbohydrate and 13 g fat. That is 48 g for the whole loaf, and it comes almost entirely from the 2 cups of flour and the 2 eggs. This is a cake, not a protein vehicle. It is in the app because you wanted it, not because it helps a target."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every numbered instruction is Budget Bytes' own sentence, in her order, with her amounts and her 12 slices. Nothing was scaled, re-panned, re-timed or reordered. Her steps 9 to 11 are a separate muffin variant and are not part of this card, because there is no muffin tin here. What this app adds is the layer a printed page cannot: which bowl and which pan, what each technique word means, and what changes because two things here differ from her kitchen. Those two are stated on the steps they affect: her loaf pan is 8.5x4.5 and this one is 9x5, and there is no hand mixer here. The mixer is not an adaptation I invented. She answers it herself on the same page, under Recipe Tips: 'If you don't have a mixer, you can still make this delicious bread. Whisk the oils and sugars with a fork or whisk. I also like to mash the bananas with a fork.' That sentence is hers, quoted, and it is the reason this card declares a whisk and a fork instead of gear this kitchen does not own.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/homemade-banana-bread/",
+        "primary": true,
+        "note": "Homemade Banana Bread. 4.64 out of 5 from 19 ratings, 12 slices, 15 minutes prep and 60 minutes bake. Fetched 2026-08-22 from the page's own JSON-LD. All thirteen ingredients and instructions 1 to 8 taken verbatim. The no-mixer sentence quoted in the statement above comes from her Recipe Tips section on the same page, read 2026-08-22, and is not in the JSON-LD capture."
+      }
+    ],
+    "readHash": "3661e469",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "bananas",
+      "stock": "bananas",
+      "display": "mashed ripe bananas",
+      "qty": 1.5,
+      "unit": "cups",
+      "prep": "her line reads 1.5 cups, about 3 to 4 bananas. You have exactly 3 and they are frozen, so this is the bottom of her range. Thaw them first and MEASURE what you get rather than assuming",
+      "defining": true
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "salted butter, room-temperature",
+      "qty": 4,
+      "unit": "tbsp",
+      "prep": "out of the fridge at least an hour before, or it will not whisk into the sugar. Room temperature means it dents easily under a finger and does not go oily",
+      "defining": true
+    },
+    {
+      "ref": "oil",
+      "stock": "oil",
+      "display": "cooking oil",
+      "qty": 0.25,
+      "unit": "cup",
+      "prep": "the plain vegetable oil",
+      "defining": false
+    },
+    {
+      "ref": "sugar",
+      "stock": "sugar",
+      "display": "granulated sugar",
+      "qty": 0.5,
+      "unit": "cup",
+      "defining": false
+    },
+    {
+      "ref": "brown_sugar",
+      "stock": "brownsugar",
+      "display": "brown sugar",
+      "qty": 0.5,
+      "unit": "cup",
+      "prep": "the golden yellow sugar in the Ziploc. The bag holds roughly a cup, so this loaf takes about half of it",
+      "defining": false
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 2,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "vanilla",
+      "stock": "vanilla",
+      "display": "vanilla extract",
+      "qty": 1,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "flour",
+      "stock": "flour",
+      "display": "all-purpose flour",
+      "qty": 2,
+      "unit": "cups",
+      "defining": true
+    },
+    {
+      "ref": "baking_soda",
+      "display": "baking soda",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "the Arm & Hammer box. NOT baking powder, they are different and are not interchangeable here",
+      "defining": true
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "nutmeg",
+      "stock": "nutmeg",
+      "display": "ground nutmeg",
+      "qty": 0.25,
+      "unit": "tsp",
+      "defining": false,
+      "altText": "NO NUTMEG HERE, and she does not mark it optional the way she marks the walnuts. A quarter teaspoon across twelve slices is a background warmth rather than a flavour you could name blind, and the cinnamon in the same step is doing the louder half of that job. The loaf works without it and will taste very slightly flatter and less spiced. It is a $2.27 jar and it was on the shop list, so this is worth fixing before the next bake rather than agonising over tonight."
+    },
+    {
+      "ref": "cinnamon",
+      "stock": "cinnamon",
+      "display": "cinnamon",
+      "qty": 0.25,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "walnuts",
+      "display": "chopped walnuts",
+      "qty": 0.5,
+      "unit": "cup",
+      "optional": true,
+      "defining": false,
+      "prep": "SHE MARKS THESE OPTIONAL on her own page, and there are no nuts of any kind in this kitchen. Skip step 5 entirely"
+    }
+  ],
+  "equipment": [
+    "oven",
+    "loafpan",
+    "mixingbowl_large",
+    "bowlset",
+    "whisk",
+    "fork",
+    "measuringcups",
+    "measuringspoons",
+    "spatula",
+    "ovenmitts",
+    "knife_sharp",
+    "plates"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Preheat the oven to 350ºF/180C/160C fan or Gas Mark 4 . Add the room-temperature butter, cooking oil, granulated sugar, and brown sugar to a mixing bowl. Use a hand mixer or stand mixer to beat the ingredients together until they become light and creamy.",
+      "sourceText": "Preheat the oven to 350ºF/180C/160C fan or Gas Mark 4 . Add the room-temperature butter, cooking oil, granulated sugar, and brown sugar to a mixing bowl. Use a hand mixer or stand mixer to beat the ingredients together until they become light and creamy.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 4,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "oil",
+          "amount": 0.25,
+          "unit": "cup"
+        },
+        {
+          "ref": "sugar",
+          "amount": 0.5,
+          "unit": "cup"
+        },
+        {
+          "ref": "brown_sugar",
+          "amount": 0.5,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "oven",
+        "mixingbowl_large",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 6,
+      "heat": {
+        "surface": "oven",
+        "target": "350F. An oven's temperature is a real number, unlike this hob's dial, so set it and trust it.",
+        "recheck": "Turn it on FIRST, before any mixing. It takes 10 to 15 minutes to come up and the batter should not sit waiting once the baking soda is wet.",
+        "tempF": 350,
+        "tempC": 180
+      },
+      "doneness": {
+        "test": "Drag the whisk through and lift it. The mixture should be paler than the butter was, and hold a soft ridge for a second before sinking back. If it still looks like lumps of butter sitting in wet sugar, keep going.",
+        "kind": "look"
+      },
+      "look": "YOU HAVE NO MIXER AND YOU DO NOT NEED ONE. That is her answer, not mine. On the same page, under Recipe Tips, she writes: \"If you don't have a mixer, you can still make this delicious bread. Whisk the oils and sugars with a fork or whisk. I also like to mash the bananas with a fork.\" So use the hand whisk. It takes a few minutes of real effort rather than thirty seconds.\n\nROOM-TEMPERATURE BUTTER IS THE WHOLE TRICK. Cold butter will not break up and you will be chasing lumps around the bowl for ten minutes. It wants to dent under a finger without being greasy. If it is still fridge-hard, cut it into small pieces and give it fifteen minutes on the counter.\n\nLIGHT AND CREAMY means paler in colour and fluffier in texture than what you started with. You are beating air into the fat, and that air is part of what lifts the loaf.\n\nTHE QUARTER CUP OF OIL alongside the butter is deliberate on her part. Butter brings the flavour, oil keeps it moist for days. Do not swap one for the other."
+    },
+    {
+      "n": 2,
+      "text": "Mash the bananas well, then add them to the mixing bowl with the butter and sugar, along with the eggs and vanilla extract. Use the mixter again to beat the ingredients together until smooth.",
+      "sourceText": "Mash the bananas well, then add them to the mixing bowl with the butter and sugar, along with the eggs and vanilla extract. Use the mixter again to beat the ingredients together until smooth.",
+      "uses": [
+        {
+          "ref": "bananas",
+          "amount": 1.5,
+          "unit": "cups"
+        },
+        {
+          "ref": "eggs",
+          "amount": 2,
+          "unit": "each"
+        },
+        {
+          "ref": "vanilla",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "fork",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "No streaks of raw egg anywhere, and no lumps of banana bigger than a pea. It will look loose, wet and slightly split, like a curdled custard. That is correct and it comes back together the moment the flour goes in.",
+        "kind": "look"
+      },
+      "look": "MASH THEM WITH A FORK in a separate bowl first, which is the second half of her no-mixer tip. Frozen bananas thaw into a slippery mush that mashes almost by itself, so this is easier for you than it is for her.\n\nTHEY WILL RELEASE LIQUID as they thaw. Put all of it in. That liquid is banana, not water, and pouring it away makes a drier and less banana-flavoured loaf.\n\nMEASURE AFTER MASHING. Her line is 1.5 cups from about 3 to 4 bananas and you have exactly 3, which is the bottom of that range. If you end up meaningfully short of 1.5 cups, nothing is ruined: the loaf will simply be a little drier and a little less banana-forward. Do not top it up with anything.\n\n\"THE MIXTER\" IS HER TYPO for mixer, left exactly as she wrote it because these steps are quoted rather than retyped. Whisk, as in step 1.\n\nIT LOOKING SPLIT IS NOT A MISTAKE. Cold eggs into a fat-and-sugar base always looks broken. Step 4 fixes it."
+    },
+    {
+      "n": 3,
+      "text": "In a separate mixing bowl, stir together the flour, baking soda, salt, nutmeg, and cinnamon until well combined.",
+      "sourceText": "In a separate mixing bowl, stir together the flour, baking soda, salt, nutmeg, and cinnamon until well combined.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 2,
+          "unit": "cups"
+        },
+        {
+          "ref": "baking_soda",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "nutmeg",
+          "amount": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "ref": "cinnamon",
+          "amount": 0.25,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Uniform colour throughout, with no darker specks of cinnamon sitting in one place. Thirty seconds with the whisk does it.",
+        "kind": "look"
+      },
+      "look": "A SEPARATE BOWL IS NOT FUSSINESS. One teaspoon of baking soda has to reach every part of two cups of flour. Tip it straight into the wet mixture instead and you get bitter soapy pockets in some slices and no lift in others.\n\nBAKING SODA, NOT BAKING POWDER. You own both and they are not interchangeable. Soda needs an acid to work, and the acid here is the banana.\n\nNO NUTMEG IN THIS KITCHEN. It is a quarter teaspoon and she does not call it optional, so the app is not pretending it does not matter. Leave it out and the loaf is very slightly less spiced. The cinnamon is doing the louder half of that job anyway."
+    },
+    {
+      "n": 4,
+      "text": "Pour the flour mixture into the bowl of wet ingredients and fold them together just until combined. Do not overmix.",
+      "sourceText": "Pour the flour mixture into the bowl of wet ingredients and fold them together just until combined. Do not overmix.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "spatula"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "STOP when the last visible streak of dry flour disappears. Not thirty seconds after. A few small lumps are fine and are supposed to be there.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE STEP THAT RUINS BANANA BREAD, and it ruins it by doing too much rather than too little.\n\nFOLD means cut down through the middle with the spatula, sweep along the bottom, and turn the whole lot over on itself. Then rotate the bowl a quarter turn and repeat. It is slow and deliberate. It is not stirring and it is not beating.\n\nWHY IT MATTERS: flour plus liquid plus agitation builds gluten, which is exactly what you want in pizza dough and exactly what you do not want here. Overmixed banana bread comes out tough, rubbery and full of long tunnels instead of an even crumb.\n\nPUT THE WHISK DOWN. Use the spatula. A whisk is built to do the thing this step forbids."
+    },
+    {
+      "n": 5,
+      "text": "Add the chopped walnuts to the bowl and gently fold to combine again.",
+      "sourceText": "Add the chopped walnuts to the bowl and gently fold to combine again.",
+      "uses": [
+        {
+          "ref": "walnuts",
+          "amount": 0.5,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "spatula"
+      ],
+      "minutes": 1,
+      "heat": null,
+      "doneness": {
+        "test": "Nothing to test. Skip this step.",
+        "kind": "look"
+      },
+      "look": "SKIP THIS ENTIRE STEP. She marks the walnuts optional on her own page, and there are no nuts of any kind in this kitchen. Go straight to step 6.\n\nIf you ever do add them, the same overmixing warning from step 4 applies, which is why she says gently."
+    },
+    {
+      "n": 6,
+      "text": "Grease an 8.5\"x4.5\" loaf pan with butter or oil, then add the batter and smooth it out evenly into the pan.",
+      "sourceText": "Grease an 8.5\"x4.5\" loaf pan with butter or oil, then add the batter and smooth it out evenly into the pan.",
+      "uses": [
+        {
+          "ref": "oil",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "loafpan",
+        "spatula"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "Tilt the pan and look along the surface. The batter should sit level rather than mounded in the middle, and it should reach into both corners at each end.",
+        "kind": "look"
+      },
+      "look": "HER PAN IS 8.5 x 4.5 AND YOURS IS 9x5. That is roughly 20 percent more floor area, so the same batter sits SHALLOWER in your pan and will bake FASTER than her 60 minutes. Do not treat her time as the answer. The toothpick in step 7 is the answer, and start checking early.\n\nGREASE means wipe a thin film over the bottom and all four sides, right up to the rim. A folded piece of paper towel with a little oil on it is the easiest way. Miss the corners and that is exactly where it welds itself to the pan.\n\nUSE OIL RATHER THAN BUTTER for greasing if you are choosing. Butter contains water and milk solids, which can stick in their own right.\n\nTHE GREASE IS EXTRA, not part of the quarter cup in the ingredient list. It is a smear, not a measured amount."
+    },
+    {
+      "n": 7,
+      "text": "Bake the banana bread in the preheated 350ºF/180C/160C fan or Gas Mark 4 oven for 60 minutes or until it's deeply golden brown on top, has a crack down the center, and a toothpick inserted into the middle comes out clean (crumbs are okay, but wet batter is not).",
+      "sourceText": "Bake the banana bread in the preheated 350ºF/180C/160C fan or Gas Mark 4 oven for 60 minutes or until it's deeply golden brown on top, has a crack down the center, and a toothpick inserted into the middle comes out clean (crumbs are okay, but wet batter is not).",
+      "uses": [],
+      "equipment": [
+        "oven",
+        "loafpan",
+        "ovenmitts",
+        "knife_sharp"
+      ],
+      "minutes": 60,
+      "heat": {
+        "surface": "oven",
+        "target": "350F, unchanged from step 1.",
+        "recheck": "Do not open the door for the first 40 minutes. Opening it drops the temperature and can collapse a loaf that has not set yet.",
+        "tempF": 350,
+        "tempC": 180
+      },
+      "doneness": {
+        "test": "THREE THINGS TOGETHER, all hers: deeply golden brown on top, a crack running down the centre, and a skewer pushed into the middle coming out with crumbs clinging to it but NO wet batter. Damp crumbs mean done. Anything glossy and smeared means keep baking. START CHECKING AT 45 MINUTES, not 60, because your pan is wider than hers.",
+        "kind": "probe"
+      },
+      "look": "THE CRACK DOWN THE MIDDLE IS A FEATURE. Every banana bread does it: the outside sets while the middle is still rising, so the top splits. A loaf with no crack is usually underbaked.\n\nNO TOOTHPICK IN THIS KITCHEN that anyone has recorded. A thin skewer, a paring knife or a piece of dry spaghetti all read the same way. Push it into the thickest part of the centre, all the way to the bottom, and pull it straight out.\n\nHER 60 MINUTES IS FOR HER SMALLER PAN. Yours is shallower, so somewhere between 45 and 60 is realistic. This is the one number on the card that will not be right for you, and it is why the test above exists.\n\nIF THE TOP IS DARK BUT THE MIDDLE IS WET, lay a piece of foil or parchment loosely over the top and carry on. That stops it browning further while the inside catches up."
+    },
+    {
+      "n": 8,
+      "text": "Allow the loaf to cool for about 5 minutes in the pan, then gently remove it from the pan and allow it to finish cooling on a wire rack. Once cooled, slice, serve, and enjoy!",
+      "sourceText": "Allow the loaf to cool for about 5 minutes in the pan, then gently remove it from the pan and allow it to finish cooling on a wire rack. Once cooled, slice, serve, and enjoy!",
+      "uses": [],
+      "equipment": [
+        "ovenmitts",
+        "knife_sharp",
+        "plates"
+      ],
+      "minutes": 45,
+      "heat": null,
+      "doneness": {
+        "test": "Press a palm flat against the side of the loaf. Cool enough to slice means it feels barely warm, not hot. Cutting it hot tears it, because the crumb is still setting.",
+        "kind": "touch"
+      },
+      "look": "FIVE MINUTES IN THE PAN, THEN OUT. Both halves matter. Straight out and it can break apart; left in and the trapped steam turns the sides soggy.\n\nNO WIRE RACK IS RECORDED IN THIS KITCHEN. Her reason for one is airflow underneath so the bottom does not sit in its own steam. The 6 qt colander turned upside down does the same job, and so does resting it across the rim of an empty loaf pan or on a couple of chopsticks over a plate. If you do just use a plate, the base ends up a little damp, which is a texture note and not a failure.\n\nRUN A KNIFE AROUND THE EDGE before turning it out, tip the pan on its side rather than upside down, and let the loaf come away with gravity instead of pulling it.\n\nIT KEEPS 3 TO 4 DAYS wrapped at room temperature, and it slices better on day two than it does warm. It also freezes well in slices, which is the honest answer to twelve slices in one household."
+    }
+  ]
+}

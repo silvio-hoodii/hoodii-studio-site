@@ -750,6 +750,14 @@
       "since": "2026-08-16",
       "src": "event",
       "note": "Catalogue row added 2026-08-22. The item has existed since a stock event on 2026-08-16 recorded 145 g, but it had no row in items.json, so any recipe declaring `stock: \"sesameseeds\"` failed validation. Identity and state are different things and this one had state without identity."
+    },
+    "cinnamon": {
+      "n": "ground cinnamon",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-16",
+      "src": "event",
+      "note": "Catalogue row added 2026-08-22. Great Value, 60 g, arrived 2026-08-16 and narrowed the `warm spices` gap that day, but it never got a row in items.json, so any recipe declaring `stock: \"cinnamon\"` failed validation. State without identity, exactly like sesameseeds."
     }
   }
 }
