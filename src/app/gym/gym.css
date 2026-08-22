@@ -772,3 +772,80 @@
 }
 .gym details.ladder-all > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 
+/* ---- one session, drawn ----
+ *
+ * Built 2026-08-22 from the per-second data the watch had always recorded and nothing had ever
+ * read. Monochrome like everything else, and NO TEXT INSIDE ANY VIEWBOX: text in an SVG scales with
+ * the box, and /health once rendered its axis labels at 6.1px on a phone for exactly that reason.
+ * Every number sits in HTML beside the drawing at a real size. */
+
+.gym .trace { margin-top: 14px; }
+.gym .trace-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.gym .trace-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted-foreground);
+}
+.gym .trace-range {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.gym .trace svg { display: block; overflow: visible; }
+.gym .trace-area { fill: var(--muted-foreground); opacity: 0.12; stroke: none; }
+/* vector-effect keeps the stroke 1px wide despite preserveAspectRatio="none" stretching the box. */
+.gym .trace-line {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+/* The one threshold that means something: 110 bpm on a lifting session, 170 spm on a run. */
+.gym .trace-floor {
+  stroke: var(--muted-foreground);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
+}
+/* --signal, once, on the value that is true right now: where the session ended. */
+.gym .trace-now { fill: var(--signal); }
+.gym .trace-foot {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted-foreground);
+  margin-top: 5px;
+}
+
+.gym .len-bar { fill: var(--muted-foreground); opacity: 0.55; }
+.gym .len-bar.fastest { fill: var(--foreground); opacity: 1; }
+/* A length he stopped after. Drawn as a notch rather than a colour so it survives being read in
+   greyscale and does not spend the accent on something that is not true right now. */
+.gym .len-bar.before-rest { opacity: 0.28; }
+
+.gym .sstats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 2px 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.gym .sstat { display: flex; flex-direction: column; padding: 5px 0; }
+.gym .sstat-k {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+.gym .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+

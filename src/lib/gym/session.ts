@@ -1,0 +1,138 @@
+import 'server-only';
+import { sql } from '../health/db';
+
+/* THE LAST SESSION, per activity, from what the watch recorded INSIDE it.
+ *
+ * "I liked how we did the analysis of each session for the swimming part... I want that for
+ * everything. I don't know if there's more information on weightlifting. Maybe there is, maybe
+ * there's not, but just look into each activity and exploit all the information that we have."
+ *
+ * The four activities are NOT equal, and the honest answer to his question is that lifting has
+ * almost nothing. Audited before anything was built:
+ *
+ *   swimming   heart rate per second, and per LENGTH: duration, stroke count, stroke, rest.
+ *   treadmill  heart rate, cadence, speed, distance per second. Cadence IS measured indoors.
+ *   strength   heart rate. Nothing else. No reps, no load, no rest detection.
+ *   cycling    heart rate. Nothing else at all.
+ *
+ * So each kind gets the panel its data can support, and the two that have only a heart rate say so
+ * rather than being padded out to look equally analysed. */
+
+export type SessionKind = 'swimming' | 'treadmill' | 'running' | 'strength' | 'cycling' | 'other';
+
+export interface LengthRow {
+  /** Seconds for the length. */
+  s: number;
+  /** Stroke CYCLES, both arms. Samsung's counter reports cycles: his median is 9 per 25 m, which
+   *  would be 2.78 m per single arm stroke and is not physically possible. */
+  c: number;
+  /** Seconds of rest recorded after this length. */
+  rest: number;
+  stroke: string | null;
+}
+
+export interface SessionDetail {
+  uuid: string;
+  date: string;
+  kind: SessionKind;
+  startTime: string;
+  minutes: number | null;
+  distanceM: number | null;
+  calories: number | null;
+  avgHr: number | null;
+  maxHr: number | null;
+  minHr: number | null;
+  /** Percent of the session under 110 bpm. */
+  pctEasy: number | null;
+  poolLength: number | null;
+  lengths: number | null;
+  avgSwolf: number | null;
+  avgCycles: number | null;
+  strokeRate: number | null;
+  avgCadence: number | null;
+  maxCadence: number | null;
+  series: { hr: number[]; cadence?: number[]; speed?: number[]; lengths?: LengthRow[] };
+}
+
+const map = (r: Record<string, unknown>): SessionDetail => ({
+  uuid: String(r.uuid),
+  date: String(r.date),
+  kind: String(r.kind) as SessionKind,
+  startTime: String(r.start_time),
+  minutes: r.minutes == null ? null : Number(r.minutes),
+  distanceM: r.distance_m == null ? null : Number(r.distance_m),
+  calories: r.calories == null ? null : Number(r.calories),
+  avgHr: r.avg_hr == null ? null : Number(r.avg_hr),
+  maxHr: r.max_hr == null ? null : Number(r.max_hr),
+  minHr: r.min_hr == null ? null : Number(r.min_hr),
+  pctEasy: r.pct_easy == null ? null : Number(r.pct_easy),
+  poolLength: r.pool_length == null ? null : Number(r.pool_length),
+  lengths: r.lengths == null ? null : Number(r.lengths),
+  avgSwolf: r.avg_swolf == null ? null : Number(r.avg_swolf),
+  avgCycles: r.avg_cycles == null ? null : Number(r.avg_cycles),
+  strokeRate: r.stroke_rate == null ? null : Number(r.stroke_rate),
+  avgCadence: r.avg_cadence == null ? null : Number(r.avg_cadence),
+  maxCadence: r.max_cadence == null ? null : Number(r.max_cadence),
+  series: (r.detail as SessionDetail['series']) ?? { hr: [] },
+});
+
+/** The most recent session of a kind. `treadmill` also accepts an outdoor run. */
+export async function getLastSession(kind: SessionKind): Promise<SessionDetail | null> {
+  const kinds = kind === 'treadmill' ? ['treadmill', 'running'] : [kind];
+  const rows = await sql`
+    select * from health_session_detail
+    where kind = any(${kinds})
+    order by start_time desc
+    limit 1
+  `;
+  const r = rows[0] as Record<string, unknown> | undefined;
+  return r ? map(r) : null;
+}
+
+/** Recent sessions of a kind, newest first, for a trend beside the single session. */
+export async function getRecentSessions(kind: SessionKind, limit = 10): Promise<SessionDetail[]> {
+  const kinds = kind === 'treadmill' ? ['treadmill', 'running'] : [kind];
+  const rows = await sql`
+    select * from health_session_detail
+    where kind = any(${kinds})
+    order by start_time desc
+    limit ${limit}
+  `;
+  return (rows as unknown as Record<string, unknown>[]).map(map);
+}
+
+/** mm:ss for a duration in seconds. */
+export function mmss(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = Math.round(sec - m * 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+/** Pace per 100 m, as mm:ss, from a distance and a duration. */
+export function pacePer100(distanceM: number | null, minutes: number | null): string | null {
+  if (!distanceM || !minutes) return null;
+  return mmss((minutes * 60) / (distanceM / 100));
+}
+
+/* WHAT THE SESSION SAYS, in one sentence, and only where the data can carry one.
+ *
+ * Deliberately narrow. A heart-rate trace over a lifting session cannot tell him whether the lifting
+ * was any good, and a page that dressed it up as insight would be exactly the "slop sitting there
+ * without any real reason" he complained about. It CAN say how much of the hour was spent under
+ * 110 bpm, which is a fact about the shape of his session and the one that found a 28-minute hole. */
+export function sessionVerdict(s: SessionDetail): string | null {
+  if (s.kind === 'strength') {
+    if (s.pctEasy == null) return null;
+    return `${Math.round(s.pctEasy)}% of this session was under 110 bpm. That is the standing-around, and it is the only thing a wrist heart rate can honestly tell you about a lifting session.`;
+  }
+  if (s.kind === 'cycling') {
+    return 'Heart rate is the only thing the watch records on the bike. No cadence, no power, no resistance, so there is nothing here about whether you rode it well.';
+  }
+  if (s.kind === 'swimming' && s.avgSwolf != null && s.strokeRate != null) {
+    return `SWOLF ${s.avgSwolf} at ${s.strokeRate} cycles a minute. SWOLF is seconds plus strokes for a length, so it drops when you get faster OR more efficient. Your stroke rate is the low half of that pair.`;
+  }
+  if ((s.kind === 'treadmill' || s.kind === 'running') && s.avgCadence) {
+    return `${Math.round(s.avgCadence)} steps a minute average. Cadence is measured on the treadmill, so this is real: most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
+  }
+  return null;
+}

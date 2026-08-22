@@ -128,3 +128,48 @@ create table if not exists health_swim_pb (
 );
 create index if not exists health_swim_pb_dist on health_swim_pb (distance_m, duration_ms);
 
+-- What the watch recorded INSIDE a session, as opposed to the one summary row per session that
+-- health_watch_session already holds. Mirrored from healthos.db `session_detail`, written by
+-- HealthOS/server/import-session-detail.mjs.
+--
+-- He asked for this directly: "just look into each activity and exploit all the information that we
+-- have." The audit that preceded it found the four activities are NOT equal, and the page says so:
+--
+--   swimming   heart rate per second AND per length (duration, stroke count, stroke, rest). SWOLF,
+--              distance per stroke and stroke rate all fall out of it. Much the richest.
+--   treadmill  heart rate, CADENCE, speed and distance per second. Cadence IS measured indoors.
+--   strength   heart rate only. It cannot judge a lift. It can show the shape of the session, which
+--              is how 54% of every gym session turned out to sit under 110 bpm.
+--   cycling    heart rate only. No rpm, no power, no resistance. Nothing to say, and the page says
+--              nothing rather than dressing it up.
+--
+-- `detail` is the downsampled series plus, for a swim, the per-length array. Downsampled to about
+-- 120 points by MEAN inside each bucket, not by taking every Nth sample: sampling drops peaks and
+-- the peak is the part worth asking about. min/max/avg are computed from the FULL series before
+-- downsampling, so no headline number depends on it. 151 sessions come to 137 KB in total.
+create table if not exists health_session_detail (
+  uuid        text primary key,
+  date        text not null,
+  kind        text not null,
+  start_time  text not null,
+  minutes     integer,
+  distance_m  real,
+  calories    real,
+  avg_hr      integer,
+  max_hr      integer,
+  min_hr      integer,
+  -- Fraction of the session under 110 bpm. For a lifting session this is the only honest thing
+  -- heart rate can say, and it is about the shape of the hour rather than the quality of a lift.
+  pct_easy    real,
+  pool_length integer,
+  lengths     integer,
+  avg_swolf   real,
+  avg_cycles  real,
+  stroke_rate real,
+  avg_cadence real,
+  max_cadence real,
+  detail      jsonb,
+  imported_at timestamptz
+);
+create index if not exists health_session_detail_kind on health_session_detail (kind, date desc);
+

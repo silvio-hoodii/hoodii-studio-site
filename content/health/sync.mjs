@@ -76,6 +76,7 @@ let swWritten = 0;
 let targetWritten = 0;
 let recWritten = 0;
 let pbWritten = 0;
+let detailWritten = 0;
 
 try {
 
@@ -167,6 +168,40 @@ if (hasPb) {
   console.log('swim_pb not in healthos.db yet: run HealthOS/server/import-watch-sessions.mjs');
 }
 
+/* --- per-session detail ----------------------------------------------------------------------
+ * The heart-rate trace, the swim splits and the treadmill cadence. Guarded like the others so an
+ * older healthos.db cannot fail the whole mirror. */
+const hasDetail = db
+  .prepare(`select count(*) c from sqlite_master where type = 'table' and name = 'session_detail'`)
+  .get().c > 0;
+if (hasDetail) {
+  const rows = db.prepare(`select uuid, date, kind, start_time, minutes, distance_m, calories,
+    avg_hr, max_hr, min_hr, pct_easy, pool_length, lengths, avg_swolf, avg_cycles, stroke_rate,
+    avg_cadence, max_cadence, detail, imported_at from session_detail`).all();
+  for (const r of rows) {
+    await q(
+      `insert into health_session_detail (uuid, date, kind, start_time, minutes, distance_m,
+         calories, avg_hr, max_hr, min_hr, pct_easy, pool_length, lengths, avg_swolf, avg_cycles,
+         stroke_rate, avg_cadence, max_cadence, detail, imported_at)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19::jsonb,$20)
+       on conflict (uuid) do update set
+         date=excluded.date, kind=excluded.kind, minutes=excluded.minutes,
+         distance_m=excluded.distance_m, calories=excluded.calories, avg_hr=excluded.avg_hr,
+         max_hr=excluded.max_hr, min_hr=excluded.min_hr, pct_easy=excluded.pct_easy,
+         pool_length=excluded.pool_length, lengths=excluded.lengths, avg_swolf=excluded.avg_swolf,
+         avg_cycles=excluded.avg_cycles, stroke_rate=excluded.stroke_rate,
+         avg_cadence=excluded.avg_cadence, max_cadence=excluded.max_cadence,
+         detail=excluded.detail, imported_at=excluded.imported_at`,
+      [r.uuid, r.date, r.kind, r.start_time, r.minutes, r.distance_m, r.calories, r.avg_hr,
+       r.max_hr, r.min_hr, r.pct_easy, r.pool_length, r.lengths, r.avg_swolf, r.avg_cycles,
+       r.stroke_rate, r.avg_cadence, r.max_cadence, r.detail, r.imported_at],
+    );
+    detailWritten++;
+  }
+} else {
+  console.log('session_detail not in healthos.db yet: run HealthOS/server/import-session-detail.mjs');
+}
+
 db.close();
 
 // --- swim sessions (session-level, from the already-enriched JSON, not the raw CSV) -------------
@@ -220,6 +255,7 @@ console.log(`${DRY ? '[dry run] ' : ''}body_comp: ${bcWritten} rows (sqlite had 
 console.log(`${DRY ? '[dry run] ' : ''}watch_session (all training kinds, walking excluded): ${wsWritten} rows (sqlite had ${watchSessions.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}recovery: ${recWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim PBs: ${pbWritten} rows`);
+console.log(`${DRY ? '[dry run] ' : ''}session detail: ${detailWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 

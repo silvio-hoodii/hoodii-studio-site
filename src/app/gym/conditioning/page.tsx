@@ -5,6 +5,8 @@ import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
 } from '@/lib/gym/swim-level';
+import { getLastSession, sessionVerdict, type SessionDetail, type SessionKind } from '@/lib/gym/session';
+import { Trace, LengthBars, SessionStats } from '../SessionCharts';
 import type { Cue } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
@@ -472,10 +474,12 @@ const SUB_TABS: Record<string, { id: string; label: string }[]> = {
     { id: 'how', label: 'How' },
   ],
   run: [
+    { id: 'now', label: 'Now' },
     { id: 'plan', label: 'Plan' },
     { id: 'how', label: 'How' },
   ],
   bike: [
+    { id: 'now', label: 'Now' },
     { id: 'plan', label: 'Plan' },
     { id: 'how', label: 'How' },
   ],
@@ -500,6 +504,55 @@ function SubNav({ tab, sub }: { tab: string; sub: string }) {
   );
 }
 
+
+/* THE LAST SESSION, drawn. Built 2026-08-22 from the per-second data the watch has always recorded
+ * and nothing had ever read.
+ *
+ * The four activities get DIFFERENT panels because they carry different data, and the two that
+ * carry only a heart rate say so instead of being padded out to look equally analysed. That is the
+ * difference between an analysis and the "slop sitting there without any real reason" he objected
+ * to: every element here exists because that activity produced the number behind it. */
+function LastSession({ s }: { s: SessionDetail | null }) {
+  if (!s) {
+    return (
+      <div className="exgroup">
+        <div className="exgroup-label">Your last session</div>
+        <p className="ex-cue">
+          Nothing recorded yet for this one. Sessions arrive with the daily watch export.
+        </p>
+      </div>
+    );
+  }
+  const verdict = sessionVerdict(s);
+  const isSwim = s.kind === 'swimming';
+  const isRun = s.kind === 'treadmill' || s.kind === 'running';
+  return (
+    <div className="exgroup">
+      <div className="exgroup-label">
+        Your last session <span className="tag">({shortDate(s.date)})</span>
+      </div>
+      <SessionStats s={s} />
+      {isSwim && s.series.lengths && (
+        <LengthBars lengths={s.series.lengths} poolLength={s.poolLength} />
+      )}
+      {isRun && s.series.cadence && (
+        <Trace values={s.series.cadence} label="Cadence" unit="spm" floor={170} />
+      )}
+      {/* Heart rate last for the two that have other data, and alone for the two that do not.
+          The 110 rule is drawn only on a lifting session, where it is the whole point. */}
+      {s.series.hr?.length > 2 && (
+        <Trace
+          values={s.series.hr}
+          label="Heart rate"
+          unit="bpm"
+          {...(s.kind === 'strength' ? { floor: 110 } : {})}
+        />
+      )}
+      {verdict && <p className="ex-cue" style={{ marginTop: 10 }}>{verdict}</p>}
+    </div>
+  );
+}
+
 export default async function ConditioningPage({
   searchParams,
 }: {
@@ -517,6 +570,11 @@ export default async function ConditioningPage({
   const [c, program] = await Promise.all([loadConditioning(), loadProgram()]);
   const week = tab === 'week' ? await getTrainingWeek(program, c) : null;
   /* Same reasoning as the week query: only the swim tab pays for the personal-best read. */
+  /* One session read, only for the discipline actually open, and only on its Now tab. */
+  const KIND_FOR_TAB: Record<string, SessionKind> = { swim: 'swimming', run: 'treadmill', bike: 'cycling', week: 'strength' };
+  const lastSession = sub === 'now' || tab === 'week'
+    ? await getLastSession(KIND_FOR_TAB[tab] ?? 'strength')
+    : null;
   const swim = tab === 'swim' ? await (async () => {
     const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
     return { standards, standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)) };
@@ -561,6 +619,8 @@ export default async function ConditioningPage({
               day. That is what leaves Wednesday and the weekend clear.
             </p>
           </div>
+
+          <LastSession s={lastSession} />
 
           <div className="exgroup">
             <div className="exgroup-label">What actually happened</div>
@@ -634,6 +694,9 @@ export default async function ConditioningPage({
           </div>
         </>
       )}
+
+      {tab === 'run' && sub === 'now' && <LastSession s={lastSession} />}
+      {tab === 'bike' && sub === 'now' && <LastSession s={lastSession} />}
 
       {tab === 'run' && sub === 'plan' && (
         <div className="exgroup">
@@ -743,6 +806,8 @@ export default async function ConditioningPage({
           <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
         </div>
       )}
+
+      {tab === 'swim' && sub === 'now' && <LastSession s={lastSession} />}
 
       {tab === 'swim' && sub === 'now' && swim && <SwimLevel standards={swim.standards} standings={swim.standings} />}
 
