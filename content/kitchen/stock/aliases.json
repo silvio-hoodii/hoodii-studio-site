@@ -886,6 +886,15 @@
       "thai jasmine rice",
       "washed jasmine rice",
       "jasmine"
+    ],
+    "broccoli": [
+      "broccoli",
+      "broccoli florets",
+      "broccoli floret",
+      "tenderstem broccoli",
+      "purple sprouting broccoli",
+      "sprouting broccoli",
+      "broccolini"
     ]
   },
   "_knownGaps": {
@@ -923,8 +932,8 @@
     "tinned fish": "NARROWED 2026-08-16. Three tins of flaked white tuna arrived 08-14 (two Ocean's albacore 184 g, one PC 170 g) and are now the stock item `tuna`. Still missing: tinned salmon, sardines, anchovies and mackerel. The only other fish here is frozen tilapia.",
     "brown sugar": "No brown sugar, only white.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
-    "fresh soft herbs": "NARROWED 2026-08-16. Dried OREGANO arrived (Great Value, 32 g) and is the stock item `oregano`. Still missing, fresh or dried: thyme, sage, rosemary, tarragon, bay, chives and any mixed-herb blend. The herbs here are fresh parsley, fresh dill, fresh basil, dried oregano and the Italian seasoning blend.",
-    "green vegetables": "No broccoli, asparagus, green beans, cauliflower, pak choi, spring greens, kale or spinach. The vegetables here are onion, carrot, peppers, sweet potato and whatever is in the frozen mixed bag.",
+    "fresh soft herbs": "NARROWED AGAIN 2026-08-21. Blends he already owns are out of this bucket: Italian seasoning is a mixed dried-herb blend and satisfies \"mixed herbs\", \"dried mixed herbs\" and \"herbes de provence\", and dried basil is covered by the fresh basil plus the blend. Still missing, fresh or dried: thyme, sage, rosemary, tarragon, marjoram, chervil, bay and chives. The herbs here are fresh parsley, fresh dill, fresh basil, dried oregano and Italian seasoning.",
+    "green vegetables": "NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans, cauliflower, pak choi, spring greens, kale, brussels sprouts, sugar snap peas, mangetout, courgette/zucchini, leeks, spinach, chard, watercress and aubergine. The vegetables here are onion, carrot, peppers, sweet potato, potato, mushrooms, cucumber, asparagus, broccoli and the frozen mixed bag.\n\nWHY THIS ROW COST MORE THAN ANY OTHER: it bundled 32 distinct vegetables under one label, and it was the single largest blocker in the whole corpus at 78 dishes where it was the ONLY thing missing. A category gap cannot be partly satisfied, so buying broccoli unblocked nothing and the note asserting \"no broccoli, asparagus...\" went on being read as true after both had arrived. Never put a shopping CATEGORY where an ingredient belongs.",
     "avocado": "No avocado.",
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
     "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing and sesame oil are the ones that ARE here.",
@@ -1744,20 +1753,12 @@
       "fresh rosemary",
       "dried rosemary",
       "dried thyme",
-      "dried basil",
       "bay leaf",
       "bay leaves",
-      "dried mixed herbs",
-      "mixed herbs",
-      "herbes de provence",
       "dried sage",
       "dried tarragon"
     ],
     "green vegetables": [
-      "broccoli",
-      "broccoli florets",
-      "tenderstem broccoli",
-      "purple sprouting broccoli",
       "green beans",
       "fine beans",
       "cauliflower",
@@ -1784,8 +1785,7 @@
       "zucchini",
       "runner beans",
       "green bean",
-      "sugar snap pea",
-      "broccoli floret"
+      "sugar snap pea"
     ],
     "avocado": [
       "avocado",

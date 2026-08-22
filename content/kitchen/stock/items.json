@@ -674,6 +674,12 @@
       "where": "pantry",
       "state": "none",
       "note": "Great Value Thai Jasmine Rice, 2 kg bag, bought 2026-08-18 (photo 20260818_215127). Catalogued as its own item on the same day, because `jasmine rice` had been an alias of `longgrainrice` and the two are not the same thing on the plate: jasmine is aromatic and cooks slightly softer and stickier, plain long grain stays neutral with the grains separate. Folding them together meant a recipe naming jasmine was answered from the long grain bag with nothing said about the difference. validate.mjs already knew they were different and carried separate RICE_RATIO entries for both."
+    },
+    "broccoli": {
+      "n": "broccoli, frozen",
+      "where": "freezer",
+      "state": "none",
+      "note": "Added 2026-08-21. Stated by Silvio that day as bought on an untracked trip along with the 30 eggs and the asparagus. Given its own id rather than being left inside the `green vegetables` known-gap, which is the reason 78 dishes stayed blocked while he owned broccoli: a gap bucket is a CATEGORY, and a category cannot be partly satisfied. Buying one of the 32 vegetables inside it moved nothing."
     }
   }
 }
