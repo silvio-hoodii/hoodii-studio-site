@@ -1,0 +1,287 @@
+{
+  "id": "caramelizedonions",
+  "name": "Caramelized Onions, a Batch for the Freezer",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "You said you like these and asked whether a batch keeps. It does, and that is the whole argument for making them: an hour of work once, then seconds to use for two months. Three white onions bought 2026-08-22 is exactly her quantity. They go on the pizza, into eggs, onto anything.",
+  "time": {
+    "activeMin": 20,
+    "totalMin": 60,
+    "note": "her number is 60 minutes total. Most of it is standing near the pan stirring every few minutes, so it is not hands-off, but it is not hard either"
+  },
+  "serves": {
+    "count": 16,
+    "unit": "portion",
+    "proteinPerUnit": 0,
+    "proteinMath": "HER FIGURE: 0.2 g per 2 tablespoon serving, 16 servings, about 3 g in the whole batch. This is a flavour, not a protein. It is here because you like it and because a freezer full of it makes other things better, not because it moves any number."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts and her yield of 2 cups. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is which pan, what each technique word means, an observable for the induction hob wherever she names a heat level, and the storage answer, which is not on her page and is sourced separately in KitchenOS/STORAGE.md. Her steps 2, 5 and 6 all name dial positions, which is the standing collision on this hob: her words stand and the observable renders with them.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/caramelized-onions/",
+        "primary": true,
+        "note": "Caramelized Onions. 5 out of 5 from 3 ratings, 16 servings of 2 Tbsp, 2 cups total, 60 minutes. Fetched 2026-08-22 from the page's own JSON-LD. All four ingredients and all eight instructions taken verbatim."
+      }
+    ],
+    "readHash": "97337509",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "onions",
+      "stock": "whiteonion",
+      "display": "medium onions",
+      "qty": 3,
+      "unit": "each",
+      "prep": "the three white onions bought 2026-08-22. Red onions work too and go sweeter; there is one of those in the pantry if you would rather keep the whites",
+      "defining": true
+    },
+    {
+      "ref": "olive_oil",
+      "stock": "oil",
+      "display": "olive oil",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter",
+      "qty": 1,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "stovetop",
+    "pan_stainless_large",
+    "knife_sharp",
+    "cuttingboard",
+    "woodenspoon",
+    "measuringspoons",
+    "bowlset",
+    "freezerbag_medium",
+    "sharpie"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Peel and slice onions into even strips.",
+      "sourceText": "Peel and slice onions into even strips.",
+      "uses": [
+        {
+          "ref": "onions",
+          "amount": 3,
+          "unit": "each"
+        }
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard"
+      ],
+      "minutes": 10,
+      "heat": null,
+      "doneness": {
+        "test": "Hold a few slices up together. They should all be about the same thickness, roughly 3 to 5 mm, which is a little thinner than a pencil. Pick out any chunky ones and re-cut them.",
+        "kind": "look"
+      },
+      "look": "EVEN IS THE ONLY THING THAT MATTERS HERE, and it is not fussiness. Thin slices burn to bitter while thick ones are still raw, and you cannot rescue one without ruining the other. This is the same failure that turned up on the chicken on 2026-08-16.\n\nSLICE ROOT TO TIP, not across. Cut the onion in half through the root, lay it flat, and cut along the lines you can see rather than against them. Strips cut this way hold together for an hour in a pan. Cut the other way they collapse into mush.\n\nLEAVE THE ROOT ON while you slice and cut it away at the end. It holds the half together and gives you something to hold that is not your fingertips.\n\nTHREE ONIONS LOOKS LIKE FAR TOO MUCH for the pan and it is not. They lose about three quarters of their volume over the hour. Two cups at the end from a mountain at the start is the normal, correct result.\n\nEYES STINGING: chill the onions for 15 minutes first, and keep the cut faces down on the board."
+    },
+    {
+      "n": 2,
+      "text": "Melt butter and olive oil in pan over medium high heat.",
+      "sourceText": "Melt butter and olive oil in pan over medium high heat.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "olive_oil",
+          "amount": 1,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "stovetop",
+        "pan_stainless_large",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The butter should melt, foam up, and the foam should settle back down without the milk solids going brown. If it browns and smells nutty within seconds, it is too hot: lift the pan off the burner for thirty seconds and start again with the heat lower.",
+        "recheck": "Her words are 'medium high heat'. That is a dial position and this hob's burners do not agree on what the numbers mean, so ignore the phrase and match the foam instead. Whatever setting does that is the right setting here."
+      },
+      "doneness": {
+        "test": "Tilt the pan. The melted butter and oil should run together and coat the whole base in one thin sheet, with no dry patches.",
+        "kind": "look"
+      },
+      "look": "USE THE LARGE STAINLESS PAN, not the non-stick. This is the one job that pan is genuinely best at: an hour of gentle browning where you WANT the sticky brown film building on the base, because it dissolves back into the onions every time they release water and it is most of the flavour.\n\nIT IS ALSO THE PAN THAT HAS FAILED THREE COOKS HERE, and every one of those was small pieces at high heat. This is the opposite: a full pan, low heat, an hour, stirred constantly. It is the safest possible use of it.\n\nBUTTER AND OIL TOGETHER is deliberate. Butter alone burns at this length of cook; oil alone tastes of nothing. The oil raises the temperature the butter can survive.\n\nA WIDE PAN, NOT A POT. Three onions release a lot of water and it has to evaporate. Tall walls trap steam and you end up boiling them, which is how you get pale floppy onions after an hour instead of brown ones."
+    },
+    {
+      "n": 3,
+      "text": "Add onions and use tongs to evenly coat with oil.",
+      "sourceText": "Add onions and use tongs to evenly coat with oil.",
+      "uses": [
+        {
+          "ref": "onions",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pan_stainless_large",
+        "woodenspoon"
+      ],
+      "minutes": 2,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Unchanged from step 2. The onions should sizzle steadily when they land, not spit or scream.",
+        "recheck": "A full pan of cold onions drops the pan temperature hard. Give it a minute and check the sizzle is back before judging anything."
+      },
+      "doneness": {
+        "test": "Every strip looks slightly glossy rather than dry and papery. Turn them over a few times and look.",
+        "kind": "look"
+      },
+      "look": "NO TONGS ARE RECORDED IN THIS KITCHEN, though the utensil set has never been listed item by item so there may well be a pair in the drawer. The wooden spoon does this job perfectly well.\n\nTHE PAN WILL LOOK ALARMINGLY FULL. It is fine. They collapse within ten minutes."
+    },
+    {
+      "n": 4,
+      "text": "Season onions with salt to help release water.",
+      "sourceText": "Season onions with salt to help release water.",
+      "uses": [
+        {
+          "ref": "salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "measuringspoons"
+      ],
+      "minutes": 1,
+      "heat": null,
+      "doneness": {
+        "test": "Within a minute or two of salting, the pan should look wetter than it did and you should hear a change from a sizzle to something quieter. That is the water coming out, and it is the point.",
+        "kind": "look"
+      },
+      "look": "SHE EXPLAINS HER OWN REASONING IN THE STEP, which is rare and worth reading: the salt is there TO RELEASE WATER, not to season. Salt pulls moisture out of the onion, which then steams off, and dry onion is what can actually brown.\n\nSPRINKLE FROM A HEIGHT so half a teaspoon reaches all of it rather than landing in one spot.\n\nDO NOT ADD MORE SALT NOW. The batch reduces to a quarter of its volume, so the salt concentrates fourfold by the end. Half a teaspoon over three onions is judged for the finished 2 cups, not for what is in the pan right now."
+    },
+    {
+      "n": 5,
+      "text": "Allow onions to cook at medium high heat for 5-10 minutes, or until onions begin to soften and turn golden brown.",
+      "sourceText": "Allow onions to cook at medium high heat for 5-10 minutes, or until onions begin to soften and turn golden brown.",
+      "uses": [
+        {
+          "ref": "onions",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "stovetop",
+        "pan_stainless_large",
+        "woodenspoon"
+      ],
+      "minutes": 10,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A steady sizzle across the whole pan and visible steam coming off. Not spitting, and nothing sticking hard enough that the spoon has to scrape. If the edges of the pan are browning while the middle is still pale, the heat is too high.",
+        "recheck": "Her 'medium high' is a dial position again. Match the steady sizzle instead. Check it two minutes in, once the water is coming out."
+      },
+      "doneness": {
+        "test": "TWO THINGS TOGETHER, both hers: the strips have gone floppy and translucent instead of stiff and white, AND the first golden colour is showing. Not brown yet. Golden at the edges is the signal to move to step 6.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE ONLY FAST PART. Ten minutes at most, then it slows right down for the rest of the hour.\n\nGOLDEN BROWN HERE MEANS THE FIRST HINT OF COLOUR, not the deep brown at step 8. Three colour words appear in this recipe and they mean different stages: golden at step 5, deep golden brown at step 8, and burnt is black and bitter and is not in the recipe at all.\n\nTHE PAN WILL LOOK WET AND CROWDED and that is correct. You are boiling off water at this stage, not browning yet."
+    },
+    {
+      "n": 6,
+      "text": "Once browning begins, lower heat to medium and cook at this heat for 35-40 minutes.",
+      "sourceText": "Once browning begins, lower heat to medium and cook at this heat for 35-40 minutes.",
+      "uses": [
+        {
+          "ref": "onions",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "stovetop",
+        "pan_stainless_large",
+        "woodenspoon"
+      ],
+      "minutes": 40,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Turn it down until the pan is barely whispering rather than sizzling, with a slow lazy bubble here and there. You want to hear almost nothing. If it is still hissing steadily after a minute at the lower setting, go lower again.",
+        "recheck": "Check after two minutes, then every ten. THIS HOB DROPS INSTANTLY WHEN YOU TURN THE DIAL and the pan does not, so give it a moment before deciding you went too far. If at any point a brown film on the base turns black and starts smelling sharp rather than sweet, take the pan off the heat, and stir a tablespoon of water in to lift it before it goes further."
+      },
+      "doneness": {
+        "test": "Time is not the test and neither is the clock: 35 to 40 minutes is her estimate. The test is at step 8. What you are checking THROUGHOUT is that nothing is sticking hard and nothing is turning black.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE LONG PART AND THE HEAT IS THE WHOLE GAME. Too high and they burn at the edges while the middle stays raw. Too low and they never brown at all and you get sweet stewed onions after an hour, which is edible but is not this.\n\nHER 'MEDIUM' IS A DIAL POSITION on a hob with no consistent dial, so use the sound. Barely whispering is the target.\n\nA BROWN FILM WILL BUILD ON THE BASE. That is not damage and it is not burning, it is the flavour. Every time the onions release a little more water it dissolves straight back in, which is why stirring matters.\n\nBLACK IS DIFFERENT FROM BROWN. Brown smells sweet. Black smells sharp and acrid and makes the whole batch bitter. If you see it starting, off the heat and a splash of water immediately.\n\nDO NOT WALK AWAY FOR TWENTY MINUTES. Step 7 is a real instruction."
+    },
+    {
+      "n": 7,
+      "text": "Stir every few minutes to prevent sticking.",
+      "sourceText": "Stir every few minutes to prevent sticking.",
+      "uses": [
+        {
+          "ref": "onions",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "woodenspoon",
+        "pan_stainless_large"
+      ],
+      "minutes": 1,
+      "heat": null,
+      "doneness": {
+        "test": "After each stir the base of the pan should have almost nothing welded to it. If the spoon has to scrape, the heat is too high, so turn it down before the next round.",
+        "kind": "look"
+      },
+      "look": "EVERY FEW MINUTES, not constantly. Roughly every 3 to 5 minutes across the 40. Constant stirring stops any browning from happening at all; leaving it 15 minutes lets one layer scorch.\n\nSCRAPE THE WHOLE BASE each time, corners and edges included. Those are where it catches first.\n\nTHIS IS WHY THE HOUR IS NOT HANDS-OFF. Set the recipe timer, stay in the kitchen, and use the gaps to grate cheese or knead pizza dough."
+    },
+    {
+      "n": 8,
+      "text": "When onions are a deep golden brown, they are done!",
+      "sourceText": "When onions are a deep golden brown, they are done!",
+      "uses": [],
+      "equipment": [
+        "bowlset",
+        "freezerbag_medium",
+        "sharpie"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "DEEP GOLDEN BROWN, the colour of caramel or dark honey, with no white or pale strips left anywhere. They should be soft enough to squash against the side of the pan with the spoon, and the whole pile should be jammy rather than loose. Volume is the other tell: about 2 cups from what started as a full pan.",
+        "kind": "look"
+      },
+      "look": "TASTE ONE, CAREFULLY, AND IT SHOULD BE SWEET. That is the real test and it is the only one you cannot get wrong. Raw sharpness left means keep going. Bitterness means something scorched.\n\nSTORING THEM, which is not on her page. Sourced separately, in KitchenOS/STORAGE.md:\n\nFRIDGE: 3 to 5 days in a sealed jar. There are clean jars in the cupboard.\n\nFREEZER, WHICH IS THE POINT OF MAKING A BATCH: about 2 months comfortably. COOL THEM TO ROOM TEMPERATURE FIRST or the steam turns to ice crystals and then freezer burn.\n\nUSE AN ICE CUBE TRAY. Spoon them in, freeze 3 hours or overnight, pop the cubes out into a medium freezer bag and date it with the Sharpie. Roughly 2 tablespoons a cube, which is one portion. This matters more here than anywhere else in the kitchen: one frozen block means thawing all of it to use any of it, and the entire reason to have these on hand is dropping two spoonfuls into something with no planning.\n\nSTRAIGHT FROM FROZEN onto a pizza or into a pan. No thawing needed."
+    }
+  ]
+}

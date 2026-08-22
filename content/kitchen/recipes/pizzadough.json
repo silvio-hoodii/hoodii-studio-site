@@ -1,0 +1,287 @@
+{
+  "id": "pizzadough",
+  "name": "Pizza Dough",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "You said the toppings are the easy part and the dough is the complex part, and you are right, so this card is only the dough. It makes one base and stops. What goes on it is decided at step 8 out of whatever is in the fridge that day, which is how you wanted it. Everything here is already in the cupboard: 2 cups of the 2.5 kg flour bag, a teaspoon of the Fleischmann's, sugar, salt and olive oil.",
+  "time": {
+    "activeMin": 20,
+    "totalMin": 102,
+    "note": "her numbers. About 20 minutes of hands-on, and an hour of that total is the dough rising with nobody in the room"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "slice",
+    "proteinPerUnit": 7,
+    "proteinMath": "HER FIGURE: Budget Bytes publishes 6.85 g of protein per serving over 4 servings, rounded to 7. That is the BARE DOUGH and nothing else, so it is the floor and not the meal. Toppings carry the rest: 100 g of the Armstrong mozzarella adds about 23 g (label, 7 g per 30 g cube), and 150 g of browned ground beef adds roughly 40 g. A whole base with that on it lands near 90 g across 4 slices, which is where this stops being a side and starts being dinner."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts. Her steps 9 to 12 are the fridge-overnight and freezer routes and are not on this card: the freezer one needs plastic wrap, which this kitchen does not have, and putting a route on screen that cannot be finished is the failure this schema exists to prevent. The same-day route, her steps 5 to 8, is the whole card. What this app adds is which bowl, what each technique word means, and one real difference stated where it lands: her step 8 asks for a 14 to 16 inch circle on a pizza pan and the largest tray here is a 9x13 rimmed sheet, so the shape is yours to choose. BBC Good Food's pizza dough was captured first and discarded, because it calls for non-fast-action yeast, a stand mixer, cling film and a barbecue, and adapting that to this kitchen would have meant inventing a method.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/pizza-dough/",
+        "primary": true,
+        "note": "Homemade Pizza Dough. 4.83 out of 5 from 64 ratings, 4 servings. Fetched 2026-08-22 from the page's own JSON-LD. All six ingredients verbatim; instructions 1 to 8 verbatim, 9 to 12 deliberately omitted as described above."
+      }
+    ],
+    "readHash": "e268ca48",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "flour",
+      "stock": "flour",
+      "display": "all-purpose flour",
+      "qty": 2,
+      "unit": "cups",
+      "prep": "goes in over two steps, 1 cup at step 2 and the rest a bit at a time at step 3. Do NOT dump it all in at once, the whole method depends on adding it gradually",
+      "defining": true
+    },
+    {
+      "ref": "water",
+      "display": "warm water",
+      "qty": 0.75,
+      "unit": "cup",
+      "staple": true,
+      "prep": "warm, not hot. Comfortable on the inside of your wrist, like a bath. Hot water kills yeast outright and cold water leaves it asleep",
+      "defining": true
+    },
+    {
+      "ref": "yeast",
+      "stock": "yeast",
+      "display": "yeast",
+      "qty": 1,
+      "unit": "tsp",
+      "prep": "the Fleischmann's Quick Rise jar. Her step 1 proofs it in water first, which works for any yeast and is the step that tells you it is still alive",
+      "defining": true
+    },
+    {
+      "ref": "sugar",
+      "stock": "sugar",
+      "display": "sugar",
+      "qty": 1,
+      "unit": "tbsp",
+      "prep": "white sugar. This is food for the yeast, not sweetness for the crust",
+      "defining": false
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "olive_oil",
+      "stock": "oil",
+      "display": "olive oil",
+      "qty": 1,
+      "unit": "tbsp",
+      "prep": "the olive oil rather than the vegetable oil here, it is in the dough and you taste it",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "oven",
+    "bakingtray",
+    "mixingbowl_large",
+    "bowlset",
+    "measuringcups",
+    "measuringspoons",
+    "woodenspoon",
+    "teatowel",
+    "rollingpin",
+    "pastrymat",
+    "parchment",
+    "ovenmitts"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Dissolve the yeast and sugar in the warm water. Allow the yeast water to sit for about 5 minutes, or until a thick layer of foam develops on top.",
+      "sourceText": "Dissolve the yeast and sugar in the warm water. Allow the yeast water to sit for about 5 minutes, or until a thick layer of foam develops on top.",
+      "uses": [
+        {
+          "ref": "yeast",
+          "amount": 1,
+          "unit": "tsp"
+        },
+        {
+          "ref": "sugar",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "water",
+          "amount": 0.75,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "doneness": {
+        "test": "After 5 minutes the surface should be visibly foamy, like the head on a beer. If it is still flat and clear, the yeast is dead and the dough will not rise. Throw it out and start again with new yeast rather than carrying on and losing the flour too.",
+        "kind": "look"
+      },
+      "look": "THIS STEP IS A TEST, and it is the reason to do it even though Quick Rise yeast does not strictly need proofing. Five minutes here tells you whether the jar is still alive. Finding out after an hour of waiting costs you the whole evening.\n\nWARM WATER means bath temperature. Run it on your wrist: it should feel pleasant, not hot. Anything above about 120F kills yeast, and that is the single most common way this goes wrong.\n\nTHE SUGAR IS FOR THE YEAST. One tablespoon in a whole base is not there to sweeten anything, it is the fast food that gets the yeast going in five minutes instead of twenty."
+    },
+    {
+      "n": 2,
+      "text": "While you’re waiting for the yeast, add 1 cup of the flour and the salt to a large bowl, then stir well to combine.",
+      "sourceText": "While you’re waiting for the yeast, add 1 cup of the flour and the salt to a large bowl, then stir well to combine.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 1,
+          "unit": "cup"
+        },
+        {
+          "ref": "salt",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "woodenspoon",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Salt evenly through the flour with no gritty patches sitting on top. Fifteen seconds of stirring is enough.",
+        "kind": "look"
+      },
+      "look": "ONE CUP NOW, THE SECOND CUP LATER. That is deliberate and it is the difference between this working and being a sticky mess. Flour absorbs different amounts of water depending on how it was scooped and how humid the room is, so she adds the back half by feel rather than by measurement.\n\nSALT AND YEAST MEET IN THE BOWL, NOT IN THE JUG. Salt in direct contact with concentrated yeast slows it down, which is why the salt goes in with the flour and not in the water at step 1."
+    },
+    {
+      "n": 3,
+      "text": "Add the olive oil to the yeast water, then pour the mixture into the bowl with the flour and salt. Begin adding more flour to the bowl, ¼ to ½ cup at a time, until it forms a ball of dough that can no longer be stirred with a spoon.",
+      "sourceText": "Add the olive oil to the yeast water, then pour the mixture into the bowl with the flour and salt. Begin adding more flour to the bowl, ¼ to ½ cup at a time, until it forms a ball of dough that can no longer be stirred with a spoon.",
+      "uses": [
+        {
+          "ref": "olive_oil",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "flour",
+          "amount": 1,
+          "unit": "cup"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "woodenspoon",
+        "measuringcups"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "HER TEST IS THE SPOON. Stop adding flour the moment the spoon will not move through it any more and the dough is pulling into one lump that leaves the sides of the bowl. That is the endpoint, not a measurement.",
+        "kind": "look"
+      },
+      "look": "THE SECOND CUP IS A CEILING, NOT A TARGET. You may use all of it, you may not. The spoon decides. Adding flour past that point is the most common way to end up with a dry, tough, cracker-like base.\n\nA QUARTER CUP AT A TIME, and stir between each one. Tipping it all in leaves dry pockets that never hydrate and turn into raw flour streaks in the finished crust.\n\nSTICKY IS CORRECT AT THIS STAGE. It should still tack to your finger a little. That water is what turns to steam in the oven and puffs the edges."
+    },
+    {
+      "n": 4,
+      "text": "Turn the dough out onto a lightly floured work surface, then knead for about 5 minutes, adding a little flour as you go to keep it from sticking.",
+      "sourceText": "Turn the dough out onto a lightly floured work surface, then knead for about 5 minutes, adding a little flour as you go to keep it from sticking.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pastrymat"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "THE POKE TEST. Press a finger into the ball about a centimetre deep and take it away. Early on the dent stays. When it is kneaded enough the dent springs most of the way back within a couple of seconds. It should also look smooth and slightly shiny rather than lumpy and torn.",
+        "kind": "touch"
+      },
+      "look": "USE THE SILICONE PASTRY MAT. This is what it was bought for on 2026-08-08 and it has never been used.\n\nKNEAD means: push the heel of your hand into the dough away from you, fold the far edge back over towards you, turn it a quarter turn, repeat. It is a rhythm, not a wrestle. Five minutes is genuinely five minutes and it will feel long the first time.\n\nWHAT IT IS DOING: stretching the flour's protein into long elastic strands. That elasticity is what lets the base stretch thin without tearing and hold the bubbles that make the edge puff. There is no shortcut and no mixer here to do it for you.\n\nLIGHTLY FLOURED means a dusting you can see through, not a layer. Every extra spoonful you work in now makes the crust drier.\n\nHANDS STICKY? Flour your hands rather than the dough. It fixes the problem without changing the recipe."
+    },
+    {
+      "n": 5,
+      "text": "At this point you have three options: use the dough tonight (one hour after kneading), use it tomorrow (allowing it to rise in the refrigerator over night) or within a month (freezing the dough).",
+      "sourceText": "At this point you have three options: use the dough tonight (one hour after kneading), use it tomorrow (allowing it to rise in the refrigerator over night) or within a month (freezing the dough).",
+      "uses": [],
+      "equipment": [],
+      "minutes": 1,
+      "heat": null,
+      "doneness": {
+        "test": "Nothing to test. This is a decision, and the card takes the first route.",
+        "kind": "look"
+      },
+      "look": "THIS CARD FOLLOWS HER FIRST OPTION, TONIGHT. Steps 6 to 8 are that route.\n\nHER FREEZER ROUTE NEEDS PLASTIC WRAP, which this kitchen does not have, so it is deliberately not on this card rather than being half-adapted into something untested.\n\nHER FRIDGE-OVERNIGHT ROUTE is real and needs only a covered container, and it does make better dough. It is not on this card because the card is the one-hour version end to end. Ask for it and it becomes its own card rather than a branch you have to reason about with flour on your hands."
+    },
+    {
+      "n": 6,
+      "text": "Place the kneaded dough back into the mixing bowl, drizzle with a little oil, then turn the dough to coat it with oil. Cover the bowl loosely and let the dough rise in a warm place for one hour, or until it is double in volume.",
+      "sourceText": "Place the kneaded dough back into the mixing bowl, drizzle with a little oil, then turn the dough to coat it with oil. Cover the bowl loosely and let the dough rise in a warm place for one hour, or until it is double in volume.",
+      "uses": [
+        {
+          "ref": "olive_oil",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "teatowel"
+      ],
+      "minutes": 60,
+      "heat": null,
+      "doneness": {
+        "test": "DOUBLE IN VOLUME IS THE TEST, NOT THE HOUR. Look at the ball, note where the top sits against the side of the bowl, and come back when it has reached about twice that. A cold kitchen takes longer. If you want it exact, press a finger gently into the risen dough: the dent should fill back slowly and only part way.",
+        "kind": "look"
+      },
+      "look": "COVER IT LOOSELY WITH WHAT YOU HAVE. There is no cling film here. The tea towels are too small to cover a rising bowl, so use a plate laid over the top, or the second large mixing bowl turned upside down over it. The job is to keep the surface from drying into a skin, not to seal it.\n\nA WARM PLACE in this flat means on the counter away from a draught. Inside the oven with only the light on also works, as long as the oven is OFF and stays off.\n\nTHE OIL is so the dough does not glue itself to the bowl. A teaspoon smeared round is plenty, and it is extra rather than part of the tablespoon in the ingredient list.\n\nAN HOUR WITH NOTHING TO DO. This is the moment to grate the cheese, brown the beef and cut the toppings."
+    },
+    {
+      "n": 7,
+      "text": "Once risen, stretch or roll the dough out to a 14 to 16-inch circle, place on a pizza pan, and top with your favorite sauce and toppings. Bake the pizza in a preheated 450ºF oven for 10-12 minutes or until the edges are brown and crispy.",
+      "sourceText": "Once risen, stretch or roll the dough out to a 14 to 16-inch circle, place on a pizza pan, and top with your favorite sauce and toppings. Bake the pizza in a preheated 450ºF oven for 10-12 minutes or until the edges are brown and crispy.",
+      "uses": [],
+      "equipment": [
+        "oven",
+        "bakingtray",
+        "parchment",
+        "rollingpin",
+        "pastrymat",
+        "ovenmitts"
+      ],
+      "minutes": 12,
+      "heat": {
+        "surface": "oven",
+        "tempF": 450,
+        "tempC": 230,
+        "target": "450F, and it must be fully preheated before the pizza goes in. An oven's temperature is a real number, unlike this hob's dial.",
+        "recheck": "Turn the oven on at the START of the hour-long rise, not at the end. A domestic oven takes 20 minutes or more to actually reach 450F, and the reading on the front panel arrives well before the metal does."
+      },
+      "doneness": {
+        "test": "HER TEST IS THE EDGES: brown and crispy. Lift a corner of the base with a spatula and look underneath as well; it should be dry and patched with brown, not pale and floppy. 10 to 12 minutes is hers and it is about right at 450F, but the edge colour decides.",
+        "kind": "look"
+      },
+      "look": "YOUR TRAY IS 9x13 INCHES AND HER CIRCLE IS 14 TO 16. It will not fit, and this is the one thing on this card that needs a decision from you. Two honest options: shape it to the tray as a RECTANGLE, which changes nothing except the outline, or split the dough in two and make two smaller bases, one after the other. Either is fine. What does not work is forcing a 15 inch circle onto a 13 inch tray.\n\nPUT PARCHMENT DOWN FIRST. There is no pizza pan here, and dough on a bare tray sticks hard.\n\nSTRETCH RATHER THAN ROLL IF YOU CAN. The rolling pin flattens the air bubbles you spent an hour growing, so the edge comes out flat instead of puffed. Press it out with your fingers from the middle outwards, leaving the last inch of the rim thicker. The pin is there if the dough fights you, and a flatter base is better than a torn one.\n\nLESS TOPPING THAN YOU THINK. A wet, overloaded base steams instead of crisping and the middle stays soggy. This is the single most common home pizza mistake.\n\nWHAT YOU HAVE FOR IT TODAY: the tomato sauce or the tomato paste, mozzarella and Monterey Jack, browned ground beef, the grape tomatoes, white or red onion, and the caramelised onions if you make a batch. Arugula goes on AFTER baking, never before, or it turns to black threads."
+    }
+  ]
+}

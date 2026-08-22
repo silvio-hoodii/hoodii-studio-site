@@ -1,0 +1,149 @@
+{
+  "id": "gratedcheese",
+  "name": "Grate the Cheese and Freeze It",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "You asked whether you could grate the mozzarella and the Monterey Jack and freeze them, because you were afraid they would go off sitting in the fridge. Yes, and the order matters: grate first, freeze second. This is here as a card rather than a note so it is a thing you can tick through when you get home, and because the pizza wants it done anyway.",
+  "time": {
+    "activeMin": 15,
+    "totalMin": 15,
+    "note": "15 minutes of grating and bagging. No cooking, no waiting"
+  },
+  "serves": {
+    "count": 1,
+    "unit": "batch",
+    "proteinPerUnit": 70,
+    "proteinMath": "Armstrong mozzarella, label read 2026-08-02: 7 g protein per 30 g cube, so 23.3 g per 100 g. The full 400 g block held 93 g; roughly 300 g is left, so about 70 g goes into the freezer. THE MONTEREY JACK IS NOT IN THAT 70. Its panel has never been photographed and its amount has never been recorded, so it is deliberately uncounted rather than estimated: typical Monterey Jack is around 24 g per 100 g, which would add real protein, and a number nobody has read does not belong in a headline. Nothing is created or lost here either way. This is the same protein moved from a shelf where it expires to one where it does not."
+  },
+  "provenance": {
+    "tier": "authored",
+    "heatFree": true,
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "NOT a published recipe, and it does not pretend to be. There is no cooking here at all: nothing is heated, nothing has a doneness point, and there is no timing that can go wrong, which is the entire class of defect the sourced-only rule exists to prevent. That is why `heatFree` is claimed and why the build checks the claim against the rendered words rather than taking it. The storage facts are not invented either. Duration, the cornstarch, and the cooked-only caveat are sourced and recorded in KitchenOS/STORAGE.md with their references.",
+    "sources": [
+      {
+        "name": "Running to the Kitchen",
+        "url": "https://www.runningtothekitchen.com/how-to-freeze-cheese/",
+        "primary": false,
+        "note": "Freezing cheese: grate before freezing, about 3 months, texture change on higher-moisture cheeses."
+      },
+      {
+        "name": "Pantry & Larder",
+        "url": "https://pantryandlarder.com/how-to-stop-shredded-cheese-clumping/",
+        "primary": false,
+        "note": "Cornstarch against clumping, and the caveat that it is only for cheese that will be cooked."
+      }
+    ],
+    "readHash": "4fcc6325",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "mozzarella",
+      "stock": "mozzarella",
+      "display": "mozzarella",
+      "qty": 300,
+      "unit": "g",
+      "prep": "the Armstrong block, roughly 300 g of the original 400 g left. Grate it straight from the fridge",
+      "defining": true
+    },
+    {
+      "ref": "montereyjack",
+      "stock": "montereyjack",
+      "display": "Monterey Jack cheese",
+      "qty": 1,
+      "unit": "each",
+      "prep": "amount never recorded, so grate whatever is there. THIS IS THE CHEESE YOU COULD NOT REMEMBER THE NAME OF",
+      "defining": false
+    },
+    {
+      "ref": "cornstarch",
+      "stock": "cornstarch",
+      "display": "cornstarch",
+      "qty": 1,
+      "unit": "tsp",
+      "prep": "roughly. Sources range from 1/4 tsp to 1 Tbsp per cup of shreds, so start at the low end and add more only if it still clumps",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "grater_hand",
+    "mixingbowl_large",
+    "freezerbag_medium",
+    "sharpie",
+    "scale_digital",
+    "measuringspoons"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Take both cheeses straight from the fridge and grate them, cold. Weigh what you get if you want the protein figure to be real.",
+      "uses": [
+        {
+          "ref": "mozzarella",
+          "amount": 300,
+          "unit": "g"
+        },
+        {
+          "ref": "montereyjack",
+          "amount": 1,
+          "unit": "each"
+        }
+      ],
+      "equipment": [
+        "grater_hand",
+        "mixingbowl_large",
+        "scale_digital"
+      ],
+      "minutes": 10,
+      "heat": null,
+      "doneness": {
+        "test": "A bowl of loose separate shreds. If they are already pressing together into a paste as you grate, the cheese has warmed up: put the block back in the fridge for fifteen minutes and carry on after.",
+        "kind": "look"
+      },
+      "look": "COLD IS THE WHOLE TRICK. Warm cheese smears and gums up the grater instead of shredding. Straight from the fridge, and if it softens while you work, put it back for a bit.\n\nGRATE BEFORE FREEZING, NEVER AFTER. This is the reason this card exists in this order. A block that has been frozen and thawed goes crumbly and falls apart under a grater rather than shredding, so the chance to do this cleanly is now, while it is still fresh.\n\nUSE THE HAND GRATER bought 2026-08-21. The multi-blade slicer has a grating blade too if you prefer it.\n\nKEEP THE TWO CHEESES SEPARATE OR MIX THEM, your call. Mixed is fine and is what most pizza cheese is. Separate keeps the option of using the Monterey Jack on its own, and it melts differently: mozzarella stretches, Jack melts smoother and browns faster.\n\nWATCH YOUR KNUCKLES on the last piece. A grater takes skin off far more easily than a knife does, and the last inch of a block is where it happens. Stop earlier than feels wasteful, or hold the end piece with a fork."
+    },
+    {
+      "n": 2,
+      "text": "Sprinkle about a teaspoon of cornstarch over the shreds and toss with your hands until every strand looks lightly dusted.",
+      "uses": [
+        {
+          "ref": "cornstarch",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Grab a handful and let it fall back into the bowl. The shreds should separate as they drop rather than coming away as one clump. If they still stick together, add a little more cornstarch and toss again.",
+        "kind": "look"
+      },
+      "look": "WHAT THIS IS FOR: the cornstarch absorbs the surface moisture that would otherwise freeze the shreds into one solid brick, and it is the same reason shop-bought bagged cheese has it on the ingredient list.\n\nONLY FOR CHEESE THAT WILL BE COOKED. This is a real limit and it is why it is on this card and not a blanket habit. On a pizza or in an omelette it disappears completely. On a cheese board it would be chalky and wrong.\n\nGO LIGHT. A teaspoon across a few hundred grams is plenty. Too much and you can taste it."
+    },
+    {
+      "n": 3,
+      "text": "Pack the shreds into a medium freezer bag, press it flat, push the air out, and seal it. Write the cheese and today's date on the bag with the Sharpie.",
+      "uses": [],
+      "equipment": [
+        "freezerbag_medium",
+        "sharpie"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "The bag should lie flat like an envelope, about a centimetre thick, with no trapped pockets of air. Lay it on the counter and press from the middle outwards before sealing the last corner.",
+        "kind": "touch"
+      },
+      "look": "FLAT IS NOT TIDINESS. A flat sheet lets you snap off exactly the piece you need and put the rest straight back. A round lump means chiselling at frozen cheese or thawing all of it.\n\nAIR IS WHAT CAUSES FREEZER BURN, so push it out. It is the difference between three good months and something dry and grey.\n\nLABEL IT. Everything looks identical under frost after three weeks, which is why the Sharpies were bought.\n\nMEDIUM BAGS are the right size and there is a fresh box from 2026-08-08.\n\nABOUT 3 MONTHS. Use it STRAIGHT FROM FROZEN onto a pizza, no thawing at all: it melts on the way to the oven temperature.\n\nONE HONEST WARNING. Mozzarella and Monterey Jack are both higher-moisture cheeses, so they take the texture hit worse than a hard cheese would. Expect it to come out crumblier than it went in, and do not plan on slicing it. Melted, none of that shows, which is exactly why the pizza is where this is going."
+    }
+  ]
+}

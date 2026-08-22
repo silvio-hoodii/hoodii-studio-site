@@ -173,7 +173,14 @@ export const appliesNoHeat = (r) => heatEvidence(r).length === 0;
 /** Mirrors NO_HEAT_FORMS in src/lib/kitchen/recipes.ts. Same deliberate duplication as render.mjs
  *  mirroring CookClient: the alternative is importing TypeScript into a zero-dependency node script.
  *  Change one, change the other. */
-export const NO_HEAT_FORMS = new Set(['assembly', 'macro']);
+/*  'method' joined this set 2026-08-22. The argument that put 'assembly' and 'macro' here is
+ *  about heat and not about the kind of dish: something that never heats anything cannot carry an
+ *  invented heat, timing or doneness instruction, which is the entire defect class SOURCING.md
+ *  exists for. Grating cheese and bagging it for the freezer clears that bar exactly as a smoothie
+ *  does. Caramelising onions does NOT, which is why that one is sourced from a published recipe.
+ *  The claim is still checked against the rendered text by checkHeatClaim(), so this widens who may
+ *  ASK for the exemption and not who is believed. */
+export const NO_HEAT_FORMS = new Set(['assembly', 'macro', 'method']);
 
 /* ---- CLI: audit the corpus ---- */
 

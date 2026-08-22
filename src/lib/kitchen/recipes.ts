@@ -188,7 +188,14 @@ export function rank(items: Cookable[]): Cookable[] {
  *  instruction; an assembly (stir measured things into a bowl) or a macro (freeze it) carries none of
  *  that risk by construction. Decided 2026-08-13 after an audit of the 27 machine-migrated recipes
  *  found 6 with no heat step, one already clean, the rest one qty/closure bug away from it. */
-const NO_HEAT_FORMS = new Set(['assembly', 'macro']);
+/*  'method' joined this set 2026-08-22. The argument that put 'assembly' and 'macro' here is
+ *  about heat and not about the kind of dish: something that never heats anything cannot carry an
+ *  invented heat, timing or doneness instruction, which is the entire defect class SOURCING.md
+ *  exists for. Grating cheese and bagging it for the freezer clears that bar exactly as a smoothie
+ *  does. Caramelising onions does NOT, which is why that one is sourced from a published recipe.
+ *  The claim is still checked against the rendered text by checkHeatClaim(), so this widens who may
+ *  ASK for the exemption and not who is believed. */
+const NO_HEAT_FORMS = new Set(['assembly', 'macro', 'method']);
 
 /** The no-heat claim, and where it is allowed to come from.
  *

@@ -209,8 +209,27 @@ export default async function KitchenHome() {
    * reachable one tap down, because hiding a dish is a navigation bug. They just stop being the
    * answer to "what can I cook". */
   const NO_RECIPE_FORMS = new Set(['assembly', 'macro']);
-  const now = readyAll.filter((c) => !NO_RECIPE_FORMS.has(c.recipe.form));
+  /* A THIRD BUCKET, 2026-08-22, and it is his distinction rather than mine.
+   *
+   * "The caramelized onion and the cheese and the pizza dough are different things than a dish...
+   * Do we need a separate session for this? I don't know but I want it to be there. That way I come
+   * home and I make it instead of coming into here and talking to you."
+   *
+   * He is right and the data already had the word: `form: "method"` has existed since the schema
+   * was written, holding "Brown the Beef and Split It" and "Slice the Roast and Bank the Beef".
+   * Both are machine-migrated and therefore never offered, so the form had never once reached a
+   * screen and nobody noticed it had no home.
+   *
+   * These are not answers to "what do I cook tonight". They are things you make so that later
+   * cooking is quick: a dough, a batch of onions for the freezer, a bag of grated cheese. Left in
+   * `now` they compete with dinner, which is the same mistake the assembly/macro split fixed on
+   * 2026-08-16. They get their own visible heading rather than a fold, because the entire point is
+   * that he sees them when he walks in. */
+  const now = readyAll.filter(
+    (c) => !NO_RECIPE_FORMS.has(c.recipe.form) && c.recipe.form !== 'method',
+  );
   const noRecipe = readyAll.filter((c) => NO_RECIPE_FORMS.has(c.recipe.form));
+  const makeAhead = readyAll.filter((c) => c.recipe.form === 'method');
   /* Split on 2026-08-11. These used to share one heading, "With one small change", which reads as a
    * caveat and is wrong for a thaw: a bag of thin slices needing 20 minutes on the counter is not a
    * dish you have to change anything about. Two headings, each saying which thing it means. */
@@ -464,6 +483,28 @@ export default async function KitchenHome() {
           </p>
           <div>
             {[...now, ...thawing, ...adapting].map((c) => <DishRow key={c.recipe.id} c={c} />)}
+          </div>
+        </>
+      )}
+
+      {/* MAKE ONCE, USE ALL WEEK. His category, 2026-08-22: "these are not dishes".
+       *
+       * A pizza dough, a batch of caramelised onions for the freezer, a bag of grated cheese. None
+       * of them is dinner and all of them make dinner faster later. They sit BELOW the dishes,
+       * because "what do I cook" is still the page's question, and ABOVE the folds, because the
+       * reason he asked for them is so he can walk in and start one without opening a chat.
+       *
+       * Rendered with the same DishRow as the dishes above rather than the stripped-down list used
+       * in the folds: these carry real steps, timers and stock, and the row already knows how to say
+       * so. A second row component would be the third instance of the copy that `MealRow` was
+       * extracted to stop. */}
+      {makeAhead.length > 0 && (
+        <>
+          <p className="sec">
+            Make once, use all week <span className="quiet">{makeAhead.length}</span>
+          </p>
+          <div>
+            {makeAhead.map((c) => <DishRow key={c.recipe.id} c={c} />)}
           </div>
         </>
       )}
