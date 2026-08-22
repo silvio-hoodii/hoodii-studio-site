@@ -17,6 +17,7 @@ const program = readJson('program.json');
 const warmups = readJson('warmups.json');
 const cooldowns = readJson('cooldowns.json');
 const equipment = readJson('equipment.json');
+const conditioning = readJson('conditioning.json');
 
 let FAIL = 0;
 const out = [];
@@ -180,7 +181,67 @@ for (const [dayKey, day] of Object.entries(program.days)) {
   }
 }
 
+// ---------------------------------------------------------------------------------------------
+// THE REST RULE, ENFORCED ON THE PLAN. Added 2026-08-21, the day he chose "never more than 3 in a
+// row" over a fixed day off.
+//
+// This is the mechanism half of that decision. The other half is on the page, which counts what he
+// ACTUALLY did; this counts what the programme ASKS of him, and refuses to build when the plan
+// contradicts its own rule. Without it, "max 3 consecutive" is a sentence in a JSON comment, and
+// every prose rule in this workspace has been violated while every mechanical gate has held.
+//
+// The lifting days are read out of program.json rather than restated in conditioning.json. A
+// second copy of the split would drift the first time a day moved, which is the same failure the
+// body-metrics rule exists to prevent: every copy is a fact that goes stale silently.
+// ---------------------------------------------------------------------------------------------
+const WEEKDAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+if (!conditioning.week?.restRule) {
+  fail('conditioning.json', 'week.restRule is missing. It is load-bearing: /gym/conditioning reads maxConsecutive to judge the real week, and this gate cannot check a plan against a rule that is not there.');
+} else {
+  const { maxConsecutive } = conditioning.week.restRule;
+  if (!Number.isInteger(maxConsecutive) || maxConsecutive < 1 || maxConsecutive > 7) {
+    fail('conditioning.json', `week.restRule.maxConsecutive must be an integer from 1 to 7, got ${JSON.stringify(maxConsecutive)}`);
+  }
+  const assigned = conditioning.week.assignedDays ?? {};
+  const training = new Set(Object.keys(program.days));   // the lifting split, from its own file
+  for (const [slot, days] of Object.entries(assigned)) {
+    if (slot.startsWith('$') || slot === 'why') continue;
+    if (!Array.isArray(days)) {
+      fail('conditioning.json', `week.assignedDays.${slot} must be an array of weekday names`);
+      continue;
+    }
+    for (const d of days) {
+      if (!WEEKDAYS.includes(d)) fail('conditioning.json', `week.assignedDays.${slot} names "${d}", which is not a weekday`);
+      training.add(d);
+    }
+  }
+  /* Scanned over TWO weeks back to back, because a week wraps. A Friday-to-Monday block reads as
+     two separate runs of two under a single Monday-to-Sunday pass, and would sail through a rule
+     it actually breaks. Capped at 7 so "trains every day" reports 7 rather than 14. */
+  let run = 0;
+  let worst = 0;
+  let worstEnd = null;
+  for (const d of [...WEEKDAYS, ...WEEKDAYS]) {
+    if (training.has(d)) {
+      run++;
+      if (run > worst) { worst = run; worstEnd = d; }
+    } else run = 0;
+  }
+  worst = Math.min(worst, 7);
+  if (Number.isInteger(maxConsecutive) && worst > maxConsecutive) {
+    fail(
+      'conditioning.json',
+      `the PLANNED week trains ${worst} days in a row (ending ${worstEnd}), but week.restRule.maxConsecutive is ${maxConsecutive}. ` +
+        `Training days in the plan: ${WEEKDAYS.filter((d) => training.has(d)).join(', ')}. ` +
+        `Move a conditioning slot onto a day that is already a training day, or change the rule on purpose.`,
+    );
+  } else {
+    out.push(`ok    [conditioning.json] planned week trains ${training.size} days, longest run ${worst}, rule allows ${maxConsecutive}`);
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
-console.log(`${Object.keys(program.days).length} days checked, ${FAIL} failures`);
+console.log(`${Object.keys(program.days).length} days checked, the planned week checked against its rest rule, ${FAIL} failures`);
 process.exit(FAIL ? 1 : 0);

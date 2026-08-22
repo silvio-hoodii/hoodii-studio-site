@@ -28,7 +28,7 @@ export default function GymNav() {
 
   const surfaces = [
     { href: '/gym', label: 'Workout' },
-    { href: '/gym/conditioning', label: 'Conditioning' },
+    { href: '/gym/conditioning', label: 'The week' },
   ];
 
   /* `surf-tab`, NOT `tab`. These look like the day tabs and share their rules in gym.css, but they

@@ -87,3 +87,20 @@ create table if not exists health_target (
   lean_kg         real,
   weight_kg       real
 );
+
+-- How recently the watch was worn AT NIGHT, one row per metric, mirrored from
+-- healthos.db `recovery_freshness` (written by HealthOS/server/import-watch-sessions.mjs).
+--
+-- Not a table of nights, because only one question is ever asked of it: can a statement about
+-- recovery be made from measurement, or only from load arithmetic? On 2026-08-21 the answer was
+-- "only arithmetic": exercise data arrived every day through 08-20 while sleep and HRV both stopped
+-- on 08-15, because the watch is on his wrist all day and off it all night. The week surface applies
+-- a max-consecutive-training-days rule, and a rule about fatigue computed with no fatigue
+-- measurement has to say so on the page rather than imply a recovery judgment it cannot make.
+create table if not exists health_recovery (
+  metric      text primary key,   -- 'sleep' | 'hrv'
+  last_seen   text,               -- local date of the newest reading
+  rows        integer,
+  export_dir  text,
+  imported_at timestamptz
+);

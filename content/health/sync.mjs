@@ -74,6 +74,7 @@ let bcWritten = 0;
 let wsWritten = 0;
 let swWritten = 0;
 let targetWritten = 0;
+let recWritten = 0;
 
 try {
 
@@ -95,10 +96,21 @@ for (const r of bodyComp) {
   bcWritten++;
 }
 
-// --- watch_sessions (strength + swimming only: the two kinds the dashboard reads) -------------
+/* --- watch_sessions: EVERY training kind, walking excluded ------------------------------------
+ *
+ * Was `kind in ('strength','swimming')`, which is why no run or bike has ever reached this site.
+ * He ran on 2026-08-18 and biked on 2026-08-19, both prescribed by /gym/conditioning, and both were
+ * invisible here. That is not cosmetic: the week surface counts CONSECUTIVE TRAINING DAYS against
+ * the max-of-3 rule, so a morning-run-only day arrived as a rest day and the count came out wrong in
+ * the direction that matters, reporting more recovery than he took.
+ *
+ * An allowlist is the wrong shape for the same reason it was wrong in import-watch-sessions.mjs: it
+ * fails silently and in the reassuring direction when he takes up something new. Excluding walking
+ * by name inverts that. A kind nobody anticipated now arrives and counts, and the thing that has to
+ * be maintained is the short list of what is NOT training rather than the open list of what is. */
 watchSessions = db.prepare(`
   select date, start_time, kind, minutes, calories, avg_hr from watch_sessions
-  where kind in ('strength', 'swimming')
+  where kind <> 'walking'
 `).all();
 for (const r of watchSessions) {
   await q(
@@ -109,6 +121,29 @@ for (const r of watchSessions) {
     [r.date, r.start_time, r.kind, r.minutes, r.calories, r.avg_hr],
   );
   wsWritten++;
+}
+
+/* --- recovery freshness ----------------------------------------------------------------------
+ * One row per metric, and the week surface refuses to present its rest-day arithmetic as a recovery
+ * judgment while these are old. `if exists` rather than a hard read: an older healthos.db that
+ * predates the table must not fail the whole mirror, which also carries his weight. */
+const hasRecovery = db
+  .prepare(`select count(*) c from sqlite_master where type = 'table' and name = 'recovery_freshness'`)
+  .get().c > 0;
+if (hasRecovery) {
+  for (const r of db.prepare('select metric, last_seen, rows, export_dir, imported_at from recovery_freshness').all()) {
+    await q(
+      `insert into health_recovery (metric, last_seen, rows, export_dir, imported_at)
+       values ($1,$2,$3,$4,$5)
+       on conflict (metric) do update set
+         last_seen = excluded.last_seen, rows = excluded.rows,
+         export_dir = excluded.export_dir, imported_at = excluded.imported_at`,
+      [r.metric, r.last_seen, r.rows, r.export_dir, r.imported_at],
+    );
+    recWritten++;
+  }
+} else {
+  console.log('recovery_freshness not in healthos.db yet: run HealthOS/server/import-watch-sessions.mjs');
 }
 
 db.close();
@@ -161,7 +196,8 @@ if (cur?.generatedAt && cur?.targets?.protein_g != null) {
 }
 
 console.log(`${DRY ? '[dry run] ' : ''}body_comp: ${bcWritten} rows (sqlite had ${bodyComp.length})`);
-console.log(`${DRY ? '[dry run] ' : ''}watch_session (strength+swimming): ${wsWritten} rows (sqlite had ${watchSessions.length})`);
+console.log(`${DRY ? '[dry run] ' : ''}watch_session (all training kinds, walking excluded): ${wsWritten} rows (sqlite had ${watchSessions.length})`);
+console.log(`${DRY ? '[dry run] ' : ''}recovery: ${recWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 

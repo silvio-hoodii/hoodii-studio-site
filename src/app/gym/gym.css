@@ -497,3 +497,150 @@
 .gym details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
 .gym .cue-name { flex: 1; min-width: 0; }
 .gym .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- the integrated week ----
+ *
+ * Built 2026-08-21 for /gym/conditioning's overview tab, which until then knew nothing about the
+ * lifting days. Same posture as the rest of this file: rules between rows, no cards, no shadows,
+ * --signal reserved for a value that is true right now. Here that value is the consecutive-day
+ * count, which is the one number on the page that changes daily and the one he is judging. */
+
+.gym .standing {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  margin-top: 18px;
+}
+/* Past the rule is the one state that gets colour, on the left edge only. A red block behind a
+   number he sees every day would read as an alarm on a normal Tuesday. */
+.gym .standing.over {
+  border-left: 3px solid var(--destructive);
+  padding-left: 12px;
+}
+.gym .standing-n {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 54px;
+}
+.gym .standing-n .big {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.gym .standing.over .standing-n .big { color: var(--destructive); }
+.gym .standing-unit {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  text-align: center;
+  margin-top: 4px;
+  line-height: 1.25;
+}
+.gym .standing-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.gym .standing-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
+
+/* The planned week. Seven columns on a phone would be 40px each and unreadable, so it is a list of
+   rows with the day as a fixed-width gutter: the same shape the actual-days list uses below, which
+   is deliberate. Two different pictures of one week is how the old page became four surfaces. */
+.gym .planweek { border-top: 1px solid var(--border); }
+.gym .pw-day {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding: 9px 0;
+}
+.gym .pw-name {
+  flex: 0 0 42px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+}
+.gym .pw-day.off .pw-name { opacity: 0.5; }
+.gym .pw-work { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.gym .pw-lift { font-size: 15px; font-weight: 600; }
+.gym .pw-slot { font-size: 13.5px; color: var(--muted-foreground); }
+.gym .pw-rest {
+  font-size: 13.5px;
+  color: var(--muted-foreground);
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* What actually happened. One row per day, newest last, because a week is read forwards. */
+.gym .actual { border-top: 1px solid var(--border); }
+.gym .ad-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  font-size: 14px;
+}
+.gym .ad-day {
+  flex: 0 0 86px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.gym .ad-date { opacity: 0.7; }
+.gym .ad-row.on .ad-day { color: var(--foreground); }
+.gym .ad-what { flex: 1; min-width: 0; }
+.gym .ad-row:not(.on) .ad-what { color: var(--muted-foreground); }
+/* A day the mirror has not reached must not look like a rest day. Same distinction /health's strip
+   had to learn: an empty row read as claimed rest for a month of a stalled sync. */
+.gym .ad-row.unknown { opacity: 0.55; }
+.gym .ad-run {
+  flex: 0 0 34px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.gym .ad-row.over .ad-run { color: var(--destructive); font-weight: 650; }
+.gym .ad-flag { margin-left: 3px; }
+.gym .ad-legend { margin-top: 10px; }
+
+/* The recovery notice. Copied in shape from .health .stale rather than shared, because the two
+   surfaces load different stylesheets and lifting the rule into globals.css to serve two callers
+   would put it in front of every page on the site. Same visual language on purpose: a
+   destructive-coloured left edge means "the thing below is not what it appears to be".
+   Here the claim being qualified is the day count above it: it is sessions, not recovery. */
+.gym .stale {
+  border: 1px solid var(--destructive);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-top: 16px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.gym .stale .k {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--destructive);
+  margin-bottom: 4px;
+}
+
+/* A .src summary that is a primary control rather than a citation. 32px is deliberate for the
+   "where this comes from" rows under a cue: they are tertiary and there are seven of them per tab.
+   The rest rule's reasoning is not tertiary, and 32px is under the 44px floor this repo enforces
+   after eight controls were found too small to hit on 2026-08-15. */
+.gym details.src.wk > summary {
+  min-height: 44px;
+  font-size: 11.5px;
+  color: var(--foreground);
+}

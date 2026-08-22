@@ -207,12 +207,43 @@ export interface Cue {
   url?: string | null;
 }
 
+/* THE REST RULE. Chosen by Silvio on 2026-08-21: never more than three training days in a row, a
+ * rule rather than a fixed day off, because the finding it answers was density and not volume.
+ *
+ * `maxConsecutive` is read in two places and both of them execute. content/gym/validate.mjs
+ * recomputes the PLANNED week from program.json plus assignedDays and exits non-zero if the
+ * programme breaks its own rule, so a self-contradicting plan cannot deploy. src/lib/gym/week.ts
+ * counts what the WATCH actually recorded and prints it against the same number. Neither is prose.
+ *
+ * assignedDays deliberately does NOT restate the lifting split: those keys live in program.json and
+ * are read from there. A second copy drifts the first time a day moves. */
+export interface RestRule {
+  maxConsecutive: number;
+  decidedBy: string;
+  decidedOn: string;
+  rule: string;
+  whyThisShape: Prose;
+  whatCountsAsTraining: Prose;
+  whenItFires: string;
+  /** Why three is his number and not a finding. Rendered, never hidden. */
+  theHonestCaveat: string;
+}
+
+export interface ConditioningWeekPlan {
+  restRule: RestRule;
+  /** Slot name to weekday keys. Extra keys are tolerated so a new slot needs no type change. */
+  assignedDays: Record<string, string[] | string | undefined> & { why?: Prose };
+}
+
 export interface Conditioning {
   slots: {
     morning: { name: string; what: string; why: string };
     evening: { name: string; what: string; why: string };
     poolTimes: Record<string, string>;
   };
+  /** Optional in the type so an older conditioning.json still parses; validate.mjs makes it
+   *  mandatory in practice by failing the build when it is missing. */
+  week?: ConditioningWeekPlan;
   run: {
     title: string;
     surface: string;
