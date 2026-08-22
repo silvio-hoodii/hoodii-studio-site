@@ -644,3 +644,80 @@
   font-size: 11.5px;
   color: var(--foreground);
 }
+
+/* ---- swim levels ----
+ *
+ * The tier ladder on /gym/conditioning?p=swim. Same posture as everything else here: rules between
+ * rows, no cards, monochrome. The one thing that gets emphasis is PROVENANCE, because the whole
+ * table is a mix of published standards and numbers we picked, and the reader has to be able to
+ * tell them apart at a glance rather than by reading a paragraph. */
+
+.gym .tierlist { border-top: 1px solid var(--border); }
+.gym .tier {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.gym .tier-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gym .tier-name { font-size: 15.5px; font-weight: 600; }
+.gym .tier-time {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The label that carries the honesty. A sourced tier and a tier somebody invented must not look
+   the same, so the sourced one is drawn in ink and ours is drawn as an outline: present, readable,
+   and visibly a different kind of thing. --signal is NOT used, because it is reserved for a value
+   that is true right now, and a tier boundary is not that. */
+.gym .prov {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.gym .prov.sourced { background: var(--foreground); color: var(--background); }
+.gym .prov.sourced-other-course {
+  border: 1px solid var(--foreground);
+  color: var(--foreground);
+}
+.gym .prov.constructed,
+.gym .prov.capability {
+  border: 1px dashed var(--muted-foreground);
+  color: var(--muted-foreground);
+}
+
+/* A date or unit riding along beside a number, quieter than it without becoming unreadable. This
+   is an inline span, so it must NOT use .quiet, which is a monospace block treatment. */
+.gym .quiet-inline {
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+/* The link that lets him check a tier's number. A 44px row, not a 15px line of text: this is the
+   control that makes "sourced" mean anything, and on the first build it was the smallest tap target
+   on the page. */
+.gym .tier-src {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gym .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+

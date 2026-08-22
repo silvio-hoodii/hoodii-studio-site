@@ -104,3 +104,27 @@ create table if not exists health_recovery (
   export_dir  text,
   imported_at timestamptz
 );
+
+-- Swim personal bests, mirrored from healthos.db `swim_pb`, itself read from Samsung's
+-- best_records file. Samsung had these all along and nothing read them until 2026-08-22.
+--
+-- A HISTORY, not one row per distance: Samsung keeps every time that was a record when it was set,
+-- which is where the phone app's "top 5 times" list comes from. Keeping the history means the page
+-- can show progression rather than a single number with no context.
+--
+-- The distance is DERIVED. Samsung stores a numeric type and a duration with no event label; the
+-- mapping is tested on every import by requiring pace per 100 m to rise with distance. See
+-- SWIM_PB_TYPES in HealthOS/server/import-watch-sessions.mjs.
+--
+-- Nothing below 100 m, deliberately. Samsung records no bests there, and deriving them from single
+-- lengths does not survive the data: the fastest recorded 25 m is 9.03 s, faster than a world-record
+-- 25 m split, and the answer moves four seconds depending on where the miscount filter is put.
+create table if not exists health_swim_pb (
+  distance_m  integer not null,
+  achieved_on text    not null,
+  duration_ms integer not null,
+  imported_at timestamptz,
+  primary key (distance_m, achieved_on, duration_ms)
+);
+create index if not exists health_swim_pb_dist on health_swim_pb (distance_m, duration_ms);
+

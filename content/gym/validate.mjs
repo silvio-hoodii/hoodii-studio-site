@@ -18,6 +18,7 @@ const warmups = readJson('warmups.json');
 const cooldowns = readJson('cooldowns.json');
 const equipment = readJson('equipment.json');
 const conditioning = readJson('conditioning.json');
+const swimStandards = readJson('swim-standards.json');
 
 let FAIL = 0;
 const out = [];
@@ -280,6 +281,84 @@ if (!conditioning.week?.restRule) {
   } else {
     out.push(`ok    [conditioning.json] planned week trains ${training.size} days, longest run ${worst}, rule allows ${maxConsecutive}`);
   }
+}
+
+// ---------------------------------------------------------------------------------------------
+// SWIM STANDARDS: every tier has to say where its numbers came from. Added 2026-08-22.
+//
+// He asked for levels knowing the honest answer would be mixed: "you're probably only going to
+// find reference for elite and whatever and really high-performing athletes. We'll have to make
+// up our own tiers." Three of these tiers are published standards for men 35-39 and two are
+// multiples of one of them that an agent chose. The whole value of the sourced rows depends on
+// the constructed ones being visibly labelled, so `provenance` is mandatory and a sourced tier
+// must name a source that exists.
+//
+// The alternative, remembering to write it down, is the shape of rule this workspace has broken
+// every single time.
+// ---------------------------------------------------------------------------------------------
+const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'constructed', 'capability']);
+
+{
+  const srcIds = new Set((swimStandards.sources || []).map((s) => s.id));
+  for (const s of swimStandards.sources || []) {
+    if (!s.url || !/^https?:\/\//.test(s.url)) fail('swim-standards.json', `source "${s.id}" has no usable url`);
+  }
+  const tiers = swimStandards.tiers || [];
+  if (!tiers.length) fail('swim-standards.json', 'no tiers');
+  const ids = new Set(tiers.map((t) => t.id));
+  for (const t of tiers) {
+    const where = `swim-standards.json/${t.id || "?"}`;
+    if (!t.id || !t.name) fail(where, 'tier needs an id and a name');
+    if (!PROVENANCE.has(t.provenance)) {
+      fail(where, `provenance must be one of ${[...PROVENANCE].join(" | ")}, got ${JSON.stringify(t.provenance ?? null)}. Every tier has to say whether its numbers were published by somebody or picked by us.`);
+    }
+    if ((t.provenance === 'sourced' || t.provenance === 'sourced-other-course')) {
+      if (!t.sourceId) fail(where, `provenance is "${t.provenance}" but no sourceId. A sourced tier must name the source it came from.`);
+      else if (!srcIds.has(t.sourceId)) fail(where, `sourceId "${t.sourceId}" is not in sources[]`);
+      if (!t.times) fail(where, `provenance is "${t.provenance}" but the tier carries no times`);
+    }
+    if (t.provenance === 'constructed' && !t.derivedFrom && !t.times) {
+      fail(where, 'a constructed tier must either carry its own times or say what it is derived from');
+    }
+    if (t.derivedFrom) {
+      if (!ids.has(t.derivedFrom.tier)) fail(where, `derivedFrom names tier "${t.derivedFrom.tier}", which does not exist`);
+      if (!(t.derivedFrom.multiplier > 0)) fail(where, `derivedFrom.multiplier must be a positive number`);
+    }
+    if (!t.what || t.what.length < 20) fail(where, `tier needs a "what" of at least 20 characters explaining who swims this`);
+  }
+
+  /* Tiers must get slower as they get easier, at every distance. A table where "National" is
+     slower than "Qualifier" would place him in the wrong band and nobody would notice by reading
+     it: the numbers are all plausible on their own. */
+  const parse = (str) => {
+    const p = String(str).split(':');
+    return p.length === 2 ? Number(p[0]) * 60 + Number(p[1]) : Number(p[0]);
+  };
+  const resolve = (tier, dist, seen = new Set()) => {
+    if (tier.times && tier.times[dist] != null) return parse(tier.times[dist]);
+    if (tier.derivedFrom && !seen.has(tier.id)) {
+      seen.add(tier.id);
+      const base = tiers.find((x) => x.id === tier.derivedFrom.tier);
+      const b = base ? resolve(base, dist, seen) : null;
+      return b == null ? null : b * tier.derivedFrom.multiplier;
+    }
+    return null;
+  };
+  const dists = [...new Set(tiers.flatMap((t) => Object.keys(t.times || {})))];
+  for (const d of dists) {
+    let prev = null;
+    let prevName = null;
+    for (const t of tiers) {
+      const v = resolve(t, d);
+      if (v == null) continue;
+      if (prev != null && v <= prev) {
+        fail('swim-standards.json', `at ${d} m, tier "${t.name}" (${v.toFixed(2)}s) is not slower than "${prevName}" (${prev.toFixed(2)}s). Tiers are listed hardest first and must get slower going down, or a swimmer lands in the wrong band.`);
+      }
+      prev = v;
+      prevName = t.name;
+    }
+  }
+  out.push(`ok    [swim-standards.json] ${tiers.length} tiers over ${dists.length} distances, provenance on all of them`);
 }
 
 console.log(out.join('\n'));

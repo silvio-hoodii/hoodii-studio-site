@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { loadConditioning, loadProgram } from '@/lib/gym/program';
 import { getTrainingWeek, KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
+import {
+  loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
+  type SwimStandards, type DistanceStanding,
+} from '@/lib/gym/swim-level';
 import type { Cue } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
@@ -151,6 +155,127 @@ function RecoveryNotice({ week }: { week: TrainingWeek }) {
       The count above is arithmetic on sessions. It cannot tell you whether you are recovered, and
       wearing the watch to bed is the only thing that would.
     </div>
+  );
+}
+
+/* WHERE HE IS, AS A SWIMMER. Built 2026-08-22.
+ *
+ * His ask: "there have to be reference or benchmarks on timings for specific levels. I want to know
+ * on what level I am with my current timings." And he called the honest problem before I hit it:
+ * real standards exist only at the sharp end, so the lower tiers had to be built.
+ *
+ * So provenance is rendered, not hidden in a comment. Three of these tiers are published standards
+ * for men aged 35 to 39 in a 25 m pool; two are multiples of one of them that I picked; one is not
+ * a time at all. Showing which is which is what makes the sourced rows worth anything, and it is
+ * the same reason the cue cards on this page print `confidence`. */
+function SwimLevel({ standards, standings }: { standards: SwimStandards; standings: DistanceStanding[] }) {
+  const withPb = standings.filter((s) => s.best);
+  if (!withPb.length) return null;
+  const tierName = (id: string | null) => standards.tiers.find((t) => t.id === id)?.name ?? null;
+  /* The distance he is CLOSEST to levelling up in, proportionally. An absolute gap is misleading:
+     18 s off at 100 m and 141 s off at 1500 m sound like the 100 is closer, and it is the furthest. */
+  const closest = [...withPb]
+    .filter((s) => s.next && s.best)
+    .sort((a, b) => (a.next!.gapMs / a.best!.durationMs) - (b.next!.gapMs / b.best!.durationMs))[0];
+
+  return (
+    <>
+      <div className="exgroup">
+        <div className="exgroup-label">
+          Where you are <span className="tag">(men {standards.meta.ageGroup}, {standards.meta.course} 25 m, freestyle)</span>
+        </div>
+        <div className="table-scroll">
+          <table className="plan-table">
+            <thead>
+              <tr>
+                <th>Distance</th>
+                <th className="tnum">Your best</th>
+                <th>Level</th>
+                <th className="tnum">Next level</th>
+              </tr>
+            </thead>
+            <tbody>
+              {withPb.map((s) => (
+                <tr key={s.distanceM}>
+                  <td className="tnum">{s.distanceM} m</td>
+                  <td className="tnum">
+                    {fmtTime(s.best!.durationMs)}
+                    <span className="quiet-inline"> {s.best!.achievedOn}</span>
+                  </td>
+                  <td>{tierName(s.tierId) ?? 'below the table'}</td>
+                  <td className="tnum">
+                    {s.next
+                      ? <>{fmtTime(s.next.timeMs)} <span className="quiet-inline">for {s.next.name}</span></>
+                      : '-'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {closest && (
+          <p className="ex-cue" style={{ marginTop: 10 }}>
+            The level you are closest to is <b>{closest.next!.name} at {closest.distanceM} m</b>:{' '}
+            {(100 * closest.next!.gapMs / closest.best!.durationMs).toFixed(0)}% faster, which is{' '}
+            {(closest.next!.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} seconds per 100 m.
+          </p>
+        )}
+      </div>
+
+      <div className="exgroup">
+        <div className="exgroup-label">What the levels are</div>
+        <div className="tierlist">
+          {standards.tiers.map((t) => {
+            const src = standards.sources.find((x) => x.id === t.sourceId);
+            const at100 = tierTimeMs(t, 100, standards.tiers);
+            return (
+              <div className="tier" key={t.id}>
+                <div className="tier-head">
+                  <span className="tier-name">{t.name}</span>
+                  {at100 != null && <span className="tier-time tnum">{fmtTime(at100)} <span className="quiet-inline">/100 m</span></span>}
+                  <span className={`prov ${t.provenance}`}>
+                    {t.provenance === 'sourced' ? 'sourced'
+                      : t.provenance === 'sourced-other-course' ? 'sourced, other course'
+                      : t.provenance === 'constructed' ? 'our number'
+                      : 'not a time'}
+                  </span>
+                </div>
+                <div className="ex-cue">{t.what}</div>
+                {/* A real tap target. These were 15px tall on the first build, which is a third of
+                    the 44px floor this repo enforces, on the one control that lets him check a
+                    number I am asking him to trust. */}
+                {src && (
+                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">
+                    {src.label}
+                  </a>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <p className="ex-cue" style={{ marginTop: 10 }}>
+          Three of these are published standards for men your age. Two are multiples of the
+          qualifying time that I chose, and they are labelled that way so you know which numbers to
+          argue with.
+        </p>
+      </div>
+
+      <div className="exgroup">
+        <div className="exgroup-label">What the shape of it says</div>
+        <Prose text={standards.profileNote} />
+        <details className="src wk">
+          <summary>Why there is no 25 m or 50 m here</summary>
+          <div className="src-body">
+            Samsung records no personal best under 100 m. Deriving one from single lengths does not
+            survive the data: the fastest length ever recorded is 9.03 s, which is faster than a
+            world-record 25 m split, and filtering the sensor miscounts moves the answer from
+            14.42 s to 18.55 s depending on where the threshold goes. A number that swings four
+            seconds on a threshold somebody picked is not a personal best. Swim a timed 25 and 50
+            from a push and they become real.
+          </div>
+        </details>
+      </div>
+    </>
   );
 }
 
@@ -324,6 +449,11 @@ export default async function ConditioningPage({
      would put a Neon round trip in front of a page he opens at the side of a pool. */
   const [c, program] = await Promise.all([loadConditioning(), loadProgram()]);
   const week = tab === 'week' ? await getTrainingWeek(program, c) : null;
+  /* Same reasoning as the week query: only the swim tab pays for the personal-best read. */
+  const swim = tab === 'swim' ? await (async () => {
+    const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
+    return { standards, standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)) };
+  })() : null;
 
   return (
     <div className="wrap">
@@ -531,6 +661,8 @@ export default async function ConditioningPage({
           <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
         </div>
       )}
+
+      {tab === 'swim' && swim && <SwimLevel standards={swim.standards} standings={swim.standings} />}
 
       {tab === 'swim' && (
         <div className="exgroup">

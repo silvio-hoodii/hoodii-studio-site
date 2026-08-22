@@ -1,0 +1,120 @@
+{
+  "$comment": [
+    "WHAT LEVEL AM I. Built 2026-08-22, from his own question: 'there have to be reference or",
+    "benchmarks on timings for specific levels. I want to know on what level I am with my current",
+    "timings.'",
+    "",
+    "EVERY NUMBER IN HERE IS EITHER SOURCED OR MARKED CONSTRUCTED. He said in advance that real",
+    "references would only exist at the elite end and that we would have to build the rest. That is",
+    "exactly what happened, so `provenance` is on every tier and the page renders it. A tier that",
+    "says 'constructed' next to a tier that says 'sourced' is the whole reason the sourced ones can",
+    "be trusted.",
+    "",
+    "COURSE AND AGE ARE NOT DECORATION. All of this is men, 35-39 (born 1991-01-24), SHORT COURSE",
+    "25 m, freestyle. His pool is 25 m and every reference here is the same course except where a",
+    "row says otherwise. An early draft of this work used the men's 50 m free world record of 20.88,",
+    "which is the LONG course record; the short course record is 19.90. Mixing the two would have",
+    "shifted every tier boundary by about 5%, which is more than the gap between two of them.",
+    "",
+    "WHY THERE IS NO 25 m OR 50 m ROW. Samsung records no personal best under 100 m, and deriving",
+    "one from individual lengths does not survive the data: the fastest recorded 25 m length is",
+    "9.03 s, faster than a world-record 25 m split, and filtering the sensor miscounts moves the",
+    "answer from 14.42 s to 18.55 s depending on where the threshold goes. A number that swings four",
+    "seconds on a threshold an agent picked is not a personal best. The app asks him to swim a timed",
+    "one instead.",
+    "",
+    "WHY THERE IS NOTHING ABOVE 1500 m. He swims 2 km, 3 km and 5 km, and competitive swimming does",
+    "not race those in a pool, so no tier table exists for them at any level. Those distances are",
+    "endurance facts about him, not ranked performances, and the page says so rather than inventing",
+    "a standard."
+  ],
+  "meta": {
+    "sex": "men",
+    "ageGroup": "35-39",
+    "course": "SCM",
+    "courseNote": "Short course, 25 m pool. The same pool he swims in.",
+    "stroke": "freestyle",
+    "builtOn": "2026-08-22"
+  },
+  "sources": [
+    {
+      "id": "wr-scm",
+      "label": "World records, short course 25 m",
+      "url": "https://en.wikipedia.org/wiki/List_of_world_records_in_swimming",
+      "note": "Fetched as one consistent table on 2026-08-22 rather than assembled from separate searches, which is how the long-course 50 m record nearly got used by mistake."
+    },
+    {
+      "id": "masters-wr",
+      "label": "Masters world records, SCM, as of 2025-09-02",
+      "url": "https://resources.fina.org/fina/document/2025/09/02/d7124d15-13e5-4b62-a72b-58ec6a8cecbe/CurrentWorldRecordsIndividualSCM.pdf",
+      "note": "World Aquatics. Age group 35-39 read directly out of the PDF."
+    },
+    {
+      "id": "usms-top10",
+      "label": "US Masters Swimming Top 10, 2025, SCM, men 35-39",
+      "url": "https://www.usms.org/comp/tt/toptenlist.php?Year=2025&CourseID=3&AgeGroupID=4&Sex=M",
+      "note": "The 10th-place time is a real person who swam it this year in his age group, which makes it a far better anchor than a record nobody will approach."
+    },
+    {
+      "id": "usms-nqt",
+      "label": "US Masters national qualifying times, men 35-39",
+      "url": "https://www.usms.org/events/national-championships/pool-national-championships/national-qualifying-times",
+      "note": "LONG COURSE, 50 m pool. USMS publishes no short-course-metres qualifying standard. Shown for scale and labelled, never compared like for like."
+    }
+  ],
+  "tiers": [
+    {
+      "id": "world",
+      "name": "World class",
+      "provenance": "sourced",
+      "sourceId": "masters-wr",
+      "what": "The fastest man aged 35 to 39 on record, anywhere.",
+      "times": { "50": "21.53", "100": "47.70", "200": "1:48.08", "400": "3:57.77", "800": "8:13.11", "1500": "15:41.78" }
+    },
+    {
+      "id": "national",
+      "name": "National",
+      "provenance": "sourced",
+      "sourceId": "usms-top10",
+      "what": "Tenth fastest in the United States in 2025, in this age group. A real swimmer, this year.",
+      "times": { "50": "25.13", "100": "57.51", "200": "2:08.67", "400": "4:50.53", "800": "10:28.96", "1500": "19:29.96" }
+    },
+    {
+      "id": "qualifier",
+      "name": "Qualifier",
+      "provenance": "sourced-other-course",
+      "sourceId": "usms-nqt",
+      "what": "Fast enough to enter the US Masters national championships. Long course, so read it as a scale marker rather than a target in your pool.",
+      "times": { "50": "29.06", "100": "1:04.32", "200": "2:26.30", "400": "5:22.92", "800": "11:25.30", "1500": "22:54.10" }
+    },
+    {
+      "id": "club",
+      "name": "Club",
+      "provenance": "constructed",
+      "what": "Comfortably inside a masters club session without being at the front of it. Set at 1.25x the qualifying time, which is a choice, not a finding.",
+      "derivedFrom": { "tier": "qualifier", "multiplier": 1.25 }
+    },
+    {
+      "id": "recreational",
+      "name": "Recreational",
+      "provenance": "constructed",
+      "what": "Swims regularly, is not training to race. Set at 1.6x the qualifying time. This is where you are.",
+      "derivedFrom": { "tier": "qualifier", "multiplier": 1.6 }
+    },
+    {
+      "id": "beginner",
+      "name": "Beginner",
+      "provenance": "capability",
+      "what": "Can cover the distance without stopping, at whatever pace. This tier is deliberately not a time: at this stage the only question that matters is whether you get to the other end."
+    }
+  ],
+  "profileNote": [
+    "His four bests score 113, 137, 154 and 130 against the age-matched world record at 100, 200,",
+    "400 and 1500. That is an unusually EVEN profile, and it tilts towards distance: he is",
+    "relatively strongest at 400 m and relatively weakest at 100 m.",
+    "",
+    "The stroke data says the same thing from the other side. He takes about 9 stroke cycles per",
+    "25 m at roughly 18 cycles a minute, which is a long, slow, glide-heavy stroke. That is an engine",
+    "ahead of a technique, and it means the fastest available improvement is turnover, not fitness."
+  ]
+}

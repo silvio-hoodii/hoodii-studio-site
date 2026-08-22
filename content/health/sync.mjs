@@ -75,6 +75,7 @@ let wsWritten = 0;
 let swWritten = 0;
 let targetWritten = 0;
 let recWritten = 0;
+let pbWritten = 0;
 
 try {
 
@@ -146,6 +147,26 @@ if (hasRecovery) {
   console.log('recovery_freshness not in healthos.db yet: run HealthOS/server/import-watch-sessions.mjs');
 }
 
+/* --- swim personal bests -------------------------------------------------------------------
+ * Same `if exists` guard as recovery above: an older healthos.db that predates the table must not
+ * fail the whole mirror, which also carries his weight. */
+const hasPb = db
+  .prepare(`select count(*) c from sqlite_master where type = 'table' and name = 'swim_pb'`)
+  .get().c > 0;
+if (hasPb) {
+  for (const r of db.prepare('select distance_m, achieved_on, duration_ms, imported_at from swim_pb').all()) {
+    await q(
+      `insert into health_swim_pb (distance_m, achieved_on, duration_ms, imported_at)
+       values ($1,$2,$3,$4)
+       on conflict (distance_m, achieved_on, duration_ms) do update set imported_at = excluded.imported_at`,
+      [r.distance_m, r.achieved_on, r.duration_ms, r.imported_at],
+    );
+    pbWritten++;
+  }
+} else {
+  console.log('swim_pb not in healthos.db yet: run HealthOS/server/import-watch-sessions.mjs');
+}
+
 db.close();
 
 // --- swim sessions (session-level, from the already-enriched JSON, not the raw CSV) -------------
@@ -198,6 +219,7 @@ if (cur?.generatedAt && cur?.targets?.protein_g != null) {
 console.log(`${DRY ? '[dry run] ' : ''}body_comp: ${bcWritten} rows (sqlite had ${bodyComp.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}watch_session (all training kinds, walking excluded): ${wsWritten} rows (sqlite had ${watchSessions.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}recovery: ${recWritten} rows`);
+console.log(`${DRY ? '[dry run] ' : ''}swim PBs: ${pbWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 
