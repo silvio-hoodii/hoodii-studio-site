@@ -2274,23 +2274,15 @@
     ]
   },
   "_shopNotes": {
-    "_": "ONE SHORT CLAUSE, for the screen. `_knownGaps` is the agent-facing record and grew into dated incident write-ups, which is right for a repo and wrong for a phone: on 2026-08-22 the shopping surface printed \"NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans...\" under a row. His words: \"There is so much text here. It does not make sense... so much fluff that does not add value. Just go straight to the point.\" The UI reads THIS map and nothing else, so the long form cannot leak again by construction. No dates, no history, no capitals. If a gap has nothing worth saying, it gets no entry and the row shows only its name and count.",
+    "_": "ONE SHORT CLAUSE, for the screen. `_knownGaps` is the agent-facing record and grew into dated incident write-ups, which is right for a repo and wrong for a phone: on 2026-08-22 the shopping surface printed \"NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans...\" under a row. His words: \"There is so much text here. It does not make sense... so much fluff that does not add value. Just go straight to the point.\" The UI reads THIS map and nothing else, so the long form cannot leak again by construction. No dates, no history, no capitals. If a gap has nothing worth saying, it gets no entry and the row shows only its name and count. A note that merely lists the same ingredients the row already prints is duplication, not information: eight were removed on 2026-08-22 for exactly that. Keep an entry only where it says something the names cannot.",
     "heavy cream": "milk will not reduce the same way",
     "peanuts": "peanut butter is here, whole nuts are not",
     "bread": "flour and yeast are here, a loaf is not",
-    "green vegetables": "spinach, green beans, kale",
-    "fresh soft herbs": "thyme, rosemary, chives",
-    "warm spices": "nutmeg, turmeric, garam masala",
     "wine": "most dishes are fine without it",
     "feta": "no crumbly white cheese",
     "icing sugar": "blitz white sugar in the bullet blender",
     "tinned tomatoes": "the diced tin covers most of this",
-    "seeds": "chia, poppy, flax",
-    "fresh fruit": "apples, oranges, berries",
-    "asian pantry": "chilli oil, chilli garlic sauce",
-    "other spices": "five-spice, cayenne",
     "oyster mushrooms": "cremini will do, they are meatier",
-    "fresh mint": "no mint of any kind",
     "enoki mushrooms": "cremini work, they are meatier"
   }
 }

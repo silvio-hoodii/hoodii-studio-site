@@ -20,7 +20,7 @@ import { sql } from '../health/db';
  * every run: pace per 100 m has to rise with distance. See SWIM_PB_TYPES in
  * HealthOS/server/import-watch-sessions.mjs. */
 
-export type Provenance = 'sourced' | 'sourced-other-course' | 'constructed' | 'capability';
+export type Provenance = 'sourced' | 'sourced-other-course' | 'third-party' | 'constructed' | 'capability';
 
 export interface SwimSource {
   id: string;
@@ -69,10 +69,16 @@ export interface DistanceStanding {
 
 const CONTENT = join(process.cwd(), 'content', 'gym');
 
-/** "1:38.71" or "47.70" to milliseconds. */
+/** "1:44:29", "1:38.71" or "47.70" to milliseconds.
+ *
+ *  Three parts matter: the 5 km rungs are over an hour, and a two-part-only parser returns the
+ *  HOURS field, so every 5 km tier silently became 1 second. The validator's ordering check caught
+ *  it, which is the only reason it was not shipped. */
 export function parseTime(s: string): number {
-  const parts = s.split(':');
-  const secs = parts.length === 2 ? Number(parts[0]) * 60 + Number(parts[1]) : Number(parts[0]);
+  const p = s.split(':').map(Number);
+  const secs = p.length === 3 ? (p[0] as number) * 3600 + (p[1] as number) * 60 + (p[2] as number)
+    : p.length === 2 ? (p[0] as number) * 60 + (p[1] as number)
+    : (p[0] as number);
   return Math.round(secs * 1000);
 }
 

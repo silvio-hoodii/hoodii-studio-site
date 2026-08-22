@@ -1,39 +1,44 @@
 {
   "$comment": [
-    "WHAT LEVEL AM I. Rebuilt 2026-08-22, the same day the first version shipped, because he read it",
-    "and said: \"I do think that maybe we're being too strict.\"",
+    "WHAT LEVEL AM I. Third version, 2026-08-22. The first was too strict, he said so, and he was",
+    "right. This one is built on a REAL adult ladder instead of multipliers an agent invented.",
     "",
-    "He was right, and the arithmetic says how wrong it was. The first version derived its lower",
-    "tiers as multiples of the US Masters national qualifying time. USMS builds that qualifying time",
-    "as roughly the tenth-fastest time in the country plus 10 to 15%. Multiplying an elite standard",
-    "by a small factor keeps you in elite territory: \"Club\" came out meaning within 1.40x of the",
-    "tenth fastest man in the United States, and the entire recreational range, which is where he",
-    "and nearly every adult swimmer lives, collapsed into two bands.",
+    "THE DISAGREEMENT AND HOW IT RESOLVED. He had a table from another conversation that put him",
+    "between Fitness and Club. My first build put him at Recreational, two rungs lower. Both were",
+    "true, of different populations, and neither of us noticed that was the actual question:",
     "",
-    "SEVEN TIERS NOW, and the top three are still the sourced ones. The bottom four are ours, spaced",
-    "to give the recreational range the room it actually occupies. Tier NAMES follow the set he had",
-    "already been using in a separate conversation, because he has a feel for them and inventing a",
-    "seventh vocabulary would only make the app harder to read.",
+    "  - His table scored him against EVERYONE WHO SWIMS. On that, a regular lap swimmer with",
+    "    reasonable technique is a fitness swimmer, and he is one.",
+    "  - Mine scored him against PEOPLE WHO RACE, by deriving tiers from the US Masters national",
+    "    qualifying time. On that, he is below the bottom.",
     "",
-    "ONE THING HE HAD WRONG, AND IT IS SMALL. The table he was reading was LONG course, 50 m pool.",
-    "His pool is 25 m and freestyle is about 3% faster short course, so reading his own times",
-    "straight off a long-course table flattered him by roughly half a tier. Corrected, he is Fitness",
-    "at 100 and 1500 and Club at 200 and 400, which is what he said he was.",
+    "He also had one real error, and it is small: his table was LONG course, 50 m. His pool is 25 m,",
+    "freestyle is about 3% faster short course, so reading his own times straight off a long-course",
+    "table flattered him by roughly half a tier.",
     "",
-    "COURSE DISCIPLINE. Everything sourced here is short course 25 m, his own pool, EXCEPT the",
-    "qualifying row, which is long course because USMS publishes no short-course-metres standard.",
-    "That row is flagged in its own provenance value so it can never be read as like for like.",
+    "WHAT THIS VERSION USES. He found Openlane, which publishes masters motivational times by age",
+    "group. Its top rung, AAAA, is EXACTLY the official USMS national qualifying time at all six",
+    "distances, and the rungs below step down by a fixed fraction: AAAA plus k/21 for k of 0, 1, 2,",
+    "3, 5, 7, so the slowest rung B is four thirds of the qualifying time. That was checked at every",
+    "distance before any of it was used, and it held to four decimal places.",
     "",
-    "3 km AND 5 km ARE NOT POOL EVENTS. No tier table exists for them at any level, so they are",
-    "extrapolated from the 1500 and marked as such at every tier. The 5 km factor is anchored to the",
-    "only real relationship available: an open-water world championship 5 km of about 51:29 against",
-    "a 1500 m short-course world record of 14:06.88.",
+    "Openlane is an independent analytics project, NOT US Masters Swimming, and says so itself. So",
+    "those rungs are marked `third-party`: better than a number we picked, weaker than the two",
+    "sourced rungs above them.",
     "",
-    "WHY THERE IS STILL NO 25 m OR 50 m PERSONAL BEST. The tier table now covers 50 m, but he has no",
-    "time for it. Samsung records no best under 100 m, and deriving one from single lengths does not",
-    "survive the data: the fastest length ever recorded is 9.03 s, faster than a world-record 25 m",
-    "split, and filtering the sensor miscounts moves the answer from 14.42 s to 18.55 s depending on",
-    "where the threshold goes."
+    "ONE RUNG IS STILL OURS. B is faster than him at every distance, so without a rung below it he",
+    "would not appear on his own page. `fitness` is B times 1.20 and is labelled `constructed`.",
+    "",
+    "THE USEFUL NUMBER, and it is the reason this rebuild was worth doing: he is 4.5% off the bottom",
+    "rung of the real masters ladder at 1500 m, and 18.6% off it at 100 m. That is a target with a",
+    "distance attached, which \"Recreational\" was not.",
+    "",
+    "COURSE. Everything on this page is short course 25 m, his pool. The Openlane rows are published",
+    "long course and are divided by 1.03 to get there; that conversion is flagged on every rung it",
+    "touches. The two sourced rungs are natively short course and are not converted.",
+    "",
+    "3 km AND 5 km ARE NOT POOL EVENTS and no ladder exists for them at any level. Extrapolated from",
+    "the 1500, and flagged at every rung."
   ],
   "meta": {
     "sex": "men",
@@ -45,38 +50,38 @@
   },
   "distanceNotes": {
     "3000": "Not a pool event. Extrapolated from the 1500 at 2.10x.",
-    "5000": "Not a pool event. Extrapolated from the 1500 at 3.65x, the ratio between an open-water world championship 5 km (about 51:29) and the 1500 m short-course world record (14:06.88). Open water has no walls and a mass start, so treat it as a scale marker."
+    "5000": "Not a pool event. Extrapolated from the 1500 at 3.65x, the ratio between an open-water world championship 5 km of about 51:29 and the 1500 m short-course world record of 14:06.88. Open water has no walls and a mass start, so read it as a scale marker."
   },
   "sources": [
     {
       "id": "masters-wr",
       "label": "Masters world records, SCM, as of 2025-09-02",
       "url": "https://resources.fina.org/fina/document/2025/09/02/d7124d15-13e5-4b62-a72b-58ec6a8cecbe/CurrentWorldRecordsIndividualSCM.pdf",
-      "note": "World Aquatics. Age group 35-39 read out of the PDF directly."
+      "note": "World Aquatics. Age group 35-39, short course, read out of the PDF directly."
     },
     {
       "id": "usms-top10",
       "label": "US Masters Swimming Top 10, 2025, SCM, men 35-39",
       "url": "https://www.usms.org/comp/tt/toptenlist.php?Year=2025&CourseID=3&AgeGroupID=4&Sex=M",
-      "note": "The tenth-place time is a real swimmer in his age group this year, which is a better anchor than a record nobody approaches."
+      "note": "Tenth place is a real swimmer in his age group this year, which anchors better than a record."
+    },
+    {
+      "id": "openlane",
+      "label": "Openlane masters motivational times, men 35-39",
+      "url": "https://www.tryopenlane.com/motivational-times",
+      "note": "Independent analytics project, not US Masters Swimming, and it says so. Its AAAA rung matches the official USMS national qualifying time exactly at all six distances, and the rungs below step down by AAAA plus k/21. Published long course; converted here."
     },
     {
       "id": "usms-nqt",
       "label": "US Masters national qualifying times, men 35-39",
       "url": "https://www.usms.org/events/national-championships/pool-national-championships/national-qualifying-times",
-      "note": "LONG course, 50 m. USMS publishes no short-course-metres qualifying standard. Roughly the tenth-fastest time in the country plus 10 to 15%."
-    },
-    {
-      "id": "ow-5k",
-      "label": "Open water 5 km world championship result",
-      "url": "https://en.wikipedia.org/wiki/Open_water_swimming_at_the_2023_World_Aquatics_Championships_%E2%80%93_Men%27s_5_km",
-      "note": "Used only to anchor how much a 5 km slows against a 1500."
+      "note": "The official standard the AAAA rung equals. Long course."
     },
     {
       "id": "course-conv",
       "label": "Short course to long course conversion, freestyle",
       "url": "https://myswimsplits.com/swimming-time-converter/",
-      "note": "Freestyle short course metres is about 3% faster than long course. This is why reading his times off a long-course table flattered him."
+      "note": "Freestyle short course metres is about 3% faster than long course."
     }
   ],
   "tiers": [
@@ -84,8 +89,6 @@
       "id": "world",
       "name": "World class",
       "provenance": "sourced",
-      "sourceId": "masters-wr",
-      "what": "The fastest man aged 35 to 39 on record, anywhere in the world.",
       "times": {
         "50": "21.53",
         "100": "47.70",
@@ -95,14 +98,14 @@
         "1500": "15:41.78",
         "3000": "32:57.74",
         "5000": "57:17.50"
-      }
+      },
+      "what": "The fastest man aged 35 to 39 on record, anywhere.",
+      "sourceId": "masters-wr"
     },
     {
       "id": "highperf",
-      "name": "High performance",
+      "name": "Top 10 in the US",
       "provenance": "sourced",
-      "sourceId": "usms-top10",
-      "what": "Tenth fastest in the United States in 2025 in this age group. A real swimmer, this year, not a record.",
       "times": {
         "50": "25.13",
         "100": "57.51",
@@ -111,89 +114,152 @@
         "800": "10:28.96",
         "1500": "19:29.96",
         "3000": "40:56.92",
-        "5000": "71:10.35"
-      }
+        "5000": "1:11:10"
+      },
+      "what": "Tenth fastest in the United States in 2025, this age group. A real swimmer, this year.",
+      "sourceId": "usms-top10"
     },
     {
-      "id": "competitive",
-      "name": "Competitive",
-      "provenance": "sourced-other-course",
-      "sourceId": "usms-nqt",
-      "what": "Fast enough to enter the US Masters national championships. Long course, so read it as a scale marker rather than a target in your pool.",
+      "id": "aaaa",
+      "name": "AAAA",
+      "provenance": "third-party",
       "times": {
-        "50": "29.06",
-        "100": "1:04.32",
-        "200": "2:26.30",
-        "400": "5:22.92",
-        "800": "11:25.30",
-        "1500": "22:54.10",
-        "3000": "48:05.61",
-        "5000": "83:35.46"
-      }
+        "50": "28.21",
+        "100": "1:02.45",
+        "200": "2:22.04",
+        "400": "5:13.51",
+        "800": "11:05.34",
+        "1500": "22:14.08",
+        "3000": "46:41.57",
+        "5000": "1:21:09"
+      },
+      "what": "Fast enough to enter the US Masters national championships. This rung is the official qualifying time.",
+      "sourceId": "openlane",
+      "converted": true
     },
     {
-      "id": "club",
-      "name": "Club",
-      "provenance": "constructed",
-      "what": "Trains with a squad and races. Set at 1.25x the qualifying time. That multiplier is a choice, not a finding.",
+      "id": "aaa",
+      "name": "AAA",
+      "provenance": "third-party",
       "times": {
-        "50": "36.32",
-        "100": "1:20.40",
-        "200": "3:02.88",
-        "400": "6:43.65",
-        "800": "14:16.63",
-        "1500": "28:37.63",
-        "3000": "60:07.01",
-        "5000": "104:29.32"
-      }
+        "50": "29.55",
+        "100": "1:05.42",
+        "200": "2:28.81",
+        "400": "5:28.45",
+        "800": "11:37.02",
+        "1500": "23:17.60",
+        "3000": "48:54.96",
+        "5000": "1:25:01"
+      },
+      "what": "A strong masters racer, close to the national standard.",
+      "sourceId": "openlane",
+      "converted": true
+    },
+    {
+      "id": "aa",
+      "name": "AA",
+      "provenance": "third-party",
+      "times": {
+        "50": "30.90",
+        "100": "1:08.40",
+        "200": "2:35.56",
+        "400": "5:43.37",
+        "800": "12:08.71",
+        "1500": "24:21.14",
+        "3000": "51:08.39",
+        "5000": "1:28:53"
+      },
+      "what": "Races regularly and trains with a squad.",
+      "sourceId": "openlane",
+      "converted": true
+    },
+    {
+      "id": "a",
+      "name": "A",
+      "provenance": "third-party",
+      "times": {
+        "50": "32.24",
+        "100": "1:11.37",
+        "200": "2:42.33",
+        "400": "5:58.30",
+        "800": "12:40.39",
+        "1500": "25:24.66",
+        "3000": "53:21.79",
+        "5000": "1:32:45"
+      },
+      "what": "Competent masters racer, mid-field at a meet.",
+      "sourceId": "openlane",
+      "converted": true
+    },
+    {
+      "id": "bb",
+      "name": "BB",
+      "provenance": "third-party",
+      "times": {
+        "50": "34.93",
+        "100": "1:17.31",
+        "200": "2:55.85",
+        "400": "6:28.17",
+        "800": "13:43.76",
+        "1500": "27:31.72",
+        "3000": "57:48.61",
+        "5000": "1:40:29"
+      },
+      "what": "Racing, and getting the hang of it.",
+      "sourceId": "openlane",
+      "converted": true
+    },
+    {
+      "id": "b",
+      "name": "B",
+      "provenance": "third-party",
+      "times": {
+        "50": "37.62",
+        "100": "1:23.26",
+        "200": "3:09.39",
+        "400": "6:58.02",
+        "800": "14:47.12",
+        "1500": "29:38.77",
+        "3000": "1:02:15",
+        "5000": "1:48:13"
+      },
+      "what": "The bottom rung of the real masters ladder. This is the one you are knocking on.",
+      "sourceId": "openlane",
+      "converted": true
     },
     {
       "id": "fitness",
       "name": "Fitness",
       "provenance": "constructed",
-      "what": "Swims two or three times a week on purpose, works on technique, is not racing. This is where you are.",
       "times": {
-        "50": "45.04",
-        "100": "1:39.70",
-        "200": "3:46.77",
-        "400": "8:20.53",
-        "800": "17:42.21",
-        "1500": "35:29.86",
-        "3000": "74:32.70",
-        "5000": "129:33.96"
-      }
-    },
-    {
-      "id": "recreational",
-      "name": "Recreational",
-      "provenance": "constructed",
-      "what": "Swims laps regularly with no plan behind it.",
-      "times": {
-        "50": "56.67",
-        "100": "2:05.42",
-        "200": "4:45.29",
-        "400": "10:29.69",
-        "800": "22:16.33",
-        "1500": "44:39.49",
-        "3000": "93:46.94",
-        "5000": "163:00.15"
-      }
+        "50": "45.14",
+        "100": "1:39.91",
+        "200": "3:47.27",
+        "400": "8:21.62",
+        "800": "17:44.54",
+        "1500": "35:34.52",
+        "3000": "1:14:42",
+        "5000": "2:09:52"
+      },
+      "what": "Swims regularly and on purpose, not racing. This is where you are, and it is the one rung on this page that we made up."
     },
     {
       "id": "firsttimer",
       "name": "First timer",
       "provenance": "capability",
-      "what": "Can get to the other end, at whatever pace. Deliberately not a time: at this stage the only question is whether you finish the length."
+      "what": "Can get to the other end, at whatever pace. Deliberately not a time: the only question at this stage is whether you finish the length."
     }
   ],
   "profileNote": [
-    "His four bests score 113, 137, 154 and 130 against the age-matched world record at 100, 200,",
-    "400 and 1500. That is an unusually EVEN profile, and it tilts towards distance: he is",
-    "relatively strongest at 400 m and relatively weakest at 100 m.",
+    "Two things are true at once and they answer different questions. Against everyone who swims, he",
+    "is a solid fitness swimmer. Against people who RACE, he is one rung below the bottom of the",
+    "masters ladder. The second is the harder mirror and the more useful one, because it comes with",
+    "a target attached.",
     "",
-    "The stroke data says the same thing from the other side. He takes about 9 stroke cycles per",
-    "25 m at roughly 18 cycles a minute, which is a long, slow, glide-heavy stroke. That is an engine",
-    "ahead of a technique, and it means the fastest improvement available to him is turnover, not",
-    "fitness."
+    "That target is the 1500. He is 4.5% off the B standard there and 18.6% off it at 100 m, which is",
+    "the same tilt every other measure shows: he gets relatively better the longer it goes. His",
+    "stroke says why. About 9 cycles per 25 m at roughly 18 cycles a minute is long, slow and",
+    "glide-heavy, an engine ahead of a technique. The cheapest improvement available to him is",
+    "turnover, not fitness."
   ]
 }

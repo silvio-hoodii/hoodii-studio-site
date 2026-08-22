@@ -296,7 +296,10 @@ if (!conditioning.week?.restRule) {
 // The alternative, remembering to write it down, is the shape of rule this workspace has broken
 // every single time.
 // ---------------------------------------------------------------------------------------------
-const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'constructed', 'capability']);
+/* 'third-party' sits between sourced and constructed: published by somebody real, but not by the
+   governing body. Openlane's masters tables are the case that created it. It must still name a
+   source, because the whole point of the value is that a reader can go and look. */
+const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'third-party', 'constructed', 'capability']);
 
 {
   const srcIds = new Set((swimStandards.sources || []).map((s) => s.id));
@@ -312,7 +315,7 @@ const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'constructed', 'c
     if (!PROVENANCE.has(t.provenance)) {
       fail(where, `provenance must be one of ${[...PROVENANCE].join(" | ")}, got ${JSON.stringify(t.provenance ?? null)}. Every tier has to say whether its numbers were published by somebody or picked by us.`);
     }
-    if ((t.provenance === 'sourced' || t.provenance === 'sourced-other-course')) {
+    if ((t.provenance === 'sourced' || t.provenance === 'sourced-other-course' || t.provenance === 'third-party')) {
       if (!t.sourceId) fail(where, `provenance is "${t.provenance}" but no sourceId. A sourced tier must name the source it came from.`);
       else if (!srcIds.has(t.sourceId)) fail(where, `sourceId "${t.sourceId}" is not in sources[]`);
       if (!t.times) fail(where, `provenance is "${t.provenance}" but the tier carries no times`);
@@ -330,9 +333,14 @@ const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'constructed', 'c
   /* Tiers must get slower as they get easier, at every distance. A table where "National" is
      slower than "Qualifier" would place him in the wrong band and nobody would notice by reading
      it: the numbers are all plausible on their own. */
+  /* h:mm:ss, m:ss, or plain seconds. The two-part-only version returned the HOURS field for a 5 km
+     time, so every rung at that distance parsed as 1.00 and the ordering check compared 1 to 1.
+     The same parser had been written three times in this feature and was wrong in all three. */
   const parse = (str) => {
-    const p = String(str).split(':');
-    return p.length === 2 ? Number(p[0]) * 60 + Number(p[1]) : Number(p[0]);
+    const p = String(str).split(':').map(Number);
+    if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2];
+    if (p.length === 2) return p[0] * 60 + p[1];
+    return p[0];
   };
   const resolve = (tier, dist, seen = new Set()) => {
     if (tier.times && tier.times[dist] != null) return parse(tier.times[dist]);

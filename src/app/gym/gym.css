@@ -689,6 +689,12 @@
   white-space: nowrap;
 }
 .gym .prov.sourced { background: var(--foreground); color: var(--background); }
+/* Published by somebody real, but not the governing body. Drawn between the two: a solid outline
+   like `sourced`, in the quieter ink of `constructed`. */
+.gym .prov.third-party {
+  border: 1px solid var(--muted-foreground);
+  color: var(--muted-foreground);
+}
 .gym .prov.sourced-other-course {
   border: 1px solid var(--foreground);
   color: var(--foreground);

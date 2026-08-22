@@ -109,6 +109,19 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
           <div className="mealmeta">{c.needsThaw.join(', ')} still in the freezer</div>
         )}
         {missing.length > 0 && <div className="mealmiss">no {missing.join(', ')}</div>}
+        {/* WHAT THE RECIPE ITSELF SAYS YOU CAN SKIP. `score.optional` has been computed since the
+            matcher was written and rendered nowhere, which is the same defect as the bucket that was
+            computed and never shown: the app knew something and did not say it.
+
+            It is exactly the question he asked about this: "Why is something like pea and mint soup not
+            ready? Do I have mint?" He has no mint, the dish IS ready, and the reason is that BBC marks
+            the mint and the cream "to serve". Nothing on the row said so, so a correct answer looked
+            like a bug. */}
+        {c.score.optional.length > 0 && (
+          <div className="mealmeta">
+            skip if you like: {c.score.optional.map((o) => o.item ? label(o.item) : o.shown).join(', ')}
+          </div>
+        )}
         {/* Naming the unsure ingredients, not just counting them. He asked directly: "there's no way
             for me to know what it's missing when you say unsure". A bare count is the app knowing
             something and not saying it. */}

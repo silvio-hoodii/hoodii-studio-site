@@ -238,6 +238,7 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
                   <span className={`prov ${t.provenance}`}>
                     {t.provenance === 'sourced' ? 'sourced'
                       : t.provenance === 'sourced-other-course' ? 'sourced, other course'
+                      : t.provenance === 'third-party' ? 'third party'
                       : t.provenance === 'constructed' ? 'our number'
                       : 'not a time'}
                   </span>

@@ -57,6 +57,16 @@ function Ingredients({ hit, label }: { hit: WantHit; label: (id: string) => stri
         </div>
       )}
 
+      {/* Same omission as the dish rows had: the recipe's own optional lines were computed and never
+          shown, so a dish could be cookable "despite" an ingredient he does not have with nothing
+          explaining why. */}
+      {s.optional.length > 0 && (
+        <div className="box look" style={{ marginTop: 14 }}>
+          <span className="k">The recipe says you can skip these</span>
+          <div>{s.optional.map((o) => (o.item ? label(o.item) : o.shown)).join(', ')}</div>
+        </div>
+      )}
+
       {s.unknown.length > 0 && (
         <div className="box look" style={{ marginTop: 14 }}>
           <span className="k">Our list does not recognise these, {s.unknown.length}</span>
