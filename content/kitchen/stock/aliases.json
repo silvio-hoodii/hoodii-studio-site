@@ -96,7 +96,19 @@
     "dried chili flakes",
     "salt and pepper",
     "salt and pepper to taste",
-    "kosher salt and pepper"
+    "kosher salt and pepper",
+    "hot water",
+    "lukewarm water",
+    "tepid water",
+    "cold pressed rapeseed oil",
+    "splash olive oil",
+    "drizzle olive oil",
+    "drizzle sunflower oil",
+    "splash sunflower oil",
+    "vegetable oil for deep frying",
+    "oil for deep frying",
+    "plain flour sifted",
+    "flour sifted"
   ],
   "map": {
     "blackvinegar": [
@@ -437,7 +449,16 @@
       "corn kernels",
       "frozen sweetcorn",
       "garden peas",
-      "petit pois"
+      "petit pois",
+      "frozen pea",
+      "stir fry vegetables",
+      "stir-fry vegetables",
+      "frozen stir fry vegetables",
+      "frozen stir-fry vegetables",
+      "mixed vegetables",
+      "mixed veg your choice",
+      "mixed veg of your choice",
+      "mixed veg"
     ],
     "frozenpeppers": [
       "frozen peppers",
@@ -450,7 +471,12 @@
       "frozen mango",
       "mixed berries",
       "berries",
-      "frozen fruit"
+      "frozen fruit",
+      "frozen blueberries",
+      "frozen raspberries",
+      "frozen mixed berries",
+      "frozen berry",
+      "frozen mixed fruit"
     ],
     "pineapple": [
       "pineapple",
@@ -696,7 +722,9 @@
       "herbes de provence",
       "dried basil",
       "mixed dried herbs",
-      "dried italian herbs"
+      "dried italian herbs",
+      "garlic granules",
+      "onion granules"
     ],
     "sriracha": [
       "sriracha",
@@ -909,6 +937,14 @@
       "purple sprouting broccoli",
       "sprouting broccoli",
       "broccolini"
+    ],
+    "cocoa": [
+      "cocoa",
+      "cocoa powder",
+      "unsweetened cocoa powder",
+      "unsweetened cocoa",
+      "natural cocoa powder",
+      "cacao powder"
     ]
   },
   "_knownGaps": {
@@ -935,7 +971,7 @@
     "leek": "No leeks.",
     "mustard": "No prepared mustard or mustard powder. The honey Dijon vinaigrette is a dressing, not a substitute.",
     "bread": "NARROWED 2026-08-16. A 450 g C&G light rye loaf arrived 08-14 and is now the stock item `ryebread`, so a plain slice of bread is no longer a gap. Still missing: baguette, pita, tortillas, naan, buns and breadcrumbs of any kind. There IS flour and yeast, so those remain a project rather than an ingredient.",
-    "prawns": "No prawns, shrimp, squid or salmon. Tilapia is the only fish and it is frozen.",
+    "prawns": "No prawns, shrimp, squid or salmon. Tilapia is the only fish and it is frozen. `white fish` is deliberately NOT here: there is 1.6 kg of frozen tilapia and tilapia IS a white fish, so a recipe asking for white fish should be told yes. lint-aliases.mjs refused the build when that was got wrong on 2026-08-22.",
     "lamb": "No lamb.",
     "worcestershire sauce": "No Worcestershire sauce.",
     "feta": "No feta. This row is the whole SOFT/FRESH CHEESE bucket, not only feta: ricotta, mascarpone, cream cheese, goat's cheese, halloumi and blue cheese are all in it and none is here. The three cheeses in this kitchen are parmesan, mozzarella and Monterey Jack, and none of them behaves like any of those. Read the ingredient line, not this row's name, when a dish is rejected for it.",
@@ -947,7 +983,7 @@
     "brown sugar": "No brown sugar, only white.",
     "self raising flour": "No self-raising flour, but plain flour and baking powder are both here.",
     "fresh soft herbs": "NARROWED AGAIN 2026-08-21. Blends he already owns are out of this bucket: Italian seasoning is a mixed dried-herb blend and satisfies \"mixed herbs\", \"dried mixed herbs\" and \"herbes de provence\", and dried basil is covered by the fresh basil plus the blend. Still missing, fresh or dried: thyme, sage, rosemary, tarragon, marjoram, chervil, bay and chives. The herbs here are fresh parsley, fresh dill, fresh basil, dried oregano and Italian seasoning.",
-    "green vegetables": "NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans, cauliflower, pak choi, spring greens, kale, brussels sprouts, sugar snap peas, mangetout, courgette/zucchini, leeks, spinach, chard, watercress and aubergine. The vegetables here are onion, carrot, peppers, sweet potato, potato, mushrooms, cucumber, asparagus, broccoli and the frozen mixed bag.\n\nWHY THIS ROW COST MORE THAN ANY OTHER: it bundled 32 distinct vegetables under one label, and it was the single largest blocker in the whole corpus at 78 dishes where it was the ONLY thing missing. A category gap cannot be partly satisfied, so buying broccoli unblocked nothing and the note asserting \"no broccoli, asparagus...\" went on being read as true after both had arrived. Never put a shopping CATEGORY where an ingredient belongs.",
+    "green vegetables": "NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans, cauliflower, pak choi, spring greens, kale, brussels sprouts, sugar snap peas, mangetout, courgette/zucchini, leeks, spinach, chard, watercress and aubergine. The vegetables here are onion, carrot, peppers, sweet potato, potato, mushrooms, cucumber, asparagus, broccoli and the frozen mixed bag.\n\nWHY THIS ROW COST MORE THAN ANY OTHER: it bundled 32 distinct vegetables under one label, and it was the single largest blocker in the whole corpus at 78 dishes where it was the ONLY thing missing. A category gap cannot be partly satisfied, so buying broccoli unblocked nothing and the note asserting \"no broccoli, asparagus...\" went on being read as true after both had arrived. Never put a shopping CATEGORY where an ingredient belongs. Plain `lettuce` is deliberately NOT in this bucket either: lettuce is modelled as the `saladmix` stock row, so putting it here would describe the same food twice and the row would win. Named varieties he has never owned (baby gem, romaine) stay here.",
     "avocado": "No avocado.",
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
     "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing and sesame oil are the ones that ARE here.",
@@ -973,7 +1009,11 @@
     "mixed spice": "No mixed spice or pumpkin pie spice, the pre-blended warm-spice mixes. Ground cinnamon arrived 2026-08-16 and is the only one of their components here.",
     "bananas": "No bananas. They are the whole structure of a banana bread or a banana oat muffin, not a flavour, so nothing stands in.",
     "vanillapod": "No vanilla pods, beans or paste. There IS a 250 mL bottle of Compliments artificial vanilla extract since 2026-08-17, which is what almost every recipe means by vanilla.",
-    "meat-free mince": "No vegan or vegetarian mince of any kind, and no plan to buy one. Catalogued 2026-08-22 because BBC Good Food's Mushroom bolognese asks for it and the line was resolving to UNKNOWN, which reads as \"the app cannot tell\" when the honest answer is \"you do not have this\". The mushrooms, lentils and canned tomatoes in that recipe are all here; the mince is the gap."
+    "meat-free mince": "No vegan or vegetarian mince of any kind, and no plan to buy one. Catalogued 2026-08-22 because BBC Good Food's Mushroom bolognese asks for it and the line was resolving to UNKNOWN, which reads as \"the app cannot tell\" when the honest answer is \"you do not have this\". The mushrooms, lentils and canned tomatoes in that recipe are all here; the mince is the gap.",
+    "icing sugar": "No icing or powdered sugar. Catalogued 2026-08-22: it appeared 13 times across the corpus as an UNRECOGNISED ingredient, the most of anything, which reads as \"the app cannot tell\" when the honest answer is that he has granulated and not powdered. They are not interchangeable straight from the bag: powdered is milled far finer and cut with cornstarch, so it dissolves cold and granulated does not. See the substitute, which is real and uses a tool he owns.",
+    "seeds": "No chia, poppy, flax or pumpkin seeds. Catalogued 2026-08-22. Sesame seeds are here and are their own item; nothing else in this family is.",
+    "fresh fruit": "No apples, oranges, fresh berries or plantain. Catalogued 2026-08-22. The fruit here is frozen (berry blend, strawberries, mango, pineapple) plus lemons and limes, and each of those is its own item. A recipe asking for a fresh apple is asking for something that is not in the kitchen, which is different from the app not knowing the word.",
+    "tinned fruit": "No tinned fruit. Catalogued 2026-08-22. The frozen pineapple is not a substitute where a recipe wants the juice from the tin, which is what these lines are usually for. `pineapple chunks` on its own is deliberately NOT in this bucket: he has 1.2 kg of frozen pineapple chunks and lint-aliases.mjs refused the build for exactly that reason, which is the gate working. Only the phrase naming the tin and its juice is a gap."
   },
   "_vetoes": {
     "_": "If a parsed ingredient name contains any of these substrings, that item can never match it, whatever the alias table says. This is how a specific qualifier beats a generic phrase it happens to contain.",
@@ -1485,14 +1525,23 @@
     "tinned tomatoes": [
       "crushed tomatoes",
       "passata",
-      "san marzano"
+      "san marzano",
+      "stewed tomatoes",
+      "fire roasted tomatoes",
+      "fire-roasted tomatoes",
+      "fire roasted diced tomatoes",
+      "fire-roasted diced tomatoes"
     ],
     "kidney beans": [
       "kidney beans",
       "black beans",
       "cannellini",
       "chickpeas",
-      "borlotti"
+      "borlotti",
+      "kidney bean in water",
+      "kidney bean",
+      "cannellini bean",
+      "borlotti bean"
     ],
     "enoki mushrooms": [
       "enoki",
@@ -1559,7 +1608,9 @@
       "pork ribs",
       "sausages",
       "sausage meat",
-      "sausage"
+      "sausage",
+      "ready made meatballs",
+      "ready-made meatballs"
     ],
     "chorizo": [
       "chorizo",
@@ -1618,7 +1669,12 @@
       "hamburger buns",
       "buns",
       "english muffins",
-      "brioche buns"
+      "brioche buns",
+      "soft burger rolls",
+      "burger rolls",
+      "4 large or 8 small soft burger rolls",
+      "lasagne sheets",
+      "dried lasagne sheets"
     ],
     "prawns": [
       "prawns",
@@ -1638,7 +1694,12 @@
       "cooked prawn",
       "shelled cooked prawn",
       "raw king prawns",
-      "tiger prawns"
+      "tiger prawns",
+      "mixed fish",
+      "fish pie mix",
+      "x fish pie mix",
+      "mussel in creamy sauce",
+      "smoked haddock"
     ],
     "lamb": [
       "lamb",
@@ -1687,7 +1748,8 @@
       "juniper",
       "ras el hanout",
       "harissa",
-      "sumac"
+      "sumac",
+      "ground ginger"
     ],
     "peanuts": [
       "peanuts",
@@ -1705,7 +1767,10 @@
       "cashew nut",
       "pecan",
       "walnut",
-      "almond"
+      "almond",
+      "pecans",
+      "chopped pecans",
+      "mixed nuts"
     ],
     "ham": [
       "ham",
@@ -1800,7 +1865,18 @@
       "zucchini",
       "runner beans",
       "green bean",
-      "sugar snap pea"
+      "sugar snap pea",
+      "squash",
+      "green squash",
+      "yellow squash",
+      "summer squash",
+      "egg plants",
+      "egg plant",
+      "baby gem lettuces",
+      "baby gem lettuce",
+      "gem lettuce",
+      "little gem lettuce",
+      "romaine lettuce"
     ],
     "avocado": [
       "avocado",
@@ -1832,7 +1908,13 @@
       "shrimp paste",
       "black bean sauce",
       "sweet soy",
-      "kecap manis"
+      "kecap manis",
+      "crispy chilli oil",
+      "crispy chili oil",
+      "chilli oil",
+      "chili oil",
+      "chili garlic sauce",
+      "chilli garlic sauce"
     ],
     "sour cream": [
       "soured cream",
@@ -1924,7 +2006,10 @@
       "beef short rib",
       "stewing steak",
       "beef bones",
-      "beef suet"
+      "beef suet",
+      "beef stir fry strips",
+      "beef stir-fry strips",
+      "stir fry strips"
     ],
     "other spices": [
       "cayenne pepper",
@@ -1939,7 +2024,8 @@
       "poultry seasoning",
       "old bay",
       "jerk seasoning",
-      "lemon pepper seasoning"
+      "lemon pepper seasoning",
+      "ranch seasoning"
     ],
     "whole chicken": [
       "whole chicken",
@@ -1963,7 +2049,10 @@
       "apricot jam",
       "pineapple jam",
       "cranberry sauce",
-      "maple butter"
+      "maple butter",
+      "unsweetened applesauce",
+      "applesauce",
+      "apple sauce"
     ],
     "other rice and grains": [
       "risotto rice",
@@ -1977,7 +2066,9 @@
       "polenta",
       "pearl barley",
       "rice flour",
-      "glutinous rice"
+      "glutinous rice",
+      "fine semolina",
+      "semolina"
     ],
     "cheddar": [
       "cheddar",
@@ -2067,6 +2158,50 @@
       "meat free mince",
       "plant-based mince",
       "quorn mince"
+    ],
+    "icing sugar": [
+      "icing sugar",
+      "powdered sugar",
+      "confectioners sugar",
+      "confectioner's sugar",
+      "confectioners’ sugar",
+      "powdered sugar sifted",
+      "icing sugar sifted",
+      "10x sugar"
+    ],
+    "seeds": [
+      "chia seeds",
+      "poppy seeds",
+      "ground flaxseed",
+      "flaxseed",
+      "flax seeds",
+      "linseed",
+      "pumpkin seeds",
+      "sunflower seeds",
+      "seeds snack",
+      "x seeds snack"
+    ],
+    "fresh fruit": [
+      "apples",
+      "apple",
+      "oranges",
+      "orange",
+      "blueberries",
+      "fresh blueberries",
+      "raspberries",
+      "blackberries",
+      "plantain",
+      "plantains",
+      "pears",
+      "pear",
+      "peaches"
+    ],
+    "tinned fruit": [
+      "pineapple chunks in juice",
+      "tinned pineapple",
+      "canned pineapple",
+      "tinned peaches",
+      "canned peaches"
     ]
   },
   "_substitutes": {
@@ -2110,6 +2245,10 @@
     "golden syrup": {
       "have": "honey",
       "note": "Honey sets a little firmer and tastes of honey, which golden syrup does not. In a flapjack or a chewy bar it works; anything where the syrup is the flavour will taste different."
+    },
+    "icing sugar": {
+      "have": "sugar",
+      "note": "Blitz white sugar in the bullet blender for about 30 seconds, until it looks like flour and no grains are visible. Use the same volume the recipe asks for, measured AFTER blending, because it fluffs up. Let the dust settle before opening the jar. It will not be quite as fine as shop-bought and there is no cornstarch in it, so it thickens an icing slightly less; for dusting a cake it is indistinguishable."
     }
   },
   "_notAnIngredient": {
