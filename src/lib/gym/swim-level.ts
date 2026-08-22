@@ -76,14 +76,23 @@ export function parseTime(s: string): number {
   return Math.round(secs * 1000);
 }
 
-/** Milliseconds to "1:38.71", or "47.70" under a minute. Two decimals, because swimming is timed
- *  to hundredths and rounding to whole seconds would hide a personal best by a tenth. */
+/** Milliseconds to "47.70", "1:38.71" or "1:44:29".
+ *
+ *  Hundredths under an hour, because swimming is timed to hundredths and rounding to whole seconds
+ *  would hide a personal best by a tenth. Whole seconds and an hours field above that: the 5 km
+ *  rows rendered as "104:29.32" on the first build, which is correct and reads as 104 minutes to
+ *  anyone who does not stop to think, on the one distance where nobody has a feel for the number. */
 export function fmtTime(ms: number): string {
   const total = ms / 1000;
   if (total < 60) return total.toFixed(2);
-  const m = Math.floor(total / 60);
-  const s = total - m * 60;
-  return `${m}:${s.toFixed(2).padStart(5, '0')}`;
+  if (total < 3600) {
+    const m = Math.floor(total / 60);
+    return `${m}:${(total - m * 60).toFixed(2).padStart(5, '0')}`;
+  }
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total - h * 3600) / 60);
+  const s = Math.round(total - h * 3600 - m * 60);
+  return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
 export async function loadSwimStandards(): Promise<SwimStandards> {
