@@ -133,6 +133,50 @@ function checkPlacement(where, item, kind) {
   }
 }
 
+/* THE SAME EXERCISE MAY NOT APPEAR TWICE ON ONE DAY'S PAGE. Added 2026-08-22.
+ *
+ * Silvio: "It's literally in two places on the same session, and it's not just that workout I want."
+ *
+ * He caught it on band pull-apart, which I had put in the warmup and then, an hour later, back into
+ * the workout as well. But the class was already there and had nothing to do with that mistake:
+ * Single-Leg Glute Bridge sat in the lower warmup AND in the squat block on both lower days, and
+ * Band Straight-Arm Pulldown sat in the upper warmup while the loaded Straight-Arm Pulldown was the
+ * Friday swim-catch lift. Three duplications, live, none of them noticed by anybody.
+ *
+ * A warmup entry and a session entry answer different questions ("get ready" vs "do the work"), and
+ * seeing one name in both places on a phone reads as the programme having lost track of itself,
+ * which is precisely the thing that makes him stop believing it. The rule: if it is loaded in the
+ * session, the warmup does not also need it; if the warmup needs it, it is not session work.
+ *
+ * Matching is deliberately exact after normalising, rather than fuzzy. A warmup name carries its
+ * dose ("Single-Leg Glute Bridge x10/side (LEFT first)") and sometimes an implement prefix ("Band
+ * Straight-Arm Pulldown"), both of which are stripped; anything past that has to match on the whole
+ * name, so "Copenhagen Plank" and "Plank w/ Shoulder Taps" stay distinct. */
+function exerciseKey(name) {
+  return String(name || '')
+    .replace(/\s*[x×]\s*\d.*$/i, '')      // the dose: "x10/side", "x 30s"
+    .replace(/\([^)]*\)/g, '')             // parentheticals: "(LEFT first)", "(short lever)"
+    .replace(/^\s*(band|db|bb|ez bar|kettlebell)\s+/i, '')  // implement prefix
+    .toLowerCase().replace(/[^a-z]/g, '');
+}
+
+for (const [dayKey, day] of Object.entries(program.days)) {
+  const prep = [
+    ...(warmups[day.warmup] || []).map((w) => ({ where: 'the warmup', name: w.name })),
+    ...(day.cooldown || []).map((c) => cooldowns[c]).filter(Boolean).map((c) => ({ where: 'the cooldown', name: c.name })),
+  ];
+  for (const b of day.blocks || []) {
+    for (const ex of b.exercises || []) {
+      const k = exerciseKey(ex.name);
+      if (!k) continue;
+      const clash = prep.find((w) => exerciseKey(w.name) === k);
+      if (clash) {
+        fail(`${dayKey}/${b.label}`, `"${ex.name}" is in the session and "${clash.name}" is in ${clash.where}, on the same day. Pick one. If it is loaded and logged here, the warmup does not also need it; if the warmup needs it, it is not session work.`);
+      }
+    }
+  }
+}
+
 for (const [dayKey, day] of Object.entries(program.days)) {
   if (!day.name || !day.title) fail(dayKey, 'missing name/title');
   if (!warmups[day.warmup]) fail(dayKey, `warmup "${day.warmup}" not found in warmups.json`);
