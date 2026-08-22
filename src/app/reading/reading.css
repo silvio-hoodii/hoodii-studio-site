@@ -546,17 +546,20 @@
  * green, so "grab" reads as the same affirmative the rest of the site already uses. */
 .reading .shelfrail {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+  gap: 3px;
   margin-top: 12px;
 }
 .reading .shelfrail .lt {
+  /* Letter and count side by side rather than stacked. Stacked, 27 letters took four rows and
+     about 200px of the fold on a phone; this is two rows. Still a 44px-tall thumb target, which
+     matters because he is holding a book in the other hand. */
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
   justify-content: center;
-  gap: 1px;
-  min-height: 44px;                       /* thumb target, he is holding a book in the other hand */
+  gap: 3px;
+  min-height: 44px;
   padding: 4px 2px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -665,3 +668,127 @@
 .reading .tierlegend .t-grab { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 45%, transparent); }
 .reading .tierlegend .t-good { color: var(--foreground); }
 .reading .tierlegend .t-maybe { color: var(--muted-foreground); opacity: 0.75; }
+
+/* ---- the toolbar: one filter control, one sort control -------------------------------------
+ * Copied in shape from the StoryGraph's "Filter all books" and the Calgary library catalogue's
+ * "Filter results / Sort by", both of which collapse everything behind two controls. The first
+ * version of this page had three chip rows and a 27-cell alphabet permanently on screen, which
+ * put about 700px of furniture between the page and the first book. */
+.reading .toolbar {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 14px;
+}
+.reading .toolbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+.reading .toolbtn:hover { border-color: var(--foreground); }
+.reading .toolbtn.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+.reading .toolbtn .badge {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  min-width: 18px;
+  padding: 1px 5px;
+  border-radius: 99px;
+  text-align: center;
+  background: var(--signal);
+  color: var(--background);
+}
+.reading .toolbtn.on .badge { background: var(--background); color: var(--foreground); }
+
+/* A real disclosure, so the sort menu needs no client JS. */
+.reading .sortbox { flex: 1 1 auto; position: relative; }
+.reading .sortbox > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  list-style: none;
+  font-size: 14px;
+}
+.reading .sortbox > summary::-webkit-details-marker { display: none; }
+.reading .sortbox > summary::after {
+  content: '';
+  width: 7px; height: 7px;
+  border-right: 1.5px solid var(--muted-foreground);
+  border-bottom: 1.5px solid var(--muted-foreground);
+  transform: rotate(45deg) translate(-2px, -2px);
+  flex: 0 0 auto;
+}
+.reading .sortbox[open] > summary { border-color: var(--foreground); }
+.reading .sortbox[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+.reading .sortbox > summary:hover { border-color: var(--foreground); }
+.reading .sortbox .k {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.reading .sortbox .v { flex: 1 1 auto; text-align: right; font-weight: 500; }
+
+.reading .sortmenu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.reading .sortopt {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+}
+.reading .sortopt:last-child { border-bottom: 0; }
+.reading .sortopt:hover { background: var(--accent); }
+.reading .sortopt.on .so-name { font-weight: 600; }
+.reading .sortopt.on .so-name::after { content: ' ✓'; color: var(--signal); }
+.reading .sortopt .so-name { font-size: 14px; }
+.reading .sortopt .so-note { font-size: 12px; color: var(--muted-foreground); }
+
+/* ---- the filter panel ---------------------------------------------------------------------
+ * Open state lives in the URL rather than in a details element, so clicking a chip inside it
+ * does not slam it shut on a page with no client JS. */
+.reading .filterpanel {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+}
+.reading .filterpanel .fp-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 14px 0 0;
+}
+.reading .filterpanel .fp-label:first-child { margin-top: 0; }
+.reading .filterpanel .chiprow { margin-top: 6px; }
+.reading .filterpanel .fp-clear { margin: 14px 0 0; font-size: 13px; }
+.reading .filterpanel .fp-clear a { color: var(--muted-foreground); }
+
+/* Length and pace, where a hand-written tag gives us them. About 5% of the pool. */
+.reading .shelfrow .facts { font-variant-numeric: tabular-nums; }

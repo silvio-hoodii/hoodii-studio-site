@@ -73,6 +73,7 @@ for (const b of db.books ?? []) {
     title: b.t, author: b.a, file_under: b.s, letter: letterOf(b.s),
     year: b.y ?? null, score: b.sc, honours: b.h ?? 0, tier: b.k,
     shelves, lists: b.w ?? [], status: b.st ?? null,
+    pages: b.pg ?? null, pace: b.pc ?? null,
   });
 }
 
@@ -95,13 +96,13 @@ try {
       const values = [];
       const params = [];
       slice.forEach((r, j) => {
-        const b = j * 12;
-        values.push(`($${b + 1},$${b + 2},$${b + 3},$${b + 4},$${b + 5},$${b + 6},$${b + 7},$${b + 8},$${b + 9},$${b + 10},$${b + 11},$${b + 12})`);
-        params.push(r.key, r.title, r.author, r.file_under, r.letter, r.year, r.score, r.honours, r.tier, r.shelves, r.lists, r.status);
+        const b = j * 14;
+        values.push(`(${Array.from({ length: 14 }, (_, k) => `$${b + k + 1}`).join(',')})`);
+        params.push(r.key, r.title, r.author, r.file_under, r.letter, r.year, r.score, r.honours, r.tier, r.shelves, r.lists, r.status, r.pages, r.pace);
       });
       await client.query(
         `insert into reading_shelf_entry
-           (key,title,author,file_under,letter,year,score,honours,tier,shelves,lists,status)
+           (key,title,author,file_under,letter,year,score,honours,tier,shelves,lists,status,pages,pace)
          values ${values.join(',')}`,
         params,
       );

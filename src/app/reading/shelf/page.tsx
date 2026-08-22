@@ -1,42 +1,57 @@
 import Link from 'next/link';
 import { getEraCounts, getLetterCounts, getShelfCounts, getShelfLiveness, getShelfPage, getTierCounts } from '@/lib/reading/shelf-db';
-import { ERAS, LETTERS, SHELVES, eraLabel, shelfHref, shelfLabel, tierChip, tierLabel, tierMeaning, TIERS } from '@/lib/reading/shelf-types';
-import type { Era, Shelf, ShelfEntry, ShelfFilters, Tier } from '@/lib/reading/shelf-types';
+import {
+  activeFilterCount, ERAS, LETTERS, SHELVES, SORTS,
+  eraLabel, shelfHref, shelfLabel, sortLabel, sortNote, tierChip, tierLabel, tierMeaning, TIERS,
+} from '@/lib/reading/shelf-types';
+import type { Era, Shelf, ShelfEntry, ShelfFilters, Sort, Tier } from '@/lib/reading/shelf-types';
 
 /* noindex,nofollow and in robots.ts's Disallow, same pair /reading/all and /kitchen/find carry:
  * this is a filter surface over thousands of rows, queried fresh on every hit, and a crawler
  * walking its section-by-letter link grid would burn real Fluid CPU doing it. */
 export const metadata = {
   title: 'Reading: Shelf check',
-  description: 'Look up a spine in a second-hand shop, by the section and the author letter it is filed under.',
+  description: 'Look up a spine in a shop or a library, or browse for something to read next.',
   alternates: { canonical: '/reading/shelf' },
   robots: { index: false, follow: false },
 };
 export const dynamic = 'force-dynamic';
 
-/* Built 2026-08-21, standing in a used bookshop, because the ten-book queue answered the wrong
- * question there. A queue says what to read next. In a shop the question is "I am looking at
- * this spine, is it worth pulling", asked a few hundred times an hour against whatever that shop
- * happens to have on the day, and no ranked ten can answer it.
+/* Built 2026-08-21 standing in a second-hand shop, redesigned the same night after looking at how
+ * the StoryGraph and the Calgary Public Library catalogue actually lay this out. Both converge on
+ * the same shape, and ours did not match it:
  *
- * So the navigation copies the SHOP, not the library: section first, then author letter, because
- * that is the order the aisles are physically walked. The alphabet rail carries a count per
- * letter so a letter can be skipped from across the room rather than walked to and found empty.
+ *     [ Filters (2) ]                          [ Sort: Author A to Z ]
+ *     154 books
+ *
+ * ONE collapsed filter control and ONE sort control, then results. The first version put three
+ * chip rows and a 27-cell alphabet permanently on screen, so about 700px of controls stood between
+ * the page and the first book, and there was no sort at all.
+ *
+ * The sort doubles as a MODE, which is the real point. Two different jobs were being served badly
+ * by one layout: "I am holding this spine, is it worth pulling" wants author order, because that
+ * is the physical order of a shelf. "I am in the mood to find something" wants best or shortest
+ * first, and there the alphabet is furniture. So the letter rail renders only in author order.
+ *
+ * Still no client JS: <details> gives a real disclosure for the sort menu, and the filter panel's
+ * open state rides in the URL so it does not slam shut on every filter click.
  */
 export default async function ShelfCheck({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string }>;
+  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string; sort?: string; open?: string }>;
 }) {
   const sp = await searchParams;
-  const letter = sp.letter && LETTERS.includes(sp.letter) ? sp.letter : undefined;
   const filters: ShelfFilters = {
     q: sp.q?.trim() || undefined,
     shelf: SHELVES.includes(sp.shelf as Shelf) ? (sp.shelf as Shelf) : undefined,
-    letter,
+    letter: sp.letter && LETTERS.includes(sp.letter) ? sp.letter : undefined,
     tier: TIERS.includes(sp.tier as Tier) ? (sp.tier as Tier) : undefined,
     era: ERAS.includes(sp.era as Era) ? (sp.era as Era) : undefined,
+    sort: SORTS.includes(sp.sort as Sort) ? (sp.sort as Sort) : 'author',
+    open: sp.open === '1',
   };
+  const sort = filters.sort ?? 'author';
 
   const [{ entries, total }, letterCounts, shelfCounts, tierCounts, eraCounts, liveness] = await Promise.all([
     getShelfPage(filters), getLetterCounts(filters), getShelfCounts(filters),
@@ -44,15 +59,16 @@ export default async function ShelfCheck({
   ]);
 
   const searching = !!filters.q;
-  /* A letter or a search is the intended path in a shop. Anything else only lists when the filters
-     have already cut it to something a thumb can get through. */
-  const BROWSABLE = 50;
-  const showRows = searching || !!filters.letter || total <= BROWSABLE;
+  const nFilters = activeFilterCount(filters);
+  const byLetter = sort === 'author' && !searching;
+
   const groups: { letter: string; books: ShelfEntry[] }[] = [];
-  for (const e of entries) {
-    const last = groups[groups.length - 1];
-    if (last && last.letter === e.letter) last.books.push(e);
-    else groups.push({ letter: e.letter, books: [e] });
+  if (byLetter) {
+    for (const e of entries) {
+      const last = groups[groups.length - 1];
+      if (last && last.letter === e.letter) last.books.push(e);
+      else groups.push({ letter: e.letter, books: [e] });
+    }
   }
 
   return (
@@ -66,8 +82,8 @@ export default async function ShelfCheck({
 
       <h1>Shelf check</h1>
       <p className="blurb">
-        For standing in a second-hand shop. Pick the section you are in, then the letter of the
-        shelf, and compare the spines against the list. Or type what is in your hand.
+        Is this spine worth pulling? Search what is in your hand, or sort by what you are in the
+        mood for.
       </p>
 
       <form action="/reading/shelf" method="get" className="csearch">
@@ -82,115 +98,126 @@ export default async function ShelfCheck({
         {filters.shelf && <input type="hidden" name="shelf" value={filters.shelf} />}
         {filters.tier && <input type="hidden" name="tier" value={filters.tier} />}
         {filters.era && <input type="hidden" name="era" value={filters.era} />}
+        {sort !== 'author' && <input type="hidden" name="sort" value={sort} />}
         <button type="submit" className="btn primary">Search</button>
       </form>
 
-      <div className="chiprow" role="group" aria-label="Shop section">
-        <Link className={`chip ${!filters.shelf ? 'on' : ''}`} href={shelfHref(filters, { shelf: undefined, letter: undefined })}>
-          every section ({shelfCounts.all.toLocaleString()})
+      {/* The two controls, side by side, the way both reference catalogues do it. */}
+      <div className="toolbar">
+        <Link className={`toolbtn ${nFilters ? 'on' : ''}`} href={shelfHref(filters, { open: !filters.open })}>
+          Filters{nFilters > 0 && <span className="badge">{nFilters}</span>}
         </Link>
-        {SHELVES.map((s) => (
-          <Link
-            key={s}
-            className={`chip ${filters.shelf === s ? 'on' : ''}`}
-            href={shelfHref(filters, { shelf: filters.shelf === s ? undefined : s, letter: undefined })}
-          >
-            {shelfLabel[s]} ({(shelfCounts.byShelf[s] ?? 0).toLocaleString()})
-          </Link>
-        ))}
+        <details className="sortbox">
+          <summary>
+            <span className="k">Sort</span>
+            <span className="v">{sortLabel[sort]}</span>
+          </summary>
+          <div className="sortmenu">
+            {SORTS.map((s) => (
+              <Link key={s} className={`sortopt ${s === sort ? 'on' : ''}`} href={shelfHref(filters, { sort: s })}>
+                <span className="so-name">{sortLabel[s]}</span>
+                <span className="so-note">{sortNote[s]}</span>
+              </Link>
+            ))}
+          </div>
+        </details>
       </div>
 
-      {/* The rail is the actual index, so it gets counts rather than bare letters: a letter with
-          nothing behind it is a walk across the shop for nothing. */}
-      <div className="shelfrail" role="group" aria-label="Author surname">
-        {LETTERS.map((L) => {
-          const n = letterCounts[L] ?? 0;
-          const on = filters.letter === L;
-          if (!n) return <span key={L} className="lt empty" aria-hidden="true">{L}</span>;
-          return (
-            <Link
-              key={L}
-              className={`lt ${on ? 'on' : ''}`}
-              href={shelfHref(filters, { letter: on ? undefined : L, q: undefined })}
-              aria-label={`${L}, ${n} book${n === 1 ? '' : 's'}`}
-            >
-              {L}<span className="ltn">{n}</span>
+      {filters.open && (
+        <div className="filterpanel">
+          <p className="fp-label">Section</p>
+          <div className="chiprow">
+            <Link className={`chip ${!filters.shelf ? 'on' : ''}`} href={shelfHref(filters, { shelf: undefined, letter: undefined })}>
+              every section ({shelfCounts.all.toLocaleString()})
             </Link>
-          );
-        })}
-      </div>
+            {SHELVES.map((s) => (
+              <Link key={s} className={`chip ${filters.shelf === s ? 'on' : ''}`}
+                href={shelfHref(filters, { shelf: filters.shelf === s ? undefined : s, letter: undefined })}>
+                {shelfLabel[s]} ({(shelfCounts.byShelf[s] ?? 0).toLocaleString()})
+              </Link>
+            ))}
+          </div>
 
-      <div className="chiprow" role="group" aria-label="How well vetted">
-        <Link className={`chip ${!filters.tier ? 'on' : ''}`} href={shelfHref(filters, { tier: undefined })}>
-          worth pulling ({((tierCounts.grab ?? 0) + (tierCounts.good ?? 0)).toLocaleString()})
-        </Link>
-        {TIERS.map((t) => (
-          <Link
-            key={t}
-            className={`chip chip-${t} ${filters.tier === t ? 'on' : ''}`}
-            href={shelfHref(filters, { tier: filters.tier === t ? undefined : t })}
-          >
-            {tierChip[t]} ({(tierCounts[t] ?? 0).toLocaleString()})
-          </Link>
-        ))}
-      </div>
+          <p className="fp-label">How well vetted</p>
+          <div className="chiprow">
+            <Link className={`chip ${!filters.tier ? 'on' : ''}`} href={shelfHref(filters, { tier: undefined })}>
+              worth pulling ({((tierCounts.grab ?? 0) + (tierCounts.good ?? 0)).toLocaleString()})
+            </Link>
+            {TIERS.map((t) => (
+              <Link key={t} className={`chip chip-${t} ${filters.tier === t ? 'on' : ''}`}
+                href={shelfHref(filters, { tier: filters.tier === t ? undefined : t })}>
+                {tierChip[t]} ({(tierCounts[t] ?? 0).toLocaleString()})
+              </Link>
+            ))}
+          </div>
 
-      <div className="chiprow" role="group" aria-label="Era">
-        <Link className={`chip ${!filters.era ? 'on' : ''}`} href={shelfHref(filters, { era: undefined })}>
-          any year
-        </Link>
-        {ERAS.map((e) => (
-          <Link
-            key={e}
-            className={`chip ${filters.era === e ? 'on' : ''}`}
-            href={shelfHref(filters, { era: filters.era === e ? undefined : e })}
-          >
-            {eraLabel[e]} ({eraCounts[e].toLocaleString()})
-          </Link>
-        ))}
-      </div>
+          <p className="fp-label">Era</p>
+          <div className="chiprow">
+            <Link className={`chip ${!filters.era ? 'on' : ''}`} href={shelfHref(filters, { era: undefined })}>any year</Link>
+            {ERAS.map((e) => (
+              <Link key={e} className={`chip ${filters.era === e ? 'on' : ''}`}
+                href={shelfHref(filters, { era: filters.era === e ? undefined : e })}>
+                {eraLabel[e]} ({eraCounts[e].toLocaleString()})
+              </Link>
+            ))}
+          </div>
 
-      {/* The badge is the page's whole verdict, so what it means is on the page rather than
-          buried at the bottom, and it names the tier currently being filtered. */}
-      {filters.tier && <p className="tiernote"><strong>{tierLabel[filters.tier]}</strong> {tierMeaning[filters.tier]}</p>}
+          {nFilters > 0 && (
+            <p className="fp-clear">
+              <Link href={shelfHref({ sort, open: true }, {})}>Clear all filters</Link>
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* 27 controls that only mean something in author order. In any other sort they are noise,
+          so they are not rendered at all rather than sitting there greyed out. */}
+      {byLetter && (
+        <div className="shelfrail" role="group" aria-label="Author surname">
+          {LETTERS.map((L) => {
+            const n = letterCounts[L] ?? 0;
+            const on = filters.letter === L;
+            if (!n) return <span key={L} className="lt empty" aria-hidden="true">{L}</span>;
+            return (
+              <Link key={L} className={`lt ${on ? 'on' : ''}`}
+                href={shelfHref(filters, { letter: on ? undefined : L, q: undefined })}
+                aria-label={`${L}, ${n} book${n === 1 ? '' : 's'}`}>
+                {L}<span className="ltn">{n}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       <p className="stat">
         <span className="tnum">{total.toLocaleString()}</span>
         {searching
           ? ` match${total === 1 ? '' : 'es'} "${filters.q}"`
-          : filters.letter
-            ? ` under ${filters.letter}${filters.shelf ? ` in ${shelfLabel[filters.shelf].toLowerCase()}` : ''}`
-            : ' worth pulling'}
+          : filters.letter ? ` filed under ${filters.letter}` : ' books'}
+        {filters.shelf && <span className="why"> · {shelfLabel[filters.shelf].toLowerCase()}</span>}
         {filters.era && <span className="why"> · {eraLabel[filters.era].toLowerCase()}</span>}
         {!filters.tier && !searching && <span className="why"> · long shots hidden</span>}
-        {total > 400 && <span className="why"> · showing the first 400, pick a letter to narrow it</span>}
+        {total > 400 && <span className="why"> · first 400 shown, narrow it to see the rest</span>}
       </p>
+
+      {filters.tier && <p className="tiernote"><strong>{tierLabel[filters.tier]}</strong> {tierMeaning[filters.tier]}</p>}
 
       {entries.length === 0 && (
         <h2 className="sec">
           {searching
             ? `nothing matches "${filters.q}" in the ${(liveness.rows ?? 0).toLocaleString()} books on record`
-            : 'nothing here. Try another letter, or widen it with the long shots chip.'}
+            : 'nothing here. Open Filters and widen it, or clear the letter.'}
         </h2>
       )}
 
-      {/* NO ROWS UNTIL SOMETHING IS CHOSEN. Measured at 390px on 2026-08-21: the unfiltered landing
-          rendered 400 rows and stood 51,387px tall, sixty-one phone screens, on a page whose own
-          copy already said "pick a letter to narrow it". The rails above ARE the page in the shop:
-          section, then author letter, the order the aisles are walked. A search or a letter is the
-          intended path, and a filter that happens to leave a browsable number is fine too. */}
-      {showRows ? (
-        groups.map((g) => (
+      {byLetter
+        ? groups.map((g) => (
           <section key={g.letter}>
             <h2 className="sec shelfletter">{g.letter}</h2>
             {g.books.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
           </section>
         ))
-      ) : (
-        <h2 className="sec">
-          {`Pick a letter above, or a section, to see the ${total.toLocaleString()} spines. Searching the author or the title works too.`}
-        </h2>
-      )}
+        : entries.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} />)}
 
       <dl className="tierlegend">
         {TIERS.map((t) => (
@@ -214,6 +241,15 @@ export default async function ShelfCheck({
 const STATUS_LABEL = { read: 'read it', queued: 'on your queue', seen: 'seen in a shop' } as const;
 
 function ShelfRow({ entry, showShelf }: { entry: ShelfEntry; showShelf: boolean }) {
+  /* The facts line is what both reference catalogues put under the title and we did not: how long
+   * it is and how it reads. Only about 5% of the pool carries those, so each part is omitted when
+   * absent rather than rendered as "unknown" on nearly every row. */
+  const facts = [
+    entry.pages ? `${entry.pages}pp` : null,
+    entry.pace,
+    entry.year ? String(entry.year) : null,
+  ].filter(Boolean);
+
   return (
     <div className="shelfrow">
       <span className={`tierbadge t-${entry.tier}`}>{tierLabel[entry.tier]}</span>
@@ -222,7 +258,8 @@ function ShelfRow({ entry, showShelf }: { entry: ShelfEntry; showShelf: boolean 
         {entry.status && <span className="ownflag">{STATUS_LABEL[entry.status]}</span>}
       </span>
       <span className="shelfby">
-        <strong>{entry.fileUnder}</strong> · {entry.author}{entry.year ? ` · ${entry.year}` : ''}
+        <strong>{entry.fileUnder}</strong> · {entry.author}
+        {facts.length > 0 && <span className="facts"> · {facts.join(' · ')}</span>}
       </span>
       <span className="shelfmeta">
         {showShelf && entry.shelves.map((s) => (

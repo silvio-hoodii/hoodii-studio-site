@@ -4,6 +4,10 @@
 export type Shelf = 'fiction' | 'scifi' | 'mystery' | 'nonfiction';
 export type Tier = 'grab' | 'good' | 'maybe';
 
+/** How many filters are actually narrowing the list, for the collapsed control's badge. */
+export const activeFilterCount = (f: ShelfFilters) =>
+  [f.shelf, f.letter, f.era, f.tier].filter(Boolean).length;
+
 export interface ShelfEntry {
   key: string;
   title: string;
@@ -19,6 +23,10 @@ export interface ShelfEntry {
   shelves: Shelf[];
   lists: string[];
   status: 'read' | 'queued' | 'seen' | null;
+  /** From a hand-written tag, so null for about 95% of the pool. Shown when present, omitted
+   *  when not, rather than rendering "unknown" on nearly every row. */
+  pages: number | null;
+  pace: string | null;
 }
 
 /* Section names as a second-hand shop signs them, not as the engine slugs them. "General
@@ -59,11 +67,42 @@ export const ERAS: Era[] = ['classic', 'contemporary'];
 
 export const LETTERS = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
 
+/* Sorting is the control this page was missing, and its absence forced one page to serve two
+ * different jobs badly. Standing at a shelf you want author order, because that is the physical
+ * order of the spines. Browsing for something to read you want the best first, or the shortest,
+ * because the alphabet means nothing then.
+ *
+ * The sort therefore doubles as a MODE. The letter rail is 27 controls that only make sense in
+ * author order, so it renders only in that sort and disappears in the others rather than sitting
+ * there as furniture. Both the StoryGraph and the library catalogue put one sort control at the
+ * top of the results and nothing else; this follows them. */
+export type Sort = 'author' | 'best' | 'short' | 'new' | 'old';
+export const SORTS: Sort[] = ['author', 'best', 'short', 'new', 'old'];
+export const sortLabel: Record<Sort, string> = {
+  author: 'Author A to Z',
+  best: 'Best evidenced first',
+  short: 'Shortest first',
+  new: 'Newest first',
+  old: 'Oldest first',
+};
+export const sortNote: Record<Sort, string> = {
+  author: 'the order the spines are in',
+  best: 'most independent evidence',
+  short: 'the ones you will actually finish',
+  new: 'published most recently',
+  old: 'published longest ago',
+};
+
 export interface ShelfFilters {
   q?: string;
   shelf?: Shelf;
   letter?: string;
   era?: Era;
+  sort?: Sort;
+  /** Open the filter panel. Held in the URL so a filtered view stays shareable and the panel
+   *  does not slam shut on every click, which is what a details element alone would do on a
+   *  page with no client JS. */
+  open?: boolean;
   /** Exact tier. Unset means grab + good, which is the browse default: the long shots are
    *  3,171 of 3,610 and a list that long is not a list. Search always covers them regardless. */
   tier?: Tier;
@@ -77,6 +116,8 @@ export function shelfHref(f: ShelfFilters, patch: Partial<ShelfFilters>) {
   if (next.letter) p.set('letter', next.letter);
   if (next.era) p.set('era', next.era);
   if (next.tier) p.set('tier', next.tier);
+  if (next.sort && next.sort !== 'author') p.set('sort', next.sort);
+  if (next.open) p.set('open', '1');
   const s = p.toString();
   return s ? `/reading/shelf?${s}` : '/reading/shelf';
 }

@@ -179,3 +179,9 @@ create table if not exists reading_shelf_sync (
   error    text
 );
 create index if not exists reading_shelf_sync_ran on reading_shelf_sync (ran_at desc);
+
+-- Added 2026-08-21 with the shelf redesign. "Shortest first" is the sort that most helps someone
+-- choose a book they will actually finish, and it silently did nothing without a pages column.
+-- Both are null for about 95% of the pool, since they come from hand-written tags.
+alter table reading_shelf_entry add column if not exists pages integer;
+alter table reading_shelf_entry add column if not exists pace  text;

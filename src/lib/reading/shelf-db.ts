@@ -1,18 +1,20 @@
 import 'server-only';
 import { sql } from './queue-db';
 import { ERA_SPLIT } from './shelf-types';
-import type { Shelf, ShelfEntry, ShelfFilters, Tier } from './shelf-types';
+import type { Shelf, ShelfEntry, ShelfFilters, Sort, Tier } from './shelf-types';
 
 type Row = {
   key: string; title: string; author: string; file_under: string; letter: string;
   year: number | null; score: string; honours: number; tier: Tier;
   shelves: Shelf[]; lists: string[]; status: ShelfEntry['status'];
+  pages: number | null; pace: string | null;
 };
 
 const toEntry = (r: Row): ShelfEntry => ({
   key: r.key, title: r.title, author: r.author, fileUnder: r.file_under, letter: r.letter,
   year: r.year, score: Number(r.score), honours: r.honours, tier: r.tier,
   shelves: r.shelves, lists: r.lists, status: r.status,
+  pages: r.pages, pace: r.pace,
 });
 
 /* Every query here shares one predicate, so it lives in one place. Getting the browse list and
@@ -44,9 +46,14 @@ const where = (f: ShelfFilters) => {
 
 export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEntry[]; total: number }> {
   const w = where(f);
+  /* Postgres sorts NULLS LAST on ASC and FIRST on DESC by default, which would put every book
+   * with no recorded page count at the top of "shortest first" and every book with no year at the
+   * top of "newest". Both are the exact opposite of useful, so unknowns are pushed to the back of
+   * whichever direction is being asked for. */
+  const sort: Sort = f.sort ?? 'author';
 
   const rows = (await sql`
-    select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status
+    select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status, pages, pace
       from reading_shelf_entry
      where (${w.like}::text is null or title ilike ${w.like} or author ilike ${w.like} or file_under ilike ${w.like})
        and (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
@@ -55,7 +62,13 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
        and (${w.hideLongShots} = false or tier <> 'maybe')
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
-     order by file_under, title
+     order by
+       case when ${sort} = 'author' then file_under end asc nulls last,
+       case when ${sort} = 'best'   then score      end desc nulls last,
+       case when ${sort} = 'short'  then pages      end asc  nulls last,
+       case when ${sort} = 'new'    then year       end desc nulls last,
+       case when ${sort} = 'old'    then year       end asc  nulls last,
+       title
      limit 400
   `) as Row[];
 
