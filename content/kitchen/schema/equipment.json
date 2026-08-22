@@ -356,6 +356,18 @@
       "name": "stand mixer",
       "class": "prep",
       "present": false
+    },
+    "grater_hand": {
+      "name": "hand grater, flat",
+      "class": "prep",
+      "present": true,
+      "notes": "Confirmed by Silvio 2026-08-21. A flat one-sided grater, NOT a box grater. Bought because the multi-blade slicer is genuinely too small to grate anything at volume: \"I found that the multi-blade slicers are really small.\" This is a separate tool from slicer_multiblade and not a duplicate of it. KITCHEN.md had been recording \"one blade grates\" as though grating were covered, which was true of the mechanism and false of the job."
+    },
+    "peeler": {
+      "name": "vegetable peeler",
+      "class": "prep",
+      "present": true,
+      "notes": "Confirmed by Silvio 2026-08-21, bought on an untracked trip. Relevant to the nine red potatoes and the sweet potato, both of which had no peeling tool recorded until now."
     }
   }
 }
