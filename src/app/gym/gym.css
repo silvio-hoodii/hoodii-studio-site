@@ -727,3 +727,48 @@
 }
 .gym .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 
+/* ---- sub-tabs ----
+ *
+ * A second level under the discipline tabs, added 2026-08-22 after the swim tab reached 7.9 phone
+ * screens and he said the app was "infinite scroll" twice.
+ *
+ * Deliberately QUIETER than the tabs above them, because they are subordinate and two rows of
+ * identically-weighted chips is the inverted hierarchy that made these blocks unreadable in August.
+ * Underline for the active one instead of a filled chip: the filled chip is the parent tab's
+ * signal and it should mean one thing on this page. Still a 44px row: this is a control. */
+.gym .subtabs {
+  display: flex;
+  gap: 18px;
+  border-bottom: 1px solid var(--border);
+  margin: 14px 0 4px;
+}
+.gym .subtab {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.gym .subtab.on {
+  color: var(--foreground);
+  border-bottom-color: var(--foreground);
+}
+.gym .subtab:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+
+/* The full ladder, collapsed. Its summary has to look like the section headings around it, because
+   it IS one: a heading that happens to open. */
+.gym details.ladder-all > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gym details.ladder-all > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+

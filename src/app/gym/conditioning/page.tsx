@@ -222,8 +222,12 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
         )}
       </div>
 
-      <div className="exgroup">
-        <div className="exgroup-label">What the levels are</div>
+      {/* THE WHOLE LADDER, BEHIND A TAP. Ten rungs is 1,200px of a phone screen, and the only two
+          he needs on any given day are his own and the one above it, both of which are already in
+          the table above. Open it when you want to see how far the top is; otherwise it is in the
+          way, which is the complaint that produced these sub-tabs in the first place. */}
+      <details className="exgroup ladder-all">
+        <summary className="exgroup-label">What the levels are <span className="tag">(all 10)</span></summary>
         <div className="tierlist">
           {standards.tiers.map((t) => {
             const src = standards.sources.find((x) => x.id === t.sourceId);
@@ -257,11 +261,11 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
           })}
         </div>
         <p className="ex-cue" style={{ marginTop: 10 }}>
-          Three of these are published standards for men your age. Two are multiples of the
-          qualifying time that I chose, and they are labelled that way so you know which numbers to
-          argue with.
+          Two rungs are published standards for men your age and six come from an independent
+          project that matches the official qualifying time exactly at its top rung. One is ours.
+          Each says which it is, so you know what to argue with.
         </p>
-      </div>
+      </details>
 
       <div className="exgroup">
         <div className="exgroup-label">What the shape of it says</div>
@@ -440,13 +444,73 @@ function Cues({ cues, note }: { cues: Cue[]; note?: string | null }) {
   );
 }
 
+
+/* A SECOND LEVEL OF NAVIGATION, added 2026-08-22.
+ *
+ * The tabs fixed one wall in August and grew another: the swim tab reached 7.9 phone screens, and
+ * he said it again, twice. "If I go to the stream section, it's like infinite scroll... right now if
+ * I go to the water, I have to scroll a lot", and "everything else feels like it's just slop that
+ * it's sitting there without any real reason."
+ *
+ * The content is not slop, but its ARRANGEMENT was: one page held what he is doing today, the plan
+ * for the next ten weeks, and how to hold his hand in the water, with no way to ask for one without
+ * the other two. Three different questions asked at three different moments, stacked vertically.
+ *
+ * So each discipline splits three ways, and the split is by WHEN YOU ASK:
+ *   Now   what is true about me today. Changes on its own.
+ *   Plan  what to do over the coming weeks. Changes when the programme changes.
+ *   How   how to actually do it. Barely changes at all.
+ *
+ * Plain links with a query param, same as the tabs above them and for the same reasons: it works
+ * before hydration, it survives a reload at the poolside, and every view is a URL he can bookmark.
+ * Nothing is deleted, which matters: he has never asked for less content, only for it to stop being
+ * in his way. */
+const SUB_TABS: Record<string, { id: string; label: string }[]> = {
+  swim: [
+    { id: 'now', label: 'Now' },
+    { id: 'plan', label: 'Plan' },
+    { id: 'how', label: 'How' },
+  ],
+  run: [
+    { id: 'plan', label: 'Plan' },
+    { id: 'how', label: 'How' },
+  ],
+  bike: [
+    { id: 'plan', label: 'Plan' },
+    { id: 'how', label: 'How' },
+  ],
+};
+
+function SubNav({ tab, sub }: { tab: string; sub: string }) {
+  const items = SUB_TABS[tab];
+  if (!items) return null;
+  return (
+    <div className="subtabs">
+      {items.map((t) => (
+        <Link
+          key={t.id}
+          href={`/gym/conditioning?p=${tab}&s=${t.id}`}
+          className={`subtab${sub === t.id ? ' on' : ''}`}
+          aria-current={sub === t.id ? 'page' : undefined}
+        >
+          {t.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export default async function ConditioningPage({
   searchParams,
 }: {
-  searchParams: Promise<{ p?: string }>;
+  searchParams: Promise<{ p?: string; s?: string }>;
 }) {
   const sp = await searchParams;
   const tab: TabId = (TABS.find((t) => t.id === sp.p)?.id ?? 'week') as TabId;
+  /* Falls back to the FIRST sub-tab of whatever discipline this is, so a bare ?p=swim link from
+     anywhere still lands somewhere sensible rather than blank. */
+  const subs = SUB_TABS[tab];
+  const sub = subs?.find((x) => x.id === sp.s)?.id ?? subs?.[0]?.id ?? '';
   /* The week query only runs for the tab that shows it. The three plan tabs are static content and
      had no database dependency before today; giving them one so the overview could share a fetch
      would put a Neon round trip in front of a page he opens at the side of a pool. */
@@ -475,6 +539,8 @@ export default async function ConditioningPage({
           </Link>
         ))}
       </div>
+
+      <SubNav tab={tab} sub={sub} />
 
       {tab === 'week' && week && (
         <>
@@ -569,7 +635,7 @@ export default async function ConditioningPage({
         </>
       )}
 
-      {tab === 'run' && (
+      {tab === 'run' && sub === 'plan' && (
         <div className="exgroup">
           <div className="exgroup-label">
             {c.run.title} <span className="tag">({c.run.surface}, {c.run.sessionsPerWeek}x/week)</span>
@@ -632,11 +698,10 @@ export default async function ConditioningPage({
               <li key={r}>{r}</li>
             ))}
           </ul>
-          <Cues cues={c.run.cues ?? []} note={c.run.cuesNote} />
         </div>
       )}
 
-      {tab === 'bike' && (
+      {tab === 'bike' && sub === 'plan' && (
         <div className="exgroup">
           <div className="exgroup-label">
             {c.bike.title} <span className="tag">({c.bike.sessionsPerWeek}x/week, {c.bike.protocol.totalMinutes} min)</span>
@@ -661,17 +726,29 @@ export default async function ConditioningPage({
               <li key={r}>{r}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+
+      {tab === 'run' && sub === 'how' && (
+        <div className="exgroup">
+          <div className="exgroup-label">How to run</div>
+          <Cues cues={c.run.cues ?? []} note={c.run.cuesNote} />
+        </div>
+      )}
+
+      {tab === 'bike' && sub === 'how' && (
+        <div className="exgroup">
+          <div className="exgroup-label">How to ride</div>
           <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
         </div>
       )}
 
-      {tab === 'swim' && swim && <SwimLevel standards={swim.standards} standings={swim.standings} />}
+      {tab === 'swim' && sub === 'now' && swim && <SwimLevel standards={swim.standards} standings={swim.standings} />}
 
-      {tab === 'swim' && (
+      {tab === 'swim' && sub === 'now' && (
         <div className="exgroup">
-          <div className="exgroup-label">
-            {c.swim.title} <span className="tag">({c.swim.sessionsPerWeek})</span>
-          </div>
+          <div className="exgroup-label">What the lap data says</div>
           <div className="exlist">
             {/* WALKED, NOT NAMED. Until 2026-08-21 this block read three baseline fields by name and
                 summarised them in one line, and two false claims lived in those slots for weeks:
@@ -705,16 +782,20 @@ export default async function ConditioningPage({
                 </details>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {tab === 'swim' && sub === 'plan' && (
+        <div className="exgroup">
+          <div className="exgroup-label">
+            {c.swim.title} <span className="tag">({c.swim.sessionsPerWeek})</span>
+          </div>
+          <div className="exlist">
             <div className="ex">
               <div className="ex-name">{c.swim.theGoal.target}</div>
               <div className="ex-cue">{c.swim.theGoal.whatThatActuallyIs}</div>
               <div className="ex-cue">{c.swim.theGoal.whyItIsAchievable}</div>
-            </div>
-            <div className="ex">
-              <div className="ex-name">The one change: go slower</div>
-              <div className="ex-meta">{c.swim.theOneTechniqueChange.what}</div>
-              <div className="ex-cue">{c.swim.theOneTechniqueChange.why}</div>
-              <div className="ex-cue">{c.swim.theOneTechniqueChange.howToKnow}</div>
             </div>
           </div>
 
@@ -768,7 +849,19 @@ export default async function ConditioningPage({
             </table>
           </div>
 
+        </div>
+      )}
+
+      {tab === 'swim' && sub === 'how' && (
+        <div className="exgroup">
+          <div className="exgroup-label">How to swim it</div>
           <div className="exlist">
+            <div className="ex">
+              <div className="ex-name">The one change: go slower</div>
+              <div className="ex-meta">{c.swim.theOneTechniqueChange.what}</div>
+              <div className="ex-cue">{c.swim.theOneTechniqueChange.why}</div>
+              <div className="ex-cue">{c.swim.theOneTechniqueChange.howToKnow}</div>
+            </div>
             <div className="ex">
               <div className="ex-name">Paddles</div>
               <div className="ex-meta">{c.swim.paddleRule.rule}</div>
