@@ -1,0 +1,185 @@
+{
+  "$comment": [
+    "COACHING HIM, not him coaching somebody else. swim-teaching.json is the other one and every cue",
+    "in it starts 'stand next to them and watch', which is right for that job and useless for this.",
+    "",
+    "Built 2026-08-22 from three questions he asked in his own words:",
+    "  'How do I go slower? I can go slow for like a hundred but then for some reason I lose my form",
+    "   after the hundred.'",
+    "  'If I go slow I should be able to go for longer but it's not really working that way for some",
+    "   reason.'",
+    "  'I think the main thing is that I need to keep my heart rate down.'",
+    "",
+    "THE RULE FOR THIS FILE, in his words: 'I don't want hallucination here so try to keep it as",
+    "literal as you can ... It has to be grounded something for both.'",
+    "",
+    "So every entry carries a `quote` that is VERBATIM from a published guide and a `source` that",
+    "resolves to a URL in `sources`. Anything that is not a quote is marked `inference` and has to",
+    "say which quote it reasons from. content/gym/validate.mjs fails the build on a `sourced` entry",
+    "with no quote, on a quote whose source id does not exist, and on an `inference` with no `from`.",
+    "An agent cannot add a cue here out of its own head and have it ship."
+  ],
+
+  "meta": {
+    "builtOn": "2026-08-22",
+    "stroke": "freestyle",
+    "who": "Him, in the water, alone, with nobody watching."
+  },
+
+  "theQuestion": {
+    "title": "Why going slower has not made it easier",
+    "body": [
+      "This is the thing he keeps hitting, and it is not a discipline problem. On land, slower is easier. In water it often is not, and the reason is drag.",
+      "US Masters Swimming frames the body as a seesaw and the whole job as reducing drag: 'Your goal is to move through the water like a torpedo' and 'Everything needs to be as straight as possible from head to toe, minimizing any drag.' Drag is what you are fighting, and it does not go away when you slow down. Spending longer in the water per length means spending longer fighting it.",
+      "So 'swim slower' is not the lever. The lever US Masters actually names is stroke count: 'Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.' Fewer strokes at the same speed is the thing that makes 400 m possible. Slower strokes at the same count is not.",
+      "That is also the honest answer to the heart rate. Every one of the checks below is about doing less work per length, not about trying harder to relax."
+    ]
+  },
+
+  "checks": [
+    {
+      "id": "count",
+      "n": 1,
+      "name": "Count your strokes on every length",
+      "say": "One number per length, counted every length, all session. Not an occasional test: the count IS the feedback, and it is the only one available to you with your face in the water.",
+      "test": "Count one arm only, the same arm, from push-off to the wall. Your logged median is 9 cycles per 25 m. Anything above your own normal on a given length means that length was less efficient, whatever it felt like.",
+      "quote": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.",
+      "source": "usms-pull",
+      "confidence": "sourced"
+    },
+    {
+      "id": "count-drift",
+      "n": 2,
+      "name": "The count going up IS the form going",
+      "say": "You said your form goes somewhere after 100 m. This is how you find out where, exactly, without anybody watching you.",
+      "test": "Write the count for each length. On a 200, that is eight numbers. The length where the number first jumps by two or more is the length where it went, and it will be the same place most sessions.",
+      "from": "usms-pull",
+      "fromQuote": "a lower stroke count implies that you're moving more water backward with each pull and therefore propelling yourself forward in the water",
+      "say2": "If each pull moves less water, you need more pulls for the same 25 m. So a rising count is a direct measure of the pull deteriorating, which is what 'losing form' means in a number.",
+      "confidence": "inference"
+    },
+    {
+      "id": "exhale",
+      "n": 3,
+      "name": "Never hold your breath, and empty the lungs before you turn to breathe",
+      "say": "Humming works, and it works because it makes holding your breath impossible. That is why it helped. Keep doing it, and add the hard part: a last forceful blow-out just before you turn your head.",
+      "test": "If you arrive at the breath and have to blow out first before you can suck in, the exhale was not finished. Done right there is nothing to blow out and the breath is only an inhale.",
+      "quote": "You should exhale while your mouth is underwater and inhale when it's out of the water.",
+      "source": "usms-breathing",
+      "confidence": "sourced"
+    },
+    {
+      "id": "exhale-final",
+      "n": 4,
+      "name": "The last blow-out",
+      "say": "After the breath, exhale slowly the whole time your face is down, then clear the lungs hard right before the next one.",
+      "test": "Continuous bubbles the entire time your face is in the water, ending in a burst. No quiet gap.",
+      "quote": "After inhaling and returning your head to the water, patiently and slowly exhale.",
+      "source": "usms-breathing",
+      "confidence": "sourced"
+    },
+    {
+      "id": "breath-frequency",
+      "n": 5,
+      "name": "Pick a breathing pattern and keep it",
+      "say": "For anything over about 75 seconds, which is every length you care about, breathe every 2nd or 3rd stroke, the same all the way.",
+      "test": "The pattern is the test. If you find yourself grabbing a breath early, that length was too hard, and the fix is the stroke count, not more air.",
+      "quote": "breathing every other or every third stroke will ensure that you get the air you need",
+      "source": "usms-breathing",
+      "confidence": "sourced"
+    },
+    {
+      "id": "hips",
+      "n": 6,
+      "name": "Press the chest down to bring the legs up",
+      "say": "Sinking legs are the biggest single source of drag, and the fix is at the other end of the body, not in the legs.",
+      "test": "If you kick harder and nothing changes, it is not the kick. Try pressing your chest and head down instead and see whether the legs come up on their own.",
+      "quote": "Press your head and chest, the lighter end of the seesaw, down into the water.",
+      "source": "usms-position",
+      "confidence": "sourced"
+    },
+    {
+      "id": "tension",
+      "n": 7,
+      "name": "Hold the back and hips firm",
+      "say": "The legs stay up because the back of the body is under tension, not because the kick is holding them there.",
+      "test": "Push off the wall and glide with no kick at all. Count how long before the legs drop. That number going up over weeks is the body line improving.",
+      "quote": "Your lower back and hips are key for creating tension in the back of your body. This tension holds your legs up at the surface of the water, preventing them from sinking.",
+      "source": "usms-position",
+      "confidence": "sourced"
+    },
+    {
+      "id": "kick-small",
+      "n": 8,
+      "name": "Small fast kick, from the hip",
+      "say": "A big kick costs a lot of oxygen and buys very little. This matters more than usual for you because the heart rate is the thing you are trying to hold down.",
+      "test": "Watch the water behind you at the wall, or just listen. Big white splashing means the feet are coming out of the air and the kick is too big.",
+      "quote": "Your kick is most effective when you perform it at a high rate of speed, rather than with a large amplitude.",
+      "source": "usms-kick",
+      "confidence": "sourced"
+    },
+    {
+      "id": "kick-origin",
+      "n": 9,
+      "name": "The kick starts at the hip",
+      "say": "Not at the knee. A knee-driven kick is the one that burns the legs and slows you down.",
+      "test": "If your knees are bending first and your feet are cycling like a bicycle, it is coming from the knee.",
+      "quote": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third.",
+      "source": "usms-kick",
+      "confidence": "sourced"
+    },
+    {
+      "id": "catch",
+      "n": 10,
+      "name": "Bend the elbow before you pull",
+      "say": "The catch is not the pull. It is getting the arm into a shape that can push water backward, and it happens before any force.",
+      "test": "Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm, and the elbow was not bending in time.",
+      "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.",
+      "source": "usms-pull",
+      "confidence": "sourced"
+    },
+    {
+      "id": "finish",
+      "n": 11,
+      "name": "Finish the pull past the hip",
+      "say": "A short pull is a wasted pull, and it shows up straight away in the stroke count.",
+      "test": "Your hand should brush past your thigh on the way out. If it leaves the water at your waist, you gave away the last and strongest part of the stroke.",
+      "quote": "your hands should finish your pull just past your hips. Your arm should not be completely straight at this point.",
+      "source": "usms-pull",
+      "confidence": "sourced"
+    },
+    {
+      "id": "rotation",
+      "n": 12,
+      "name": "Rotate the whole spine at once",
+      "say": "Rotation is what lets the arm reach and pull properly. Rotating the shoulders while the hips stay flat is not rotation, it is a twist, and it costs you.",
+      "test": "Shoulders and hips should arrive at the same time. If your hips stay flat while your shoulder turns, you are twisting rather than rotating.",
+      "quote": "Rotation only works if you keep your spine relatively straight. Your whole spine needs to rotate in the same way at the same time for your rotation to fulfill its function.",
+      "source": "usms-position",
+      "confidence": "sourced"
+    }
+  ],
+
+  "sources": [
+    {
+      "id": "usms-position",
+      "label": "US Masters Swimming, Freestyle: Body Position",
+      "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position"
+    },
+    {
+      "id": "usms-breathing",
+      "label": "US Masters Swimming, Freestyle: Breathing",
+      "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing"
+    },
+    {
+      "id": "usms-pull",
+      "label": "US Masters Swimming, Freestyle: Pull",
+      "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull"
+    },
+    {
+      "id": "usms-kick",
+      "label": "US Masters Swimming, Freestyle: Kick",
+      "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick"
+    }
+  ]
+}

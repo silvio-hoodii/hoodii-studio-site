@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { loadConditioning, loadProgram, loadSwimTeaching } from '@/lib/gym/program';
+import { loadConditioning, loadProgram, loadSwimCoaching, loadSwimTeaching } from '@/lib/gym/program';
 import { getTrainingWeek, KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
 import { getSwimBaseline } from '@/lib/gym/db';
 import SwimBaselineForm from '../SwimBaselineForm';
@@ -9,7 +9,7 @@ import {
 } from '@/lib/gym/swim-level';
 import { getLastSession, sessionVerdict, type SessionDetail, type SessionKind } from '@/lib/gym/session';
 import { Trace, LengthBars, SessionStats } from '../SessionCharts';
-import type { Cue, SwimTeaching } from '@/lib/gym/types';
+import type { Cue, SwimCoaching, SwimTeaching } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -478,7 +478,13 @@ const SUB_TABS: Record<string, { id: string; label: string }[]> = {
     { id: 'now', label: 'Now' },
     { id: 'plan', label: 'Plan' },
     { id: 'how', label: 'How' },
-    { id: 'teach', label: 'Teach' },
+    /* TWO COACHING TABS, split 2026-08-22. "Me" is him in the water on his own; "Them" is him on
+     * the deck coaching somebody else. They were one tab, and every cue in it read "stand next to
+     * them and watch", which answered none of the questions he was actually asking about his own
+     * swimming. His words: "there's the need for another tab, like the coach for me and me coaching
+     * someone else, because I want both things." */
+    { id: 'me', label: 'Coach me' },
+    { id: 'teach', label: 'Coach them' },
   ],
   run: [
     { id: 'now', label: 'Now' },
@@ -571,6 +577,65 @@ function LastSession({ s }: { s: SessionDetail | null }) {
  * the side of the pool rather than a sensation the other person has to report. Nothing in this file
  * was written from an agent's memory: the staging is Swim England's and the freestyle is US Masters
  * Swimming's, and the one line that has no source says so on its own card. */
+/* HIS OWN SWIMMING. Every check shows the sentence it came from and links the page, because he
+ * asked for exactly that: "I don't want hallucination here so try to keep it as literal as you
+ * can." The quote is on the card rather than behind a tap, so an invented cue would have nowhere
+ * to hide. validate.mjs refuses a "sourced" check with no quote and no source. */
+function SwimCoachMe({ c }: { c: SwimCoaching }) {
+  const byId = new Map(c.sources.map((s) => [s.id, s]));
+  return (
+    <>
+      <div className="exgroup">
+        <div className="exgroup-label">{c.theQuestion.title}</div>
+        <Prose text={c.theQuestion.body} />
+      </div>
+
+      {c.checks.map((k) => {
+        const src = byId.get(k.source ?? k.from ?? '');
+        const quote = k.quote ?? k.fromQuote;
+        return (
+          <div className="exgroup" key={k.id}>
+            <div className="exgroup-label">
+              <span className="exgroup-n tnum">{k.n}/{c.checks.length}</span>
+              {k.name}
+              {k.confidence !== 'sourced' && <span className="tag opt">{k.confidence}</span>}
+            </div>
+            <p className="ex-cue">{k.say}</p>
+            {k.say2 && <p className="ex-cue">{k.say2}</p>}
+            <div className="lookfor">
+              <div className="lf">
+                <div className="lf-see">How you check it</div>
+                <div className="lf-say">{k.test}</div>
+              </div>
+            </div>
+            {quote && (
+              <div className="stale">
+                <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>
+                <p className="ex-cue">&ldquo;{quote}&rdquo;</p>
+                {src && (
+                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="exgroup">
+        <div className="exgroup-label">Where all of this comes from</div>
+        <div className="tierlist">
+          {c.sources.map((src) => (
+            <div className="tier" key={src.id}>
+              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+              {src.note && <div className="ex-cue">{src.note}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 function SwimTeach({ t }: { t: SwimTeaching }) {
   return (
     <>
@@ -664,6 +729,7 @@ export default async function ConditioningPage({
     ? await getLastSession(KIND_FOR_TAB[tab] ?? 'strength')
     : null;
   const teaching = tab === 'swim' && sub === 'teach' ? await loadSwimTeaching() : null;
+  const coaching = tab === 'swim' && sub === 'me' ? await loadSwimCoaching() : null;
   const baseline = tab === 'swim' && sub === 'plan' ? await getSwimBaseline() : null;
   const swim = tab === 'swim' ? await (async () => {
     const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
@@ -921,6 +987,7 @@ export default async function ConditioningPage({
         </div>
       )}
 
+      {tab === 'swim' && sub === 'me' && coaching && <SwimCoachMe c={coaching} />}
       {tab === 'swim' && sub === 'teach' && teaching && <SwimTeach t={teaching} />}
 
       {tab === 'swim' && sub === 'now' && <LastSession s={lastSession} />}

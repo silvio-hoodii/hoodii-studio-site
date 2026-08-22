@@ -1,7 +1,7 @@
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { Program, WarmupItem, CooldownItem, Conditioning, SwimTeaching } from './types';
+import type { Program, WarmupItem, CooldownItem, Conditioning, SwimCoaching, SwimTeaching } from './types';
 
 export * from './program-shared';
 
@@ -52,4 +52,8 @@ export async function loadConditioning(): Promise<Conditioning> {
 
 export async function loadSwimTeaching(): Promise<SwimTeaching> {
   return readJson<SwimTeaching>('swim-teaching.json');
+}
+
+export async function loadSwimCoaching(): Promise<SwimCoaching> {
+  return readJson<SwimCoaching>('swim-coaching.json');
 }

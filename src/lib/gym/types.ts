@@ -343,6 +343,29 @@ export interface TeachingStage {
   cues: Cue[];
 }
 
+/** COACHING HIM, in the water, alone. The sibling of SwimTeaching, which is him coaching somebody
+ *  else from the deck. Split on 2026-08-22 because every cue in the teaching file begins "stand
+ *  next to them and watch", which is right for that job and no use at all for his own swimming.
+ *  Every check carries a verbatim quote and a source; content/gym/validate.mjs enforces it. */
+export interface SwimCoaching {
+  meta: { builtOn: string; stroke: string; who: string };
+  theQuestion: { title: string; body: Prose };
+  checks: {
+    id: string;
+    n: number;
+    name: string;
+    say: string;
+    say2?: string;
+    test: string;
+    confidence: 'sourced' | 'inference' | 'convention';
+    quote?: string;
+    source?: string;
+    from?: string;
+    fromQuote?: string;
+  }[];
+  sources: { id: string; label: string; url: string; note?: string }[];
+}
+
 export interface SwimTeaching {
   meta: { builtOn: string; stroke: string; who: string };
   /** The safety line. First thing on the page, deliberately. */

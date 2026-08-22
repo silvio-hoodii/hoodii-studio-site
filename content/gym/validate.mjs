@@ -20,6 +20,7 @@ const equipment = readJson('equipment.json');
 const conditioning = readJson('conditioning.json');
 const swimStandards = readJson('swim-standards.json');
 const swimTeaching = readJson('swim-teaching.json');
+const swimCoaching = readJson('swim-coaching.json');
 
 let FAIL = 0;
 const out = [];
@@ -595,7 +596,77 @@ const TEACH_CONF = new Set(['sourced', 'convention']);
   out.push(`ok    [swim-teaching.json] ${stages.length} stages, ${nCues} cues, all with a test and a stated confidence`);
 }
 
+/* NO CUE WITHOUT A QUOTE. Added 2026-08-22, at his instruction and in his words:
+ *
+ *   "Again I don't want hallucination here so try to keep it as literal as you can. Same thing for
+ *    coach them: the actual grounding has to happen so I don't want the agents or whatever just
+ *    coming back, coming up with their own leg cues or whatever. It has to be grounded something
+ *    for both."
+ *
+ * swim-coaching.json is him coaching HIMSELF in the water; swim-teaching.json is him coaching
+ * somebody else from the deck. Both are pure prose, which means both are exactly the kind of file
+ * an agent can fill with confident invented technique advice that reads perfectly and is checked by
+ * nothing. This is the check.
+ *
+ *   confidence 'sourced'    must carry a verbatim `quote` and a `source` that resolves to a URL
+ *                           in the file's own `sources` list.
+ *   confidence 'inference'  must name the `from` source and the `fromQuote` it reasons from, so the
+ *                           reasoning is visible and the reader can go and disagree with it.
+ *   confidence 'convention' is allowed and means common practice with no trial behind it. It has to
+ *                           say so on the page, which the renderer does.
+ *
+ * A quote is not proof it was quoted correctly. Nothing here can check that, and pretending
+ * otherwise would be worse than admitting it: what this stops is the case with no source at all,
+ * which is the one that has actually happened. */
+function checkGroundedCues(fileLabel, doc, entries) {
+  const sourceIds = new Set((doc.sources || []).map((x) => x.id));
+  for (const src of doc.sources || []) {
+    if (!/^https?:\/\//.test(String(src.url || ''))) {
+      fail(fileLabel, `source "${src.id}" has no usable url (${JSON.stringify(src.url ?? null)}). Every source must be a link he can open and check.`);
+    }
+  }
+  for (const c of entries) {
+    const where = `${fileLabel}/${c.id || c.name || c.say || '?'}`;
+    const hasSource = sourceIds.has(c.source) || /^https?:\/\//.test(String(c.url || ''));
+    const conf = c.confidence;
+    if (!['sourced', 'inference', 'convention'].includes(conf)) {
+      fail(where, `confidence must be sourced | inference | convention, got ${JSON.stringify(conf ?? null)}. An unlabelled cue is an agent's opinion wearing a coach's voice.`);
+      continue;
+    }
+    if (conf === 'sourced') {
+      if (!c.quote || String(c.quote).trim().length < 15) {
+        fail(where, 'marked "sourced" with no verbatim quote. Paste the sentence from the guide, or mark it convention.');
+      }
+      /* Either a `source` id into this file's list, or a `url` on the cue itself. The teaching
+         file already used the second shape and the first version of this gate did not know about
+         it, which made it report nine ungrounded cues that were not ungrounded. They were missing
+         the QUOTE, which is the half that matters and the half that is still enforced below. */
+      if (!hasSource) {
+        fail(where, `marked "sourced" but names neither a source id from this file's list (${[...sourceIds].join(', ')}) nor a url of its own.`);
+      }
+    }
+    if (conf === 'inference') {
+      if (!sourceIds.has(c.from)) {
+        fail(where, `marked "inference" but ${JSON.stringify(c.from ?? null)} is not one of this file's sources. An inference has to say what it reasons FROM.`);
+      }
+      if (!c.fromQuote || String(c.fromQuote).trim().length < 15) {
+        fail(where, 'marked "inference" with no fromQuote. Paste the sentence the reasoning starts from so he can judge the leap himself.');
+      }
+    }
+    if (!c.test || String(c.test).trim().length < 15) {
+      fail(where, 'no test. Every cue must come with something he can actually check, not a sensation he is supposed to have.');
+    }
+  }
+}
+
+checkGroundedCues('swim-coaching.json', swimCoaching, swimCoaching.checks || []);
+checkGroundedCues('swim-teaching.json', swimTeaching, (swimTeaching.stages || []).flatMap((st) => st.cues || []));
+if ((swimCoaching.checks || []).length) {
+  out.push(`ok    [swim-coaching.json] ${swimCoaching.checks.length} self-checks, every one carrying a test, a stated confidence and a source`);
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
+
 console.log(`${Object.keys(program.days).length} days checked, the planned week checked against its rest rule, ${FAIL} failures`);
 process.exit(FAIL ? 1 : 0);
