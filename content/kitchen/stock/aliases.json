@@ -2060,8 +2060,8 @@
       "note": "One Knorr cube per 2 cups of water, per the box. For cooking purposes this IS stock. It is saltier than fresh and has no body from bones, so go easy on other salt in the dish."
     },
     "tinned tomatoes": {
-      "have": "tomatoes_grape",
-      "note": "680 g of fresh grape tomatoes, bought 08-12 on clearance. Halve them and cook them down about 10 minutes longer than a tin needs, since they carry more water and no acid correction. Brighter and less deep than tinned."
+      "have": "tomatoes_canned",
+      "note": "REPOINTED 2026-08-22, from `tomatoes_grape` to `tomatoes_canned`. A 796 ml tin of diced tomatoes is the right stand-in for a 28 oz can of crushed: 796 ml is 26.9 oz, so the quantity is the same tin. Crush them against the pan with the spoon as they cook, or give them a few seconds in the bullet blender first. Diced holds its shape longer, so a sauce made from them stays chunkier unless you break them up.\n\nIt pointed at 680 g of clearance grape tomatoes, which were 6 days past their date and had been dropped from availability that morning, so the substitute silently stopped working and Budget Bytes' Bolognese went from needing one thing to needing two. That dish is the example he has raised in three separate sessions. A substitute that depends on the most perishable thing in the kitchen is a substitute that expires; prefer the shelf-stable option where one exists."
     },
     "brown sugar": {
       "have": "sugar",

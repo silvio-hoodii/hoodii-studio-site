@@ -26,7 +26,7 @@ import { getProteinTarget } from '@/lib/kitchen/protein';
  * for a hard dish and absurd as the gate on "what can I eat", because building one costs an evening,
  * so the card library can never be the answer to what is for dinner. Cards are now a PROPERTY of a
  * dish, shown as a badge, rather than the universe the question is asked over. */
-import { findCandidates } from '@/lib/kitchen/corpus';
+import { findCandidates, type Candidate } from '@/lib/kitchen/corpus';
 import { MealRow } from './MealRow';
 
 export const dynamic = 'force-dynamic';
@@ -58,6 +58,38 @@ const gist = (why?: string) => {
   const first = why.split(/(?<=\.)\s/)[0]!.trim();
   return first.length > 150 ? `${first.slice(0, 147).trimEnd()}...` : first;
 };
+
+/* DINNER FIRST. Added 2026-08-22.
+ *
+ * Every corpus bucket arrives sorted by NAME, which is fine on /kitchen/find where he is browsing with
+ * filters and a search box, and useless as the top of the front page. Sorted A to Z, "ready" opened on
+ * Air Fryer Asparagus, Air Fryer Hard Boiled Eggs, air fryer patatas bravas and two kinds of cookie,
+ * and "one ingredient short" opened on `"All-Edge" Warm and Spicy Brownies` followed by baked oatmeal
+ * and pancakes. 501 dishes behind an alphabet is not an answer to what is for dinner.
+ *
+ * His words: "Why is it not something as simple as 'Oh chicken and rice with something, whatever,
+ * tuna'?" That dish exists in the corpus and was buried under the letter A.
+ *
+ * `courses` is already derived per candidate from the publisher's own category, so this needs no
+ * tagging and cannot drift from the filter chips that use the same field. Sides and sweets are not
+ * hidden, they sort last, and the Sweet & baking chip on /kitchen/find is still the way to ask for
+ * them on purpose. */
+const COURSE_RANK: Record<string, number> = {
+  dinner: 0, lunch: 1, soup: 2, breakfast: 3, side: 4, sweet: 5,
+};
+const courseRank = (c: Candidate) =>
+  Math.min(6, ...c.courses.map((id) => COURSE_RANK[id] ?? 6));
+/** Dinner-ish first, then whatever order the bucket already had, which is meaningful for `rescue`
+ *  (soonest to spoil) and alphabetical elsewhere. A stable sort keeps both. */
+const mealFirst = (list: Candidate[]) =>
+  [...list].sort((a, b) =>
+    courseRank(a) - courseRank(b)
+    /* Then FEWEST UNRECOGNISED INGREDIENTS. Within one course the buckets are alphabetical, so the
+     * first ten dinners were whatever began with A: air-fryer roast chicken, an anchovy spaghetti,
+     * four asparagus dishes. Confidence is the honest tiebreak, because a dish with three lines the
+     * matcher could not read is a weaker claim than one it read completely, and it happens to bury
+     * the alphabet. */
+    || a.score.unknown.length - b.score.unknown.length);
 
 function Dish({ c }: { c: Cookable }) {
   const r = c.recipe;
@@ -165,6 +197,10 @@ export default async function KitchenHome() {
   const thawing = offered.filter((c) => c.offer.status === 'thaw');
   const adapting = offered.filter((c) => c.offer.status === 'adapt');
   const soon = expiringSoon(stock, 7, 3);
+  /* Same rule as `usableIds` in corpus.ts, and it has to be the same number: this panel and the
+   * matcher cannot be allowed to disagree about whether a thing is still food. Items further past
+   * their date than the grace are gone, and nagging about them is what made this panel wallpaper. */
+  const soonUsable = soon.filter((i) => i.daysLeft == null || i.daysLeft >= -3);
   /* Everything with a genuinely known amount, most recently touched first. `qty !== null` is the
    * whole filter: unknown stays unknown and simply does not appear. */
   const counted = Object.values(stock.items)
@@ -214,6 +250,24 @@ export default async function KitchenHome() {
         {d.missingOne.length > 0 && <>{d.missingOne.length} one ingredient short. </>}
         <Link href="/kitchen/find">See all, or filter by an ingredient</Link>.
       </p>
+
+      {/* A SEARCH BOX ON THE PAGE HE OPENS. Added 2026-08-22.
+       *
+       * It existed only on /kitchen/find, so naming a dish meant knowing that the tab called Dishes
+       * contained a search. It did not, as far as he could tell: "Okay where is the fucking spaghetti
+       * bolognese? I'm scrolling the whole page and I don't see it." Scrolling was the only gesture
+       * the front page offered, and no ranking will ever put every nameable dish in the first ten
+       * rows. Typing the name is the answer to knowing the name. */}
+      <form action="/kitchen/find" method="get" className="searchrow">
+        <input
+          type="search"
+          name="q"
+          placeholder="name a dish: spaghetti bolognese"
+          aria-label="Search the dishes for a name"
+          enterKeyHint="search"
+        />
+        <button type="submit" className="primary">Find</button>
+      </form>
 
 
       {/* The receipt, MOVED BELOW THE LIST on 2026-08-18. It qualifies the dishes above rather than
@@ -281,38 +335,6 @@ export default async function KitchenHome() {
           even with a startable dish sitting directly underneath it, and he went looking on the live
           site and could not find the dish he had asked for that afternoon. A false negative in the
           loudest position on the page is worse than no status at all. */}
-      {/* NO MORE "nothing ready tonight". That sentence was true of the card library and false of
-          the kitchen, and it was the loudest thing on the page. The count above cannot be zero while
-          there is food in the house, so the empty state that used to live here is gone rather than
-          reworded. */}
-      {now.length > 0 && (
-        <>
-          <p className="sec">
-            <span className="live">{now.length}</span> written out step by step
-          </p>
-          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
-            Checked against this kitchen and cooked from. Everything else links to the publisher.
-          </p>
-          <div>{now.map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
-        </>
-      )}
-
-      {/* A 20-minute counter thaw is not "not ready". Splitting thaw from swap so the heading can
-          say which, because "With one small change" read as a caveat and buried the only dish. */}
-      {thawing.length > 0 && (
-        <>
-          <p className="sec">Start tonight, once one thing thaws</p>
-          <div>{thawing.slice(0, 8).map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
-        </>
-      )}
-
-      {adapting.length > 0 && (
-        <>
-          <p className="sec">With one swap</p>
-          <div>{adapting.slice(0, 8).map((c) => <Dish key={c.recipe.id} c={c} />)}</div>
-        </>
-      )}
-
       {/* THE ACTUAL MENU. Three groups, in the order that answers "what do I make", and each one is
           the same bucket /kitchen/find shows under the same heading, from the same function.
           Deliberately capped short: this is the front page, and the tab is one tap away for the rest.
@@ -340,7 +362,7 @@ export default async function KitchenHome() {
             From the fridge, nothing to buy <span className="quiet">{d.ready.length}</span>
           </p>
           <ul className="meallist">
-            {d.ready.slice(0, 10).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+            {mealFirst(d.ready).slice(0, 10).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
           </ul>
           {d.ready.length > 10 && (
             <p className="lede" style={{ marginTop: 8 }}>
@@ -348,6 +370,35 @@ export default async function KitchenHome() {
               <Link href="/kitchen/find">All of them</Link>.
             </p>
           )}
+        </>
+      )}
+
+      {/* ONE INGREDIENT SHORT. Absent from this page until 2026-08-22, and its absence is why the dish
+       * he has named as his own obvious example in three separate sessions was nowhere on it.
+       *
+       *   "Okay where is the fucking spaghetti bolognese? I'm scrolling the whole page and I don't see
+       *   it. Why is it not there?"
+       *
+       * Because Budget Bytes' Bolognese is short of wine and TheMealDB's Spaghetti Bolognese is short
+       * of worcestershire sauce, so both sat in a 641-dish bucket that only /kitchen/find rendered.
+       * The home page showed what he could cook with nothing missing and then stopped, which hides
+       * exactly the dishes a person would decide to skip an ingredient on. Naming the gap is the whole
+       * value: he can look at "no wine" and make that call in a second. */}
+      {d.missingOne.length > 0 && (
+        <>
+          <p className="sec">
+            One ingredient short <span className="quiet">{d.missingOne.length}</span>
+          </p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            What is missing is named. Some of it you will decide to skip or swap.
+          </p>
+          <ul className="meallist">
+            {mealFirst(d.missingOne).slice(0, 14).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+          </ul>
+          <p className="lede" style={{ marginTop: 8 }}>
+            and {d.missingOne.length - 14} more.{' '}
+            <Link href="/kitchen/find">All of them</Link>.
+          </p>
         </>
       )}
 
@@ -366,7 +417,7 @@ export default async function KitchenHome() {
             Nothing to buy. Move the named thing to the fridge tonight.
           </p>
           <ul className="meallist">
-            {d.thaw.slice(0, 8).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
+            {mealFirst(d.thaw).slice(0, 8).map((c) => <MealRow key={c.meal.id} c={c} label={d.nameOf} />)}
           </ul>
           {d.thaw.length > 8 && (
             <p className="lede" style={{ marginTop: 8 }}>
@@ -374,6 +425,41 @@ export default async function KitchenHome() {
               <Link href="/kitchen/find">All of them</Link>.
             </p>
           )}
+        </>
+      )}
+
+      {/* THE COOK CARDS, MOVED DOWN HERE 2026-08-22, and reframed as a shelf rather than as an answer.
+       *
+       * They were the first three sections on the page, above everything, in a rewrite whose entire
+       * point was that the card library is not the answer to what is for dinner. So the top of the
+       * page was still Scrambled Eggs, Mongolian Ground Beef and Arroz con Pollo, which is precisely
+       * the five-dish loop he has been describing for weeks:
+       *
+       *   "Why are those two the first ones to show? Why is the fucking Mongolian ground beef thing
+       *   here? I've been telling you that I don't even understand why it is there. Why is it Arroz
+       *   con pollo here? The fact that I cook something doesn't mean that I want to eat it forever.
+       *   Why are these four sections here even? They don't make sense."
+       *
+       * Both halves of that are right. A dish he has cooked is evidence the card works, which is why
+       * `cookedResult` admits it, and it is also the LEAST interesting thing to be shown tonight. And
+       * four separate headings for one shelf of four dishes is four times the heading it earns.
+       *
+       * So: one section, one heading, below the real list. `rank()` already sinks recently-cooked
+       * dishes within it. Thaw and swap notes stay on the individual rows, where the dish itself says
+       * what it needs, rather than becoming sections of their own. */}
+      {(now.length > 0 || thawing.length > 0 || adapting.length > 0) && (
+        <>
+          <p className="sec">
+            Written out step by step{' '}
+            <span className="quiet">{now.length + thawing.length + adapting.length}</span>
+          </p>
+          <p className="lede" style={{ marginTop: 4, marginBottom: 10 }}>
+            The only dishes here with instructions of their own. Everything above links to the
+            publisher.
+          </p>
+          <div>
+            {[...now, ...thawing, ...adapting].map((c) => <Dish key={c.recipe.id} c={c} />)}
+          </div>
         </>
       )}
 
@@ -393,22 +479,38 @@ export default async function KitchenHome() {
           <ul className="plainlist stack">
             {d.unlocks.slice(0, 5).map((u) => (
               <li key={u.item}>
-                <b>{u.count}</b> dishes need only {d.nameOf(u.item)}
+                <b>{u.count}</b> dishes need only{' '}
+                {/* The ingredient names the recipes actually use, not the matcher's bucket name.
+                    "64 dishes need only green vegetables" was unactionable: nothing in a shop is
+                    called that. His words: "What the fuck is that green vegetable?" */}
+                {u.examples.length > 0 ? u.examples.join(', ') : d.nameOf(u.item)}
               </li>
             ))}
           </ul>
         </>
       )}
 
-      {soon.length > 0 && (
+      {/* GUARDED ON THE FILTERED LIST, not the raw one. Filtering the rows without moving the
+          condition left a heading with nothing under it the moment every expiring item was past the
+          rot grace, which is the state the kitchen was actually in on 2026-08-22. An empty section
+          with a heading reads as a broken app. */}
+      {soonUsable.length > 0 && (
         <>
           <p className="sec">Use these first</p>
           {/* Each one is a LINK now. It used to be plain text: he was told three things were dying
               today and given nothing to tap, while /kitchen/find had a group of dishes that eat exactly
               those items one tap away. DESIGN.md's rule is never to say what is wrong without saying
               what to do about it, and this panel was breaking it. */}
+          {/* FILTERED 2026-08-22. This panel was listing arugula at 12 days past its best, spring mix
+              at 9 and basil at 7, every one of them long gone, and it had been doing it for weeks:
+              "Use this first. This has been here for like a month already." A reminder to use food
+              that no longer exists is not a reminder, it is a reason to stop reading the panel, and
+              those same rows were still being credited to dishes until `usableIds` was fixed today.
+
+              Anything past the rot grace is dropped from BOTH places by the same rule, so the panel
+              and the matcher cannot disagree about whether a thing is food. */}
           <ul className="plainlist">
-            {soon.map((i) => {
+            {soonUsable.map((i) => {
               const amt = amountText(i);
               return (
                 <li key={i.id}>

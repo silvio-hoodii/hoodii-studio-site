@@ -165,10 +165,39 @@ export async function loadCorpus() {
 }
 
 /** Stock ids usable right now. Frozen counts: it needs a thaw, not a shop. */
+/** How far past its own use-by an item may be and still count as food.
+ *
+ *  Zero would be too strict: these dates are estimates written by an agent from a shelf-life table,
+ *  not printed on the pack, and a cucumber is not rubbish the morning after a guess. Three days is
+ *  the width of that guess. */
+const ROT_GRACE_DAYS = 3;
+
 function usableIds(stock: Awaited<ReturnType<typeof deriveStock>>): Set<string> {
   const s = new Set<string>();
   for (const it of Object.values(stock.items)) {
-    if (it.level === 'have' || it.level === 'low') s.add(it.id);
+    if (it.level !== 'have' && it.level !== 'low') continue;
+    /* FOOD WELL PAST ITS DATE IS NOT AVAILABLE. Added 2026-08-22.
+     *
+     * It was, and it poisoned the single most prominent ranking on the app. The home page showed
+     * "Use these first: arugula 12 days past its best, spring mix salad 9 days past, fresh basil
+     * 7 days past" while those same three items were still in this set, so they were credited to
+     * dishes, and `rescue` sorts by soonest-expiring. The heading "Cook one of these and nothing
+     * goes to waste, 94" was therefore ranked mostly on leaves that had rotted a fortnight earlier,
+     * and the top rows of the front page were dishes he could not make.
+     *
+     * His words the day this was found: "Use this first. This has been here for like a month
+     * already. Tea basil is gone. It doesn't make sense." And, about the loaf: "I don't have the
+     * bread anymore. Also we went to waste, obviously, because nothing was using it."
+     *
+     * The direction of the fix is deliberate. Dropping it means the app may say he lacks something
+     * he still has, and he corrects that with one tap. Keeping it meant the app said he HAD rotten
+     * food and built its best-looking list out of it, which is law 5's worse error and also the exact
+     * outcome the whole project exists to prevent.
+     *
+     * `daysLeft` is computed by the fold against the kitchen's own day boundary, not recomputed here,
+     * because doing this arithmetic twice is how two surfaces end up disagreeing. */
+    if (it.daysLeft != null && it.daysLeft < -ROT_GRACE_DAYS) continue;
+    s.add(it.id);
   }
   return s;
 }
@@ -395,15 +424,40 @@ export async function findCandidates(filters: Filters = {}) {
     /* What one purchase would unlock the most dishes. Counted only over dishes missing EXACTLY that
      * one thing, because "would unlock" has to mean it, not "would help with". */
     unlocks: (() => {
-      const n = new Map<string, { count: number; reason?: string }>();
+      /* `examples` added 2026-08-22, and it is the difference between a shopping list and a riddle.
+       *
+       * The rows rendered the matcher's own bucket names, so the top of "one thing to buy, most
+       * dishes" read "64 dishes need only green vegetables", "42 need only fresh soft herbs", "33 need
+       * only peanuts". Those are internal vocabulary, invented to group 32 vegetables under one gap,
+       * and nothing in a shop is called any of them. His words: "What is the one thing to buy most
+       * dishes? What are these numbers? Dishes need only green vegetables? What the fuck is that green
+       * vegetable?" A row he cannot act on is not a shopping list.
+       *
+       * So each row now carries the actual ingredient names the publishers asked for, taken from the
+       * lines that were counted. No new vocabulary, no guessing what he ought to buy: it is what the
+       * recipes literally say, deduped and shortest first so the common word wins over one page's
+       * florid phrasing. */
+      const n = new Map<string, { count: number; reason?: string; names: Set<string> }>();
       for (const c of all) {
         if (c.score.missing.length !== 1) continue;
         const m = c.score.missing[0]!;
         const k = m.item ?? m.shown;
-        const cur = n.get(k) ?? { count: 0, reason: m.reason };
-        n.set(k, { count: cur.count + 1, reason: cur.reason ?? m.reason });
+        const cur = n.get(k) ?? { count: 0, reason: m.reason, names: new Set<string>() };
+        cur.count += 1;
+        if (cur.reason === undefined) cur.reason = m.reason;
+        /* `shown` is what resolveLine matched on, so it is already stripped of quantity and prep.
+         * Guarded anyway: anything long enough to be a whole sentence is not a shopping word. */
+        const nm = (m.shown || '').trim().toLowerCase();
+        if (nm && nm.length <= 24) cur.names.add(nm);
+        n.set(k, cur);
       }
-      return [...n.entries()].map(([item, v]) => ({ item, ...v }))
+      return [...n.entries()]
+        .map(([item, v]) => ({
+          item,
+          count: v.count,
+          reason: v.reason,
+          examples: [...v.names].sort((a, b) => a.length - b.length || a.localeCompare(b)).slice(0, 4),
+        }))
         .sort((a, b) => b.count - a.count).slice(0, 8);
     })(),
   };
