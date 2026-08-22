@@ -70,6 +70,8 @@ if (!url) {
 const program = JSON.parse(readFileSync(join(ROOT, 'content/gym/program.json'), 'utf8'));
 const DEFAULT_WIDTH = 2;
 const LOOKBACK_DAYS = 90;
+/** Above this many prescribed reps the Epley estimate is not trustworthy. See the note at its use. */
+const EPLEY_LIMIT = 15;
 const e1rm = (w, reps) => w * (1 + reps / 30);
 
 const client = new Client(url);
@@ -97,12 +99,22 @@ for (const r of rows) {
 const gaps = [];
 const checked = [];
 const unlogged = [];
+const outOfScope = [];
 for (const [dayKey, day] of Object.entries(program.days)) {
   for (const block of day.blocks) {
     for (const ex of block.exercises) {
       if (ex.log === false || ex.progression !== 'weight') continue;
       const bottom = parseInt(String(ex.reps), 10);
       if (!Number.isFinite(bottom) || bottom <= 0) continue;
+      /* EPLEY IS NOT VALID UP HERE, so neither is this check. Added 2026-08-22, twenty minutes
+         after the check itself, when it fired on the farmer carry: 40 "reps" of a carry are STEPS,
+         and 50 lb times (1 + 40/30) is not an estimated one-rep max, it is a meaningless number. It
+         then demanded a 47-step carry to earn the next dumbbell. Every rep-to-max formula of this
+         shape is fitted on sets of roughly one to ten and drifts badly past twelve to fifteen, so
+         anything prescribed above fifteen is out of scope and says so rather than being silently
+         wrong. Carries and long holds progress on load and on distance, which nobody needs an
+         equation for. */
+      if (bottom > EPLEY_LIMIT) { outOfScope.push(`${dayKey}/${ex.id} (${bottom} reps)`); continue; }
       const width = ex.rangeWidth != null ? Number(ex.rangeWidth) : DEFAULT_WIDTH;
       const top = bottom + width;
       const increment = ex.increment != null ? Number(ex.increment) : 5;
@@ -133,6 +145,8 @@ if (!QUIET) {
     );
   }
   if (unlogged.length) console.log(`\nnot yet logged, nothing to check against: ${unlogged.join(', ')}`);
+  // Never a silent skip: a check that quietly drops rows reads as coverage it does not have.
+  if (outOfScope.length) console.log(`\nabove ${EPLEY_LIMIT} reps, where the estimate stops holding, so deliberately not checked: ${outOfScope.join(', ')}`);
 }
 
 if (gaps.length) {

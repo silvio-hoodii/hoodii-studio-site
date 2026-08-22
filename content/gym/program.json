@@ -275,7 +275,7 @@
           "exercises": [
             {
               "id": "romanian-deadlift",
-              "name": "Romanian Deadlift",
+              "name": "BB Romanian Deadlift",
               "sets": 2,
               "reps": "8",
               "rest": "2 min",
@@ -397,10 +397,9 @@
               "rest": "60s",
               "zone": "benchDb",
               "station": null,
-              "timed": true,
               "bodyweight": false,
               "log": true,
-              "cue": "One heavy dumbbell in ONE hand, nothing in the other. Walk for the seconds shown standing as tall as you can. The whole exercise is refusing to lean toward the weight: imagine a broomstick down your spine that must stay vertical. Swap hands each set. This trains your side, which nothing else in the programme does. If you cannot stop leaning, the weight is too heavy.",
+              "cue": "One heavy dumbbell in ONE hand, nothing in the other. Walk the number of STEPS shown, counting them standing as tall as you can. The whole exercise is refusing to lean toward the weight: imagine a broomstick down your spine that must stay vertical. Swap hands each set. This trains your side, which nothing else in the programme does. If you cannot stop leaning, the weight is too heavy. COUNT STEPS, not seconds, and type the count: with a dumbbell in each hand you cannot start a timer, which is the same reason the shoulder taps stopped being timed on 2026-08-22. Get the steps first, then go heavier.",
               "alts": [
                 {
                   "id": "farmer-carry",
@@ -423,7 +422,7 @@
                   "progression": "time"
                 }
               ],
-              "progression": "time"
+              "progression": "weight"
             }
           ],
           "why": "Single-leg strength, and resisting sideways lean. Both loaded, both at the dumbbells, so these two genuinely alternate."
@@ -474,7 +473,7 @@
             },
             {
               "id": "standing-calf-raise",
-              "name": "Standing Calf Raise",
+              "name": "DB Standing Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -997,7 +996,7 @@
           "exercises": [
             {
               "id": "romanian-deadlift",
-              "name": "Romanian Deadlift",
+              "name": "BB Romanian Deadlift",
               "sets": 4,
               "reps": "6",
               "rest": "2 min",
@@ -1274,7 +1273,7 @@
               "timed": true,
               "bodyweight": true,
               "log": true,
-              "cue": "The groin and inner-thigh half of the sideways work, and the piece nothing in the old programme trained at all. START WITH THE EASY VERSION: lie on your side with your bottom forearm on the floor, and put your TOP KNEE (not the foot) on the bench. Lift your hips off the floor so your body is a straight line, squeezing the bench with the top leg. Hold for the seconds shown. Your bottom leg hangs free. When 3 sets of 20 seconds feels controlled, move the top FOOT to the bench instead of the knee, which is much harder. Expect this to be humbling. Stop if you feel a sharp pull in the groin.",
+              "cue": "The groin and inner-thigh half of the sideways work, and the piece nothing in the old programme trained at all. START WITH THE EASY VERSION: lie on your side with your bottom forearm on the floor, and put your TOP KNEE (not the foot) on the bench. Lift your hips off the floor so your body is a straight line, squeezing the bench with the top leg. Hold for the seconds shown. Your bottom leg hangs free. When 3 sets of 20 seconds feels controlled, move the top FOOT to the bench instead of the knee, which is much harder. Expect this to be humbling. Stop if you feel a sharp pull in the groin. Count the seconds in your head, one thousand one, one thousand two: you are on one forearm and cannot reach the phone. The count is the number you type.",
               "alts": [
                 {
                   "id": "adductor-squeeze",
@@ -1674,9 +1673,9 @@
         },
         {
           "role": "accessory",
-          "pairing": "fill",
-          "label": "Biceps + Carry",
-          "tag": "(preacher seat, dumbbells in hand)",
+          "pairing": "sequence",
+          "label": "Biceps, then Carry",
+          "tag": "(preacher seat, then walk)",
           "exercises": [
             {
               "id": "ez-preacher-curl",
@@ -1723,12 +1722,11 @@
               "sets": 3,
               "reps": "40",
               "rest": "60s",
-              "zone": "ezPreacher",
+              "zone": "benchDb",
               "station": null,
-              "timed": true,
               "bodyweight": false,
               "log": true,
-              "cue": "Done after the curls rather than alternating with them, because it needs room to walk and the preacher seat does not travel. A heavy dumbbell in each hand, stand as tall as you can, shoulders back, stomach tight, and walk for the seconds shown. Grip, posture and everything down your sides at once. Put them down before your form falls apart, not after.",
+              "cue": "Done after the curls rather than alternating with them, because it needs room to walk and the preacher seat does not travel. A heavy dumbbell in each hand, stand as tall as you can, shoulders back, stomach tight, and walk for the steps shown. Grip, posture and everything down your sides at once. Put them down before your form falls apart, not after. COUNT STEPS, not seconds, and type the count: with a dumbbell in each hand you cannot start a timer, which is the same reason the shoulder taps stopped being timed on 2026-08-22. Get the steps first, then go heavier.",
               "alts": [
                 {
                   "id": "suitcase-carry",
@@ -1761,10 +1759,10 @@
                   "progression": "time"
                 }
               ],
-              "progression": "time"
+              "progression": "weight"
             }
           ],
-          "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry goes in its rest rather than after it: it is grip and trunk, the curl is elbow, and neither slows the other down. Nothing here needs the floor."
+          "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."
         }
       ]
     }
