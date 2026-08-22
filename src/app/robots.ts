@@ -33,7 +33,8 @@ import type { MetadataRoute } from 'next';
  * the combinatorial filter-URL space would turn into real, billed CPU time on Vercel's Fluid
  * compute model, which is what actually drove that day's usage spike.
  *
- * /reading/all gets the same Disallow, added the same day and BEFORE it ever shipped: same shape
+ * /reading/shelf gets the same Disallow (it inherited /reading/all's, which was added the same
+ * day that page shipped and moved across when it was retired into the shelf on 2026-08-21): same shape
  * (search + filter chips over thousands of rows, freshly queried every hit, no cache), so it gets
  * the fix at the same time it's built rather than after a bot finds it first.
  */
@@ -42,7 +43,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/kitchen/find', '/reading/all', '/reading/shelf', '/reading/want'],
+      disallow: ['/kitchen/find', '/reading/shelf', '/reading/want'],
     },
     sitemap: 'https://hoodii.studio/sitemap.xml',
     host: 'https://hoodii.studio',

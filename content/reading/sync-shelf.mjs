@@ -62,6 +62,7 @@ const SHELF_SLUG = new Map([
   ['Sci-Fi & Fantasy', 'scifi'],
   ['Mystery & Crime', 'mystery'],
   ['Non-fiction', 'nonfiction'],
+  ['Spanish', 'spanish'],
 ]);
 
 const letterOf = (fileUnder) => {

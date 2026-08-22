@@ -1,4 +1,6 @@
-/* Shapes for the full catalog browse (/reading/all), no `server-only`. Same split as queue-types
+/* Shapes for the retired /reading/all catalogue browse, no `server-only`. That page was folded
+ * into /reading/shelf on 2026-08-21; what survives here is what /reading/about still needs to
+ * list the source lists behind the scores. Same split as queue-types
  * and ./types: this file can be imported by a client component later without dragging the DB
  * client with it. */
 

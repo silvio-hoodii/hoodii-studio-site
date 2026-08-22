@@ -21,6 +21,17 @@ const nextConfig: NextConfig = {
       { source: '/es/:path*', destination: '/', permanent: true },
       { source: '/studio', destination: '/', permanent: true },
 
+      /* /reading/all is retired into /reading/shelf, 2026-08-21. Both browsed the same pool and
+       * the shelf page now does everything /reading/all did (search, filters, the full catalogue)
+       * plus covers, descriptions, six sorts, tiers, a want list and pagination. The last two
+       * things only /reading/all had, Spanish books and paging, moved across first.
+       *
+       * Two surfaces answering the same question is one of them going stale, which is a rule this
+       * project wrote down after finding a standalone spine-check page duplicating this one. A
+       * 307 rather than a 308: this is a product decision that could be reversed, not a permanent
+       * URL move, and a permanent redirect is cached by browsers forever. */
+      { source: '/reading/all', destination: '/reading/shelf', permanent: false },
+
       /* The vercel.app copy of the whole site, sent home.
        *
        * Silvio, 2026-08-14: "why do we need the Hoodii Studio site, Vercel app? We can erase that."

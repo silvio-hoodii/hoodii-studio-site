@@ -1,6 +1,6 @@
 import 'server-only';
 import { sql } from './queue-db';
-import { ERA_SPLIT } from './shelf-types';
+import { ERA_SPLIT, PAGE_SIZE } from './shelf-types';
 import type { Shelf, ShelfEntry, ShelfFilters, Sort, Tier } from './shelf-types';
 
 type Row = {
@@ -76,7 +76,7 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
        case when ${sort} = 'new'    then year       end desc nulls last,
        case when ${sort} = 'old'    then year       end asc  nulls last,
        title
-     limit 400
+     limit ${PAGE_SIZE} offset ${((f.page ?? 1) - 1) * PAGE_SIZE}
   `) as Row[];
 
   const [countRow] = (await sql`

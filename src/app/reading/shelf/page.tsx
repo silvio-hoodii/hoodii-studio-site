@@ -3,12 +3,12 @@ import { getEraCounts, getLetterCounts, getShelfCounts, getShelfLiveness, getShe
 import { getWantKeys } from '@/lib/reading/want-db';
 import WantButton from './WantButton';
 import {
-  activeFilterCount, ERAS, LETTERS, SHELVES, SORTS,
+  activeFilterCount, ERAS, LETTERS, PAGE_SIZE, SHELVES, SORTS,
   eraLabel, shelfHref, shelfLabel, sortLabel, sortNote, tierChip, tierLabel, tierMeaning, TIERS,
 } from '@/lib/reading/shelf-types';
 import type { Era, Shelf, ShelfEntry, ShelfFilters, Sort, Tier } from '@/lib/reading/shelf-types';
 
-/* noindex,nofollow and in robots.ts's Disallow, same pair /reading/all and /kitchen/find carry:
+/* noindex,nofollow and in robots.ts's Disallow, the same pair /kitchen/find carries:
  * this is a filter surface over thousands of rows, queried fresh on every hit, and a crawler
  * walking its section-by-letter link grid would burn real Fluid CPU doing it. */
 export const metadata = {
@@ -41,7 +41,7 @@ export const dynamic = 'force-dynamic';
 export default async function ShelfCheck({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string; sort?: string; open?: string; pick?: string }>;
+  searchParams: Promise<{ q?: string; shelf?: string; letter?: string; tier?: string; era?: string; sort?: string; open?: string; pick?: string; page?: string }>;
 }) {
   const sp = await searchParams;
   const filters: ShelfFilters = {
@@ -52,6 +52,7 @@ export default async function ShelfCheck({
     era: ERAS.includes(sp.era as Era) ? (sp.era as Era) : undefined,
     sort: SORTS.includes(sp.sort as Sort) ? (sp.sort as Sort) : 'author',
     open: sp.open === '1',
+    page: Math.max(1, Number(sp.page) || 1),
   };
   const sort = filters.sort ?? 'author';
 
@@ -72,6 +73,8 @@ export default async function ShelfCheck({
   const nFilters = activeFilterCount(filters);
   const byLetter = sort === 'author' && !searching;
 
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
   const groups: { letter: string; books: ShelfEntry[] }[] = [];
   if (byLetter && !picked) {
     for (const e of shown) {
@@ -85,8 +88,8 @@ export default async function ShelfCheck({
     <div className="reading">
       <p className="surf-nav">
         <Link className="rtab" href="/reading">Next up</Link>
-        <Link className="rtab" href="/reading/all">All books</Link>
-        <span className="rtab on">Shelf check</span>
+        <span className="rtab on">Browse</span>
+        <Link className="rtab" href="/reading/want">Want</Link>
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 
@@ -210,7 +213,7 @@ export default async function ShelfCheck({
         {filters.shelf && <span className="why"> · {shelfLabel[filters.shelf].toLowerCase()}</span>}
         {filters.era && <span className="why"> · {eraLabel[filters.era].toLowerCase()}</span>}
         {!filters.tier && !searching && <span className="why"> · long shots hidden</span>}
-        {total > 400 && <span className="why"> · first 400 shown, narrow it to see the rest</span>}
+        {totalPages > 1 && <span className="why"> · page {filters.page} of {totalPages}</span>}
       </p>
 
       {filters.tier && <p className="tiernote"><strong>{tierLabel[filters.tier]}</strong> {tierMeaning[filters.tier]}</p>}
@@ -240,6 +243,18 @@ export default async function ShelfCheck({
           </section>
         ))
         : shown.map((b) => <ShelfRow key={b.key} entry={b} showShelf={!filters.shelf} wanted={wantKeys.has(b.key)} expanded={!!picked} />)}
+
+      {totalPages > 1 && !picked && (
+        <nav className="pager" aria-label="Pagination">
+          {(filters.page ?? 1) > 1 && (
+            <Link className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) - 1 })}>Previous</Link>
+          )}
+          <span className="pager-pos">Page {filters.page} of {totalPages}</span>
+          {(filters.page ?? 1) < totalPages && (
+            <Link className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) + 1 })}>Next</Link>
+          )}
+        </nav>
+      )}
 
       <dl className="tierlegend">
         {TIERS.map((t) => (

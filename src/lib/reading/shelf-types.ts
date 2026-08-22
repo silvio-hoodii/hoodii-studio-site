@@ -1,7 +1,7 @@
 /* Shapes for the store-shelf finder (/reading/shelf). No `server-only`, same split as
  * catalog-types: importable from a client component later without dragging the DB client in. */
 
-export type Shelf = 'fiction' | 'scifi' | 'mystery' | 'nonfiction';
+export type Shelf = 'fiction' | 'scifi' | 'mystery' | 'nonfiction' | 'spanish';
 export type Tier = 'grab' | 'good' | 'maybe';
 
 /** How many filters are actually narrowing the list, for the collapsed control's badge. */
@@ -46,8 +46,9 @@ export const shelfLabel: Record<Shelf, string> = {
   scifi: 'Sci-fi & fantasy',
   mystery: 'Mystery & crime',
   nonfiction: 'Non-fiction',
+  spanish: 'Spanish',
 };
-export const SHELVES: Shelf[] = ['fiction', 'scifi', 'mystery', 'nonfiction'];
+export const SHELVES: Shelf[] = ['fiction', 'scifi', 'mystery', 'nonfiction', 'spanish'];
 
 /* What the badge means, in the words the page uses to explain itself. Kept next to the type so
  * a tier can never be added without someone writing down what it tells him to do. */
@@ -110,6 +111,7 @@ export interface ShelfFilters {
   letter?: string;
   era?: Era;
   sort?: Sort;
+  page?: number;
   /** Open the filter panel. Held in the URL so a filtered view stays shareable and the panel
    *  does not slam shut on every click, which is what a details element alone would do on a
    *  page with no client JS. */
@@ -119,8 +121,11 @@ export interface ShelfFilters {
   tier?: Tier;
 }
 
+/** A filter change always returns to page 1; only the pager passes a page explicitly. Otherwise
+ *  narrowing a list from page 7 lands you on a page that list does not have. */
+export const PAGE_SIZE = 50;
 export function shelfHref(f: ShelfFilters, patch: Partial<ShelfFilters>) {
-  const next = { ...f, ...patch };
+  const next = { ...f, ...patch, page: patch.page ?? 1 };
   const p = new URLSearchParams();
   if (next.q) p.set('q', next.q);
   if (next.shelf) p.set('shelf', next.shelf);
@@ -129,6 +134,7 @@ export function shelfHref(f: ShelfFilters, patch: Partial<ShelfFilters>) {
   if (next.tier) p.set('tier', next.tier);
   if (next.sort && next.sort !== 'author') p.set('sort', next.sort);
   if (next.open) p.set('open', '1');
+  if (next.page && next.page > 1) p.set('page', String(next.page));
   const s = p.toString();
   return s ? `/reading/shelf?${s}` : '/reading/shelf';
 }
