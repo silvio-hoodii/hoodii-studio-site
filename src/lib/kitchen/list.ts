@@ -188,10 +188,17 @@ export async function shoppingList(): Promise<ShoppingList> {
   for (const d of dishes) {
     const score = scoreRecipe(d.lines, usable);
     for (const m of score.missing) {
+      const stockItem = m.item ? stock.items[m.item as string] : undefined;
+      /* NOTHING HE COOKS GOES ON A LIST OF THINGS TO BUY, same rule as step 1, applied here too.
+       * `spaghetti_cooked` is `buyable:false` for exactly this reason and step 1 already honours
+       * it -- but a card that is SHORT of it (pastafrittata wants cold leftover spaghetti it does
+       * not have yet) reaches this loop instead, which never checked the flag, and put "cooked
+       * spaghetti (plain, leftover)" back on the list from a different door. */
+      if (stockItem?.buyable === false) continue;
       const id = m.item && !String(m.item).startsWith('__')
-        ? (stock.items[m.item] ? m.item : `gap:${m.item}`)
+        ? (stockItem ? m.item : `gap:${m.item}`)
         : `gap:${m.shown}`;
-      const name = stock.items[m.item as string]?.n ?? String(m.item ?? m.shown);
+      const name = stockItem?.n ?? String(m.item ?? m.shown);
       const row = touch(id, name);
       if (!row.dishes.includes(d.name)) row.dishes.push(d.name);
     }
