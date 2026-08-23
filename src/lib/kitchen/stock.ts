@@ -124,6 +124,19 @@ export async function deriveStock(now = new Date()): Promise<Stock> {
        * app asserted a date it had no evidence for, and hid food behind it. */
       case 'bought':  it.level = 'have'; it.by = null; if (e.where_at) it.where = e.where_at; break;
       case 'low':     it.level = 'low'; break;
+      /* A CONFIRM CLEARS `low`. Added 2026-08-23, same shape as the restock-clears-use-by argument
+       * above: a confirm is someone looking at the thing and asserting it is there, which is newer
+       * evidence than an older "running out".
+       *
+       * Until today `bought` was the ONLY event that could take an item off the shopping list, so a
+       * `low` written in error could be undone only by claiming a purchase that never happened. The
+       * 2 kg jasmine bag reached exactly that state: two cook decrements were logged as `low`, and
+       * the app spent four days telling him to buy rice he has about 1.4 kg of.
+       *
+       * The blast radius is nil and that is why it is safe: nothing in the UI emits `confirm`. It is
+       * an agent-only kind, so this cannot fire from a mis-tap and quietly hide something he really
+       * is running out of. If a tap for it is ever added, revisit this line first. */
+      case 'confirm': if (it.level === 'low') it.level = 'have'; break;
       // Gone means gone, and that includes the amount. Leaving a quantity behind on an `out` item
       // is precisely the contradiction of 2026-08-09: "gone" in one column, "250 g bag" in another.
       case 'out':
@@ -136,7 +149,7 @@ export async function deriveStock(now = new Date()): Promise<Stock> {
       // item. Not clearing `by` here is why the home screen was still shouting "3 DAYS PAST ITS
       // BEST, slice it TODAY" about a roast eaten three days earlier.
       case 'cooked':  it.by = null; break;
-      // confirm/note leave the level alone, but the fields below still apply.
+      // `note` leaves the level alone, but the fields below still apply.
     }
     if (e.use_by !== null) it.by = typeof e.use_by === 'string' ? e.use_by : kitchenDay(e.use_by);
     if (e.display_name) it.n = e.display_name;

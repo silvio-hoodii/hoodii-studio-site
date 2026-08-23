@@ -53,6 +53,26 @@ alter table stock_event add column if not exists unit     text;
 alter table stock_event add column if not exists qty_mode text;      -- absolute | delta
 alter table stock_event add column if not exists portions numeric[];
 
+-- A QUANTITY WITHOUT A MODE IS NOT A QUANTITY. Added 2026-08-23.
+--
+-- `qty_mode` was nullable and `appendStockEvent` defaulted it to 'absolute', which protected every
+-- write that went through that function and nothing else. Agent scripts insert here directly, and
+-- two of them did:
+--
+--   08-19  jasminerice  low   2 cup   mode=NULL   Cooked into Peruvian Arroz con Pollo
+--   08-19  jasminerice  low   1 cup   mode=NULL   cooked plain in the rice cooker
+--
+-- Both numbers are amounts USED. The fold reads a mode-less qty as absolute, so a 2 kg bag folded
+-- to "1 cup left", and the shopping list told him to buy rice for four days while about 1.4 kg of it
+-- sat in the cupboard. Nobody typed a wrong number. The wrong FIELD accepted a right number.
+--
+-- A default cannot fix this, because a default is exactly what makes the wrong reading silent. The
+-- writer has to say which of the two things it means, so the constraint lives here rather than in
+-- TypeScript: this is the only layer a hand-written script cannot route around.
+alter table stock_event drop constraint if exists stock_event_qty_needs_mode;
+alter table stock_event add  constraint stock_event_qty_needs_mode
+  check (qty is null or qty_mode in ('absolute', 'delta'));
+
 -- What actually happened at the stove. The only honest record of it.
 create table if not exists cook_log (
   id        bigserial primary key,
