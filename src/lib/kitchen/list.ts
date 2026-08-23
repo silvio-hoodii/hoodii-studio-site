@@ -82,7 +82,7 @@ async function prices(): Promise<Map<string, PriceRow>> {
   return m;
 }
 
-/** Every dish this kitchen holds a recipe or a capture for, as name plus ingredient lines. */
+/** Every dish this kitchen actually holds a built, reviewed card for, as name plus ingredient lines. */
 async function dishesToScore(): Promise<{ name: string; lines: string[] }[]> {
   const out: { name: string; lines: string[] }[] = [];
 
@@ -116,15 +116,16 @@ async function dishesToScore(): Promise<{ name: string; lines: string[] }[]> {
     out.push({ name: r.name, lines });
   }
 
-  const capDir = join(CONTENT, 'imported');
-  for (const f of await readdir(capDir)) {
-    if (!f.endsWith('.json')) continue;
-    const c = JSON.parse(await readFile(join(capDir, f), 'utf8')) as {
-      source?: { name?: string }; ingredients?: string[];
-    };
-    if (!Array.isArray(c.ingredients)) continue;
-    out.push({ name: c.source?.name ?? f.replace('.json', ''), lines: c.ingredients });
-  }
+  /* `content/kitchen/imported/` is NOT scored here. Added 2026-08-23, and it should never have been:
+   * import.mjs's own header says a capture "lives in imported/, never in recipes/, so an unfinished
+   * one can never be offered and can never break pnpm build" -- that promise held for the cook pages
+   * and broke here. A capture is the publisher's raw text, not a reviewed card: nobody has mapped its
+   * lines to stock, flagged what is actually buyable, or noticed a line like the pastafrittata
+   * capture's "4 ounces cold leftover spaghetti", which cannot be bought at any store. Two separate,
+   * never-finished captures of the same dish (arrozconpollo.json and arrozconpolloaji.json, one with
+   * a comma-mangled scraped title) is why "3 dishes waiting on it" read as three different names for
+   * one dish he cannot even cook yet. If a capture becomes a real card, it already scores above once
+   * it lands in recipes/ -- nothing needs to be counted twice by reaching into the staging folder. */
   return out;
 }
 

@@ -91,7 +91,7 @@ const BANNED_HEAT = [
  * step that applies no heat at all: it is a stand mixer setting, not a dial on a stove. Widening the
  * rule to let that pass would be wrong, so it is narrowed to exactly the phrase that caused it.
  * Everything this rule exists for still fails. */
-const HEAT_LEVEL_WORD = /\b(?:on|to|over)\s+(?:a\s+)?(?:low|medium(?:[- ]high|[- ]low)?|high)\b(?!\s+speed)(?:\s+heat)?/i;
+const HEAT_LEVEL_WORD = /\b(?:on|to|over)\s+(?:a\s+)?(?:low|medium(?:[- ]high|[- ]low)?|high)\b(?!\s+speed)(?!\s+heatproof\b)(?:\s+heat)?/i;
 
 const BANNED_CUE = [
   { re: /\bsizzles? rather than hiss/i, why: 'Failed for real 2026-08-02. He cannot tell these apart and neither can most people.' },

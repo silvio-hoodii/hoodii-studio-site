@@ -1,245 +1,363 @@
 {
   "id": "chaufa",
   "name": "Arroz Chaufa",
-  "build": "2026-08-09-migrated",
+  "build": "2026-08-23a",
   "form": "dish",
   "meal": [
     "dinner"
   ],
-  "why": "Peruvian fried rice, and the answer to why a Peruvian kitchen owns soy sauce. It runs entirely on the rice left over from the arroz tapado, which has to be cold and a day old for this to work at all. Nothing extra to buy.",
+  "why": "Peruvian fried rice, and the reason a Peruvian kitchen owns soy sauce and sesame oil at all: Chinese immigration to Peru in the 1800s built a whole fusion cuisine called chifa, and this is its best-known dish. It wants the rice cold and a day old, which lines it up directly with the arroz tapado rice already made in this kitchen: cook that once, hold back the leftovers uneaten, and this needs nothing extra bought except the pachikay aromatics and a bell pepper. It is also the bed the Easy Sesame Chicken card is built to sit on top of.",
   "time": {
-    "totalMin": 15,
-    "note": "15 min"
+    "activeMin": 55,
+    "totalMin": 95,
+    "note": "her numbers: 15 min prep, 20 min cook. The extra time here is the pachikay's 40-minute cooling, which needs no attention once the oil is poured -- do something else during it, do not stand over the pan."
   },
   "serves": {
-    "count": 3,
+    "count": 5,
     "unit": "bowl",
-    "proteinPerUnit": 11
+    "proteinPerUnit": 37,
+    "proteinMath": "AN ESTIMATE, because her page carries no nutrition panel -- unlike the Easy Sesame Chicken card, where 30 g is her own published figure. The arithmetic: 1 3/4 lb (about 794 g) raw boneless skinless chicken thigh at roughly 18 g protein per 100 g is about 143 g. Four large eggs add roughly 6 g each, 24 g. Four cups of cooked jasmine rice add roughly 4 g per cup, 16 g. Total about 183 g across the pan. She serves 4 to 6; split 5 ways that is 37 g each, or 46 g if you split it 4 ways instead. The bell pepper, garlic, scallions and oil are not counted -- their protein is negligible next to the other three."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-23a",
+    "statement": "Every instruction is The Kitchn's own sentence, in her order, with her times, her amounts and her scale of 4 to 6 servings. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and a protein estimate with its assumptions stated because her page has no nutrition panel. All of it renders visibly separate from her sentences. Three departures are recorded on the ingredient they belong to: the pan (she says wok or 12-inch cast iron, this kitchen has neither), the food processor (she says mini food processor or blender, this kitchen has the blender), and the bell pepper (stock unconfirmed as of this build -- flagged, not blocked on).",
+    "sources": [
+      {
+        "name": "The Kitchn",
+        "url": "https://www.thekitchn.com/arroz-chaufa-recipe-23784539",
+        "primary": true,
+        "note": "Arroz Chaufa (Peruvian Fried Rice), by Andrea Loret de Mola, tested by Patty Catalano. 4 to 6 servings, 15 minutes prep, 20 minutes cook, makes 8 cups. Fetched 2026-08-23 via a rendered read of the page (the plain fetcher was refused; read live in a real browser instead, same as the swimming.org lesson from 2026-08-22). All 28 ingredient lines and all 13 instruction sentences captured verbatim into content/kitchen/imported/chaufa.json, hash e7c2659171e7."
+      }
+    ],
+    "readHash": "08547463",
+    "cookedResult": null
   },
   "ingredients": [
     {
-      "ref": "cold_cooked_rice",
-      "stock": "longgrainrice",
-      "display": "cold cooked rice, at least a day old (from the arroz tapado)",
-      "qty": 3,
-      "unit": "cups",
+      "ref": "scallion_whites",
+      "stock": "greenonion",
+      "display": "scallion whites",
+      "qty": 5,
+      "unit": "each",
+      "prep": "the white and pale-green base of the stalk, from one bunch of about 5 to 6 green onions. Keep the dark green tops -- they are used later in this same recipe, so buy one bunch, not two",
       "defining": true
     },
     {
-      "ref": "eggs",
-      "stock": "eggs",
-      "display": "eggs",
-      "qty": 3,
-      "unit": "each"
-    },
-    {
-      "ref": "green_onions",
-      "stock": "greenonion",
-      "display": "green onions",
-      "qty": 3,
-      "unit": "each"
+      "ref": "ginger_piece",
+      "stock": "ginger",
+      "display": "fresh ginger, peeled and roughly chopped",
+      "qty": 1,
+      "unit": "piece",
+      "prep": "about 2 1/2 inches long, roughly the length of your thumb",
+      "defining": false
     },
     {
       "ref": "garlic_cloves",
       "stock": "garlic",
-      "display": "garlic cloves, chopped fine",
-      "qty": 2,
-      "unit": "each"
+      "display": "garlic cloves, peeled",
+      "qty": 16,
+      "unit": "each",
+      "prep": "one whole medium head, all cloves peeled. That is a lot of garlic for one dish on purpose -- the pachikay is meant to be pungent",
+      "defining": true
+    },
+    {
+      "ref": "kosher_salt",
+      "display": "kosher salt",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "neutral_oil",
+      "stock": "oil",
+      "display": "neutral cooking oil",
+      "qty": 0.5,
+      "unit": "cup",
+      "prep": "vegetable or avocado oil, not the sesame oil -- that one is a finishing flavour and burns if used for frying",
+      "defining": true
+    },
+    {
+      "ref": "chicken",
+      "stock": "chickenthighs_boneless",
+      "display": "boneless, skinless chicken thighs",
+      "qty": 1.75,
+      "unit": "lb",
+      "prep": "about 794 g. Weigh it before cutting so the protein figure above is real, then cut into bite-size pieces, roughly the width of your thumb",
+      "defining": true
     },
     {
       "ref": "soy_sauce",
       "stock": "soy",
       "display": "soy sauce",
-      "qty": 3,
-      "unit": "tbsp"
+      "qty": 4,
+      "unit": "tbsp",
+      "prep": "SHE SPECIFIES DARK SOY SAUCE and this kitchen's bottle is regular soy sauce, not dark. Dark soy is thicker, less salty and deepens colour more; regular soy is saltier and thinner. Against everything else in this dish the difference reads as slightly saltier and a shade lighter, not wrong. That is the app's substitution, not a published one -- buy dark soy sauce separately if you want her exact result",
+      "defining": true
+    },
+    {
+      "ref": "cumin",
+      "stock": "cumin",
+      "display": "ground cumin",
+      "qty": 0.25,
+      "unit": "tsp",
+      "defining": false
+    },
+    {
+      "ref": "bell_pepper",
+      "stock": "peppers",
+      "display": "red bell pepper, small-diced",
+      "qty": 1,
+      "unit": "each",
+      "prep": "STOCK UNCONFIRMED as of this build -- the last bell peppers logged in this kitchen were bought 2026-08-02 with a use-by around 2026-08-06, three weeks before this card was written, so treat this as a fresh purchase to check rather than something already in the crisper. Small-diced means pieces about the size of a pea",
+      "defining": true
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs, lightly beaten",
+      "qty": 4,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "cold_cooked_rice",
+      "stock": "longgrainrice",
+      "display": "cold cooked jasmine rice, at least a day old",
+      "qty": 4,
+      "unit": "cups",
+      "prep": "COLD AND A DAY OLD IS NOT A PREFERENCE. Fresh rice is full of surface moisture and the grains are soft; a hot pan steams it into porridge. A night in the fridge dries the outside of each grain so it fries instead of mushing. If you are making this from the arroz tapado leftovers, that rice is already the right age. If cooking fresh for this, that means starting it the day before. Cooked rice has to go into the fridge within an hour of cooking -- rice left out overnight can grow a bacterium that survives reheating, so if it sat out all night, throw it away rather than use it here",
+      "defining": false
     },
     {
       "ref": "toasted_sesame_oil",
       "stock": "sesameoil",
       "display": "toasted sesame oil",
       "qty": 1,
-      "unit": "tbsp"
+      "unit": "tsp",
+      "prep": "the dark Kadoya bottle. This goes in at the very end, off the heat -- it is a finishing smell, not a cooking oil, and heat destroys it",
+      "defining": false
     },
     {
-      "ref": "vegetable_oil",
-      "display": "vegetable oil",
-      "qty": 2,
-      "unit": "tbsp"
+      "ref": "scallion_greens",
+      "stock": "greenonion",
+      "display": "scallion greens, thinly sliced",
+      "qty": 5,
+      "unit": "each",
+      "prep": "the dark green tops set aside from the scallion_whites above -- same bunch, second half, not a second purchase",
+      "defining": false
     },
     {
-      "ref": "black_pepper",
-      "display": "black pepper"
-    },
-    {
-      "ref": "1_cooked_chicken_breast",
-      "display": "1 cooked chicken breast, diced, or leftover beef",
-      "_rawQty": "optional"
-    },
-    {
-      "ref": "1_red_bell_pepper",
-      "display": "1 red bell pepper, diced small",
-      "_rawQty": "optional"
+      "ref": "msg",
+      "display": "MSG",
+      "qty": 1,
+      "unit": "pinch",
+      "optional": true,
+      "prep": "optional. Skip it if you do not have any -- nothing else in the recipe changes",
+      "defining": false
     }
   ],
   "equipment": [
-    "pan_nonstick_large",
-    "bowlset",
-    "spatula",
+    "cuttingboard",
     "knife_sharp",
-    "stovetop"
+    "scale_digital",
+    "blender_bullet",
+    "bowlset",
+    "mixingbowl_large",
+    "pot_small",
+    "stovetop",
+    "pan_stainless_large",
+    "thermometer",
+    "spatula",
+    "measuringcups",
+    "measuringspoons",
+    "papertowel",
+    "plates"
   ],
   "steps": [
     {
       "n": 1,
-      "text": "The rice has to be cold and at least a day old. This is not a preference.",
+      "text": "Process 5 medium scallion whites, 1 (2 1/2-inch) piece peeled and coarsely chopped ginger, and 16 peeled garlic cloves together in a mini food processor or blender, scraping down the sides of the bowl as needed, until finely chopped. Transfer to a medium heatproof bowl and add 1/2 teaspoon kosher salt.",
+      "sourceText": "Process 5 medium scallion whites, 1 (2 1/2-inch) piece peeled and coarsely chopped ginger, and 16 peeled garlic cloves together in a mini food processor or blender, scraping down the sides of the bowl as needed, until finely chopped. Transfer to a medium heatproof bowl and add 1/2 teaspoon kosher salt.",
       "uses": [
-        "cold_cooked_rice"
+        { "ref": "scallion_whites", "amount": 5, "unit": "each" },
+        { "ref": "ginger_piece", "amount": 1, "unit": "piece" },
+        { "ref": "garlic_cloves", "amount": 16, "unit": "each" },
+        { "ref": "kosher_salt", "amount": 0.5, "unit": "tsp" }
       ],
-      "look": "Fresh rice is full of surface moisture and the grains are soft. Put it in a hot pan and it steams, tears and turns to porridge. There is no technique that saves it.A night in the fridge dries the outside of each grain and firms it up, so the grains stay separate and fry instead of mushing. This is the single thing that decides whether fried rice works.Break up any clumps with your fingers before it goes near the pan. Cold rice compacts into a solid block and a spatula will not separate it once it is hot.",
-      "warn": "Cooked rice should have gone into the fridge within an hour of cooking, not been left out overnight. Rice left at room temperature can grow a bacterium that survives reheating. If it sat out all night, throw it away.",
-      "_inferred": [
-        "uses"
-      ]
+      "equipment": ["blender_bullet", "knife_sharp", "cuttingboard", "bowlset", "measuringspoons"],
+      "minutes": 8,
+      "heat": null,
+      "doneness": {
+        "test": "Stop when the mixture looks like a rough, wet paste with no piece bigger than a grain of rice. It will not go smooth like a sauce -- that is fine, it does not need to.",
+        "kind": "look"
+      },
+      "look": "SHE SAYS MINI FOOD PROCESSOR OR BLENDER -- this kitchen has no food processor, so this is the bullet blender, which is exactly the small-batch, high-shear job it is good for. Do it in short pulses rather than one long run, and scrape the sides down with a spatula between pulses so nothing sits untouched at the bottom.\n\n16 CLOVES is genuinely one whole head of garlic, not a handful. That is correct, not a typo.\n\nTHE BOWL MUST BE HEATPROOF because hot oil is about to go into it in the next step. A ceramic prep bowl from the 8-piece set works; do not use a thin plastic one."
     },
     {
       "n": 2,
-      "text": "Why this dish is here at all.",
-      "look": "Peru has a whole Chinese-Peruvian cuisine called chifa, from Chinese immigration in the 1800s. Soy sauce is standard in Peruvian home cooking and has its own Peruvian name, sillao.So the soy sauce and sesame oil you bought for the gyudon are not a detour into another cuisine. They open up more of your own.Lomo saltado is the same idea and the better-known one: beef strips seared hard with soy sauce, onion and tomato, served with fries and rice. You have a 1 kg sirloin tip roast in the freezer, which is the right cut for it. That is a future dish, but it is why this pantry earns its shelf space.",
-      "_inferred": []
+      "text": "Heat 1/2 cup neutral oil in a small saucepan over medium-high heat until 375°F or shimmering and very tiny bubbles form on the bottom of the pan. Carefully pour over the scallion mixture (careful, it will sizzle up) and stir to combine. Let cool to room temperature, about 40 minutes.",
+      "sourceText": "Heat 1/2 cup neutral oil in a small saucepan over medium-high heat until 375°F or shimmering and very tiny bubbles form on the bottom of the pan. Carefully pour over the scallion mixture (careful, it will sizzle up) and stir to combine. Let cool to room temperature, about 40 minutes.",
+      "uses": [
+        { "ref": "neutral_oil", "amount": 0.5, "unit": "cup" }
+      ],
+      "equipment": ["pot_small", "stovetop", "thermometer", "measuringcups"],
+      "minutes": 45,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The oil is ready when it shimmers and moves like water when you tilt the pan, with very small bubbles rising off the bottom -- not big rolling bubbles, and no smoke. If you have the thermometer in, that is 375F. If it starts smoking, take it off the burner for thirty seconds before continuing.",
+        "recheck": "This is a small volume of oil in a small pan, so it heats fast on induction. Watch it rather than walking away."
+      },
+      "doneness": {
+        "test": "Small, steady bubbles off the bottom of the pan and a shimmer across the surface. No smoke.",
+        "kind": "look"
+      },
+      "warn": "POUR SLOWLY AND STAND BACK. Hot oil hitting raw garlic and scallion sizzles up hard and can spit. Pour it in a thin stream down the side of the bowl, not straight into the middle, and keep your face and arms clear.",
+      "look": "'CAREFULLY POUR OVER' IS THE WHOLE SAFETY INSTRUCTION -- do not rush this part. Once it is poured and stirred, this needs no attention for 40 minutes. Do the next steps (weighing and cutting the chicken, dicing the pepper) while it cools rather than standing over it.\n\nTHIS IS THE PACHIKAY, and it is what carries the flavour through the whole rest of the dish -- both the chicken cook and the rice fry use it instead of plain oil. There is no shortcut version: everything after this step assumes it exists and is at least warm."
     },
     {
       "n": 3,
-      "text": "Beat the 3 eggs in a small bowl with a pinch of pepper. Heat 1 tbsp of vegetable oil in the non-stick pan on medium, pour the eggs in, and let them set into a thin flat sheet, about 2 minutes. Slide it onto a board, roll it up, and slice into ribbons.",
+      "text": "Toss 1 3/4 pounds chopped boneless, skinless chicken thighs, 2 tablespoons of the dark soy sauce, and 1/4 teaspoon ground cumin together in a large bowl.",
+      "sourceText": "Toss 1 3/4 pounds chopped boneless, skinless chicken thighs, 2 tablespoons of the dark soy sauce, and 1/4 teaspoon ground cumin together in a large bowl.",
       "uses": [
-        "eggs",
-        "vegetable_oil",
-        "black_pepper",
-        "1_red_bell_pepper"
+        { "ref": "chicken", "amount": 1.75, "unit": "lb" },
+        { "ref": "soy_sauce", "amount": 2, "unit": "tbsp" },
+        { "ref": "cumin", "amount": 0.25, "unit": "tsp" }
       ],
-      "equipment": [
-        "pan_nonstick_large",
-        "bowlset",
-        "knife_sharp",
-        "stovetop"
-      ],
-      "minutes": 2,
-      "heat": {
-        "surface": "stovetop",
-        "_needsTarget": true
+      "equipment": ["mixingbowl_large", "knife_sharp", "cuttingboard", "scale_digital", "measuringspoons"],
+      "minutes": 8,
+      "heat": null,
+      "doneness": {
+        "test": "Every piece should be glossy and coated, no dry patches or pools of liquid sitting separate in the bottom of the bowl.",
+        "kind": "look"
       },
-      "look": "You are making a thin omelette, not scrambled eggs. Do not stir it. Let it sit until the top is just set and no longer wet, then it lifts out in one piece.Rolling it like a carpet and cutting across gives you ribbons, which is how chaufa is served. Scrambled egg stirred through works and looks messier.Non-stick pan for this one, then switch to whichever pan for the rice.",
-      "_inferred": [
-        "uses",
-        "equipment",
-        "heat"
-      ]
+      "look": "WEIGH THE CHICKEN RAW, before cutting, so the protein figure on this card stays real. 1 3/4 lb is about 794 g.\n\nCHOPPED means bite-size pieces, roughly the width of your thumb -- even sizing matters more than exact sizing, because uneven pieces finish at different times.\n\nRAW CHICKEN: the board and knife go straight to hot soapy water once this step is done, and nothing else touches that board until they do."
     },
     {
       "n": 4,
-      "text": "Slice the 3 green onions thinly, whites and greens in separate piles. Chop the 2 garlic cloves fine. If you are adding chicken, beef or bell pepper, cut it small now.",
+      "text": "Heat a wok or large 12-inch cast iron skillet over high heat until almost smoking. Reduce the heat to medium high. Add half of the chicken and 1 1/2 teaspoons of the pachikay, and stir-fry until the chicken is cooked through and golden brown, 5 to 6 minutes. Transfer to a large bowl.",
+      "sourceText": "Heat a wok or large 12-inch cast iron skillet over high heat until almost smoking. Reduce the heat to medium high. Add half of the chicken and 1 1/2 teaspoons of the pachikay, and stir-fry until the chicken is cooked through and golden brown, 5 to 6 minutes. Transfer to a large bowl.",
       "uses": [
-        "green_onions",
-        "garlic_cloves",
-        "black_pepper",
-        "1_cooked_chicken_breast",
-        "1_red_bell_pepper"
+        { "ref": "chicken", "amount": 0, "optional": true }
       ],
-      "equipment": [
-        "knife_sharp"
-      ],
-      "look": "Everything gets cut before the pan gets hot. Fried rice takes about 5 minutes start to finish and there is no point in it where you can stop and chop something.",
-      "_inferred": [
-        "uses",
-        "equipment"
-      ]
+      "equipment": ["pan_stainless_large", "stovetop", "spatula", "thermometer"],
+      "minutes": 6,
+      "heat": {
+        "surface": "stovetop",
+        "target": "SHE SAYS WOK OR 12-INCH CAST IRON -- this kitchen has neither, so this is the large stainless pan, which is the one built for searing and browning meat (its own notes say so). Get it hot enough that a drop of water flicked in beads and rolls like mercury rather than hissing away, then add the pachikay oil, then the chicken. 'Almost smoking then reduce' is a gas instruction for a burner you can see; on this induction hob there is no flame to watch, so use the water test instead: once the chicken is in, ease off until the sizzle is steady rather than a roar.",
+        "recheck": "Check again after two minutes. A pan half full of cold chicken drops the temperature, and this hob recovers it fast."
+      },
+      "doneness": {
+        "test": "TWO TESTS. For colour: pieces should be a deep golden brown on the outside, not pale and not black. For doneness: push the thermometer into the thickest piece and read 165F -- colour alone will not tell you the middle is safe.",
+        "kind": "probe"
+      },
+      "warn": "STIR-FRY MEANS KEEP IT MOVING, unlike a sear where you leave meat undisturbed. Toss or turn the pieces every 30 to 60 seconds so every face gets some pan contact without any one face burning.",
+      "look": "HALF THE CHICKEN means eyeball it roughly in half, not weigh it -- there is no need to be precise here, the two batches just need to fit the pan without crowding.\n\n1 1/2 TEASPOONS OF THE PACHIKAY: stir the pachikay jar first, the solids settle. This is one of three uses of it across the recipe, so do not use more than a third here."
     },
     {
       "n": 5,
-      "text": "Heat the pan on high with 1 tbsp of vegetable oil until the oil slides like water when you tilt the pan. Add the garlic and the white parts of the green onions and stir for 30 seconds. Add any chicken, beef or pepper and stir for 1 minute.",
+      "text": "Repeat cooking the remaining chicken with 1 1/2 teaspoons of the pachikay. Keep this chicken in the skillet. Add 1 small-diced medium red bell pepper and stir-fry until the pepper is crisp-tender, 1 to 2 minutes. Turn off the heat. Transfer to the bowl with the remaining chicken.",
+      "sourceText": "Repeat cooking the remaining chicken with 1 1/2 teaspoons of the pachikay. Keep this chicken in the skillet. Add 1 small-diced medium red bell pepper and stir-fry until the pepper is crisp-tender, 1 to 2 minutes. Turn off the heat. Transfer to the bowl with the remaining chicken.",
       "uses": [
-        "green_onions",
-        "garlic_cloves",
-        "vegetable_oil",
-        "black_pepper",
-        "1_cooked_chicken_breast",
-        "1_red_bell_pepper"
+        { "ref": "chicken", "amount": 0, "optional": true },
+        { "ref": "bell_pepper", "amount": 1, "unit": "each" }
       ],
-      "equipment": [
-        "pan_nonstick_large"
-      ],
-      "minutes": 1,
-      "look": "High heat here, unlike almost everything else in this app. Fried rice wants the pan hot enough to drive moisture off fast, and a cooler pan gives you steamed rice with soy sauce on it.",
-      "warn": "30 seconds on the garlic. On high heat it burns faster than anywhere else in this app, and burnt garlic makes the whole pan bitter.",
-      "_inferred": [
-        "uses",
-        "equipment"
-      ]
+      "equipment": ["pan_stainless_large", "stovetop", "spatula", "thermometer", "knife_sharp", "cuttingboard"],
+      "minutes": 8,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Same as step 4: hot enough for a steady, continuous sizzle from the moment the chicken lands.",
+        "recheck": "The pan is already hot from the first batch, so this one can catch faster -- watch it rather than assuming it needs the same time."
+      },
+      "doneness": {
+        "test": "Chicken: same 165F thermometer check as step 4. Pepper: crisp-tender means it has softened at the edges and smells sweet rather than raw, but a piece still gives a slight resistance when you bite it rather than going fully soft -- think just past raw, well short of mushy.",
+        "kind": "probe"
+      },
+      "look": "THIS SECOND BATCH KEEPS THE CHICKEN IN THE PAN -- unlike batch one, do not transfer it out before the pepper goes in. The pepper cooks alongside it for the last minute or two.\n\nSMALL-DICED means pieces about the size of a pea, same scale as the pachikay paste, so nothing is a big enough chunk to still be crunchy once the dish is finished."
     },
     {
       "n": 6,
-      "text": "Add the 3 cups of cold rice. Press it flat with the spatula, leave it 1 minute, then toss and press flat again. Repeat for about 3 minutes total.",
+      "text": "Wipe out the pan with paper towels and scrape up any browned or burned bits. Place back over medium-high heat. Add the remaining 1 1/2 teaspoons pachikay and swirl the pan so the oil coats the bottom. Pour in 4 lightly beaten large eggs. Cook, stirring constantly, until the eggs are just scrambled and set, 20 to 30 seconds.",
+      "sourceText": "Wipe out the pan with paper towels and scrape up any browned or burned bits. Place back over medium-high heat. Add the remaining 1 1/2 teaspoons pachikay and swirl the pan so the oil coats the bottom. Pour in 4 lightly beaten large eggs. Cook, stirring constantly, until the eggs are just scrambled and set, 20 to 30 seconds.",
       "uses": [
-        "cold_cooked_rice"
+        { "ref": "eggs", "amount": 4, "unit": "each" }
       ],
-      "equipment": [
-        "spatula"
-      ],
+      "equipment": ["pan_stainless_large", "stovetop", "spatula", "papertowel"],
       "minutes": 3,
-      "look": "Pressing and leaving it is the technique. Constant stirring keeps the rice moving and it never gets hot enough to fry. Flat against the pan for a minute at a time is what browns it.Done looks like: the grains have separated, some of them have picked up a few toasted brown spots, and the rice moves freely in the pan rather than clumping.",
-      "_inferred": [
-        "uses",
-        "equipment"
-      ]
+      "heat": {
+        "surface": "stovetop",
+        "target": "Medium-high, same range as the chicken batches. The pachikay oil should shimmer and coat the pan when you swirl it before the eggs go in.",
+        "recheck": null
+      },
+      "doneness": {
+        "test": "Just set means soft curds that are no longer wet or pooling liquid, but not dry or rubbery -- this happens fast, 20 to 30 seconds, so watch it rather than stepping away.",
+        "kind": "look"
+      },
+      "warn": "WIPING OUT BURNED BITS MATTERS HERE. Anything scorched from the chicken batches turns bitter if it stays in the pan through the eggs and rice.",
+      "look": "THIS IS THE LAST OF THE THREE PACHIKAY PORTIONS -- 1 1/2 teaspoons each at steps 4, 5 and 6 uses the whole 4 1/2 teaspoons.\n\nSTIRRING CONSTANTLY here means small soft curds through the rice, not a solid sheet like an omelette -- a different technique from how the Easy Sesame Chicken card's egg step in this app works, and that is deliberate, this is how her chaufa method wants it."
     },
     {
       "n": 7,
-      "text": "Pour the 3 tbsp of soy sauce around the edge of the pan rather than into the middle. Toss for 1 minute. Turn the heat off, then add the egg ribbons, the green parts of the green onions and the 1 tbsp of sesame oil. Toss once more.",
+      "text": "Add 1 1/2 teaspoons pachikay if the pan is dry. Add 4 cups day-old cooked jasmine rice. Stir-fry, tossing constantly and breaking up any clumps, until the rice grains are separated and heated through, 2 to 3 minutes.",
+      "sourceText": "Add 1 1/2 teaspoons pachikay if the pan is dry. Add 4 cups day-old cooked jasmine rice. Stir-fry, tossing constantly and breaking up any clumps, until the rice grains are separated and heated through, 2 to 3 minutes.",
       "uses": [
-        "green_onions",
-        "soy_sauce",
-        "toasted_sesame_oil"
+        { "ref": "cold_cooked_rice", "amount": 4, "unit": "cups" }
       ],
-      "equipment": [
-        "pan_nonstick_large"
-      ],
-      "look": "Around the edge, not into the middle. Soy sauce hitting hot bare pan cooks for a second before it reaches the rice, which deepens it. Poured into the middle it just wets the rice.Sesame oil goes in off the heat, always. It is a finishing oil, not a cooking oil. Heat destroys the nutty smell that is the entire reason it is in the dish.",
-      "warn": "Toasted sesame oil is strong. One tablespoon in three cups of rice is right; double it and the dish tastes of nothing else.",
-      "_inferred": [
-        "uses",
-        "equipment"
-      ]
+      "equipment": ["pan_stainless_large", "stovetop", "spatula", "measuringcups"],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Hold the pan at medium-high. If the rice starts sticking hard rather than sliding when you toss it, the pan is dry -- that is what the optional extra pachikay in her instruction is for.",
+        "recheck": null
+      },
+      "doneness": {
+        "test": "Break up any clumps with the spatula edge as you go. Done looks like every grain moving separately in the pan and steam rising off it, rather than a solid block.",
+        "kind": "look"
+      },
+      "look": "BREAK UP CLUMPS BEFORE THEY HIT THE PAN if you can -- cold rice compacts into a solid mass in the fridge, and a spatula alone will not separate a big block once it is hot. Break it apart with your fingers first if it came out of the container in one piece."
     },
     {
       "n": 8,
-      "text": "Roughly 32 g of protein across 3 bowls, so about 11 g each. With a diced cooked chicken breast stirred in it is about 26 g.",
+      "text": "Return the chicken and bell pepper mixture to the pan and stir-fry until heated through, 2 to 3 minutes.",
+      "sourceText": "Return the chicken and bell pepper mixture to the pan and stir-fry until heated through, 2 to 3 minutes.",
+      "uses": [],
+      "equipment": ["pan_stainless_large", "stovetop", "spatula"],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Same medium-high as the previous step.",
+        "recheck": null
+      },
+      "doneness": {
+        "test": "Everything looks and feels hot again -- the chicken and pepper were sitting off-heat while the eggs and rice cooked, so this is bringing them back up, not cooking anything further.",
+        "kind": "look"
+      },
+      "look": "EVERYTHING IS NOW IN ONE PAN: the two chicken batches, the pepper, the eggs, the rice. Toss rather than stir, so it mixes without turning to mush."
+    },
+    {
+      "n": 9,
+      "text": "Reduce the heat to medium low. Drizzle with the remaining 2 tablespoons dark soy sauce and 1 teaspoon toasted sesame oil, and toss to coat evenly. Add 5 thinly sliced medium scallion greens and 1 pinch MSG if desired, and toss to combine. Garnish with more thinly sliced scallion greens if desired.",
+      "sourceText": "Reduce the heat to medium low. Drizzle with the remaining 2 tablespoons dark soy sauce and 1 teaspoon toasted sesame oil, and toss to coat evenly. Add 5 thinly sliced medium scallion greens and 1 pinch MSG if desired, and toss to combine. Garnish with more thinly sliced scallion greens if desired.",
       "uses": [
-        "cold_cooked_rice",
-        "1_cooked_chicken_breast"
+        { "ref": "soy_sauce", "amount": 2, "unit": "tbsp" },
+        { "ref": "toasted_sesame_oil", "amount": 1, "unit": "tsp" },
+        { "ref": "scallion_greens", "amount": 5, "unit": "each" },
+        { "ref": "msg", "optional": true }
       ],
-      "look": "The arithmetic: 19 g from the 3 eggs, 13 g from 3 cups of cooked rice. Adding a 200 g cooked chicken breast puts in another 45 g, which is what takes it from a side dish to a dinner.Eleven grams is low and this is worth saying plainly. Egg-only chaufa is a side, not a main. It is written that way because that version needs nothing thawed and nothing extra bought, so it can never be blocked. If you want it to be dinner, thaw a chicken breast the night before.Eat it the day you make it. Fried rice reheated a second time goes hard and dry, and you are already reheating rice once to make it.",
-      "_inferred": [
-        "uses"
-      ]
+      "equipment": ["pan_stainless_large", "stovetop", "spatula", "knife_sharp", "cuttingboard", "plates"],
+      "minutes": 3,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Turn the heat down a step from medium-high. Nothing more needs to cook hard from here -- this is folding in the last flavours, not browning anything.",
+        "recheck": null
+      },
+      "doneness": {
+        "test": "None beyond looking evenly coated -- once the sesame oil and remaining soy sauce are tossed through and the scallion greens are in, it is done.",
+        "kind": "look"
+      },
+      "look": "SESAME OIL GOES IN LAST, ALWAYS. It is a finishing smell, not a cooking oil, and heat destroys the nutty smell that is the entire reason it is in the dish.\n\nMSG IS OPTIONAL. Skip it if you do not keep it in the cupboard -- nothing else changes.\n\nEAT IT THE DAY YOU MAKE IT. Fried rice reheated a second time goes hard and dry, and this recipe already reheats the rice once to make it. Leftovers keep 3 to 4 days in the fridge or up to 2 months frozen, per her own storage note, but the texture is best fresh."
     }
-  ],
-  "_migration": {
-    "from": "kitchen.html DISHES array",
-    "at": "2026-08-09",
-    "legacyNeeds": [
-      "longgrainrice",
-      "eggs",
-      "soy",
-      "sesameoil",
-      "greenonion",
-      "garlic",
-      "oil"
-    ],
-    "note": "Fields under _inferred were guessed by migrate-recipes.mjs and need a human pass."
-  },
-  "provenance": {
-    "tier": "authored",
-    "cooked": false,
-    "statement": "WRITTEN BY AN AGENT. No published source. Nobody has cooked these quantities. Treat every number as a first draft.",
-    "sources": []
-  }
+  ]
 }
