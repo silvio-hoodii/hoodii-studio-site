@@ -46,7 +46,9 @@ function cdp(path) {
       (r) => {
         let d = '';
         r.on('data', (c) => { d += c; });
-        r.on('end', () => { try { resolve(JSON.parse(d)); } catch (e) { reject(new Error(`${d.slice(0, 120)}`)); } });
+        r.on('end', () => {
+          try { resolve(JSON.parse(d)); } catch { reject(new Error(d.slice(0, 120))); }
+        });
       },
     );
     req.on('error', () => reject(new Error(
