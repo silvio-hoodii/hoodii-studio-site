@@ -1,0 +1,15 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+const P = 'content/gym/validate.mjs';
+const s = readFileSync(P, 'utf8');
+const start = s.indexOf('\n/* NO CUE WITHOUT A QUOTE.');
+const endMark = 'out.push(`ok    [swim-coaching.json]';
+const endLine = s.indexOf(endMark);
+const end = s.indexOf('\n}\n', endLine) + 3;
+if (start < 0 || endLine < 0) throw new Error('block not found');
+const block = s.slice(start, end);
+let rest = s.slice(0, start) + s.slice(end);
+const printAt = rest.indexOf("console.log(out.join('\n'));");
+if (printAt < 0) throw new Error('print line not found');
+rest = rest.slice(0, printAt) + block.trim() + '\n\n' + rest.slice(printAt);
+writeFileSync(P, rest, 'utf8');
+console.log('moved the grounding gate above the report');

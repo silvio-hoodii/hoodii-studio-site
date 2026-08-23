@@ -758,6 +758,14 @@
       "since": "2026-08-16",
       "src": "event",
       "note": "Catalogue row added 2026-08-22. Great Value, 60 g, arrived 2026-08-16 and narrowed the `warm spices` gap that day, but it never got a row in items.json, so any recipe declaring `stock: \"cinnamon\"` failed validation. State without identity, exactly like sesameseeds."
+    },
+    "potatoes_red": {
+      "n": "red potatoes",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-14",
+      "src": "event",
+      "note": "Catalogue row added 2026-08-22. About 9, from a food bank donation bag, photo 20260814_121248. Variety was not known to him and \"red\" is his description of the skin. Third row found this week that had STATE from an event but no IDENTITY in this file, after sesameseeds and cinnamon, and each one silently failed any recipe that pointed at it."
     }
   }
 }

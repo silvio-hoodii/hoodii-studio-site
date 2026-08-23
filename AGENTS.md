@@ -249,6 +249,16 @@ harmless, and PSN is not surfaced on the hub.
 - Production deploys from `main`.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
   All four, before any push.
+- **A source that 403s the fetcher is not a source that cannot be checked.** Use
+  `node scripts/read-source.mjs <url> ["<regex>"]`, which reads the page in the real Chrome on CDP
+  9222 and prints the rendered text. On 2026-08-22 swimming.org returned 403, a swim cue was
+  downgraded to "convention", and the file was made to say no sentence from that page could be
+  quoted "by anyone reading this". It loads fine in a browser. Silvio caught it in one line. Reading
+  it then showed the file's note ABOUT that source was also wrong: it claimed nine core aquatic
+  skills and listed nine, and the page names four (Floatation and Balance, Rotation and Orientation,
+  Streamlining, Aquatic Breathing). Nobody had opened it, so the detail had been written from
+  memory. Before writing "this cannot be verified", verify it. Before trusting a note about a
+  source, read the source.
 - **Touching `content/gym/program.json`? Run `node scripts/check-ladder.mjs`.** It reads his real
   working weights out of Neon and asks one question of every logged lift: does maxing out the rep
   range actually earn the next weight? Double progression is a ladder, and a rung that cannot be

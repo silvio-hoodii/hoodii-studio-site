@@ -1,0 +1,264 @@
+{
+  "id": "freshpasta",
+  "name": "Fresh Pasta, Rolled by Hand",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "You asked whether pasta needs the flattening machine you do not have. It does not. A rolling pin is how this was done for centuries and it is what you already own, bought 2026-08-08 with the pastry mat. Flour and eggs are the entire ingredient list and you have 2.5 kg of one and 30 of the other. This is the dough only, cut into noodles: what sauce goes on it is a separate decision on a separate day.",
+  "time": {
+    "activeMin": 45,
+    "totalMin": 90,
+    "note": "her total is 60 minutes and that assumes a machine. Rolling by hand is the slow part, so budget 90 and treat 30 of it as the dough resting with nobody in the room"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 14,
+    "proteinMath": "HER FIGURE: King Arthur publishes 14 g of protein per serving over 4 to 5 servings. It checks out from the ingredients: 3 large eggs is about 19 g and 280 g of all-purpose flour is about 29 g at roughly 10 g per 100 g, so about 48 g total, which is 12 g across four or 10 across five. Her 14 is at the generous end of that. Either way this is flour and eggs, so the protein is real but modest, and the sauce is where a meal gets its own."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is King Arthur Baking's own sentence, in her order, with her amounts and her 4 to 5 servings. TWO deliberate selections, both branches she herself offers. Her step 2 is the food-processor method and her step 3 is the by-hand method: only step 3 is on this card, because there is no food processor here and she wrote the alternative herself. Her step 6 offers machine cutting or hand cutting, and the hand-cut sentences are the ones quoted. ONE real gap remains and it is stated where it lands: her step 5 rolls the dough through a pasta machine and gives no by-hand alternative. That method is not invented here. King Arthur published a companion article on rolling pasta without a machine, and its sentences are quoted in step 5's note with the article cited, including the test for thinness, which is theirs and not mine.",
+    "sources": [
+      {
+        "name": "King Arthur Baking",
+        "url": "https://www.kingarthurbaking.com/recipes/fresh-pasta-recipe",
+        "primary": true,
+        "note": "Fresh Pasta. 4.5 out of 5 from 26 ratings, 4 to 5 servings, 1 hour. Fetched 2026-08-22 from the page's own JSON-LD. Four ingredients verbatim; instructions 1, 3, 4, 5, 6, 7 and 8 verbatim. Instruction 2 is the food-processor branch and is deliberately omitted."
+      },
+      {
+        "name": "King Arthur Baking",
+        "url": "https://www.kingarthurbaking.com/blog/2025/03/10/homemade-pasta-without-machine",
+        "primary": false,
+        "note": "How to make homemade pasta without a machine, read 2026-08-22. Source of the rolling-pin guidance quoted in step 5: the pin shape, the 1 mm target, the flour advice, the blow test for thinness, and the rest-if-it-snaps-back fix. Not in the recipe's JSON-LD capture."
+      }
+    ],
+    "readHash": "d17398ed",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "flour",
+      "stock": "flour",
+      "display": "all-purpose flour",
+      "qty": 280,
+      "unit": "g",
+      "prep": "her line gives 2 1/3 cups or 280 g. WEIGH IT. Her own step 1 is about this and pasta is the dish where it matters most: a heavy scoop can add 30 g and turn a soft dough into a dry crumbly one",
+      "defining": true
+    },
+    {
+      "ref": "salt",
+      "display": "table salt",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "she says TABLE salt, which is finer than the kosher flakes that are the default here. Kosher works, it just measures differently by volume, so err slightly generous",
+      "defining": false
+    },
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 3,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "semolina",
+      "display": "semolina flour, for dusting",
+      "qty": 1,
+      "unit": "handful",
+      "staple": true,
+      "insteadOf": "semolina flour",
+      "defining": false,
+      "prep": "USE ALL-PURPOSE INSTEAD. There is no semolina here. Semolina is coarser and gritty, so it sits on the surface and keeps cut noodles from welding together, where fine flour partly absorbs into the dough. All-purpose does the job, you just need to be more generous with it and toss the nests more often. A bag of semolina is cheap and would be the single upgrade to this dish"
+    }
+  ],
+  "equipment": [
+    "stovetop",
+    "bowlset",
+    "fork",
+    "rollingpin",
+    "pastrymat",
+    "knife_sharp",
+    "cuttingboard",
+    "bakingtray",
+    "parchment",
+    "pot_large",
+    "colander",
+    "scale_digital",
+    "measuringcups",
+    "measuringspoons",
+    "teatowel"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Weigh your flour; or measure it by gently spooning it into a cup, then sweeping off any excess.",
+      "sourceText": "Weigh your flour; or measure it by gently spooning it into a cup, then sweeping off any excess.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 280,
+          "unit": "g"
+        }
+      ],
+      "equipment": [
+        "scale_digital",
+        "measuringcups",
+        "bowlset"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "The scale reads 280 g. That is the whole test and it is why the scale was bought.",
+        "kind": "look"
+      },
+      "look": "SHE MADE THIS A STEP OF ITS OWN, which almost no recipe does, and that tells you how much it matters here. Pasta is flour and eggs and nothing else: there is no liquid to adjust with and no leavening to hide behind. Thirty grams too much flour is the difference between a supple dough and a dry one that cracks as you roll it.\n\nUSE THE SCALE. 280 g. If you measure by cup instead, her method is exact: spoon the flour gently INTO the cup and sweep the top level with a knife. Do not scoop the cup through the bag, which packs it and can add a fifth more than you wanted."
+    },
+    {
+      "n": 2,
+      "text": "To make the dough by hand: In a medium bowl, combine the flour and salt. Transfer the flour mixture to a clean work surface. Create a large well in the center, then crack the eggs directly into the well. Scramble them with your fingers or a fork. Draw flour evenly from all sides of the well into the center, mixing it into the eggs. Continue to draw flour until a soft, loose dough forms. Switch to a flexible bowl scraper; use a cutting motion to further incorporate moisture from the eggs into the flour. The dough will seem dry at first but continue to fold and press it over on itself until it comes together, then knead on an unfloured surface until the dough is smooth and firm, 1 to 2 minutes.",
+      "sourceText": "To make the dough by hand: In a medium bowl, combine the flour and salt. Transfer the flour mixture to a clean work surface. Create a large well in the center, then crack the eggs directly into the well. Scramble them with your fingers or a fork. Draw flour evenly from all sides of the well into the center, mixing it into the eggs. Continue to draw flour until a soft, loose dough forms. Switch to a flexible bowl scraper; use a cutting motion to further incorporate moisture from the eggs into the flour. The dough will seem dry at first but continue to fold and press it over on itself until it comes together, then knead on an unfloured surface until the dough is smooth and firm, 1 to 2 minutes.",
+      "uses": [
+        {
+          "ref": "salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "ref": "eggs",
+          "amount": 3,
+          "unit": "each"
+        },
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "bowlset",
+        "pastrymat",
+        "fork"
+      ],
+      "minutes": 15,
+      "heat": null,
+      "doneness": {
+        "test": "SMOOTH AND FIRM, hers. Press a thumb into the ball: the surface should be even and slightly satiny rather than shaggy and torn, and it should feel firm like putty, NOT soft like bread dough. It will still look a bit rough compared to bread and that is correct for pasta.",
+        "kind": "touch"
+      },
+      "look": "THIS IS THE BY-HAND BRANCH AND IT IS HERS. Her recipe offers a food-processor method first; there is no food processor here, so this card carries the alternative she wrote herself rather than an adaptation.\n\nTHE WELL is a volcano of flour on the mat with a crater in the middle deep enough to hold three eggs without them escaping. Build the walls higher than you think. If a wall breaks, egg runs across the counter and there is no fixing it gracefully.\n\nDRAW FLOUR FROM ALL SIDES means pulling a little at a time from the inner edge of the wall into the egg with the fork, keeping the wall intact as long as you can. It is slow at first and then suddenly comes together.\n\nNO BOWL SCRAPER HERE. She switches to one; the flexible silicone spatula does the same cutting motion, and so does the flat of a wide knife.\n\nIT WILL SEEM DRY AND YOU WILL WANT TO ADD WATER. She says so in the step, which is the reason to trust it. Do not add water. Keep folding and pressing and the egg redistributes. Adding water is the mistake that produces sticky dough two minutes later.\n\nKNEAD ON AN UNFLOURED SURFACE, hers again, and it is deliberate: the dough needs a slight grip on the counter to stretch against. Flour here makes it slide and it will not develop."
+    },
+    {
+      "n": 3,
+      "text": "Wrap the dough tightly with plastic or your favorite reusable wrap. Let it rest for at least 30 minutes at room temperature, or up to overnight in the refrigerator. (If the dough is refrigerated, it will need to come to room temperature for at least 30 minutes before moving on to the next step.)",
+      "sourceText": "Wrap the dough tightly with plastic or your favorite reusable wrap. Let it rest for at least 30 minutes at room temperature, or up to overnight in the refrigerator. (If the dough is refrigerated, it will need to come to room temperature for at least 30 minutes before moving on to the next step.)",
+      "uses": [],
+      "equipment": [
+        "bowlset",
+        "teatowel"
+      ],
+      "minutes": 30,
+      "heat": null,
+      "doneness": {
+        "test": "Thirty minutes on a timer. Then press a thumb into it: it should dent easily and stay dented, where before resting it would have pushed back. That softening is the gluten relaxing and it is the whole point.",
+        "kind": "touch"
+      },
+      "look": "NO PLASTIC WRAP IN THIS KITCHEN, and she says 'or your favorite reusable wrap', so a covered bowl is inside her instruction rather than a departure. Put the ball in a prep bowl with a plate over the top, or the second mixing bowl inverted over it. The only job is stopping the surface drying into a crust, because a dried skin tears when you roll it.\n\nDO NOT SKIP THIS AND DO NOT SHORTEN IT. Freshly kneaded pasta dough fights back: you roll it thin, it springs straight back thicker. Thirty minutes of rest is what makes the rolling possible at all, and skipping it is the single most common reason hand-rolled pasta defeats people.\n\nTHIRTY MINUTES IS FREE TIME. Clear the counter, get the tray lined with parchment, and put the big pot of water on later rather than now."
+    },
+    {
+      "n": 4,
+      "text": "Divide the dough into two pieces (about 220g each). Working with one piece at a time (keep the other piece covered), dust both sides of the dough with flour to prevent it from sticking. Roll the dough through a pasta machine once on the largest setting. Fold the dough in thirds like a letter (this helps it become a rectangular shape) before rolling it a second time on the largest setting. Adjust the pasta machine to the next increment (one step thinner) and pass the dough through, flouring as necessary. Continue adjusting the setting and rolling the dough through the machine until you’ve reached your desired thickness (we like between setting seven and nine on the Atlas 150 Pasta Machine).",
+      "sourceText": "Divide the dough into two pieces (about 220g each). Working with one piece at a time (keep the other piece covered), dust both sides of the dough with flour to prevent it from sticking. Roll the dough through a pasta machine once on the largest setting. Fold the dough in thirds like a letter (this helps it become a rectangular shape) before rolling it a second time on the largest setting. Adjust the pasta machine to the next increment (one step thinner) and pass the dough through, flouring as necessary. Continue adjusting the setting and rolling the dough through the machine until you’ve reached your desired thickness (we like between setting seven and nine on the Atlas 150 Pasta Machine).",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "rollingpin",
+        "pastrymat",
+        "scale_digital"
+      ],
+      "minutes": 30,
+      "heat": null,
+      "doneness": {
+        "test": "KING ARTHUR'S OWN TEST, and it is the best beginner test in this whole app. Line the rolled-out sheet up to the edge of the table, bend down so your mouth is level with the table, and blow on it. IF THE DOUGH RUFFLES AS YOU BLOW, IT IS THIN ENOUGH. If it just sits there, keep rolling. Their target is roughly 1 mm, and they say a little thinner or thicker is fine.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE STEP YOU ASKED ABOUT. Her step is written for a pasta machine, the crank-handled roller you were thinking of, and this kitchen does not have one. She gives no by-hand alternative here, so the method below is NOT invented: it is King Arthur's own, from their article on making pasta without a machine, quoted.\n\nTHEIR WORDS ON THE PIN: 'Jen recommends a long, straight, non-tapered French rolling pin, as the straight shape will help make more even noodles.' Yours is a standard pin rather than a French one. It still works; a tapered pin just makes the sheet slightly less even at the edges, and the edges are the offcuts anyway.\n\nTHEIR WORDS ON FLOUR: 'Prep your work surface with an ample dusting of flour, to prevent sticking. Never be worried about how much flour you use on your work surface, since most of it will come off while boiling the noodles.' This is the opposite of the bread and pizza advice and it surprises people. Be generous here.\n\nTHEIR WORDS ON THE DOUGH FIGHTING BACK: 'If the dough is too strong, it may start to snap back and become difficult to roll. Like bread dough, the gluten just needs a few minutes to relax: Let the covered dough rest for 5 to 10 minutes, then return to rolling.' Expect this. It is not you doing it wrong.\n\nHOW IT ACTUALLY GOES: work from the centre outwards, turn the sheet a quarter turn every few passes so it stays roughly even, and keep the piece you are not working on covered so it does not dry out. STILL DO HER LETTER FOLD once early on, it squares the sheet up and makes the cutting tidier.\n\nIT IS PHYSICAL AND IT TAKES A WHILE. Half an hour for both pieces is realistic the first time. This is the honest cost of not owning the machine, and it is the only cost."
+    },
+    {
+      "n": 5,
+      "text": "Cut the sheets of pasta into 12\"-long pieces. Dust a sheet lightly with flour, then pass it through the noodle cutter on your pasta machine. Place noodles onto a semolina-dusted baking sheet and toss to coat lightly. (To cut the sheets by hand, lightly coat the top of one sheet with semolina flour, then loosely roll up both short ends toward the center so they meet in the middle. Cut the rolled-up dough into strips of your desired thickness, and unroll.) Once the noodles are cut and coated with semolina flour, coil the pasta into loose mounds (“nests”) and set them aside on a parchment-lined baking sheet, covered, until you’re ready to boil them. Repeat with the remaining pieces of dough.",
+      "sourceText": "Cut the sheets of pasta into 12\"-long pieces. Dust a sheet lightly with flour, then pass it through the noodle cutter on your pasta machine. Place noodles onto a semolina-dusted baking sheet and toss to coat lightly. (To cut the sheets by hand, lightly coat the top of one sheet with semolina flour, then loosely roll up both short ends toward the center so they meet in the middle. Cut the rolled-up dough into strips of your desired thickness, and unroll.) Once the noodles are cut and coated with semolina flour, coil the pasta into loose mounds (“nests”) and set them aside on a parchment-lined baking sheet, covered, until you’re ready to boil them. Repeat with the remaining pieces of dough.",
+      "uses": [
+        {
+          "ref": "semolina",
+          "amount": 1,
+          "unit": "handful"
+        }
+      ],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard",
+        "bakingtray",
+        "parchment",
+        "teatowel"
+      ],
+      "minutes": 15,
+      "heat": null,
+      "doneness": {
+        "test": "Unroll one cut strip and let it hang from your fingers. It should come apart cleanly as a single ribbon. If several strips cling together as one lump, there was not enough flour between the layers: toss the whole lot with more before nesting them.",
+        "kind": "look"
+      },
+      "look": "THE HAND-CUT METHOD IS IN HER OWN STEP, in the brackets, so nothing here is invented. Flour the top of the sheet, roll BOTH short ends in towards the middle until they meet, then cut across the double roll and unroll each piece. Rolling from both ends rather than one means the strips are half as long to unravel and far less likely to tangle.\n\nWIDTH IS YOURS. About 6 mm gives you tagliatelle, thinner gives fettuccine-ish, wider gives pappardelle. Cut them as evenly as you can so they cook at the same rate, which is the same rule as the onions.\n\nSEMOLINA IS WHAT SHE DUSTS WITH AND THERE IS NONE HERE. All-purpose stands in and works, it just absorbs into the dough a little rather than sitting on top, so use more of it and re-toss the nests once or twice while you finish the second piece.\n\nNESTS, LOOSE, NOT PACKED. A tight coil welds itself together within twenty minutes. Loose mounds on the parchment-lined tray, covered with a tea towel.\n\nCOOK THEM TODAY IF YOU CAN. Fresh pasta on a tray is at its best within a few hours. It also freezes well ON THE TRAY first, then bagged once solid, and goes into boiling water straight from frozen with a minute added."
+    },
+    {
+      "n": 6,
+      "text": "To cook the fresh pasta, bring 4 quarts salted water to a boil. Drop the pasta into the boiling water, stir, then boil gently for 3 to 4 minutes.",
+      "sourceText": "To cook the fresh pasta, bring 4 quarts salted water to a boil. Drop the pasta into the boiling water, stir, then boil gently for 3 to 4 minutes.",
+      "uses": [],
+      "equipment": [
+        "stovetop",
+        "pot_large",
+        "measuringspoons"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A rolling boil to start: the whole surface moving and breaking, not just a few bubbles at the edge. Once the pasta is in, back off until it is bubbling steadily but not thrashing, which is her 'boil gently'. Fresh pasta is soft and a violent boil tears it.",
+        "recheck": "The moment the pasta goes in the boil drops. Wait for it to come back, then turn down to hold the gentle bubble. Check again after a minute."
+      },
+      "doneness": {
+        "test": "THREE TO FOUR MINUTES IS HERS AND FRESH PASTA IS FAST, so start tasting at 2. Fish one strand out, let it cool a second, and bite it. Done is tender the whole way through with no chalky or floury core, and it happens much sooner than dried pasta trains you to expect. When in doubt pull it early, because it carries on softening in the sauce.",
+        "kind": "taste"
+      },
+      "look": "FOUR QUARTS IS ABOUT 3.8 LITRES, so the large pot, filled maybe two thirds. Fresh pasta sheds a lot of starch and needs room; a crowded pot glues it together.\n\nSALT THE WATER PROPERLY. It should taste noticeably salty. This is the only chance to season the pasta itself rather than the sauce sitting on it, and unsalted pasta water is why home pasta often tastes flat.\n\nDO NOT ADD OIL TO THE WATER. It coats the strands and stops sauce sticking to them later.\n\nSTIR IN THE FIRST TEN SECONDS and again once after. Fresh noodles sink and stick to the bottom and to each other in the first moments, and after that they are fine.\n\nSAVE A MUGFUL OF THE WATER before you drain. Starchy pasta water is what makes a sauce cling instead of sliding off, and it is free."
+    },
+    {
+      "n": 7,
+      "text": "Drain the noodles and serve immediately with your sauce of choice.",
+      "sourceText": "Drain the noodles and serve immediately with your sauce of choice.",
+      "uses": [],
+      "equipment": [
+        "colander",
+        "pot_large"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Nothing to test. Drained and on the plate.",
+        "kind": "look"
+      },
+      "look": "IMMEDIATELY IS A REAL INSTRUCTION. Fresh pasta sitting in a colander clumps within a minute or two, much faster than dried does. Have the sauce hot and ready BEFORE you drain, not after.\n\nDRAIN, DO NOT RINSE. Rinsing washes off the starch that makes sauce stick.\n\nWHAT YOU HAVE FOR IT TODAY: the pesto, the jarred tomato sauce or the tin of diced tomatoes with garlic, browned ground beef, parmesan, the grape tomatoes. The caramelised onions if you have made a batch. This card deliberately stops at plain noodles, because you said the dough was the hard part and the toppings could be decided from what is in the fridge."
+    }
+  ]
+}

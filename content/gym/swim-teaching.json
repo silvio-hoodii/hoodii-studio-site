@@ -74,9 +74,11 @@
           "cue": "Face in, arms out, let the legs come up on their own. Do nothing. Then roll over and do the same on the back.",
           "test": "Do they stay up without moving? If the legs sink the moment they stop kicking, they are not floating yet and there is no point talking about a stroke.",
           "why": "Floating on the front and on the back is Stage 1 of the Swim England framework, alongside submerging the face and blowing bubbles. It comes before travel, not after.",
-          "confidence": "convention",
-          "grounding": "Downgraded from \"sourced\" on 2026-08-22. It was credited to the Swim England Learn to Swim Framework, which does list floatation among its core aquatic skills, but swimming.org returns HTTP 403 to any fetch, so no sentence from it can be quoted or checked by anyone reading this. Teaching floating before strokes is universal practice. It does not get to claim a citation nobody can open.",
-          "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/"
+          "confidence": "sourced",
+          "grounding": "Floatation and Balance is the FIRST of the four core aquatic skills the Swim England framework names, ahead of any stroke. Marked \"convention\" earlier on 2026-08-22 because swimming.org returns HTTP 403 to a plain fetcher; it loads normally in a real browser over CDP, which is where this sentence came from. A 403 to one tool is not a source that cannot be checked.",
+          "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
+          "source": "swim-england",
+          "quote": "It takes a games-led approach to learning to swim, and gives the core aquatic skills needed to become competent swimmers. These are: Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing."
         }
       ]
     },
@@ -221,7 +223,7 @@
       "id": "swim-england",
       "label": "Swim England Learn to Swim Framework",
       "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
-      "note": "Teaches nine core aquatic skills rather than strokes: entry, exit, floatation, rotation, streamlining, breathing, travel and coordination, water safety, fitness. That ordering is why stage 1 here has no swimming in it."
+      "note": "Names FOUR core aquatic skills, taught through games rather than strokes: Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing. That ordering is why stage 1 here has no swimming in it. Corrected 2026-08-22: this note previously said nine skills and listed nine (entry, exit, floatation, rotation, streamlining, breathing, travel and coordination, water safety, fitness). The page says four. Nobody had opened it, because the fetcher used at the time got a 403 and the number was written from memory instead."
     },
     {
       "id": "usms-position",
