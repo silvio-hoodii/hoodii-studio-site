@@ -301,6 +301,15 @@ harmless, and PSN is not surfaced on the hub.
   refuses to run rather than blaming the app, and `run-probe-gym.mjs` sets
   `Emulation.setFocusEmulationEnabled`. Verified both directions on one build: 5 failed without the
   flag, 0 with it.
+- **A pre-push hook now runs `node scripts/verify.mjs` and refuses a red tree.** `.githooks/pre-push`,
+  wired with `git config core.hooksPath .githooks`. 49 seconds: install, typecheck, lint, build, one
+  GREEN or RED line whose exit code agrees with it. `verify.mjs` had existed for this since
+  2026-08-17 and its own header called itself "the thing a person or an agent types before pushing";
+  nothing made anyone type it. On 2026-08-22 two Claude sessions were pushing to main in the same
+  hour, one pushed a recipe containing an en dash, lint-prose refused it and the deploy failed.
+  Silvio noticed before either session did. **If two sessions are working here, `git pull --rebase
+  origin main` before you push**: the hook checks the tree you are pushing, so a failure may be
+  someone else's file that you have not pulled yet.
 - **The lockfile check is not optional and `pnpm build` cannot substitute for it.** On 2026-08-09 a
   dep was removed by editing `package.json` directly instead of running `pnpm remove`. Every local
   command passed, because `node_modules` was already correct and install never re-ran. Vercel

@@ -1,0 +1,35 @@
+#!/bin/sh
+# NOTHING RED REACHES MAIN. Added 2026-08-23.
+#
+# main auto-deploys to hoodii.studio, and on 2026-08-22 two Claude sessions were pushing to it in
+# the same hour. One pushed a recipe whose text contained an en dash, lint-prose refused it, and the
+# Vercel deploy failed. Silvio saw it before either session did: "theres another agent working and
+# you two keep clasinh and the dlopyment failed."
+#
+# scripts/verify.mjs already existed for exactly this, and its own header says it is "the thing a
+# person or an agent types before pushing". Nothing made anyone type it. A rule that does not
+# execute is decoration, and that one was decoration written INSIDE the file that solves the
+# problem. This is the part that executes.
+#
+# 49 seconds on this machine: install --frozen-lockfile, typecheck, lint, build. It prints one line
+# that says GREEN or RED and names the gate that failed, and its exit code agrees with the line.
+#
+# A failing push is not a bug in the hook. It means the tree you are pushing does not build, and
+# pushing it would take the live site's next deploy down for whoever else is working today.
+#
+# --no-verify skips this. If you are reaching for it, the honest move is to say out loud what you
+# are skipping and why, because the next deploy after yours inherits it.
+
+echo "pre-push: running the full gate chain before this reaches main and deploys"
+node scripts/verify.mjs
+status=$?
+
+if [ $status -ne 0 ]; then
+  echo ""
+  echo "pre-push: REFUSED. The tree you are pushing does not pass its own gates, and main deploys"
+  echo "pre-push: straight to hoodii.studio. Fix the gate named above, or rebase onto whatever the"
+  echo "pre-push: other session just pushed if the failure is not yours: git pull --rebase origin main"
+  exit 1
+fi
+
+exit 0
