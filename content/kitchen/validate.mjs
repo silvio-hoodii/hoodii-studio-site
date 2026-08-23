@@ -83,7 +83,15 @@ const BANNED_HEAT = [
 
 /* Heat words in the instruction are fine, but ONLY alongside a structured observable. This is the
  * "never give a heat setting without an observable in the same step" rule, made mechanical. */
-const HEAT_LEVEL_WORD = /\b(?:on|to|over)\s+(?:a\s+)?(?:low|medium(?:[- ]high|[- ]low)?|high)\b(?:\s+heat)?/i;
+/* A heat level named in an instruction, which on this induction hob means nothing without an
+ * observable beside it.
+ *
+ * The negative lookahead for "speed" was added 2026-08-23. King Arthur's eggless pasta dough says
+ * "using the dough hook on medium speed", and this matched it and demanded a heat observable for a
+ * step that applies no heat at all: it is a stand mixer setting, not a dial on a stove. Widening the
+ * rule to let that pass would be wrong, so it is narrowed to exactly the phrase that caused it.
+ * Everything this rule exists for still fails. */
+const HEAT_LEVEL_WORD = /\b(?:on|to|over)\s+(?:a\s+)?(?:low|medium(?:[- ]high|[- ]low)?|high)\b(?!\s+speed)(?:\s+heat)?/i;
 
 const BANNED_CUE = [
   { re: /\bsizzles? rather than hiss/i, why: 'Failed for real 2026-08-02. He cannot tell these apart and neither can most people.' },

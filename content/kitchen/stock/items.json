@@ -766,6 +766,12 @@
       "since": "2026-08-14",
       "src": "event",
       "note": "Catalogue row added 2026-08-22. About 9, from a food bank donation bag, photo 20260814_121248. Variety was not known to him and \"red\" is his description of the skin. Third row found this week that had STATE from an event but no IDENTITY in this file, after sesameseeds and cinnamon, and each one silently failed any recipe that pointed at it."
+    },
+    "durumflour": {
+      "n": "durum flour",
+      "where": "pantry",
+      "state": "none",
+      "note": "Catalogued 2026-08-22, not owned. Milled from durum wheat, harder and higher in protein than the all-purpose in the cupboard, which is what gives eggless pasta its chew. NOT the same as SEMOLINA, which is the coarse grind of the same wheat and is used for dusting rather than for dough. King Arthur's eggless pasta dough, which is the pici card, is written for the fine grind."
     }
   }
 }

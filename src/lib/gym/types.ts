@@ -222,10 +222,17 @@ export interface Cue {
   cue: string;
   test: string;
   why?: string | null;
-  confidence: 'evidence' | 'convention' | 'contested';
+  confidence: 'evidence' | 'convention' | 'contested' | 'sourced';
   /** A real citation with the URL that was fetched, or the literal word CONVENTION. */
   grounding?: string | null;
   url?: string | null;
+  /** The verbatim sentence from the source. Added 2026-08-22, at his instruction: "I don't want
+   *  hallucination here so try to keep it as literal as you can." validate.mjs requires one on any
+   *  cue claiming to be sourced, and the renderer prints it, because a quote nobody can see does
+   *  the same job as no quote at all. Nine were added to swim-teaching.json before anybody noticed
+   *  this component had nowhere to put them. */
+  quote?: string | null;
+  source?: string | null;
 }
 
 /* THE REST RULE. Chosen by Silvio on 2026-08-21: never more than three training days in a row, a

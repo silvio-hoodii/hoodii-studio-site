@@ -1,0 +1,74 @@
+{
+  "id": "pici",
+  "fetchedAt": "2026-08-23",
+  "via": "url",
+  "source": {
+    "name": "Eggless Pasta Dough",
+    "url": "https://www.kingarthurbaking.com/recipes/eggless-pasta-dough-recipe",
+    "provider": "kingarthurbaking.com"
+  },
+  "yield": [
+    "1 1/4 lbs. of pasta, about 4 servings",
+    "1 1/4 lbs. of pasta, about 4 servings"
+  ],
+  "totalTime": "PT45M",
+  "prepTime": "PT30M",
+  "cookTime": "PT0M",
+  "nutrition": {
+    "servingSize": "1 portion (150g)",
+    "calories": "370 calories",
+    "carbohydrateContent": "73g",
+    "cholesterolContent": "0mg",
+    "fiberContent": "3g",
+    "proteinContent": "13g",
+    "sodiumContent": "150mg",
+    "sugarContent": "3g",
+    "fatContent": "0g",
+    "saturatedFatContent": "0g",
+    "transFatContent": "0g"
+  },
+  "rating": "5.00",
+  "ratingCount": "1",
+  "image": "https://www.kingarthurbaking.com/sites/default/files/2025-05/Brian-Levys-Eggless-Pasta-Dough_2025_Lifestyle_H_107.jpg",
+  "cuisine": null,
+  "category": null,
+  "ingredients": [
+    "3 1/4 cups (400g) King Arthur Durum Flour",
+    "1/4 teaspoon table salt",
+    "3/4 cup plus 2 tablespoons (200g) water, hot (about 110°F to 120°F)"
+  ],
+  "instructions": [
+    "To make the dough: Weigh your flour; or measure it by gently spooning it into a cup, then sweeping off any excess.",
+    "In a large bowl, combine the flour and salt.",
+    "Make a well in the center of the dry ingredients and gently pour the hot water into the well. Using a flexible spatula or your clean hand, slowly incorporate the flour into the water, working from the center of the well outward. Once all of the flour is moistened, gather the dough and press it together into a single mass; it will be crumbly and shaggy with a bit of dry flour remaining.",
+    "Transfer the pasta dough to an unfloured work surface or to the bowl of a stand mixer. Knead, either by hand or using the dough hook on medium speed, for about 10 minutes until very smooth. (If kneading by hand, use minimal additional flour, if necessary, to prevent the dough from sticking.)",
+    "Let the dough rest, in a covered bowl, for 15 to 20 minutes at room temperature to allow the gluten to relax. Once rested, the dough is ready for shaping. (The dough can be made up to 24 hours in advance and stored in an airtight container in the refrigerator. For longer storage, freeze the dough in an airtight container for up to a month. Thaw it overnight in the refrigerator before shaping the next day.)",
+    "To shape the pasta: Shape the pasta either by hand or with the aid of a pasta machine, depending on your desired pasta shape. For instructions on making shapes such as tagliolini, fettuccine, spaghetti, and lasagna, see the Guide to Different Ribbon-Cut Pasta Shapes. And for shapes such as orecchiette, cavatelli, and pici, see the Guide to Hand-Shaped Pastas.",
+    "To cook the fresh pasta: Bring a large pot of heavily salted water to a boil. Add the pasta and cook for 3 to 5 minutes; it should still have a slight bite (al dente). Drain the pasta and serve immediately with your sauce of choice.",
+    "Storage information: Extra uncooked pasta can be stored in the freezer for up to 2 weeks and boiled directly from frozen. It may require several extra minutes of cooking time. Leftover cooked pasta can be stored in the refrigerator with sauce, covered, for up to 2 days."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "3 1/4 cups (400g) King Arthur Durum Flour",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/4 teaspoon table salt",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3/4 cup plus 2 tablespoons (200g) water, hot (about 110°F to 120°F)",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "50964fed4088"
+}

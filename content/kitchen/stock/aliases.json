@@ -989,6 +989,11 @@
       "grated nutmeg",
       "freshly grated nutmeg",
       "whole nutmeg"
+    ],
+    "durumflour": [
+      "durum flour",
+      "durum wheat flour",
+      "semola rimacinata"
     ]
   },
   "_knownGaps": {

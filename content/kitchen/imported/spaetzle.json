@@ -1,0 +1,94 @@
+{
+  "id": "spaetzle",
+  "fetchedAt": "2026-08-23",
+  "via": "url",
+  "source": {
+    "name": "Spaetzle",
+    "url": "https://www.budgetbytes.com/spaetzle/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "6",
+    "6 servings (1 cup each)"
+  ],
+  "totalTime": "PT40M",
+  "prepTime": "PT20M",
+  "cookTime": "PT20M",
+  "nutrition": {
+    "servingSize": "1 serving",
+    "calories": "250 kcal",
+    "carbohydrateContent": "33 g",
+    "proteinContent": "8 g",
+    "fatContent": "9 g",
+    "sodiumContent": "283 mg",
+    "fiberContent": "1 g"
+  },
+  "rating": "5",
+  "ratingCount": "5",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2025/08/Spaetzle-Overhead.jpg",
+  "cuisine": "German",
+  "category": "Main Course",
+  "ingredients": [
+    "3 large eggs ($0.68)",
+    "½ cup whole milk ($0.14*)",
+    "½ tsp salt (plus more to season water and to taste, $0.04)",
+    "2 cups all-purpose flour ($0.25)",
+    "3 Tbsp butter ($0.35)",
+    "1 Tbsp fresh parsley (chopped, $0.18)"
+  ],
+  "instructions": [
+    "Gather all your ingredients.",
+    "In a large bowl, whisk eggs, milk, and salt until smooth.",
+    "Add flour and stir until you have a thick, sticky batter (thicker than pancake batter but not doughy). If too thick, add 1–2 tbsp more milk. Rest the dough for 10-15 minutes.**",
+    "Bring a large pot of salted water to a boil.***",
+    "Working in batches, place a portion of the batter on the back of a large-holed grater or in a colander set over the pot. Use a spoon or spatula to press the batter through the holes so little “noodles” drop into the boiling water.****",
+    "The noodles will rise to the top in about 2 minutes. Once they float, remove them with a slotted spoon and transfer them to an ice water bath to stop the cooking. Continue until all the batter has been used.",
+    "Once all of the spaetzle has been made, drain it thoroughly.",
+    "In a large skillet, melt the butter over medium heat, then add the spaetzle. Toss until lightly coated and warmed through. Season with salt and pepper (optional), sprinkle with parsley, and serve hot."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "3 large eggs ($0.68)",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ cup whole milk ($0.14*)",
+      "item": "milk",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ tsp salt (plus more to season water and to taste, $0.04)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 cups all-purpose flour ($0.25)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "3 Tbsp butter ($0.35)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp fresh parsley (chopped, $0.18)",
+      "item": "parsley",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "5726bb9fdacf"
+}

@@ -1,0 +1,256 @@
+{
+  "id": "pici",
+  "name": "Pici, Rolled Between Your Palms",
+  "build": "2026-08-23a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "The least equipment of any pasta there is: no machine, no rolling pin, not even eggs. Flour, water, salt, and your hands. Every noodle comes out slightly different and that is what pici is supposed to look like, so there is almost nothing to get wrong. One thing to buy: her dough is durum flour, which is what gives an eggless pasta its chew, and the cupboard only has all-purpose.",
+  "time": {
+    "activeMin": 60,
+    "totalMin": 90,
+    "note": "her recipe is 45 minutes and that stops at the dough. Rolling every noodle by hand is the part she sends you elsewhere for, so budget an hour on top the first time"
+  },
+  "serves": {
+    "count": 4,
+    "unit": "portion",
+    "proteinPerUnit": 13,
+    "proteinMath": "HER FIGURE: King Arthur publishes 13 g of protein per serving over about 4 servings, from 1 1/4 lb of finished pasta. All of it is the flour, since there are no eggs in this at all: durum is a hard, high-protein wheat, which is both why the number is this high for flour and water and why it has the chew it does. Sauce is where a meal gets the rest."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-23a",
+    "statement": "Every instruction is King Arthur Baking's own sentence, in her order, with her amounts. Her step 4 offers kneading by hand or with a stand mixer, and the by-hand branch is the one here, because there is no stand mixer in this kitchen and she wrote the alternative herself. Her step 6 does NOT give shaping instructions: it names pici and points at their Guide to Hand-Shaped Pastas, so the shaping is not invented here either, it is quoted from that guide with the article cited as a second source. One ingredient is genuinely missing rather than substituted, and it is on its own row: she specifies durum flour and this kitchen has all-purpose, which is a real difference in a dough made of nothing but flour and water.",
+    "sources": [
+      {
+        "name": "King Arthur Baking",
+        "url": "https://www.kingarthurbaking.com/recipes/eggless-pasta-dough-recipe",
+        "primary": true,
+        "note": "Eggless Pasta Dough. 5 out of 5 from 1 rating, about 4 servings, 45 minutes. Fetched 2026-08-22 from the page's own JSON-LD. All three ingredients and all eight instructions taken verbatim."
+      },
+      {
+        "name": "King Arthur Baking",
+        "url": "https://www.kingarthurbaking.com/blog/2025/05/22/types-of-pasta-shapes",
+        "primary": false,
+        "note": "A guide to the types of pasta shapes you can make by hand, read 2026-08-22. The recipe's own step 6 points here for pici. Source of the shaping sentences quoted in step 6: the 10 g piece, the 24 inch cord, the 1/8 inch diameter, and the note about irregularities."
+      }
+    ],
+    "readHash": "b0008a40",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "flour",
+      "stock": "durumflour",
+      "display": "durum flour",
+      "qty": 400,
+      "unit": "g",
+      "defining": true,
+      "altText": "NOT IN THE CUPBOARD, and this is the one thing standing between you and this dish. Durum is a harder, higher-protein wheat than the all-purpose you have, and in a dough made of nothing but flour and water it is doing all of the work: it is what makes pici chewy rather than soft, and it is why her protein figure is 13 g a serving with no eggs in it. All-purpose will make something, and it will be softer and blander and closer to a dumpling than a noodle. A bag is a couple of dollars. NOTE IT IS NOT THE SAME AS SEMOLINA, which is the coarse grind of the same wheat and is for dusting cut noodles rather than for dough. If you are buying one thing for pasta generally, buy both, and they usually sit on the same shelf."
+    },
+    {
+      "ref": "salt",
+      "display": "table salt",
+      "qty": 0.25,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "water",
+      "display": "hot water",
+      "qty": 200,
+      "unit": "g",
+      "staple": true,
+      "prep": "her line is 3/4 cup plus 2 tablespoons, or 200 g, HOT at about 110F to 120F. That is hot tap water: uncomfortable to hold a finger in but not scalding. Unlike yeast doughs there is nothing alive to kill here, so the temperature is about softening the hard durum rather than about safety",
+      "defining": true
+    }
+  ],
+  "equipment": [
+    "stovetop",
+    "mixingbowl_large",
+    "pastrymat",
+    "spatula",
+    "knife_sharp",
+    "bakingtray",
+    "teatowel",
+    "pot_large",
+    "colander",
+    "scale_digital",
+    "measuringspoons",
+    "freezerbag_medium",
+    "sharpie"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "To make the dough: Weigh your flour; or measure it by gently spooning it into a cup, then sweeping off any excess.",
+      "sourceText": "To make the dough: Weigh your flour; or measure it by gently spooning it into a cup, then sweeping off any excess.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 400,
+          "unit": "g"
+        }
+      ],
+      "equipment": [
+        "scale_digital",
+        "mixingbowl_large"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "The scale reads 400 g.",
+        "kind": "look"
+      },
+      "look": "WEIGH IT. This dough is two ingredients and a fixed ratio: 400 g of flour to 200 g of water, which is exactly half. Get the flour wrong and there is nothing else in the recipe to absorb the error.\n\nWEIGH THE WATER TOO if the scale is already out. 200 g of water is 200 ml, so a measuring jug works equally well."
+    },
+    {
+      "n": 2,
+      "text": "In a large bowl, combine the flour and salt.",
+      "sourceText": "In a large bowl, combine the flour and salt.",
+      "uses": [
+        {
+          "ref": "salt",
+          "amount": 0.25,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "measuringspoons"
+      ],
+      "minutes": 1,
+      "heat": null,
+      "doneness": {
+        "test": "Salt evenly through the flour. A few seconds of stirring.",
+        "kind": "look"
+      },
+      "look": "A QUARTER TEASPOON IN 400 G OF FLOUR is much less salt than the pizza dough or the bread. That is deliberate for pasta: the cooking water is heavily salted and that is where the seasoning comes from."
+    },
+    {
+      "n": 3,
+      "text": "Make a well in the center of the dry ingredients and gently pour the hot water into the well. Using a flexible spatula or your clean hand, slowly incorporate the flour into the water, working from the center of the well outward. Once all of the flour is moistened, gather the dough and press it together into a single mass; it will be crumbly and shaggy with a bit of dry flour remaining.",
+      "sourceText": "Make a well in the center of the dry ingredients and gently pour the hot water into the well. Using a flexible spatula or your clean hand, slowly incorporate the flour into the water, working from the center of the well outward. Once all of the flour is moistened, gather the dough and press it together into a single mass; it will be crumbly and shaggy with a bit of dry flour remaining.",
+      "uses": [
+        {
+          "ref": "water",
+          "amount": 200,
+          "unit": "g"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "spatula"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "doneness": {
+        "test": "SHE TELLS YOU WHAT IT SHOULD LOOK LIKE AND IT LOOKS UNPROMISING: crumbly and shaggy with a bit of dry flour remaining. A single rough mass that holds together when squeezed, not a smooth ball. If it is smooth already, something is wrong with the ratio.",
+        "kind": "look"
+      },
+      "look": "IT WILL LOOK TOO DRY AND YOU WILL WANT TO ADD WATER. Do not. She says in the step that a bit of dry flour remains, which is the reason to trust it: the next ten minutes of kneading is what brings it together, and durum absorbs water slowly.\n\nTHE WELL IS IN THE BOWL HERE, not on the counter as it was for the egg pasta. Easier, because hot water is what you are pouring.\n\nWORK FROM THE CENTRE OUTWARD, pulling a little flour at a time into the water so it hydrates evenly rather than in lumps."
+    },
+    {
+      "n": 4,
+      "text": "Transfer the pasta dough to an unfloured work surface or to the bowl of a stand mixer. Knead, either by hand or using the dough hook on medium speed, for about 10 minutes until very smooth. (If kneading by hand, use minimal additional flour, if necessary, to prevent the dough from sticking.)",
+      "sourceText": "Transfer the pasta dough to an unfloured work surface or to the bowl of a stand mixer. Knead, either by hand or using the dough hook on medium speed, for about 10 minutes until very smooth. (If kneading by hand, use minimal additional flour, if necessary, to prevent the dough from sticking.)",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pastrymat"
+      ],
+      "minutes": 10,
+      "heat": null,
+      "doneness": {
+        "test": "VERY SMOOTH, hers, and ten minutes is genuinely ten minutes. The surface goes from rough and cracked to satiny. Press a thumb in: the dent should fill back part way rather than staying as a hole.",
+        "kind": "touch"
+      },
+      "look": "BY HAND IS HER OWN BRANCH, written into the step, so nothing is being adapted for the missing stand mixer.\n\nUNFLOURED SURFACE, and she is explicit about minimal extra flour. The dough needs grip on the mat to stretch against, and this one starts dry, so every extra spoonful makes it worse.\n\nTEN MINUTES IS LONGER THAN ANY OTHER DOUGH IN THIS APP. Durum is hard wheat and it takes that long to become smooth. It is also the whole reason pici has its chew: this kneading is the recipe.\n\nHOW TO KNEAD: heel of the hand pushing the dough away, fold the far edge back over, quarter turn, repeat. A rhythm, not a fight.\n\nIT STARTS UGLY AND CRACKED. That is normal for the first three or four minutes."
+    },
+    {
+      "n": 5,
+      "text": "Let the dough rest, in a covered bowl, for 15 to 20 minutes at room temperature to allow the gluten to relax. Once rested, the dough is ready for shaping. (The dough can be made up to 24 hours in advance and stored in an airtight container in the refrigerator. For longer storage, freeze the dough in an airtight container for up to a month. Thaw it overnight in the refrigerator before shaping the next day.)",
+      "sourceText": "Let the dough rest, in a covered bowl, for 15 to 20 minutes at room temperature to allow the gluten to relax. Once rested, the dough is ready for shaping. (The dough can be made up to 24 hours in advance and stored in an airtight container in the refrigerator. For longer storage, freeze the dough in an airtight container for up to a month. Thaw it overnight in the refrigerator before shaping the next day.)",
+      "uses": [],
+      "equipment": [
+        "mixingbowl_large",
+        "teatowel"
+      ],
+      "minutes": 20,
+      "heat": null,
+      "doneness": {
+        "test": "Fifteen to twenty minutes on a timer. Afterwards a thumb should sink in easily where before it pushed back.",
+        "kind": "touch"
+      },
+      "look": "COVERED BOWL, and she does not ask for plastic wrap here, which is convenient because there is none. A plate over the bowl, or the second mixing bowl inverted.\n\nDO NOT SKIP IT. Freshly kneaded dough springs back, and you are about to roll seventy separate cords by hand. Fighting the dough for every one of them is the difference between a pleasant hour and an unpleasant one.\n\nHER MAKE-AHEAD NOTE IS USEFUL: the dough keeps 24 hours in the fridge and a month in the freezer. That splits this into two short sessions rather than one long one, which suits the rolling.\n\nFLOUR THE TRAY AND CLEAR THE COUNTER while you wait."
+    },
+    {
+      "n": 6,
+      "text": "To shape the pasta: Shape the pasta either by hand or with the aid of a pasta machine, depending on your desired pasta shape. For instructions on making shapes such as tagliolini, fettuccine, spaghetti, and lasagna, see the Guide to Different Ribbon-Cut Pasta Shapes. And for shapes such as orecchiette, cavatelli, and pici, see the Guide to Hand-Shaped Pastas.",
+      "sourceText": "To shape the pasta: Shape the pasta either by hand or with the aid of a pasta machine, depending on your desired pasta shape. For instructions on making shapes such as tagliolini, fettuccine, spaghetti, and lasagna, see the Guide to Different Ribbon-Cut Pasta Shapes. And for shapes such as orecchiette, cavatelli, and pici, see the Guide to Hand-Shaped Pastas.",
+      "uses": [],
+      "equipment": [
+        "pastrymat",
+        "knife_sharp",
+        "bakingtray",
+        "teatowel",
+        "scale_digital"
+      ],
+      "minutes": 60,
+      "heat": null,
+      "doneness": {
+        "test": "THEIR TARGET, from the guide her step points at: a cord about 24 inches long and about 1/8 inch across, which is roughly the thickness of a pencil lead or a bootlace. The ends taper and that is expected. Their own words: don't worry about making a perfect cylinder.",
+        "kind": "look"
+      },
+      "look": "HER STEP SENDS YOU AWAY AND THIS IS WHERE IT SENDS YOU. King Arthur's Guide to Hand-Shaped Pastas, quoted directly rather than paraphrased:\n\n\"Cut off about 10 grams (approximately a 1\" ball) of dough and roll it under your outstretched fingers until you have a cord about 24\" long with a diameter of about 1/8\"; the ends will taper as you roll.\"\n\n\"Don't worry about making a perfect cylinder; irregularities are what make hand-shaped pici special.\"\n\nWHAT THAT MEANS IN PRACTICE: take a lump the size of a large marble, put it on the mat, lay your flat outstretched fingers across it, and roll back and forth while sliding your hands apart. It lengthens as it thins. Ten grams is small and 24 inches is long, so it thins a great deal.\n\nSEVENTY OR SO NOODLES. 400 g of flour plus 200 g of water is about 700 g of dough, at 10 g a piece. This is the hour. Weigh the first few pieces to calibrate your eye, then stop weighing.\n\nKEEP EVERYTHING COVERED that you are not touching. Both the dough you have not rolled and the noodles you have.\n\nTHE MAT IS THE RIGHT SURFACE. The guide notes that a slightly textured surface helps, because the cord needs something to grip in order to roll rather than slide.\n\nLAY THEM LENGTHWISE ON A FLOURED TRAY, not in a heap. They stick to each other readily.\n\nIRREGULAR IS CORRECT. This is the one pasta where uneven noodles are the point, and it is why it is nearly impossible to fail."
+    },
+    {
+      "n": 7,
+      "text": "To cook the fresh pasta: Bring a large pot of heavily salted water to a boil. Add the pasta and cook for 3 to 5 minutes; it should still have a slight bite (al dente). Drain the pasta and serve immediately with your sauce of choice.",
+      "sourceText": "To cook the fresh pasta: Bring a large pot of heavily salted water to a boil. Add the pasta and cook for 3 to 5 minutes; it should still have a slight bite (al dente). Drain the pasta and serve immediately with your sauce of choice.",
+      "uses": [],
+      "equipment": [
+        "stovetop",
+        "pot_large",
+        "colander"
+      ],
+      "minutes": 6,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A rolling boil to start: the whole surface moving and breaking. Once the pasta is in, keep it bubbling steadily rather than thrashing.",
+        "recheck": "The boil drops when the pasta goes in. Let it come back, then hold it there."
+      },
+      "doneness": {
+        "test": "AL DENTE, and hers is 3 to 5 minutes. Pici are thick, so they take longer than the thin egg pasta and start tasting at 3. Fish one out, let it cool a second, and bite through the MIDDLE: done is tender with a slight firm resistance at the core and no chalky white centre. Because they are hand-rolled they vary, so test a thick one.",
+        "kind": "taste"
+      },
+      "look": "HEAVILY SALTED IS HER WORD AND IT MATTERS MORE HERE THAN ANYWHERE. There are no eggs and almost no salt in this dough, so the water is the only seasoning the noodle ever gets. It should taste properly of salt.\n\nA LARGE POT AND PLENTY OF WATER. Thick fresh noodles shed a lot of starch and will glue themselves together in a crowded pot.\n\nSTIR IN THE FIRST TEN SECONDS.\n\nSAVE A MUGFUL OF THE WATER before draining. Starchy water is what makes a sauce cling, and pici with its rough hand-rolled surface holds sauce better than any machine pasta.\n\nSERVE IMMEDIATELY, hers. Have the sauce ready before you drain.\n\nWHAT YOU HAVE FOR IT: pesto, the tinned tomatoes with garlic, browned ground beef, parmesan, the grape tomatoes, the caramelised onions if you have made a batch. Traditionally pici goes with the simplest possible sauces, which suits this."
+    },
+    {
+      "n": 8,
+      "text": "Storage information: Extra uncooked pasta can be stored in the freezer for up to 2 weeks and boiled directly from frozen. It may require several extra minutes of cooking time. Leftover cooked pasta can be stored in the refrigerator with sauce, covered, for up to 2 days.",
+      "sourceText": "Storage information: Extra uncooked pasta can be stored in the freezer for up to 2 weeks and boiled directly from frozen. It may require several extra minutes of cooking time. Leftover cooked pasta can be stored in the refrigerator with sauce, covered, for up to 2 days.",
+      "uses": [],
+      "equipment": [
+        "bakingtray",
+        "freezerbag_medium",
+        "sharpie"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "Nothing to test. Freeze what you are not eating.",
+        "kind": "look"
+      },
+      "look": "HER OWN STORAGE STEP, which is unusual for a recipe to include and is worth having.\n\nFREEZE THEM SPREAD OUT FIRST, on the floured tray until solid, THEN bag them. Bagged straight away they fuse into one lump. Same rule as everything else in the freezer here.\n\nTWO WEEKS UNCOOKED, straight from frozen into the water with a few extra minutes.\n\nLABEL THE BAG with the Sharpie.\n\nGIVEN THE HOUR THIS TAKES, making the full 400 g batch and freezing most of it is the sensible way to run this dish."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "id": "gnocchi",
+  "fetchedAt": "2026-08-23",
+  "via": "url",
+  "source": {
+    "name": "Potato Gnocchi",
+    "url": "https://www.budgetbytes.com/potato-gnocchi/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "3",
+    "3 servings (about 25 pieces each)"
+  ],
+  "totalTime": "PT105M",
+  "prepTime": "PT30M",
+  "cookTime": "PT75M",
+  "nutrition": {
+    "servingSize": "1 serving (about 25 pieces)",
+    "calories": "398 kcal",
+    "carbohydrateContent": "65 g",
+    "proteinContent": "10 g",
+    "fatContent": "11 g",
+    "sodiumContent": "853 mg",
+    "fiberContent": "4 g"
+  },
+  "rating": "5",
+  "ratingCount": "1",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2026/01/Potato-Gnocchi-Overhead-Wide.jpg",
+  "cuisine": "Italian",
+  "category": "Dinner",
+  "ingredients": [
+    "1½ lb. russet potatoes (washed, (about 2 potatoes, 670g) $1.30*)",
+    "2 egg yolks ($0.33)",
+    "1 tsp salt ($0.04)",
+    "¾ cup all-purpose flour (plus more for dusting, (130g) $0.14**)",
+    "2 Tbsp butter ($0.23)"
+  ],
+  "instructions": [
+    "Gather and prepare all ingredients. Preheat the oven to 400°F.",
+    "Pierce the potatoes with a fork and place them on a parchment-lined sheet tray. Bake for 1 hour until fork-tender.",
+    "When they have cooled enough to handle but are still warm, peel the skin or scoop out the insides of the potatoes and place them in a bowl. I got 2½ cups of cooked potatoes. (You can season, oil, and air-fry the skins for a snack)",
+    "Using a ricer, potato masher, or fork, mash the potatoes until smooth so there are no lumps.",
+    "Add the yolks and salt. Using a fork, combine.",
+    "Sprinkle in ½ cup of flour. Using the fork, mix the flour into the potatoes.",
+    "Add the remaining flour. Use your hands and continue to work it into the potatoes until they are no longer sticky or wet. Add a dusting of flour if needed. Be careful not to overwork.",
+    "Lightly dust your counter with flour and place the dough on the surface. Knead the dough for one minute, incorporating a dusting of flour if it is sticking.",
+    "Divide the dough into quarters and let the dough rest for 10 minutes.",
+    "Roll each dough quarter into a rope, about ½-inch to ¾-inch thick. Add more flour if the dough is sticking.",
+    "Using a butter knife or bench scraper, cut the ropes into ¾-inch pieces.",
+    "Lightly flour your hands. Gently, but firmly, pinch each piece of gnocchi, then roll it on the back of a fork to create grooves. Continue until all they are all shaped, placing them on a floured tray.",
+    "Bring a medium pot of water to a boil. Once at a boil, gently place the gnocchi in the pot. Make sure not to overcrowd, and work in batches if needed. After 2 minutes, they will begin to float. Once they begin to float, they are cooked and should be removed promptly. Avoid overcooking them in the water because they will turn mushy. Using a slotted spoon, remove them and place them on paper towels to drain. Continue cooking until all the gnocchi are done.",
+    "Melt 1 Tbsp butter in a medium skillet over medium heat. Once melted and hot (the butter should be almost browning), place half the gnocchi in a single layer in the pan. Cook undisturbed for 3 minutes, until they are crispy and brown. Using tongs, flip, and continue cooking for another 3 minutes. Continue with the remaining tablespoon of butter and gnocchi."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "1½ lb. russet potatoes (washed, (about 2 potatoes, 670g) $1.30*)",
+      "item": null,
+      "staple": false,
+      "gap": "potatoes",
+      "optional": false
+    },
+    {
+      "line": "2 egg yolks ($0.33)",
+      "item": "eggs",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 tsp salt ($0.04)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "¾ cup all-purpose flour (plus more for dusting, (130g) $0.14**)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp butter ($0.23)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "fab38286f89f"
+}

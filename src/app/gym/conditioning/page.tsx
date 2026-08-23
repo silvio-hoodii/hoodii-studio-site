@@ -424,6 +424,15 @@ function Cues({ cues, note, heading, intro }: { cues: Cue[]; note?: string | nul
               <div className="ex-cue">{c.cue}</div>
               <div className="ex-meta cue-test"><b>The test.</b> {c.test}</div>
               {c.why && <div className="ex-cue quiet">{c.why}</div>}
+              {/* THE SENTENCE ITSELF, not a paraphrase of it and not behind a second tap. The whole
+                  value of a citation here is that he can read what the source actually said and
+                  disagree with how it was used. */}
+              {c.quote && (
+                <div className="stale cue-quote">
+                  <span className="k">Their words</span>
+                  <p className="ex-cue">&ldquo;{c.quote}&rdquo;</p>
+                </div>
+              )}
               {c.grounding && (
                 <details className="src">
                   <summary>{c.confidence === 'convention' ? 'No study behind this' : 'Where this comes from'}</summary>

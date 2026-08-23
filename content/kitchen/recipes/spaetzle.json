@@ -1,0 +1,301 @@
+{
+  "id": "spaetzle",
+  "name": "Spaetzle, Pushed Through the Colander",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "The most forgiving noodle there is. No rolling, no cutting, no shaping and nothing to get wrong with your hands: it is a thick batter pushed through holes straight into boiling water. She names a colander as one of the tools by name, and the 6 qt one has been in the cupboard since 2026-08-02. Every ingredient is already here, including the parsley.",
+  "time": {
+    "activeMin": 30,
+    "totalMin": 40,
+    "note": "her number is 40 minutes, and 10 to 15 of that is the batter resting"
+  },
+  "serves": {
+    "count": 6,
+    "unit": "portion",
+    "proteinPerUnit": 8,
+    "proteinMath": "HER FIGURE: Budget Bytes publishes 8 g of protein per 1 cup serving over 6 servings, so about 48 g in the batch. It comes from the 3 eggs (about 19 g) and 2 cups of all-purpose flour (about 25 g), which is 44 g plus a little from the milk. Her number checks out. That is a decent floor for a starch, and it is why this beats plain pasta on a protein day."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts and her 6 servings. Nothing was scaled, re-panned, re-timed or reordered. Her step 5 names the colander herself, so this kitchen is not improvising the one piece of equipment the dish turns on. What this app adds is which bowl and which pan, what each technique word means, an observable for the induction hob where she names a heat level, and one substitution recorded on its own row: she asks for whole milk and the fridge holds 2%.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/spaetzle/",
+        "primary": true,
+        "note": "Spaetzle. 5 out of 5 from 5 ratings, 6 servings of 1 cup, 40 minutes. Fetched 2026-08-22 from the page's own JSON-LD. All six ingredients and all eight instructions taken verbatim."
+      }
+    ],
+    "readHash": "537eb15c",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "eggs",
+      "stock": "eggs",
+      "display": "large eggs",
+      "qty": 3,
+      "unit": "each",
+      "defining": true
+    },
+    {
+      "ref": "milk",
+      "stock": "milk",
+      "display": "2% milk",
+      "qty": 0.5,
+      "unit": "cup",
+      "insteadOf": "whole milk",
+      "prep": "she says WHOLE milk and the jug in the fridge is 2%. The difference is a little fat, so the noodles come out very slightly less rich and nothing else. Her step 3 already tells you to add 1 to 2 more tablespoons of milk if the batter is too thick, which is the only adjustment this needs",
+      "defining": true
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 0.5,
+      "unit": "tsp",
+      "staple": true,
+      "prep": "plus more for the water, which she says and which matters",
+      "defining": false
+    },
+    {
+      "ref": "flour",
+      "stock": "flour",
+      "display": "all-purpose flour",
+      "qty": 2,
+      "unit": "cups",
+      "defining": true
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter",
+      "qty": 3,
+      "unit": "tbsp",
+      "defining": false
+    },
+    {
+      "ref": "parsley",
+      "stock": "parsley",
+      "display": "fresh parsley, chopped",
+      "qty": 1,
+      "unit": "tbsp",
+      "prep": "the curly parsley in the fridge. Nothing else in the kitchen has been using it",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "stovetop",
+    "pot_large",
+    "colander",
+    "mixingbowl_large",
+    "bowlset",
+    "whisk",
+    "spatula",
+    "pan_nonstick_large",
+    "knife_sharp",
+    "cuttingboard",
+    "measuringcups",
+    "measuringspoons"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Gather all your ingredients.",
+      "sourceText": "Gather all your ingredients.",
+      "uses": [],
+      "equipment": [
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 3,
+      "heat": null,
+      "doneness": {
+        "test": "Six things on the counter: eggs, milk, salt, flour, butter, parsley.",
+        "kind": "look"
+      },
+      "look": "SHE MAKES THIS A STEP AND IT EARNS IT HERE. Once the batter is pressing through the colander over a boiling pot you have both hands busy and steam in your face. Everything measured first."
+    },
+    {
+      "n": 2,
+      "text": "In a large bowl, whisk eggs, milk, and salt until smooth.",
+      "sourceText": "In a large bowl, whisk eggs, milk, and salt until smooth.",
+      "uses": [
+        {
+          "ref": "eggs",
+          "amount": 3,
+          "unit": "each"
+        },
+        {
+          "ref": "milk",
+          "amount": 0.5,
+          "unit": "cup"
+        },
+        {
+          "ref": "salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "whisk",
+        "measuringcups",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Uniform pale yellow with no ropes of egg white left. Lift the whisk: it should run off in a thin even stream rather than in slippery strands.",
+        "kind": "look"
+      },
+      "look": "EGG WHITE IS THE THING TO CHASE HERE. Yolks blend instantly; whites hang together in clear ropes and will stay as rubbery threads in the finished noodles if you stop early. Thirty seconds of real whisking."
+    },
+    {
+      "n": 3,
+      "text": "Add flour and stir until you have a thick, sticky batter (thicker than pancake batter but not doughy). If too thick, add 1–2 tbsp more milk. Rest the dough for 10-15 minutes.**",
+      "sourceText": "Add flour and stir until you have a thick, sticky batter (thicker than pancake batter but not doughy). If too thick, add 1–2 tbsp more milk. Rest the dough for 10-15 minutes.**",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 2,
+          "unit": "cups"
+        },
+        {
+          "ref": "milk",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "spatula",
+        "measuringcups"
+      ],
+      "minutes": 15,
+      "heat": null,
+      "doneness": {
+        "test": "HER OWN DESCRIPTION IS THE TEST: thicker than pancake batter but not doughy. Lift a spoonful and hold it above the bowl. It should fall back in a slow thick ribbon that sits on the surface for a second before sinking. If it drops off in a splat it is too thin; if it clings to the spoon and will not fall at all it is too thick, and that is when you add her tablespoon or two of milk.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE ONLY JUDGEMENT CALL IN THE WHOLE DISH, and she gives you both the target and the fix in her own sentence.\n\nTOO THICK IS THE COMMON WAY ROUND. It will not press through the holes and you will be leaning on the spatula. Add milk a tablespoon at a time, as she says.\n\nTOO THIN IS THE WORSE PROBLEM because there is no undoing it: the batter pours straight through the colander in a stream and you get shreds instead of noodles. Add flour cautiously if it happens, a tablespoon at a time.\n\nTHE REST IS NOT OPTIONAL. Ten to fifteen minutes lets the flour absorb the liquid, and the batter visibly thickens while it sits. Skipping it means judging the thickness before it has finished changing.\n\nSTIR, DO NOT WHISK, once the flour is in. A whisk builds gluten and clogs itself with thick batter."
+    },
+    {
+      "n": 4,
+      "text": "Bring a large pot of salted water to a boil.***",
+      "sourceText": "Bring a large pot of salted water to a boil.***",
+      "uses": [],
+      "equipment": [
+        "stovetop",
+        "pot_large"
+      ],
+      "minutes": 8,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A rolling boil: the whole surface moving and breaking continuously, not just bubbles at the edge. You need it genuinely boiling before the first batter goes through, because the noodles set on contact.",
+        "recheck": "Each batch of cold batter knocks the boil back. Let it return before pressing the next one through, or the noodles sit in warm water and go slack."
+      },
+      "doneness": {
+        "test": "Rolling boil across the whole surface.",
+        "kind": "look"
+      },
+      "look": "SALT IT PROPERLY. It should taste of the sea. This is the only chance to season the noodle itself.\n\nSTART THIS WHILE THE BATTER RESTS, so the two finish together.\n\nA WIDE POT BEATS A TALL ONE. You are going to hold a colander over it and press, so you want room to work and a target you can see. The large pot, two thirds full.\n\nSET THE ICE WATER UP NOW TOO. Step 6 wants a bowl of very cold water beside the pot, and it is much harder to organise once you have batter on your hands."
+    },
+    {
+      "n": 5,
+      "text": "Working in batches, place a portion of the batter on the back of a large-holed grater or in a colander set over the pot. Use a spoon or spatula to press the batter through the holes so little “noodles” drop into the boiling water.****",
+      "sourceText": "Working in batches, place a portion of the batter on the back of a large-holed grater or in a colander set over the pot. Use a spoon or spatula to press the batter through the holes so little “noodles” drop into the boiling water.****",
+      "uses": [],
+      "equipment": [
+        "colander",
+        "spatula",
+        "pot_large",
+        "stovetop"
+      ],
+      "minutes": 10,
+      "heat": {
+        "surface": "stovetop",
+        "target": "Keep the rolling boil going underneath. If it drops to a simmer while you press, wait for it to come back before the next batch.",
+        "recheck": "Steam comes straight up at your hands while you do this. Hold the colander by its handles, high enough that you are not in the steam, and press with the spatula rather than reaching in."
+      },
+      "doneness": {
+        "test": "Short irregular noodles dropping into the water, roughly the size of a grain of rice up to a small worm. If it comes through as one continuous stream the batter is too thin; if barely anything comes through it is too thick.",
+        "kind": "look"
+      },
+      "look": "SHE NAMES THE COLANDER HERSELF, which is why this dish is on this card at all. The 6 qt colander bought 2026-08-02 is exactly the tool. The multi-blade slicer's grating blade is her other option if the colander holes turn out too small.\n\nIN BATCHES IS A REAL INSTRUCTION and it is her first note. A colander full of batter over a crowded pot gives you one lump. Roughly a third at a time.\n\nPRESS, SCRAPE, REPEAT. Push the batter across the holes with the flat of the spatula rather than trying to force it straight down. It goes through in bursts and that is normal.\n\nTHEY LOOK WRONG AND ARE RIGHT. Spaetzle are stubby, knobbly and completely irregular. That is the dish, not a failure of technique. There is no version of this where they come out looking like machine pasta.\n\nHOT COLANDER. The metal sits over a boiling pot and gets hot fast. Oven mitts or a towel if it is a metal one."
+    },
+    {
+      "n": 6,
+      "text": "The noodles will rise to the top in about 2 minutes. Once they float, remove them with a slotted spoon and transfer them to an ice water bath to stop the cooking. Continue until all the batter has been used.",
+      "sourceText": "The noodles will rise to the top in about 2 minutes. Once they float, remove them with a slotted spoon and transfer them to an ice water bath to stop the cooking. Continue until all the batter has been used.",
+      "uses": [],
+      "equipment": [
+        "pot_large",
+        "mixingbowl_large",
+        "colander"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "doneness": {
+        "test": "FLOATING IS THE WHOLE TEST AND IT IS HERS. They sink, they cook, they rise. Once a noodle is bobbing on the surface it is done, and it takes about 2 minutes. There is no cutting one open and no guessing.",
+        "kind": "look"
+      },
+      "look": "THIS IS THE BEST DONENESS SIGNAL IN THIS APP. Nothing to judge, nothing to time, nothing to taste. They tell you.\n\nNO SLOTTED SPOON IS RECORDED HERE, though nobody has ever listed what is in the utensil set and there may well be one. If there is not: tip the batch into the colander and straight into the ice water, then rinse the colander for the next press.\n\nICE WATER BATH means a bowl of cold water with ice in it. It stops them cooking the moment they leave the pot, which is what keeps them from going soft while the later batches are still going. Without ice, very cold tap water and change it between batches.\n\nDO NOT LEAVE THEM FLOATING while you press the next batch. A minute extra and they start to bloat."
+    },
+    {
+      "n": 7,
+      "text": "Once all of the spaetzle has been made, drain it thoroughly.",
+      "sourceText": "Once all of the spaetzle has been made, drain it thoroughly.",
+      "uses": [],
+      "equipment": [
+        "colander"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Shake the colander and watch. When water stops running out in a stream and only drips, they are drained. Give it a full minute.",
+        "kind": "look"
+      },
+      "look": "THOROUGHLY IS HER WORD AND IT IS DOING WORK. Wet spaetzle hitting hot butter in step 8 spits, and worse, it steams instead of browning. A minute of shaking is worth it."
+    },
+    {
+      "n": 8,
+      "text": "In a large skillet, melt the butter over medium heat, then add the spaetzle. Toss until lightly coated and warmed through. Season with salt and pepper (optional), sprinkle with parsley, and serve hot.",
+      "sourceText": "In a large skillet, melt the butter over medium heat, then add the spaetzle. Toss until lightly coated and warmed through. Season with salt and pepper (optional), sprinkle with parsley, and serve hot.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 3,
+          "unit": "tbsp"
+        },
+        {
+          "ref": "parsley",
+          "amount": 1,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula",
+        "knife_sharp",
+        "cuttingboard"
+      ],
+      "minutes": 6,
+      "heat": {
+        "surface": "stovetop",
+        "target": "The butter should melt and foam, and the foam should settle without the milk solids turning dark. If it browns and smells nutty within seconds it is too hot: lift the pan off the burner for thirty seconds.",
+        "recheck": "Her 'medium heat' is a dial position and this hob's burners do not agree on what the numbers mean. Match the foam instead, and check again once the spaetzle are in, because a cold pan of noodles drops the temperature hard."
+      },
+      "doneness": {
+        "test": "Every noodle glossy with butter and hot through. If you want them crisp, leave them undisturbed for two minutes and look underneath: the ones touching the metal go golden. Hers says 'warmed through', so crisping is optional and yours.",
+        "kind": "look"
+      },
+      "look": "USE THE NON-STICK PAN. Soft starchy noodles in butter are exactly what the stainless pan grips, and there is nothing to be gained from fond here.\n\nTOSS RATHER THAN STIR, meaning lift and turn them over rather than dragging them around. They are soft and they break.\n\nBROWNED IS BETTER THAN WARMED if you have the patience. Left alone in the butter for a couple of minutes they take on crisp golden edges and stop being plain boiled dough. That is a preference, not her instruction.\n\nTHEY KEEP 3 TO 4 DAYS in the fridge, boiled and undressed, and reheat in butter in the same pan. Do the butter step fresh each time rather than reheating buttered ones."
+    }
+  ]
+}

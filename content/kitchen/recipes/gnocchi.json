@@ -1,0 +1,419 @@
+{
+  "id": "gnocchi",
+  "name": "Potato Gnocchi",
+  "build": "2026-08-22a",
+  "form": "method",
+  "meal": [
+    "project"
+  ],
+  "why": "No rolling pin, no machine, and the shaping is done with a fork. The catch is the potato: this wants RUSSETS and the nine in the pantry are red, which is the single biggest predictor of gnocchi going wrong. That is not a detail to discover halfway through, so it is on the ingredient row, in this note, and on the shopping list.",
+  "time": {
+    "activeMin": 45,
+    "totalMin": 105,
+    "note": "her number is 105 minutes, and a full hour of that is the potatoes baking with nobody in the room"
+  },
+  "serves": {
+    "count": 3,
+    "unit": "portion",
+    "proteinPerUnit": 10,
+    "proteinMath": "HER FIGURE: Budget Bytes publishes 10 g of protein per serving over 3 servings of about 25 pieces, so about 30 g in the batch. It comes from 670 g of potato (about 13 g), 130 g of flour (about 13 g) and 2 egg yolks (about 5 g), which lands at 31 g. Her number checks out. As with all of these, the starch is the vehicle and the sauce is where a meal gets its protein."
+  },
+  "provenance": {
+    "tier": "sourced",
+    "cooked": false,
+    "readAt": "2026-08-22a",
+    "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts and her 3 servings. Nothing was scaled, re-panned, re-timed or reordered. Her step 4 offers a ricer, a potato masher or a fork, and the fork is the one this kitchen has, so that is a branch she wrote rather than a substitution. What this app adds is which pan and which bowl, what each technique word means, an observable for the induction hob where she names a heat level, and the potato problem, which is stated where it lands rather than buried: she specifies russets and this kitchen has waxy red potatoes, and those two behave differently enough that the app does NOT credit one for the other.",
+    "sources": [
+      {
+        "name": "Budget Bytes",
+        "url": "https://www.budgetbytes.com/potato-gnocchi/",
+        "primary": true,
+        "note": "The Step-by-Step Guide to Perfect, Homemade Potato Gnocchi. 5 out of 5 from 1 rating, 3 servings of about 25 pieces, 105 minutes. Fetched 2026-08-22 from the page's own JSON-LD. All five ingredients and all fourteen instructions taken verbatim."
+      }
+    ],
+    "readHash": "ae573d6a",
+    "cookedResult": null
+  },
+  "ingredients": [
+    {
+      "ref": "potatoes",
+      "display": "russet potatoes, washed",
+      "qty": 1.5,
+      "unit": "lb",
+      "defining": true,
+      "altText": "THE RED POTATOES IN THE PANTRY WILL NOT DO THIS WELL, and the app is deliberately not pretending otherwise. Russets are floury: low moisture, high starch, so they mash dry and fluffy and need very little flour to hold together. Red potatoes are waxy: they hold water, so the dough comes out wet, you end up adding flour to fix it, and flour is exactly what turns gnocchi into erasers. This is the most common way this dish fails and it is decided before you start. The app already knew: the potatoes gap was narrowed on 2026-08-16 and says in its own words that what is missing here is a FLOURY potato. Two russets is about $1.30. Buy them and this becomes an easy dish."
+    },
+    {
+      "ref": "yolks",
+      "stock": "eggs",
+      "display": "egg yolks",
+      "qty": 2,
+      "unit": "each",
+      "prep": "yolks only. Crack each egg and pass the yolk back and forth between the two shell halves, letting the white run into a separate bowl. Keep the whites, they scramble fine",
+      "defining": true
+    },
+    {
+      "ref": "salt",
+      "display": "salt",
+      "qty": 1,
+      "unit": "tsp",
+      "staple": true,
+      "defining": false
+    },
+    {
+      "ref": "flour",
+      "stock": "flour",
+      "display": "all-purpose flour, plus more for dusting",
+      "qty": 130,
+      "unit": "g",
+      "prep": "her line is 3/4 cup or 130 g. It goes in over two steps, half then the rest, and step 7 says stop when it stops being sticky rather than when the flour runs out. LESS IS BETTER HERE than in any other dough in this app",
+      "defining": true
+    },
+    {
+      "ref": "butter",
+      "stock": "butter",
+      "display": "butter",
+      "qty": 2,
+      "unit": "tbsp",
+      "prep": "1 tbsp per batch in the final pan step",
+      "defining": false
+    }
+  ],
+  "equipment": [
+    "oven",
+    "stovetop",
+    "bakingtray",
+    "parchment",
+    "mixingbowl_large",
+    "bowlset",
+    "fork",
+    "knife_sharp",
+    "cuttingboard",
+    "pastrymat",
+    "pot_medium",
+    "pan_nonstick_large",
+    "spatula",
+    "papertowel",
+    "ovenmitts",
+    "scale_digital",
+    "measuringspoons",
+    "teatowel",
+    "measuringcups",
+    "colander"
+  ],
+  "steps": [
+    {
+      "n": 1,
+      "text": "Gather and prepare all ingredients. Preheat the oven to 400°F.",
+      "sourceText": "Gather and prepare all ingredients. Preheat the oven to 400°F.",
+      "uses": [],
+      "equipment": [
+        "oven",
+        "scale_digital"
+      ],
+      "minutes": 5,
+      "heat": {
+        "surface": "oven",
+        "tempF": 400,
+        "tempC": 200,
+        "target": "400F. An oven's temperature is a real number, unlike this hob's dial, so set it and trust it.",
+        "recheck": "Turn it on first. It takes 10 to 15 minutes to come up and the potatoes want a hot oven from the start."
+      },
+      "doneness": {
+        "test": "Oven on and climbing, everything measured out.",
+        "kind": "look"
+      },
+      "look": "SEPARATE THE YOLKS NOW, while your hands are clean and dry. Doing it later with potato on your fingers is miserable."
+    },
+    {
+      "n": 2,
+      "text": "Pierce the potatoes with a fork and place them on a parchment-lined sheet tray. Bake for 1 hour until fork-tender.",
+      "sourceText": "Pierce the potatoes with a fork and place them on a parchment-lined sheet tray. Bake for 1 hour until fork-tender.",
+      "uses": [
+        {
+          "ref": "potatoes",
+          "amount": 1.5,
+          "unit": "lb"
+        }
+      ],
+      "equipment": [
+        "oven",
+        "bakingtray",
+        "parchment",
+        "fork",
+        "ovenmitts"
+      ],
+      "minutes": 60,
+      "heat": {
+        "surface": "oven",
+        "tempF": 400,
+        "tempC": 200,
+        "target": "400F, unchanged.",
+        "recheck": "No need to open the door before 50 minutes."
+      },
+      "doneness": {
+        "test": "FORK-TENDER IS HERS AND IT IS A REAL TEST. Push a fork into the thickest part of a potato. It should go all the way to the centre with almost no resistance, the way it would into soft butter. Any firmness in the middle means longer. An underbaked potato will not mash smooth and there is no fixing it later.",
+        "kind": "probe"
+      },
+      "look": "SHE BAKES THEM RATHER THAN BOILING THEM AND THAT IS THE POINT. Boiling puts water INTO the potato, and water is the enemy of gnocchi: more water means more flour means erasers. Baking drives water out. This is why her method starts with an hour you cannot skip.\n\nPIERCE THEM FIRST, several times each. A sealed potato builds steam pressure and can burst in the oven.\n\nDO NOT WRAP THEM IN FOIL. Foil traps the steam you are trying to get rid of.\n\nAN HOUR IS FREE TIME. Get the tray floured, the pot filled, and the counter clear."
+    },
+    {
+      "n": 3,
+      "text": "When they have cooled enough to handle but are still warm, peel the skin or scoop out the insides of the potatoes and place them in a bowl. I got 2½ cups of cooked potatoes. (You can season, oil, and air-fry the skins for a snack)",
+      "sourceText": "When they have cooled enough to handle but are still warm, peel the skin or scoop out the insides of the potatoes and place them in a bowl. I got 2½ cups of cooked potatoes. (You can season, oil, and air-fry the skins for a snack)",
+      "uses": [],
+      "equipment": [
+        "bowlset",
+        "knife_sharp",
+        "cuttingboard",
+        "ovenmitts"
+      ],
+      "minutes": 8,
+      "heat": null,
+      "doneness": {
+        "test": "About 2½ cups of potato flesh in the bowl, still warm to the touch. If it has gone cold you have waited too long.",
+        "kind": "touch"
+      },
+      "look": "STILL WARM IS THE INSTRUCTION AND IT MATTERS. Warm potato mashes smooth and takes flour readily. Cold potato goes claggy and needs working, and working is what makes gnocchi tough.\n\nBUT NOT SO HOT YOU BURN YOURSELF. Give them five to ten minutes on the tray. Hold each one in a folded tea towel and cut it open, then scoop with a spoon.\n\nHER AIR-FRYER NOTE IS A GIFT. Season the empty skins, oil them, air fry them. Do it while the dough rests at step 9."
+    },
+    {
+      "n": 4,
+      "text": "Using a ricer, potato masher, or fork, mash the potatoes until smooth so there are no lumps.",
+      "sourceText": "Using a ricer, potato masher, or fork, mash the potatoes until smooth so there are no lumps.",
+      "uses": [],
+      "equipment": [
+        "fork",
+        "bowlset"
+      ],
+      "minutes": 6,
+      "heat": null,
+      "doneness": {
+        "test": "NO LUMPS, hers. Drag the fork through and look at what it leaves behind. Any pebble of unmashed potato you can see will be a lump in the finished gnocchi, because nothing after this breaks it up. Keep going until the surface is uniform.",
+        "kind": "look"
+      },
+      "look": "SHE OFFERS THREE TOOLS AND THE FORK IS THE ONE HERE. No ricer and no masher in this kitchen, and she wrote the fork option herself, so this is her branch and not an improvisation.\n\nIT TAKES LONGER WITH A FORK. Five or six minutes rather than one. Press and drag rather than stirring.\n\nDO NOT USE THE BULLET BLENDER. High-shear blending ruptures the starch and turns potato into wallpaper paste. This is the one job where the powered tool is worse than the fork.\n\nNO SEASONING YET. Salt comes at step 5 with the yolks."
+    },
+    {
+      "n": 5,
+      "text": "Add the yolks and salt. Using a fork, combine.",
+      "sourceText": "Add the yolks and salt. Using a fork, combine.",
+      "uses": [
+        {
+          "ref": "yolks",
+          "amount": 2,
+          "unit": "each"
+        },
+        {
+          "ref": "salt",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ],
+      "equipment": [
+        "fork",
+        "bowlset",
+        "measuringspoons"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "Uniform pale yellow with no streaks of raw yolk visible anywhere.",
+        "kind": "look"
+      },
+      "look": "YOLKS ONLY, NOT WHOLE EGGS. The white is mostly water and this whole recipe is a campaign against water. Keep the whites for scrambled eggs.\n\nTHE POTATO SHOULD STILL BE WARM. If it has gone cold the yolk sits on top instead of blending in."
+    },
+    {
+      "n": 6,
+      "text": "Sprinkle in ½ cup of flour. Using the fork, mix the flour into the potatoes.",
+      "sourceText": "Sprinkle in ½ cup of flour. Using the fork, mix the flour into the potatoes.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 85,
+          "unit": "g"
+        }
+      ],
+      "equipment": [
+        "fork",
+        "bowlset",
+        "measuringcups"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "No dry flour visible. It will still be soft and sticky at this point and that is correct.",
+        "kind": "look"
+      },
+      "look": "HALF NOW, THE REST AT STEP 7. She splits it deliberately, because how much flour this needs depends on how wet the potato was, and there is no way to know that in advance.\n\nSPRINKLE, DO NOT DUMP. Scattering it across the surface means it hydrates evenly instead of forming lumps you then have to work out, and working is what you are trying to avoid."
+    },
+    {
+      "n": 7,
+      "text": "Add the remaining flour. Use your hands and continue to work it into the potatoes until they are no longer sticky or wet. Add a dusting of flour if needed. Be careful not to overwork.",
+      "sourceText": "Add the remaining flour. Use your hands and continue to work it into the potatoes until they are no longer sticky or wet. Add a dusting of flour if needed. Be careful not to overwork.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 45,
+          "unit": "g"
+        }
+      ],
+      "equipment": [
+        "mixingbowl_large",
+        "measuringcups"
+      ],
+      "minutes": 4,
+      "heat": null,
+      "doneness": {
+        "test": "HER TEST IS TOUCH: no longer sticky or wet. Press a clean fingertip into the dough and lift it away. Almost nothing should come with it. Slightly tacky is right, gummy on the finger is not. THE MOMENT IT PASSES THIS TEST, STOP.",
+        "kind": "touch"
+      },
+      "look": "THIS IS THE STEP THAT DECIDES THE DISH, and both of her warnings point the same way.\n\nSTOP AT THE TOUCH TEST, NOT AT THE END OF THE FLOUR. If it stops being sticky with flour left in the cup, leave the rest. Her 130 g is a ceiling.\n\nDO NOT OVERWORK, hers. Every extra minute of kneading builds gluten, and gluten in gnocchi means chewy and dense instead of light. Handle it as little as it takes.\n\nTHE TWO FAILURE MODES, and they are opposite. Too much flour gives you erasers: heavy, rubbery, bouncing. Too little and they dissolve in the water into potato soup. The touch test is the line between them, and it is why the WAXY POTATO PROBLEM matters so much: a wet potato pushes you toward the eraser end before you have even started."
+    },
+    {
+      "n": 8,
+      "text": "Lightly dust your counter with flour and place the dough on the surface. Knead the dough for one minute, incorporating a dusting of flour if it is sticking.",
+      "sourceText": "Lightly dust your counter with flour and place the dough on the surface. Knead the dough for one minute, incorporating a dusting of flour if it is sticking.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pastrymat"
+      ],
+      "minutes": 2,
+      "heat": null,
+      "doneness": {
+        "test": "One minute on a timer. Set it. The dough should come together as a smooth ball and it should still feel soft, not springy.",
+        "kind": "touch"
+      },
+      "look": "ONE MINUTE, AND USE A TIMER RATHER THAN JUDGEMENT. This is the opposite of every other dough in this app: pizza wants ten minutes of kneading, pasta wants two, this wants sixty seconds and not a moment more.\n\nUSE THE PASTRY MAT.\n\nSPRINGY IS BAD HERE. If the dough starts pushing back at you like bread dough, you have gone too far."
+    },
+    {
+      "n": 9,
+      "text": "Divide the dough into quarters and let the dough rest for 10 minutes.",
+      "sourceText": "Divide the dough into quarters and let the dough rest for 10 minutes.",
+      "uses": [],
+      "equipment": [
+        "knife_sharp",
+        "teatowel"
+      ],
+      "minutes": 10,
+      "heat": null,
+      "doneness": {
+        "test": "Ten minutes on a timer. Cover them with a tea towel so the surfaces do not dry out.",
+        "kind": "look"
+      },
+      "look": "TEN MINUTES OF DOING NOTHING, which lets what little gluten you built relax so the ropes roll without springing back.\n\nTHIS IS WHEN TO AIR-FRY THE SKINS from step 3, and to put the pot of water on for step 13."
+    },
+    {
+      "n": 10,
+      "text": "Roll each dough quarter into a rope, about ½-inch to ¾-inch thick. Add more flour if the dough is sticking.",
+      "sourceText": "Roll each dough quarter into a rope, about ½-inch to ¾-inch thick. Add more flour if the dough is sticking.",
+      "uses": [
+        {
+          "ref": "flour",
+          "amount": 0,
+          "optional": true
+        }
+      ],
+      "equipment": [
+        "pastrymat"
+      ],
+      "minutes": 5,
+      "heat": null,
+      "doneness": {
+        "test": "A rope roughly as thick as your index finger, even along its length. Half to three quarters of an inch is her range and it is generous, so do not agonise.",
+        "kind": "look"
+      },
+      "look": "ROLL WITH YOUR PALMS FLAT, working from the middle outwards and letting your hands travel apart as it lengthens. Fingertips make it lumpy.\n\nWORK ONE QUARTER AT A TIME and keep the others covered.\n\nIF IT TEARS OR CRUMBLES, the dough is too dry, which means too much flour went in at step 7. Nothing to do about it now; note it for next time."
+    },
+    {
+      "n": 11,
+      "text": "Using a butter knife or bench scraper, cut the ropes into ¾-inch pieces.",
+      "sourceText": "Using a butter knife or bench scraper, cut the ropes into ¾-inch pieces.",
+      "uses": [],
+      "equipment": [
+        "knife_sharp",
+        "cuttingboard"
+      ],
+      "minutes": 4,
+      "heat": null,
+      "doneness": {
+        "test": "Pieces about as long as they are thick, so roughly little cubes. Even beats pretty: uneven pieces float at different times and step 13 uses floating as the doneness signal.",
+        "kind": "look"
+      },
+      "look": "A BUTTER KNIFE IS HER FIRST CHOICE and it is the better one. A sharp knife slices cleanly but drags and squashes the soft dough; a dull edge presses through and lets it spring back.\n\nDUST THE TRAY WITH FLOUR before the pieces land on it, and do not let them touch each other."
+    },
+    {
+      "n": 12,
+      "text": "Lightly flour your hands. Gently, but firmly, pinch each piece of gnocchi, then roll it on the back of a fork to create grooves. Continue until all they are all shaped, placing them on a floured tray.",
+      "sourceText": "Lightly flour your hands. Gently, but firmly, pinch each piece of gnocchi, then roll it on the back of a fork to create grooves. Continue until all they are all shaped, placing them on a floured tray.",
+      "uses": [],
+      "equipment": [
+        "fork",
+        "bakingtray"
+      ],
+      "minutes": 12,
+      "heat": null,
+      "doneness": {
+        "test": "Ridges you can see on one side and a dent from your thumb on the other. If the piece just smears flat against the fork, flour your hands and the fork more.",
+        "kind": "look"
+      },
+      "look": "THE GROOVES ARE NOT DECORATION. Ridges hold sauce, and a smooth gnocchi sheds it. That is the entire reason for this step.\n\nHOW IT GOES: hold a fork tines-down on the counter, press the piece onto the back of the tines with your thumb, and let it roll off and away from you. It curls as it goes.\n\nTWENTY-FIVE PIECES A SERVING, SEVENTY-FIVE IN TOTAL. This step takes ten minutes or more and there is no way to speed it up. Put something on to listen to.\n\nSKIPPING THIS IS ALLOWED. Plain cut pieces cook exactly the same and are sometimes called gnocchi anyway. You lose the sauce grip and nothing else.\n\nTHEY FREEZE WELL from here: on the floured tray until solid, then into a bag, and boiled straight from frozen with a minute or two extra."
+    },
+    {
+      "n": 13,
+      "text": "Bring a medium pot of water to a boil. Once at a boil, gently place the gnocchi in the pot. Make sure not to overcrowd, and work in batches if needed. After 2 minutes, they will begin to float. Once they begin to float, they are cooked and should be removed promptly. Avoid overcooking them in the water because they will turn mushy. Using a slotted spoon, remove them and place them on paper towels to drain. Continue cooking until all the gnocchi are done.",
+      "sourceText": "Bring a medium pot of water to a boil. Once at a boil, gently place the gnocchi in the pot. Make sure not to overcrowd, and work in batches if needed. After 2 minutes, they will begin to float. Once they begin to float, they are cooked and should be removed promptly. Avoid overcooking them in the water because they will turn mushy. Using a slotted spoon, remove them and place them on paper towels to drain. Continue cooking until all the gnocchi are done.",
+      "uses": [],
+      "equipment": [
+        "stovetop",
+        "pot_medium",
+        "papertowel",
+        "colander"
+      ],
+      "minutes": 10,
+      "heat": {
+        "surface": "stovetop",
+        "target": "A gentle rolling boil: the surface moving and breaking, but not thrashing. Gnocchi are soft and a violent boil knocks them apart.",
+        "recheck": "Each batch drops the boil. Let it come back before the next one goes in."
+      },
+      "doneness": {
+        "test": "FLOATING, AND HERS IS EMPHATIC: once they float they are cooked and should be removed PROMPTLY. About 2 minutes. This is a signal, not a timer, and the window is narrow. Have the slotted spoon or colander in your hand before they go in.",
+        "kind": "look"
+      },
+      "look": "OVERCOOKING IS THE FAILURE SHE WARNS ABOUT and it is fast. A minute past floating and they go from tender to mush, and there is no recovering them.\n\nGENTLY PLACE, not drop. Lower them in with the spoon or slide them off the tray at the surface.\n\nDO NOT OVERCROWD, hers. Twenty or so at a time in the medium pot.\n\nSALT THE WATER as you would for pasta.\n\nPAPER TOWELS, which she names, and there are always plenty here."
+    },
+    {
+      "n": 14,
+      "text": "Melt 1 Tbsp butter in a medium skillet over medium heat. Once melted and hot (the butter should be almost browning), place half the gnocchi in a single layer in the pan. Cook undisturbed for 3 minutes, until they are crispy and brown. Using tongs, flip, and continue cooking for another 3 minutes. Continue with the remaining tablespoon of butter and gnocchi.",
+      "sourceText": "Melt 1 Tbsp butter in a medium skillet over medium heat. Once melted and hot (the butter should be almost browning), place half the gnocchi in a single layer in the pan. Cook undisturbed for 3 minutes, until they are crispy and brown. Using tongs, flip, and continue cooking for another 3 minutes. Continue with the remaining tablespoon of butter and gnocchi.",
+      "uses": [
+        {
+          "ref": "butter",
+          "amount": 2,
+          "unit": "tbsp"
+        }
+      ],
+      "equipment": [
+        "pan_nonstick_large",
+        "stovetop",
+        "spatula"
+      ],
+      "minutes": 14,
+      "heat": {
+        "surface": "stovetop",
+        "target": "HER OWN OBSERVABLE, and it is a good one: the butter should be ALMOST BROWNING. Melted, foaming settled, just starting to smell nutty and take on colour. If it is already dark brown you are past it, so lift the pan off the burner for thirty seconds.",
+        "recheck": "Her 'medium heat' is a dial position and this hob's burners disagree about the numbers. Match the almost-browning butter instead. The second batch starts in a hotter pan than the first, so go lower for it."
+      },
+      "doneness": {
+        "test": "CRISPY AND BROWN, hers, and 3 minutes a side. Lift one with the spatula and look at the face that was down: it should be golden and firm-looking. If it is pale, leave the rest another minute. If it lifts reluctantly it is not ready.",
+        "kind": "look"
+      },
+      "look": "THIS STEP IS WHY HOMEMADE GNOCCHI BEAT SHOP GNOCCHI, and skipping it wastes the previous two hours. Boiled gnocchi are soft all over. Pan-fried in butter they get a crisp golden face and stay pillowy inside.\n\nUNDISTURBED FOR 3 MINUTES, hers. Do not stir, do not shake the pan, do not check at ninety seconds. They need continuous contact with the metal to crisp.\n\nSINGLE LAYER AND HALF AT A TIME. A crowded pan steams them.\n\nUSE THE NON-STICK. Soft starchy dough in butter is exactly what the stainless pan grips.\n\nNO TONGS RECORDED HERE, though nobody has itemised the utensil set. The spatula flips them fine, one at a time or a few at once.\n\nSERVE STRAIGHT AWAY. The crisp face softens within a few minutes."
+    }
+  ]
+}
