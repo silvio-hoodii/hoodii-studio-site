@@ -52,8 +52,28 @@ function walk(dir) {
     if (statSync(full).isDirectory()) { walk(full); continue; }
     if (!EXT.test(e)) continue;
     const lines = readFileSync(full, 'utf8').split(/\r?\n/);
+    /* A COOK CARD'S QUOTED SENTENCES ARE NOT OUR PROSE. Added 2026-08-23.
+     *
+     * `content/kitchen/recipes/*.json` is mostly our writing and stays under this rule: `why`,
+     * `look`, `prep`, `doneness`, `statement` and the rest are all things an agent wrote and the
+     * no-dash rule is about exactly that. But `text` and `sourceText` on a `sourced` card are ONE
+     * PUBLISHER'S SENTENCE, quoted, and `validate.mjs` checks every one of them against the hashed
+     * capture in `imported/`. Editing a quote to satisfy a punctuation rule would either break that
+     * check or, worse, pass it while putting words in her mouth.
+     *
+     * That is the same argument this file already makes for skipping `corpus/` and `imported/`
+     * twenty lines up: rewriting a source's text is a provenance violation and it matters more than
+     * a punctuation rule about our own writing. Those two directories were exempt and the recipe
+     * cards that quote them were not, which is an inconsistency nobody hit until Budget Bytes'
+     * spaetzle step 3 gave a range of one to two tablespoons of milk using an en dash, on
+     * 2026-08-23. (Written out in words here on purpose: this comment is our prose and the rule
+     * still applies to it, which this file proved by failing on itself when it was not.)
+     *
+     * Deliberately NOT a whole-file skip: a dash in anything else on the card is still a failure. */
+    const isCard = full.includes(join('content', 'kitchen', 'recipes'));
     lines.forEach((line, i) => {
       if (line.includes('lint-prose-allow')) return;
+      if (isCard && /^\s*"(?:text|sourceText)":/.test(line)) return;
       const hits = [];
       if (line.includes(EM)) hits.push('U+2014 em dash');
       if (line.includes(EN)) hits.push('U+2013 en dash');
