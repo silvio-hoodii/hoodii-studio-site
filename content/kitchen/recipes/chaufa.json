@@ -1,12 +1,12 @@
 {
   "id": "chaufa",
   "name": "Arroz Chaufa",
-  "build": "2026-08-23a",
+  "build": "2026-08-23b",
   "form": "dish",
   "meal": [
     "dinner"
   ],
-  "why": "Peruvian fried rice, and the reason a Peruvian kitchen owns soy sauce and sesame oil at all: Chinese immigration to Peru in the 1800s built a whole fusion cuisine called chifa, and this is its best-known dish. It wants the rice cold and a day old, which lines it up directly with the arroz tapado rice already made in this kitchen: cook that once, hold back the leftovers uneaten, and this needs nothing extra bought except the pachikay aromatics and a bell pepper. It is also the bed the Easy Sesame Chicken card is built to sit on top of.",
+  "why": "Peruvian fried rice, and the reason a Peruvian kitchen owns soy sauce and sesame oil at all: Chinese immigration to Peru in the 1800s built a whole fusion cuisine called chifa, and this is its best-known dish. It wants the rice DRY on the surface, which leftover rice from the arroz tapado already is, and which fresh rice can be in an hour on a tray in front of a fan. It does not need to be a day old, whatever this card said before 2026-08-23. Beyond that it needs nothing bought except the pachikay aromatics and a bell pepper. It is also the bed the Easy Sesame Chicken card is built to sit on top of.",
   "time": {
     "activeMin": 55,
     "totalMin": 95,
@@ -21,7 +21,7 @@
   "provenance": {
     "tier": "sourced",
     "cooked": false,
-    "readAt": "2026-08-23a",
+    "readAt": "2026-08-23b",
     "statement": "Every instruction is The Kitchn's own sentence, in her order, with her times, her amounts and her scale of 4 to 6 servings. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. What this app adds is the layer a printed page cannot: which of his pans she means, what each technique word means, an observable for the induction hob wherever she names a heat level, a thermometer test where she says cooked through, and a protein estimate with its assumptions stated because her page has no nutrition panel. All of it renders visibly separate from her sentences. Three departures are recorded on the ingredient they belong to: the pan (she says wok or 12-inch cast iron, this kitchen has neither), the food processor (she says mini food processor or blender, this kitchen has the blender), and the bell pepper (stock unconfirmed as of this build -- flagged, not blocked on).",
     "sources": [
       {
@@ -31,7 +31,7 @@
         "note": "Arroz Chaufa (Peruvian Fried Rice), by Andrea Loret de Mola, tested by Patty Catalano. 4 to 6 servings, 15 minutes prep, 20 minutes cook, makes 8 cups. Fetched 2026-08-23 via a rendered read of the page (the plain fetcher was refused; read live in a real browser instead, same as the swimming.org lesson from 2026-08-22). All 28 ingredient lines and all 13 instruction sentences captured verbatim into content/kitchen/imported/chaufa.json, hash e7c2659171e7."
       }
     ],
-    "readHash": "08547463",
+    "readHash": "b7402f2b",
     "cookedResult": null
   },
   "ingredients": [
@@ -111,7 +111,7 @@
       "display": "red bell pepper, small-diced",
       "qty": 1,
       "unit": "each",
-      "prep": "STOCK UNCONFIRMED as of this build -- the last bell peppers logged in this kitchen were bought 2026-08-02 with a use-by around 2026-08-06, three weeks before this card was written, so treat this as a fresh purchase to check rather than something already in the crisper. Small-diced means pieces about the size of a pea",
+      "prep": "ONE bell pepper was logged into stock on 2026-08-19 and nothing has spent it, so this is probably covered -- check the crisper before shopping. This note said the opposite until 2026-08-23: it claimed the last peppers were the 2026-08-02 clearance batch, which was written without reading the event log and was already four days out of date the day it was written. Small-diced means pieces about the size of a pea",
       "defining": true
     },
     {
@@ -125,10 +125,10 @@
     {
       "ref": "cold_cooked_rice",
       "stock": "longgrainrice",
-      "display": "cold cooked jasmine rice, at least a day old",
+      "display": "day-old cooked jasmine rice",
       "qty": 4,
       "unit": "cups",
-      "prep": "COLD AND A DAY OLD IS NOT A PREFERENCE. Fresh rice is full of surface moisture and the grains are soft; a hot pan steams it into porridge. A night in the fridge dries the outside of each grain so it fries instead of mushing. If you are making this from the arroz tapado leftovers, that rice is already the right age. If cooking fresh for this, that means starting it the day before. Cooked rice has to go into the fridge within an hour of cooking -- rice left out overnight can grow a bacterium that survives reheating, so if it sat out all night, throw it away rather than use it here",
+      "prep": "WHAT THIS ACTUALLY NEEDS IS DRY RICE, NOT OLD RICE, and an earlier version of this note got that wrong. It said a day in the fridge was not a preference, which sent Silvio away from the dish on 2026-08-23 rather than into it: 'I don't want to wait for a day just to make it.' Fair. The reason day-old rice works is that the SURFACE of each grain has dried out, so it fries instead of steaming into porridge, and a night in the fridge is only one way to get there. The other way takes an hour and no planning: cook the rice, tip it out onto a baking tray in a thin layer no deeper than your little finger, break the lumps apart with a fork, and leave it uncovered in front of a fan. Kenji Lopez-Alt tested both and the fan came out AHEAD of the fridge. Done looks matte rather than glossy, and a pinch of grains falls apart in your fingers instead of squashing into a ball. Leftover rice from the arroz tapado is already there and needs nothing. TWO SAFETY LINES, and they are the reason the tray goes in the fridge and not on the counter overnight: cooked rice must be chilled within an hour of cooking, and rice left out all night can grow a bacterium that survives reheating, so if it sat out, bin it rather than fry it",
       "defining": false
     },
     {
@@ -316,7 +316,7 @@
         "test": "Break up any clumps with the spatula edge as you go. Done looks like every grain moving separately in the pan and steam rising off it, rather than a solid block.",
         "kind": "look"
       },
-      "look": "BREAK UP CLUMPS BEFORE THEY HIT THE PAN if you can -- cold rice compacts into a solid mass in the fridge, and a spatula alone will not separate a big block once it is hot. Break it apart with your fingers first if it came out of the container in one piece."
+      "look": "BREAK UP CLUMPS BEFORE THEY HIT THE PAN if you can -- rice held in the fridge compacts into a solid mass, and a spatula alone will not separate a big block once it is hot. Break it apart with your fingers first if it came out of the container in one piece. Rice dried on a tray in front of a fan arrives already loose and needs none of this."
     },
     {
       "n": 8,

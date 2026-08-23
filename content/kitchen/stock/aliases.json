@@ -229,6 +229,13 @@
       "smoked turkey",
       "turkey breast slices"
     ],
+    "prosciutto": [
+      "prosciutto",
+      "prosciutto di parma",
+      "prosciutto crudo",
+      "parma ham",
+      "cured ham"
+    ],
     "tilapia": [
       "tilapia",
       "tilapia fillet",
@@ -535,9 +542,13 @@
       "parmesan cheese",
       "grana padano",
       "grana",
+      "hard cheese"
+    ],
+    "pecorino": [
       "pecorino",
       "pecorino romano",
-      "hard cheese"
+      "pecorino cheese",
+      "romano cheese"
     ],
     "mozzarella": [
       "mozzarella",
@@ -641,6 +652,12 @@
       "dark sesame oil",
       "sesame seed oil",
       "roasted sesame oil"
+    ],
+    "chilioil": [
+      "chili oil",
+      "chilli oil",
+      "hot chili oil",
+      "chile oil"
     ],
     "cornstarch": [
       "cornstarch",
@@ -839,6 +856,14 @@
       "white sesame seeds",
       "sesame seed"
     ],
+    "almonds": [
+      "sliced almonds",
+      "slivered almonds",
+      "flaked almonds",
+      "almonds",
+      "toasted almonds",
+      "chopped almonds"
+    ],
     "cinnamon": [
       "cinnamon",
       "ground cinnamon"
@@ -1025,8 +1050,8 @@
     "worcestershire sauce": "No Worcestershire sauce.",
     "feta": "No feta. This row is the whole SOFT/FRESH CHEESE bucket, not only feta: ricotta, mascarpone, cream cheese, goat's cheese, halloumi and blue cheese are all in it and none is here. The three cheeses in this kitchen are parmesan, mozzarella and Monterey Jack, and none of them behaves like any of those. Read the ingredient line, not this row's name, when a dish is rejected for it.",
     "warm spices": "NARROWED AGAIN 2026-08-22. NUTMEG is now its own stock item `nutmeg` and is out of this bucket, on the same argument as broccoli: a category gap cannot be partly satisfied, so one jar bought against a bucket unblocks nothing. Ground CINNAMON left on 2026-08-16. Still missing: allspice, cardamom, cloves, turmeric, saffron, garam masala, curry powder, star anise, fennel seeds, caraway, juniper, ras el hanout, harissa, sumac and ground ginger.",
-    "peanuts": "No whole or crushed nuts of any kind. There is peanut butter, which is not a garnish.",
-    "ham": "No ham or bacon.",
+    "peanuts": "No peanuts, cashews, walnuts, pecans, pine nuts or tahini. SLICED ALMONDS left this gap on 2026-08-23 and have their own row: a recipe asking for almonds is now answered yes. There is peanut butter, which is not a garnish.",
+    "ham": "No cooking ham and no bacon. PROSCIUTTO left this gap on 2026-08-23 and has its own row, and it is not a substitute for bacon in anything cooked: it is dry-cured raw and turns tough and oversalted under real heat.",
     "lemongrass": "No lemongrass.",
     "tinned fish": "NARROWED 2026-08-16. Three tins of flaked white tuna arrived 08-14 (two Ocean's albacore 184 g, one PC 170 g) and are now the stock item `tuna`. Still missing: tinned salmon, sardines, anchovies and mackerel. The only other fish here is frozen tilapia.",
     "brown sugar": "NARROWED 2026-08-22. Brown sugar itself ARRIVED on 2026-08-18 (Redpath golden yellow, decanted into a Ziploc, roughly a cup by eye) and is the stock item `brownsugar`. This row had gone on saying \"No brown sugar, only white\" for four days, and the substitute entry went on telling him to use white sugar for a bag in his own pantry. Third instance of a gap outliving the purchase that closed it, after broccoli on 08-22. Still missing: muscovado, demerara, palm sugar, coconut sugar and jaggery, which are darker and more molasses-heavy than golden yellow and are not the same thing.",
@@ -1035,7 +1060,7 @@
     "green vegetables": "NARROWED 2026-08-21. BROCCOLI is now its own stock item and is out of this bucket, and asparagus already had its own id. Still missing: green beans, cauliflower, pak choi, spring greens, kale, brussels sprouts, sugar snap peas, mangetout, courgette/zucchini, leeks, spinach, chard, watercress and aubergine. The vegetables here are onion, carrot, peppers, sweet potato, potato, mushrooms, cucumber, asparagus, broccoli and the frozen mixed bag.\n\nWHY THIS ROW COST MORE THAN ANY OTHER: it bundled 32 distinct vegetables under one label, and it was the single largest blocker in the whole corpus at 78 dishes where it was the ONLY thing missing. A category gap cannot be partly satisfied, so buying broccoli unblocked nothing and the note asserting \"no broccoli, asparagus...\" went on being read as true after both had arrived. Never put a shopping CATEGORY where an ingredient belongs. Plain `lettuce` is deliberately NOT in this bucket either: lettuce is modelled as the `saladmix` stock row, so putting it here would describe the same food twice and the row would win. Named varieties he has never owned (baby gem, romaine) stay here.",
     "avocado": "No avocado.",
     "curry paste": "No Thai red, green or yellow curry paste, and no Indian curry paste. Not something the spice rack can approximate.",
-    "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing and sesame oil are the ones that ARE here.",
+    "asian pantry": "No hoisin, tamarind, fish sauce, chipotle paste, miso, gochujang or curry leaves. Soy, oyster sauce, mirin, Shaoxing, sesame oil and CHILI OIL (bought 2026-08-23, its own row) are the ones that ARE here. Chilli CRISP is still a gap: it carries fried solids the plain oil does not.",
     "sour cream": "No soured cream, creme fraiche, buttermilk or yogurt substitute for cooking. There is Greek yogurt, which splits if boiled, so it is not a swap in a hot sauce.",
     "beans": "No tinned beans of any kind: kidney, pinto, cannellini, black, chickpeas or butter beans.",
     "tinned sweetcorn": "No tinned sweetcorn or green chiles. There IS frozen corn.",
@@ -1803,7 +1828,6 @@
       "roasted peanuts",
       "crushed peanuts",
       "cashews",
-      "almonds",
       "pine nuts",
       "walnuts",
       "pistachios",
@@ -1814,7 +1838,6 @@
       "cashew nut",
       "pecan",
       "walnut",
-      "almond",
       "pecans",
       "chopped pecans",
       "mixed nuts"
@@ -1823,8 +1846,6 @@
       "ham",
       "bacon",
       "gammon",
-      "prosciutto",
-      "parma ham",
       "lardons",
       "smoked bacon",
       "streaky bacon"
@@ -1952,8 +1973,6 @@
       "kecap manis",
       "crispy chilli oil",
       "crispy chili oil",
-      "chilli oil",
-      "chili oil",
       "chili garlic sauce",
       "chilli garlic sauce"
     ],

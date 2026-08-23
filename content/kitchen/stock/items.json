@@ -772,6 +772,46 @@
       "where": "pantry",
       "state": "none",
       "note": "Catalogued 2026-08-22, not owned. Milled from durum wheat, harder and higher in protein than the all-purpose in the cupboard, which is what gives eggless pasta its chew. NOT the same as SEMOLINA, which is the coarse grind of the same wheat and is used for dusting rather than for dough. King Arthur's eggless pasta dough, which is the pici card, is written for the fine grind."
+    },
+    "oregano": {
+      "n": "dried oregano",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-23",
+      "src": "event",
+      "note": "Great Value Oregano Leaves, 72 g jar, bought 2026-08-23. The phrase list for this id has existed in aliases.json for weeks with NO row here, so every recipe that matched oregano resolved to an id the catalogue did not contain. Fourth instance this month of state without identity, after sesameseeds, cinnamon and potatoes_red. Leaves, not ground: they want crushing between the fingers as they go in."
+    },
+    "almonds": {
+      "n": "sliced almonds",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-23",
+      "src": "event",
+      "note": "Great Value Sliced Almonds, 300 g resealable bag, bought 2026-08-23. Sliced, not whole and not ground, so this is the toasted-topping and green-bean-almondine form, not marzipan or almond flour. Nuts go rancid from the cut surface, and slices are almost all cut surface: the bag reseals, and it lives in the cupboard away from heat."
+    },
+    "chilioil": {
+      "n": "chili oil",
+      "where": "pantry",
+      "state": "have",
+      "since": "2026-08-23",
+      "src": "event",
+      "note": "Lee Kum Kee Chili Oil, 207 mL, bought 2026-08-23. A FINISHING oil, drizzled at the end like the sesame oil, not a frying medium. Deliberately its own row rather than an alias of `oil`: `oil` is the neutral frying staple and swapping one for the other in either direction ruins a dish. Not the same as chilli crisp, which carries fried solids."
+    },
+    "prosciutto": {
+      "n": "prosciutto",
+      "where": "fridge",
+      "state": "have",
+      "since": "2026-08-23",
+      "src": "event",
+      "note": "San Daniele, 200 g resealable pack, bought 2026-08-23. Dry-cured raw ham, eaten as-is: it is not bacon and not cooking ham, and heating it hard turns it tough and oversalted. Where a recipe cooks it, it goes in at the very end or gets crisped separately."
+    },
+    "pecorino": {
+      "n": "pecorino romano",
+      "where": "fridge",
+      "state": "have",
+      "since": "2026-08-23",
+      "src": "event",
+      "note": "Lupa Pecorino Romano DOP (Tre Stelle), 200 g wedge, bought 2026-08-23. Split off `parmesan` the same day, which had been claiming the phrases `pecorino` and `pecorino romano` in aliases.json. They are different cheeses: pecorino is SHEEP'S milk and markedly saltier, parmesan is cow's and nuttier. Carbonara and cacio e pepe are written for this one, and rule 2 of aliases.json forbids aliasing two things that behave differently. Its protein figure was not legible in the label photo, so it is unrecorded rather than guessed."
     }
   }
 }
