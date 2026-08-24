@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { getEraCounts, getLetterCounts, getShelfCounts, getShelfLiveness, getShelfPage, getTierCounts } from '@/lib/reading/shelf-db';
-import { getWantKeys } from '@/lib/reading/want-db';
+import { getShelfBundle } from '@/lib/reading/shelf-db';
 import WantButton from './WantButton';
 import {
   activeFilterCount, ERAS, LETTERS, PAGE_SIZE, SHELVES, SORTS,
@@ -56,10 +55,12 @@ export default async function ShelfCheck({
   };
   const sort = filters.sort ?? 'author';
 
-  const [{ entries, total }, letterCounts, shelfCounts, tierCounts, eraCounts, liveness, wantKeys] = await Promise.all([
-    getShelfPage(filters), getLetterCounts(filters), getShelfCounts(filters),
-    getTierCounts(filters), getEraCounts(filters), getShelfLiveness(), getWantKeys(),
-  ]);
+  /* One round trip, not nine. This was a `Promise.all` of seven functions issuing nine separate
+   * HTTP queries to Neon; `getShelfBundle` sends the same nine as one transaction. See the note in
+   * shelf-db.ts for why the count of round trips is the thing that costs money here rather than
+   * the work the queries do. */
+  const { entries, total, letterCounts, shelfCounts, tierCounts, eraCounts, liveness, wantKeys } =
+    await getShelfBundle(filters);
 
   /* Surprise me. Picks one book from whatever is currently filtered, which is the point: "give me
    * something" is only useful if it respects "something SHORT, in non-fiction". The seed rides in

@@ -49,15 +49,32 @@ const where = (f: ShelfFilters) => {
   };
 };
 
-export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEntry[]; total: number }> {
+/* ---------------------------------------------------------------------------------------------
+ * The queries are BUILT here and RUN below, which is the whole point of splitting them out.
+ *
+ * A `sql` tagged template that is never awaited is a lazy query object, so these functions cost
+ * nothing until something executes them. That is what lets `getShelfBundle` hand all nine to
+ * `sql.transaction()` and get one HTTP round trip to Neon instead of nine.
+ *
+ * Why that matters, measured 2026-08-24. Vercel bills Provisioned Memory for the whole time an
+ * instance is alive INCLUDING time spent waiting on I/O, and only bills Active CPU while code is
+ * actually running. This page's Active CPU was 13ms per request against a 153ms P75 time to first
+ * byte: almost all of what it cost was memory held open waiting for Postgres. Nine concurrent
+ * round trips in a `Promise.all` are only as fast as the slowest of them, but every one of them
+ * holds its own connection and its own slice of that wait open.
+ *
+ * The SQL text below is unchanged from when each query lived in its own exported function. That is
+ * deliberate: this is a change to how many times the network is crossed, not to what is asked.
+ * ------------------------------------------------------------------------------------------- */
+
+const qEntries = (f: ShelfFilters) => {
   const w = where(f);
   /* Postgres sorts NULLS LAST on ASC and FIRST on DESC by default, which would put every book
    * with no recorded page count at the top of "shortest first" and every book with no year at the
    * top of "newest". Both are the exact opposite of useful, so unknowns are pushed to the back of
    * whichever direction is being asked for. */
   const sort: Sort = f.sort ?? 'author';
-
-  const rows = (await sql`
+  return sql`
     select key, title, author, file_under, letter, year, score, honours, tier, shelves, lists, status,
            pages, pace, cover_url, description, rating, rating_count, subjects
       from reading_shelf_entry
@@ -77,9 +94,12 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
        case when ${sort} = 'old'    then year       end asc  nulls last,
        title
      limit ${PAGE_SIZE} offset ${((f.page ?? 1) - 1) * PAGE_SIZE}
-  `) as Row[];
+  `;
+};
 
-  const [countRow] = (await sql`
+const qEntryCount = (f: ShelfFilters) => {
+  const w = where(f);
+  return sql`
     select count(*)::int n from reading_shelf_entry
      where (${w.like}::text is null or title ilike ${w.like} or author ilike ${w.like} or file_under ilike ${w.like})
        and (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
@@ -88,18 +108,12 @@ export async function getShelfPage(f: ShelfFilters): Promise<{ entries: ShelfEnt
        and (${w.hideLongShots} = false or tier <> 'maybe')
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
-  `) as { n: number }[];
+  `;
+};
 
-  return { entries: rows.map(toEntry), total: countRow?.n ?? 0 };
-}
-
-/** Books per letter under the CURRENT section and long-shot setting, so the rail can show him
- *  what is actually behind each letter before he walks to it, and grey out the empty ones.
- *  Deliberately ignores `letter` itself: the rail must not collapse to the letter already
- *  selected. Ignores `q` too, since during a search the rail is not what he is using. */
-export async function getLetterCounts(f: ShelfFilters): Promise<Record<string, number>> {
+const qLetterCounts = (f: ShelfFilters) => {
   const w = where({ ...f, q: undefined, letter: undefined });
-  const rows = (await sql`
+  return sql`
     select letter, count(*)::int n
       from reading_shelf_entry
      where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
@@ -108,29 +122,24 @@ export async function getLetterCounts(f: ShelfFilters): Promise<Record<string, n
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      group by letter
-  `) as { letter: string; n: number }[];
-  return Object.fromEntries(rows.map((r) => [r.letter, r.n]));
-}
+  `;
+};
 
-/** Counts for the tier chips, under the current section and era but ignoring tier itself, so a
- *  chip always shows what selecting it would give rather than collapsing to the current pick. */
-export async function getTierCounts(f: ShelfFilters): Promise<Record<string, number>> {
+const qTierCounts = (f: ShelfFilters) => {
   const w = where({ ...f, q: undefined, tier: undefined });
-  const rows = (await sql`
+  return sql`
     select tier, count(*)::int n
       from reading_shelf_entry
      where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      group by tier
-  `) as { tier: string; n: number }[];
-  return Object.fromEntries(rows.map((r) => [r.tier, r.n]));
-}
+  `;
+};
 
-/** Counts for the era chips, ignoring era itself for the same reason. */
-export async function getEraCounts(f: ShelfFilters): Promise<{ classic: number; contemporary: number }> {
+const qEraCounts = (f: ShelfFilters) => {
   const w = where({ ...f, q: undefined, era: undefined });
-  const [r] = (await sql`
+  return sql`
     select
       count(*) filter (where year is not null and year < ${ERA_SPLIT})::int  as classic,
       count(*) filter (where year is not null and year >= ${ERA_SPLIT})::int as contemporary
@@ -138,16 +147,12 @@ export async function getEraCounts(f: ShelfFilters): Promise<{ classic: number; 
      where (${f.shelf ?? null}::text is null or shelves @> array[${f.shelf ?? null}]::text[])
        and (${w.tier}::text is null or tier = ${w.tier})
        and (${w.hideLongShots} = false or tier <> 'maybe')
-  `) as { classic: number; contemporary: number }[];
-  return { classic: r?.classic ?? 0, contemporary: r?.contemporary ?? 0 };
-}
+  `;
+};
 
-/** Counts for the section chips, under the current long-shot setting only. A book can sit on
- *  two shelves (a Pulitzer-winning crime novel is in both), so these deliberately sum to more
- *  than the total and the page must not present them as a partition. */
-export async function getShelfCounts(f: ShelfFilters): Promise<{ all: number; byShelf: Record<string, number> }> {
+const qShelfCountsByShelf = (f: ShelfFilters) => {
   const w = where({ ...f, q: undefined, shelf: undefined });
-  const rows = (await sql`
+  return sql`
     select s as shelf, count(*)::int n
       from reading_shelf_entry, unnest(shelves) s
      where (${w.tier}::text is null or tier = ${w.tier})
@@ -155,22 +160,84 @@ export async function getShelfCounts(f: ShelfFilters): Promise<{ all: number; by
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
      group by s
-  `) as { shelf: string; n: number }[];
-  const [allRow] = (await sql`
+  `;
+};
+
+const qShelfCountsAll = (f: ShelfFilters) => {
+  const w = where({ ...f, q: undefined, shelf: undefined });
+  return sql`
     select count(*)::int n from reading_shelf_entry
      where (${w.tier}::text is null or tier = ${w.tier})
        and (${w.hideLongShots} = false or tier <> 'maybe')
        and (${w.yearMax}::int is null or (year is not null and year <= ${w.yearMax}))
        and (${w.yearMin}::int is null or (year is not null and year >= ${w.yearMin}))
-  `) as { n: number }[];
-  return { all: allRow?.n ?? 0, byShelf: Object.fromEntries(rows.map((r) => [r.shelf, r.n])) };
+  `;
+};
+
+const qLiveness = () => sql`
+  select rows, ran_at, error from reading_shelf_sync order by ran_at desc limit 1
+`;
+
+/* Lives here rather than in want-db.ts only so it can ride along in the same transaction. The
+ * exported `getWantKeys` in want-db.ts is still the one anything outside this page calls. */
+const qWantKeys = () => sql`select key from reading_want`;
+
+export interface ShelfBundle {
+  entries: ShelfEntry[];
+  total: number;
+  letterCounts: Record<string, number>;
+  tierCounts: Record<string, number>;
+  eraCounts: { classic: number; contemporary: number };
+  shelfCounts: { all: number; byShelf: Record<string, number> };
+  liveness: { rows: number | null; ranAt: string | null; lastError: string | null };
+  wantKeys: Set<string>;
 }
 
-export async function getShelfLiveness(): Promise<{ rows: number | null; ranAt: string | null; lastError: string | null }> {
-  const [r] = (await sql`
-    select rows, ran_at, error from reading_shelf_sync order by ran_at desc limit 1
-  `) as { rows: number | null; ran_at: string | null; error: string | null }[];
-  return { rows: r?.rows ?? null, ranAt: r?.ran_at ?? null, lastError: r?.error ?? null };
+/** Everything /reading/shelf renders, in ONE round trip to Postgres.
+ *
+ *  The order of the array below is the order of the destructure, and nothing else ties them
+ *  together, so do not reorder one without the other. */
+export async function getShelfBundle(f: ShelfFilters): Promise<ShelfBundle> {
+  const [
+    entryRows, countRows, letterRows, tierRows, eraRows, shelfRows, shelfAllRows, livenessRows, wantRows,
+  ] = (await sql.transaction([
+    qEntries(f),
+    qEntryCount(f),
+    qLetterCounts(f),
+    qTierCounts(f),
+    qEraCounts(f),
+    qShelfCountsByShelf(f),
+    qShelfCountsAll(f),
+    qLiveness(),
+    qWantKeys(),
+  ], { readOnly: true })) as [
+    Row[],
+    { n: number }[],
+    { letter: string; n: number }[],
+    { tier: string; n: number }[],
+    { classic: number; contemporary: number }[],
+    { shelf: string; n: number }[],
+    { n: number }[],
+    { rows: number | null; ran_at: string | null; error: string | null }[],
+    { key: string }[],
+  ];
+
+  const era = eraRows[0];
+  const live = livenessRows[0];
+
+  return {
+    entries: entryRows.map(toEntry),
+    total: countRows[0]?.n ?? 0,
+    letterCounts: Object.fromEntries(letterRows.map((r) => [r.letter, r.n])),
+    tierCounts: Object.fromEntries(tierRows.map((r) => [r.tier, r.n])),
+    eraCounts: { classic: era?.classic ?? 0, contemporary: era?.contemporary ?? 0 },
+    shelfCounts: {
+      all: shelfAllRows[0]?.n ?? 0,
+      byShelf: Object.fromEntries(shelfRows.map((r) => [r.shelf, r.n])),
+    },
+    liveness: { rows: live?.rows ?? null, ranAt: live?.ran_at ?? null, lastError: live?.error ?? null },
+    wantKeys: new Set(wantRows.map((r) => r.key)),
+  };
 }
 
 /** Front-door numbers. Computed, never written down: the hub's reading row once carried a
