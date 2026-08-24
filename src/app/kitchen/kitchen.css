@@ -734,6 +734,25 @@
   flex: 0 0 auto;
   background: var(--muted);
 }
+/* How long it keeps. Its own block rather than a line in .meta: for a snack this is the deciding
+   fact, and .meta is a row of small grey asides. */
+.kos .keeps {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--border);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+.kos .keeps b {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  margin-bottom: 3px;
+}
+
 .kos .srcmeta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .kos .srcmeta b { font-size: 15px; }
 .kos .srcmeta span { font-size: 13px; color: var(--muted-foreground); }

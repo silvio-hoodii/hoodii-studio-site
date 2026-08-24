@@ -1,0 +1,104 @@
+{
+  "id": "mugmuffin",
+  "fetchedAt": "2026-08-24",
+  "via": "url",
+  "source": {
+    "name": "blueberry mug muffin",
+    "url": "https://www.budgetbytes.com/blueberry-mug-muffin/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "1"
+  ],
+  "totalTime": "PT7M",
+  "prepTime": "PT5M",
+  "cookTime": "PT2M",
+  "nutrition": {
+    "servingSize": "1 Serving",
+    "calories": "248.9 kcal",
+    "carbohydrateContent": "42.3 g",
+    "proteinContent": "4.4 g",
+    "fatContent": "7.2 g",
+    "fiberContent": "1.9 g",
+    "sodiumContent": "451.5 mg"
+  },
+  "rating": "4.43",
+  "ratingCount": "138",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2013/02/Blueberry-Mug-Muffin-Overhead.jpg",
+  "cuisine": null,
+  "category": null,
+  "ingredients": [
+    "¼ cup flour ($0.04)",
+    "1 Tbsp brown sugar ($0.02)",
+    "¼ tsp baking powder ($0.02)",
+    "⅛ tsp salt ($0.01)",
+    "pinch cinnamon ($0.01)",
+    "½ Tbsp butter ($0.04)",
+    "2 Tbsp milk ($0.04)",
+    "1-2 Tbsp frozen blueberries ($0.19)"
+  ],
+  "instructions": [
+    "In a microwave safe mug, stir together the flour, brown sugar, baking powder, salt, and cinnamon until well mixed.",
+    "Add the butter to the mug and use your fingers to rub or smoosh them together until no large chunks of butter remain and the mixture looks like damp sand (see photos below).",
+    "Stir the milk into the butter/flour mixture. It should now resemble a thick muffin batter. If it’s too dry, add a splash more milk. Sprinkle blueberries over top and push them down into the batter. Microwave on high for approximately 90 seconds. Enjoy with a drizzle of maple syrup over top."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "¼ cup flour ($0.04)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1 Tbsp brown sugar ($0.02)",
+      "item": "brownsugar",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "¼ tsp baking powder ($0.02)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "⅛ tsp salt ($0.01)",
+      "item": null,
+      "staple": true,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "pinch cinnamon ($0.01)",
+      "item": "cinnamon",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "½ Tbsp butter ($0.04)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp milk ($0.04)",
+      "item": "milk",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1-2 Tbsp frozen blueberries ($0.19)",
+      "item": "fruit",
+      "staple": false,
+      "gap": null,
+      "optional": false
+    }
+  ],
+  "captureHash": "29b34a5b2957"
+}

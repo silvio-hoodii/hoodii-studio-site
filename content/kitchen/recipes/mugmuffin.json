@@ -1,0 +1,278 @@
+{
+ "id": "mugmuffin",
+ "name": "Blueberry Mug Muffin",
+ "build": "2026-08-23a",
+ "form": "dish",
+ "meal": [
+  "snack"
+ ],
+ "why": "One muffin, in a mug, in seven minutes, with no pan and no tray and nothing to wash but the mug. This is the answer to wanting something sweet at nine at night without committing to a batch of eighteen cookies that then sit on the counter for a week.\n\nIt is here because of the vessel, not the recipe. You do not own a muffin tin, and that one gap was quietly blocking every portioned sweet thing in this app: banana muffins, chocolate banana muffins, oatmeal muffins, the savoury egg muffins. A mug is not a substitute for a muffin tin, it is a different published recipe that was written for a mug, which is the whole difference between finding something that fits this kitchen and bending something that does not.\n\nThe honest limit: it is 4.4 g of protein and a quarter cup of flour. It is a small cake. It replaces a chocolate bar, and that is the job.",
+ "source": "https://www.budgetbytes.com/blueberry-mug-muffin/",
+ "keeps": "HER LINE, off the page: \"best fresh, but you can store it by letting it cool and storing in an airtight container in the fridge for 4 to 5 days. For longer storage, wrap well and freeze for 2 to 3 months. To reheat, microwave for 25 to 45 seconds, just until warmed through.\"\n\nWhich means it batches. Four mugs on a Sunday, turned out and frozen, is a freezer of single portions thirty seconds from ready. Nothing goes stale on the counter, because none of it is on the counter.",
+ "time": {
+  "activeMin": 5,
+  "totalMin": 7,
+  "note": "her numbers: 5 minutes prep, 2 minutes cook. The 2 minutes is 90 seconds in the microwave"
+ },
+ "serves": {
+  "count": 1,
+  "unit": "mug",
+  "proteinPerUnit": 4,
+  "proteinMath": "HER FIGURE, off Budget Bytes' own nutrition panel: 4.4 g of protein per serving at her yield of 1, alongside 248.9 cal, 42.3 g carbohydrate and 7.2 g fat. Rounded DOWN to 4.\n\nWhere it comes from: the quarter cup of flour carries about 3 g and the 2 tablespoons of milk about 1 g. The blueberries and the sugar carry none. This is a cake and it is not a protein vehicle, which is stated here rather than left for you to work out from the panel."
+ },
+ "ingredients": [
+  {
+   "ref": "flour",
+   "display": "flour",
+   "qty": 0.25,
+   "unit": "cup",
+   "staple": true,
+   "prep": "the all-purpose flour. Spoon it into the measuring cup and level it off with a knife rather than scooping the cup through the bag, which packs in up to a quarter more and is the single most common reason a small bake comes out dry",
+   "defining": true
+  },
+  {
+   "ref": "brown_sugar",
+   "stock": "brownsugar",
+   "display": "brown sugar",
+   "qty": 1,
+   "unit": "tbsp",
+   "prep": "press it into the spoon so there are no air pockets. Brown sugar is measured packed",
+   "defining": false
+  },
+  {
+   "ref": "baking_powder",
+   "display": "baking powder",
+   "qty": 0.25,
+   "unit": "tsp",
+   "staple": true,
+   "prep": "baking POWDER, not baking soda. There is a 450 g tub of each in the cupboard and they are not interchangeable: soda alone here would taste soapy",
+   "defining": true
+  },
+  {
+   "ref": "salt",
+   "display": "salt",
+   "qty": 0.125,
+   "unit": "tsp",
+   "staple": true,
+   "prep": "an eighth of a teaspoon, which is half of the quarter-teaspoon spoon in the set. Do not leave it out: in something this sweet the salt is what stops it tasting flat",
+   "defining": false
+  },
+  {
+   "ref": "cinnamon",
+   "stock": "cinnamon",
+   "display": "cinnamon",
+   "qty": 1,
+   "unit": "pinch",
+   "prep": "a pinch is what you pick up between thumb and one finger, roughly an eighth of a teaspoon. Her word, and it does not need to be precise",
+   "defining": false
+  },
+  {
+   "ref": "butter",
+   "stock": "butter",
+   "display": "butter",
+   "qty": 0.5,
+   "unit": "tbsp",
+   "prep": "half a tablespoon, and it wants to be soft rather than fridge-hard, because step 2 is rubbing it into the flour with your fingers. Cut it off and leave it on the counter while you measure everything else",
+   "defining": true
+  },
+  {
+   "ref": "milk",
+   "stock": "milk",
+   "display": "milk",
+   "qty": 2,
+   "unit": "tbsp",
+   "defining": true
+  },
+  {
+   "ref": "blueberries",
+   "stock": "fruit",
+   "display": "frozen blueberries",
+   "qty": 2,
+   "unit": "tbsp",
+   "prep": "she writes 1 to 2 tablespoons, so anywhere in that range is her recipe. YOUR FREEZER HOLDS A FOUR-BERRY BLEND rather than a bag of blueberries, and 2 tablespoons is a small enough amount to pick the blueberries out of it. Straight from frozen, not thawed: thawed berries bleed and turn the whole mug purple. The frozen fruit is marked LOW in the app, so look before you plan on four of these",
+   "defining": true
+  },
+  {
+   "ref": "maple",
+   "display": "maple syrup",
+   "qty": 1,
+   "unit": "tsp",
+   "staple": true,
+   "optional": true,
+   "prep": "she finishes with a drizzle of it. Optional, and the honey would do the same job",
+   "defining": false
+  }
+ ],
+ "equipment": [
+  "cups",
+  "microwave",
+  "measuringcups",
+  "measuringspoons",
+  "knife_sharp",
+  "spatula",
+  "woodenspoon",
+  "ovenmitts",
+  "teatowel"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "text": "In a microwave safe mug, stir together the flour, brown sugar, baking powder, salt, and cinnamon until well mixed.",
+   "sourceText": "In a microwave safe mug, stir together the flour, brown sugar, baking powder, salt, and cinnamon until well mixed.",
+   "uses": [
+    {
+     "ref": "flour",
+     "amount": 0.25,
+     "unit": "cup"
+    },
+    {
+     "ref": "brown_sugar",
+     "amount": 1,
+     "unit": "tbsp"
+    },
+    {
+     "ref": "baking_powder",
+     "amount": 0.25,
+     "unit": "tsp"
+    },
+    {
+     "ref": "salt",
+     "amount": 0.125,
+     "unit": "tsp"
+    },
+    {
+     "ref": "cinnamon",
+     "amount": 1,
+     "unit": "pinch"
+    }
+   ],
+   "equipment": [
+    "cups",
+    "measuringcups",
+    "measuringspoons",
+    "knife_sharp"
+   ],
+   "minutes": 2,
+   "heat": null,
+   "doneness": {
+    "test": "Look for streaks. Tip the mug slightly and stir until there is no pale flour streak and no darker brown-sugar streak left, so the whole thing is one even colour. Dry ingredients not mixed now will not mix later.",
+    "kind": "look"
+   },
+   "look": "A MICROWAVE SAFE MUG means a plain ceramic mug with no metal on it: no gold rim, no metallic paint, no travel mug with a steel liner. Any of the everyday mugs in the cupboard.\n\nSIZE MATTERS MORE THAN YOU WOULD THINK. This rises while it cooks, so use a full-size mug rather than a small espresso cup, and the batter should sit no more than halfway up. Too small and it climbs over the rim in the microwave.\n\nEVERYTHING GOES IN THE MUG. There is no bowl in this recipe and no second dish to wash. That is the point of it."
+  },
+  {
+   "n": 2,
+   "text": "Add the butter to the mug and use your fingers to rub or smoosh them together until no large chunks of butter remain and the mixture looks like damp sand (see photos below).",
+   "sourceText": "Add the butter to the mug and use your fingers to rub or smoosh them together until no large chunks of butter remain and the mixture looks like damp sand (see photos below).",
+   "uses": [
+    {
+     "ref": "butter",
+     "amount": 0.5,
+     "unit": "tbsp"
+    }
+   ],
+   "equipment": [
+    "cups",
+    "measuringspoons"
+   ],
+   "minutes": 2,
+   "heat": null,
+   "doneness": {
+    "test": "DAMP SAND IS HER TEST AND IT IS A GOOD ONE, so use it literally. Squeeze a bit of the mixture between finger and thumb: it should hold together in a crumb for a second and then fall apart, and you should feel no slippery lumps of butter bigger than a grain of rice. If it still feels like dry flour, keep rubbing. If it clumps into a paste, the butter was too warm, which is not a problem here.",
+    "kind": "touch"
+   },
+   "look": "RUB OR SMOOSH means exactly what it sounds like. Pinch the butter into the flour between your fingertips and keep working it, and it breaks into smaller and smaller pieces coated in flour. Thirty seconds to a minute. Wash your hands first and get the ring off.\n\nWHY THIS RATHER THAN MELTING IT: butter rubbed in as solid pieces makes a muffin crumb rather than a dense little cake, because each coated piece keeps a bit of flour separate from the liquid. Melting it would work and it would not be her recipe.\n\nSEE PHOTOS BELOW refers to HER page, not to this card. The step-by-step photographs are on the Budget Bytes page and the link is at the top of this screen. Worth one look the first time, because damp sand is a texture rather than a description."
+  },
+  {
+   "n": 3,
+   "text": "Stir the milk into the butter/flour mixture. It should now resemble a thick muffin batter. If it’s too dry, add a splash more milk.",
+   "sourceText": "Stir the milk into the butter/flour mixture. It should now resemble a thick muffin batter. If it’s too dry, add a splash more milk. Sprinkle blueberries over top and push them down into the batter. Microwave on high for approximately 90 seconds. Enjoy with a drizzle of maple syrup over top.",
+   "uses": [
+    {
+     "ref": "milk",
+     "amount": 2,
+     "unit": "tbsp"
+    }
+   ],
+   "equipment": [
+    "cups",
+    "measuringspoons",
+    "spatula",
+    "woodenspoon"
+   ],
+   "minutes": 1,
+   "heat": null,
+   "doneness": {
+    "test": "Pull the spoon up through the middle and lift it out. Thick muffin batter falls off the spoon slowly in a lump rather than running off it in a stream, and the trench it leaves closes over in a second or two. If it will not move at all and there is dry flour at the bottom of the mug, that is her \"too dry\": add milk half a teaspoon at a time, stirring between, until it does.",
+    "kind": "look"
+   },
+   "look": "A SPLASH MORE MILK IS HER ESCAPE HATCH and this is one of the few times a recipe here hands you a dial to turn. Use it in small amounts: half a teaspoon at a time. Too much milk and it goes from muffin to pancake, and there is no way back from that in a mug.\n\nSTIR, DO NOT BEAT. Enough to bring it together and no more. Flour turns tough when it is worked, and in something this small the difference is noticeable.\n\nSCRAPE THE CORNERS. Dry flour hides where the bottom of the mug meets the side, and it stays dry flour right through cooking. The spatula gets in there better than a spoon does."
+  },
+  {
+   "n": 4,
+   "text": "Sprinkle blueberries over top and push them down into the batter. Microwave on high for approximately 90 seconds.",
+   "sourceText": "Stir the milk into the butter/flour mixture. It should now resemble a thick muffin batter. If it’s too dry, add a splash more milk. Sprinkle blueberries over top and push them down into the batter. Microwave on high for approximately 90 seconds. Enjoy with a drizzle of maple syrup over top.",
+   "uses": [
+    {
+     "ref": "blueberries",
+     "amount": 2,
+     "unit": "tbsp"
+    }
+   ],
+   "equipment": [
+    "cups",
+    "microwave",
+    "measuringspoons",
+    "ovenmitts",
+    "teatowel",
+    "woodenspoon"
+   ],
+   "minutes": 2,
+   "heat": {
+    "surface": "microwave",
+    "target": "High, which on a microwave means full power and is the setting it sits on unless somebody changed it. This is the one appliance in the kitchen with no heat judgement in it: the power is fixed and the time is the only variable.",
+    "recheck": "At 90 seconds, and only then. Opening the door partway through drops the temperature and the muffin sinks."
+   },
+   "doneness": {
+    "test": "Press the top lightly with a fingertip. Cooked, it springs back and feels dry and set. Underdone, it stays dented and your finger comes away wet. If it is still wet, another 10 seconds, then test again. Repeat rather than guessing at a longer time: 20 extra seconds in a microwave is the difference between a muffin and a rubber puck, and overcooked cannot be undone.",
+    "kind": "touch"
+   },
+   "look": "PUSH THEM DOWN INTO THE BATTER, which she says for a reason: berries left sitting on top dry out and scorch in a microwave while the batter under them is still raw. Poke each one just below the surface with a fingertip or the spoon handle.\n\nAPPROXIMATELY 90 SECONDS IS HER WORD AND THE APPROXIMATELY IS LOAD-BEARING. Microwave wattages vary by a factor of two, so the first one you make is a calibration. Start at 90 seconds, do the fingertip test, and note what your microwave actually needed. From then on it is the same number every time.\n\nTHE MUG IS HOT. It has been in a microwave for 90 seconds with hot food in it. Use the tea towel or a mitt, and let it stand a minute before eating: the middle carries on cooking and it will burn your mouth straight out of the machine."
+  },
+  {
+   "n": 5,
+   "text": "Enjoy with a drizzle of maple syrup over top.",
+   "sourceText": "Stir the milk into the butter/flour mixture. It should now resemble a thick muffin batter. If it’s too dry, add a splash more milk. Sprinkle blueberries over top and push them down into the batter. Microwave on high for approximately 90 seconds. Enjoy with a drizzle of maple syrup over top.",
+   "uses": [
+    {
+     "ref": "maple",
+     "amount": 1,
+     "unit": "tsp"
+    }
+   ],
+   "equipment": [
+    "cups",
+    "measuringspoons"
+   ],
+   "minutes": 1,
+   "heat": null,
+   "look": "OPTIONAL, AND THE HONEY WOULD DO THE SAME JOB. There is a 500 g jar of honey in the cupboard and maple syrup as well; either is a drizzle. This is the one line on the card where nothing depends on the choice.\n\nIF YOU ARE BATCHING THESE FOR THE FREEZER, leave the syrup off and add it when you reheat. Syrup soaks in and goes sticky over a few days in the freezer."
+  }
+ ],
+ "provenance": {
+  "tier": "sourced",
+  "cooked": false,
+  "readAt": "2026-08-23a",
+  "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts and her times, at her scale of one. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped.\n\nHer method is published as three steps and this card shows five, which is re-chunking rather than rewriting. Her third step contains four separate actions plus the cook, and the last one is eaten. Steps 3, 4 and 5 here quote that whole published step as `sourceText` and each shows its own slice of it, which is the split the validator is built to allow: the words he reads are hers in the order she wrote them, one screen at a time. Nothing is added and nothing is dropped.\n\nWhat this app adds is the layer a printed page cannot: which mug, and that it must have no metal on it; that the butter wants to be soft before step 2 starts; that the four-berry blend in the freezer is where her blueberries come from; a fingertip test for done, because a microwave gives no visual warning and 20 seconds too long ruins it; the warning that the mug is hot; and the protein arithmetic off her own panel.\n\nOne thing is stated as ours rather than hers, on step 2: she writes \"see photos below\", meaning the photographs on her page. There are none on this card, so the annotation says where they are and the source link at the top of the screen goes there.\n\nHer storage line in `keeps` is quoted with the dash characters replaced by the word \"to\", because this repo's prose linter refuses en dashes and the exemption covers only `text` and `sourceText`. Nothing else about the sentence changed. Reading it as rendered found three things and all three are fixed here: the tea towel, the oven mitt and a spoon were referenced in annotations without being declared, so the prep list did not name them; and step 4 carried a sentence promising the muffin rises and then settles, which nobody here has watched and which could talk him out of noticing a real problem. Removed rather than softened.\n\nThe `keeps` line was cut down after reading the card at 390px: it carried a paragraph of explanation after her quote, and her quote plus one sentence on what it means for batching is the whole useful content. Her dash characters are replaced by the word \"to\" because the prose linter refuses them and its exemption covers only `text` and `sourceText`. Nothing else about the sentence changed.",
+  "sources": [
+   {
+    "name": "Budget Bytes",
+    "url": "https://www.budgetbytes.com/blueberry-mug-muffin/",
+    "primary": true,
+    "note": "blueberry mug muffin. 4.43 out of 5 from 138 ratings, yield 1, 5 minutes prep and 2 minutes cook. Captured 2026-08-23 from the page's own JSON-LD via content/kitchen/import.mjs. All eight ingredient lines and all three instructions taken verbatim. Nutrition panel on the same page gives 248.9 cal and 4.4 g protein. The storage and reheating paragraph quoted in `keeps` is from her Storage and reheating section on the same page, read 2026-08-23, and is not part of the JSON-LD capture."
+   }
+  ],
+  "readHash": "4be95180",
+  "cookedResult": null
+ }
+}

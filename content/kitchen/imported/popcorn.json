@@ -1,0 +1,75 @@
+{
+  "id": "popcorn",
+  "fetchedAt": "2026-08-24",
+  "via": "url",
+  "source": {
+    "name": "Easy Stovetop Popcorn Recipe",
+    "url": "https://www.budgetbytes.com/how-to-make-stove-top-popcorn/",
+    "provider": "budgetbytes.com"
+  },
+  "yield": [
+    "4",
+    "4 2 cups each"
+  ],
+  "totalTime": "PT5M",
+  "prepTime": null,
+  "cookTime": "PT5M",
+  "nutrition": {
+    "servingSize": "2 cups",
+    "calories": "153.5 kcal",
+    "carbohydrateContent": "8.75 g",
+    "proteinContent": "1.45 g",
+    "fatContent": "13 g",
+    "sodiumContent": "340.9 mg",
+    "fiberContent": "1.63 g"
+  },
+  "rating": "4.11",
+  "ratingCount": "57",
+  "image": "https://www.budgetbytes.com/wp-content/uploads/2015/11/How-to-Make-Stovetop-Popcorn-big-bowl.jpg",
+  "cuisine": null,
+  "category": null,
+  "ingredients": [
+    "2 Tbsp high heat cooking oil* ($0.04)",
+    "1/3 cup popcorn kernels ($0.19)",
+    "2 Tbsp butter (optional) ($0.26)",
+    "1/2 tsp seasoning salt (optional) ($0.05)"
+  ],
+  "instructions": [
+    "Add the oil and one kernel to a large sauce pot. Place the lid on the pot and turn the heat onto medium-high. Wait for the test kernel to pop.",
+    "Once the kernel pops, add the rest of the kernels, replace the lid, and give the pot a swirl to coat the kernels in the hot oil. Wait for the kernels to begin to pop. You can swirl again to redistribute the hot oil, if needed.",
+    "Once the kernels begin to pop rapidly, crack the lid a little bit to allow excess steam to escape. Make sure it's only open a little to keep the pot hot enough to continue popping the corn.",
+    "When the popping slows to about one pop per second, turn off the heat. Wait a few extra seconds for the last few pops, then remove the lid and pour the popcorn into a bowl.",
+    "Let the pot cool for two minutes or so, then add the butter to the still hot pot. Allow the residual heat in the pot to melt the butter, swirling the butter to maximize the contact with the hot pan. Drizzle the melted butter over the popcorn bowl, then sprinkle with seasoning salt or your favorite herbs and spices."
+  ],
+  "_stockAtCapture": [
+    {
+      "line": "2 Tbsp high heat cooking oil* ($0.04)",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "1/3 cup popcorn kernels ($0.19)",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": false
+    },
+    {
+      "line": "2 Tbsp butter (optional) ($0.26)",
+      "item": "butter",
+      "staple": false,
+      "gap": null,
+      "optional": true
+    },
+    {
+      "line": "1/2 tsp seasoning salt (optional) ($0.05)",
+      "item": null,
+      "staple": false,
+      "gap": null,
+      "optional": true
+    }
+  ],
+  "captureHash": "e835c1943ca0"
+}

@@ -121,6 +121,13 @@ function print(r, { look = true } = {}) {
   console.log('='.repeat(W));
   console.log(r.name.toUpperCase());
   console.log('='.repeat(W));
+  /* HOW LONG IT KEEPS renders here because it renders on the card here, above the ingredients.
+   * A read that skips a block he reads is not a read, which is the entire lesson of `look` being
+   * absent from this output until 2026-08-16. */
+  if (r.keeps) {
+    console.log('\nKEEPS');
+    console.log(wrap(r.keeps, W - 2).split('\n').map((l) => '  ' + l).join('\n'));
+  }
   console.log('\nGET THIS OUT FIRST');
   for (const p of prep) console.log(`  ${p.qty.padEnd(11)}  ${p.name}`);
 
@@ -170,6 +177,11 @@ export function renderHash(r) {
   const { prep, steps } = renderRecipe(r);
   const blob = JSON.stringify({
     name: r.name,
+    /* IN THE HASH, because it is text he reads and acts on: a `keeps` line edited from "1 week" to
+     * "3 months" with no other change would otherwise leave the read stamp valid. Absent on every
+     * card written before 2026-08-23, and JSON.stringify drops an undefined key, so adding it here
+     * moves no existing hash. Verified against bananabread before and after. */
+    keeps: r.keeps,
     prep: prep.map((p) => [p.qty, p.name]),
     steps: steps.map((s) => [s.text, s.rows.map((x) => [x.qty, x.name]), s.heat, s.recheck, s.doneness, s.warn, s.look]),
   });

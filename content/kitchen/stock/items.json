@@ -1,817 +1,825 @@
 {
-  "_": "Generated once by migrate-stock.mjs from the HAVE / USEFIRST / SHOP / ING_NAME tables that used to live in kitchen.html. From here this file is the SEED and stock/events.jsonl is what actually moves. Do not hand-edit a state: append an event instead, or the next fold will overwrite you.",
-  "seeded": "2026-08-05T02:20:51.749Z",
-  "states": {
-    "have": "in the kitchen and usable now",
-    "low": "usable now, but running out",
-    "out": "had it, finished it",
-    "none": "never owned it",
-    "frozen": "owned, in the freezer, not edible tonight without a thaw"
+ "_": "Generated once by migrate-stock.mjs from the HAVE / USEFIRST / SHOP / ING_NAME tables that used to live in kitchen.html. From here this file is the SEED and stock/events.jsonl is what actually moves. Do not hand-edit a state: append an event instead, or the next fold will overwrite you.",
+ "seeded": "2026-08-05T02:20:51.749Z",
+ "states": {
+  "have": "in the kitchen and usable now",
+  "low": "usable now, but running out",
+  "out": "had it, finished it",
+  "none": "never owned it",
+  "frozen": "owned, in the freezer, not edible tonight without a thaw"
+ },
+ "items": {
+  "eggs": {
+   "n": "eggs",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
   },
-  "items": {
-    "eggs": {
-      "n": "eggs",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "butter": {
-      "n": "butter",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "milk": {
-      "n": "milk",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "whey": {
-      "n": "whey",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "oats": {
-      "n": "oats",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "honey": {
-      "n": "honey",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "cocoa": {
-      "n": "cocoa",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "peanutbutter": {
-      "n": "peanut butter",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "mayo": {
-      "n": "mayo",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "oil": {
-      "n": "cooking oil",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "vinegar": {
-      "n": "vinegar",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "salt": {
-      "n": "salt",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "seasoning": {
-      "n": "spice rack",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "garlic": {
-      "n": "garlic",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "flour": {
-      "n": "flour",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "yeast": {
-      "n": "yeast",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "sugar": {
-      "n": "white sugar",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "pasta": {
-      "n": "pasta",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "rice": {
-      "n": "instant rice",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "lentils": {
-      "n": "lentils",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "jars": {
-      "n": "mason jars",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "onion": {
-      "n": "a red onion",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "lemon": {
-      "n": "lemon juice (ReaLime, bottled)",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "capers": {
-      "n": "capers",
-      "state": "none",
-      "where": "fridge",
-      "note": "Great Value 90 mL jar, Walmart house brand, bought 2026-08-09. The buy block that used to sit here said Walmart does not carry capers in a normal jar size and kept piccata blocked for five days. It was simply false. Keep the jar in the fridge once opened, where it lasts months under its own brine.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "stock": {
-      "n": "chicken stock",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "longgrainrice": {
-      "n": "long grain rice",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "cumin": {
-      "n": "cumin",
-      "state": "none",
-      "where": "pantry",
-      "buy": {
-        "price": 2.27,
-        "zone": "Spices and baking",
-        "walk": "Baking aisle, near the flour and sugar",
-        "n": "Ground cumin",
-        "s": "WALMART MARKED THIS UNAVAILABLE on the Aug 4 delivery, so it is the one thing from that order you do not have. Every Peruvian source for the arroz tapado uses it and your spice rack has nothing that stands in for it. The dish still works without it, just flatter, and the app tells you how to compensate. $2.27, and any grocery or corner store has it, so do not wait for another Walmart order"
-      },
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "smokedpaprika": {
-      "n": "smoked paprika",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "tomatopaste": {
-      "n": "tomato paste",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "raisins": {
-      "n": "raisins",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "olives": {
-      "n": "black olives",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "soy": {
-      "n": "soy sauce",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "mirin": {
-      "n": "mirin",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "sesameoil": {
-      "n": "sesame oil",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "greenonion": {
-      "n": "green onions",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "yellowonion": {
-      "n": "yellow onions",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04",
-      "note": "Yellow, confirmed by Silvio 2026-08-12. This row was briefly renamed to \"sweet onions\" on the strength of the 2026-08-04 receipt note recording a Walmart substitution; he corrected it the same day. A substitution logged at order time describes that order, not a standing fact about the pantry. White onions are a separate item."
-    },
-    "oyster": {
-      "n": "oyster sauce",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "cornstarch": {
-      "n": "cornstarch",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "shaoxing": {
-      "n": "Shaoxing wine",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "ginger": {
-      "n": "fresh ginger",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "mushrooms": {
-      "n": "mushrooms",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "yogurt": {
-      "n": "Greek yogurt",
-      "state": "have",
-      "where": "fridge",
-      "label": "Greek yogurt, 750 g",
-      "by": "2026-08-16",
-      "note": "Completely untouched since Aug 1. Not urgent, but it is the single biggest unused thing in the fridge and four jars of overnight oats would take 680 g of it.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "mozzarella": {
-      "n": "mozzarella",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "fruit": {
-      "n": "frozen fruit",
-      "state": "have",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "frozenveg": {
-      "n": "frozen vegetables",
-      "state": "have",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "peppers": {
-      "n": "fresh peppers",
-      "state": "have",
-      "where": "fridge",
-      "label": "Red bell peppers, 2",
-      "by": "2026-08-06",
-      "note": "Off the clearance rack, so they were already partway through their life when they arrived. Treat them as days, not the usual fortnight.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "frozenpeppers": {
-      "n": "frozen peppers",
-      "state": "have",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "cucumbers": {
-      "n": "cucumbers",
-      "state": "have",
-      "where": "fridge",
-      "label": "English cucumbers, 2",
-      "by": "2026-08-16",
-      "note": "Pickling turns these into something that lasts a month instead of a fortnight.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "carrots": {
-      "n": "carrots",
-      "state": "have",
-      "where": "fridge",
-      "label": "Baby carrots, 454 g",
-      "by": "2026-08-23",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "sweetpotato": {
-      "n": "sweet potato",
-      "state": "have",
-      "where": "pantry",
-      "label": "Sweet potato, 1 kg",
-      "by": "2026-08-23",
-      "note": "Keep it out of the fridge, somewhere cool and dark. Cold turns its starch to sugar and gives it a hard core that never softens.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "arugula": {
-      "n": "arugula",
-      "state": "have",
-      "where": "fridge",
-      "label": "Arugula, about 120 g",
-      "by": "2026-08-05",
-      "note": "The most perishable thing in the kitchen. Bagged greens turn to slime rather than going obviously off, so there is no warning.",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "beef": {
-      "n": "ground beef",
-      "state": "have",
-      "where": "fridge",
-      "label": "Browned beef, 3 bags (700 g)",
-      "by": "2026-08-08",
-      "note": "Cooked and bagged the evening of Aug 4: 250 g, 250 g and 200 g. Browned beef gets 3 to 4 days in the fridge against 1 to 2 raw. Anything you will not cook by Friday goes in the freezer, where it keeps 3 months.",
-      "src": "seed",
-      "since": "2026-08-04",
-      "buyable": false,
-      "buyableWhy": "Made, not bought: browned from `beef-raw` in his own pan. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
-    },
-    "groundchickenfrozen": {
-      "n": "frozen ground chicken",
-      "state": "frozen",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "tilapia": {
-      "n": "tilapia",
-      "state": "frozen",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "parmesan": {
-      "n": "parmesan",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "cottagecheese": {
-      "n": "cottage cheese",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "bolognese": {
-      "n": "bolognese sauce",
-      "state": "out",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04",
-      "made": "Big-Batch Bolognese",
-      "buyable": false,
-      "buyableWhy": "Made, not bought: a sauce he cooks. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
-    },
-    "chickenbreast": {
-      "n": "chicken breast",
-      "state": "frozen",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "quarters": {
-      "n": "leg quarters",
-      "state": "frozen",
-      "where": "freezer",
-      "src": "seed",
-      "since": "2026-08-04"
-    },
-    "roast": {
-      "n": "sirloin tip roast",
-      "state": "have",
-      "where": "fridge",
-      "src": "seed",
-      "since": "2026-08-04",
-      "label": "Sirloin tip roast, 1 kg",
-      "for": "bulgogi"
-    },
-    "shortgrainrice": {
-      "n": "short-grain rice",
-      "state": "none",
-      "where": "pantry",
-      "buy": {
-        "n": "Short-grain / sushi rice, 1 bag",
-        "price": 5.77,
-        "zone": "Pantry and canned goods",
-        "walk": "Rice and pasta aisle. Often shelved with international foods",
-        "s": "What Korean pot rice is actually made with. Bulgogi and Mushroom Pot Rice works properly with this and only approximately without it. Price seen on walmart.ca 2026-08-04, range was $5.77 to $18.97, so buy the cheap end. Any bag labelled sushi rice, calrose or short-grain is the right thing."
-      },
-      "src": "seed",
-      "since": "2026-08-06"
-    },
-    "stockcube": {
-      "n": "chicken stock cubes",
-      "state": "have",
-      "where": "pantry",
-      "src": "seed",
-      "since": "2026-08-06"
-    },
-    "lemon_fresh": {
-      "n": "fresh lemons",
-      "where": "fridge",
-      "state": "none",
-      "note": "Distinct from the bottle on purpose. In a sauce where lemon is one of three flavours, they are not the same ingredient. Bought 2026-08-09 as a 908 g bag."
-    },
-    "parsley": {
-      "n": "fresh parsley",
-      "where": "fridge",
-      "state": "none",
-      "note": "Bought 2026-08-04 for Chicken Piccata and reported going mushy on 2026-08-08. Events for it were already in the database with no catalogue row here, which meant the validator could not resolve any recipe that reached for it. Added 2026-08-09."
-    },
-    "turkeydeli": {
-      "n": "sliced turkey breast",
-      "where": "fridge",
-      "state": "none",
-      "note": "Deli slices, already cooked. High in sodium per the label, so anything built on it needs less added salt."
-    },
-    "chickendeli": {
-      "n": "sliced chicken breast (deli)",
-      "where": "fridge",
-      "state": "none",
-      "note": "Fully cooked deli slices. Deliberately a separate id from `chickenbreast`, which is raw and frozen. A recipe that reaches for one must never resolve to the other."
-    },
-    "pineapple": {
-      "n": "frozen pineapple",
-      "where": "freezer",
-      "state": "none",
-      "note": "Frozen chunks. Raw pineapple carries bromelain, an enzyme that breaks protein down, so it curdles dairy if left to sit and it will not set in gelatin. Fine in a shake drunk straight away."
-    },
-    "montereyjack": {
-      "n": "Monterey Jack cheese",
-      "where": "fridge",
-      "state": "none",
-      "note": "Semi-soft, melts smoothly, jalapeno already in it. Where mozzarella stretches, this one flows, so it suits a quesadilla or eggs rather than a pizza."
-    },
-    "spaghetti_cooked": {
-      "n": "cooked spaghetti (plain, leftover)",
-      "where": "fridge",
-      "state": "none",
-      "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days.",
-      "buyable": false,
-      "buyableWhy": "Made, not bought: boiled from the dry pasta in the pantry. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
-    },
-    "chickenwings": {
-      "n": "chicken wings",
-      "where": "freezer",
-      "state": "none",
-      "note": "Drumette and winglet, bone-in. Freeze-by on the label is Aug 21."
-    },
-    "chickenthighs": {
-      "n": "chicken thighs",
-      "where": "freezer",
-      "state": "none",
-      "note": "Bone-in skin-on. At $7.63/kg this is the cheapest protein per dollar in the kitchen. Freeze-by Aug 21. Deliberately separate from chickenbreast and from the deli slices: a recipe wanting thighs must never resolve to breast, which cooks differently and dries out."
-    },
-    "basil": {
-      "n": "fresh basil",
-      "where": "fridge",
-      "state": "none",
-      "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
-    },
-    "blackvinegar": {
-      "n": "Chinkiang black vinegar",
-      "where": "pantry",
-      "state": "none",
-      "note": "Catalogued 2026-08-18, not owned. Chinkiang, also spelled Zhenjiang, is a dark malty rice vinegar and it is NOT the distilled white vinegar in the cupboard: it is the sour note in General Tso and in most northern Chinese sauces. Gold Plum 554 ml was $2.99 at Superstore on 2026-08-18. Walmart lists Hengshun at $3.97 on an alphanumeric SKU, which is the marketplace pattern, so the shelf is unproven there."
-    },
-    "driedchilli": {
-      "n": "whole dried red chillies",
-      "where": "pantry",
-      "state": "none",
-      "note": "Catalogued 2026-08-18, not owned. Distinct from the fresh chilli gap, from chili powder and from crushed red pepper: these are whole dried pods that go into hot oil for aroma. Omnivore Cookbook General Tso wants 7 to 8 and her footnote says they add aroma rather than heat. Tastie Dried Red Chili 120 g was $2.29 at Superstore on 2026-08-18, and it is not sold as Chinese or Korean, which is his call to make."
-    },
-    "tomatoes_round": {
-      "n": "fresh tomatoes",
-      "where": "fridge",
-      "state": "none",
-      "note": "Round slicing tomatoes on the vine, 5 of them, receipt photo 20260814_121315 and the count stated by Silvio. Distinct from the grape tomatoes and from anything tinned. Catalogued 2026-08-18: it had existed only as stock_event 74, so validate.mjs refused a recipe pointing at it and the app printed the raw id where a name belongs."
-    },
-    "beanmedley": {
-      "n": "canned bean medley",
-      "where": "pantry",
-      "state": "none",
-      "note": "UNCERTAIN COUNT, per stock_event 71: two receipt photos seven seconds apart may be one can twice or two cans, recorded as 1. Ask before a recipe leans on two. Catalogued 2026-08-18 for the same reason as tomatoes_round, and because burrito and chilli recipes are rejected for kidney beans while this sits in the pantry unmatched."
-    },
-    "tomatoes_grape": {
-      "n": "grape tomatoes",
-      "where": "pantry",
-      "state": "none",
-      "note": "1.5 lb / 680 g, clearance. The first FRESH tomato in this kitchen. Distinct from tinned chopped tomatoes, from tomato sauce and from tomato paste, all of which behave differently in a sauce. Keep on the counter: the fridge kills the flavour and makes the texture mealy."
-    },
-    "whiteonion": {
-      "n": "white onions",
-      "where": "pantry",
-      "state": "none",
-      "note": "Two, bought 2026-08-12. NOT the same as the sweet onions under `yellowonion`, and the difference matters: white is sharper and cleaner, sweet holds more sugar and water and collapses faster. Recipes asking specifically for white onion can now be satisfied exactly instead of substituted."
-    },
-    "sriracha": {
-      "n": "sriracha",
-      "where": "fridge",
-      "state": "have",
-      "src": "KITCHEN.md",
-      "note": "Listed under fridge condiments in KITCHEN.md. Had an alias set but NO catalogue row, so it could never be in stock and 190 recipe lines reported a shortage of something he owns."
-    },
-    "pesto": {
-      "n": "pesto",
-      "where": "fridge",
-      "state": "have",
-      "src": "KITCHEN.md",
-      "note": "KITCHEN.md: \"Pesto | a little\". Was aliased to peanutbutter, so the app named the wrong jar."
-    },
-    "ketchup": {
-      "n": "ketchup (no sugar added)",
-      "where": "fridge",
-      "state": "have",
-      "src": "KITCHEN.md",
-      "note": "KITCHEN.md fridge condiments. Was aliased to mayo."
-    },
-    "relish": {
-      "n": "relish",
-      "where": "fridge",
-      "state": "have",
-      "src": "KITCHEN.md",
-      "note": "KITCHEN.md fridge condiments."
-    },
-    "beef-raw": {
-      "n": "raw ground beef",
-      "state": "have",
-      "where": "freezer",
-      "note": "Distinct from `beef`, which is BROWNED beef already cooked and bagged. Two different foods that a recipe treats completely differently, and printing them one above the other as \"ground beef\" twice is what read as a broken app on 2026-08-13. Events have existed for this id since 2026-08-11; the catalogue row was missing until 2026-08-14, which made every recipe pointing at it fail validation.",
-      "src": "event",
-      "since": "2026-08-11"
-    },
-    "brownsugar": {
-      "n": "brown sugar",
-      "state": "none",
-      "where": "pantry",
-      "note": "NOT the white sugar. Added to the catalogue 2026-08-14 because it is the single thing standing between this kitchen and a published Mongolian ground beef recipe it otherwise satisfies exactly (Salt & Lavender, 4.92 from 25 ratings). Her sauce is a third of a cup of it. White sugar, honey and maple syrup are all in the cupboard and any of them is a substitution, which only Silvio may decide.",
-      "src": "doc"
-    },
-    "vanilla": {
-      "n": "artificial vanilla extract",
-      "where": "pantry",
-      "state": "none",
-      "note": "Compliments ARTIFICIAL Vanilla Extract, 250 mL, read off the label in photo 20260817_222001. Artificial means vanillin rather than bean extract: in the 31 corpus lines that bake it, that is a flavour difference and not a functional one. Bought 2026-08-17 at a Sobeys or Safeway, since Compliments is their brand."
-    },
-    "chocolatechips": {
-      "n": "dark chocolate chips",
-      "where": "pantry",
-      "state": "none",
-      "note": "Compliments Dark Chocolate Chips, 225 g, read off the label in photo 20260817_222004. CHIPS, not a bar: chips carry stabilisers that hold their shape, so a recipe asking for chopped chocolate to melt smoothly is a substitution rather than a match. Bought 2026-08-17."
-    },
-    "cilantro": {
-      "n": "fresh cilantro",
-      "where": "fridge",
-      "state": "none",
-      "note": "Catalogued 2026-08-18, the evening a bunch arrived (photo 20260818_181607). Sold as cilantro here and as coriander in British recipes, and the SAME plant as Peruvian culantro in every recipe this kitchen will meet, though true culantro (Eryngium foetidum) is a different, stronger leaf. It is what makes Peruvian arroz con pollo green. Stems carry more flavour than leaves and Peruvian recipes blend both. Parsley looks identical and tastes nothing like it, so it is never a swap. Lasts about a week standing in water in the fridge, three days loose."
-    },
-    "jalapeno": {
-      "n": "jalapeno peppers",
-      "where": "fridge",
-      "state": "none",
-      "note": "Your Fresh Market, 225 g bag, product of Mexico, bought 2026-08-18 (photo 20260818_181512). Rated MEDIUM on the pack. Distinct from the crushed jalapeno in the spice rack and from crushed red pepper: this is the fresh fruit, and the fresh fruity note is the thing the dried forms cannot give. Most of the heat is in the white pith, not the seeds, so deseeding-and-depithing is the volume control."
-    },
-    "ajiamarillo": {
-      "n": "aji amarillo paste",
-      "where": "fridge",
-      "state": "none",
-      "note": "The backbone chilli of Peruvian cooking, from the yellow Peruvian chilli. Fruity and mildly hot rather than sharp, and it is a COLOUR as much as a flavour. Jalapeno is not a substitute in either direction: Peruvian recipes written for North American shops swap ají amarillo OUT for jalapeno because it is hard to find, never the reverse. Bought 2026-08-18. Quantity small, stated by Silvio as \"not much but should be enough\". Paste keeps months in the fridge once opened."
-    },
-    "beer": {
-      "n": "beer",
-      "where": "fridge",
-      "state": "none",
-      "note": "Catalogued 2026-08-18 for Peruvian arroz con pollo, where beer is a real ingredient rather than a drink: cilantro is blended INTO it and the whole thing becomes the braising liquid. Classic Peruvian recipes name a dark malty beer (Cusquena Negra) and America’s Test Kitchen allows any smooth malty beer. The eatatourtable recipe this kitchen matched just says \"1 12 oz beer\" with no style, so whatever he bought satisfies her line exactly. STYLE NOT YET READ: a can is visible in the background of photo 20260818_181612 and its label was not legible."
-    },
-    "asparagus": {
-      "n": "asparagus",
-      "where": "fridge",
-      "state": "none",
-      "note": "Ocean Mist Farms, 1 bunch, product of Mexico, bought 2026-08-18 (photo 20260818_181521). Nothing in the recipe catalogue asks for it yet, so it arrived unassigned. Highly perishable: 3 to 4 days, and it keeps best standing upright in a little water like cut flowers."
-    },
-    "limes": {
-      "n": "fresh limes",
-      "where": "fridge",
-      "state": "none",
-      "note": "Catalogued 2026-08-18. Events for it existed from 2026-08-08, when a 1.5 lb bag came home on clearance at $1.97, and there was never a row here to hang them on, so the id resolved to nothing. NOT the same as the bottled ReaLime, which is item `lemon`: bottled juice cannot be cut into a wedge and squeezed over a bowl, and every recipe that says \"lime wedges\" means the fruit."
-    },
-    "jasminerice": {
-      "n": "Thai jasmine rice",
-      "where": "pantry",
-      "state": "none",
-      "note": "Great Value Thai Jasmine Rice, 2 kg bag, bought 2026-08-18 (photo 20260818_215127). Catalogued as its own item on the same day, because `jasmine rice` had been an alias of `longgrainrice` and the two are not the same thing on the plate: jasmine is aromatic and cooks slightly softer and stickier, plain long grain stays neutral with the grains separate. Folding them together meant a recipe naming jasmine was answered from the long grain bag with nothing said about the difference. validate.mjs already knew they were different and carried separate RICE_RATIO entries for both."
-    },
-    "broccoli": {
-      "n": "broccoli, frozen",
-      "where": "freezer",
-      "state": "none",
-      "note": "Added 2026-08-21. Stated by Silvio that day as bought on an untracked trip along with the 30 eggs and the asparagus. Given its own id rather than being left inside the `green vegetables` known-gap, which is the reason 78 dishes stayed blocked while he owned broccoli: a gap bucket is a CATEGORY, and a category cannot be partly satisfied. Buying one of the 32 vegetables inside it moved nothing."
-    },
-    "bananas": {
-      "n": "bananas, frozen ripe",
-      "where": "freezer",
-      "state": "none",
-      "note": "Added 2026-08-22. He stated THREE RIPE BANANAS IN THE FREEZER at the start of the 08-21 session, said it again on 08-22, and it was never logged, so every banana recipe in the corpus read \"no bananas\" while they sat in his freezer. His words: \"I told you in the first moment that I opened this session that I have three ripe bananas in the freezer. If I said so already, why isnt it anywhere in the app?\" A fact he states out loud and an agent does not write down is worse than one nobody knew."
-    },
-    "rice_cooked_plain": {
-      "n": "plain cooked rice",
-      "where": "freezer",
-      "state": "none",
-      "buyable": false,
-      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
-      "note": "Cooked from the dry jasmine or long grain in the pantry. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
-    },
-    "pickledonion": {
-      "n": "quick pickled red onions",
-      "where": "fridge",
-      "state": "none",
-      "buyable": false,
-      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
-      "note": "Made from half a red onion and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
-    },
-    "cucumberpickles": {
-      "n": "refrigerator pickles",
-      "where": "fridge",
-      "state": "none",
-      "buyable": false,
-      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
-      "note": "Made from cucumbers and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
-    },
-    "tzatziki": {
-      "n": "tzatziki",
-      "where": "fridge",
-      "state": "none",
-      "buyable": false,
-      "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
-      "note": "Made from Greek yogurt, cucumber and garlic. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
-    },
-    "chickenthighs_boneless": {
-      "n": "chicken thighs, boneless skinless",
-      "where": "fridge",
-      "state": "none",
-      "note": "Catalogued 2026-08-22, not owned. Split off `chickenthighs`, which is BONE-IN SKIN-ON and whose alias list was claiming boneless as well. They are different products: boneless skinless cooks in a pan in minutes and is sold by the tray, bone-in skin-on needs longer and carries skin and bone in its weight. Budget Bytes' Easy Sesame Chicken wants 1 lb of this one."
-    },
-    "ricevinegar": {
-      "n": "rice vinegar",
-      "where": "pantry",
-      "state": "none",
-      "note": "Catalogued 2026-08-22, not owned. Made by fermenting rice wine a second time into acid: about 4% and slightly sweet, against the 5% and flatly sour of the distilled white in the cupboard. NOT the Shaoxing wine or the mirin bought 2026-08-04, both of which are rice WINES and contain no vinegar at all. Stands behind 83 corpus dishes currently answered by substituting white."
-    },
-    "nutmeg": {
-      "n": "ground nutmeg",
-      "where": "pantry",
-      "state": "none",
-      "note": "Catalogued 2026-08-22, not owned. Pulled out of the `warm spices` category gap so that buying one jar actually closes it, which is the broccoli fix of the same day. It is the single ingredient standing between this kitchen and Budget Bytes' Homemade Banana Bread."
-    },
-    "sesameseeds": {
-      "n": "sesame seeds",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-16",
-      "src": "event",
-      "note": "Catalogue row added 2026-08-22. The item has existed since a stock event on 2026-08-16 recorded 145 g, but it had no row in items.json, so any recipe declaring `stock: \"sesameseeds\"` failed validation. Identity and state are different things and this one had state without identity."
-    },
-    "cinnamon": {
-      "n": "ground cinnamon",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-16",
-      "src": "event",
-      "note": "Catalogue row added 2026-08-22. Great Value, 60 g, arrived 2026-08-16 and narrowed the `warm spices` gap that day, but it never got a row in items.json, so any recipe declaring `stock: \"cinnamon\"` failed validation. State without identity, exactly like sesameseeds."
-    },
-    "potatoes_red": {
-      "n": "red potatoes",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-14",
-      "src": "event",
-      "note": "Catalogue row added 2026-08-22. About 9, from a food bank donation bag, photo 20260814_121248. Variety was not known to him and \"red\" is his description of the skin. Third row found this week that had STATE from an event but no IDENTITY in this file, after sesameseeds and cinnamon, and each one silently failed any recipe that pointed at it."
-    },
-    "durumflour": {
-      "n": "durum flour",
-      "where": "pantry",
-      "state": "none",
-      "note": "Catalogued 2026-08-22, not owned. Milled from durum wheat, harder and higher in protein than the all-purpose in the cupboard, which is what gives eggless pasta its chew. NOT the same as SEMOLINA, which is the coarse grind of the same wheat and is used for dusting rather than for dough. King Arthur's eggless pasta dough, which is the pici card, is written for the fine grind."
-    },
-    "oregano": {
-      "n": "dried oregano",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-23",
-      "src": "event",
-      "note": "Great Value Oregano Leaves, 72 g jar, bought 2026-08-23. The phrase list for this id has existed in aliases.json for weeks with NO row here, so every recipe that matched oregano resolved to an id the catalogue did not contain. Fourth instance this month of state without identity, after sesameseeds, cinnamon and potatoes_red. Leaves, not ground: they want crushing between the fingers as they go in."
-    },
-    "almonds": {
-      "n": "sliced almonds",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-23",
-      "src": "event",
-      "note": "Great Value Sliced Almonds, 300 g resealable bag, bought 2026-08-23. Sliced, not whole and not ground, so this is the toasted-topping and green-bean-almondine form, not marzipan or almond flour. Nuts go rancid from the cut surface, and slices are almost all cut surface: the bag reseals, and it lives in the cupboard away from heat."
-    },
-    "chilioil": {
-      "n": "chili oil",
-      "where": "pantry",
-      "state": "have",
-      "since": "2026-08-23",
-      "src": "event",
-      "note": "Lee Kum Kee Chili Oil, 207 mL, bought 2026-08-23. A FINISHING oil, drizzled at the end like the sesame oil, not a frying medium. Deliberately its own row rather than an alias of `oil`: `oil` is the neutral frying staple and swapping one for the other in either direction ruins a dish. Not the same as chilli crisp, which carries fried solids."
-    },
-    "prosciutto": {
-      "n": "prosciutto",
-      "where": "fridge",
-      "state": "have",
-      "since": "2026-08-23",
-      "src": "event",
-      "note": "San Daniele, 200 g resealable pack, bought 2026-08-23. Dry-cured raw ham, eaten as-is: it is not bacon and not cooking ham, and heating it hard turns it tough and oversalted. Where a recipe cooks it, it goes in at the very end or gets crisped separately."
-    },
-    "pecorino": {
-      "n": "pecorino romano",
-      "where": "fridge",
-      "state": "have",
-      "since": "2026-08-23",
-      "src": "event",
-      "note": "Lupa Pecorino Romano DOP (Tre Stelle), 200 g wedge, bought 2026-08-23. Split off `parmesan` the same day, which had been claiming the phrases `pecorino` and `pecorino romano` in aliases.json. They are different cheeses: pecorino is SHEEP'S milk and markedly saltier, parmesan is cow's and nuttier. Carbonara and cacio e pepe are written for this one, and rule 2 of aliases.json forbids aliasing two things that behave differently. Its protein figure was not legible in the label photo, so it is unrecorded rather than guessed."
-    }
+  "butter": {
+   "n": "butter",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "milk": {
+   "n": "milk",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "whey": {
+   "n": "whey",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "oats": {
+   "n": "oats",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "honey": {
+   "n": "honey",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "cocoa": {
+   "n": "cocoa",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "peanutbutter": {
+   "n": "peanut butter",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "mayo": {
+   "n": "mayo",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "oil": {
+   "n": "cooking oil",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "vinegar": {
+   "n": "vinegar",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "salt": {
+   "n": "salt",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "seasoning": {
+   "n": "spice rack",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "garlic": {
+   "n": "garlic",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "flour": {
+   "n": "flour",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "yeast": {
+   "n": "yeast",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "sugar": {
+   "n": "white sugar",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "pasta": {
+   "n": "pasta",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "rice": {
+   "n": "instant rice",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "lentils": {
+   "n": "lentils",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "jars": {
+   "n": "mason jars",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "onion": {
+   "n": "a red onion",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "lemon": {
+   "n": "lemon juice (ReaLime, bottled)",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "capers": {
+   "n": "capers",
+   "state": "none",
+   "where": "fridge",
+   "note": "Great Value 90 mL jar, Walmart house brand, bought 2026-08-09. The buy block that used to sit here said Walmart does not carry capers in a normal jar size and kept piccata blocked for five days. It was simply false. Keep the jar in the fridge once opened, where it lasts months under its own brine.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "stock": {
+   "n": "chicken stock",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "longgrainrice": {
+   "n": "long grain rice",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "cumin": {
+   "n": "cumin",
+   "state": "none",
+   "where": "pantry",
+   "buy": {
+    "price": 2.27,
+    "zone": "Spices and baking",
+    "walk": "Baking aisle, near the flour and sugar",
+    "n": "Ground cumin",
+    "s": "WALMART MARKED THIS UNAVAILABLE on the Aug 4 delivery, so it is the one thing from that order you do not have. Every Peruvian source for the arroz tapado uses it and your spice rack has nothing that stands in for it. The dish still works without it, just flatter, and the app tells you how to compensate. $2.27, and any grocery or corner store has it, so do not wait for another Walmart order"
+   },
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "smokedpaprika": {
+   "n": "smoked paprika",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "tomatopaste": {
+   "n": "tomato paste",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "raisins": {
+   "n": "raisins",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "olives": {
+   "n": "black olives",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "soy": {
+   "n": "soy sauce",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "mirin": {
+   "n": "mirin",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "sesameoil": {
+   "n": "sesame oil",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "greenonion": {
+   "n": "green onions",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "yellowonion": {
+   "n": "yellow onions",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04",
+   "note": "Yellow, confirmed by Silvio 2026-08-12. This row was briefly renamed to \"sweet onions\" on the strength of the 2026-08-04 receipt note recording a Walmart substitution; he corrected it the same day. A substitution logged at order time describes that order, not a standing fact about the pantry. White onions are a separate item."
+  },
+  "oyster": {
+   "n": "oyster sauce",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "cornstarch": {
+   "n": "cornstarch",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "shaoxing": {
+   "n": "Shaoxing wine",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "ginger": {
+   "n": "fresh ginger",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "mushrooms": {
+   "n": "mushrooms",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "yogurt": {
+   "n": "Greek yogurt",
+   "state": "have",
+   "where": "fridge",
+   "label": "Greek yogurt, 750 g",
+   "by": "2026-08-16",
+   "note": "Completely untouched since Aug 1. Not urgent, but it is the single biggest unused thing in the fridge and four jars of overnight oats would take 680 g of it.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "mozzarella": {
+   "n": "mozzarella",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "fruit": {
+   "n": "frozen fruit",
+   "state": "have",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "frozenveg": {
+   "n": "frozen vegetables",
+   "state": "have",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "peppers": {
+   "n": "fresh peppers",
+   "state": "have",
+   "where": "fridge",
+   "label": "Red bell peppers, 2",
+   "by": "2026-08-06",
+   "note": "Off the clearance rack, so they were already partway through their life when they arrived. Treat them as days, not the usual fortnight.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "frozenpeppers": {
+   "n": "frozen peppers",
+   "state": "have",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "cucumbers": {
+   "n": "cucumbers",
+   "state": "have",
+   "where": "fridge",
+   "label": "English cucumbers, 2",
+   "by": "2026-08-16",
+   "note": "Pickling turns these into something that lasts a month instead of a fortnight.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "carrots": {
+   "n": "carrots",
+   "state": "have",
+   "where": "fridge",
+   "label": "Baby carrots, 454 g",
+   "by": "2026-08-23",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "sweetpotato": {
+   "n": "sweet potato",
+   "state": "have",
+   "where": "pantry",
+   "label": "Sweet potato, 1 kg",
+   "by": "2026-08-23",
+   "note": "Keep it out of the fridge, somewhere cool and dark. Cold turns its starch to sugar and gives it a hard core that never softens.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "arugula": {
+   "n": "arugula",
+   "state": "have",
+   "where": "fridge",
+   "label": "Arugula, about 120 g",
+   "by": "2026-08-05",
+   "note": "The most perishable thing in the kitchen. Bagged greens turn to slime rather than going obviously off, so there is no warning.",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "beef": {
+   "n": "ground beef",
+   "state": "have",
+   "where": "fridge",
+   "label": "Browned beef, 3 bags (700 g)",
+   "by": "2026-08-08",
+   "note": "Cooked and bagged the evening of Aug 4: 250 g, 250 g and 200 g. Browned beef gets 3 to 4 days in the fridge against 1 to 2 raw. Anything you will not cook by Friday goes in the freezer, where it keeps 3 months.",
+   "src": "seed",
+   "since": "2026-08-04",
+   "buyable": false,
+   "buyableWhy": "Made, not bought: browned from `beef-raw` in his own pan. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
+  },
+  "groundchickenfrozen": {
+   "n": "frozen ground chicken",
+   "state": "frozen",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "tilapia": {
+   "n": "tilapia",
+   "state": "frozen",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "parmesan": {
+   "n": "parmesan",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "cottagecheese": {
+   "n": "cottage cheese",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "bolognese": {
+   "n": "bolognese sauce",
+   "state": "out",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04",
+   "made": "Big-Batch Bolognese",
+   "buyable": false,
+   "buyableWhy": "Made, not bought: a sauce he cooks. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
+  },
+  "chickenbreast": {
+   "n": "chicken breast",
+   "state": "frozen",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "quarters": {
+   "n": "leg quarters",
+   "state": "frozen",
+   "where": "freezer",
+   "src": "seed",
+   "since": "2026-08-04"
+  },
+  "roast": {
+   "n": "sirloin tip roast",
+   "state": "have",
+   "where": "fridge",
+   "src": "seed",
+   "since": "2026-08-04",
+   "label": "Sirloin tip roast, 1 kg",
+   "for": "bulgogi"
+  },
+  "shortgrainrice": {
+   "n": "short-grain rice",
+   "state": "none",
+   "where": "pantry",
+   "buy": {
+    "n": "Short-grain / sushi rice, 1 bag",
+    "price": 5.77,
+    "zone": "Pantry and canned goods",
+    "walk": "Rice and pasta aisle. Often shelved with international foods",
+    "s": "What Korean pot rice is actually made with. Bulgogi and Mushroom Pot Rice works properly with this and only approximately without it. Price seen on walmart.ca 2026-08-04, range was $5.77 to $18.97, so buy the cheap end. Any bag labelled sushi rice, calrose or short-grain is the right thing."
+   },
+   "src": "seed",
+   "since": "2026-08-06"
+  },
+  "stockcube": {
+   "n": "chicken stock cubes",
+   "state": "have",
+   "where": "pantry",
+   "src": "seed",
+   "since": "2026-08-06"
+  },
+  "lemon_fresh": {
+   "n": "fresh lemons",
+   "where": "fridge",
+   "state": "none",
+   "note": "Distinct from the bottle on purpose. In a sauce where lemon is one of three flavours, they are not the same ingredient. Bought 2026-08-09 as a 908 g bag."
+  },
+  "parsley": {
+   "n": "fresh parsley",
+   "where": "fridge",
+   "state": "none",
+   "note": "Bought 2026-08-04 for Chicken Piccata and reported going mushy on 2026-08-08. Events for it were already in the database with no catalogue row here, which meant the validator could not resolve any recipe that reached for it. Added 2026-08-09."
+  },
+  "turkeydeli": {
+   "n": "sliced turkey breast",
+   "where": "fridge",
+   "state": "none",
+   "note": "Deli slices, already cooked. High in sodium per the label, so anything built on it needs less added salt."
+  },
+  "chickendeli": {
+   "n": "sliced chicken breast (deli)",
+   "where": "fridge",
+   "state": "none",
+   "note": "Fully cooked deli slices. Deliberately a separate id from `chickenbreast`, which is raw and frozen. A recipe that reaches for one must never resolve to the other."
+  },
+  "pineapple": {
+   "n": "frozen pineapple",
+   "where": "freezer",
+   "state": "none",
+   "note": "Frozen chunks. Raw pineapple carries bromelain, an enzyme that breaks protein down, so it curdles dairy if left to sit and it will not set in gelatin. Fine in a shake drunk straight away."
+  },
+  "montereyjack": {
+   "n": "Monterey Jack cheese",
+   "where": "fridge",
+   "state": "none",
+   "note": "Semi-soft, melts smoothly, jalapeno already in it. Where mozzarella stretches, this one flows, so it suits a quesadilla or eggs rather than a pizza."
+  },
+  "spaghetti_cooked": {
+   "n": "cooked spaghetti (plain, leftover)",
+   "where": "fridge",
+   "state": "none",
+   "note": "Distinct from the dry Barilla in the pantry on purpose: a recipe that wants cold cooked pasta must never resolve to a box of dry pasta, and one that wants dry must never resolve to this. Same reasoning as chickendeli versus chickenbreast. Plain, no sauce, confirmed by Silvio 2026-08-12. Cooked pasta gets 3 to 5 days.",
+   "buyable": false,
+   "buyableWhy": "Made, not bought: boiled from the dry pasta in the pantry. Flagged 2026-08-22 because running out of it was putting it on the SHOPPING LIST. His words: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" Nothing you cook belongs on a list of things to buy; what belongs there is whatever it is cooked FROM, and that has its own row."
+  },
+  "chickenwings": {
+   "n": "chicken wings",
+   "where": "freezer",
+   "state": "none",
+   "note": "Drumette and winglet, bone-in. Freeze-by on the label is Aug 21."
+  },
+  "chickenthighs": {
+   "n": "chicken thighs",
+   "where": "freezer",
+   "state": "none",
+   "note": "Bone-in skin-on. At $7.63/kg this is the cheapest protein per dollar in the kitchen. Freeze-by Aug 21. Deliberately separate from chickenbreast and from the deli slices: a recipe wanting thighs must never resolve to breast, which cooks differently and dries out."
+  },
+  "basil": {
+   "n": "fresh basil",
+   "where": "fridge",
+   "state": "none",
+   "note": "28 g packet. The most perishable thing in the kitchen, 2 to 3 days. Hates cold: stand the stems in water on the counter or keep it in the fridge DOOR, never the coldest shelf. Not interchangeable with dried basil or with Italian seasoning in anything where it goes in raw at the end."
+  },
+  "blackvinegar": {
+   "n": "Chinkiang black vinegar",
+   "where": "pantry",
+   "state": "none",
+   "note": "Catalogued 2026-08-18, not owned. Chinkiang, also spelled Zhenjiang, is a dark malty rice vinegar and it is NOT the distilled white vinegar in the cupboard: it is the sour note in General Tso and in most northern Chinese sauces. Gold Plum 554 ml was $2.99 at Superstore on 2026-08-18. Walmart lists Hengshun at $3.97 on an alphanumeric SKU, which is the marketplace pattern, so the shelf is unproven there."
+  },
+  "driedchilli": {
+   "n": "whole dried red chillies",
+   "where": "pantry",
+   "state": "none",
+   "note": "Catalogued 2026-08-18, not owned. Distinct from the fresh chilli gap, from chili powder and from crushed red pepper: these are whole dried pods that go into hot oil for aroma. Omnivore Cookbook General Tso wants 7 to 8 and her footnote says they add aroma rather than heat. Tastie Dried Red Chili 120 g was $2.29 at Superstore on 2026-08-18, and it is not sold as Chinese or Korean, which is his call to make."
+  },
+  "tomatoes_round": {
+   "n": "fresh tomatoes",
+   "where": "fridge",
+   "state": "none",
+   "note": "Round slicing tomatoes on the vine, 5 of them, receipt photo 20260814_121315 and the count stated by Silvio. Distinct from the grape tomatoes and from anything tinned. Catalogued 2026-08-18: it had existed only as stock_event 74, so validate.mjs refused a recipe pointing at it and the app printed the raw id where a name belongs."
+  },
+  "beanmedley": {
+   "n": "canned bean medley",
+   "where": "pantry",
+   "state": "none",
+   "note": "UNCERTAIN COUNT, per stock_event 71: two receipt photos seven seconds apart may be one can twice or two cans, recorded as 1. Ask before a recipe leans on two. Catalogued 2026-08-18 for the same reason as tomatoes_round, and because burrito and chilli recipes are rejected for kidney beans while this sits in the pantry unmatched."
+  },
+  "tomatoes_grape": {
+   "n": "grape tomatoes",
+   "where": "pantry",
+   "state": "none",
+   "note": "1.5 lb / 680 g, clearance. The first FRESH tomato in this kitchen. Distinct from tinned chopped tomatoes, from tomato sauce and from tomato paste, all of which behave differently in a sauce. Keep on the counter: the fridge kills the flavour and makes the texture mealy."
+  },
+  "whiteonion": {
+   "n": "white onions",
+   "where": "pantry",
+   "state": "none",
+   "note": "Two, bought 2026-08-12. NOT the same as the sweet onions under `yellowonion`, and the difference matters: white is sharper and cleaner, sweet holds more sugar and water and collapses faster. Recipes asking specifically for white onion can now be satisfied exactly instead of substituted."
+  },
+  "sriracha": {
+   "n": "sriracha",
+   "where": "fridge",
+   "state": "have",
+   "src": "KITCHEN.md",
+   "note": "Listed under fridge condiments in KITCHEN.md. Had an alias set but NO catalogue row, so it could never be in stock and 190 recipe lines reported a shortage of something he owns."
+  },
+  "pesto": {
+   "n": "pesto",
+   "where": "fridge",
+   "state": "have",
+   "src": "KITCHEN.md",
+   "note": "KITCHEN.md: \"Pesto | a little\". Was aliased to peanutbutter, so the app named the wrong jar."
+  },
+  "ketchup": {
+   "n": "ketchup (no sugar added)",
+   "where": "fridge",
+   "state": "have",
+   "src": "KITCHEN.md",
+   "note": "KITCHEN.md fridge condiments. Was aliased to mayo."
+  },
+  "relish": {
+   "n": "relish",
+   "where": "fridge",
+   "state": "have",
+   "src": "KITCHEN.md",
+   "note": "KITCHEN.md fridge condiments."
+  },
+  "beef-raw": {
+   "n": "raw ground beef",
+   "state": "have",
+   "where": "freezer",
+   "note": "Distinct from `beef`, which is BROWNED beef already cooked and bagged. Two different foods that a recipe treats completely differently, and printing them one above the other as \"ground beef\" twice is what read as a broken app on 2026-08-13. Events have existed for this id since 2026-08-11; the catalogue row was missing until 2026-08-14, which made every recipe pointing at it fail validation.",
+   "src": "event",
+   "since": "2026-08-11"
+  },
+  "brownsugar": {
+   "n": "brown sugar",
+   "state": "none",
+   "where": "pantry",
+   "note": "NOT the white sugar. Added to the catalogue 2026-08-14 because it is the single thing standing between this kitchen and a published Mongolian ground beef recipe it otherwise satisfies exactly (Salt & Lavender, 4.92 from 25 ratings). Her sauce is a third of a cup of it. White sugar, honey and maple syrup are all in the cupboard and any of them is a substitution, which only Silvio may decide.",
+   "src": "doc"
+  },
+  "vanilla": {
+   "n": "artificial vanilla extract",
+   "where": "pantry",
+   "state": "none",
+   "note": "Compliments ARTIFICIAL Vanilla Extract, 250 mL, read off the label in photo 20260817_222001. Artificial means vanillin rather than bean extract: in the 31 corpus lines that bake it, that is a flavour difference and not a functional one. Bought 2026-08-17 at a Sobeys or Safeway, since Compliments is their brand."
+  },
+  "chocolatechips": {
+   "n": "dark chocolate chips",
+   "where": "pantry",
+   "state": "none",
+   "note": "Compliments Dark Chocolate Chips, 225 g, read off the label in photo 20260817_222004. CHIPS, not a bar: chips carry stabilisers that hold their shape, so a recipe asking for chopped chocolate to melt smoothly is a substitution rather than a match. Bought 2026-08-17."
+  },
+  "cilantro": {
+   "n": "fresh cilantro",
+   "where": "fridge",
+   "state": "none",
+   "note": "Catalogued 2026-08-18, the evening a bunch arrived (photo 20260818_181607). Sold as cilantro here and as coriander in British recipes, and the SAME plant as Peruvian culantro in every recipe this kitchen will meet, though true culantro (Eryngium foetidum) is a different, stronger leaf. It is what makes Peruvian arroz con pollo green. Stems carry more flavour than leaves and Peruvian recipes blend both. Parsley looks identical and tastes nothing like it, so it is never a swap. Lasts about a week standing in water in the fridge, three days loose."
+  },
+  "jalapeno": {
+   "n": "jalapeno peppers",
+   "where": "fridge",
+   "state": "none",
+   "note": "Your Fresh Market, 225 g bag, product of Mexico, bought 2026-08-18 (photo 20260818_181512). Rated MEDIUM on the pack. Distinct from the crushed jalapeno in the spice rack and from crushed red pepper: this is the fresh fruit, and the fresh fruity note is the thing the dried forms cannot give. Most of the heat is in the white pith, not the seeds, so deseeding-and-depithing is the volume control."
+  },
+  "ajiamarillo": {
+   "n": "aji amarillo paste",
+   "where": "fridge",
+   "state": "none",
+   "note": "The backbone chilli of Peruvian cooking, from the yellow Peruvian chilli. Fruity and mildly hot rather than sharp, and it is a COLOUR as much as a flavour. Jalapeno is not a substitute in either direction: Peruvian recipes written for North American shops swap ají amarillo OUT for jalapeno because it is hard to find, never the reverse. Bought 2026-08-18. Quantity small, stated by Silvio as \"not much but should be enough\". Paste keeps months in the fridge once opened."
+  },
+  "beer": {
+   "n": "beer",
+   "where": "fridge",
+   "state": "none",
+   "note": "Catalogued 2026-08-18 for Peruvian arroz con pollo, where beer is a real ingredient rather than a drink: cilantro is blended INTO it and the whole thing becomes the braising liquid. Classic Peruvian recipes name a dark malty beer (Cusquena Negra) and America’s Test Kitchen allows any smooth malty beer. The eatatourtable recipe this kitchen matched just says \"1 12 oz beer\" with no style, so whatever he bought satisfies her line exactly. STYLE NOT YET READ: a can is visible in the background of photo 20260818_181612 and its label was not legible."
+  },
+  "asparagus": {
+   "n": "asparagus",
+   "where": "fridge",
+   "state": "none",
+   "note": "Ocean Mist Farms, 1 bunch, product of Mexico, bought 2026-08-18 (photo 20260818_181521). Nothing in the recipe catalogue asks for it yet, so it arrived unassigned. Highly perishable: 3 to 4 days, and it keeps best standing upright in a little water like cut flowers."
+  },
+  "limes": {
+   "n": "fresh limes",
+   "where": "fridge",
+   "state": "none",
+   "note": "Catalogued 2026-08-18. Events for it existed from 2026-08-08, when a 1.5 lb bag came home on clearance at $1.97, and there was never a row here to hang them on, so the id resolved to nothing. NOT the same as the bottled ReaLime, which is item `lemon`: bottled juice cannot be cut into a wedge and squeezed over a bowl, and every recipe that says \"lime wedges\" means the fruit."
+  },
+  "jasminerice": {
+   "n": "Thai jasmine rice",
+   "where": "pantry",
+   "state": "none",
+   "note": "Great Value Thai Jasmine Rice, 2 kg bag, bought 2026-08-18 (photo 20260818_215127). Catalogued as its own item on the same day, because `jasmine rice` had been an alias of `longgrainrice` and the two are not the same thing on the plate: jasmine is aromatic and cooks slightly softer and stickier, plain long grain stays neutral with the grains separate. Folding them together meant a recipe naming jasmine was answered from the long grain bag with nothing said about the difference. validate.mjs already knew they were different and carried separate RICE_RATIO entries for both."
+  },
+  "broccoli": {
+   "n": "broccoli, frozen",
+   "where": "freezer",
+   "state": "none",
+   "note": "Added 2026-08-21. Stated by Silvio that day as bought on an untracked trip along with the 30 eggs and the asparagus. Given its own id rather than being left inside the `green vegetables` known-gap, which is the reason 78 dishes stayed blocked while he owned broccoli: a gap bucket is a CATEGORY, and a category cannot be partly satisfied. Buying one of the 32 vegetables inside it moved nothing."
+  },
+  "bananas": {
+   "n": "bananas, frozen ripe",
+   "where": "freezer",
+   "state": "none",
+   "note": "Added 2026-08-22. He stated THREE RIPE BANANAS IN THE FREEZER at the start of the 08-21 session, said it again on 08-22, and it was never logged, so every banana recipe in the corpus read \"no bananas\" while they sat in his freezer. His words: \"I told you in the first moment that I opened this session that I have three ripe bananas in the freezer. If I said so already, why isnt it anywhere in the app?\" A fact he states out loud and an agent does not write down is worse than one nobody knew."
+  },
+  "rice_cooked_plain": {
+   "n": "plain cooked rice",
+   "where": "freezer",
+   "state": "none",
+   "buyable": false,
+   "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+   "note": "Cooked from the dry jasmine or long grain in the pantry. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+  },
+  "pickledonion": {
+   "n": "quick pickled red onions",
+   "where": "fridge",
+   "state": "none",
+   "buyable": false,
+   "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+   "note": "Made from half a red onion and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+  },
+  "cucumberpickles": {
+   "n": "refrigerator pickles",
+   "where": "fridge",
+   "state": "none",
+   "buyable": false,
+   "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+   "note": "Made from cucumbers and vinegar. Keeps about a month. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+  },
+  "tzatziki": {
+   "n": "tzatziki",
+   "where": "fridge",
+   "state": "none",
+   "buyable": false,
+   "buyableWhy": "Made, not bought. Flagged 2026-08-22 because running out of it put it on the SHOPPING LIST: \"Why is cooked spaghetti in the list? This is a shopping list. It doesn't make sense.\" What belongs on a shopping list is whatever this is made FROM, and that has its own row.",
+   "note": "Made from Greek yogurt, cucumber and garlic. Added to the catalogue 2026-08-22: it existed only as stock events, so the fold invented a row for it with no properties and nothing could mark it unbuyable."
+  },
+  "chickenthighs_boneless": {
+   "n": "chicken thighs, boneless skinless",
+   "where": "fridge",
+   "state": "none",
+   "note": "Catalogued 2026-08-22, not owned. Split off `chickenthighs`, which is BONE-IN SKIN-ON and whose alias list was claiming boneless as well. They are different products: boneless skinless cooks in a pan in minutes and is sold by the tray, bone-in skin-on needs longer and carries skin and bone in its weight. Budget Bytes' Easy Sesame Chicken wants 1 lb of this one."
+  },
+  "ricevinegar": {
+   "n": "rice vinegar",
+   "where": "pantry",
+   "state": "none",
+   "note": "Catalogued 2026-08-22, not owned. Made by fermenting rice wine a second time into acid: about 4% and slightly sweet, against the 5% and flatly sour of the distilled white in the cupboard. NOT the Shaoxing wine or the mirin bought 2026-08-04, both of which are rice WINES and contain no vinegar at all. Stands behind 83 corpus dishes currently answered by substituting white."
+  },
+  "nutmeg": {
+   "n": "ground nutmeg",
+   "where": "pantry",
+   "state": "none",
+   "note": "Catalogued 2026-08-22, not owned. Pulled out of the `warm spices` category gap so that buying one jar actually closes it, which is the broccoli fix of the same day. It is the single ingredient standing between this kitchen and Budget Bytes' Homemade Banana Bread."
+  },
+  "sesameseeds": {
+   "n": "sesame seeds",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-16",
+   "src": "event",
+   "note": "Catalogue row added 2026-08-22. The item has existed since a stock event on 2026-08-16 recorded 145 g, but it had no row in items.json, so any recipe declaring `stock: \"sesameseeds\"` failed validation. Identity and state are different things and this one had state without identity."
+  },
+  "cinnamon": {
+   "n": "ground cinnamon",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-16",
+   "src": "event",
+   "note": "Catalogue row added 2026-08-22. Great Value, 60 g, arrived 2026-08-16 and narrowed the `warm spices` gap that day, but it never got a row in items.json, so any recipe declaring `stock: \"cinnamon\"` failed validation. State without identity, exactly like sesameseeds."
+  },
+  "potatoes_red": {
+   "n": "red potatoes",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-14",
+   "src": "event",
+   "note": "Catalogue row added 2026-08-22. About 9, from a food bank donation bag, photo 20260814_121248. Variety was not known to him and \"red\" is his description of the skin. Third row found this week that had STATE from an event but no IDENTITY in this file, after sesameseeds and cinnamon, and each one silently failed any recipe that pointed at it."
+  },
+  "durumflour": {
+   "n": "durum flour",
+   "where": "pantry",
+   "state": "none",
+   "note": "Catalogued 2026-08-22, not owned. Milled from durum wheat, harder and higher in protein than the all-purpose in the cupboard, which is what gives eggless pasta its chew. NOT the same as SEMOLINA, which is the coarse grind of the same wheat and is used for dusting rather than for dough. King Arthur's eggless pasta dough, which is the pici card, is written for the fine grind."
+  },
+  "oregano": {
+   "n": "dried oregano",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-23",
+   "src": "event",
+   "note": "Great Value Oregano Leaves, 72 g jar, bought 2026-08-23. The phrase list for this id has existed in aliases.json for weeks with NO row here, so every recipe that matched oregano resolved to an id the catalogue did not contain. Fourth instance this month of state without identity, after sesameseeds, cinnamon and potatoes_red. Leaves, not ground: they want crushing between the fingers as they go in."
+  },
+  "almonds": {
+   "n": "sliced almonds",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-23",
+   "src": "event",
+   "note": "Great Value Sliced Almonds, 300 g resealable bag, bought 2026-08-23. Sliced, not whole and not ground, so this is the toasted-topping and green-bean-almondine form, not marzipan or almond flour. Nuts go rancid from the cut surface, and slices are almost all cut surface: the bag reseals, and it lives in the cupboard away from heat."
+  },
+  "chilioil": {
+   "n": "chili oil",
+   "where": "pantry",
+   "state": "have",
+   "since": "2026-08-23",
+   "src": "event",
+   "note": "Lee Kum Kee Chili Oil, 207 mL, bought 2026-08-23. A FINISHING oil, drizzled at the end like the sesame oil, not a frying medium. Deliberately its own row rather than an alias of `oil`: `oil` is the neutral frying staple and swapping one for the other in either direction ruins a dish. Not the same as chilli crisp, which carries fried solids."
+  },
+  "prosciutto": {
+   "n": "prosciutto",
+   "where": "fridge",
+   "state": "have",
+   "since": "2026-08-23",
+   "src": "event",
+   "note": "San Daniele, 200 g resealable pack, bought 2026-08-23. Dry-cured raw ham, eaten as-is: it is not bacon and not cooking ham, and heating it hard turns it tough and oversalted. Where a recipe cooks it, it goes in at the very end or gets crisped separately."
+  },
+  "pecorino": {
+   "n": "pecorino romano",
+   "where": "fridge",
+   "state": "have",
+   "since": "2026-08-23",
+   "src": "event",
+   "note": "Lupa Pecorino Romano DOP (Tre Stelle), 200 g wedge, bought 2026-08-23. Split off `parmesan` the same day, which had been claiming the phrases `pecorino` and `pecorino romano` in aliases.json. They are different cheeses: pecorino is SHEEP'S milk and markedly saltier, parmesan is cow's and nuttier. Carbonara and cacio e pepe are written for this one, and rule 2 of aliases.json forbids aliasing two things that behave differently. Its protein figure was not legible in the label photo, so it is unrecorded rather than guessed."
+  },
+  "popcorn": {
+   "n": "popcorn kernels",
+   "state": "have",
+   "where": "pantry",
+   "src": "KITCHEN.md",
+   "since": "2026-08-01",
+   "note": "Yellow, standard. In the cupboard since at least 2026-08-01 and never used, because no recipe in the app referenced it, so nothing ever offered it."
   }
+ }
 }

@@ -105,6 +105,20 @@ export interface Recipe {
     decidedBy?: 'silvio' | 'agent';
     toldHim?: string;
   }[];
+  /** How long the finished food keeps, and where.
+   *
+   *  Added 2026-08-23, and it exists because of what he actually asked for: snacks to have in the
+   *  house so store-bought candy stops being the default, "either frozen and reheated or on the
+   *  shelf". Every card in this app until now answered "how do I cook this" and had nowhere to say
+   *  "and then what", which for a snack is most of the decision. A batch of 18 cookies is a
+   *  different proposition depending on whether it lasts a day or three months.
+   *
+   *  The words are the PUBLISHER'S wherever she gives them, for the same reason every step is:
+   *  Budget Bytes prints "up to 1 week at room temperature or a freezer-safe bag for up to 3
+   *  months" on her own page, and quoting that beats an agent's shelf-life guess. `validate.mjs`
+   *  requires it on any card whose meal includes 'snack', so it cannot quietly go missing on the
+   *  exact class of dish it was added for. */
+  keeps?: string;
   time: { activeMin?: number; totalMin?: number | null; note?: string | null };
   serves: {
     count: number | null;

@@ -160,6 +160,26 @@ function validate(r, file) {
     fail(id, 'structure', 'no steps');
     return;
   }
+  /* A SNACK HAS TO SAY HOW LONG IT KEEPS. Added 2026-08-23.
+   *
+   * His ask, in his words, was snacks to have in the house "either frozen and reheated or on the
+   * shelf", so that he stops buying candy. For that class of dish the storage life is not a footnote,
+   * it is most of the decision: 18 cookies that last a day and 18 that last three months are
+   * different products.
+   *
+   * A gate rather than a note in a schema document, because this repo's own meta-law is that a rule
+   * which does not execute is decoration, and `storage` was first written on the popcorn card as a
+   * field nothing in the app read. Invisible data that looks like a feature is worse than no data:
+   * the card claimed to answer a question the cook screen never showed him.
+   *
+   * Scoped to meal 'snack' deliberately. A dinner is eaten the day it is cooked and does not owe
+   * anyone a shelf life, so requiring it everywhere would make it noise that gets filled in by rote. */
+  if ((r.meal || []).includes('snack') && !r.keeps) {
+    fail(id, 'structure', "meal includes 'snack' and there is no `keeps`",
+      "A snack is chosen on how long it lasts. Quote the publisher's own storage line where she "
+      + 'gives one, the way every step quotes hers, rather than estimating a shelf life here.');
+  }
+
   if (!Array.isArray(r.ingredients)) {
     fail(id, 'structure', 'ingredients is not an array');
     return;

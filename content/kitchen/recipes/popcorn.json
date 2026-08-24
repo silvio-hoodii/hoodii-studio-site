@@ -1,0 +1,245 @@
+{
+ "id": "popcorn",
+ "name": "Stovetop Popcorn",
+ "build": "2026-08-23a",
+ "form": "dish",
+ "meal": [
+  "snack"
+ ],
+ "why": "The salty half of the snack problem, and it has been sitting in the cupboard the whole time. There has been a bag of popcorn kernels here since at least the first of August and nothing in this app ever mentioned it, so it never got offered and never got eaten. It needs a pot with a lid, oil, and five minutes. Nothing gets bought, nothing goes in the fridge, and a third of a cup of kernels makes about eight cups of popcorn, which is a bowl big enough to be the whole point of sitting down.\n\nIt is also the one recipe here where her doneness tests are better than anything this app could write. She pops ONE kernel first and waits for it, which means the pot tells you when it is hot instead of you guessing what medium-high is on an induction dial. Then she says stop when the popping slows to about one pop per second. Both of those are things you do and count, not things you have to sense.",
+ "source": "https://www.budgetbytes.com/how-to-make-stove-top-popcorn/",
+ "time": {
+  "activeMin": 5,
+  "totalMin": 5,
+  "note": "her number: 5 minutes cook, no prep. It is genuinely this fast, and all five minutes are hands-on, so do not start it and walk off"
+ },
+ "serves": {
+  "count": 4,
+  "unit": "bowl",
+  "proteinPerUnit": 1,
+  "proteinMath": "HER FIGURE, off Budget Bytes' own nutrition panel: 1.45 g of protein per 2-cup serving, at her yield of 4 servings, alongside 153.5 cal and 13 g of fat. So about 6 g of protein in the entire batch, and rounded DOWN to 1 per bowl here rather than up.\n\nSaid plainly: this is not protein and it is not pretending to be. It is on the list because it is salty, it is shelf stable, it costs about 20 cents, and it replaces a bag of chips. The protein target is won at the stove earlier in the day, not here."
+ },
+ "ingredients": [
+  {
+   "ref": "oil",
+   "display": "high heat cooking oil",
+   "qty": 2,
+   "unit": "tbsp",
+   "staple": true,
+   "prep": "the plain vegetable oil, NOT the olive oil. High heat is the whole point of her asterisk: this pot gets hotter than olive oil tolerates, and olive oil starts smoking and tasting bitter well before a kernel pops",
+   "defining": true
+  },
+  {
+   "ref": "kernels",
+   "stock": "popcorn",
+   "display": "popcorn kernels",
+   "qty": 0.33,
+   "unit": "cup",
+   "prep": "a third of a cup, measured with the measuring cups. It looks like far too little and it is not: this swells to roughly eight cups of popcorn",
+   "defining": true
+  },
+  {
+   "ref": "butter",
+   "stock": "butter",
+   "display": "butter",
+   "qty": 2,
+   "unit": "tbsp",
+   "optional": true,
+   "prep": "she marks it optional and so is this. It goes in at the end, off the heat",
+   "defining": false
+  },
+  {
+   "ref": "seasonsalt",
+   "display": "seasoning salt",
+   "qty": 0.5,
+   "unit": "tsp",
+   "staple": true,
+   "optional": true,
+   "prep": "she marks it optional. Anything on the spice rack works here and she says so herself at the end of the last step",
+   "defining": false
+  }
+ ],
+ "equipment": [
+  "pot_large",
+  "stovetop",
+  "measuringcups",
+  "measuringspoons",
+  "mixingbowl_large",
+  "ovenmitts",
+  "teatowel",
+  "plates",
+  "microwave"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "text": "Add the oil and one kernel to a large sauce pot. Place the lid on the pot and turn the heat onto medium-high. Wait for the test kernel to pop.",
+   "sourceText": "Add the oil and one kernel to a large sauce pot. Place the lid on the pot and turn the heat onto medium-high. Wait for the test kernel to pop.",
+   "uses": [
+    {
+     "ref": "oil",
+     "amount": 2,
+     "unit": "tbsp"
+    },
+    {
+     "ref": "kernels",
+     "amount": 0,
+     "unit": "cup",
+     "optional": true
+    }
+   ],
+   "equipment": [
+    "pot_large",
+    "stovetop",
+    "measuringspoons"
+   ],
+   "minutes": 2,
+   "heat": {
+    "surface": "stovetop",
+    "target": "THE ONE TEST KERNEL IS THE TEMPERATURE GAUGE, and it is why this recipe does not care what the dial says. Put in the oil and exactly one kernel, lid on, and set the burner somewhere in the upper half of its range. When that single kernel pops, the oil is at popping temperature and the pot is ready. Nothing else to judge.",
+    "recheck": "If the kernel has not popped after about three minutes, the burner is too low: move it up and wait again. If the oil starts smoking before the kernel pops, it is too high: lift the pot off the burner for thirty seconds, come down, and put it back."
+   },
+   "doneness": {
+    "test": "One pop, from the one kernel. That is the whole test. Do not add the rest until you have heard it.",
+    "kind": "listen"
+   },
+   "look": "A LARGE SAUCE POT means the big pot, and it has to have a lid that fits. Both are in the cupboard. Use the large one rather than a small one even for one batch: the kernels need room to be a single layer on the bottom, and eight cups of popcorn has to fit somewhere.\n\nTWO TABLESPOONS OF OIL covers the bottom of the pot in a thin film, not a puddle. It should look wet all over, with no dry patches.\n\nONE KERNEL. Actually one. This is not a rounding of \"a few\", it is her method: a single kernel makes a single unmistakable pop, and several kernels make a mess of overlapping noises you cannot read.\n\nLID ON NOW, and leave it on. A kernel leaves the pot at speed."
+  },
+  {
+   "n": 2,
+   "text": "Once the kernel pops, add the rest of the kernels, replace the lid, and give the pot a swirl to coat the kernels in the hot oil. Wait for the kernels to begin to pop. You can swirl again to redistribute the hot oil, if needed.",
+   "sourceText": "Once the kernel pops, add the rest of the kernels, replace the lid, and give the pot a swirl to coat the kernels in the hot oil. Wait for the kernels to begin to pop. You can swirl again to redistribute the hot oil, if needed.",
+   "uses": [
+    {
+     "ref": "kernels",
+     "amount": 0.33,
+     "unit": "cup"
+    }
+   ],
+   "equipment": [
+    "pot_large",
+    "stovetop",
+    "measuringcups"
+   ],
+   "minutes": 1,
+   "heat": {
+    "surface": "stovetop",
+    "target": "Leave the burner exactly where it was when the test kernel popped. Do not turn it up because nothing is happening yet: there is a gap of thirty seconds to a minute after the kernels go in while they come up to temperature, and that silence is normal.",
+    "recheck": "Listen after one minute. If there is still no popping at all after ninety seconds, come up a little. Once popping starts, do not touch the burner again."
+   },
+   "doneness": {
+    "test": "The first few pops from the main batch. Once you hear popping start, you are into step 3 and it moves fast from here.",
+    "kind": "listen"
+   },
+   "look": "GIVE THE POT A SWIRL means lift it off the burner by the handles, keep it flat, and move it in a circle so the kernels slide around the bottom. Two seconds. Lid stays on the whole time. This is to get oil on every kernel, which is what makes them all pop instead of half of them.\n\nSTAND HERE. From this point the whole thing takes about two minutes and it does not tolerate being left, so do not go and do something else."
+  },
+  {
+   "n": 3,
+   "text": "Once the kernels begin to pop rapidly, crack the lid a little bit to allow excess steam to escape. Make sure it's only open a little to keep the pot hot enough to continue popping the corn.",
+   "sourceText": "Once the kernels begin to pop rapidly, crack the lid a little bit to allow excess steam to escape. Make sure it's only open a little to keep the pot hot enough to continue popping the corn.",
+   "uses": [
+    {
+     "ref": "kernels",
+     "amount": 0,
+     "unit": "cup",
+     "optional": true
+    }
+   ],
+   "equipment": [
+    "pot_large",
+    "stovetop",
+    "ovenmitts",
+    "teatowel"
+   ],
+   "minutes": 1,
+   "heat": {
+    "surface": "stovetop",
+    "target": "Burner unchanged. The lid is what you are adjusting here, not the heat.",
+    "recheck": "None. Do not change the burner during popping."
+   },
+   "doneness": {
+    "test": "Rapid popping, meaning several pops a second rather than one every few seconds. That is the cue to crack the lid.",
+    "kind": "listen"
+   },
+   "look": "CRACK THE LID A LITTLE BIT means slide it sideways so there is a gap of about a finger's width at one edge. Not off, not half off. Use the oven mitt or the tea towel, because the lid is hot and so is the steam coming out of that gap.\n\nWHY IT MATTERS, and this is the difference between popcorn and chewy popcorn: the kernels release water as they pop and that steam has nowhere to go under a sealed lid, so it soaks back into the popcorn. The gap lets it out. Too wide a gap and the pot loses its heat and the last kernels never pop, which is why she says only a little."
+  },
+  {
+   "n": 4,
+   "text": "When the popping slows to about one pop per second, turn off the heat. Wait a few extra seconds for the last few pops, then remove the lid and pour the popcorn into a bowl.",
+   "sourceText": "When the popping slows to about one pop per second, turn off the heat. Wait a few extra seconds for the last few pops, then remove the lid and pour the popcorn into a bowl.",
+   "uses": [
+    {
+     "ref": "kernels",
+     "amount": 0,
+     "unit": "cup",
+     "optional": true
+    }
+   ],
+   "equipment": [
+    "pot_large",
+    "stovetop",
+    "mixingbowl_large",
+    "ovenmitts"
+   ],
+   "minutes": 1,
+   "heat": {
+    "surface": "stovetop",
+    "target": "Off. This is the step where the burner goes to zero, and her test tells you when.",
+    "recheck": "None."
+   },
+   "doneness": {
+    "test": "COUNT THE POPS. While it is going hard you cannot count them. When you can count them, and there is roughly one a second with a gap between each, that is her cue and the heat goes off. This is the only decision in the recipe that burns the batch if you get it wrong, and it is a counting test rather than a judgement.",
+    "kind": "listen"
+   },
+   "look": "WAITING TOO LONG IS HOW POPCORN BURNS, and there is no visual warning before it happens because everything is under a lid. The nose gets it first. If you smell anything scorched, off the heat immediately and pour it out, and the batch is probably still fine.\n\nPOUR IT INTO A BOWL now rather than leaving it in the pot. The pot is still hot enough to keep cooking the bottom layer.\n\nA FEW UNPOPPED KERNELS AT THE BOTTOM IS NORMAL and is not a mistake. Chasing the last of them is exactly what burns everything above them. Tip them out with the popcorn and mind your teeth."
+  },
+  {
+   "n": 5,
+   "text": "Let the pot cool for two minutes or so, then add the butter to the still hot pot. Allow the residual heat in the pot to melt the butter, swirling the butter to maximize the contact with the hot pan. Drizzle the melted butter over the popcorn bowl, then sprinkle with seasoning salt or your favorite herbs and spices.",
+   "sourceText": "Let the pot cool for two minutes or so, then add the butter to the still hot pot. Allow the residual heat in the pot to melt the butter, swirling the butter to maximize the contact with the hot pan. Drizzle the melted butter over the popcorn bowl, then sprinkle with seasoning salt or your favorite herbs and spices.",
+   "uses": [
+    {
+     "ref": "butter",
+     "amount": 2,
+     "unit": "tbsp"
+    },
+    {
+     "ref": "seasonsalt",
+     "amount": 0.5,
+     "unit": "tsp"
+    }
+   ],
+   "equipment": [
+    "pot_large",
+    "measuringspoons",
+    "mixingbowl_large",
+    "plates",
+    "microwave"
+   ],
+   "minutes": 2,
+   "heat": null,
+   "doneness": {
+    "test": "Tilt the pot. When the butter runs as a liquid with no solid lump left in it, it is melted and ready to pour. If a lump is still sitting there after a minute, the pot has cooled too far: that is fine, melt it in the microwave in 15 second bursts instead.",
+    "kind": "look"
+   },
+   "look": "THE BURNER IS ALREADY OFF and stays off. She is using the heat left in the metal, not the hob, which is why she waits two minutes first: straight off the boil the pot would brown the butter rather than melt it.\n\nDRIZZLE, THEN TOSS. Pour the butter over the popcorn in a few passes rather than one puddle in the middle, then put a plate over the bowl and shake it, or stir it with your hands. Butter poured in one spot makes four soggy pieces and eight cups of dry ones.\n\nSALT WHILE IT IS BUTTERY, not before. Salt slides straight off dry popcorn to the bottom of the bowl, and sticks to buttered popcorn.\n\nHER LAST CLAUSE IS AN OPEN DOOR: \"or your favorite herbs and spices\". The rack has smoked paprika, chili powder, garlic powder and oregano, and any of them go on from here. That is her sentence, not an addition to it."
+  }
+ ],
+ "keeps": "Plain, a few days in a sealed jar or bag at room temperature. It goes chewy after that, because it takes moisture back out of the air. Buttered and salted, the same evening: the butter is the moisture. No fridge, no freezer.\n\nSo this is the one for right now rather than the one for the cupboard, and it does not need to keep: five minutes from cupboard to bowl, nothing bought, nothing thawed.",
+ "provenance": {
+  "tier": "sourced",
+  "cooked": false,
+  "readAt": "2026-08-23a",
+  "statement": "Every numbered instruction is Budget Bytes' own sentence, in her order, with her amounts, her heat and her tests. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped. All five of her published steps are here.\n\nWhat this app adds is the layer a printed page cannot: which of his pots she means, what \"crack the lid\" and \"swirl\" actually look like as a physical action, an observable for the induction hob where she writes medium-high, and the protein arithmetic off her own panel. The doneness tests are HERS in both of the places that matter, the single test kernel and the one-pop-per-second cue, which is unusual and is why this recipe was picked: they are already tests you perform rather than senses you have to have.\n\nOne thing worth stating plainly because it is the kind of gap that has burnt a dish here before. She never says what to do with unpopped kernels at the bottom, and the annotation on step 4 says to leave them, which is a claim about SAFETY OF THE BATCH rather than a cooking instruction: going back for them is how the popped corn above scorches. It is in `look`, which renders as ours, not in her sentence.\n\nTwo defects were found by reading this card as rendered, and both are recorded because they are the class this project keeps hitting. The `keeps` block opened with \"HER OWN WORDS FROM THE PAGE\" and her page has no storage section, which is a false attribution on the one field added specifically to answer his question. And four pieces of gear the annotations tell him to pick up, the oven mitt, the tea towel, a plate to shake the bowl under and the microwave as the butter fallback, were referenced without being declared, so the prep list did not name them. The validator cannot catch that second one: `present:false` is a hard failure only for equipment a card DECLARES, and a card that declares nothing requires nothing. `bananabread.json` still has it, at her wire rack.\n\nHER PAGE HAS NO STORAGE SECTION, so the `keeps` line is ours and not a quote. Its first draft opened with \"HER OWN WORDS FROM THE PAGE\", which was a false attribution on the one field added specifically to answer his storage question, and it was caught by reading the card as rendered. What the line says now is a property of dry food rather than a claim about her recipe. The second draft was also cut by two thirds: it explained the correction to the cook, and a note about a draft belongs here, in the QA field, not on the screen he reads while deciding whether to make popcorn.",
+  "sources": [
+   {
+    "name": "Budget Bytes",
+    "url": "https://www.budgetbytes.com/how-to-make-stove-top-popcorn/",
+    "primary": true,
+    "note": "Easy Stovetop Popcorn Recipe. 4.11 out of 5 from 57 ratings, yield 4 servings of 2 cups each, 5 minutes. Captured 2026-08-23 from the page's own JSON-LD via content/kitchen/import.mjs. All four ingredient lines and all five instructions taken verbatim. Nutrition panel on the same page gives 153.5 cal and 1.45 g protein per 2-cup serving."
+   }
+  ],
+  "cookedResult": null,
+  "readHash": "55c9de4c"
+ }
+}

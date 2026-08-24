@@ -229,6 +229,18 @@ export default function CookClient({
 
         {recipe.why && <p className="lede">{recipe.why}</p>}
 
+        {/* HOW LONG IT KEEPS, above the fold rather than after the last step.
+          *
+          * A snack is chosen on this, not on the method. He asked for things that store "either
+          * frozen and reheated or on the shelf", so the answer belongs where he decides whether to
+          * start, not at the bottom of a screen he reaches forty minutes later. */}
+        {recipe.keeps && (
+          <p className="keeps">
+            <b>Keeps</b>
+            {recipe.keeps}
+          </p>
+        )}
+
         <div className="meta" style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 14, color: 'var(--ink-faint)' }}>
           {recipe.time.note && <span>{recipe.time.note}</span>}
           {recipe.serves.proteinPerUnit ? (

@@ -329,6 +329,13 @@
       "notes": "BOUGHT 2026-08-22, 9x5 non-stick. His words: \"bought the loaf pan, 9x5. I think that is the one.\" No photo and no brand read, so the exact product is unrecorded. 9x5 inches is the standard North American loaf size and is what Budget Bytes' banana bread is written for.",
       "history": "Recorded as present:false earlier the same day, after asking rather than assuming. It was the only thing besides ground nutmeg blocking the banana bread card, because present:false is a hard validator failure."
     },
+    "ramekin": {
+      "name": "ramekins",
+      "class": "vessel",
+      "present": true,
+      "notes": "BOUGHT and reported 2026-08-23, in his words: \"the ramekins i bought shouold work for somethign\". He is right, and they were the missing vessel: a ramekin is the only baking dish this kitchen has between a 9x5 loaf pan and nothing, so individual-portion baking was structurally unreachable before them. CAPACITY AND COUNT ARE UNRECORDED, and capacity changes the arithmetic: Budget Bytes' brownie pots are written for two 8 oz ramekins, and 8 oz is exactly 1 cup, so the measuring cup already in the drawer settles it. Logged in UNKNOWNS.md rather than guessed.",
+      "history": "Nothing in the app knew ramekins existed until he said so, so every individual-portion dish in the corpus scored as unmakeable. Recorded the same day he mentioned them, the same way the loaf pan was on 2026-08-22."
+    },
     "muffintin": {
       "name": "muffin tin",
       "class": "vessel",

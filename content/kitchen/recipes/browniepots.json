@@ -1,0 +1,327 @@
+{
+ "id": "browniepots",
+ "name": "Fudge Brownie Pots",
+ "build": "2026-08-23a",
+ "form": "dish",
+ "meal": [
+  "snack",
+  "dessert"
+ ],
+ "why": "The ramekins you bought have a job. This is a brownie that makes exactly two, baked in two ramekins, out of eight things already in the cupboard: butter, sugar, vanilla, one egg, flour, cocoa, baking powder, salt. Nothing bought, nothing thawed, no tin.\n\nThe ramekins mattered more than they look like they should. Before them this kitchen had a 9x5 loaf pan and a flat baking tray and nothing in between, so every individual-portion bake in the corpus scored as unmakeable: brownies want an 8x8 dish, baked oatmeal wants a casserole dish, muffins want a tin. A ramekin is the one vessel that turns a tray recipe into a portion recipe without changing anybody's recipe, because some recipes are written for ramekins in the first place. This is one of them.\n\nIt also melts its butter in the microwave and stirs everything with a spoon, so the missing hand mixer that blocks both cookie recipes does not come up.",
+ "source": "https://www.budgetbytes.com/fudge-brownie-pots-for-two/",
+ "keeps": "NOT A KEEPER, by design rather than by fault: it makes two and they are eaten warm. The second one, covered on the counter, is fine tomorrow.\n\nIf what you want is a tray of squares that lives in the freezer, that is her Super Fudgy Homemade Brownies instead, which needs an 8x8 dish this kitchen does not have.",
+ "time": {
+  "activeMin": 15,
+  "totalMin": 45,
+  "note": "her numbers: 15 minutes prep, 25 to 30 minutes bake. Add ten minutes for the oven to come up to temperature before any of it starts"
+ },
+ "serves": {
+  "count": 2,
+  "unit": "pot",
+  "proteinPerUnit": 8,
+  "proteinMath": "HER FIGURE, off Budget Bytes' own nutrition panel: 8.3 g of protein per serving at her yield of 2, alongside 532.5 cal, 71.4 g carbohydrate and 27.8 g fat. Rounded DOWN to 8.\n\nWhere it comes from: one egg is about 6 g split across two pots, so 3 g each, and the third of a cup of flour plus the third of a cup of cocoa carry the rest. Cocoa powder is genuinely a fifth protein by weight, which is why this is the highest-protein sweet thing in the app that is not a peanut butter cookie.\n\nSaid plainly anyway: 532 calories a pot. This is a dessert with a good protein number for a dessert, not a protein snack. It is here because you wanted something sweet in the house, and it is honest about the trade."
+ },
+ "ingredients": [
+  {
+   "ref": "butter",
+   "stock": "butter",
+   "display": "butter",
+   "qty": 4,
+   "unit": "tbsp",
+   "prep": "four tablespoons is half a standard stick, and the wrapper is usually marked in tablespoons so it can be cut on the line rather than guessed. Straight from the fridge is fine here: it gets melted",
+   "defining": true
+  },
+  {
+   "ref": "sugar",
+   "display": "granulated sugar",
+   "qty": 0.5,
+   "unit": "cup",
+   "staple": true,
+   "prep": "the plain white sugar",
+   "defining": true
+  },
+  {
+   "ref": "vanilla",
+   "stock": "vanilla",
+   "display": "vanilla",
+   "qty": 0.25,
+   "unit": "tsp",
+   "prep": "the 250 ml bottle of artificial vanilla extract. A quarter teaspoon is a small amount and it is not the flavour of the dish, the cocoa is",
+   "defining": false
+  },
+  {
+   "ref": "egg",
+   "stock": "eggs",
+   "display": "large egg",
+   "qty": 1,
+   "unit": "each",
+   "prep": "one egg, and read step 4 before it goes in. It meets warm butter, which needs a moment of care",
+   "defining": true
+  },
+  {
+   "ref": "flour",
+   "display": "all-purpose flour",
+   "qty": 0.33,
+   "unit": "cup",
+   "staple": true,
+   "prep": "a third of a cup. Spoon it into the cup and level it with a knife rather than scooping the cup through the bag: scooping packs in up to a quarter more flour, and in a recipe this small that is the difference between fudgy and cakey",
+   "defining": true
+  },
+  {
+   "ref": "cocoa",
+   "stock": "cocoa",
+   "display": "unsweetened cocoa powder",
+   "qty": 0.33,
+   "unit": "cup",
+   "prep": "the cocoa in the cupboard is natural rather than Dutch-processed, which is what an unsweetened cocoa powder means in a North American recipe. It is the right one for this",
+   "defining": true
+  },
+  {
+   "ref": "baking_powder",
+   "display": "baking powder",
+   "qty": 0.25,
+   "unit": "tsp",
+   "staple": true,
+   "prep": "baking POWDER. There is a 450 g tub of it and a 500 g box of baking soda beside it, and they are not interchangeable",
+   "defining": true
+  },
+  {
+   "ref": "salt",
+   "display": "salt",
+   "qty": 0.125,
+   "unit": "tsp",
+   "staple": true,
+   "prep": "an eighth of a teaspoon, which is half the quarter-teaspoon spoon. In something this chocolatey the salt is what makes the chocolate taste of chocolate",
+   "defining": false
+  }
+ ],
+ "equipment": [
+  "oven",
+  "ramekin",
+  "microwave",
+  "mixingbowl_large",
+  "bowlset",
+  "measuringcups",
+  "measuringspoons",
+  "woodenspoon",
+  "spatula",
+  "knife_sharp",
+  "ovenmitts",
+  "teatowel",
+  "plates",
+  "cuttingboard"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "text": "Preheat the oven to 350 degrees.",
+   "sourceText": "Preheat the oven to 350 degrees.Cut the butter into chunks and place it in a large microwave safe bowl. Microwave on high for 30 seconds, then stir until the butter is fully melted. Add the sugar and microwave for 15 seconds. Stir again, then repeat the 15 second intervals until the sugar and butter no longer separate from each other after being stirred (about 30-45 seconds total).",
+   "uses": [],
+   "equipment": [
+    "oven"
+   ],
+   "minutes": 10,
+   "heat": {
+    "surface": "oven",
+    "tempF": 350,
+    "target": "350F. An oven temperature is a real number and needs no interpretation, unlike the hob.",
+    "recheck": "None. Set it and leave it."
+   },
+   "doneness": {
+    "test": "Wait for the oven's own ready signal, whichever it does: the light going out, the beep, or the display reaching 350. Do not start the timer on the bake from the moment you pressed the button. A cold oven adds ten minutes to the bake and the dome test in the last step then arrives late.",
+    "kind": "look"
+   },
+   "look": "FIRST, BECAUSE IT IS THE SLOWEST THING. The oven takes about ten minutes to reach 350F and the rest of this recipe takes fifteen, so starting it now means it is ready when the batter is.\n\nCHECK THE RAMEKINS BEFORE YOU START, and this is the one thing on this card that has to be settled by looking rather than reading. Her recipe pours the batter into two 8 oz ramekins. Eight ounces is exactly one cup, so fill one ramekin from the 1-cup measure with water: if it takes the full cup, hers and yours are the same size and the whole card works as written.\n\nIF YOURS HOLD LESS THAN A CUP, STOP AND SAY SO. Do not divide the batter across three or four to make it fit. She gives one bake time for her size, 25 to 30 minutes, and the time for a smaller pot is a number she never published. Guessing it is exactly the invention that has burnt food from this app before, so the card refuses rather than guessing."
+  },
+  {
+   "n": 2,
+   "text": "Cut the butter into chunks and place it in a large microwave safe bowl. Microwave on high for 30 seconds, then stir until the butter is fully melted.",
+   "sourceText": "Preheat the oven to 350 degrees.Cut the butter into chunks and place it in a large microwave safe bowl. Microwave on high for 30 seconds, then stir until the butter is fully melted. Add the sugar and microwave for 15 seconds. Stir again, then repeat the 15 second intervals until the sugar and butter no longer separate from each other after being stirred (about 30-45 seconds total).",
+   "uses": [
+    {
+     "ref": "butter",
+     "amount": 4,
+     "unit": "tbsp"
+    }
+   ],
+   "equipment": [
+    "microwave",
+    "mixingbowl_large",
+    "knife_sharp",
+    "measuringspoons",
+    "woodenspoon"
+   ],
+   "minutes": 2,
+   "heat": {
+    "surface": "microwave",
+    "target": "High, meaning full power, which is where a microwave sits unless somebody changed it.",
+    "recheck": "After the first 30 seconds. Stir before adding any more time: butter carries on melting off the heat of the bowl and the part that looks solid is often already soft."
+   },
+   "doneness": {
+    "test": "Tilt the bowl. Fully melted means it runs as a single clear yellow liquid with no solid lump left anywhere, including under the surface, so drag the spoon across the bottom to check. If a lump remains, stir for ten seconds first rather than microwaving again: usually that finishes it. If it is still there, 10 more seconds.",
+    "kind": "look"
+   },
+   "look": "A LARGE MICROWAVE SAFE BOWL means the big mixing bowl if it is glass or ceramic and has no metal rim. Large matters: every wet ingredient joins this bowl and the dry ones get poured in at step 6, so the whole batter is mixed in here.\n\nCUT THE BUTTER INTO CHUNKS is not a formality. Half-inch pieces melt evenly in thirty seconds; a solid block goes liquid at the edges and stays cold in the middle, and then the next thirty seconds overheats the melted part.\n\nDO NOT LET IT GO PAST MELTED. Butter that boils and spits in the microwave has separated and got much hotter than melted butter, and step 4 puts a raw egg into it. Thirty seconds, then look."
+  },
+  {
+   "n": 3,
+   "text": "Add the sugar and microwave for 15 seconds. Stir again, then repeat the 15 second intervals until the sugar and butter no longer separate from each other after being stirred (about 30-45 seconds total).",
+   "sourceText": "Preheat the oven to 350 degrees.Cut the butter into chunks and place it in a large microwave safe bowl. Microwave on high for 30 seconds, then stir until the butter is fully melted. Add the sugar and microwave for 15 seconds. Stir again, then repeat the 15 second intervals until the sugar and butter no longer separate from each other after being stirred (about 30-45 seconds total).",
+   "uses": [
+    {
+     "ref": "sugar",
+     "amount": 0.5,
+     "unit": "cup"
+    }
+   ],
+   "equipment": [
+    "microwave",
+    "mixingbowl_large",
+    "measuringcups",
+    "woodenspoon"
+   ],
+   "minutes": 2,
+   "heat": {
+    "surface": "microwave",
+    "target": "High again, 15 seconds at a time. Short bursts because the thing being judged changes between each one.",
+    "recheck": "After every single burst, and stir before you look. This is a loop she asks you to run two or three times, not one 45 second blast."
+   },
+   "doneness": {
+    "test": "HER TEST IS PRECISE, so use her words rather than a guess at colour. Stir hard for a few seconds, then stop and watch the surface. NOT READY: a layer of clear yellow butter rises and sits on top of the sugar, so you can see two things in the bowl. READY: it stays one thick glossy grainy paste with no butter separating out, and it holds that way while you look at it. Then stop, whatever the clock says.",
+    "kind": "look"
+   },
+   "look": "REPEAT THE 15 SECOND INTERVALS is a loop with an exit condition, and the condition is hers, not the time. Her thirty to forty five seconds total is what it took in her kitchen, so expect two or three bursts and let the test decide.\n\nWHY IT MATTERS AT ALL: dissolving the sugar into the warm butter is what gives a brownie the shiny, papery, crackly top. Skipping it makes a perfectly good brownie with a dull matte surface. It is the only reason this recipe involves a microwave twice.\n\nIT WILL LOOK WRONG AND GRAINY THROUGHOUT, and that is correct. Sugar in butter does not go smooth like a cream. What is being watched is whether butter separates OUT of it, not whether the grains vanish."
+  },
+  {
+   "n": 4,
+   "text": "Add the vanilla extract and egg to the melted butter and sugar, then stir to combine.",
+   "sourceText": "Add the vanilla extract and egg to the melted butter and sugar, then stir to combine.",
+   "uses": [
+    {
+     "ref": "vanilla",
+     "amount": 0.25,
+     "unit": "tsp"
+    },
+    {
+     "ref": "egg",
+     "amount": 1,
+     "unit": "each"
+    }
+   ],
+   "equipment": [
+    "mixingbowl_large",
+    "measuringspoons",
+    "woodenspoon"
+   ],
+   "minutes": 2,
+   "heat": null,
+   "doneness": {
+    "test": "The bowl goes from grainy and dull to noticeably darker, looser and glossier, and there is no streak or thread of clear egg white visible anywhere when you pull the spoon through it. Scrape the bottom and the sides and look again, because egg hides against the side of a bowl.",
+    "kind": "look"
+   },
+   "look": "THE ONE PLACE THIS RECIPE CAN GO WRONG, and it is not in her sentence because it does not happen in every kitchen. The butter and sugar have just been in the microwave, and if they are hot rather than warm, a raw egg dropped in starts to cook on contact and sets into little white threads. Somebody left a comment on her page reporting exactly that.\n\nSO: TOUCH THE OUTSIDE OF THE BOWL FIRST. If it is too hot to rest your hand on comfortably, wait two or three minutes until it is merely warm. Nothing is lost by waiting, and this is the cheapest possible insurance.\n\nTHEN STIR WHILE YOU POUR. Crack the egg into a small prep bowl first rather than straight into the mix, which also catches any shell, then add it while the spoon is already moving. Egg going into moving batter cannot sit in one hot spot.\n\nIF IT DOES THREAD, it is cosmetic rather than ruined. Carry on: the bits bake in and nobody will find them under the cocoa."
+  },
+  {
+   "n": 5,
+   "text": "In a separate bowl, stir together the flour, cocoa powder, baking powder, and salt until well combined.",
+   "sourceText": "In a separate bowl, stir together the flour, cocoa powder, baking powder, and salt until well combined.",
+   "uses": [
+    {
+     "ref": "flour",
+     "amount": 0.33,
+     "unit": "cup"
+    },
+    {
+     "ref": "cocoa",
+     "amount": 0.33,
+     "unit": "cup"
+    },
+    {
+     "ref": "baking_powder",
+     "amount": 0.25,
+     "unit": "tsp"
+    },
+    {
+     "ref": "salt",
+     "amount": 0.125,
+     "unit": "tsp"
+    }
+   ],
+   "equipment": [
+    "bowlset",
+    "measuringcups",
+    "measuringspoons",
+    "woodenspoon"
+   ],
+   "minutes": 3,
+   "heat": null,
+   "doneness": {
+    "test": "One even brown, with no paler streaks of flour left in it. Drag the spoon across the bottom of the bowl and turn what comes up: cocoa is much darker than flour, so a streak is easy to see if you look for it. Keep going until there is not one.",
+    "kind": "look"
+   },
+   "look": "A SEPARATE BOWL, which is why the prep bowls are on the list. This is the second and last bowl in the recipe.\n\nWHY NOT JUST TIP THEM ALL INTO THE BUTTER: a quarter teaspoon of baking powder and an eighth of a teaspoon of salt spread through a third of a cup of flour reach every part of the batter. Dropped straight into a wet mix they clump, and a clump of baking powder is a bitter patch in the middle of one brownie.\n\nCOCOA CLUMPS AND FLOUR DOES NOT. If the cocoa has lumps in it, press them apart against the side of the bowl with the back of the spoon. There is no sieve here and none is needed for this amount."
+  },
+  {
+   "n": 6,
+   "text": "Pour the bowl of dry ingredients into the bowl of wet ingredients and stir just until a smooth, chocolatey batter has formed. Pour the batter into two 8oz. ramekins.",
+   "sourceText": "Pour the bowl of dry ingredients into the bowl of wet ingredients and stir just until a smooth, chocolatey batter has formed. Pour the batter into two 8oz. ramekins.",
+   "uses": [],
+   "equipment": [
+    "mixingbowl_large",
+    "bowlset",
+    "ramekin",
+    "spatula",
+    "woodenspoon"
+   ],
+   "minutes": 3,
+   "heat": null,
+   "doneness": {
+    "test": "JUST UNTIL is hers and it is the instruction, so stop at the first moment there is no dry cocoa or flour visible anywhere, including at the bottom of the bowl. Not one stir more. The batter will be thick and it will not be pourable like a cake batter: it drops off the spatula in one lump, and that is right.",
+    "kind": "look"
+   },
+   "look": "THIS IS THE STEP WHERE OVERMIXING COSTS SOMETHING. Flour worked in a wet batter turns tough, so once the streaks are gone the job is done even if it looks like it could use more.\n\nTWO 8 OZ RAMEKINS, and this is where the measurement from step 1 pays off. If they take a cup each, split the batter as evenly as you can by eye. Her ingredients come to roughly 1 1/3 cups of batter (4 tbsp butter, 1/2 cup sugar, one egg, 1/3 cup flour, 1/3 cup cocoa), so two 1-cup pots end up around two thirds full. That is arithmetic rather than a number she gave, and it matters only because it has to have room to dome.\n\nA SPATULA, NOT A SPOON, for getting it out. This batter is thick enough that a spoon leaves a third of it in the bowl.\n\nNO GREASING, because she does not ask for it. Do not add butter or parchment to the ramekins: this is eaten out of the pot with a spoon rather than turned out, so nothing needs to release."
+  },
+  {
+   "n": 7,
+   "text": "Bake the brownies in the preheated 350 degree oven for 25-30 minutes, or until the center of each brownie has risen up into a dome and the surface looks glossy and cracked. Let the brownies cool slightly before eating.",
+   "sourceText": "Bake the brownies in the preheated 350 degree oven for 25-30 minutes, or until the center of each brownie has risen up into a dome and the surface looks glossy and cracked. Let the brownies cool slightly before eating.",
+   "uses": [],
+   "equipment": [
+    "oven",
+    "ramekin",
+    "ovenmitts",
+    "teatowel",
+    "plates",
+    "cuttingboard"
+   ],
+   "minutes": 30,
+   "heat": {
+    "surface": "oven",
+    "tempF": 350,
+    "target": "350F, the temperature it has been coming up to since step 1.",
+    "recheck": "Look at 25 minutes, through the door rather than by opening it. Her window is 25 to 30, so the first look is at the start of it and not at the end."
+   },
+   "doneness": {
+    "test": "HER TWO SIGNS, and both are things you look at rather than judge: the middle of each one has risen up into a dome, so the centre is no longer lower than the edges, AND the top looks glossy and cracked rather than wet and flat. Both, not either. No skewer test, because she gives none: this is a fudge brownie and a skewer is meant to come out with crumbs on it, so the skewer would tell you to overbake it.",
+    "kind": "look"
+   },
+   "look": "OVEN MITTS, and the ramekins are the reason. A ceramic pot straight out of a 350F oven holds its heat far longer than a metal tray does and there is no handle anywhere on it. Take them out onto a plate or a board, not onto the counter.\n\nCOOL SLIGHTLY IS HER WORD AND SHE GIVES NO NUMBER FOR IT, so none is invented here. What it is not is cold: the point of this recipe is a warm brownie eaten with a spoon out of the pot. What it is not either is straight out of the oven, where the middle is molten enough to burn your mouth. Between those two, and the pot itself tells you: when you can hold the ramekin in a bare hand, it is ready to eat from.\n\nONE COMMENT ON HER PAGE IS WORTH KNOWING: a reader wrote that the centre deflated a little on cooling and that she would have given it another minute or two. So if it comes out domed and then sinks slightly, that is the known edge of her window rather than a mistake, and next time take it at 30 rather than 25."
+  }
+ ],
+ "provenance": {
+  "tier": "sourced",
+  "cooked": false,
+  "readAt": "2026-08-23a",
+  "statement": "Every instruction is Budget Bytes' own sentence, in her order, with her amounts, her temperature and her times, at her scale of two. Nothing was scaled, re-panned, re-timed or reordered, and no step was added or dropped.\n\nHer method is published as five steps and this card shows seven, which is re-chunking rather than rewriting. Her first step contains five separate actions across two appliances: a preheat, cutting and melting butter in the microwave, and then a stir-and-burst loop with the sugar. Steps 1, 2 and 3 here each quote that whole published step as `sourceText` and show their own slice of it, in her order. The words he reads are hers.\n\nWhat this app adds is the layer a printed page cannot: which bowl and which appliance, that the oven is started first because it is the slowest thing, what a technique word means in place, a doneness test built out of her own two signs, and the protein arithmetic off her own panel.\n\nTHE ONE OPEN NUMBER IS THE RAMEKIN, and the card is built to refuse rather than guess. She specifies two 8 oz ramekins. His were bought on 2026-08-23 and their capacity was never recorded, so step 1 gives him a test he can perform with the 1-cup measure already in the drawer, and says explicitly that if they hold less he should stop and say so rather than divide the batter across three or four. A bake time for a smaller pot is a number she never published, and inventing one is the exact failure class in SOURCING.md. Logged in KitchenOS/UNKNOWNS.md as well, so it is asked once.\n\nTwo annotations draw on the comment thread on her page rather than on her method, and both are labelled as comments where they appear: a reader whose egg began to cook when it met the warm butter and sugar (step 4), and a reader whose centre deflated slightly on cooling and who would have baked a minute or two longer (step 7). Neither changes an amount, a time or a temperature. Both are the kind of gap between the numbers that this project has been burnt by twice, so they are surfaced rather than left on a page he may not scroll. Reading it as rendered found three things, all fixed here: a plate and a board were referenced for landing the hot ramekins without being declared, so the prep list did not name them; step 6 asserted the pots end up two thirds full, which is now shown as the arithmetic it came from rather than stated as if she gave it; and step 7 put a ten-minute number on her word \"slightly\", which she never published. That last one is replaced by the pot itself as the test, held in a bare hand.\n\nThe `keeps` line was cut down after reading the card at 390px. Her page carries no storage section, so nothing there is quoted and nothing is invented; what remains is structural, which is the only honest thing to say about a recipe that yields two warm puddings.",
+  "sources": [
+   {
+    "name": "Budget Bytes",
+    "url": "https://www.budgetbytes.com/fudge-brownie-pots-for-two/",
+    "primary": true,
+    "note": "Fudge Brownie Pots (for two). 4.56 out of 5 from 58 ratings, yield 2, 15 minutes prep and 30 minutes cook. Captured 2026-08-23 from the page's own JSON-LD via content/kitchen/import.mjs. All eight ingredient lines and all five instructions taken verbatim. Nutrition panel on the same page gives 532.5 cal and 8.3 g protein per serving. The two reader observations cited in the provenance statement are from the comment thread on the same page, read 2026-08-23, and are not part of the JSON-LD capture."
+   }
+  ],
+  "readHash": "233ba98a",
+  "cookedResult": null
+ }
+}
