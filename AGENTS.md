@@ -334,6 +334,46 @@ on GitHub as of 2026-08-10 (`silvio-hoodii/hoodii-studio-site`). Git history was
 secrets first; keep it that way: dependency/API keys go in `.env.local` (gitignored) or Vercel env
 vars, never inline.
 
+## What costs money, and the gate that is NOT in this repo
+
+**Three Vercel firewall rules protect this site and none of them are visible in these files.**
+Read them with `vercel firewall overview` and `vercel firewall rules list` before concluding that
+something is unprotected, and re-read them before adding a filter page.
+
+| # | Rule | What it does |
+|---|---|---|
+| 1 | Unlocked device bypass | A request carrying the `kos` cookie skips rules 2 and 3 |
+| 2 | Filter surface cost gate | `/reading/shelf`, `/reading/want`, `/kitchen/find` get an edge challenge |
+| 3 | Document burst limit | 150 non-`/_next/` requests per minute per IP, then a challenge |
+
+Added 2026-08-24, after `/reading/shelf` took **178,000 invocations and 40 minutes of Active CPU
+in twelve hours**: 97.7% of the site's invocations and 95.7% of its compute, at a sustained 3.55
+req/s that a live log tail caught still running. Projected out, that was ten times the entire
+Hobby monthly allowance for both invocations and Active CPU, and the plan is to move back to Hobby.
+
+**The lesson is about which of these mechanisms actually executes.** `robots.ts` had disallowed all
+three of those paths since 2026-08-20, and its own addendum argued correctly that an AI scraper has
+no reason to read a page's meta tags before fetching it. It does not read `robots.txt` either. Two
+of the three disallowed paths were the two most-requested routes on the site. Keep the Disallow, it
+still speaks to crawlers that do honour it, but never count it as protection. After publishing the
+rules, function invocations went from 2.37 req/s to 0.02 req/s with zero on all three paths.
+
+**Rule 3 is the one that matters for code you have not written yet.** `/kitchen/find` was caught
+with this shape on 2026-08-20 and `/reading/shelf` shipped the same shape on 2026-08-21, so naming
+paths one at a time loses. Any page that renders on every request, exposes its filter state as
+crawlable `<Link>` hrefs, and needs no cookie is a combinatorial URL space someone will walk.
+
+**Two numbers to reason with before optimising anything here.** Vercel bills Active CPU only while
+code runs, and Provisioned Memory for an instance's whole lifetime *including* time spent waiting
+on I/O. `/reading/shelf` was 13ms of Active CPU against a 153ms P75 time to first byte, so what it
+cost was memory held open waiting for Postgres, not compute. **Count round trips, not work.** That
+page issued nine separate HTTP queries per hit; `getShelfBundle` in `src/lib/reading/shelf-db.ts`
+sends the same nine as one `sql.transaction`. A `Promise.all` makes queries concurrent, not free.
+
+`/` and `/opengraph-image` were checked at the same time and left alone: the first already carries
+`revalidate = 60` and the second prerenders static (`○` in the build's route table). Neither was
+costing anything, and changing them would have been motion.
+
 ## Posture rules (load-bearing)
 
 - **No CMS.** Content lives in TS/JSON files in this repo.

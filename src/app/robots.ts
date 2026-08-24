@@ -23,8 +23,23 @@ import type { MetadataRoute } from 'next';
  * indexed URL under it that a Disallow could orphan, because there is nothing to orphan. noindex
  * only speaks to SEARCH crawlers deciding what to index. It says nothing to an AI-training
  * scraper, which isn't building a search index and has no reason to read or honour a page's own
- * meta tags before deciding to fetch it. `robots.txt Disallow` is the one signal both kinds of bot
- * actually check before requesting a URL.
+ * meta tags before deciding to fetch it. `robots.txt Disallow` is the signal a well-behaved bot of
+ * either kind checks before requesting a URL.
+ *
+ * CORRECTED 2026-08-24. That last sentence used to read "the one signal both kinds of bot actually
+ * check", and it is wrong. A scraper with no reason to read a meta tag has no reason to read this
+ * file either, and on 2026-08-24 the two most-requested routes on the whole site were
+ * /reading/shelf and /reading/want, both listed below, at a sustained 3.55 req/s: 178,000
+ * invocations and 40 minutes of Active CPU in twelve hours, ten times the entire Hobby monthly
+ * allowance. Every line above was reasoning about what a bot would honour, and none of it executed.
+ *
+ * THE ENFORCEMENT IS NOT IN THIS FILE and cannot be, because this file is a request. It is three
+ * Vercel firewall rules (`vercel firewall rules list`): the `kos` cookie bypasses, those paths
+ * otherwise get an edge challenge, and a per-IP burst limit catches the next such page before
+ * anyone names it. See AGENTS.md, "What costs money, and the gate that is NOT in this repo".
+ *
+ * These Disallow lines stay anyway. They cost nothing and they still work on the bots that read
+ * them. They are just not the reason those paths are safe.
  *
  * Found 2026-08-20 via `vercel logs`: in one ~28-minute window, 136 of 200 sampled requests to
  * hoodii.studio were GET /kitchen/find, arriving every 150-300ms, which is not a person clicking.
