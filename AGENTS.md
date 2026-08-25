@@ -415,6 +415,31 @@ events during the scrape, and grouping by `request_hostname` returned exactly on
 `api.us-west-2.aws.neon.tech`. Not Spotify, not PSN. That is what makes the round-trip count in
 `getShelfBundle` a billing decision and not a tidiness one.
 
+**`aggregation: "sum"` is not the default and forgetting it reads as ZERO, not as an error.** Every
+value metric (`function_cpu_time_ms`, `function_duration_gbhr`, `fdt_total_bytes`,
+`peak_memory_mb`, the ISR byte counts) defaults to `avg`, so the response field comes back named
+`..._avg`. Code that reads a `..._sum` key it built by string manipulation gets `undefined`, scores
+it as 0, and prints a confident "0.00 CPU-hours" for a site that ran functions all day. That is
+exactly what the first pass of the 2026-08-25 sweep reported. Pass `aggregation` explicitly and
+assert the field name is present in the response before summing it.
+
+**Baseline as of 2026-08-25, so a future session can tell drift from noise.** Measured over a clean
+13-hour window with the scraper blocked, projected to a month, against the Hobby allowances that
+matter because that is where this account is going:
+
+| Resource | Projected / month | Hobby allows |
+|---|---|---|
+| Active CPU | ~1.0 CPU-hr | 4 |
+| Function invocations | ~33,000 | 1,000,000 |
+| Provisioned memory | ~7 GB-hrs | 360 |
+| Fast data transfer | ~0.8 GB | 100 GB |
+| Image transformations | ~111 | 5,000 |
+
+Function error rate at that point was 9 non-200s out of 26,225 invocations in 24 hours. If a later
+sweep shows Active CPU climbing, look at `vercel.function_invocation.function_cpu_time_ms` grouped
+by `route` first: on 2026-08-25 a single route, `/`, was 67.1% of the whole account's CPU, and the
+fix was its `revalidate`, not its code.
+
 ## Posture rules (load-bearing)
 
 - **No CMS.** Content lives in TS/JSON files in this repo.
