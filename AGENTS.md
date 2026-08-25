@@ -336,15 +336,33 @@ vars, never inline.
 
 ## What costs money, and the gate that is NOT in this repo
 
-**Three Vercel firewall rules protect this site and none of them are visible in these files.**
+**Four Vercel firewall rules protect this site and none of them are visible in these files.**
 Read them with `vercel firewall overview` and `vercel firewall rules list` before concluding that
 something is unprotected, and re-read them before adding a filter page.
 
 | # | Rule | What it does |
 |---|---|---|
-| 1 | Unlocked device bypass | A request carrying the `kos` cookie skips rules 2 and 3 |
-| 2 | Filter surface cost gate | `/reading/shelf`, `/reading/want`, `/kitchen/find` get an edge challenge |
-| 3 | Document burst limit | 150 non-`/_next/` requests per minute per IP, then a challenge |
+| 1 | Block AI training crawlers | UA regex, deny. meta-externalagent, GPTBot, ClaudeBot, Bytespider and friends |
+| 2 | Unlocked device bypass | A request carrying the `kos` cookie skips rules 3 and 4 |
+| 3 | Filter surface cost gate | `/reading/shelf`, `/reading/want`, `/kitchen/find` get an edge challenge |
+| 4 | Document burst limit | 150 non-`/_next/` requests per minute per IP, then a challenge |
+
+**Rule 1 names the actual culprit, identified 2026-08-25 from `vercel.request.count` grouped by
+`bot_name`: `meta-externalagent`, Meta's AI training crawler, was 208,938 of 215,673 edge requests
+in one 30-hour window.** Googlebot, bingbot, facebookexternalhit and UptimeRobot are deliberately
+NOT in that rule and were each re-tested after publishing it: search indexing and link-preview
+cards are wanted. Deny rather than challenge, because a challenge page is 33KB served to something
+that will never look at it, against 59 bytes for a 403.
+
+**Two traps in that rule, both of which cost a wrong answer before being caught.** The Vercel
+dashboard TRUNCATES the user agent column, and `meta-externalagent/1.1` sits at the END of an
+otherwise ordinary Chrome UA string, so the top user agents look like plain desktop Chrome. Group
+by `bot_name`, never eyeball the UA column. And the firewall's `inc` operator is EXACT match
+against a list, not substring: the first version of this rule used `inc` with the bot names,
+published clean, and let `meta-externalagent` through with a 200 on every path. Only `re` (regex,
+RE2, so no `(?i)` inline flag) does substring matching. A firewall rule that reads correctly in
+`vercel firewall rules list` has not been tested. Curl it with the real user agent, both the
+should-block and the should-pass side.
 
 Added 2026-08-24, after `/reading/shelf` took **178,000 invocations and 40 minutes of Active CPU
 in twelve hours**: 97.7% of the site's invocations and 95.7% of its compute, at a sustained 3.55
@@ -373,6 +391,29 @@ sends the same nine as one `sql.transaction`. A `Promise.all` makes queries conc
 `/` and `/opengraph-image` were checked at the same time and left alone: the first already carries
 `revalidate = 60` and the second prerenders static (`○` in the build's route table). Neither was
 costing anything, and changing them would have been motion.
+
+**How to read the real numbers, rather than the dashboard.** `vercel api` is an authenticated
+passthrough to the whole Vercel REST API using the CLI's own login, so no separate token is needed.
+In Git Bash, prefix it with `MSYS_NO_PATHCONV=1` or the leading `/` in the path gets rewritten into
+a Windows path and the CLI rejects it.
+
+```
+MSYS_NO_PATHCONV=1 vercel api /v2/observability/schema                # 97 metrics and their dimensions
+MSYS_NO_PATHCONV=1 vercel api /v2/observability/schema/<metricId>     # the dimensions you may group by
+MSYS_NO_PATHCONV=1 vercel api /v2/observability/query -X POST --input body.json
+```
+
+The query body needs `scope: {type: "owner", ownerId: "<team id>"}`, a single `metric`, ISO-string
+`startTime` / `endTime`, and an optional `groupBy` array. The metrics worth knowing:
+`vercel.external_api_request.count` (every Neon query counts here, and on this site that is ALL of
+it: group by `origin_route` to see which page), `vercel.function_invocation.count` (group by
+`route`), and `vercel.request.count` (group by `bot_name`, `client_user_agent`, `client_ip`,
+`waf_action`, `waf_rule_id`, `project_name`).
+
+**"External API Requests" on the billing page means Neon.** It was 66.6% of all observability
+events during the scrape, and grouping by `request_hostname` returned exactly one value:
+`api.us-west-2.aws.neon.tech`. Not Spotify, not PSN. That is what makes the round-trip count in
+`getShelfBundle` a billing decision and not a tidiness one.
 
 ## Posture rules (load-bearing)
 
