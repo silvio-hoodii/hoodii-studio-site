@@ -18,17 +18,30 @@ import { getShelfStats } from '@/lib/reading/shelf-db';
 import { getWantKeys } from '@/lib/reading/want-db';
 import './hub.css';
 
-/* ISR, 60 seconds. Added 2026-08-22 after Active CPU passed the Hobby allowance.
+/* ISR. Added 2026-08-22 at 60 seconds after Active CPU passed the Hobby allowance, raised to 600
+ * on 2026-08-25 after measuring what it was actually costing.
  *
  * This is the front door and it makes ten data calls per render, so it took the full weight of
  * every crawler. force-dynamic meant one render per request forever; at 60s a thousand bot hits
- * cost about sixteen renders instead of a thousand.
+ * cost about sixteen renders instead of a thousand. It does NOT reintroduce the build-time
+ * staleness problem AGENTS.md warns about: ISR regenerates against Neon, it does not bake at build.
  *
- * The one thing this trades is Spotify now-playing, which is server-rendered here and can now be
- * up to a minute stale. That is imperceptible for a footer element and the right trade against a
- * hard cap that stops the site serving. It does NOT reintroduce the build-time staleness problem
- * AGENTS.md warns about: ISR regenerates against Neon, it does not bake the page at build. */
-export const revalidate = 60;
+ * WHY 600 NOW. With the scraper blocked, this route was still 67.1% of ALL remaining Active CPU on
+ * the whole Vercel account: 42.3 seconds across 178 regenerations in 13 hours, about 237ms of CPU
+ * each, because every regeneration runs all ten calls. And the rate did not move when the crawler
+ * was blocked (13.7/hr before, 13.5/hr after), so the regenerations were never bot-driven at the
+ * margin: they were demand-limited by the 60-second window itself. Every minute that anyone at all
+ * asks for this page is a minute it rebuilds. Ten minutes caps that at six an hour.
+ *
+ * The 60-second version's comment said the trade was Spotify now-playing going stale. That was
+ * already untrue when it was written: NowPlaying moved to a client component the SAME DAY (see the
+ * header of components/NowPlaying.tsx) and fetches /api/spotify itself, which sets its own
+ * s-maxage=60. Nothing about this number touches it.
+ *
+ * What 600 actually trades is the app-state rows: dishes ready, next lift, queue length. Those
+ * change when he cooks or trains, a few times a day, not every minute. And ISR serves the stale
+ * copy WHILE regenerating, so the lag is never a wait, only an older number. */
+export const revalidate = 600;
 
 /* Declared here rather than in the root layout, where it would be inherited by every route and
  * would tell a crawler the whole site is a duplicate of this page. */

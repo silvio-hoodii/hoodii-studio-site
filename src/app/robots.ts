@@ -53,13 +53,35 @@ import type { MetadataRoute } from 'next';
  * (search + filter chips over thousands of rows, freshly queried every hit, no cache), so it gets
  * the fix at the same time it's built rather than after a bot finds it first.
  */
+/* The named AI-training crawlers, 2026-08-25. `meta-externalagent` is here because it was measured
+ * doing 208,938 of 215,673 edge requests in thirty hours; the rest are its peers, listed before
+ * they show up rather than after.
+ *
+ * This block is NOT what stops them, and adding it changes nothing on its own: the `*` rules above
+ * already disallowed two of the paths Meta was hammering, and it hammered them anyway. The
+ * firewall's deny rule is the mechanism. This is here because a per-agent block is the one form of
+ * the request some crawlers honour when they ignore the wildcard, it costs nothing to state, and a
+ * bot that stops on its own never reaches the edge at all.
+ *
+ * Search and link-preview bots are deliberately absent: googlebot, bingbot and facebookexternalhit
+ * are wanted, and facebookexternalhit is a different agent from meta-externalagent despite both
+ * being Meta. */
+const AI_TRAINING_CRAWLERS = [
+  'meta-externalagent', 'GPTBot', 'ClaudeBot', 'Bytespider', 'CCBot', 'PerplexityBot',
+  'Amazonbot', 'Applebot-Extended', 'Google-Extended', 'Diffbot', 'Omgilibot',
+  'ImagesiftBot', 'Timpibot', 'Webzio-Extended', 'anthropic-ai', 'cohere-ai',
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/kitchen/find', '/reading/shelf', '/reading/want'],
-    },
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/kitchen/find', '/reading/shelf', '/reading/want'],
+      },
+      { userAgent: AI_TRAINING_CRAWLERS, disallow: '/' },
+    ],
     sitemap: 'https://hoodii.studio/sitemap.xml',
     host: 'https://hoodii.studio',
   };
