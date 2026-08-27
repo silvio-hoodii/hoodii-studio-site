@@ -10,6 +10,20 @@ interface PlanExerciseIn {
   targetReps?: number;
   type?: ExerciseType;
   increment?: number;
+  /** `rangeWidth` WAS MISSING HERE AND THE WHOLE 2026-08-22 LADDER FIX WAS DEAD BECAUSE OF IT.
+   *
+   *  On 2026-08-22 eight of fifteen lifts were found to have a rep range whose top could not earn
+   *  the next weight, which is why the overhead press was flat all year: at 65 lb, three sets of ten
+   *  banks an estimated max of 86.7 and the jump to 70 demands 88.7. The fix was a per-exercise
+   *  `rangeWidth` in program.json. GymClient sends it, `PlanInput` in progression.ts declares it,
+   *  `suggest` reads it, and THIS interface did not list it, so it was dropped in the middle and
+   *  every suggestion has used the default of 2 ever since.
+   *
+   *  Found 2026-08-27 as P1-1 in docs/audits/2026-08-26/03-gym.md and confirmed by reading the live
+   *  API. It is the reason `scripts/check-ladder.mjs` still reports nine findings against a fix that
+   *  shipped five days ago: nothing was wrong with the fix, it never arrived. A field silently
+   *  dropped by a type is not a check anyone can run, which is why check-ladder exists. */
+  rangeWidth?: number;
 }
 
 /** Last-session + a suggested target for each of today's prescribed lifts. */
@@ -31,6 +45,7 @@ export async function POST(req: Request) {
           type: ex.type || 'weighted',
           targetReps: ex.targetReps,
           increment: ex.increment,
+          rangeWidth: ex.rangeWidth,
           today: date,
           recent: recent.slice(0, 3),
         });

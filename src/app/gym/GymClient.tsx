@@ -104,7 +104,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`${points.length} sessions, ${first} to ${latest}`}
+        aria-label={`last ${points.length} sessions, ${first} to ${latest}`}
       >
         <path d={d} />
         <circle cx={lastX} cy={lastY} r={2.5} />
@@ -112,10 +112,15 @@ function Trend({ recent }: { recent: LastSession[] }) {
       {/* "flat at 10" over a line with a visible hump in it is the drawing and the caption
           disagreeing. Only the genuinely unchanging series gets called held; a series that ended
           where it started but moved in between says so and lets the line show the shape. */}
+      {/* "over the last 8", not "over 8". The window is HARD-CAPPED at 8 in
+          src/app/gym/api/plan/route.ts (`getRecentSessions(ex.id, date, 8)`) and the caption said
+          "over 8" as if that were every session on record. On a lift he has done thirty times it
+          read as a complete history of it. Finding 42 of the 2026-08-27 audit, and the same class as
+          the notes list's silent 20-row cap: a cap that does not say it is a cap. */}
       <span className="trend-n tnum">
         {points.every((v) => v === points[0])
           ? `held at ${latest}`
-          : `${first} to ${latest}`} over {points.length}
+          : `${first} to ${latest}`} over the last {points.length}
       </span>
     </span>
   );

@@ -55,61 +55,25 @@ export function restSeconds(rest: string | undefined): number {
  *  the local SQLite `sets` table, both retired: the table stopped being written on 2026-08-09 when
  *  the app moved to Neon. So this predicts how long a session HAS taken him, which is exactly what
  *  the page claims when it prints it, and it is not a claim about how long the work needs. */
-const SET_OVERHEAD_SEC = 150;
-const FIXED_MIN = 10; // warmup + cooldown
 
-export function exMinutes(ex: Exercise): number {
-  return ((ex.sets || 1) * (restSeconds(ex.rest) + SET_OVERHEAD_SEC)) / 60;
-}
-
-/* TWO MODELS, ON PURPOSE, AND THEY ANSWER DIFFERENT QUESTIONS. Conflating them is a mistake I made
- * and then measured: charging a fill partner nothing in the DESCRIPTIVE total made Tuesday come out
- * at 63 minutes on a day the watch says took him about 100.
+/* THE SESSION-TIME MODEL IS GONE. Deleted 2026-08-27. `exMinutes`, `dayMinutes` and
+ * `dayTimeBreakdown` were here; nothing has called any of them since the paragraph they fed was cut
+ * from /gym earlier the same day.
  *
- *  dayMinutes / dayTimeBreakdown  = DESCRIPTIVE. How long this day HAS taken him. Every set is
- *    charged its own prescribed rest plus SET_OVERHEAD_SEC, because that is precisely how
- *    fit-session-time.mjs summed rest when it fitted the constant. Changing the shape of the sum
- *    here without re-fitting the constant would silently invalidate it.
+ * WHY IT IS DELETED RATHER THAN KEPT FOR LATER. It printed "the whole day is about 164 min" on a day
+ * his watch says he does in 60 to 103 and his own note called "about 40 min". The reason is
+ * structural, not a tuning error: every set was charged its prescribed rest PLUS a 2.5 minute
+ * overhead constant, so the total could never fall below sets x (rest + 150s) no matter what he
+ * actually did. The constant was fitted by fit-session-time.mjs against a local SQLite table that
+ * stopped being written on 2026-08-09, so it cannot be re-fitted from anything live either.
  *
- *  The prescriptive half of this pair, budgetKeep, is gone with the time budget it served (see the
- *    note above). What it knew is still true and still worth knowing: a 'fill' partner is done
- *    inside the lead's rest and costs NOTHING, because that window is paid for either way. That is
- *    the whole reason 'fill' exists, and it is why the page can show the day as one list. */
-export function dayMinutes(day: Day): number {
-  return Math.round(
-    FIXED_MIN + day.blocks.reduce((a, b) => a + b.exercises.reduce((x, e) => x + exMinutes(e), 0), 0),
-  );
-}
+ * The honest replacement already exists and is better: /gym/log prints the minutes the WATCH
+ * recorded for each session, next to the sets he logged. A measurement, per session, instead of one
+ * model applied to a prescription.
+ *
+ * If a page ever wants a prescribed duration again, derive it from `restSeconds` and the real
+ * distribution in health_watch_session rather than resurrecting this. git history has it. */
 
-/** The total, and what it is made of. Printed on the page instead of the typed "75-85 min" string
- *  that used to sit in program.json, because the split is the finding: the sessions are long because
- *  of rest and overhead, not because of the amount of work in them. */
-export function dayTimeBreakdown(day: Day): {
-  total: number;
-  restMin: number;
-  overheadMin: number;
-  sets: number;
-} {
-  let restSec = 0;
-  let sets = 0;
-  for (const block of day.blocks) {
-    for (const ex of block.exercises) {
-      sets += ex.sets || 1;
-      restSec += (ex.sets || 1) * restSeconds(ex.rest);
-    }
-  }
-  return {
-    total: dayMinutes(day),
-    restMin: Math.round(restSec / 60),
-    overheadMin: Math.round((sets * SET_OVERHEAD_SEC) / 60),
-    sets,
-  };
-}
-
-// ---- plate math + warmup ramp ----
-
-// Barbell lifts that get plate math and, on main blocks, a warmup ramp. Same set as
-// HealthOS/gym.html's PLATE_IDS.
 export const PLATE_IDS = new Set([
   'bb-back-squat', 'front-squat', 'romanian-deadlift', 'bench-press', 'bb-ohp', 'bb-row',
   'good-morning', 'bb-hip-thrust', 'paused-back-squat',

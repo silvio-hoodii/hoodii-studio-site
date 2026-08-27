@@ -1,6 +1,6 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadRirGuide } from '@/lib/gym/program';
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getNotes } from '@/lib/gym/db';
+import { getNotes, countNotes } from '@/lib/gym/db';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
 import { today } from '@/lib/day';
@@ -28,8 +28,11 @@ export default async function GymHome() {
 
      FIVE, and the count of the rest is on screen beside them. A cap that does not say it is a cap is
      finding 37 in the audit (the notes list silently holds 20). */
-  const [logRows, logTotal] = await Promise.all([getGymLog(5), countGymLog()]);
-  const unacted = notes.filter((n) => !n.handled).length;
+  const [logRows, logTotal, noteCount] = await Promise.all([getGymLog(5), countGymLog(), countNotes()]);
+  /* COUNTED IN THE DATABASE, NOT IN THE ARRAY. `getNotes` caps at 20 and `notes.filter(...)` could
+     only ever see what survived the cap, so an unhandled note older than the twentieth would vanish
+     from the count with nothing on screen admitting it. Finding 37. */
+  const unacted = noteCount.unhandled;
 
   return (
     <div className="wrap">
@@ -106,8 +109,9 @@ export default async function GymHome() {
           <summary className="exgroup-label">
             What you have written{' '}
             <span className="tag">
-              ({notes.length}
-              {unacted > 0 ? `, ${unacted} not acted on` : ', all acted on'})
+              ({noteCount.total}
+              {unacted > 0 ? `, ${unacted} not acted on` : ', all acted on'}
+              {noteCount.total > notes.length ? `, newest ${notes.length} shown` : ''})
             </span>
           </summary>
           <p className="ex-cue">

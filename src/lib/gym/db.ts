@@ -268,6 +268,23 @@ export interface NoteRow {
 }
 
 /** Newest first. `onlyUnhandled` is the agent's view: what has he told me that I have not acted on. */
+/** How many notes exist in total, and how many are unhandled, independent of any display cap.
+ *
+ *  `getNotes` caps at 20 rows and the page printed `notes.length` as if it were the total. At 18
+ *  notes that was correct by luck. At 21 the count would have silently understated it, and worse,
+ *  an old UNHANDLED note would have scrolled out of the window and out of the "not acted on" count
+ *  with nothing on screen to say so, in the one feature whose whole promise is that a captured
+ *  question does not get lost. Finding 37 of the 2026-08-27 audit. */
+export async function countNotes(): Promise<{ total: number; unhandled: number }> {
+  const rows = await sql`
+    select count(*)::int as total,
+           count(*) filter (where handled = false)::int as unhandled
+    from gym_note
+  `;
+  const r = rows[0] as { total: number; unhandled: number };
+  return { total: Number(r.total), unhandled: Number(r.unhandled) };
+}
+
 export async function getNotes(opts: { limit?: number; onlyUnhandled?: boolean } = {}): Promise<NoteRow[]> {
   const limit = opts.limit ?? 20;
   const rows = opts.onlyUnhandled
