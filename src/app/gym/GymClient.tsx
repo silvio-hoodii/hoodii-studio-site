@@ -664,7 +664,24 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
               <div className="ex" key={ex.id} data-slot={ex.id} data-eff={eff.id}>
                 <div className="ex-name">{eff.name}</div>
                 <div className="ex-meta">{eff.sets}×{eff.reps} · {eff.rest} rest</div>
-                <div className="ex-cue">{eff.cue}</div>
+                {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
+                     "Walls of text again why do I need all this, just leave the cue and thats it,
+                     it can even be hidden" (gym_note #12, 2026-08-25), after the same complaint on
+                     #8 two days earlier.
+
+                     He is describing a real measurement: /gym is about ten phone screens, three
+                     times the tallest thing anywhere else on this site, and ten cues of 400 to 700
+                     characters each are most of it. The cue is not slop and it is not being cut:
+                     it is what a beginner needs the first time and noise the tenth. One tap.
+
+                     `cuefold`, NOT `fold`: `.fold` is the warmup and cooldown block on this same
+                     page and carries a top border and 12 px of padding, which multiplied by ten
+                     exercises would have made the page taller rather than shorter. Same reasoning
+                     as `.tab` versus `.surf-tab`, one level down. */}
+                <details className="cuefold">
+                  <summary>How to do it</summary>
+                  <div className="ex-cue">{eff.cue}</div>
+                </details>
                 {/* `swap-revert`, not `swap-toggle`. Both controls sat on a swapped card wearing the same class,
                      and the revert link renders first, so "the swap control" resolved to the wrong one: an
                      interaction test aiming at the alternatives list reverted the swap instead. Two different

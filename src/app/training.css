@@ -270,6 +270,31 @@
   color: var(--muted-foreground);
   cursor: pointer;
 }
+/* The technique cue on an exercise card, folded. Added 2026-08-27 from gym_note #12.
+ *
+ * DELIBERATELY LIGHTER THAN `.fold` ABOVE, which is the warmup and cooldown block on the same page:
+ * that one carries a top border and 12px of vertical padding, and ten of those between ten exercise
+ * cards would have added height to the page this change exists to shorten.
+ *
+ * 44px, not the 32px the tertiary `.src` citations use. This is a control he presses mid-session
+ * with one hand, which is the same reason the day tabs went from 35px to 44px. */
+.training details.cuefold { margin: 0 0 8px; }
+.training details.cuefold > summary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.training details.cuefold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+/* No bottom margin on the cue itself when it is open: the details already spaces what follows. */
+.training details.cuefold > .ex-cue { margin-bottom: 4px; }
+
 .training .warm-item { padding: 10px 0; border-top: 1px solid var(--border); }
 .training .warm-item:first-child { border-top: 0; }
 .training .warm-item .name { font-weight: 600; font-size: 14.5px; }

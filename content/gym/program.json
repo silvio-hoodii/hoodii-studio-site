@@ -762,6 +762,14 @@
                   "station": "cable-pulldown",
                   "cue": "The cable version, only if the stack you are already standing at is free between sets.",
                   "progression": "weight"
+                },
+                {
+                  "id": "cable-overhead-tricep-extension",
+                  "name": "Cable Overhead Tricep Extension",
+                  "zone": "cable",
+                  "station": "cable-pulldown",
+                  "cue": "His own call, 2026-08-25: 'if im using cable for straight arm pull down I could that same for overhead tri withou db'. He is right, and on Friday it is free: the straight-arm pulldown is at this stack already. Rope on the LOW pulley, face away from the machine, rope held behind your head in both hands, one foot forward for balance. Same movement as the dumbbell version: upper arms stay pointing forward and still, bend only at the elbows, straighten to finish. The cable pulls on the muscle at the bottom of the movement where a dumbbell goes slack, which is the one thing it does better.",
+                  "progression": "weight"
                 }
               ],
               "progression": "weight",
@@ -1513,7 +1521,7 @@
               "needsFloor": true,
               "bodyweight": true,
               "log": true,
-              "cue": "Done on the floor next to the rack while you rest between squat sets. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
+              "cue": "Done on the floor while you rest between sets of the pushups above. This is the only lower-body work on an upper day: it is here because it costs almost nothing to do lying down in a rest period, and glutes respond to being trained often. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
               "alts": [
                 {
                   "id": "frog-pump",
@@ -1883,6 +1891,14 @@
                   "zone": "cable",
                   "station": "cable-pulldown",
                   "cue": "The cable version, only if the stack you are already standing at is free between sets.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "cable-overhead-tricep-extension",
+                  "name": "Cable Overhead Tricep Extension",
+                  "zone": "cable",
+                  "station": "cable-pulldown",
+                  "cue": "His own call, 2026-08-25: 'if im using cable for straight arm pull down I could that same for overhead tri withou db'. He is right, and on Friday it is free: the straight-arm pulldown is at this stack already. Rope on the LOW pulley, face away from the machine, rope held behind your head in both hands, one foot forward for balance. Same movement as the dumbbell version: upper arms stay pointing forward and still, bend only at the elbows, straighten to finish. The cable pulls on the muscle at the bottom of the movement where a dumbbell goes slack, which is the one thing it does better.",
                   "progression": "weight"
                 }
               ],
