@@ -1,5 +1,34 @@
 # One pipeline, five pages: the training redesign
 
+## THE LEDGER, verified 2026-08-27 against the code, not recalled
+
+Every row checked by reading the file or fetching the live URL. Written because he asked for it in
+those words: "any loose end on that intial plan lets cover it ... i need you to keep track of
+everything".
+
+| Item | State | Where it stands |
+|---|---|---|
+| D1 five routes, /health the index | **DONE** | Live, five nav chips on all five |
+| D2 bike write path | **DONE** | `POST /bike/api/ride` live and gated. No form yet, by design |
+| D3 all 19,327 lengths | **DONE** | `health_swim_length`. **Nothing reads it yet** |
+| C1 one streak | **DONE** | `cycle.ts` mentions streak only in comments |
+| C2 swim was three pools | **DONE** | Schedule deleted, PBs and history both on /swim |
+| C3 contested 100 m PB | **OPEN** | `HealthOS\official-pbs.js` still present AND still wired as `npm run pbs`. Wrong about types 15 and 16 |
+| C3b two pace metrics in one column | **DONE** | Two columns, moving pace never a fallback |
+| C4 the 5,000 m | **PART** | Visible on /swim as longest session distance. `SWIM_PB_TYPES` still `{13,14,15,16}`: type 3 not imported. **This document contradicts itself on C4**, saying both "was not a defect" and "add type 3" |
+| C5 two dead `gym_set` columns | **PART** | Client stopped sending `rir`; `rir` and `estimated` are still in `content\gym\schema.sql` and still cannot be filled |
+| C6 body comp on a schedule | **DONE** | Step 2b of the 07:15 task |
+| Phase A kill the schedule | **DONE** | |
+| Phase B correctness | **PART** | C1, C6 done. C3, C4 open |
+| Phase B2 two new mirrors | **DONE** | |
+| Phase C the shell | **DONE** | Live |
+| Phase D depth | **4 of 5** | Item 2, the swim level page, **NOT STARTED** |
+| Phase E verify | **DONE** for what shipped | Live routes, live redirects, live write gates, heights at 390 px |
+
+**The one thing he keeps asking for and has not got is Phase D item 2**, and the table filled for it
+yesterday is still read by nothing.
+
+
 ## SHIPPED SO FAR, 2026-08-26
 
 - **C1, one streak.** `computeNextUp` no longer returns one. `getTrainingStreak` in
