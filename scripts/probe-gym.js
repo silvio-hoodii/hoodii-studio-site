@@ -117,7 +117,11 @@
   function card(name) {
     return $$('.ex').find((e) => text($('.ex-name', e)) === name) || null;
   }
-  const cardNames = () => $$('.ex').map((e) => text($('.ex-name', e)));
+  /* `.ex[data-slot]`, not `.ex`. Every real exercise card carries data-slot (its programme slot id)
+     and data-eff (the exercise actually showing after a swap); nothing else on the page does.
+     On 2026-08-27 a notes block reused `.ex` and this helper silently went from 10 exercises to 28,
+     with every test still green. See exSelectorMeansExercise below, which is the gate. */
+  const cardNames = () => $$('.ex[data-slot]').map((e) => text($('.ex-name', e)));
 
   const state = {
     calls: [],
@@ -300,6 +304,32 @@
       return {
         pass: missing.length === 0 && after === before && named.length > 0,
         detail: { rendered: before, afterSettle: after, namedInDropOrder: named, missingFromPage: missing },
+      };
+    },
+
+    /* `.ex` MEANS AN EXERCISE, and nothing else on this page may answer to it.
+       Added 2026-08-27, the day a "what you have written" notes block shipped using `.ex` for its
+       rows. Every test passed. cardNames() went from 10 entries to 28, wholeDayIsShown compared a
+       count against itself and saw no change, and the harness was counting his notes as exercises.
+
+       The discriminator is data-slot, which GymClient puts on every real card and nothing else has.
+       Same family as surfaceNavIsPresentAndDistinct: on this surface a class name is an API, and
+       this is the third time it has been borrowed (`.tab` cost 17 failing tests, then swap-revert).
+       Does not navigate and writes nothing. */
+    async exSelectorMeansExercise() {
+      const all = $$('.ex');
+      const real = $$('.ex[data-slot]');
+      const strays = all
+        .filter((e) => !e.hasAttribute('data-slot'))
+        .map((e) => (text($('.ex-name', e)) || e.className || '?').slice(0, 60));
+      return {
+        pass: all.length > 0 && strays.length === 0,
+        detail: {
+          totalDotEx: all.length,
+          realExercises: real.length,
+          strays,
+          note: strays.length ? 'something that is not an exercise is answering to .ex' : 'clean',
+        },
       };
     },
 
