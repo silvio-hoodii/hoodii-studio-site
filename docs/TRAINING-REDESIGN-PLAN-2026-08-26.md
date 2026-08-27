@@ -20,6 +20,45 @@
 - **The export is whole again.** 89,186 of 89,186 files verified and promoted. Lap data regenerated:
   **19,327 lengths across 364 sessions**, up from 18,804 across 354.
 
+### D2 SHIPPED, 2026-08-27, and the plan's letter was wrong about one column
+
+Commit `9aae4d7`. `bike_ride`, `POST /bike/api/ride`, both halves of `src\proxy.ts`, and both halves
+of the probe harness, in one commit as this document required.
+
+**The deviation: four resistance levels, not one.** D2 below specifies a single `resistance` column.
+`content\gym\conditioning.json` already tells him, in the cue "Do not touch the resistance before
+2:00", to "write down the level you finished each effort on, so next week starts from real numbers".
+That is four numbers, one per interval of the 4x4, and the across-weeks comparison the cue exists to
+build is exactly what one column discards at the moment of entry. Silvio was asked directly and
+chose the four. Stored as an `integer[]` rather than `r1..r4` because the session has two published
+shapes, four intervals at 43 minutes and three at 31, and four columns cannot tell "that interval
+did not happen" apart from "he did not write it down".
+
+**The resistance scale is no longer an assumption.** 1 to 20, stated 2026-08-27.
+`content\gym\equipment.json` said "No resistance scale recorded yet" until that day; it now carries
+the scale, and the first of the "TWO ASSUMPTIONS THAT COULD BREAK THIS SET" in conditioning.json is
+marked settled. The bound is enforced twice, in the route and in a table constraint, so a different
+machine means changing both and the comment says where.
+
+**Every gate broken on purpose before it was trusted**, against the real table and the running app:
+
+- Twelve bad rows refused by the constraints. Two were traps: `array_length('{}', 1)` is NULL and a
+  CHECK evaluating to NULL **passes**, so `cardinality()` is what refuses a ride with no intervals;
+  and a containment test does not reliably reject a NULL element, so `array_position` with its
+  IS NOT DISTINCT FROM semantics is what refuses `{13, null, 11}`.
+- Thirteen bad bodies refused by the route, each naming the interval that is wrong.
+- **The matcher half is load-bearing, demonstrated rather than asserted.** With `/bike/api` in the
+  prefix list and `'/bike/api/:path*'` deleted from `config.matcher`, an unauthenticated POST
+  reached the handler and came back **400 from the route**, not 401 from the gate. Restored, 401.
+- The probe linter fails and names the route when `WRITE_ROUTES` is missing it.
+- Two real rides posted through the live route, read back field for field, then deleted.
+  `bike_ride` is empty.
+
+`content\gympply-schema.mjs` confirmed its work with `like 'gym_%'`, which cannot match
+`bike_ride`. It names the four tables explicitly now and exits 1 on a missing one.
+
+**Not yet pushed**, so this is committed and not deployed.
+
 ### C4 was not a defect
 
 `/health` already showed the 5,000 m: `getSwimSummary` takes `max(distance_m)` with no date filter.
