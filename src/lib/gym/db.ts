@@ -70,9 +70,10 @@ export interface SetInput {
    the insert, carried by the upsert and selected back out again, and not one of those steps ever
    moved a value. Nothing read it either, so removing it changes no behaviour.
 
-   The RIR GUIDE STAYS on /gym, and it is a different thing: content/gym/rir-guide.json teaches what
-   reps-in-reserve means, which is useful whether or not the number is ever logged. Deleting the
-   teaching along with the dead plumbing is the mistake available here. */
+   The RIR GUIDE IS ALSO GONE, 2026-08-27, and the argument above for keeping it lost. It taught what
+   reps-in-reserve means, which was defensible while something might one day log the number. Nothing
+   ever will, he asked twice where it had gone, and on the second ask he said "cut it". A folded
+   panel explaining a metric the app does not record is text with no job. */
 export interface SetRow {
   weight: number | null;
   reps: number | null;

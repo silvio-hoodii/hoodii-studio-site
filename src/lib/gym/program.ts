@@ -43,9 +43,6 @@ export async function loadWarmups(): Promise<{ lower: WarmupItem[]; upper: Warmu
 export async function loadCooldowns(): Promise<Record<string, CooldownItem>> {
   return readJson('cooldowns.json');
 }
-export async function loadRirGuide(): Promise<{ rir: string; desc: string; highlight?: boolean }[]> {
-  return readJson('rir-guide.json');
-}
 export async function loadConditioning(): Promise<Conditioning> {
   return readJson<Conditioning>('conditioning.json');
 }

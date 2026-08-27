@@ -121,7 +121,7 @@
           "role": "primer",
           "pairing": "fill",
           "label": "Power Primer",
-          "tag": "(box, dumbbells in hand)",
+          "tag": "(box)",
           "exercises": [
             {
               "id": "box-jump",
@@ -161,37 +161,6 @@
                 }
               ],
               "progression": "reps"
-            },
-            {
-              "id": "db-reverse-fly",
-              "name": "DB Reverse Fly",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "chest-supported-reverse-fly",
-                  "name": "Chest-Supported Reverse Fly",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "pec-deck-rear-delt",
-                  "name": "Rear Delt Machine",
-                  "zone": "machines",
-                  "station": "pec-deck",
-                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "whyHere": "The reverse fly rides in the rest because it is upper back: a jump does not use it"
             }
           ],
           "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, not broad jump, because you step down instead of absorbing a landing. The reverse fly rides in the rest because it is upper back: a jump does not use it, so the jump stays as fresh as it would have been standing still."
@@ -247,40 +216,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "single-leg-glute-bridge",
-              "name": "Single-Leg Glute Bridge",
-              "sets": 2,
-              "reps": "12/leg",
-              "rest": "60s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "Done on the floor next to the rack while you rest between squat sets. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
-              "alts": [
-                {
-                  "id": "frog-pump",
-                  "name": "Frog Pump",
-                  "zone": "rack",
-                  "station": null,
-                  "needsFloor": true,
-                  "cue": "On your back, soles of the feet together, knees fallen wide, heels close to you. Push the hips up and squeeze. 2x20.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "banded-hip-abduction",
-                  "name": "Banded Hip Abduction",
-                  "zone": "rack",
-                  "station": null,
-                  "cue": "Short band above the knees, seated on a bench or standing. Push the knees apart against the band and hold two seconds. 2x20.",
-                  "progression": "reps"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "The bridge goes in the squat rest, not on top of it."
             }
           ],
           "why": "Squat is one of the four patterns that earns twice a week. Pelland 2025, 67 studies: strength rises with frequency at matched volume (posterior 100%), size does not care about the split. The bridge goes in the squat rest, not on top of it."
@@ -289,7 +224,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Second Pattern: Hinge, light",
-          "tag": "(rack, dumbbells in hand)",
+          "tag": "(rack)",
           "exercises": [
             {
               "id": "romanian-deadlift",
@@ -328,37 +263,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "db-lateral-raise",
-              "name": "DB Lateral Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "db-lateral-raise-seated",
-                  "name": "Seated DB Lateral Raise",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "kb-lateral-raise",
-                  "name": "Kettlebell Lateral Raise",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "rack",
-              "station": null,
-              "log": true,
-              "whyHere": "The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
             }
           ],
           "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions. The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
@@ -493,8 +397,8 @@
               "progression": "weight"
             },
             {
-              "id": "standing-calf-raise",
-              "name": "DB Standing Calf Raise",
+              "id": "db-calf-raise",
+              "name": "DB Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -521,7 +425,13 @@
                 }
               ],
               "progression": "weight",
-              "whyHere": "The calf raise is not sourced."
+              "open": [
+                {
+                  "q": "This slot moved from standing-calf-raise to db-calf-raise on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "Frontal-plane hip strength is injury insurance for the running: weak abductors feed pelvic drop, which feeds knee valgus, a documented route into shin and knee trouble in novice runners. The calf raise is not sourced."
@@ -537,82 +447,6 @@
         "thoracic"
       ],
       "blocks": [
-        {
-          "role": "primer",
-          "pairing": "fill",
-          "label": "Upper Primer",
-          "tag": "(floor, first and fresh)",
-          "exercises": [
-            {
-              "id": "pushup",
-              "name": "Pushup",
-              "sets": 3,
-              "reps": "8",
-              "rest": "60s",
-              "zone": "benchDb",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor by the benches, first thing, while you are fresh. Hands slightly wider than your shoulders, body in one straight line from head to heels, and it STAYS that way: squeeze your bum and your stomach before you lower. Lower until your chest is a fist off the floor, elbows going back at about 45 degrees from your body rather than straight out sideways. Push back up. Success looks like: your hips arrive at the top at the same time as your chest. If your hips sag or lead, put your hands on a bench and do the same thing from there. THEIR VERSION IS A PLYO PUSHUP, where you push hard enough to leave the floor. That is not prescribed here: you weigh 105 kg and have never done either, and landing on your hands from a jump is not something to try because a PDF said so. Get to three clean sets of ten first, then ask. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"B2. Pushup Variations\", whose own instruction is to choose the variation you can perform 10 to 12 reps of.",
-              "alts": [
-                {
-                  "id": "incline-pushup",
-                  "name": "Incline Pushup",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "bodyweight": true,
-                  "cue": "The same pushup with your hands on a bench instead of the floor. Higher hands make it easier. Use this one if the hips sag on the floor version.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "assisted-dip",
-                  "name": "Assisted Dip",
-                  "zone": "machines",
-                  "station": "assisted-dip",
-                  "cue": "The machine version of the same pushing pattern, with a counterweight so you pick the difficulty. He had 5 strict dips at the May intake. Lower until the upper arms are parallel to the floor, no further.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "reps"
-            },
-            {
-              "id": "single-leg-glute-bridge",
-              "name": "Single-Leg Glute Bridge",
-              "sets": 2,
-              "reps": "12/leg",
-              "rest": "60s",
-              "zone": "benchDb",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "Done on the floor by the benches while you rest between sets of the pushups above. This is the only lower-body work on an upper day: it is here because it costs almost nothing to do lying down in a rest period, and glutes respond to being trained often. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
-              "alts": [
-                {
-                  "id": "frog-pump",
-                  "name": "Frog Pump",
-                  "zone": "benchDb",
-                  "station": null,
-                  "needsFloor": true,
-                  "cue": "On your back, soles of the feet together, knees fallen wide, heels close to you. Push the hips up and squeeze. 2x20.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "banded-hip-abduction",
-                  "name": "Banded Hip Abduction",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Short band above the knees, seated on a bench or standing. Push the knees apart against the band and hold two seconds. 2x20.",
-                  "progression": "reps"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "The glute bridge rides in the rest because a pushup uses nothing below the waist."
-            }
-          ],
-          "why": "The other upper day's primer. Upper A was the only one of the four days with no primer at all, which he spotted from the page on 2026-08-27: \"the upper primer is only present on one session thats the inconstincey im talking about\". The reason written on Upper B's primer already covered both upper days and said so, and it had been applied to one of them. Same source (The Motion Blueprint, Jason & Lauren Pak, Theory of Motion, 2025, which opens every one of its upper days with a pushup variation) and the same dose. One cost he accepted knowingly: pushups before a DB bench press pre-fatigue the same muscles, which is the opposite of why the jumps go first on the lower days, so this stays at three easy sets and the bench press numbers are the thing to watch. The glute bridge rides in the rest because a pushup uses nothing below the waist."
-        },
         {
           "role": "main",
           "pairing": "fill",
@@ -753,44 +587,6 @@
               ],
               "progression": "weight",
               "rangeWidth": 4
-            },
-            {
-              "id": "plank-shoulder-taps",
-              "name": "Plank w/ Shoulder Taps",
-              "sets": 3,
-              "reps": "30",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor beside the dumbbells, in the rest between press sets. High plank on your hands, feet wide apart for balance. Slowly lift one hand and tap the opposite shoulder, then put it back, then the other hand. COUNT THE TAPS, both sides together, and type that number: 30 taps is the target. It used to ask for 30 seconds, which was a mistake, because you cannot start a timer with one hand off the floor. The point is that your HIPS DO NOT ROTATE. Success looks like: if someone put a glass of water on your lower back it would not spill. If your hips twist toward the hand that is lifting, widen your feet or slow down.",
-              "alts": [
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "needsFloor": true,
-                  "timed": true,
-                  "bodyweight": true,
-                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held. Drop to the knees if the hips sag. 3x30s per side.",
-                  "progression": "time"
-                },
-                {
-                  "id": "suitcase-carry-upper",
-                  "name": "Suitcase Carry",
-                  "zone": "benchDb",
-                  "station": null,
-                  "timed": true,
-                  "bodyweight": false,
-                  "cue": "One heavy dumbbell in one hand, walk tall and refuse to lean toward it. Use this when the floor is busy. 3x30s per side.",
-                  "progression": "time"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time."
             }
           ],
           "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells. It is not the last time he needs them: every one of the four cable blocks after it has a dumbbell partner, so three separate loads still travel to the cable stack. The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time. That pairing bends this file's own first rule: an overhead press already loads the front of the shoulder that a plank shoulder tap holds up, so it is not the antagonist preloading the review describes. He was shown exactly that on 2026-08-27 and chose to keep it. It progresses by reps rather than weight, which is true of four of the eleven partners in this file: the glute bridge, the dead bug, these taps and the Copenhagen. An earlier version of this line called it the only one, which was false the day it was written."
@@ -799,7 +595,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Second Pattern: Vertical Pull",
-          "tag": "(cable, dumbbells in hand)",
+          "tag": "(cable)",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -840,8 +636,8 @@
               "progression": "weight"
             },
             {
-              "id": "db-overhead-tricep-extension",
-              "name": "DB Overhead Tricep Extension",
+              "id": "cable-overhead-tricep-extension",
+              "name": "Cable Overhead Tricep Extension",
               "sets": 3,
               "reps": "8",
               "rest": "45s",
@@ -862,22 +658,20 @@
                   "station": "cable-pulldown",
                   "cue": "The cable version, only if the stack you are already standing at is free between sets.",
                   "progression": "weight"
-                },
-                {
-                  "id": "cable-overhead-tricep-extension",
-                  "name": "Cable Overhead Tricep Extension",
-                  "zone": "cable",
-                  "station": "cable-pulldown",
-                  "cue": "His own call, 2026-08-25: 'if im using cable for straight arm pull down I could that same for overhead tri withou db'. He is right, and on Friday it is free: the straight-arm pulldown is at this stack already. Rope on the LOW pulley, face away from the machine, rope held behind your head in both hands, one foot forward for balance. Same movement as the dumbbell version: upper arms stay pointing forward and still, bend only at the elbows, straighten to finish. The cable pulls on the muscle at the bottom of the movement where a dumbbell goes slack, which is the one thing it does better.",
-                  "progression": "weight"
                 }
               ],
               "progression": "weight",
               "zone": "cable",
-              "station": null,
+              "station": "cable-pulldown",
               "log": true,
               "rangeWidth": 4,
-              "whyHere": "The triceps do nothing during a pulldown, so they are what goes in its rest."
+              "open": [
+                {
+                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank."
@@ -942,7 +736,18 @@
               "zone": "cable",
               "station": null,
               "log": true,
-              "whyHere": "The side delt goes in its rest because a row does not use it, and because nothing else in the week does"
+              "open": [
+                {
+                  "q": "This slot moved from db-lateral-raise to cable-lateral-raise on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                },
+                {
+                  "q": "Moved to the cable on 2026-08-27 and moved back the same hour: the seated row holds the low pulley and a cable lateral raise needs the adjustable column, so the two cannot share one rest window. A dumbbell holds nothing and travels, which is why the partner is a dumbbell.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ]
         },
@@ -1013,7 +818,18 @@
               "station": null,
               "log": true,
               "rangeWidth": 5,
-              "whyHere": "Pushdown and curl are direct opposites, which is the pairing the review actually studied"
+              "open": [
+                {
+                  "q": "This slot moved from db-hammer-curl to cable-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                },
+                {
+                  "q": "Same reason: the pushdown holds the high pulley and a cable curl needs the low one. Two cable exercises are only one station when they are the same column.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "Arms do not earn twice a week on the frequency evidence, so this block is first to go when time is short. It does not follow that arms get one exposure: counted across the week they get three each, because every partner slot that needed filling got filled with an arm or a delt. That is a live problem with the file and not a justification. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
@@ -1022,7 +838,7 @@
           "role": "accessory",
           "pairing": "fill",
           "label": "Anti-Rotation + Rear Delts",
-          "tag": "(cable, dumbbells in hand)",
+          "tag": "(cable)",
           "exercises": [
             {
               "id": "cable-pallof",
@@ -1055,8 +871,8 @@
               "progression": "weight"
             },
             {
-              "id": "db-reverse-fly",
-              "name": "DB Reverse Fly",
+              "id": "cable-reverse-fly",
+              "name": "Cable Reverse Fly",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -1081,11 +897,16 @@
               ],
               "progression": "weight",
               "zone": "cable",
-              "station": null,
+              "station": "cable-adjustable",
               "log": true,
               "open": [
                 {
                   "q": "Why does the reverse fly sit in the Cable Pallof rest? This block's why is entirely about anti-rotation and never mentions the fly, so there is no clause to show on the card.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                },
+                {
+                  "q": "This slot moved from db-reverse-fly to cable-reverse-fly on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -1228,41 +1049,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "single-leg-glute-bridge",
-              "name": "Single-Leg Glute Bridge",
-              "sets": 2,
-              "reps": "12/leg",
-              "rest": "60s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor by the rack between deadlift sets. Lie on your back, one heel close to your bum, toes up, other leg straight. Flatten your lower back into the floor, push through the heel until your hips are level with the knee, squeeze two seconds. LEFT first, one extra set. Should be felt in the back of the hip, not the back of the thigh.",
-              "alts": [
-                {
-                  "id": "frog-pump",
-                  "name": "Frog Pump",
-                  "zone": "rack",
-                  "station": null,
-                  "needsFloor": true,
-                  "cue": "Soles together, knees wide, heels close in. Push the hips up and squeeze. 2x20.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "clamshell",
-                  "name": "Clamshell",
-                  "zone": "rack",
-                  "station": null,
-                  "needsFloor": true,
-                  "cue": "On your side, band above the knees, knees bent. Open the top knee like a clam without letting your hips roll backward. 2x15/side, LEFT first.",
-                  "progression": "reps"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "Bridge in the rest gaps."
             }
           ],
           "why": "The heavy hinge, the one that gets progressed. Squat went 135x10 to 185x6 since May on this heavy-then-light pattern. Bridge in the rest gaps."
@@ -1271,7 +1057,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Second Pattern: Squat, light",
-          "tag": "(rack, dumbbells in hand)",
+          "tag": "(rack)",
           "exercises": [
             {
               "id": "front-squat",
@@ -1310,37 +1096,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "db-reverse-fly",
-              "name": "DB Reverse Fly",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "chest-supported-reverse-fly",
-                  "name": "Chest-Supported Reverse Fly",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "pec-deck-rear-delt",
-                  "name": "Rear Delt Machine",
-                  "zone": "machines",
-                  "station": "pec-deck",
-                  "cue": "The fly machine turned around. Arms out and back, squeeze the shoulder blades, no jerking.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "rack",
-              "station": null,
-              "log": true,
-              "whyHere": "The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position"
             }
           ],
           "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
@@ -1348,7 +1103,7 @@
         {
           "role": "accessory",
           "pairing": "fill",
-          "label": "Lunge + Core",
+          "label": "Lunge",
           "tag": "(dumbbells, floor right there)",
           "exercises": [
             {
@@ -1381,45 +1136,6 @@
               ],
               "progression": "weight",
               "rangeWidth": 6
-            },
-            {
-              "id": "dead-bug",
-              "name": "Dead Bug",
-              "sets": 3,
-              "reps": "10/side",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor next to where you are lunging. On your back, arms straight up, knees bent over the hips. Press your lower back FLAT into the floor and hold it there. Slowly lower one arm overhead and the opposite leg toward the floor, breathing out. The instant your lower back lifts, you have gone too far: come back and swap sides.",
-              "alts": [
-                {
-                  "id": "hollow-hold",
-                  "name": "Hollow Body Hold",
-                  "zone": "benchDb",
-                  "station": null,
-                  "needsFloor": true,
-                  "timed": true,
-                  "bodyweight": true,
-                  "cue": "Lower back pressed flat, arms overhead, legs lifted, body a shallow banana. Bend the knees if the back lifts. 3x20s.",
-                  "progression": "time"
-                },
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "needsFloor": true,
-                  "timed": true,
-                  "bodyweight": true,
-                  "cue": "On one forearm, straight line head to heels, hips lifted. 3x30s per side.",
-                  "progression": "time"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "Dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
             }
           ],
           "why": "Single-leg work, dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
@@ -1508,7 +1224,7 @@
           "role": "accessory",
           "pairing": "fill",
           "label": "Hamstrings + Calves",
-          "tag": "(machine, dumbbells in hand)",
+          "tag": "(machine)",
           "exercises": [
             {
               "id": "leg-curl",
@@ -1588,82 +1304,6 @@
       ],
       "blocks": [
         {
-          "role": "primer",
-          "pairing": "fill",
-          "label": "Upper Primer",
-          "tag": "(floor, first and fresh)",
-          "exercises": [
-            {
-              "id": "pushup",
-              "name": "Pushup",
-              "sets": 3,
-              "reps": "8",
-              "rest": "60s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor beside the rack, first thing, while you are fresh. Hands slightly wider than your shoulders, body in one straight line from head to heels, and it STAYS that way: squeeze your bum and your stomach before you lower. Lower until your chest is a fist off the floor, elbows going back at about 45 degrees from your body rather than straight out sideways. Push back up. Success looks like: your hips arrive at the top at the same time as your chest. If your hips sag or lead, put your hands on a bench and do the same thing from there. THEIR VERSION IS A PLYO PUSHUP, where you push hard enough to leave the floor. That is not prescribed here: you weigh 105 kg and have never done either, and landing on your hands from a jump is not something to try because a PDF said so. Get to three clean sets of ten first, then ask. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"B2. Pushup Variations\", whose own instruction is to choose the variation you can perform 10 to 12 reps of.",
-              "alts": [
-                {
-                  "id": "incline-pushup",
-                  "name": "Incline Pushup",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "bodyweight": true,
-                  "cue": "The same pushup with your hands on a bench instead of the floor. Higher hands make it easier. Use this one if the hips sag on the floor version.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "assisted-dip",
-                  "name": "Assisted Dip",
-                  "zone": "machines",
-                  "station": "assisted-dip",
-                  "cue": "The machine version of the same pushing pattern, with a counterweight so you pick the difficulty. He had 5 strict dips at the May intake. Lower until the upper arms are parallel to the floor, no further.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "reps"
-            },
-            {
-              "id": "single-leg-glute-bridge",
-              "name": "Single-Leg Glute Bridge",
-              "sets": 2,
-              "reps": "12/leg",
-              "rest": "60s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "Done on the floor while you rest between sets of the pushups above. This is the only lower-body work on an upper day: it is here because it costs almost nothing to do lying down in a rest period, and glutes respond to being trained often. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
-              "alts": [
-                {
-                  "id": "frog-pump",
-                  "name": "Frog Pump",
-                  "zone": "rack",
-                  "station": null,
-                  "needsFloor": true,
-                  "cue": "On your back, soles of the feet together, knees fallen wide, heels close to you. Push the hips up and squeeze. 2x20.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "banded-hip-abduction",
-                  "name": "Banded Hip Abduction",
-                  "zone": "rack",
-                  "station": null,
-                  "cue": "Short band above the knees, seated on a bench or standing. Push the knees apart against the band and hold two seconds. 2x20.",
-                  "progression": "reps"
-                }
-              ],
-              "progression": "reps",
-              "whyHere": "Friday already runs dead bugs with the row, and a pushup uses nothing below the waist."
-            }
-          ],
-          "why": "Both upper days had no power or bodyweight work at all while both lower days opened with jumps, and The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) opens every one of its upper days with a pushup variation. This is the first bodyweight pushing in the programme, it is free, and it is the one thing here that gets easier as he gets lighter rather than heavier. First and fresh for the same reason the jumps are: Deng 2024. Its partner is the glute bridge rather than another dead bug: Friday already runs dead bugs with the row, and a pushup uses nothing below the waist."
-        },
-        {
           "role": "main",
           "pairing": "fill",
           "label": "Main Lift: BB Row",
@@ -1706,48 +1346,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "dead-bug",
-              "name": "Dead Bug",
-              "sets": 3,
-              "reps": "10/side",
-              "rest": "45s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "cue": "On the floor at the rack, between row sets. This is the pairing that used to be lat pulldown plus dead bug, which was impossible: there is no floor at the cable stack. At the rack there is. On your back, arms up, knees over hips, lower back pressed flat into the floor. Lower one arm and the opposite leg slowly, stop before the back lifts, swap.",
-              "alts": [
-                {
-                  "id": "pallof-press",
-                  "name": "Half-Kneeling Pallof Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band on the rack post at chest height. Kneel side-on, press the band straight out from your chest and refuse to be twisted. Hold two seconds. 3x10/side.",
-                  "progression": "reps"
-                },
-                {
-                  "id": "hollow-hold",
-                  "name": "Hollow Body Hold",
-                  "zone": "rack",
-                  "station": null,
-                  "needsFloor": true,
-                  "timed": true,
-                  "bodyweight": true,
-                  "cue": "Lower back flat, arms overhead, legs lifted, shallow banana shape. 3x20s.",
-                  "progression": "time"
-                }
-              ],
-              "progression": "reps",
-              "open": [
-                {
-                  "q": "Why do dead bugs sit in the BB Row rest? This block's why is about pulling frequency and never mentions them, so there is no clause to show on the card.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
             }
           ],
           "why": "Pulling twice a week, heavy here and moderate Tuesday. Six loaded pulling sets in a week is the thinnest part of the programme, which is why this is the spine of the day and not the chest press."
@@ -1756,7 +1354,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Second Pattern: Horizontal Press",
-          "tag": "(machine, dumbbells in hand)",
+          "tag": "(machine)",
           "exercises": [
             {
               "id": "machine-chest-press",
@@ -1795,38 +1393,6 @@
                 }
               ],
               "progression": "weight"
-            },
-            {
-              "id": "db-hammer-curl",
-              "name": "DB Hammer Curl",
-              "sets": 3,
-              "reps": "8",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "db-curl-supinated",
-                  "name": "DB Biceps Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same movement with the palms turned UP the whole way instead of facing in. Same muscle, slightly different angle.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "kb-hammer-curl",
-                  "name": "Kettlebell Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "machines",
-              "station": null,
-              "log": true,
-              "rangeWidth": 5,
-              "whyHere": "Biceps do nothing during a chest press, so that is what goes there."
             }
           ],
           "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a pair of dumbbells, which you carry in. Biceps do nothing during a chest press, so that is what goes there. He asked on 2026-08-25 whether more of this day could have happened at the barbell station he started at (note #14), and ruled on 2026-08-27 to keep the machines. The barbell versions do exist: he has logged BB bench to 185 and BB OHP to 115 in that rack. What a machine buys is the cheap half of a twice-a-week pattern, which is the entire reason a second exposure is not a second heavy one. The walking is already bounded by a gate rather than by good intentions: validate.mjs refuses a day whose route doubles back, so Friday visits the rack, the machines, the cable stack and the preacher seat once each and finishes with each before leaving it."
@@ -1835,7 +1401,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Second Vertical Pull",
-          "tag": "(machine, dumbbells in hand)",
+          "tag": "(machine)",
           "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up. Side delts go in the rest because a pull-up does not use them.",
           "exercises": [
             {
@@ -1861,37 +1427,6 @@
                   "cue": "If the assisted machine is taken. Same job, elbows down to the ribs, all the way straight at the top."
                 }
               ]
-            },
-            {
-              "id": "db-lateral-raise",
-              "name": "DB Lateral Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "db-lateral-raise-seated",
-                  "name": "Seated DB Lateral Raise",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "kb-lateral-raise",
-                  "name": "Kettlebell Lateral Raise",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "machines",
-              "station": null,
-              "log": true,
-              "whyHere": "Side delts go in the rest because a pull-up does not use them."
             }
           ]
         },
@@ -1955,7 +1490,18 @@
               "zone": "machines",
               "station": null,
               "log": true,
-              "whyHere": "The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set."
+              "open": [
+                {
+                  "q": "This slot moved from db-reverse-fly to pec-deck-reverse on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                },
+                {
+                  "q": "Same reason: the shoulder press machine and the pec deck are two separate fixtures.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ]
         },
@@ -1963,7 +1509,7 @@
           "role": "accessory",
           "pairing": "fill",
           "label": "Swim Catch + Triceps",
-          "tag": "(cable, dumbbells in hand)",
+          "tag": "(cable)",
           "exercises": [
             {
               "id": "straight-arm-pulldown",
@@ -1997,8 +1543,8 @@
               "increment": 2.5
             },
             {
-              "id": "db-overhead-tricep-extension",
-              "name": "DB Overhead Tricep Extension",
+              "id": "cable-overhead-tricep-extension",
+              "name": "Cable Overhead Tricep Extension",
               "sets": 3,
               "reps": "8",
               "rest": "45s",
@@ -2019,22 +1565,20 @@
                   "station": "cable-pulldown",
                   "cue": "The cable version, only if the stack you are already standing at is free between sets.",
                   "progression": "weight"
-                },
-                {
-                  "id": "cable-overhead-tricep-extension",
-                  "name": "Cable Overhead Tricep Extension",
-                  "zone": "cable",
-                  "station": "cable-pulldown",
-                  "cue": "His own call, 2026-08-25: 'if im using cable for straight arm pull down I could that same for overhead tri withou db'. He is right, and on Friday it is free: the straight-arm pulldown is at this stack already. Rope on the LOW pulley, face away from the machine, rope held behind your head in both hands, one foot forward for balance. Same movement as the dumbbell version: upper arms stay pointing forward and still, bend only at the elbows, straighten to finish. The cable pulls on the muscle at the bottom of the movement where a dumbbell goes slack, which is the one thing it does better.",
-                  "progression": "weight"
                 }
               ],
               "progression": "weight",
               "zone": "cable",
-              "station": null,
+              "station": "cable-pulldown",
               "log": true,
               "rangeWidth": 4,
-              "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
+              "open": [
+                {
+                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
@@ -2043,16 +1587,16 @@
           "role": "accessory",
           "pairing": "sequence",
           "label": "Biceps, then Carry",
-          "tag": "(preacher seat, then walk)",
+          "tag": "(bench, then walk)",
           "exercises": [
             {
-              "id": "ez-preacher-curl",
-              "name": "EZ Bar Preacher Curl",
+              "id": "incline-db-curl",
+              "name": "Incline DB Curl",
               "sets": 3,
               "reps": "10",
               "rest": "45s",
-              "zone": "ezPreacher",
-              "station": "preacher",
+              "zone": "benchDb",
+              "station": "bench",
               "log": true,
               "cue": "The zed bar with the seat, which you have had all along and which was never written down anywhere. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Grip the angled part of the bar so your wrists sit comfortably. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think.",
               "alts": [
@@ -2082,7 +1626,14 @@
                 }
               ],
               "progression": "weight",
-              "rangeWidth": 3
+              "rangeWidth": 3,
+              "open": [
+                {
+                  "q": "This slot moved from ez-preacher-curl to incline-db-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             },
             {
               "id": "farmer-carry",

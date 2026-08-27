@@ -1,0 +1,1519 @@
+{
+  "$comment": [
+    "THE MOVEMENT CATALOGUE. One entry per JOB the programme needs done, and every way of doing that",
+    "job in HIS gym, with the station each way lives at.",
+    "",
+    "WHY IT REPLACES muscles.json, written four hours earlier the same day. That file listed the 34",
+    "exercises the programme happened to contain and asked whether every muscle was covered. He spotted",
+    "the circularity immediately: 'you are going about the list that we already have, but how do we know",
+    "if that list is complete?' Coverage measured against the exercises already chosen can only ever",
+    "come back complete. The closed set to measure against is not the exercise list, it is",
+    "equipment.json: THE GYM IS FINITE AND KNOWN. scripts/gym-catalogue.mjs checks this file against it.",
+    "",
+    "AND WHY VARIANTS ARE FIRST-CLASS, his second point: 'there is a lot of lifts that can be done in",
+    "different ways, barbell, dumbbell, cable, and they will still be the same exercise basically... if",
+    "I am about to do a straight-arm pulldown and I was going to pair that with something for biceps,",
+    "you might as well [do] the cable [curl] instead of' walking to the dumbbells.",
+    "",
+    "That is a real scheduling constraint and nothing in this repo could express it. program.json",
+    "carried 86 `alts` spread across 50 slots, which produced exactly the drift a per-slot list always",
+    "produces: `tricep-pushdown` and `tricep-pushdown-alt`, `assisted-pullup` and `lat-pulldown-alt`,",
+    "`bicep-curl` and `db-curl-supinated`, `hammer-curl` and `db-hammer-curl`, `suitcase-carry` and",
+    "`suitcase-carry-upper`. Five pairs of ids for the same movement, because a slot-local alternative",
+    "list has nowhere to say 'this is the same lift somewhere else'.",
+    "",
+    "STRUCTURE. A movement owns the muscles. A variant owns the implement, the zone and the station,",
+    "and may override the muscles only where the mechanics genuinely differ (front squat against back",
+    "squat, overhead extension against pushdown). Everything else is inherited, so a muscle attribution",
+    "is written once and cannot drift between four days.",
+    "",
+    "THREE KINDS OF CLAIM, tagged, because conflating them is how this project got 91 false claims in",
+    "one audit:",
+    "  anatomy     which muscles a movement uses. Textbook, not a trial finding. Never cite a study.",
+    "  evidence    this variant beats another for a stated purpose, with a fetched source.",
+    "  convention  standard practice, no trial. Most variant choices are honestly this.",
+    "  unsourced   no basis at all, and it says so.",
+    "",
+    "`inProgramme` is whether a variant is currently prescribed. `false` does NOT mean rejected; it",
+    "means available and unused, which is the whole point of listing it."
+  ],
+  "muscles": {
+    "quads": "Quadriceps",
+    "hamstrings": "Hamstrings",
+    "glutes": "Glutes",
+    "adductors": "Adductors",
+    "calves": "Calves",
+    "erectors": "Spinal erectors / lower back",
+    "abs": "Abdominals and obliques",
+    "lats": "Lats",
+    "upper-back": "Rhomboids and mid traps",
+    "rear-delts": "Rear deltoids",
+    "side-delts": "Side deltoids",
+    "front-delts": "Front deltoids",
+    "chest": "Chest",
+    "biceps": "Biceps",
+    "triceps": "Triceps",
+    "grip": "Grip and forearms"
+  },
+  "movements": {
+    "squat-bilateral": {
+      "name": "Bilateral squat",
+      "primary": [
+        "quads",
+        "glutes"
+      ],
+      "secondary": [
+        "adductors",
+        "erectors",
+        "hamstrings"
+      ],
+      "confidence": "evidence",
+      "note": "Also the reason no hip thrust is needed: Plotkin 2023 found squat and hip thrust produce similar gluteal hypertrophy, and the squat adds quads and adductors.",
+      "source": "Plotkin DL et al. Front Physiol. 2023;14:1279170. Evidence file section 13.",
+      "variants": [
+        {
+          "id": "bb-back-squat",
+          "name": "BB Back Squat",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "front-squat",
+          "name": "Front Squat",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": true,
+          "primary": [
+            "quads"
+          ],
+          "secondary": [
+            "glutes",
+            "abs",
+            "erectors"
+          ],
+          "note": "More quad-dominant and more trunk than the back squat, which is why it is a genuinely different lift with its own weight and its own history rather than a lighter copy."
+        },
+        {
+          "id": "smith-squat",
+          "name": "Smith Squat",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "heavy-goblet-squat",
+          "name": "Heavy Goblet Squat",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Capped by what he can hold at the chest, so it ceilings well below a barbell squat."
+        },
+        {
+          "id": "leg-press",
+          "name": "Leg Press",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "leg-press",
+          "loadable": true,
+          "inProgramme": false,
+          "primary": [
+            "quads",
+            "glutes"
+          ],
+          "secondary": [
+            "adductors"
+          ],
+          "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely."
+        }
+      ]
+    },
+    "squat-unilateral": {
+      "name": "Single-leg squat",
+      "primary": [
+        "quads",
+        "glutes"
+      ],
+      "secondary": [
+        "adductors",
+        "hamstrings"
+      ],
+      "confidence": "convention",
+      "note": "Single-leg loading without a rack, so every variant holds no fixture and can pair with anything.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "bulgarian-split-squat",
+          "name": "Bulgarian Split Squat",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "reverse-lunge",
+          "name": "Reverse Lunge",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "confidence": "unsourced",
+          "note": "NO REASON RECORDED for having this AND the split squat. They train the same thing."
+        },
+        {
+          "id": "walking-lunge",
+          "name": "Walking Lunge",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "db-step-up",
+          "name": "DB Step-Up",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "smith-split-squat",
+          "name": "Smith Split Squat",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Removes the balance ceiling, so the legs limit the set instead of the balance."
+        },
+        {
+          "id": "lateral-step-up",
+          "name": "Lateral Step-Up",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "box-step-up-explosive",
+          "name": "Explosive Box Step-Up",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": "box",
+          "loadable": false,
+          "inProgramme": false
+        },
+        {
+          "id": "cossack-squat",
+          "name": "Cossack Squat",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "primary": [
+            "adductors",
+            "quads"
+          ],
+          "secondary": [
+            "glutes"
+          ],
+          "note": "Frontal plane and single leg at once."
+        },
+        {
+          "id": "single-leg-leg-press",
+          "name": "Single-Leg Leg Press",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "leg-press",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "hinge-bilateral": {
+      "name": "Bilateral hip hinge",
+      "primary": [
+        "hamstrings",
+        "glutes"
+      ],
+      "secondary": [
+        "erectors",
+        "grip"
+      ],
+      "confidence": "evidence",
+      "note": "The loadable posterior chain. The RDL biases hamstrings; a conventional deadlift produces greater glute and quadriceps activation.",
+      "source": "Lee S et al. J Exerc Sci Fit. 2018;16(3):87-93. EMG, directional only.",
+      "variants": [
+        {
+          "id": "romanian-deadlift",
+          "name": "BB Romanian Deadlift",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "conventional-deadlift",
+          "name": "BB Deadlift",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": false,
+          "primary": [
+            "hamstrings",
+            "glutes",
+            "quads"
+          ],
+          "secondary": [
+            "erectors",
+            "grip",
+            "upper-back"
+          ],
+          "note": "HE HAS ALREADY DONE ONE: 2026-08-05 ramped 180x6, 200x6, 225x4 and it was logged under romanian-deadlift by mistake. That is the only conventional-deadlift data that exists. Not currently prescribed, and mentioning it is not a reason to prescribe it: see evidence file 20.8 item 7."
+        },
+        {
+          "id": "db-rdl",
+          "name": "DB Romanian Deadlift",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Holds no fixture, so unlike the barbell RDL it can pair with anything. Ceilings at the heaviest pair of dumbbells he can hold."
+        },
+        {
+          "id": "smith-rdl",
+          "name": "Smith RDL",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "good-morning",
+          "name": "Good Morning",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Logged 6 sets in May and June at up to 95 lb, then dropped with no reason recorded."
+        },
+        {
+          "id": "back-extension",
+          "name": "45-Degree Back Extension",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "back-extension",
+          "loadable": true,
+          "inProgramme": false,
+          "primary": [
+            "glutes",
+            "erectors"
+          ],
+          "secondary": [
+            "hamstrings"
+          ],
+          "note": "Logged 13 sets at up to 50 lb, last used 2026-08-08. Loadable by hugging a plate.",
+          "aliases": [
+            "glute-back-extension-alt"
+          ]
+        },
+        {
+          "id": "kb-swing",
+          "name": "KB Swing",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Ballistic hinge. Trains the hinge fast rather than heavy, so it does not substitute for the RDL."
+        }
+      ]
+    },
+    "hinge-unilateral": {
+      "name": "Single-leg hip hinge",
+      "primary": [
+        "hamstrings",
+        "glutes"
+      ],
+      "secondary": [
+        "erectors"
+      ],
+      "confidence": "convention",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "single-leg-rdl",
+          "name": "Single-Leg RDL",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Capped by balance rather than by the hamstrings, stuck at 40 lb, which is why it has never progressed."
+        },
+        {
+          "id": "b-stance-rdl",
+          "name": "B-Stance RDL",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "note": "The back toe stays down, which removes the balance ceiling that stalls the single-leg version."
+        },
+        {
+          "id": "kb-single-leg-rdl",
+          "name": "KB Single-Leg RDL",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "knee-flexion": {
+      "name": "Knee flexion (hamstring isolation)",
+      "primary": [
+        "hamstrings"
+      ],
+      "secondary": [],
+      "confidence": "unsourced",
+      "note": "SOURCE VOID. Its only citation was the Motion Blueprint guide, dropped 2026-08-27.",
+      "source": "none, evidence file section 18",
+      "variants": [
+        {
+          "id": "leg-curl",
+          "name": "Leg Curl Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "leg-curl",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "stability-ball-ham-curl",
+          "name": "Stability Ball Hamstring Curl",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "knee-extension": {
+      "name": "Knee extension (quad isolation)",
+      "primary": [
+        "quads"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "note": "IN THE GYM, NEVER PRESCRIBED, NEVER LOGGED. Listed so the gap is visible rather than invisible. Holds a fixture.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "leg-extension",
+          "name": "Leg Extension",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "leg-extension",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "hip-extension-isolation": {
+      "name": "Hip extension isolation",
+      "primary": [
+        "glutes"
+      ],
+      "secondary": [
+        "hamstrings"
+      ],
+      "confidence": "convention",
+      "note": "Plotkin 2023 argues AGAINST needing this at all while he squats twice a week.",
+      "source": "Plotkin DL et al. Front Physiol. 2023;14:1279170.",
+      "variants": [
+        {
+          "id": "single-leg-glute-bridge",
+          "name": "Single-Leg Glute Bridge",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": true,
+          "note": "NOT LOADABLE, so it can never progress. On all four days by accretion, never by a decision."
+        },
+        {
+          "id": "smith-hip-thrust",
+          "name": "Smith Hip Thrust",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "The loadable version. The gym has no hip thrust machine; the Smith is the recorded workaround."
+        },
+        {
+          "id": "frog-pump",
+          "name": "Frog Pump",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "adduction": {
+      "name": "Adduction and frontal plane",
+      "primary": [
+        "adductors"
+      ],
+      "secondary": [
+        "quads",
+        "glutes"
+      ],
+      "confidence": "evidence",
+      "note": "Loaded frontal-plane work rather than a band, because Comert and Gruber 2025 found hip strengthening alone had minimal effect on knee alignment.",
+      "source": "Comert and Gruber 2025. Evidence file section 5.",
+      "variants": [
+        {
+          "id": "db-lateral-lunge",
+          "name": "DB Lateral Lunge",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "primary": [
+            "adductors",
+            "quads"
+          ],
+          "secondary": [
+            "glutes"
+          ]
+        },
+        {
+          "id": "copenhagen-plank",
+          "name": "Copenhagen Plank",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": false,
+          "inProgramme": true,
+          "secondary": [
+            "abs"
+          ],
+          "note": "Progressed by lever length, not weight, so the app's ladder does not apply to it.",
+          "aliases": [
+            "side-plank-leg-lift"
+          ]
+        },
+        {
+          "id": "adductor-squeeze",
+          "name": "Adductor Ball Squeeze",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "calf": {
+      "name": "Calf raise",
+      "primary": [
+        "calves"
+      ],
+      "secondary": [],
+      "confidence": "unsourced",
+      "note": "SOURCE VOID for its placement. The Motion Blueprint guide was the only basis for where it sits.",
+      "source": "none, evidence file section 18",
+      "variants": [
+        {
+          "id": "standing-calf-raise",
+          "name": "Standing Calf Raise",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "calf-raise",
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "machine-calf-raise"
+          ]
+        },
+        {
+          "id": "db-calf-raise",
+          "name": "DB Calf Raise",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Holds no fixture, so it can ride in any rest gap. The machine version cannot."
+        },
+        {
+          "id": "smith-calf-raise",
+          "name": "Smith Calf Raise",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "single-leg-calf-raise",
+          "name": "Single-Leg Calf Raise",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "push-horizontal": {
+      "name": "Horizontal press",
+      "primary": [
+        "chest",
+        "triceps"
+      ],
+      "secondary": [
+        "front-delts"
+      ],
+      "confidence": "convention",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "db-bench-press",
+          "name": "DB Bench Press",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": true,
+          "note": "At 75 lb dumbbells he presses 150 lb, against a 185 lb BARBELL bench he logged on 2026-05-25 before it was dropped with no reason recorded. This is the lift that has moved least."
+        },
+        {
+          "id": "bb-bench-press",
+          "name": "BB Bench Press",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Logged 6 sets to 185 lb in May and early August, then dropped. Higher ceiling and a finer load step than the dumbbells.",
+          "aliases": [
+            "bench-press"
+          ]
+        },
+        {
+          "id": "machine-chest-press",
+          "name": "Machine Chest Press",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "chest-press",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "db-incline-press",
+          "name": "DB Incline Press",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "smith-bench-press",
+          "name": "Smith Bench Press",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "pushup",
+          "name": "Pushup",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": true,
+          "confidence": "unsourced",
+          "secondary": [
+            "front-delts",
+            "abs"
+          ],
+          "note": "Added 2026-08-27 as an upper primer and refuted the same day. Not a plyometric, and post-activation enhancement is measured on jumps and sprints, never on a following strength set. It pre-fatigues the press behind it."
+        },
+        {
+          "id": "assisted-dip",
+          "name": "Assisted Dip",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "assisted-dip",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "incline-pushup",
+          "name": "Incline Pushup",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "chest-isolation": {
+      "name": "Chest fly",
+      "primary": [
+        "chest"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "note": "IN THE GYM, NEVER PRESCRIBED. The pec deck also runs backwards as a rear-delt machine, which is a second unused option.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "pec-deck",
+          "name": "Chest Fly Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "pec-deck",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "cable-fly",
+          "name": "Cable Fly",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "push-vertical": {
+      "name": "Vertical press",
+      "primary": [
+        "front-delts",
+        "triceps"
+      ],
+      "secondary": [
+        "side-delts",
+        "abs"
+      ],
+      "confidence": "contested",
+      "note": "Its sole citation, Nunes 2021, could not be verified. This is also the ONLY main lift whose estimated 1RM has fallen, and the cause is a load step it cannot reach.",
+      "source": "Nunes 2021, UNVERIFIED. Evidence file section 18.",
+      "variants": [
+        {
+          "id": "db-overhead-press",
+          "name": "Standing DB Overhead Press",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks."
+        },
+        {
+          "id": "machine-shoulder-press",
+          "name": "Machine Shoulder Press",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "shoulder-press",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "db-seated-ohp",
+          "name": "Seated DB Overhead Press",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false,
+          "aliases": [
+            "db-ohp-seated"
+          ]
+        },
+        {
+          "id": "bb-overhead-press",
+          "name": "BB Overhead Press",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Logged to 105 lb in May and June, then dropped. A barbell moves in 5 lb total, which is a 2.5 lb step per side against the dumbbells' 5 lb per hand.",
+          "aliases": [
+            "bb-ohp"
+          ]
+        },
+        {
+          "id": "smith-overhead-press",
+          "name": "Smith Overhead Press",
+          "implement": "smith",
+          "zone": "smith",
+          "station": "smith",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "half-kneeling-sa-press",
+          "name": "Half-Kneeling Single-Arm Press",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "secondary": [
+            "side-delts",
+            "abs"
+          ]
+        }
+      ]
+    },
+    "pull-horizontal": {
+      "name": "Horizontal pull (row)",
+      "primary": [
+        "upper-back",
+        "lats"
+      ],
+      "secondary": [
+        "biceps",
+        "rear-delts",
+        "erectors",
+        "grip"
+      ],
+      "confidence": "convention",
+      "note": "A bent-over row is also the largest trunk brace in the week, which is why pairing it with dead bugs is redundant rather than complementary.",
+      "source": "CONVENTION for selection; the pairing point is Zhang 2025, evidence file section 12.",
+      "variants": [
+        {
+          "id": "bb-row",
+          "name": "BB Row",
+          "implement": "barbell",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": true,
+          "inProgramme": true
+        },
+        {
+          "id": "seated-cable-row",
+          "name": "Seated Cable Row",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-row",
+          "loadable": true,
+          "inProgramme": true,
+          "secondary": [
+            "biceps",
+            "rear-delts"
+          ],
+          "note": "Moves in 2.5 lb steps, the finest increment anywhere in this gym."
+        },
+        {
+          "id": "chest-supported-row",
+          "name": "Chest-Supported DB Row",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false,
+          "secondary": [
+            "biceps",
+            "rear-delts"
+          ],
+          "note": "No erector or trunk cost, because the chest is supported. That makes it the row that pairs freely."
+        },
+        {
+          "id": "db-single-arm-row",
+          "name": "DB Single-Arm Row",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "trx-row",
+          "name": "TRX Row",
+          "implement": "bodyweight",
+          "zone": "rack",
+          "station": "trx",
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "pull-vertical": {
+      "name": "Vertical pull",
+      "primary": [
+        "lats"
+      ],
+      "secondary": [
+        "biceps",
+        "upper-back",
+        "rear-delts",
+        "grip"
+      ],
+      "confidence": "convention",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "lat-pulldown",
+          "name": "Lat Pulldown",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "lat-pulldown-alt"
+          ]
+        },
+        {
+          "id": "assisted-pullup",
+          "name": "Assisted Pull-Up",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "assisted-pullup",
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Assistance moves in 10 lb steps off 40 lb, a 25% change, which is why it cannot reach its next rung."
+        },
+        {
+          "id": "pullup",
+          "name": "Pull-Up",
+          "implement": "bodyweight",
+          "zone": "rack",
+          "station": "rack-pullup-bar",
+          "loadable": false,
+          "inProgramme": false
+        },
+        {
+          "id": "pullup-smith-bar",
+          "name": "Pull-Up (Smith section bar)",
+          "implement": "bodyweight",
+          "zone": "smith",
+          "station": "smith-pullup-bar",
+          "loadable": false,
+          "inProgramme": false,
+          "note": "Second bar in the gym. Listed so no station is unreachable, not because a second pull-up bar changes anything."
+        }
+      ]
+    },
+    "lat-isolation": {
+      "name": "Shoulder extension (lat isolation)",
+      "primary": [
+        "lats"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "note": "Adds lat volume without adding biceps volume, because the elbow does not bend.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "straight-arm-pulldown",
+          "name": "Straight-Arm Pulldown",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "band-straight-arm-pulldown"
+          ]
+        },
+        {
+          "id": "db-pullover",
+          "name": "DB Pullover",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "rear-delt": {
+      "name": "Horizontal shoulder abduction (rear delts)",
+      "primary": [
+        "rear-delts"
+      ],
+      "secondary": [
+        "upper-back"
+      ],
+      "confidence": "convention",
+      "note": "No source anywhere justifies its current four exposures a week.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "db-reverse-fly",
+          "name": "DB Reverse Fly",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Its 20 lb dumbbell steps 25% to the next weight, so it cannot progress."
+        },
+        {
+          "id": "cable-reverse-fly",
+          "name": "Cable Reverse Fly",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "2.5 lb steps, which fixes the unreachable-weight problem the dumbbell version has."
+        },
+        {
+          "id": "face-pull",
+          "name": "Face Pull",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Logged 6 sets in May and June at up to 35 lb, then dropped."
+        },
+        {
+          "id": "pec-deck-reverse",
+          "name": "Reverse Pec Deck",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "pec-deck",
+          "loadable": true,
+          "inProgramme": false,
+          "aliases": [
+            "pec-deck-rear-delt"
+          ]
+        },
+        {
+          "id": "band-pull-apart",
+          "name": "Band Pull-Apart",
+          "implement": "band",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        },
+        {
+          "id": "chest-supported-reverse-fly",
+          "name": "Chest-Supported Reverse Fly",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "side-delt": {
+      "name": "Shoulder abduction (side delts)",
+      "primary": [
+        "side-delts"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "note": "The only direct work the side delts get. No source justifies four exposures a week.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "db-lateral-raise",
+          "name": "DB Lateral Raise",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Stuck at a 25% load step from 20 lb to 25 lb.",
+          "aliases": [
+            "db-lateral-raise-seated",
+            "kb-lateral-raise"
+          ]
+        },
+        {
+          "id": "cable-lateral-raise",
+          "name": "Cable Lateral Raise",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "2.5 lb steps. This is the fix for the unreachable next weight, per evidence file section 17."
+        }
+      ]
+    },
+    "elbow-flexion": {
+      "name": "Elbow flexion (biceps)",
+      "primary": [
+        "biceps"
+      ],
+      "secondary": [
+        "grip"
+      ],
+      "confidence": "evidence",
+      "note": "Kassiano 2022: variation helps when variants load the muscle DIFFERENTLY and may hinder when they are redundant. Swapping implement at the same shoulder position is the redundant kind. Changing where the SHOULDER sits is the systematic kind, which is why the incline and preacher entries carry a note and the rest do not.",
+      "source": "Kassiano W et al. J Strength Cond Res. 2022. Evidence file section 14.",
+      "variants": [
+        {
+          "id": "db-hammer-curl",
+          "name": "DB Hammer Curl",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "hammer-curl"
+          ]
+        },
+        {
+          "id": "bicep-curl",
+          "name": "DB Biceps Curl",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false,
+          "aliases": [
+            "db-curl-supinated"
+          ]
+        },
+        {
+          "id": "cable-curl",
+          "name": "Cable Curl",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-row",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "HIS OWN EXAMPLE, 2026-08-27: if the block before it is a straight-arm pulldown, this keeps him at the cable stack instead of walking to the dumbbells. 2.5 lb steps as well."
+        },
+        {
+          "id": "ez-preacher-curl",
+          "name": "EZ Bar Preacher Curl",
+          "implement": "ezbar",
+          "zone": "ezPreacher",
+          "station": "preacher",
+          "loadable": true,
+          "inProgramme": true,
+          "note": "SHOULDER FLEXED, so the biceps work shortened. Genuinely different from a standing curl, and therefore the systematic kind of variation. MISPLACED though: he asked on 2026-08-15 for the EZ bar as a SWAP on the dumbbell curl card, and the next commit made it Friday's lead."
+        },
+        {
+          "id": "incline-db-curl",
+          "name": "Incline DB Curl",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "SHOULDER EXTENDED, so the biceps work lengthened. The genuine opposite of the preacher curl, and the one pairing of curls that is not redundant."
+        },
+        {
+          "id": "kb-hammer-curl",
+          "name": "Kettlebell Curl",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "elbow-extension": {
+      "name": "Elbow extension (triceps)",
+      "primary": [
+        "triceps"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "note": "Same logic as the curls: shortened against lengthened is systematic variation, one handle against another is redundant.",
+      "source": "Kassiano W et al. J Strength Cond Res. 2022.",
+      "variants": [
+        {
+          "id": "tricep-pushdown",
+          "name": "Tricep Pushdown",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Shoulder neutral, long head SHORTENED. 2.5 lb steps.",
+          "aliases": [
+            "tricep-pushdown-alt"
+          ]
+        },
+        {
+          "id": "db-overhead-tricep-extension",
+          "name": "DB Overhead Tricep Extension",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "note": "Shoulder flexed, long head LENGTHENED, which is what makes this and the pushdown non-redundant. CAVEAT: the meta-analysis favouring longer muscle length studied quadriceps in five of eight trials and no triceps, so applying it here extrapolates across muscles.",
+          "source": "Strey B, Irigoyen A, McMahon G, Pinto RS. Sport Sci Health. 2025;22(33):1-14. DOI 10.1007/s11332-025-01586-5. Eight studies, longer length ES 0.283 p=0.036. EXTRAPOLATED to triceps."
+        },
+        {
+          "id": "cable-overhead-tricep-extension",
+          "name": "Cable Overhead Tricep Extension",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "Same lengthened position as the dumbbell version, at the cable stack and in 2.5 lb steps."
+        },
+        {
+          "id": "ez-skullcrusher",
+          "name": "EZ Bar Skullcrusher",
+          "implement": "ezbar",
+          "zone": "ezPreacher",
+          "station": "preacher",
+          "loadable": true,
+          "inProgramme": false
+        },
+        {
+          "id": "db-skullcrusher",
+          "name": "DB Skullcrusher",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": "bench",
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "anti-rotation": {
+      "name": "Anti-rotation trunk",
+      "primary": [
+        "abs"
+      ],
+      "secondary": [],
+      "confidence": "unsourced",
+      "note": "SOURCE VOID. The 'eight core patterns' claim behind the Pallof press came from the Motion Blueprint guide.",
+      "source": "none, evidence file section 18",
+      "variants": [
+        {
+          "id": "cable-pallof",
+          "name": "Cable Pallof Press",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "pallof-press",
+            "half-kneeling-pallof"
+          ]
+        },
+        {
+          "id": "band-pallof",
+          "name": "Band Pallof Press",
+          "implement": "band",
+          "zone": "rack",
+          "station": "rack",
+          "loadable": false,
+          "inProgramme": false
+        },
+        {
+          "id": "plank-shoulder-taps",
+          "name": "Plank w/ Shoulder Taps",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": true,
+          "secondary": [
+            "front-delts"
+          ]
+        },
+        {
+          "id": "side-plank",
+          "name": "Side Plank",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "anti-extension": {
+      "name": "Anti-extension trunk",
+      "primary": [
+        "abs"
+      ],
+      "secondary": [],
+      "confidence": "convention",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "dead-bug",
+          "name": "Dead Bug",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": true,
+          "note": "NOT LOADABLE. 9 sets a week, more than any main lift, and it sits in the rest gap of a bent-over row, which is already the largest trunk brace in the week."
+        },
+        {
+          "id": "hanging-knee-raise",
+          "name": "Hanging Knee Raise",
+          "implement": "bodyweight",
+          "zone": "rack",
+          "station": "rack-pullup-bar",
+          "loadable": false,
+          "inProgramme": false,
+          "secondary": [
+            "grip"
+          ],
+          "note": "Logged 6 sets in August. Progressed by leg position rather than weight."
+        },
+        {
+          "id": "cable-crunch",
+          "name": "Cable Crunch",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress."
+        },
+        {
+          "id": "hollow-hold",
+          "name": "Hollow Hold",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "carry": {
+      "name": "Loaded carry",
+      "primary": [
+        "grip"
+      ],
+      "secondary": [
+        "abs",
+        "upper-back"
+      ],
+      "confidence": "convention",
+      "note": "The only bare-handed grip work in the week, which is the stated reason straps are permitted on the RDL.",
+      "source": "CONVENTION.",
+      "variants": [
+        {
+          "id": "farmer-carry",
+          "name": "Farmer Carry",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "aliases": [
+            "db-hold"
+          ]
+        },
+        {
+          "id": "suitcase-carry",
+          "name": "Suitcase Carry",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": true,
+          "primary": [
+            "abs",
+            "grip"
+          ],
+          "secondary": [
+            "upper-back"
+          ],
+          "note": "Single-side, so it adds anti-lateral-flexion that the two-sided farmer carry does not.",
+          "aliases": [
+            "suitcase-carry-upper",
+            "kb-suitcase-hold"
+          ]
+        },
+        {
+          "id": "kb-farmer-carry",
+          "name": "KB Farmer Carry",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "inProgramme": false
+        }
+      ]
+    },
+    "plyo-vertical": {
+      "name": "Vertical plyometric",
+      "primary": [
+        "quads",
+        "glutes"
+      ],
+      "secondary": [
+        "calves"
+      ],
+      "confidence": "evidence",
+      "note": "In the programme because plyometric training is worth doing at 2 to 3 sessions a week, NOT because it primes the lift after it. Post-activation enhancement is measured on jumps and sprints, never on a following strength set.",
+      "source": "Deng N et al. Sci Rep. 2024;14:11272. 21 studies, 1,263 untrained participants, strength ES 0.61. Evidence file section 4 and 15.",
+      "variants": [
+        {
+          "id": "box-jump",
+          "name": "Box Jump",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": "box",
+          "loadable": false,
+          "inProgramme": true,
+          "note": "He has swapped to this from broad jump every single time, 20 sets since 2026-06-09. Lower-impact landing at his bodyweight because he steps down."
+        },
+        {
+          "id": "pogo-hops",
+          "name": "Pogo Hops",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false,
+          "primary": [
+            "calves"
+          ],
+          "secondary": [
+            "quads"
+          ]
+        },
+        {
+          "id": "broad-jump",
+          "name": "Broad Jump",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false,
+          "note": "REMOVED as a default. He has swapped away from it every time and has said it does not fit a crowded commercial gym."
+        }
+      ]
+    },
+    "plyo-lateral": {
+      "name": "Frontal-plane plyometric",
+      "primary": [
+        "glutes",
+        "quads"
+      ],
+      "secondary": [
+        "adductors",
+        "calves"
+      ],
+      "confidence": "evidence",
+      "source": "Deng N et al. Sci Rep. 2024;14:11272. Evidence file section 4.",
+      "variants": [
+        {
+          "id": "lateral-bound",
+          "name": "Lateral Bound",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": true
+        },
+        {
+          "id": "lateral-line-hop",
+          "name": "Lateral Line Hop",
+          "implement": "bodyweight",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        }
+      ]
+    },
+    "hip-abduction": {
+      "name": "Hip abduction (glute medius)",
+      "primary": [
+        "glutes"
+      ],
+      "secondary": [],
+      "confidence": "evidence",
+      "note": "Glute MEDIUS rather than maximus, so it is not covered by the squat the way hip extension is. It was in the programme until 2026-08-16 as a banded lateral walk and was removed for the right reason: Comert and Gruber 2025 found hip strengthening ALONE had minimal effect on knee alignment. The loaded frontal-plane work replaced it. Listed here so the removal stays visible and so the cable option is on record.",
+      "source": "Comert and Gruber 2025. Evidence file section 5.",
+      "variants": [
+        {
+          "id": "banded-lateral-walk",
+          "name": "Banded Lateral Walk",
+          "implement": "band",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false,
+          "note": "Logged 12 sets to 2026-08-05, then removed."
+        },
+        {
+          "id": "clamshell",
+          "name": "Clamshell",
+          "implement": "band",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false,
+          "note": "Currently in the WARM-UP, not the programme body."
+        },
+        {
+          "id": "banded-hip-abduction",
+          "name": "Banded Hip Abduction",
+          "implement": "band",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": false,
+          "inProgramme": false
+        },
+        {
+          "id": "cable-hip-abduction",
+          "name": "Cable Hip Abduction",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "inProgramme": false,
+          "note": "The only LOADABLE abduction option in the gym. The band versions cannot progress."
+        }
+      ]
+    }
+  }
+}

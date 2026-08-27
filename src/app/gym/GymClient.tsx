@@ -15,7 +15,6 @@ interface Props {
   program: Program;
   warmups: { lower: WarmupItem[]; upper: WarmupItem[] };
   cooldowns: Record<string, CooldownItem>;
-  rirGuide: { rir: string; desc: string; highlight?: boolean }[];
   nextUp: NextUp;
   /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
      that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
@@ -134,7 +133,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp }: Props) {
+export default function GymClient({ program, warmups, cooldowns, nextUp }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -816,16 +815,6 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
           ))}
         </details>
       )}
-
-      <details className="fold">
-        <summary>RIR guide</summary>
-        {rirGuide.map((r) => (
-          <div className="warm-item" key={r.rir}>
-            <div className="name">RIR {r.rir}</div>
-            <div className="cue">{r.desc}</div>
-          </div>
-        ))}
-      </details>
 
       {/* ---- a note from the floor ----
         *

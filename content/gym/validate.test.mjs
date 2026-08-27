@@ -31,9 +31,27 @@ const blockBy = (program, day, label) => {
   return b;
 };
 const partnerOf = (block) => block.exercises[block.exercises.length - 1];
+
+/* A fixture that no longer holds what a case needs must stop the run, not skip it. */
+function assertAnchor(program, anchor, needs) {
+  const b = blockBy(program, ...anchor);
+  if (!b) throw new Error(`anchor block ${anchor.join('/')} no longer exists; repoint it`);
+  if (b.exercises.length < 2) throw new Error(`anchor block ${anchor.join('/')} is no longer a pair, so partnerOf() returns the lead lift; repoint it`);
+  const partner = partnerOf(b);
+  if (!partner[needs]) throw new Error(`anchor block ${anchor.join('/')} partner "${partner.id}" has no ${needs}; repoint it`);
+}
 /** The two blocks the fixtures use, named once. Any block with an `open` row works for the second. */
-const SPAN_BLOCK = ['friday', 'Second Vertical Pull'];
-const OPEN_BLOCK = ['friday', 'Main Lift: BB Row'];
+/* THESE TWO ANCHORS ARE FIXTURES AND THEY GO STALE. Repointed 2026-08-27: the 2026-08-27 programme
+ * rebuild left `friday/Second Vertical Pull` and `friday/Main Lift: BB Row` as SINGLE-exercise
+ * blocks, so `partnerOf` returned the lead lift and five of these cases silently stopped testing
+ * anything. They did not error, they PASSED for the wrong reason, which is the failure mode this
+ * suite exists to catch in the validator.
+ *
+ * SPAN_BLOCK must be a paired block whose partner carries a `whyHere`.
+ * OPEN_BLOCK must be a paired block whose partner carries an `open` question.
+ * If a future edit unpairs either one, the first case below fails loudly rather than passing. */
+const SPAN_BLOCK = ['thursday', 'Hamstrings + Calves'];
+const OPEN_BLOCK = ['tuesday', 'Second Pattern: Vertical Pull'];
 
 /** @type {{name: string, mutate: (p: any) => void, expect: string | null}[]} */
 const CASES = [
@@ -53,8 +71,14 @@ const CASES = [
   {
     name: 'a true span with a different first-character case is allowed',
     mutate: (p) => {
+      // DERIVED from the anchor's own `why`, never a typed sentence. The hardcoded version of this
+      // line was a true span of a block that stopped existing on 2026-08-27, and it then tested
+      // nothing except that the validator still rejects strings. Take a real span and flip its
+      // first character's case, which is exactly the tolerance under test.
       const b = blockBy(p, ...SPAN_BLOCK);
-      partnerOf(b).whyHere = 'side delts go in the rest because a pull-up does not use them.';
+      const span = b.why.slice(0, 60);
+      const flipped = (span[0] === span[0].toUpperCase() ? span[0].toLowerCase() : span[0].toUpperCase()) + span.slice(1);
+      partnerOf(b).whyHere = flipped;
     },
     expect: null,
   },
@@ -119,6 +143,10 @@ for (const c of CASES) {
     cpSync(HERE, dir, { recursive: true });
     const file = join(dir, 'program.json');
     const program = JSON.parse(readFileSync(file, 'utf8'));
+    // Check the fixtures the cases rely on BEFORE mutating, so a stale anchor is a loud failure
+    // rather than five cases quietly passing against a lead lift.
+    assertAnchor(program, SPAN_BLOCK, 'whyHere');
+    assertAnchor(program, OPEN_BLOCK, 'open');
     c.mutate(program);
     writeFileSync(file, JSON.stringify(program, null, 2));
 

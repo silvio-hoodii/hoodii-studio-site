@@ -13,6 +13,26 @@ import { dirname, join } from 'node:path';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const readJson = (f) => JSON.parse(readFileSync(join(HERE, f), 'utf8'));
 
+/* The movement catalogue, flattened to one lookup per variant id (and per legacy alias id, because
+ * program.json's per-slot `alts` still carry older names for jobs the catalogue already owns).
+ * Loaded here so the shared-muscle rule below can run offline like everything else in this file. */
+const MOVEMENTS = (() => {
+  try {
+    const cat = readJson('movements.json');
+    const out = {};
+    for (const m of Object.values(cat.movements)) {
+      for (const v of m.variants) {
+        const flat = { ...v, primary: v.primary ?? m.primary, secondary: v.secondary ?? m.secondary };
+        out[v.id] = flat;
+        for (const a of v.aliases ?? []) out[a] = flat;
+      }
+    }
+    return out;
+  } catch {
+    return null;   // absent catalogue disables the rule loudly at the call site, never silently
+  }
+})();
+
 const program = readJson('program.json');
 const warmups = readJson('warmups.json');
 const cooldowns = readJson('cooldowns.json');
@@ -252,25 +272,53 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       fail(where, 'empty exercises[]');
       continue;
     }
-    /* EVERY BLOCK IS A PAIR. Added 2026-08-22, at his instruction and with the sourcing in
-     * program.json's $comment (Iversen 2021: supersets run in about half the time at matched
-     * volume, and the one 8-week loaded trial found the same strength gains).
+    /* A PARTNER MAY NOT SHARE A MUSCLE WITH THE LIFT IT SITS BEHIND.
      *
-     * "Just pair everything. I want everything to be a superset." He had asked the same question
-     * three times in two days about blocks that ran one exercise, and each time the answer was a
-     * local excuse rather than a rule. This is the rule. A single-exercise block is now a build
-     * failure, so the question cannot come back.
+     * THIS REPLACES "EVERY BLOCK IS A PAIR", which was here from 2026-08-22 to 2026-08-27 and made
+     * a single-exercise block a build failure. He asked for that rule for a good reason: he had
+     * questioned three one-exercise blocks in two days and got a local excuse each time. But it was
+     * sourced to Iversen 2021, which the 2026-08-27 audit could not verify, and it had a cost
+     * nobody counted. Every new block needed a partner; a partner may hold no fixture; so the only
+     * candidates left were dumbbell isolation and floor holds. The week ended up with 12 sets of
+     * rear delts and 12 of lateral raises against 4 of back squat, and 23 weekly sets of work with
+     * no weight column at all sitting inside blocks labelled `main`.
      *
-     * `sequence` is still a legal pairing for two exercises done one after the other, but a block
-     * with only one thing in it is not a design decision any more, it is an unfinished edit. */
-    if (block.exercises.length < 2) {
-      const lead = block.exercises[0] || {};
-      fail(where, `one exercise. Every block is a pair. Give "${lead.name || block.label}" a partner that uses a muscle it does not: a dumbbell or kettlebell exercise, \`station: null\`, zone "${lead.zone}", no floor needed. Dumbbells travel to any station; a mat does not.`);
+     * His own words, 2026-08-27: "when I said superset the agents started pairing everything, like
+     * every single exercise needs a superset, which might also not be the best approach."
+     *
+     * THE REPLACEMENT IS SOURCED, WHICH THE OLD RULE WAS NOT. Zhang X, Weakley J, Li H, et al.
+     * Superset Versus Traditional Resistance Training Prescriptions. Sports Med. 2025;55(4):953-975.
+     * 19 studies, 313 participants. Verbatim: "similar biomechanical supersets led to significantly
+     * less volume load than traditional sets", while agonist-antagonist pairs showed "no significant
+     * difference" and "a significantly greater total number of repetitions". Supersets cut session
+     * time by about 37%.
+     *
+     * So pairing is still good and still the mechanism that makes a long day fit. What is banned is
+     * the pairing that taxes the lift in front of it. A block of one is now legal; a block whose
+     * partner shares the lead's primary muscle is not.
+     *
+     * The muscle data is content/gym/movements.json. If a block's exercise is not in that
+     * catalogue this check cannot run, and says so rather than passing quietly. */
+    if (block.exercises.length >= 2 && MOVEMENTS) {
+      const lead = block.exercises[0];
+      const leadInfo = MOVEMENTS[lead.id];
+      for (const partner of block.exercises.slice(1)) {
+        const pInfo = MOVEMENTS[partner.id];
+        if (!leadInfo || !pInfo) {
+          fail(where, `"${!leadInfo ? lead.id : partner.id}" is not in content/gym/movements.json, so the shared-muscle check cannot run on this block. Add it to the catalogue in this commit.`);
+          continue;
+        }
+        const shared = pInfo.primary.filter((m) => leadInfo.primary.includes(m));
+        if (shared.length) {
+          fail(where, `partner "${partner.name}" works ${shared.join(', ')}, which is also what "${lead.name}" works. Zhang 2025: a superset of two exercises hitting the same muscle significantly REDUCES the volume load of the lead lift. Either pick a partner that uses a different muscle, or run the lead on its own, which is now allowed.`);
+        }
+      }
     }
 
     // `alternate` means the two share one rest window, which only makes sense for exactly two.
-    if (CONCURRENT.has(block.pairing) && block.exercises.length !== 2) {
-      fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);
+    // A block of ONE is fine and is not an alternate; only a block of three or more is an error.
+    if (CONCURRENT.has(block.pairing) && block.exercises.length > 2) {
+      fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected at most 2`);
     }
 
     /* ------ THE PARTNER SAYS WHY IT IS THERE, ON ITS OWN ROW. Added 2026-08-27, on his ruling.
