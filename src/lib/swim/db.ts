@@ -90,15 +90,44 @@ export interface SwimHistory {
  *
  *  Lifted out of src/lib/health/db.ts on 2026-08-26 so /swim owns its own reads. /health no longer
  *  shows swim at all: it links here. */
+/* THE DATE ON THIS TABLE IS UTC, AND THAT PUT TWO DATES FOR ONE SWIM ON ONE SCREEN.
+ *
+ * Found 2026-08-27 while building /swim/deep. `health_swim_session.date` is derived from a UTC
+ * instant, so any swim starting after 18:00 in Calgary is filed on the following day: 94 of 475
+ * rows. `health_session_detail`, which feeds the "Your last session" card at the top of this page,
+ * is local and correct. So /swim showed a card headed "Aug 25" and, one screen below it, "Last swim
+ * the watch export has reached: Aug 26", about the same swim.
+ *
+ * The comment above this function claimed the opposite ("every row in these tables was stamped in
+ * local time") and had been right about the tables it was written for. It is the reason nobody
+ * looked.
+ *
+ * THE EVIDENCE, not a preference: converting `session_start_time` from UTC to America/Edmonton
+ * reproduces the date `health_watch_session` independently recorded on 359 of 361 sessions where
+ * both exist. The raw column matches on 271. Neither `health_swim_session` nor the mirror that
+ * fills it carries a start time, so the instant is recovered by joining to the tables that do, and
+ * the 108 sessions with no per-length detail and no session detail keep the raw date rather than
+ * being dropped. Fixing this at the source, in the importer, is the real repair; this makes the two
+ * halves of one page agree in the meantime. */
+const SWIM_LOCAL_DATE = `coalesce(
+        ((l.st::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
+        ((d.start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
+        s.date::date)`;
+
 export async function getSwimHistory(days = 90): Promise<SwimHistory> {
-  /* Calgary dates, not UTC ones: every row in these tables was stamped in local time. Same reason
-     src/lib/health/db.ts routes its cutoffs through this helper. See src/lib/day.ts. */
+  /* Calgary dates on both sides of the comparison. `daysAgo` gives a Calgary day (see
+     src/lib/day.ts) and the column it is compared against is now converted to one. */
   const cutoff = daysAgo(days);
   const [sessionRows, prRows] = await Promise.all([
     sql`
-      select date, distance_m, pace_per_100m_ms from health_swim_session
-      where date >= ${cutoff}
-      order by date asc
+      select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m, s.pace_per_100m_ms
+      from health_swim_session s
+      left join (
+        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
+      ) l on l.session_uuid = s.uuid
+      left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
+      where ${sql.unsafe(SWIM_LOCAL_DATE)}::text >= ${cutoff}
+      order by 1 asc
     `,
     /* TWO MINIMA, over two columns that mean two different things.
        Taking one minimum over the old mixed column is what put a 1:31 "best pace" on /health,
@@ -107,13 +136,19 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
        lengths were read and is NEVER a fallback for the other. */
     sql`
       select
-        max(distance_m) filter (where distance_m > 0) as longest,
-        min(pace_per_100m_ms) filter (where pace_per_100m_ms > 0) as best_wall_pace,
-        min(moving_pace_per_100m_ms) filter (where moving_pace_per_100m_ms > 0) as best_moving_pace,
-        count(*) filter (where moving_pace_per_100m_ms > 0) as moving_sessions,
+        max(s.distance_m) filter (where s.distance_m > 0) as longest,
+        min(s.pace_per_100m_ms) filter (where s.pace_per_100m_ms > 0) as best_wall_pace,
+        min(s.moving_pace_per_100m_ms) filter (where s.moving_pace_per_100m_ms > 0) as best_moving_pace,
+        count(*) filter (where s.moving_pace_per_100m_ms > 0) as moving_sessions,
         count(*) as total,
-        max(date) as last_on
-      from health_swim_session
+        /* THE LINE THE READER SEES, so it is the one that had to stop disagreeing with the card at
+           the top of the page. Derived, per SWIM_LOCAL_DATE above. */
+        max(${sql.unsafe(SWIM_LOCAL_DATE)})::text as last_on
+      from health_swim_session s
+      left join (
+        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
+      ) l on l.session_uuid = s.uuid
+      left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
     `,
   ]);
   const pr = prRows[0] as {
@@ -152,7 +187,20 @@ export interface SwimFrontRow {
 
 export async function getSwimFrontRow(): Promise<SwimFrontRow> {
   const [lastRows, aggRows] = await Promise.all([
-    sql`select date, distance_m from health_swim_session order by date desc limit 1`,
+    /* SAME DERIVED DATE as getSwimHistory, and it matters more here than anywhere: the hub turns
+       this into "last swim N days ago", so a date a day late makes the number a day small. Ordering
+       is on the derived date too, because the newest raw date and the newest real swim are not
+       always the same row once 94 of 475 are shifted. */
+    sql`
+      select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m
+      from health_swim_session s
+      left join (
+        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
+      ) l on l.session_uuid = s.uuid
+      left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
+      order by 1 desc
+      limit 1
+    `,
     sql`
       select count(*) as total, max(distance_m) filter (where distance_m > 0) as longest
       from health_swim_session
