@@ -170,9 +170,26 @@ function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwi
  * table was built and /swim renders only `best`. This is the cheapest thing on the page: the data
  * was already computed and thrown away at the render.
  * ---------------------------------------------------------------------------------------------- */
-function Progression({ standings }: { standings: DistanceStanding[] }) {
+function Progression({
+  standings,
+  records,
+}: {
+  standings: DistanceStanding[];
+  records: DeepSwim['distanceRecords'];
+}) {
   const withHistory = standings.filter((s) => s.history.length > 1);
   if (!withHistory.length) return null;
+  /* The oldest date anywhere in Samsung's record log, computed. It is the same day for every
+     distance, which is the tell that the log was started or reset rather than being a full history,
+     and it is the caveat the whole section needs. */
+  const logStart = withHistory
+    .flatMap((s) => s.history.map((h) => h.achievedOn))
+    .sort()[0];
+  const firstRecord = records[0];
+  const latestRecord = records[records.length - 1];
+  const logStartsAfterFirstRecord = logStart != null && firstRecord != null
+    && firstRecord.date < logStart;
+
   return (
     <div className="exgroup">
       <div className="exgroup-label">
@@ -182,6 +199,20 @@ function Progression({ standings }: { standings: DistanceStanding[] }) {
         /swim shows the best at each distance. This is every attempt the watch kept, oldest at the
         bottom, so an improvement is a shape rather than a single number.
       </p>
+      {logStart != null && logStartsAfterFirstRecord && (
+        /* THE CAVEAT THAT OUTRANKS THE TABLES BELOW, so it goes above them.
+           Samsung's record log does not reach back as far as his swimming does, and the proof is
+           the derived table further down: it holds swims that predate the log and beat what the log
+           calls a record. Stated here because a reader who takes these tables as a full history
+           will believe he first swam 100 m in 2023. */
+        <p className="ex-cue">
+          <b>These start where Samsung&rsquo;s record log starts, not where your swimming does.</b>{' '}
+          Its earliest entry at any distance is {when(logStart)}, and the mirror holds swims from{' '}
+          {when(firstRecord!.date)}. Anything faster before that date is not in the log, so treat
+          the bottom row of each table as the first time the WATCH noticed, not the first time you
+          did it.
+        </p>
+      )}
       {withHistory.map((s) => {
         const oldest = s.history[s.history.length - 1]!;
         const best = s.best!;
@@ -230,6 +261,53 @@ function Progression({ standings }: { standings: DistanceStanding[] }) {
           </details>
         );
       })}
+
+      {/* THE FURTHEST YOU HAVE EVER SWUM, and the reason it is computed rather than read.
+          Samsung keeps this as `best_records` type 3 and the plan asked whether to import it. The
+          answer turned out to be no: its log says 900 m on 2023-09-12 while the sessions hold
+          4,500 m on 2023-05-27. Importing it would have understated the record it was meant to
+          supply. A running maximum over the sessions is more complete and costs one query. */}
+      {records.length > 1 && firstRecord && latestRecord && (
+        <details className="exgroup ladder-all">
+          <summary className="exgroup-label">
+            The furthest you had ever swum{' '}
+            {/* NON-BREAKING, like the distance labels above: "(9 times, 5,000" wrapped and left
+                "m)" alone on the next line. */}
+            <span className="tag">
+              ({records.length} times, {latestRecord.metres.toLocaleString('en-CA')}&nbsp;m)
+            </span>
+          </summary>
+          <p className="lede">
+            Every swim that beat the longest one before it, newest first. Derived from the sessions
+            rather than read out of Samsung&rsquo;s own record log, which starts too late to know
+            about most of these.
+          </p>
+          <div className="table-scroll">
+            <table className="plan-table">
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th className="tnum">Distance</th>
+                  <th className="tnum">Beat</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...records].reverse().map((r) => (
+                  <tr key={r.date + r.metres}>
+                    <td>{when(r.date)}</td>
+                    <td className="tnum">{r.metres.toLocaleString('en-CA')}&nbsp;m</td>
+                    <td className="tnum">
+                      {r.previousMetres > 0
+                        ? `${r.previousMetres.toLocaleString('en-CA')} m`
+                        : 'first recorded'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
     </div>
   );
 }
@@ -673,7 +751,7 @@ export default async function SwimDeepPage() {
       </p>
 
       <Swolf points={d.swolf} agreement={d.swolfAgreement} />
-      <Progression standings={standings} />
+      <Progression standings={standings} records={d.distanceRecords} />
       <WeightAgainstPace d={d} />
       <AfterLifting cohorts={d.proximity} />
       <WorkToRest d={d} />

@@ -13,21 +13,23 @@ everything".
 | D3 all 19,327 lengths | **DONE** | `health_swim_length`, and `/swim/deep` reads it as of 2026-08-27 |
 | C1 one streak | **DONE** | `cycle.ts` mentions streak only in comments |
 | C2 swim was three pools | **DONE** | Schedule deleted, PBs and history both on /swim |
-| C3 contested 100 m PB | **OPEN** | `HealthOS\official-pbs.js` still present AND still wired as `npm run pbs`. Wrong about types 15 and 16 |
+| C3 contested 100 m PB | **DONE 2026-08-27** | Confirmed wrong about 15 and 16, and wrong about being authoritative. Corrected in place, not deleted: `HealthOS\official-pbs.js` now names the importer as the authority |
 | C3b two pace metrics in one column | **DONE** | Two columns, moving pace never a fallback |
-| C4 the 5,000 m | **PART** | Visible on /swim as longest session distance. `SWIM_PB_TYPES` still `{13,14,15,16}`: type 3 not imported. **This document contradicts itself on C4**, saying both "was not a defect" and "add type 3" |
-| C5 two dead `gym_set` columns | **PART** | Client stopped sending `rir`; `rir` and `estimated` are still in `content\gym\schema.sql` and still cannot be filled |
+| C4 the 5,000 m | **DONE 2026-08-27, and the answer is DO NOT import type 3** | Samsung's type 3 log says his longest swim is 900 m on 2023-09-12; the sessions hold 4,500 m on 2023-05-27. Importing it would understate the record. Derived instead as a running maximum and drawn on `/swim/deep`: 9 events, 1,025 m in 2018 to 5,000 m in 2025 |
+| C5 dead `gym_set` columns | **NARROWED to ONE, 2026-08-27** | `rir` is 0 of 569 rows, ever: genuinely dead, his call to drop it or build the input. **`estimated` is NOT dead and must not be dropped**: 54 rows are `true`, and `src\lib\gym\db.ts:97` filters `coalesce(estimated, false) = false` so progression only walks back to measured sets |
 | C6 body comp on a schedule | **DONE** | Step 2b of the 07:15 task |
 | Phase A kill the schedule | **DONE** | |
-| Phase B correctness | **PART** | C1, C6 done. C3, C4 open |
+| Phase B correctness | **DONE 2026-08-27** | C1, C3, C4, C6 done. C5 narrowed to one column awaiting his call |
 | Phase B2 two new mirrors | **DONE** | |
 | Phase C the shell | **DONE** | Live |
 | Phase D depth | **DONE, 5 of 5** | Item 2 shipped 2026-08-27 as `/swim/deep`, a route rather than a sixth sub-tab |
 | Phase E verify | **DONE** for what shipped | Live routes, live redirects, live write gates, heights at 390 px |
 
-**Phase D is closed.** Item 2 shipped on 2026-08-27 as `/swim/deep`. What is left on this plan is
-C3, C4 and C5, all three of which need a decision from him rather than a fix, and all three are
-described at the bottom of this file.
+**Phase D is closed, and so is Phase B.** Item 2 shipped on 2026-08-27 as `/swim/deep`. C3 and C4
+were then settled by query and acted on, and C5 turned out to be one dead column rather than two.
+
+**The only thing left on this plan needing him is one line: drop `gym_set.rir` or build the input
+for it.** Everything else is done.
 
 **Two defects were found by building it, both now fixed and neither on the plan.** The swim table's
 `date` column is UTC, so 94 of 475 swims were filed a day late and /swim printed two different dates

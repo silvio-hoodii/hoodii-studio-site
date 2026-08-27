@@ -140,6 +140,25 @@ export interface YearProfile {
   bestPaceSeconds: number | null;
 }
 
+/** The day the furthest-ever swim got further. A running maximum, DERIVED, and the derivation is
+ *  the point.
+ *
+ *  Samsung keeps its own longest-distance record as `best_records` type 3, and `HealthOS/official-pbs.js`
+ *  used to call that log "authoritative in a way our own reconstruction can never be". It is not.
+ *  The log says his longest swim is 900 m on 2023-09-12; `health_swim_session` holds 4,500 m on
+ *  2023-05-27, 4,000 m on 2023-03-22 and 2,300 m in March 2022. Every series in that log begins on
+ *  2023-09-12, so it was started or reset that day and knows nothing before it.
+ *
+ *  This is why C4 on the training-redesign plan resolves the opposite way to how it was written:
+ *  importing type 3 would not add the record, it would understate it. Nine events from 1,025 m in
+ *  January 2018 to 5,000 m in July 2025, out of data already in the mirror. */
+export interface DistanceRecord {
+  date: string;
+  metres: number;
+  /** What the record was before this swim, so the size of the jump is visible. */
+  previousMetres: number;
+}
+
 export interface ProximityCohort {
   label: string;
   swims: number;
@@ -201,6 +220,7 @@ export interface DeepSwim {
   gaps: SeasonGap[];
   lastPieces: PieceSession | null;
   years: YearProfile[];
+  distanceRecords: DistanceRecord[];
 }
 
 const num = (v: unknown): number => Number(v);
@@ -335,6 +355,48 @@ async function weightAgainstPace(): Promise<WeightPacePoint[]> {
     kg: Math.round(num(r.kg) * 10) / 10,
     daysOff: num(r.gap),
     distanceM: Math.round(num(r.distance_m)),
+  }));
+}
+
+/** Every swim that set a new furthest-ever distance. See DistanceRecord for why this is derived
+ *  rather than read out of Samsung's own record log.
+ *
+ *  Ordered by the derived local date, and ties broken by distance so that two swims on one day
+ *  cannot both count as a record. `rows between unbounded preceding and 1 preceding` is what makes
+ *  the window the PREVIOUS maximum rather than one including the row being tested, which would
+ *  compare every swim against itself and return nothing. */
+async function distanceRecords(): Promise<DistanceRecord[]> {
+  const rows = await sql`
+    with s as (
+      select s.distance_m,
+        coalesce(
+          ((l.st::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
+          ((d.start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
+          s.date::date) as local_date
+      from health_swim_session s
+      left join (
+        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
+      ) l on l.session_uuid = s.uuid
+      left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
+      where s.distance_m > 0
+    ),
+    r as (
+      select local_date, distance_m,
+        max(distance_m) over (
+          order by local_date, distance_m
+          rows between unbounded preceding and 1 preceding
+        ) as prev_max
+      from s
+    )
+    select local_date::text as d, distance_m, coalesce(prev_max, 0) as prev
+    from r
+    where prev_max is null or distance_m > prev_max
+    order by local_date asc
+  `;
+  return (rows as unknown as Record<string, unknown>[]).map((r) => ({
+    date: String(r.d),
+    metres: Math.round(num(r.distance_m)),
+    previousMetres: Math.round(num(r.prev)),
   }));
 }
 
@@ -606,7 +668,7 @@ async function coverage(): Promise<LengthCoverage> {
 
 /** One call, one round of queries, for the whole deep-dive page. */
 export async function getDeepSwim(): Promise<DeepSwim> {
-  const [cov, sw, agree, rest, weightPace, proximity, strokes, gaps, pieces, years] =
+  const [cov, sw, agree, rest, weightPace, proximity, strokes, gaps, pieces, years, records] =
     await Promise.all([
       coverage(),
       swolfHistory(),
@@ -618,6 +680,7 @@ export async function getDeepSwim(): Promise<DeepSwim> {
       seasonGaps(),
       lastPieces(),
       yearProfile(),
+      distanceRecords(),
     ]);
   return {
     coverage: cov,
@@ -631,6 +694,7 @@ export async function getDeepSwim(): Promise<DeepSwim> {
     gaps,
     lastPieces: pieces,
     years,
+    distanceRecords: records,
   };
 }
 
