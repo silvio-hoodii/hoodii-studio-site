@@ -1,7 +1,7 @@
-/* Health surface, same idiom as .gym / .kos: monochrome, mono labels, rules instead of cards,
+/* Health surface, same idiom as .training / .kos: monochrome, mono labels, rules instead of cards,
  * --signal reserved for a value that is true right now. Charts follow that same rule: the
  * historical line is ink (foreground), the latest/current point is --signal: the chart-level
- * application of the same convention .gym .live already uses for a live number. */
+ * application of the same convention .training .live already uses for a live number. */
 
 .health {
   --pad: 20px;
@@ -69,66 +69,10 @@
 /* .empty is declared once in globals.css. This surface's version is where the shared one came
    from: a left rule reads as a note about the state of a thing rather than as its content. */
 
-/* ---- charts ---- */
-/* min-height reserves the drawn height before the chart has measured itself. The server renders a
-   600-unit box scaled into whatever width it lands in, which is shorter than 160 on a phone; the
-   reservation is what keeps everything below from jumping when the measured version replaces it.
-   See the header comment in HealthCharts.tsx. */
-.health .chart-wrap { position: relative; width: 100%; min-height: 160px; }
-.health .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
-
-.health .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.health .chart-axis { stroke: var(--border); stroke-width: 1; }
-.health .chart-axis-label {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  fill: var(--muted-foreground);
-}
-.health .chart-endpoint { fill: var(--signal); stroke: var(--background); stroke-width: 2; }
-.health .chart-endpoint-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  fill: var(--signal);
-  /* The last point of a time series is always at the right edge, so this label is always the one
-     that flips to end-anchored and lands back on top of the line it is labelling. A halo the colour
-     of the page, painted under the glyphs, is one rule; the alternative is guessing at an offset
-     that clears a line whose slope changes with the data. */
-  paint-order: stroke;
-  stroke: var(--background);
-  stroke-width: 3px;
-  stroke-linejoin: round;
-}
-.health .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
-.health .chart-crosshair.on { opacity: 0.6; }
-.health .chart-hit { fill: transparent; cursor: crosshair; }
-
-.health .chart-bar { fill: var(--muted-foreground); }
-.health .chart-bar:hover, .health .chart-bar.hot { fill: var(--foreground); }
-
-.health .tooltip {
-  position: absolute;
-  pointer-events: none;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 7px 10px;
-  font-size: 12.5px;
-  white-space: nowrap;
-  transform: translate(-50%, -100%);
-  margin-top: -10px;
-  opacity: 0;
-  transition: opacity 80ms ease;
-  z-index: 5;
-}
-.health .tooltip.on { opacity: 1; }
-.health .tooltip .t-date {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted-foreground);
-  margin-bottom: 2px;
-}
-.health .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+/* ---- charts ----
+   The chart rules moved to src/app/charts.css on 2026-08-26, shared with /swim, which took over
+   the swim history when swim became its own route. This surface imports that file in its layout.
+   The pair-of-charts rules below stayed: only /health puts two charts side by side. */
 
 /* ---- a pair of charts ----
  *

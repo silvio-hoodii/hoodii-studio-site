@@ -120,7 +120,7 @@ try {
   }
 
   const rows = [...byKey.values()];
-  // Refuses to write on zero, the way content/swim/sync.mjs and content/reading/sync.mjs do.
+  // Refuses to write on zero, the way content/reading/sync.mjs does. (content/swim/sync.mjs did too, until the pool schedule it mirrored was deleted on 2026-08-26.)
   if (!rows.length) throw new Error('0 catalog rows resolved (masters unreadable or all excluded), refusing to write');
 
   if (!sources.length) throw new Error('0 source lists resolved, refusing to write');

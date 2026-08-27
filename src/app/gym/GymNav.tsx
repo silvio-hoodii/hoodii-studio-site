@@ -12,7 +12,7 @@ import { usePathname } from 'next/navigation';
  *
  * He is right twice. The specific fix is this: the two surfaces are a visible choice at the top of
  * both of them, in the tab idiom already used for the days, so "there is a second page" is
- * something you SEE rather than something you have to be told. The systemic fix is in gym.css,
+ * something you SEE rather than something you have to be told. The systemic fix is in training.css,
  * where inline links inside prose now carry an underline, because a link that looks exactly like
  * the text around it is not a link on a phone.
  *
@@ -31,7 +31,7 @@ export default function GymNav() {
     { href: '/gym/conditioning', label: 'The week' },
   ];
 
-  /* `surf-tab`, NOT `tab`. These look like the day tabs and share their rules in gym.css, but they
+  /* `surf-tab`, NOT `tab`. These look like the day tabs and share their rules in training.css, but they
    * must not ANSWER to `.tab`: probe-gym.js selects `.tab` to test day switching, and the first
    * version of this component made that selector ambiguous. The harness clicked "Conditioning",
    * navigated off /gym, and 17 tests failed with "no set row" and "no note box".

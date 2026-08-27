@@ -1,6 +1,6 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
-import type { AdherenceDay, BodyCompPoint, BodyCompSummary, SwimSummary, TrendDelta } from './types';
+import type { AdherenceDay, BodyCompPoint, BodyCompSummary, TrendDelta } from './types';
 import { today, daysAgo } from '../day';
 
 // Same underlying Neon database as Kitchen/Gym (health_ prefix keeps the tables apart), see
@@ -123,47 +123,12 @@ export async function getSyncLiveness(): Promise<SyncLiveness> {
   };
 }
 
-/** Session-level swim history for the last N days, plus all-time PRs. */
-export async function getSwimSummary(days = 90): Promise<SwimSummary> {
-  const cutoff = isoDaysAgo(days);
-  const [sessionRows, prRows] = await Promise.all([
-    sql`
-      select date, distance_m, pace_per_100m_ms from health_swim_session
-      where date >= ${cutoff}
-      order by date asc
-    `,
-    /* TWO MINIMA, over two columns that mean two different things. See the note in
-       content/health/schema.sql. Taking one minimum over the old mixed column is what put a 1:31
-       "best pace" on this page, faster than his official 100 m personal best, off a 300 m session
-       that was 82% rest. */
-    sql`
-      select
-        max(distance_m) filter (where distance_m > 0) as longest,
-        min(pace_per_100m_ms) filter (where pace_per_100m_ms > 0) as best_wall_pace,
-        min(moving_pace_per_100m_ms) filter (where moving_pace_per_100m_ms > 0) as best_moving_pace,
-        count(*) filter (where moving_pace_per_100m_ms > 0) as moving_sessions,
-        count(*) as total
-      from health_swim_session
-    `,
-  ]);
-  const pr = prRows[0] as {
-    longest: number | null;
-    best_wall_pace: number | null;
-    best_moving_pace: number | null;
-    moving_sessions: string;
-    total: string;
-  };
-  return {
-    sessions: (sessionRows as unknown as { date: string; distance_m: number | null; pace_per_100m_ms: number | null }[]).map(
-      (r) => ({ date: r.date, distanceM: r.distance_m, pacePer100mMs: r.pace_per_100m_ms }),
-    ),
-    longestDistanceM: pr.longest,
-    bestWallPacePer100mMs: pr.best_wall_pace,
-    bestMovingPacePer100mMs: pr.best_moving_pace,
-    movingPaceSessions: Number(pr.moving_sessions),
-    totalSessions: Number(pr.total),
-  };
-}
+/* getSwimSummary LEFT THIS FILE on 2026-08-26 and is getSwimHistory in src/lib/swim/db.ts. Swim
+ * became its own route and /health no longer renders any swim number: it links there instead. Same
+ * tables, same two-pace split, same reasoning about why a single minimum over a mixed column read
+ * faster than his own personal best. It reads health_swim_session across a database boundary that
+ * does not exist: this is one Neon database and the table prefixes are what keep the surfaces
+ * apart, so the read moved to the page that needs it rather than the table moving anywhere. */
 
 /** Per-day lifting attendance for the last N days: watch-detected ("trained") vs logged in the gym
  *  app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than

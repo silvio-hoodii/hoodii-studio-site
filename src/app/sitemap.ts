@@ -16,12 +16,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
     { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
 
-    /* Two apps that used to be someone else's subdomain, moved here 2026-08-16. /swim changes every
-     * morning; the finish packs change when a book gets finished. The individual /reading/[slug]
-     * pages are deliberately NOT listed: they are linked from /reading, which is enough for a
-     * crawler, and a sitemap that has to be hand-extended every time a book is added is the same
-     * hand-maintained list this whole migration exists to get rid of. */
-    { url: 'https://hoodii.studio/swim', changeFrequency: 'daily', priority: 0.6 },
+    /* Two apps that used to be someone else's subdomain, moved here 2026-08-16. The individual
+     * /reading/[slug] pages are deliberately NOT listed: they are linked from /reading, which is
+     * enough for a crawler, and a sitemap that has to be hand-extended every time a book is added
+     * is the same hand-maintained list this whole migration exists to get rid of.
+     *
+     * /swim was `daily` until 2026-08-26, which was true of a timetable scraped every morning and
+     * is not true of a training log. The schedule was deleted that day and the page became his own
+     * swimming: a tier ladder, a ten-week plan and two coaching handbooks, all of which change when
+     * he changes them. `weekly` is the honest answer now. */
+    { url: 'https://hoodii.studio/swim', changeFrequency: 'weekly', priority: 0.6 },
     { url: 'https://hoodii.studio/reading', changeFrequency: 'monthly', priority: 0.6 },
 
     /* The four project pages, published 2026-08-16. `monthly` rather than `weekly`: they describe

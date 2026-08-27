@@ -1,7 +1,7 @@
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { sql } from '../health/db';
+import { sql } from './db';
 
 /* WHAT LEVEL AM I, for a 35-year-old man in a 25 m pool.
  *
@@ -67,7 +67,7 @@ export interface DistanceStanding {
   pacePer100Ms: number | null;
 }
 
-const CONTENT = join(process.cwd(), 'content', 'gym');
+const CONTENT = join(process.cwd(), 'content', 'swim');
 
 /** "1:44:29", "1:38.71" or "47.70" to milliseconds.
  *
@@ -102,7 +102,7 @@ export function fmtTime(ms: number): string {
 }
 
 export async function loadSwimStandards(): Promise<SwimStandards> {
-  const raw = JSON.parse(await readFile(join(CONTENT, 'swim-standards.json'), 'utf8')) as SwimStandards & {
+  const raw = JSON.parse(await readFile(join(CONTENT, 'standards.json'), 'utf8')) as SwimStandards & {
     $comment?: unknown;
   };
   const { $comment, ...rest } = raw;

@@ -65,8 +65,13 @@ export function proxy(req: NextRequest) {
   /* /reading/api joined this on 2026-08-21 with the want list. Every /reading PAGE stays public,
    * the same as the rest of the site; only the write is gated. An unauthenticated POST that adds
    * books to a want list is not a want list, it is a guestbook. */
+  /* /swim/api joined on 2026-08-26, when the swim tracker left /gym for its own route and took
+   * the calibration-baseline write with it. TWO edits were needed, not one: this prefix, and
+   * '/swim/api/:path*' in the `config.matcher` at the bottom of this file. The matcher named no
+   * /swim path at all, so adding the prefix on its own would have read as a gate and been none. */
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
-      || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')) {
+      || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')
+      || pathname.startsWith('/swim/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
     return NextResponse.json(
       { ok: false, error: 'locked', hint: 'Sign in once and this device stays signed in.' },
@@ -88,4 +93,14 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/kitchen/:path*', '/gym/:path*', '/health/:path*', '/french/:path*', '/reading/api/:path*'] };
+export const config = {
+  matcher: [
+    '/kitchen/:path*',
+    '/gym/:path*',
+    '/health/:path*',
+    '/french/:path*',
+    '/reading/api/:path*',
+    /* Only the API, not the pages: /swim is public like every other page on this site. */
+    '/swim/api/:path*',
+  ],
+};

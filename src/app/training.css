@@ -1,22 +1,22 @@
-/* Gym surface, on the shared token system: same idiom as .kos (kitchen.css): monochrome, mono
+/* Training surface (gym and swim), on the shared token system: same idiom as .kos (kitchen.css): monochrome, mono
  * labels, rules instead of cards, --signal reserved for a value that is true right now. */
 
-.gym {
+.training {
   --pad: 20px;
   font-family: var(--font-sans);
   color: var(--foreground);
   background: var(--background);
   min-height: 100dvh;
 }
-.gym * { box-sizing: border-box; }
+.training * { box-sizing: border-box; }
 
-.gym .wrap {
+.training .wrap {
   max-width: var(--measure);
   margin: 0 auto;
   padding: clamp(28px, 7vw, 52px) var(--pad) 140px;
 }
 
-.gym .eyebrow {
+.training .eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
@@ -26,21 +26,21 @@
   display: block;
   text-decoration: none;
 }
-.gym a.eyebrow:hover { color: var(--foreground); }
+.training a.eyebrow:hover { color: var(--foreground); }
 
 /* h1 comes from globals.css: one scale for the whole site. */
-.gym h2 { font-size: 17px; line-height: 1.3; font-weight: 600; margin: 0; }
+.training h2 { font-size: 17px; line-height: 1.3; font-weight: 600; margin: 0; }
 /* .lede, .count, .quiet, .live and .tnum are declared once in globals.css. */
 
-.gym .divider { margin: 22px 0 0; }
+.training .divider { margin: 22px 0 0; }
 
 /* ---- day tabs ---- */
-.gym .tabs { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
+.training .tabs { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
 /* 44px, the site's tap floor. These were 35: four day tabs, at the top of the page he opens with
    one hand between sets, under the floor every other control on the site keeps. Found the same way
    the chips were, by measuring rather than looking, because 35px and 44px look identical. */
-.gym .tab,
-.gym .surf-tab {
+.training .tab,
+.training .surf-tab {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -56,15 +56,15 @@
   color: var(--muted-foreground);
   cursor: pointer;
 }
-.gym .tab.on,
-.gym .surf-tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+.training .tab.on,
+.training .surf-tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
 
 /* ---- budget selector ---- */
-.gym .budgets { display: flex; gap: 6px; margin-top: 14px; }
+.training .budgets { display: flex; gap: 6px; margin-top: 14px; }
 /* These are `.chip` now, declared once in globals.css and shared with the kitchen's filters. */
 
 /* ---- progress ---- */
-.gym .progress-row {
+.training .progress-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -80,12 +80,12 @@
    one was a 1px hairline. The hierarchy was upside down, which is what "four exercises at the same
    level and they were sort of inside one" describes. A block now opens with the same full-ink rule
    the rest of the site opens a section with; the hairline stays for the rows underneath it. */
-.gym .exgroup {
+.training .exgroup {
   margin-top: 30px;
   border-top: 1px solid var(--foreground);
   padding-top: 13px;
 }
-.gym .exgroup-label {
+.training .exgroup-label {
   font-family: var(--font-mono);
   /* 12px / 0.13em is the site's label, agreed by twelve other rules. This was the last surface
      still setting its own. */
@@ -96,11 +96,11 @@
   color: var(--muted-foreground);
   margin-bottom: 10px;
 }
-.gym .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+.training .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
 /* "optional" on every accessory block. Boxed rather than just dimmer, because the point is that it
    is a STATE of the block and not an aside: the main lifts are the session and these are not. Kept
    monochrome. --signal is reserved for a value that is true right now, and "optional" is neither. */
-.gym .exgroup-label .tag.opt {
+.training .exgroup-label .tag.opt {
   border: 1px solid var(--border);
   border-radius: 2px;
   padding: 1px 5px;
@@ -113,7 +113,7 @@
 }
 /* Where he is, and how much is left, on a page that is six screens long. Full ink, because it is
    the one part of the label that is a value rather than a name. */
-.gym .exgroup-n {
+.training .exgroup-n {
   color: var(--foreground);
   margin-right: 9px;
   letter-spacing: 0.06em;
@@ -122,7 +122,7 @@
 /* How to run the block. The label alone said WHERE ("rack area") and never HOW, so a superset and
  * two straight exercises rendered identically. Sentence case on purpose: it is an instruction to
  * follow mid-set, not another mono heading to skim past. */
-.gym .exgroup-how {
+.training .exgroup-how {
   font-size: 13px;
   line-height: 1.45;
   color: var(--muted-foreground);
@@ -133,42 +133,42 @@
  * Cheaper and quieter than a card, and it survives the monochrome palette. */
 /* The bracket holds the two exercises that share a rest window, and not the label above them:
    wrapping the whole block made the label look like a parent of a nested thing. */
-.gym .exgroup.tied .exlist { border-left: 2px solid var(--border); padding-left: 13px; }
+.training .exgroup.tied .exlist { border-left: 2px solid var(--border); padding-left: 13px; }
 
-.gym .ex { padding: 16px 0; border-top: 1px solid var(--border); }
-.gym .ex:first-child { border-top: 0; }
-.gym .ex-name { font-size: 16.5px; font-weight: 600; margin: 0 0 3px; }
-.gym .ex-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin-bottom: 8px; }
-.gym .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
-.gym .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
+.training .ex { padding: 16px 0; border-top: 1px solid var(--border); }
+.training .ex:first-child { border-top: 0; }
+.training .ex-name { font-size: 16.5px; font-weight: 600; margin: 0 0 3px; }
+.training .ex-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin-bottom: 8px; }
+.training .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
+.training .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
 
 /* The suggestion is the most useful thing on this screen and deserves the emphasis, but a green
    rule on nine blocks at once is structural decoration: after the third one the colour has stopped
    meaning "true right now" and started meaning "block". Full-strength ink is the same emphasis
    without spending the signal, which is what kitchen.css does for its heat blocks. */
-.gym .ex-suggest {
+.training .ex-suggest {
   border-left: 2px solid var(--foreground);
   padding-left: 11px;
   margin: 10px 0;
   font-size: 14.5px;
 }
-.gym .ex-suggest-why { display: block; color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
+.training .ex-suggest-why { display: block; color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
 
 /* Eight sessions of the top set. No text inside the SVG on purpose: a viewBox scales its own type,
    which is how /health ended up drawing 6px axis labels on a phone. The numbers are HTML. */
-.gym .trend { display: flex; align-items: center; gap: 9px; margin-top: 7px; }
-.gym .trend svg { display: block; overflow: visible; }
-.gym .trend path { fill: none; stroke: var(--foreground); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
-.gym .trend circle { fill: var(--signal); }
-.gym .trend-n { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted-foreground); }
+.training .trend { display: flex; align-items: center; gap: 9px; margin-top: 7px; }
+.training .trend svg { display: block; overflow: visible; }
+.training .trend path { fill: none; stroke: var(--foreground); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.training .trend circle { fill: var(--signal); }
+.training .trend-n { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted-foreground); }
 
 /* ---- set rows ---- */
-.gym .sets { margin-top: 10px; }
+.training .sets { margin-top: 10px; }
 /* 2.75rem for the done column, not 2.4: the circle is the most-tapped control in the app and it
    measured 38px, under the floor, while he is mid-set holding a phone in one hand. */
-.gym .set-row { display: grid; grid-template-columns: 1.5rem 1fr 1fr 2.75rem; gap: 8px; align-items: center; padding: 6px 0; }
-.gym .set-row .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); }
-.gym .set-row input[type='number'], .gym .set-row input[type='text'] {
+.training .set-row { display: grid; grid-template-columns: 1.5rem 1fr 1fr 2.75rem; gap: 8px; align-items: center; padding: 6px 0; }
+.training .set-row .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); }
+.training .set-row input[type='number'], .training .set-row input[type='text'] {
   width: 100%;
   font-family: var(--font-mono);
   /* 16px. Below it, iOS zooms the whole page when the field takes focus, which mid-set means
@@ -181,8 +181,8 @@
   background: var(--background);
   color: var(--foreground);
 }
-.gym .set-row input:focus { outline: none; border-color: var(--foreground); }
-.gym .set-row .done-toggle {
+.training .set-row input:focus { outline: none; border-color: var(--foreground); }
+.training .set-row .done-toggle {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
@@ -190,13 +190,13 @@
   background: var(--background);
   cursor: pointer;
 }
-.gym .set-row .done-toggle.on { background: var(--signal); border-color: var(--signal); }
+.training .set-row .done-toggle.on { background: var(--signal); border-color: var(--signal); }
 
 /* ---- swap picker ---- */
 /* Both of these are underlined text links rather than buttons on purpose, so they do not compete
    with the set rows. They still have to be tappable: measured at 30px, under the floor. */
-.gym .swap-toggle,
-.gym .swap-revert {
+.training .swap-toggle,
+.training .swap-revert {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -210,8 +210,8 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.gym .swap-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-.gym .swap-opt {
+.training .swap-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.training .swap-opt {
   text-align: left;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
@@ -219,13 +219,13 @@
   background: var(--background);
   cursor: pointer;
 }
-.gym .swap-opt:hover { border-color: var(--foreground); }
-.gym .swap-opt-name { font-weight: 600; font-size: 14.5px; }
-.gym .swap-opt-cue { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
-.gym .swapped-note { font-family: var(--font-mono); font-size: 12px; color: var(--signal); margin-top: 4px; }
+.training .swap-opt:hover { border-color: var(--foreground); }
+.training .swap-opt-name { font-weight: 600; font-size: 14.5px; }
+.training .swap-opt-cue { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
+.training .swapped-note { font-family: var(--font-mono); font-size: 12px; color: var(--signal); margin-top: 4px; }
 
 /* ---- rest timer bar. Sticky rather than fixed-overlay, same reasoning as .kos .rail. ---- */
-.gym .timer-bar {
+.training .timer-bar {
   position: sticky;
   bottom: 0;
   z-index: 20;
@@ -238,14 +238,14 @@
   max-width: var(--measure);
   margin: 0 auto;
 }
-.gym .timer-bar.off { display: none; }
-.gym .timer-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
-.gym .timer-time { font-family: var(--font-mono); font-size: 30px; font-variant-numeric: tabular-nums; }
-.gym .timer-time.go { color: var(--signal); }
+.training .timer-bar.off { display: none; }
+.training .timer-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-foreground); }
+.training .timer-time { font-family: var(--font-mono); font-size: 30px; font-variant-numeric: tabular-nums; }
+.training .timer-time.go { color: var(--signal); }
 
 /* ---- warmup / cooldown / RIR ---- */
-.gym details.fold { border-top: 1px solid var(--border); padding: 12px 0; }
-.gym details.fold summary {
+.training details.fold { border-top: 1px solid var(--border); padding: 12px 0; }
+.training details.fold summary {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
@@ -254,13 +254,13 @@
   color: var(--muted-foreground);
   cursor: pointer;
 }
-.gym .warm-item { padding: 10px 0; border-top: 1px solid var(--border); }
-.gym .warm-item:first-child { border-top: 0; }
-.gym .warm-item .name { font-weight: 600; font-size: 14.5px; }
-.gym .warm-item .cue { font-size: 13.5px; color: var(--muted-foreground); margin-top: 2px; }
+.training .warm-item { padding: 10px 0; border-top: 1px solid var(--border); }
+.training .warm-item:first-child { border-top: 0; }
+.training .warm-item .name { font-weight: 600; font-size: 14.5px; }
+.training .warm-item .cue { font-size: 13.5px; color: var(--muted-foreground); margin-top: 2px; }
 
 /* ---- controls ---- */
-.gym .nav {
+.training .nav {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   background: var(--background);
@@ -273,7 +273,7 @@
 }
 /* The button is declared once in globals.css. All that is left here is the one thing that is
    this surface's own: the primary action sits in a fixed bottom bar and shares its width. */
-.gym button.primary, .gym .btn.primary { flex: 1; }
+.training button.primary, .training .btn.primary { flex: 1; }
 
 
 /* .not-here was declared here and in health.css, character for character, and used by neither.
@@ -291,11 +291,11 @@
  * thumb, and darkening every one of them would turn a quiet page into a grid.
  */
 
-.gym a:focus-visible,
-.gym button:focus-visible,
-.gym input:focus-visible,
-.gym select:focus-visible,
-.gym summary:focus-visible {
+.training a:focus-visible,
+.training button:focus-visible,
+.training input:focus-visible,
+.training select:focus-visible,
+.training summary:focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
@@ -309,14 +309,14 @@
  * Tables scroll INSIDE their own container. The run and swim ladders are the only wide things on
  * this site, and a page body that scrolls sideways on a phone is worse than a table that does. */
 
-.gym .table-scroll { overflow-x: auto; margin: 14px 0 4px; }
+.training .table-scroll { overflow-x: auto; margin: 14px 0 4px; }
 
-.gym .plan-table {
+.training .plan-table {
   border-collapse: collapse;
   width: 100%;
   font-size: 13.5px;
 }
-.gym .plan-table th {
+.training .plan-table th {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
@@ -328,19 +328,19 @@
   border-bottom: 1px solid var(--foreground);
   white-space: nowrap;
 }
-.gym .plan-table td {
+.training .plan-table td {
   padding: 10px 12px 10px 0;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
 }
 /* The numeric columns never wrap: "1.45 km" breaking across two lines in a 3-column table on a
    390px phone reads as two separate values. The wide middle column absorbs the wrapping instead. */
-.gym .plan-table td:last-child, .gym .plan-table th:last-child { padding-right: 0; }
-.gym .plan-table td.tnum, .gym .plan-table th.tnum { white-space: nowrap; }
-.gym .plan-table .quiet { font-size: 12.5px; margin-top: 3px; }
+.training .plan-table td:last-child, .training .plan-table th:last-child { padding-right: 0; }
+.training .plan-table td.tnum, .training .plan-table th.tnum { white-space: nowrap; }
+.training .plan-table .quiet { font-size: 12.5px; margin-top: 3px; }
 
-.gym ul.rules { margin: 12px 0 0; padding-left: 18px; }
-.gym ul.rules li {
+.training ul.rules { margin: 12px 0 0; padding-left: 18px; }
+.training ul.rules li {
   font-size: 13.5px;
   line-height: 1.55;
   color: var(--muted-foreground);
@@ -349,11 +349,11 @@
 
 /* The ladder's middle column carries both the piece ("600 m · 400 m") and a note under it. The
    piece must not break mid-distance; the note is free to wrap. */
-.gym .plan-table .wide { width: 55%; }
-.gym .plan-table .nowrap { white-space: nowrap; }
+.training .plan-table .wide { width: 55%; }
+.training .plan-table .nowrap { white-space: nowrap; }
 
 /* ---- note from the floor ---- */
-.gym .note-box {
+.training .note-box {
   width: 100%;
   font-family: var(--font-sans);
   /* 16px, same non-negotiable as the set inputs: below it iOS zooms the page on focus, and here
@@ -367,24 +367,24 @@
   color: var(--foreground);
   resize: vertical;
 }
-.gym .note-box:focus { outline: none; border-color: var(--foreground); }
-.gym .note-actions { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-.gym .note-actions .btn { min-height: 44px; }
-.gym .note-actions .btn:disabled { opacity: 0.45; cursor: default; }
+.training .note-box:focus { outline: none; border-color: var(--foreground); }
+.training .note-actions { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.training .note-actions .btn { min-height: 44px; }
+.training .note-actions .btn:disabled { opacity: 0.45; cursor: default; }
 
 /* ---- surface nav: the gym is two pages ----
  *
  * Reuses .tab so it reads as the same kind of control as the day tabs, but sits above the h1 so the
  * hierarchy is page -> title -> day rather than two identical rows meaning different things.
  * Constrained to --measure like everything else so it lines up with the column below it. */
-.gym .surface-nav {
+.training .surface-nav {
   max-width: var(--measure);
   margin: 0 auto;
   padding: 14px var(--pad) 0;
   display: flex;
   gap: 6px;
 }
-.gym .surface-nav .surf-tab { text-decoration: none; }
+.training .surface-nav .surf-tab { text-decoration: none; }
 
 /* ---- inline links inside prose ----
  *
@@ -395,21 +395,21 @@
  *
  * Scoped to prose, so it cannot touch .tab, .btn, .eyebrow or the site header, all of which are
  * links that already announce themselves by shape. */
-.gym .lede a,
-.gym .ex-cue a,
-.gym ul.rules a,
-.gym .plan-table a {
+.training .lede a,
+.training .ex-cue a,
+.training ul.rules a,
+.training .plan-table a {
   color: var(--foreground);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.gym .lede a:hover,
-.gym .ex-cue a:hover { text-decoration-thickness: 2px; }
+.training .lede a:hover,
+.training .ex-cue a:hover { text-decoration-thickness: 2px; }
 
 /* The second ending. Deliberately quieter than `.primary`: finishing is still the normal way out of
    a session and "ran out of time" must not read as the easy option. */
-.gym .ghost {
+.training .ghost {
   width: 100%;
   background: transparent;
   color: var(--muted-foreground);
@@ -420,21 +420,21 @@
   font-size: 15px;
   cursor: pointer;
 }
-.gym .ghost:hover { color: var(--foreground); border-color: var(--foreground); }
-.gym .ghost:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training .ghost:hover { color: var(--foreground); border-color: var(--foreground); }
+.training .ghost:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 
 /* An `.ex` that is a link, used on the conditioning overview to reach each plan. The row already
    looks like a thing; this only stops the browser making it blue and underlined, and gives it the
    focus state every other control here has. */
-.gym a.ex { display: block; text-decoration: none; color: inherit; }
-.gym a.ex:hover .ex-name { text-decoration: underline; }
-.gym a.ex:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training a.ex { display: block; text-decoration: none; color: inherit; }
+.training a.ex:hover .ex-name { text-decoration: underline; }
+.training a.ex:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 
 /* ---- technique cues ----
    The confidence badge is rendered rather than hidden. "convention" means nobody has studied it and
    saying so out loud is what makes the "evidence" rows worth anything. Monochrome by default; only
    `contested` gets a colour, because that is the one that should make him pause. */
-.gym .conf {
+.training .conf {
   font-family: var(--font-mono);
   font-size: 9.5px;
   font-weight: 600;
@@ -447,20 +447,20 @@
   margin-left: 6px;
   white-space: nowrap;
 }
-.gym .conf.evidence { color: var(--foreground); border-color: var(--foreground); }
-.gym .conf.contested { color: var(--destructive); border-color: var(--destructive); }
+.training .conf.evidence { color: var(--foreground); border-color: var(--foreground); }
+.training .conf.contested { color: var(--destructive); border-color: var(--destructive); }
 
 /* The test is the operative half of a cue, so it gets a rule down its side rather than being a
    third paragraph of grey. */
-.gym .cue-test {
+.training .cue-test {
   border-left: 2px solid var(--border-strong);
   padding-left: 10px;
   margin-top: 8px;
   color: var(--foreground);
 }
 
-.gym details.src { margin-top: 8px; }
-.gym details.src > summary {
+.training details.src { margin-top: 8px; }
+.training details.src > summary {
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -471,19 +471,19 @@
   display: flex;
   align-items: center;
 }
-.gym details.src > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-.gym .src-body {
+.training details.src > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training .src-body {
   font-size: 13px;
   line-height: 1.55;
   color: var(--muted-foreground);
   padding: 4px 0 6px;
 }
-.gym .src-body a { color: var(--foreground); }
+.training .src-body a { color: var(--foreground); }
 
 /* Collapsed cue rows. A rule between siblings, no cards, matching everything else here. */
-.gym .cuelist { border-top: 1px solid var(--border); }
-.gym details.cue { border-bottom: 1px solid var(--border); }
-.gym details.cue > summary {
+.training .cuelist { border-top: 1px solid var(--border); }
+.training details.cue { border-bottom: 1px solid var(--border); }
+.training details.cue > summary {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -493,10 +493,10 @@
   font-size: 16px;
   font-weight: 600;
 }
-.gym details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
-.gym details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-.gym .cue-name { flex: 1; min-width: 0; }
-.gym .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
+.training details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+.training details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.training .cue-name { flex: 1; min-width: 0; }
+.training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
 
 /* ---- the integrated week ----
  *
@@ -505,7 +505,7 @@
  * --signal reserved for a value that is true right now. Here that value is the consecutive-day
  * count, which is the one number on the page that changes daily and the one he is judging. */
 
-.gym .standing {
+.training .standing {
   display: flex;
   gap: 14px;
   align-items: flex-start;
@@ -516,24 +516,24 @@
 }
 /* Past the rule is the one state that gets colour, on the left edge only. A red block behind a
    number he sees every day would read as an alarm on a normal Tuesday. */
-.gym .standing.over {
+.training .standing.over {
   border-left: 3px solid var(--destructive);
   padding-left: 12px;
 }
-.gym .standing-n {
+.training .standing-n {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 54px;
 }
-.gym .standing-n .big {
+.training .standing-n .big {
   font-size: 34px;
   line-height: 1;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
-.gym .standing.over .standing-n .big { color: var(--destructive); }
-.gym .standing-unit {
+.training .standing.over .standing-n .big { color: var(--destructive); }
+.training .standing-unit {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -542,32 +542,32 @@
   margin-top: 4px;
   line-height: 1.25;
 }
-.gym .standing-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.gym .standing-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
+.training .standing-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.training .standing-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
 
 /* The planned week. Seven columns on a phone would be 40px each and unreadable, so it is a list of
    rows with the day as a fixed-width gutter: the same shape the actual-days list uses below, which
    is deliberate. Two different pictures of one week is how the old page became four surfaces. */
-.gym .planweek { border-top: 1px solid var(--border); }
-.gym .pw-day {
+.training .planweek { border-top: 1px solid var(--border); }
+.training .pw-day {
   display: flex;
   gap: 12px;
   align-items: baseline;
   border-bottom: 1px solid var(--border);
   padding: 9px 0;
 }
-.gym .pw-name {
+.training .pw-name {
   flex: 0 0 42px;
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--muted-foreground);
   text-transform: uppercase;
 }
-.gym .pw-day.off .pw-name { opacity: 0.5; }
-.gym .pw-work { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.gym .pw-lift { font-size: 15px; font-weight: 600; }
-.gym .pw-slot { font-size: 13.5px; color: var(--muted-foreground); }
-.gym .pw-rest {
+.training .pw-day.off .pw-name { opacity: 0.5; }
+.training .pw-work { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.training .pw-lift { font-size: 15px; font-weight: 600; }
+.training .pw-slot { font-size: 13.5px; color: var(--muted-foreground); }
+.training .pw-rest {
   font-size: 13.5px;
   color: var(--muted-foreground);
   font-style: italic;
@@ -575,8 +575,8 @@
 }
 
 /* What actually happened. One row per day, newest last, because a week is read forwards. */
-.gym .actual { border-top: 1px solid var(--border); }
-.gym .ad-row {
+.training .actual { border-top: 1px solid var(--border); }
+.training .ad-row {
   display: flex;
   gap: 10px;
   align-items: baseline;
@@ -584,7 +584,7 @@
   padding: 8px 0;
   font-size: 14px;
 }
-.gym .ad-day {
+.training .ad-day {
   flex: 0 0 86px;
   font-family: var(--font-mono);
   font-size: 12.5px;
@@ -592,14 +592,14 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
-.gym .ad-date { opacity: 0.7; }
-.gym .ad-row.on .ad-day { color: var(--foreground); }
-.gym .ad-what { flex: 1; min-width: 0; }
-.gym .ad-row:not(.on) .ad-what { color: var(--muted-foreground); }
+.training .ad-date { opacity: 0.7; }
+.training .ad-row.on .ad-day { color: var(--foreground); }
+.training .ad-what { flex: 1; min-width: 0; }
+.training .ad-row:not(.on) .ad-what { color: var(--muted-foreground); }
 /* A day the mirror has not reached must not look like a rest day. Same distinction /health's strip
    had to learn: an empty row read as claimed rest for a month of a stalled sync. */
-.gym .ad-row.unknown { opacity: 0.55; }
-.gym .ad-run {
+.training .ad-row.unknown { opacity: 0.55; }
+.training .ad-run {
   flex: 0 0 34px;
   text-align: right;
   font-family: var(--font-mono);
@@ -607,16 +607,16 @@
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
-.gym .ad-row.over .ad-run { color: var(--destructive); font-weight: 650; }
-.gym .ad-flag { margin-left: 3px; }
-.gym .ad-legend { margin-top: 10px; }
+.training .ad-row.over .ad-run { color: var(--destructive); font-weight: 650; }
+.training .ad-flag { margin-left: 3px; }
+.training .ad-legend { margin-top: 10px; }
 
 /* The recovery notice. Copied in shape from .health .stale rather than shared, because the two
    surfaces load different stylesheets and lifting the rule into globals.css to serve two callers
    would put it in front of every page on the site. Same visual language on purpose: a
    destructive-coloured left edge means "the thing below is not what it appears to be".
    Here the claim being qualified is the day count above it: it is sessions, not recovery. */
-.gym .stale {
+.training .stale {
   border: 1px solid var(--destructive);
   border-left-width: 3px;
   border-radius: var(--radius);
@@ -625,7 +625,7 @@
   font-size: 14.5px;
   line-height: 1.5;
 }
-.gym .stale .k {
+.training .stale .k {
   display: block;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -639,7 +639,7 @@
    "where this comes from" rows under a cue: they are tertiary and there are seven of them per tab.
    The rest rule's reasoning is not tertiary, and 32px is under the 44px floor this repo enforces
    after eight controls were found too small to hit on 2026-08-15. */
-.gym details.src.wk > summary {
+.training details.src.wk > summary {
   min-height: 44px;
   font-size: 11.5px;
   color: var(--foreground);
@@ -652,22 +652,22 @@
  * table is a mix of published standards and numbers we picked, and the reader has to be able to
  * tell them apart at a glance rather than by reading a paragraph. */
 
-.gym .tierlist { border-top: 1px solid var(--border); }
-.gym .tier {
+.training .tierlist { border-top: 1px solid var(--border); }
+.training .tier {
   border-bottom: 1px solid var(--border);
   padding: 10px 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-.gym .tier-head {
+.training .tier-head {
   display: flex;
   align-items: baseline;
   gap: 8px;
   flex-wrap: wrap;
 }
-.gym .tier-name { font-size: 15.5px; font-weight: 600; }
-.gym .tier-time {
+.training .tier-name { font-size: 15.5px; font-weight: 600; }
+.training .tier-time {
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--muted-foreground);
@@ -678,7 +678,7 @@
    the same, so the sourced one is drawn in ink and ours is drawn as an outline: present, readable,
    and visibly a different kind of thing. --signal is NOT used, because it is reserved for a value
    that is true right now, and a tier boundary is not that. */
-.gym .prov {
+.training .prov {
   margin-left: auto;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -688,26 +688,26 @@
   border-radius: var(--radius-sm);
   white-space: nowrap;
 }
-.gym .prov.sourced { background: var(--foreground); color: var(--background); }
+.training .prov.sourced { background: var(--foreground); color: var(--background); }
 /* Published by somebody real, but not the governing body. Drawn between the two: a solid outline
    like `sourced`, in the quieter ink of `constructed`. */
-.gym .prov.third-party {
+.training .prov.third-party {
   border: 1px solid var(--muted-foreground);
   color: var(--muted-foreground);
 }
-.gym .prov.sourced-other-course {
+.training .prov.sourced-other-course {
   border: 1px solid var(--foreground);
   color: var(--foreground);
 }
-.gym .prov.constructed,
-.gym .prov.capability {
+.training .prov.constructed,
+.training .prov.capability {
   border: 1px dashed var(--muted-foreground);
   color: var(--muted-foreground);
 }
 
 /* A date or unit riding along beside a number, quieter than it without becoming unreadable. This
    is an inline span, so it must NOT use .quiet, which is a monospace block treatment. */
-.gym .quiet-inline {
+.training .quiet-inline {
   font-size: 11.5px;
   color: var(--muted-foreground);
   white-space: nowrap;
@@ -716,7 +716,7 @@
 /* The link that lets him check a tier's number. A 44px row, not a 15px line of text: this is the
    control that makes "sourced" mean anything, and on the first build it was the smallest tap target
    on the page. */
-.gym .tier-src {
+.training .tier-src {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -725,7 +725,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.gym .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 
 /* ---- sub-tabs ----
  *
@@ -736,13 +736,13 @@
  * identically-weighted chips is the inverted hierarchy that made these blocks unreadable in August.
  * Underline for the active one instead of a filled chip: the filled chip is the parent tab's
  * signal and it should mean one thing on this page. Still a 44px row: this is a control. */
-.gym .subtabs {
+.training .subtabs {
   display: flex;
   gap: 18px;
   border-bottom: 1px solid var(--border);
   margin: 14px 0 4px;
 }
-.gym .subtab {
+.training .subtab {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -755,22 +755,22 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
 }
-.gym .subtab.on {
+.training .subtab.on {
   color: var(--foreground);
   border-bottom-color: var(--foreground);
 }
-.gym .subtab:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+.training .subtab:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 
 /* The full ladder, collapsed. Its summary has to look like the section headings around it, because
    it IS one: a heading that happens to open. */
-.gym details.ladder-all > summary {
+.training details.ladder-all > summary {
   cursor: pointer;
   min-height: 44px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.gym details.ladder-all > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+.training details.ladder-all > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 
 /* ---- one session, drawn ----
  *
@@ -779,31 +779,31 @@
  * the box, and /health once rendered its axis labels at 6.1px on a phone for exactly that reason.
  * Every number sits in HTML beside the drawing at a real size. */
 
-.gym .trace { margin-top: 14px; }
-.gym .trace-head {
+.training .trace { margin-top: 14px; }
+.training .trace-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 4px;
 }
-.gym .trace-label {
+.training .trace-label {
   font-family: var(--font-mono);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--muted-foreground);
 }
-.gym .trace-range {
+.training .trace-range {
   font-family: var(--font-mono);
   font-size: 11.5px;
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
-.gym .trace svg { display: block; overflow: visible; }
-.gym .trace-area { fill: var(--muted-foreground); opacity: 0.12; stroke: none; }
+.training .trace svg { display: block; overflow: visible; }
+.training .trace-area { fill: var(--muted-foreground); opacity: 0.12; stroke: none; }
 /* vector-effect keeps the stroke 1px wide despite preserveAspectRatio="none" stretching the box. */
-.gym .trace-line {
+.training .trace-line {
   fill: none;
   stroke: var(--foreground);
   stroke-width: 1.5;
@@ -811,43 +811,43 @@
   vector-effect: non-scaling-stroke;
 }
 /* The one threshold that means something: 110 bpm on a lifting session, 170 spm on a run. */
-.gym .trace-floor {
+.training .trace-floor {
   stroke: var(--muted-foreground);
   stroke-width: 1;
   stroke-dasharray: 3 3;
   vector-effect: non-scaling-stroke;
 }
 /* --signal, once, on the value that is true right now: where the session ended. */
-.gym .trace-now { fill: var(--signal); }
-.gym .trace-foot {
+.training .trace-now { fill: var(--signal); }
+.training .trace-foot {
   font-size: 12px;
   line-height: 1.45;
   color: var(--muted-foreground);
   margin-top: 5px;
 }
 
-.gym .len-bar { fill: var(--muted-foreground); opacity: 0.55; }
-.gym .len-bar.fastest { fill: var(--foreground); opacity: 1; }
+.training .len-bar { fill: var(--muted-foreground); opacity: 0.55; }
+.training .len-bar.fastest { fill: var(--foreground); opacity: 1; }
 /* A length he stopped after. Drawn as a notch rather than a colour so it survives being read in
    greyscale and does not spend the accent on something that is not true right now. */
-.gym .len-bar.before-rest { opacity: 0.28; }
+.training .len-bar.before-rest { opacity: 0.28; }
 
-.gym .sstats {
+.training .sstats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 2px 14px;
   border-top: 1px solid var(--border);
   padding-top: 10px;
 }
-.gym .sstat { display: flex; flex-direction: column; padding: 5px 0; }
-.gym .sstat-k {
+.training .sstat { display: flex; flex-direction: column; padding: 5px 0; }
+.training .sstat-k {
   font-family: var(--font-mono);
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted-foreground);
 }
-.gym .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.training .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
 /* ---- what to look for ----
  *
@@ -855,43 +855,43 @@
  * columns because that is the actual shape of the moment, somebody swims a length and asks what to
  * work on. On a phone it stacks, with the observation quiet and the thing to say in full ink,
  * because the thing to say is the thing he reads out loud. */
-.gym .lookfor { border-top: 1px solid var(--border); margin-top: 10px; }
-.gym .lf {
+.training .lookfor { border-top: 1px solid var(--border); margin-top: 10px; }
+.training .lf {
   border-bottom: 1px solid var(--border);
   padding: 10px 0;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
-.gym .lf-see {
+.training .lf-see {
   font-family: var(--font-mono);
   font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted-foreground);
 }
-.gym .lf-say { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
+.training .lf-say { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
 
 /* ---- the swim baseline input ----
  *
  * The slot for the one number the whole ladder is measured from. 44px controls throughout: this is
  * typed at the side of a pool, wet, once every couple of months. */
-.gym .baseline {
+.training .baseline {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 12px 0 14px;
   margin: 14px 0;
 }
-.gym .baseline-row { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; margin-top: 8px; }
-.gym .baseline-field { display: flex; flex-direction: column; gap: 4px; }
-.gym .baseline-k {
+.training .baseline-row { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; margin-top: 8px; }
+.training .baseline-field { display: flex; flex-direction: column; gap: 4px; }
+.training .baseline-k {
   font-family: var(--font-mono);
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted-foreground);
 }
-.gym .baseline-field input {
+.training .baseline-field input {
   min-height: 44px;
   width: 120px;
   padding: 0 10px;
@@ -902,9 +902,9 @@
   background: var(--background);
   color: var(--foreground);
 }
-.gym .baseline-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14.5px; }
-.gym .baseline-check input { width: 20px; height: 20px; }
-.gym .baseline-save {
+.training .baseline-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14.5px; }
+.training .baseline-check input { width: 20px; height: 20px; }
+.training .baseline-save {
   margin-top: 12px;
   min-height: 44px;
   padding: 0 16px;
@@ -916,9 +916,9 @@
   color: var(--background);
   cursor: pointer;
 }
-.gym .baseline-save:disabled { opacity: 0.45; cursor: default; }
-.gym .baseline-save:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training .baseline-save:disabled { opacity: 0.45; cursor: default; }
+.training .baseline-save:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 /* The server's refusals are instructions ("round down to the nearest 25 m"), so they get read, not
    hidden behind a generic failure state. */
-.gym .baseline-err { color: var(--destructive); margin-top: 8px; }
+.training .baseline-err { color: var(--destructive); margin-top: 8px; }
 

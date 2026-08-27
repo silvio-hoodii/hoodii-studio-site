@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import './gym.css';
+import '../training.css';
 import SiteHeader from '@/components/SiteHeader';
 import GymNav from './GymNav';
 
@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 export default function GymLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="gym">
+    <div className="training">
       <SiteHeader app="Gym" />
       {/* In the LAYOUT, not the pages, for the same reason SiteHeader is: a third gym page gets an
         * entrance whether or not anyone remembers to add one. The login page is deliberately the

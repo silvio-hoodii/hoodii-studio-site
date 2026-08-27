@@ -1,18 +1,11 @@
-import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSwimSummary, getSyncLiveness } from '@/lib/health/db';
-import { AdherenceStrip, BarChart, LineChart } from './HealthCharts';
+import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSyncLiveness } from '@/lib/health/db';
+import { AdherenceStrip, LineChart } from './HealthCharts';
+import Link from 'next/link';
 import { daysAgoText } from '@/lib/format';
 
 /* ISR, thirty minutes. Body composition changes when a measurement is taken, not per request.
  * CURRENT.md's own staleness flag is measured in DAYS, so half an hour costs nothing. */
 export const revalidate = 1800;
-
-function msToPace(ms: number | null): string {
-  if (!ms) return 'N/A';
-  const totalSec = Math.round(ms / 1000);
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  return `${min}:${String(sec).padStart(2, '0')}`;
-}
 
 function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek: number } | null): string {
   if (!t) return 'not enough history';
@@ -21,11 +14,10 @@ function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek:
 }
 
 export default async function HealthPage() {
-  const [bodySummary, weightSeries, bfSeries, swim, adherence, sync] = await Promise.all([
+  const [bodySummary, weightSeries, bfSeries, adherence, sync] = await Promise.all([
     getBodyCompSummary(),
     getBodyCompSeries(120).then((rows) => rows.filter((r) => r.kg != null).map((r) => ({ date: r.date, value: r.kg as number }))),
     getBodyCompSeries(120).then((rows) => rows.filter((r) => r.bf_pct != null).map((r) => ({ date: r.date, value: r.bf_pct as number }))),
-    getSwimSummary(90),
     getLiftingAdherence(30),
     getSyncLiveness(),
   ]);
@@ -41,7 +33,7 @@ export default async function HealthPage() {
     <div className="wrap">
       <h1>Health</h1>
       <p className="lede">
-        Weight, swim history, and lifting attendance, pulled from the Samsung Health export pipeline
+        Weight and lifting attendance, pulled from the Samsung Health export pipeline
         that already runs on the laptop. Read-only: nothing here is loggable, and healthos.db stays
         the source of truth.
       </p>
@@ -120,58 +112,17 @@ export default async function HealthPage() {
         )}
       </div>
 
+      {/* SWIM LEFT THIS PAGE on 2026-08-26. It was a section about swimming on a page about body
+          composition, and the two numbers in it that matter (best pace on the wall clock, best pace
+          with the rest taken out) sat here with no route to the tier ladder that gives them a
+          meaning. All of it renders on /swim now, next to the ladder. A link rather than a repeated
+          tile: a second copy of a number is a number that goes stale silently. */}
       <div className="section">
-        <div className="section-head"><h2>Swim history</h2></div>
-        {/* The explanation goes here, once, rather than into the tiles. Same shape as the lifting
-            section below, which explains watch-versus-app in prose and then shows numbers. */}
-        {swim.bestMovingPacePer100mMs != null && (
-          <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
-            Two paces, because a swim includes standing at the wall. Whole session counts that rest;
-            swimming pace removes it, and exists for{' '}
-            <span className="tnum">{swim.movingPaceSessions}</span> of{' '}
-            <span className="tnum">{swim.totalSessions}</span> sessions, the ones the watch timed
-            length by length.
-          </p>
-        )}
-        <div className="stats">
-          <div>
-            <div className="stat-k">Longest</div>
-            <div className="stat-v">{Math.round(swim.longestDistanceM ?? 0)}<span className="stat-u">m</span></div>
-          </div>
-          {/* "Best pace / 100m" was ONE tile reading 1:31, and it was wrong in the way that is
-              hardest to notice: not out of range, just quietly answering a different question than
-              its label asked. It came from a column computed two ways (see content/health/schema.sql)
-              and a minimum always picks the flattering one, so it reported a rest-excluded pace off a
-              300 m session that ran 25 minutes with 4 minutes of swimming in it, and it was FASTER
-              than his official 100 m personal best of 1:38.71. Two tiles now, each saying which
-              clock it ran on, because the honest version of this number needs the qualifier more
-              than it needs to be a single figure. */}
-          {/* CAPTIONS STAY SHORT because `.stats` is a wrap-flex and a tile is as wide as its widest
-              child. The first version of this said "whole session, rest included" and "rest
-              excluded, from 364 of 475 sessions", which measured at 390px as four tiles on four
-              rows with the captions spilling across the row above. Two words each, and the
-              distinction lives in the label. */}
-          <div>
-            <div className="stat-k">Best pace / 100m</div>
-            <div className="stat-v">{msToPace(swim.bestWallPacePer100mMs)}</div>
-            <div className="stat-d">whole session</div>
-          </div>
-          {swim.bestMovingPacePer100mMs != null && (
-            <div>
-              <div className="stat-k">Swimming pace / 100m</div>
-              <div className="stat-v">{msToPace(swim.bestMovingPacePer100mMs)}</div>
-              <div className="stat-d">rest removed</div>
-            </div>
-          )}
-          <div>
-            <div className="stat-k">Total sessions</div>
-            <div className="stat-v">{swim.totalSessions}</div>
-          </div>
-        </div>
-        <BarChart
-          points={swim.sessions.filter((s) => s.distanceM != null).map((s) => ({ date: s.date, value: s.distanceM as number }))}
-          unit="m"
-        />
+        <div className="section-head"><h2>Swimming</h2></div>
+        <p className="lede" style={{ marginTop: 0 }}>
+          Swim history, personal bests and where they sit against the tier ladder are all on{' '}
+          <Link href="/swim">the swim page</Link>.
+        </p>
       </div>
 
       <div className="section">

@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import '../charts.css';
 import './health.css';
 import SiteHeader from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Health',
-  description: 'Weight, swim history and lifting attendance, read from the watch export. Nothing here is typed by hand.',
+  description: 'Weight and lifting attendance, read from the watch export. Nothing here is typed by hand.',
   robots: { index: false, follow: false },
 };
 

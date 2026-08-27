@@ -1,4 +1,4 @@
-/* French surface, same idiom as .gym / .health / .kos: monochrome, rules instead of cards,
+/* French surface, same idiom as .training / .health / .kos: monochrome, rules instead of cards,
  * --signal reserved for a value that is true right now (due count, streak, a correct/easy recall),
  * --destructive reserved for the one thing that needs to read as "wrong" (the Again rating, a
  * failed login). Ported from LanguageOS/site/french.html, which had its own standalone blue/green

@@ -1,7 +1,7 @@
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { Program, WarmupItem, CooldownItem, Conditioning, SwimCoaching, SwimTeaching } from './types';
+import type { Program, WarmupItem, CooldownItem, Conditioning } from './types';
 
 export * from './program-shared';
 
@@ -50,10 +50,8 @@ export async function loadConditioning(): Promise<Conditioning> {
   return readJson<Conditioning>('conditioning.json');
 }
 
-export async function loadSwimTeaching(): Promise<SwimTeaching> {
-  return readJson<SwimTeaching>('swim-teaching.json');
-}
-
-export async function loadSwimCoaching(): Promise<SwimCoaching> {
-  return readJson<SwimCoaching>('swim-coaching.json');
-}
+/* The two swim loaders left this file on 2026-08-26 and are src/lib/swim/content.ts, reading
+ * content/swim/ rather than content/gym/. Swim became its own route; its content and its loaders
+ * went with it. The stripComments function above is duplicated there rather than shared, which is a
+ * deliberate small copy: it is eight lines with no state, and the alternative was a lib/shared
+ * module existing solely to hold it. */

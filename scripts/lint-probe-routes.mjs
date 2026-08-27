@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Every POST route under /gym/api must be stubbed by scripts/probe-gym.js.
+ * Every POST route under /gym/api or /swim/api must be stubbed by scripts/probe-gym.js.
  *
  * WHY THIS EXISTS. probe-gym.js patches window.fetch so that no test can write to the real Neon
  * store, which holds his actual training log. There is no development database. The patch works off
@@ -13,12 +13,21 @@
  *
  * A comment saying "remember to add it" is decoration. This is the mechanism.
  *
+ * ON 2026-08-26 THIS FILE'S SCOPE WAS THE BUG WAITING TO HAPPEN. It hardcoded one directory,
+ * and the swim migration moved /gym/api/swim-baseline to /swim/api/baseline: a live POST into the
+ * real Neon store, sitting outside the only mechanism that checks the probe stubs it. The scope is
+ * a list now. Adding an API root under a new route means adding it here, and the failure mode if
+ * you forget is silent, which is precisely why the list is short and the note is loud.
+ *
  * Run: node scripts/lint-probe-routes.mjs
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-const API_DIR = join(process.cwd(), 'src', 'app', 'gym', 'api');
+const API_ROOTS = [
+  { dir: join(process.cwd(), 'src', 'app', 'gym', 'api'), url: '/gym/api' },
+  { dir: join(process.cwd(), 'src', 'app', 'swim', 'api'), url: '/swim/api' },
+];
 const PROBE = join(process.cwd(), 'scripts', 'probe-gym.js');
 
 /* Read but deliberately not stubbed: both are shaped as POSTs because they take a body the URL
@@ -56,7 +65,11 @@ function walk(dir, urlPath) {
     }
   }
 }
-walk(API_DIR, '/gym/api');
+for (const root of API_ROOTS) {
+  /* A declared root that does not exist yet is a failure, not a skip. Silently walking nothing is
+     how this check would report "all clear" for a directory somebody renamed. */
+  walk(root.dir, root.url);
+}
 
 let fail = 0;
 for (const r of routes.sort()) {
@@ -70,7 +83,7 @@ for (const r of routes.sort()) {
 }
 for (const s of stubbed) {
   if (!routes.includes(s)) {
-    console.error(`FAIL  WRITE_ROUTES lists ${s}, which has no POST route under src/app/gym/api.`);
+    console.error(`FAIL  WRITE_ROUTES lists ${s}, which has no POST route under any of ${API_ROOTS.map((r) => r.url).join(', ')}.`);
     console.error('      A stale entry stubs nothing and hides that the real route moved.');
     fail++;
   }
@@ -78,7 +91,7 @@ for (const s of stubbed) {
 
 console.log('-'.repeat(70));
 console.log(
-  `${routes.length} POST route(s) under /gym/api, ${stubbed.size} stubbed, ` +
+  `${routes.length} POST route(s) under ${API_ROOTS.map((r) => r.url).join(' + ')}, ${stubbed.size} stubbed, ` +
     `${READ_ONLY_POSTS.size} read-only by declaration, ${fail} failures`,
 );
 process.exit(fail ? 1 : 0);

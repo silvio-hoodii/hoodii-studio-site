@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from 'react';
  * crosshair+tooltip on line charts and a per-mark tooltip on bars/cells.
  *
  * Color: this site is monochrome with one chromatic color (--signal) reserved for "a value that is
- * true right now" (see .gym .live in gym.css). Charts extend that same convention rather than
+ * true right now" (see .training .live in training.css). Charts extend that same convention rather than
  * introducing a categorical palette: the historical line/bars are ink (foreground/muted), and the
  * one point that IS true right now (today's weight, the most recent swim, today's strip cell) is
  * the only thing in signal. Every chart here is single-series, so no legend box is needed (a legend

@@ -147,7 +147,7 @@ export interface Program {
   days: Record<DayKey, Day>;
 }
 
-/** Run, bike and swim. Lives in content/gym/conditioning.json and renders at /gym/conditioning,
+/** Run and bike. Lives in content/gym/conditioning.json and renders at /gym/conditioning,
  *  deliberately NOT inside the workout page: it is read in the morning before a treadmill or at
  *  the poolside, not between sets with wet hands.
  *
@@ -172,41 +172,6 @@ export interface ConditioningWeek {
   note?: string;
 }
 
-/** A labelled fact about where he currently is. An ordered ARRAY, not the `Record<string, string>`
- *  this was until 2026-08-21, and the change is the point: the page read three fields by name
- *  (`continuousUnassisted`, `typicalSession`, `matchesTheData`), so the data had to fit the slots,
- *  and two false claims survived in them for weeks because there was nowhere else for the truth to
- *  go. A list the page walks cannot be outgrown by what the lap data turns out to say. */
-export interface BaselineFact {
-  label: string;
-  value: string;
-  /** True for a fact that BACKS the headline ones rather than changing what he does next. Rendered
-   *  behind a tap. The flag lives in the data, not in the page's row order, because "the first two
-   *  are the important ones" is a coupling that breaks silently the moment a fact is inserted. */
-  secondary?: boolean;
-}
-
-/** A rung. `piece` is written RELATIVE to the number the week-0 calibration swim returns, never as
- *  an absolute distance: the lap data says 600 m unbroken, he said 200 m unassisted, the difference
- *  is almost certainly the pull buoy, and nothing in the watch export records a buoy. A constant
- *  here would be wrong by up to 400 m in a direction nobody can predict. */
-export interface SwimLadderStep {
-  weeks: string;
-  piece: string;
-  rest: string;
-  note?: string;
-}
-
-/** The swim that sets the ladder. Exists because the alternative to measuring the opening rung was
- *  guessing it, and both guesses were bad: 3 x 200 m spends two months rebuilding a capacity the
- *  lap data already shows, and 2 x 400 m hands a novice a piece he may not hold. */
-export interface SwimCalibration {
-  name: string;
-  what: string;
-  test: string;
-  why: string;
-}
-
 /** A technique cue. Added 2026-08-16, because the plan said how hard and how long and never how,
  *  and he has never run or cycled.
  *
@@ -229,8 +194,8 @@ export interface Cue {
   /** The verbatim sentence from the source. Added 2026-08-22, at his instruction: "I don't want
    *  hallucination here so try to keep it as literal as you can." validate.mjs requires one on any
    *  cue claiming to be sourced, and the renderer prints it, because a quote nobody can see does
-   *  the same job as no quote at all. Nine were added to swim-teaching.json before anybody noticed
-   *  this component had nowhere to put them. */
+   *  the same job as no quote at all. Nine were added to content/swim/teaching.json before
+   *  anybody noticed this component had nowhere to put them. */
   quote?: string | null;
   source?: string | null;
 }
@@ -312,20 +277,6 @@ export interface Conditioning {
     /** What was dropped from the cue set and why, which is the more useful half. */
     cuesNote?: string | null;
   };
-  swim: {
-    title: string;
-    sessionsPerWeek: string;
-    baseline: BaselineFact[];
-    theGoal: { target: string; whatThatActuallyIs: string; whyItIsAchievable: string };
-    theOneTechniqueChange: { what: string; why: string; howToKnow: string };
-    onDrills: string;
-    structure: { note: string; calibration: SwimCalibration; ladder: SwimLadderStep[] };
-    paddleRule: { rule: string; why: Prose };
-    pullBuoyRule: string;
-  cues?: Cue[];
-    /** What was dropped from the cue set and why, which is the more useful half. */
-    cuesNote?: string | null;
-  };
 }
 
 /* HandstandStep was removed on 2026-08-16 along with content/gym/handstand-ladder.json and the
@@ -334,54 +285,10 @@ export interface Conditioning {
  * ladder JSON either, so it was a five-step progression that existed only on disk. Recoverable from
  * git history if it is ever wanted back. */
 
-/** The handbook for when somebody at the pool asks him what to work on.
+/* SWIM TYPES LEFT THIS FILE on 2026-08-26 and are in src/lib/swim/types.ts: BaselineFact,
+ * SwimLadderStep, SwimCalibration, SwimPlan, TeachingStage, SwimCoaching and SwimTeaching, plus the
+ * `swim` member that used to hang off Conditioning above. Swim stopped being a tab on
+ * /gym/conditioning and became its own route, and its types followed its content to content/swim/.
  *
- *  Reuses `Cue`, because a teaching point and a training cue are the same shape: a thing to do, a
- *  TEST with a binary answer, and where it came from. The test matters more here than anywhere else
- *  on this site: he is standing on a pool deck looking at another person, so the cue has to be
- *  something he can SEE rather than something they have to feel. */
-export interface TeachingStage {
-  id: string;
-  n: number;
-  name: string;
-  /** Who this stage is for, so he can pick one by recognising the person in front of him. */
-  who: string;
-  sourceId?: string;
-  cues: Cue[];
-}
-
-/** COACHING HIM, in the water, alone. The sibling of SwimTeaching, which is him coaching somebody
- *  else from the deck. Split on 2026-08-22 because every cue in the teaching file begins "stand
- *  next to them and watch", which is right for that job and no use at all for his own swimming.
- *  Every check carries a verbatim quote and a source; content/gym/validate.mjs enforces it. */
-export interface SwimCoaching {
-  meta: { builtOn: string; stroke: string; who: string };
-  theQuestion: { title: string; body: Prose };
-  checks: {
-    id: string;
-    n: number;
-    name: string;
-    say: string;
-    say2?: string;
-    test: string;
-    confidence: 'sourced' | 'inference' | 'convention';
-    quote?: string;
-    source?: string;
-    from?: string;
-    fromQuote?: string;
-  }[];
-  sources: { id: string; label: string; url: string; note?: string }[];
-}
-
-export interface SwimTeaching {
-  meta: { builtOn: string; stroke: string; who: string };
-  /** The safety line. First thing on the page, deliberately. */
-  beforeYouStart: { title: string; body: Prose };
-  stages: TeachingStage[];
-  whatToLookFor: {
-    title: string;
-    intro: string;
-    items: { see: string; say: string; stage: string }[];
-  };
-  sources: { id: string; label: string; url: string; note?: string }[];
-}
+ * `Cue` deliberately STAYED here. Run and bike cues are the same shape and the swim types import
+ * it from this file, which is the honest direction: the cue is the shared idea, swim is not. */

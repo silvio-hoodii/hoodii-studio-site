@@ -182,7 +182,7 @@ input[type='password'] {
 
 /* ---- one button ----
  *
- * Same argument as the password field above, and the same evidence. `.kos button` and `.gym button`
+ * Same argument as the password field above, and the same evidence. `.kos button` and `.training button`
  * were byte-identical including their hover, primary and disabled states. `.health` wrote out the
  * primary variant only, so the one button on /health/login was the base rule's job and there was no
  * base rule. `.french` invented its own at 17px/600 with a 52px floor, and the two banner buttons in
@@ -261,7 +261,7 @@ h1 {
  * where the divergence is visible as a divergence.
  *
  * One trap, paid for once already: each of these is a single class, so a surface rule that names an
- * ELEMENT (`.kos h2`, `.gym h2`) outranks it. While the duplicate copies existed as `.kos .count`
+ * ELEMENT (`.kos h2`, `.training h2`) outranks it. While the duplicate copies existed as `.kos .count`
  * they tied with the element rule and won on source order; deleting them handed six headings on
  * /kitchen/find and /kitchen/shop back to `.kos h2`. If you add one of these classes to a tag a
  * surface styles by name, exclude it there (`.kos h2:not(.count)`) rather than writing the idiom

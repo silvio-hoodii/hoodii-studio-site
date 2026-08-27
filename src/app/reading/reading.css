@@ -275,7 +275,7 @@
 
 /* ---- next-up / finished nav ----
  *
- * The gym learned this the hard way (gym.css .surf-tab, 2026-08-16): a surface nav rendered as
+ * The gym learned this the hard way (training.css .surf-tab, 2026-08-16): a surface nav rendered as
  * small inline text was measured at 35px and read as prose, not as a control, on a page opened
  * one-handed. Same recipe here rather than the underline-link version this route had a first draft
  * of: 44px, a real border, the active one filled solid rather than just coloured differently, so

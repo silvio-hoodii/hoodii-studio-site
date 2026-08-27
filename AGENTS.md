@@ -43,7 +43,10 @@ that it scrolls.** Drive a real wheel or CDP touch event.
 - **Data.** Neon Postgres via `@neondatabase/serverless` (HTTP, no pooling problem on Vercel).
 - **Styling.** shadcn tokens in `globals.css` are the system. Per-surface CSS (`hub.css`,
   `kitchen/kitchen.css`) is scoped under a root class and **must consume the tokens, never hardcode
-  a colour.** Fonts are IBM Plex Sans and Mono.
+  a colour.** Fonts are IBM Plex Sans and Mono. Two files are shared rather than per-surface:
+  `src/app/training.css` (root class `.training`, used by `/gym` and `/swim`, and named `gym.css`
+  with a `.gym` root until 2026-08-26) and `src/app/charts.css` (`/health` and `/swim`). Both were
+  renamed or extracted the day a second route needed them, rather than copied.
 
 **The palette is a decision, not a default.** Monochrome, one chromatic colour (`--signal`) used
 only for a value that is true right now, radius near zero, rules instead of cards, no shadows or
@@ -72,13 +75,13 @@ always lose to the thing that exists.
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
 | `/gym` | Lifting log + a note box. `content/gym/` + `gym_*` tables | yes |
-| `/gym/conditioning` | **The whole week**, and since 2026-08-22 it has TWO levels of tabs. Discipline across the top (Overview, Run, Bike, Swim), then sub-tabs by WHEN YOU ASK: **Now** (what is true today, changes on its own), **Plan** (the coming weeks), **How** (technique, barely changes), plus **Teach** on swim. That split took the worst view from 7.9 phone screens to 2.2. Every view is a URL: `?p=swim&s=teach`. Sources: `conditioning.json`, `swim-standards.json`, `swim-teaching.json`, `program.json`, and `health_session_detail` / `health_swim_pb` / `health_watch_session` in Neon | `/gym/api/swim-baseline` only |
-| `/gym/api/swim-baseline` | The one number the swim ladder is measured from. Every rung reads "your number plus 100 m" and for a month there was nowhere to put it. Writes `gym_swim_baseline`, a history not a value, and records whether the pull buoy was out | **cookie** |
+| `/gym/conditioning` | **The whole week**, with TWO levels of tabs. Discipline across the top (Overview, Run, Bike), then sub-tabs by WHEN YOU ASK: **Now** (what is true today, changes on its own), **Plan** (the coming weeks), **How** (technique, barely changes). That split took the worst view from 7.9 phone screens to 2.2. Every view is a URL: `?p=run&s=how`. **Swim left this page on 2026-08-26** and `?p=swim` 307s to `/swim`, sub-tab preserved. The week Overview still counts swims toward the streak: `src/lib/gym/week.ts` reads the watch mirror, not the tab list. Sources: `conditioning.json`, `program.json`, and `health_session_detail` / `health_watch_session` in Neon | no writes |
 | `/health` | Body composition, read-only from `healthos.db` | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
-| `/swim` | Calgary lane-swim schedules. Read-only mirror of `SwimOS/wedge/app/data/schedule.json`, pushed by `content/swim/sync.mjs` from the 05:30 laptop task. The scrapers stay off Vercel | no writes |
+| `/swim` | **His own swimming, since 2026-08-26.** Five sub-tabs on the same `?s=` idiom: Now (last session drawn, tier ladder, personal bests, 90-day history), Plan (the ten-week continuity ladder), How, Coach me, Coach them. The Calgary pool schedule that used to be here is DELETED, along with six scrapers, the `HOODII-SwimOS-Daily` task and the four `swim_*` tables; backup at `_archive/SwimOS-2026-08-26/`. Sources: `content/swim/*.json` and `health_swim_pb` / `health_swim_session` / `health_session_detail` in Neon | `/swim/api/baseline` only |
+| `/swim/api/baseline` | The one number the swim ladder is measured from. Every rung reads "your number plus 100 m" and for a month there was nowhere to put it. Writes `gym_swim_baseline` (the table keeps its `gym_` prefix on purpose), a history not a value, and records whether the pull buoy was out. Was `/gym/api/swim-baseline` | **cookie** |
 | `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
 | `/reading/shelf` | **The browse surface, and the main one.** Every scored book, for two moments: in a shop (search a spine, or walk the alphabet by author surname) and at home (sort by best, shortest, best-rated, newest, oldest). One collapsed Filters control and one Sort control, copied in shape from the StoryGraph and the Calgary library catalogue after screenshotting both; the sort doubles as a MODE, so the 27-letter rail renders only in author order. Covers, descriptions and reader ratings from Open Library. `noindex` + robots Disallow. Mirror of `reading_shelf_entry`, pushed by `content/reading/sync-shelf.mjs` | no writes |
 | `/reading/want` | Books saved for the next shop trip. NOT the queue: a want costs nothing and evicts nothing, where adding to the ten pushes something out. Reads `reading_want` | via `/reading/api/want` |
@@ -314,11 +317,15 @@ harmless, and PSN is not surfaced on the hub.
   `node scripts/gym-notes.mjs --handled <id>`. The kitchen already learned what happens otherwise:
   a captured question nobody answers is worse than no capture, because he stops believing the box
   does anything.
-- **Adding a POST route under `/gym/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
+- **Adding a POST route under `/gym/api` or `/swim/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
   Nothing is optional about this: the probe drives a real browser against the real Neon store, and
   an unstubbed write route means a test posts into his actual training log. `/gym/api/note` was
   added without it and the first probe went out over the network. `scripts/lint-probe-routes.mjs`
   now fails the build on it, so this is a description of a gate rather than a thing to remember.
+  That linter hardcoded ONE directory until 2026-08-26, when the baseline write moved to
+  `/swim/api/baseline` and would have left its scope silently. It walks a list of API roots now, and
+  `src/proxy.ts` needed TWO edits for the same move: the path-prefix check AND `config.matcher`,
+  which named no `/swim` path at all. A prefix added without the matcher reads as a gate and is none.
 - **Touching `/gym`? Run `node scripts/run-probe-gym.mjs <base-url>` as well**, and the reload pair
   with `node scripts/run-probe-gym.mjs <base-url> swapSurvivesReload`. Together that is 24 checks;
   it exits non-zero on any failure. The four other gates are static: they all passed on a build

@@ -1,15 +1,12 @@
 import Link from 'next/link';
-import { loadConditioning, loadProgram, loadSwimCoaching, loadSwimTeaching } from '@/lib/gym/program';
+import { loadConditioning, loadProgram } from '@/lib/gym/program';
 import { getTrainingWeek, KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
-import { getSwimBaseline } from '@/lib/gym/db';
-import SwimBaselineForm from '../SwimBaselineForm';
-import {
-  loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
-  type SwimStandards, type DistanceStanding,
-} from '@/lib/gym/swim-level';
-import { getLastSession, sessionVerdict, type SessionDetail, type SessionKind } from '@/lib/gym/session';
-import { Trace, LengthBars, SessionStats } from '../SessionCharts';
-import type { Cue, SwimCoaching, SwimTeaching } from '@/lib/gym/types';
+import { getLastSession, type SessionKind } from '@/lib/gym/session';
+import { redirect } from 'next/navigation';
+import LastSession from '@/components/training/LastSession';
+import Prose from '@/components/training/Prose';
+import Cues from '@/components/training/Cues';
+import { shortDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +34,10 @@ const TABS = [
   { id: 'week', label: 'Overview' },
   { id: 'run', label: 'Run' },
   { id: 'bike', label: 'Bike' },
-  { id: 'swim', label: 'Swim' },
+  /* SWIM LEFT THIS PAGE on 2026-08-26 and is /swim, its own route, holding the tracker AND the
+     coaching that used to be four sub-tabs in here. It is still training and it still counts toward
+     the streak on the Overview tab: src/lib/gym/week.ts reads the watch mirror, not this list. What
+     changed is where you go to read about it. A ?p=swim link redirects, see the page component. */
 ] as const;
 type TabId = (typeof TABS)[number]['id'];
 
@@ -56,15 +56,6 @@ function agoText(days: number): string {
   if (days <= 0) return 'today';
   if (days === 1) return 'yesterday';
   return `${days} days ago`;
-}
-
-/** 2026-08-14 -> "Aug 14". The year is never in question on a 28-day window. */
-function shortDate(iso: string): string {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  });
 }
 
 /* WHERE HE STANDS, and it is the first thing on the page because it is the only thing here that
@@ -162,134 +153,6 @@ function RecoveryNotice({ week }: { week: TrainingWeek }) {
   );
 }
 
-/* WHERE HE IS, AS A SWIMMER. Built 2026-08-22.
- *
- * His ask: "there have to be reference or benchmarks on timings for specific levels. I want to know
- * on what level I am with my current timings." And he called the honest problem before I hit it:
- * real standards exist only at the sharp end, so the lower tiers had to be built.
- *
- * So provenance is rendered, not hidden in a comment. Three of these tiers are published standards
- * for men aged 35 to 39 in a 25 m pool; two are multiples of one of them that I picked; one is not
- * a time at all. Showing which is which is what makes the sourced rows worth anything, and it is
- * the same reason the cue cards on this page print `confidence`. */
-function SwimLevel({ standards, standings }: { standards: SwimStandards; standings: DistanceStanding[] }) {
-  const withPb = standings.filter((s) => s.best);
-  if (!withPb.length) return null;
-  const tierName = (id: string | null) => standards.tiers.find((t) => t.id === id)?.name ?? null;
-  /* The distance he is CLOSEST to levelling up in, proportionally. An absolute gap is misleading:
-     18 s off at 100 m and 141 s off at 1500 m sound like the 100 is closer, and it is the furthest. */
-  const closest = [...withPb]
-    .filter((s) => s.next && s.best)
-    .sort((a, b) => (a.next!.gapMs / a.best!.durationMs) - (b.next!.gapMs / b.best!.durationMs))[0];
-
-  return (
-    <>
-      <div className="exgroup">
-        <div className="exgroup-label">
-          Where you are <span className="tag">(men {standards.meta.ageGroup}, {standards.meta.course} 25 m, freestyle)</span>
-        </div>
-        <div className="table-scroll">
-          <table className="plan-table">
-            <thead>
-              <tr>
-                <th>Distance</th>
-                <th className="tnum">Your best</th>
-                <th>Level</th>
-                <th className="tnum">Next level</th>
-              </tr>
-            </thead>
-            <tbody>
-              {withPb.map((s) => (
-                <tr key={s.distanceM}>
-                  <td className="tnum">{s.distanceM} m</td>
-                  <td className="tnum">
-                    {fmtTime(s.best!.durationMs)}
-                    <span className="quiet-inline"> {s.best!.achievedOn}</span>
-                  </td>
-                  <td>{tierName(s.tierId) ?? 'below the table'}</td>
-                  <td className="tnum">
-                    {s.next
-                      ? <>{fmtTime(s.next.timeMs)} <span className="quiet-inline">for {s.next.name}</span></>
-                      : '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {closest && (
-          <p className="ex-cue" style={{ marginTop: 10 }}>
-            The level you are closest to is <b>{closest.next!.name} at {closest.distanceM} m</b>:{' '}
-            {(100 * closest.next!.gapMs / closest.best!.durationMs).toFixed(0)}% faster, which is{' '}
-            {(closest.next!.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} seconds per 100 m.
-          </p>
-        )}
-      </div>
-
-      {/* THE WHOLE LADDER, BEHIND A TAP. Ten rungs is 1,200px of a phone screen, and the only two
-          he needs on any given day are his own and the one above it, both of which are already in
-          the table above. Open it when you want to see how far the top is; otherwise it is in the
-          way, which is the complaint that produced these sub-tabs in the first place. */}
-      <details className="exgroup ladder-all">
-        <summary className="exgroup-label">What the levels are <span className="tag">(all 10)</span></summary>
-        <div className="tierlist">
-          {standards.tiers.map((t) => {
-            const src = standards.sources.find((x) => x.id === t.sourceId);
-            const at100 = tierTimeMs(t, 100, standards.tiers);
-            return (
-              <div className="tier" key={t.id}>
-                <div className="tier-head">
-                  <span className="tier-name">{t.name}</span>
-                  {/* "/100 m" read as a PACE. It is the tier's time FOR the 100, which is a different number
-                      and the one place on this page a reader could quietly take away the wrong figure. */}
-                  {at100 != null && <span className="tier-time tnum">{fmtTime(at100)} <span className="quiet-inline">at 100 m</span></span>}
-                  <span className={`prov ${t.provenance}`}>
-                    {t.provenance === 'sourced' ? 'sourced'
-                      : t.provenance === 'sourced-other-course' ? 'sourced, other course'
-                      : t.provenance === 'third-party' ? 'third party'
-                      : t.provenance === 'constructed' ? 'our number'
-                      : 'not a time'}
-                  </span>
-                </div>
-                <div className="ex-cue">{t.what}</div>
-                {/* A real tap target. These were 15px tall on the first build, which is a third of
-                    the 44px floor this repo enforces, on the one control that lets him check a
-                    number I am asking him to trust. */}
-                {src && (
-                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">
-                    {src.label}
-                  </a>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <p className="ex-cue" style={{ marginTop: 10 }}>
-          Two rungs are published standards for men your age and six come from an independent
-          project that matches the official qualifying time exactly at its top rung. One is ours.
-          Each says which it is, so you know what to argue with.
-        </p>
-      </details>
-
-      <div className="exgroup">
-        <div className="exgroup-label">What the shape of it says</div>
-        <Prose text={standards.profileNote} />
-        <details className="src wk">
-          <summary>Why there is no 25 m or 50 m here</summary>
-          <div className="src-body">
-            Samsung records no personal best under 100 m. Deriving one from single lengths does not
-            survive the data: the fastest length ever recorded is 9.03 s, which is faster than a
-            world-record 25 m split, and filtering the sensor miscounts moves the answer from
-            14.42 s to 18.55 s depending on where the threshold goes. A number that swings four
-            seconds on a threshold somebody picked is not a personal best. Swim a timed 25 and 50
-            from a push and they become real.
-          </div>
-        </details>
-      </div>
-    </>
-  );
-}
-
 /* THE PLAN, as a week. Lifting titles come from program.json and the slots from conditioning.json,
  * so nothing here is a second copy of either. A day with no work on it is drawn as such rather than
  * omitted, because the gaps are the point of the whole arrangement. */
@@ -366,100 +229,6 @@ function ActualDays({ week }: { week: TrainingWeek }) {
   );
 }
 
-/** Prose fields arrive as a string or an array of lines, because JSON has no multi-line string and
- *  these paragraphs carry the reasoning the whole plan rests on. An empty entry is a blank line. */
-function Prose({ text }: { text: string | string[] }) {
-  const paras = (Array.isArray(text) ? text.join('\n') : text).split(/\n\s*\n|\n(?=\s*$)/);
-  return (
-    <>
-      {paras
-        .map((p) => p.replace(/\n/g, ' ').trim())
-        .filter(Boolean)
-        .map((p, i) => (
-          <p className="lede" key={i}>
-            {p}
-          </p>
-        ))}
-    </>
-  );
-}
-
-/* THE CUES. Added 2026-08-16: "also cues and techinique remember that ive never run or bike".
- *
- * The plan told him how hard and how long and never how, which is a gap when the athlete has never
- * done the sport. Each cue is a TEST WITH A BINARY RESULT, per the same house rule the kitchen runs
- * on: a doneness cue must be something he performs, never a sense he has to have.
- *
- * `confidence` is rendered, not hidden. "convention" means good coaching practice with no study
- * behind it, and saying so is the point: a plan that labels its guesses can be trusted about the
- * rest. The citation sits behind a tap because he needs the cue at the gym and the source only when
- * he doubts it. */
-function Cues({ cues, note, heading, intro }: { cues: Cue[]; note?: string | null; heading?: string; intro?: string }) {
-  if (!cues?.length) return null;
-  return (
-    <>
-      <div className="exgroup-label" style={{ marginTop: 22 }}>
-        {heading ?? 'How to actually do it'} <span className="tag">({cues.length})</span>
-      </div>
-      {/* The default copy says "a test YOU perform", which is right on the run, bike and swim tabs
-          and wrong on the teaching tab, where the test is one he performs on somebody else while
-          standing on the deck. Same component, because a teaching point and a training cue are the
-          same shape; different sentence, because the person doing the looking is different. */}
-      <p className="lede" style={{ marginBottom: 6 }}>
-        {intro ?? 'Each one is a test you perform, not a feeling you have to have. Tap to open.'}
-      </p>
-      {/* COLLAPSED BY DEFAULT, and measured before and after rather than guessed. Rendering all
-          seven open took the Run tab to 8,536 px, which is TALLER than the 6,287 px page he
-          complained about in the first place. Fixing one wall of text by building a bigger one is
-          not a fix. Collapsed, the seven names are a scannable checklist and each opens on its own,
-          which is also how he would use them at the gym. */}
-      <div className="cuelist">
-        {cues.map((c) => (
-          <details className="cue" key={c.name}>
-            <summary>
-              <span className="cue-name">{c.name}</span>
-              <span className={`conf ${c.confidence}`}>{c.confidence}</span>
-            </summary>
-            <div className="cue-body">
-              <div className="ex-cue">{c.cue}</div>
-              <div className="ex-meta cue-test"><b>The test.</b> {c.test}</div>
-              {c.why && <div className="ex-cue quiet">{c.why}</div>}
-              {/* THE SENTENCE ITSELF, not a paraphrase of it and not behind a second tap. The whole
-                  value of a citation here is that he can read what the source actually said and
-                  disagree with how it was used. */}
-              {c.quote && (
-                <div className="stale cue-quote">
-                  <span className="k">Their words</span>
-                  <p className="ex-cue">&ldquo;{c.quote}&rdquo;</p>
-                </div>
-              )}
-              {c.grounding && (
-                <details className="src">
-                  <summary>{c.confidence === 'convention' ? 'No study behind this' : 'Where this comes from'}</summary>
-                  <div className="src-body">
-                    {c.grounding}
-                    {c.url && (
-                      <>
-                        {' '}
-                        <a href={c.url} target="_blank" rel="noreferrer">open the source</a>
-                      </>
-                    )}
-                  </div>
-                </details>
-              )}
-            </div>
-          </details>
-        ))}
-      </div>
-      {note && (
-        <details className="src">
-          <summary>What was thrown out, and why</summary>
-          <div className="src-body" style={{ whiteSpace: 'pre-line' }}>{note}</div>
-        </details>
-      )}
-    </>
-  );
-}
 
 
 /* A SECOND LEVEL OF NAVIGATION, added 2026-08-22.
@@ -483,18 +252,6 @@ function Cues({ cues, note, heading, intro }: { cues: Cue[]; note?: string | nul
  * Nothing is deleted, which matters: he has never asked for less content, only for it to stop being
  * in his way. */
 const SUB_TABS: Record<string, { id: string; label: string }[]> = {
-  swim: [
-    { id: 'now', label: 'Now' },
-    { id: 'plan', label: 'Plan' },
-    { id: 'how', label: 'How' },
-    /* TWO COACHING TABS, split 2026-08-22. "Me" is him in the water on his own; "Them" is him on
-     * the deck coaching somebody else. They were one tab, and every cue in it read "stand next to
-     * them and watch", which answered none of the questions he was actually asking about his own
-     * swimming. His words: "there's the need for another tab, like the coach for me and me coaching
-     * someone else, because I want both things." */
-    { id: 'me', label: 'Coach me' },
-    { id: 'teach', label: 'Coach them' },
-  ],
   run: [
     { id: 'now', label: 'Now' },
     { id: 'plan', label: 'Plan' },
@@ -527,223 +284,32 @@ function SubNav({ tab, sub }: { tab: string; sub: string }) {
 }
 
 
-/* THE LAST SESSION, drawn. Built 2026-08-22 from the per-second data the watch has always recorded
- * and nothing had ever read.
- *
- * The four activities get DIFFERENT panels because they carry different data, and the two that
- * carry only a heart rate say so instead of being padded out to look equally analysed. That is the
- * difference between an analysis and the "slop sitting there without any real reason" he objected
- * to: every element here exists because that activity produced the number behind it. */
-function LastSession({ s }: { s: SessionDetail | null }) {
-  if (!s) {
-    return (
-      <div className="exgroup">
-        <div className="exgroup-label">Your last session</div>
-        <p className="ex-cue">
-          Nothing recorded yet for this one. Sessions arrive with the daily watch export.
-        </p>
-      </div>
-    );
-  }
-  const verdict = sessionVerdict(s);
-  const isSwim = s.kind === 'swimming';
-  const isRun = s.kind === 'treadmill' || s.kind === 'running';
-  return (
-    <div className="exgroup">
-      <div className="exgroup-label">
-        Your last session <span className="tag">({shortDate(s.date)})</span>
-      </div>
-      <SessionStats s={s} />
-      {isSwim && s.series.lengths && (
-        <LengthBars lengths={s.series.lengths} poolLength={s.poolLength} />
-      )}
-      {isRun && s.series.cadence && (
-        <Trace values={s.series.cadence} label="Cadence" unit="spm" floor={170} />
-      )}
-      {/* Heart rate last for the two that have other data, and alone for the two that do not.
-          The 110 rule is drawn only on a lifting session, where it is the whole point. */}
-      {s.series.hr?.length > 2 && (
-        <Trace
-          values={s.series.hr}
-          label="Heart rate"
-          unit="bpm"
-          {...(s.kind === 'strength' ? { floor: 110 } : {})}
-        />
-      )}
-      {verdict && <p className="ex-cue" style={{ marginTop: 10 }}>{verdict}</p>}
-    </div>
-  );
-}
-
-
-/* THE HANDBOOK, for when somebody at the pool asks him what to work on.
- *
- * "I have no idea how to explain principles that I'm already familiar with but not sure how to
- * explain... I'm not really sure how to tell them what to work on or what to improve."
- *
- * The safety line is first and it is not decoration. The most valuable thing he can say to a
- * frightened non-swimmer is that he is not a teacher, and every fix here is a TEST HE CAN SEE from
- * the side of the pool rather than a sensation the other person has to report. Nothing in this file
- * was written from an agent's memory: the staging is Swim England's and the freestyle is US Masters
- * Swimming's, and the one line that has no source says so on its own card. */
-/* HIS OWN SWIMMING. Every check shows the sentence it came from and links the page, because he
- * asked for exactly that: "I don't want hallucination here so try to keep it as literal as you
- * can." The quote is on the card rather than behind a tap, so an invented cue would have nowhere
- * to hide. validate.mjs refuses a "sourced" check with no quote and no source. */
-function SwimCoachMe({ c }: { c: SwimCoaching }) {
-  const byId = new Map(c.sources.map((s) => [s.id, s]));
-  return (
-    <>
-      <div className="exgroup">
-        <div className="exgroup-label">{c.theQuestion.title}</div>
-        <Prose text={c.theQuestion.body} />
-      </div>
-
-      {c.checks.map((k) => {
-        const src = byId.get(k.source ?? k.from ?? '');
-        const quote = k.quote ?? k.fromQuote;
-        return (
-          <div className="exgroup" key={k.id}>
-            <div className="exgroup-label">
-              <span className="exgroup-n tnum">{k.n}/{c.checks.length}</span>
-              {k.name}
-              {k.confidence !== 'sourced' && <span className="tag opt">{k.confidence}</span>}
-            </div>
-            <p className="ex-cue">{k.say}</p>
-            {k.say2 && <p className="ex-cue">{k.say2}</p>}
-            <div className="lookfor">
-              <div className="lf">
-                <div className="lf-see">How you check it</div>
-                <div className="lf-say">{k.test}</div>
-              </div>
-            </div>
-            {quote && (
-              <div className="stale">
-                <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>
-                <p className="ex-cue">&ldquo;{quote}&rdquo;</p>
-                {src && (
-                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      })}
-
-      <div className="exgroup">
-        <div className="exgroup-label">Where all of this comes from</div>
-        <div className="tierlist">
-          {c.sources.map((src) => (
-            <div className="tier" key={src.id}>
-              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-              {src.note && <div className="ex-cue">{src.note}</div>}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
-
-function SwimTeach({ t }: { t: SwimTeaching }) {
-  return (
-    <>
-      <div className="exgroup">
-        <div className="stale">
-          <span className="k">{t.beforeYouStart.title}</span>
-          <Prose text={t.beforeYouStart.body} />
-        </div>
-      </div>
-
-      <div className="exgroup">
-        <div className="exgroup-label">{t.whatToLookFor.title}</div>
-        <p className="ex-cue">{t.whatToLookFor.intro}</p>
-        <div className="lookfor">
-          {t.whatToLookFor.items.map((i) => (
-            <div className="lf" key={i.see}>
-              <div className="lf-see">{i.see}</div>
-              <div className="lf-say">{i.say}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {t.stages.map((st) => (
-        <div className="exgroup" key={st.id}>
-          <div className="exgroup-label">
-            {st.n}. {st.name}
-          </div>
-          <p className="ex-cue"><b>Who this is for.</b> {st.who}</p>
-          <Cues
-            cues={st.cues}
-            heading="What to say, and what to watch for"
-            intro="Each one is something you can SEE from the side of the pool, not something they have to feel and tell you about. Tap to open."
-          />
-        </div>
-      ))}
-
-      <div className="exgroup">
-        <div className="exgroup-label">Where all of this comes from</div>
-        <div className="tierlist">
-          {t.sources.map((src) => (
-            <div className="tier" key={src.id}>
-              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-              {src.note && <div className="ex-cue">{src.note}</div>}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
-
-
-/* Turns "Your number plus 100 m" into "500 m" once the calibration swim has happened.
- *
- * Text substitution rather than a restructured data model, deliberately: the rung wording is prose
- * that changes with the plan, and the alternative is a schema of operations that has to be kept in
- * step with sentences somebody rewrites. If a phrase stops matching, the reader sees the original
- * relative wording, which is still true and still followable. It degrades to correct. */
-function resolvePiece(piece: string, base: number | null): string {
-  if (!base) return piece;
-  return piece
-    .replace(/your number plus (\d+) m/gi, (_m, n) => `${base + Number(n)} m`)
-    /* Floored at 100 m, four lengths, the smallest piece worth writing down in a 25 m pool. A
-       200 m baseline made the week 7 to 8 rung resolve to "0 m", which is not a prescription. The
-       ladder's own note already covers what a small baseline means for the later rungs. */
-    .replace(/your number minus (\d+) m/gi, (_m, n) => `${Math.max(100, base - Number(n))} m`)
-    .replace(/your number/gi, `${base} m`);
-}
-
 export default async function ConditioningPage({
   searchParams,
 }: {
   searchParams: Promise<{ p?: string; s?: string }>;
 }) {
   const sp = await searchParams;
+  /* EVERY OLD SWIM BOOKMARK STILL LANDS SOMEWHERE. ?p=swim was a real URL for ten days and he was
+     told to bookmark it at the poolside; the sub-tab carries across because /swim uses the same
+     `?s=` parameter names. A redirect rather than a rendered "this moved" panel: he does not need
+     to be told his bookmark is old, he needs the page. */
+  if (sp.p === 'swim') redirect(sp.s ? `/swim?s=${sp.s}` : '/swim');
   const tab: TabId = (TABS.find((t) => t.id === sp.p)?.id ?? 'week') as TabId;
-  /* Falls back to the FIRST sub-tab of whatever discipline this is, so a bare ?p=swim link from
+  /* Falls back to the FIRST sub-tab of whatever discipline this is, so a bare ?p=run link from
      anywhere still lands somewhere sensible rather than blank. */
   const subs = SUB_TABS[tab];
   const sub = subs?.find((x) => x.id === sp.s)?.id ?? subs?.[0]?.id ?? '';
-  /* The week query only runs for the tab that shows it. The three plan tabs are static content and
+  /* The week query only runs for the tab that shows it. The two plan tabs are static content and
      had no database dependency before today; giving them one so the overview could share a fetch
-     would put a Neon round trip in front of a page he opens at the side of a pool. */
+     would put a Neon round trip in front of a page he opens at the side of a treadmill. */
   const [c, program] = await Promise.all([loadConditioning(), loadProgram()]);
   const week = tab === 'week' ? await getTrainingWeek(program, c) : null;
-  /* Same reasoning as the week query: only the swim tab pays for the personal-best read. */
   /* One session read, only for the discipline actually open, and only on its Now tab. */
-  const KIND_FOR_TAB: Record<string, SessionKind> = { swim: 'swimming', run: 'treadmill', bike: 'cycling', week: 'strength' };
+  const KIND_FOR_TAB: Record<string, SessionKind> = { run: 'treadmill', bike: 'cycling', week: 'strength' };
   const lastSession = sub === 'now' || tab === 'week'
     ? await getLastSession(KIND_FOR_TAB[tab] ?? 'strength')
     : null;
-  const teaching = tab === 'swim' && sub === 'teach' ? await loadSwimTeaching() : null;
-  const coaching = tab === 'swim' && sub === 'me' ? await loadSwimCoaching() : null;
-  const baseline = tab === 'swim' && sub === 'plan' ? await getSwimBaseline() : null;
-  const swim = tab === 'swim' ? await (async () => {
-    const [standards, pbs] = await Promise.all([loadSwimStandards(), getSwimPbs()]);
-    return { standards, standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)) };
-  })() : null;
 
   return (
     <div className="wrap">
@@ -865,7 +431,7 @@ export default async function ConditioningPage({
 
           {/* One line each, then out. The detail is a tap away and does not belong here. */}
           <div className="exgroup">
-            <div className="exgroup-label">The three plans</div>
+            <div className="exgroup-label">The plans</div>
             <div className="exlist">
               <Link className="ex" href="/gym/conditioning?p=run">
                 <div className="ex-name">{c.run.title} &rarr;</div>
@@ -875,9 +441,13 @@ export default async function ConditioningPage({
                 <div className="ex-name">{c.bike.title} &rarr;</div>
                 <div className="ex-meta">{c.bike.sessionsPerWeek}x a week · {c.bike.protocol.totalMinutes} min · {c.bike.protocol.name}</div>
               </Link>
-              <Link className="ex" href="/gym/conditioning?p=swim">
-                <div className="ex-name">{c.swim.title} &rarr;</div>
-                <div className="ex-meta">{c.swim.sessionsPerWeek} · target {c.swim.theGoal.target}</div>
+              {/* OFF THIS PAGE, and that is the point of the row rather than a wart on it. Swim is
+                  a route now, so the third plan is a link OUT of the gym rather than a fourth tab
+                  along the top. The week above still counts his swims: this list is about where to
+                  go to read a plan, not about what counts as training. */}
+              <Link className="ex" href="/swim">
+                <div className="ex-name">Swim &rarr;</div>
+                <div className="ex-meta">its own page now, with the tier ladder and the coaching</div>
               </Link>
             </div>
           </div>
@@ -996,156 +566,6 @@ export default async function ConditioningPage({
         </div>
       )}
 
-      {tab === 'swim' && sub === 'me' && coaching && <SwimCoachMe c={coaching} />}
-      {tab === 'swim' && sub === 'teach' && teaching && <SwimTeach t={teaching} />}
-
-      {tab === 'swim' && sub === 'now' && <LastSession s={lastSession} />}
-
-      {tab === 'swim' && sub === 'now' && swim && <SwimLevel standards={swim.standards} standings={swim.standings} />}
-
-      {tab === 'swim' && sub === 'now' && (
-        <div className="exgroup">
-          <div className="exgroup-label">What the lap data says</div>
-          <div className="exlist">
-            {/* WALKED, NOT NAMED. Until 2026-08-21 this block read three baseline fields by name and
-                summarised them in one line, and two false claims lived in those slots for weeks:
-                "600 m on 2026-06-27" (right distance, wrong date) and a best continuous effort of
-                "around 3 minutes" when the lap data says 11:36. The data had to fit the sentence.
-                Now each fact carries its own label and the page cannot outgrow what the laps say. */}
-            <div className="ex">
-              <div className="ex-name">Where you are</div>
-              {c.swim.baseline
-                .filter((f) => !f.secondary)
-                .map((f) => (
-                  <div className="ex-cue" key={f.label}>
-                    <b>{f.label}.</b> {f.value}
-                  </div>
-                ))}
-              {/* The backing numbers go behind a tap. Adding five labelled facts took this tab to
-                  5,821px on a 390px screen, which is the seven-screen scroll the tabs were built to
-                  kill. The data keeps every fact; the page shows the ones that change what he does. */}
-              {c.swim.baseline.some((f) => f.secondary) && (
-                <details className="src">
-                  <summary>The rest of the numbers</summary>
-                  <div className="src-body">
-                    {c.swim.baseline
-                      .filter((f) => f.secondary)
-                      .map((f) => (
-                        <p key={f.label}>
-                          <b>{f.label}.</b> {f.value}
-                        </p>
-                      ))}
-                  </div>
-                </details>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {tab === 'swim' && sub === 'plan' && (
-        <div className="exgroup">
-          <div className="exgroup-label">
-            {c.swim.title} <span className="tag">({c.swim.sessionsPerWeek})</span>
-          </div>
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">{c.swim.theGoal.target}</div>
-              <div className="ex-cue">{c.swim.theGoal.whatThatActuallyIs}</div>
-              <div className="ex-cue">{c.swim.theGoal.whyItIsAchievable}</div>
-            </div>
-          </div>
-
-          <p className="lede">{c.swim.structure.note}</p>
-
-          {/* THE SLOT FOR THE NUMBER. Added 2026-08-22: every rung below reads "your number plus
-              100 m" and there was nowhere to put the number, so the plan could not be followed as
-              written. Above the calibration card, because once the number exists the card is
-              history and the ladder is the thing he reads. */}
-          <SwimBaselineForm current={baseline} />
-
-          {/* THE CALIBRATION SWIM SITS ABOVE THE TABLE, because every row in the table is measured
-              from the number it returns and the table is unreadable without it. It is not styled as
-              a row of the ladder: it is a gate on the ladder. */}
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">{c.swim.structure.calibration.name}</div>
-              <div className="ex-meta">{c.swim.structure.calibration.what}</div>
-              <div className="ex-meta cue-test">
-                <b>The test.</b> {c.swim.structure.calibration.test}
-              </div>
-              {/* The reasoning is why he trusts it, and it is also 90 words he does not need at the
-                  poolside. Same treatment the cues get. */}
-              <details className="src">
-                <summary>Why there is no number written here</summary>
-                <div className="src-body">{c.swim.structure.calibration.why}</div>
-              </details>
-            </div>
-          </div>
-
-          <div className="table-scroll">
-            <table className="plan-table">
-              <thead>
-                <tr>
-                  <th className="tnum">Weeks</th>
-                  <th className="wide">Continuity piece</th>
-                  {/* NOT .tnum: the last two rows say "then easy swimming" and "the whole thing,
-                      unbroken", and nowrap on prose forced the table to scroll sideways. */}
-                  <th>Rest</th>
-                </tr>
-              </thead>
-              <tbody>
-                {c.swim.structure.ladder.map((s) => (
-                  <tr key={s.weeks}>
-                    <td className="tnum">{s.weeks}</td>
-                    {/* NOT .nowrap any more. The rungs stopped being "2 x 400 m" on 2026-08-21 and
-                        became sentences relative to his measured number, and nowrap on a sentence is
-                        how you force a phone to scroll sideways. */}
-                    {/* "Your number plus 100 m" becomes "500 m" the moment the number exists.
-                        The relative wording stays in the DATA, because the ladder has to be
-                        readable before the calibration swim and correct after it, and a stored
-                        absolute would be wrong for whoever reads it first. */}
-                    <td>
-                      {resolvePiece(s.piece, baseline?.metres ?? null)}
-                      {s.note && <div className="quiet">{s.note}</div>}
-                    </td>
-                    <td>{s.rest}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-      )}
-
-      {tab === 'swim' && sub === 'how' && (
-        <div className="exgroup">
-          <div className="exgroup-label">How to swim it</div>
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">The one change: go slower</div>
-              <div className="ex-meta">{c.swim.theOneTechniqueChange.what}</div>
-              <div className="ex-cue">{c.swim.theOneTechniqueChange.why}</div>
-              <div className="ex-cue">{c.swim.theOneTechniqueChange.howToKnow}</div>
-            </div>
-            <div className="ex">
-              <div className="ex-name">Paddles</div>
-              <div className="ex-meta">{c.swim.paddleRule.rule}</div>
-              <Prose text={c.swim.paddleRule.why} />
-            </div>
-            <div className="ex">
-              <div className="ex-name">Pull buoy</div>
-              <div className="ex-cue">{c.swim.pullBuoyRule}</div>
-            </div>
-            <div className="ex">
-              <div className="ex-name">Drills</div>
-              <div className="ex-cue">{c.swim.onDrills}</div>
-            </div>
-          </div>
-          <Cues cues={c.swim.cues ?? []} note={c.swim.cuesNote} />
-        </div>
-      )}
     </div>
   );
 }

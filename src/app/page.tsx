@@ -12,7 +12,7 @@ import { getBodyCompSummary } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import { getSummary as getMusicSummary } from '@/lib/music/db';
-import { getSummary as getSwimSummary, getLiveness as getSwimLiveness, shortPool } from '@/lib/swim/db';
+import { getSwimFrontRow } from '@/lib/swim/db';
 import { allPacks } from '@/lib/reading/packs';
 import { getAcquisitionMap, getQueue } from '@/lib/reading/queue-db';
 import { getShelfStats } from '@/lib/reading/shelf-db';
@@ -61,6 +61,11 @@ export const metadata = { alternates: { canonical: '/' } };
  * it now, so its row is computed rather than written. That is the real cure for the drift. The
  * hand-written version of that row described the wrong app for months and read perfectly well the
  * whole time it was wrong.
+ *
+ * Swim proved the rule twice. On 2026-08-26 the pool schedule it was computed from was deleted, and
+ * because the row was a computation rather than a sentence, what needed changing was visible: the
+ * function stopped compiling against a table that no longer exists. A hand-written line would have
+ * gone on describing a scraper that had been switched off.
  */
 
 interface Row {
@@ -176,7 +181,7 @@ async function healthRow(): Promise<Row> {
     };
   } catch {
     // A database hiccup must not take the front door down with it.
-    return { label: 'Health', line: 'Weight, swim history, and lifting attendance', href: '/health' };
+    return { label: 'Health', line: 'Weight and lifting attendance', href: '/health' };
   }
 }
 
@@ -228,34 +233,36 @@ async function readingRow(): Promise<Row> {
 
 async function swimRow(): Promise<Row> {
   try {
-    const [s, live] = await Promise.all([getSwimSummary(), getSwimLiveness()]);
+    const s = await getSwimFrontRow();
+    if (!s.lastDate) throw new Error('nothing synced');
 
-    /* The schedule no longer reaching today REPLACES the metric rather than sitting beside it. The
-       count would be a true statement about a week that has already happened, and "0 pools open"
-       reads as a quiet Sunday rather than as a broken scrape. Same move /music makes when its
-       collector dies. */
-    if (live.dataStale) {
-      return {
-        label: 'Swim',
-        line: 'The pool schedule has fallen behind and is not safe to read',
-        sub: live.coversThrough ? `it only runs to ${live.coversThrough}` : 'there is no schedule behind it',
-        href: '/swim',
-      };
-    }
+    /* THIS ROW USED TO COUNT POOLS. It read "N Calgary pools with lane swim open right now", off
+       six scrapers and a nightly mirror, and all of that was deleted on 2026-08-26 along with the
+       only answer anywhere to that question. What /swim holds now is his own swimming, so the row
+       shows his own swimming.
 
+       Still derived rather than written, which is the part that matters and the reason this
+       function exists at all: this row once said "Sessions, drills, and what to work on in the
+       water" for months, which the app had never been. A sentence nobody computes is a sentence
+       nobody checks.
+
+       No `.live` class. --signal is reserved for a value that is true RIGHT NOW, and the last swim
+       is a thing that happened, sometimes three days ago. The old row earned the green because a
+       pool being open at 6am is true at 6am. */
+    const days = Math.max(0, Math.round((Date.parse(today()) - Date.parse(s.lastDate)) / 86400000));
     return {
       label: 'Swim',
-      line: s.openNow > 0
-        ? <><span className="live tnum">{s.openNow}</span> Calgary pool{s.openNow === 1 ? '' : 's'} with lane swim open right now</>
-        : 'No lane swim open this minute',
-      sub: s.nextStart
-        ? `next ${shortPool(s.nextPool ?? '')} at ${s.nextStart}`
-        : `${s.poolsLive} of ${s.poolsTotal} pools covered`,
+      line: (
+        <>
+          Last swim <b className="tnum">{Math.round(s.lastDistanceM ?? 0)} m</b>, {daysAgoText(days)}
+        </>
+      ),
+      sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0)} m`,
       href: '/swim',
     };
   } catch {
     // A database hiccup must not take the front door down with it.
-    return { label: 'Swim', line: 'Which Calgary pools have lane swim open right now', href: '/swim' };
+    return { label: 'Swim', line: 'Where I am in the water, and the plan to swim 1,000 m unbroken', href: '/swim' };
   }
 }
 
@@ -329,11 +336,10 @@ async function musicRow(): Promise<Row> {
 }
 
 const STATIC_ROWS: Row[] = [
-  /* Swim used to sit here, hand-written, pointing at swim.hoodii.studio. It is a real route as of
-   * 2026-08-16 and its row is DERIVED from the mirror in swimRow() above, which is the actual fix
-   * for the drift this list kept producing: this row once said "Sessions, drills, and what to work
-   * on in the water" for months, which the app has never been. A sentence nobody computes is a
-   * sentence nobody checks. */
+  /* Swim used to sit here, hand-written, pointing at swim.hoodii.studio. It became a real route on
+   * 2026-08-16 and its row has been DERIVED ever since, which is the actual fix for the drift this
+   * list kept producing. What it derives FROM changed on 2026-08-26, when the pool schedule was
+   * deleted and /swim became his own swimming: see swimRow() above. */
   /* Theories was here, pointing at theoryos-review.vercel.app, which renders nothing but its own
    * title. A link to an empty page is worse than no link and breaks the honest-states rule below.
    * The app still exists and is untouched; it is just not advertised until it has content. */

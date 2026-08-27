@@ -11,7 +11,7 @@
  * decided manual-to-start on 2026-08-20 rather than a cron, since acquire.mjs can't run unattended
  * anyway and the queue itself only changes when a book gets ticked off.
  *
- * Full replace, in a transaction, for both tables -- same reasoning as content/swim/sync.mjs:
+ * Full replace, in a transaction, for both tables -- same reasoning as the swim mirror had (content/swim/sync.mjs, deleted 2026-08-26):
  * queue.json is regenerated whole by refill.mjs, so a book that has dropped out of the ten has
  * genuinely left it, and an upsert-only sync would leave stale entries behind forever.
  */
@@ -57,7 +57,7 @@ try {
   const queue = JSON.parse(readFileSync(QUEUE_PATH, 'utf8'));
   const entries = queue.entries ?? [];
 
-  // Refuses to write on zero, the way content/swim/sync.mjs does. A parse regression that yields
+  // Refuses to write on zero, the way the deleted swim mirror did. A parse regression that yields
   // an empty queue must not empty the mirror and show ten blank rows.
   if (!entries.length) throw new Error('queue.json parsed 0 entries, refusing to write');
   queueUpdated = queue.updated ?? null;

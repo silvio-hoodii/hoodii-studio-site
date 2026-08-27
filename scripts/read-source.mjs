@@ -5,7 +5,7 @@
  *   node scripts/read-source.mjs <url>                 print the rendered text
  *   node scripts/read-source.mjs <url> "<regex>"       print only the lines that match
  *
- * WHY THIS EXISTS. On 2026-08-22 a cue in swim-teaching.json was downgraded from "sourced" to
+ * WHY THIS EXISTS. On 2026-08-22 a cue in content/swim/teaching.json was downgraded from "sourced" to
  * "convention" and the file was made to say that swimming.org "returns HTTP 403 to any fetch, so no
  * sentence from it can be quoted or checked by anyone reading this."
  *

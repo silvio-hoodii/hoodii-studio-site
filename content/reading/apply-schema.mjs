@@ -2,7 +2,7 @@
 /** One-time (and re-runnable, everything is IF NOT EXISTS) apply of schema.sql to Neon.
  *  Run: node content/reading/apply-schema.mjs
  *
- *  Copied from content/swim/apply-schema.mjs -- same reasoning: Client, not the http `sql` tag,
+ *  Copied from the swim mirror (content/swim/apply-schema.mjs, deleted 2026-08-26 with the pool schedule) -- same reasoning: Client, not the http `sql` tag,
  *  because the tag refuses a plain string call. Reads .env.local itself since sourcing it from a
  *  shell on Windows fails silently (CRLF endings put a trailing \r on every exported name).
  */

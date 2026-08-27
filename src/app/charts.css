@@ -1,0 +1,75 @@
+/* CHARTS, shared by /health and /swim.
+ *
+ * These rules were .health-only until 2026-08-26. On that day swim left /gym for its own route and
+ * /health handed its swim section over to it, which meant the distance chart had to render under
+ * `.training` as well. The two options were this file or a second copy of these forty lines, and a
+ * copy is a rule that goes stale silently. Same call, and the same afternoon, as gym.css becoming
+ * training.css.
+ *
+ * The components are src/app/health/HealthCharts.tsx. They are not moved: /health is still the
+ * surface that owns charting on this site, and moving a working client component to prove a point
+ * about naming is churn. What is shared here is the paint, not the plumbing.
+ *
+ * NOT MOVED, on purpose: `.pair`, `.chartfig` and `.chart-cap`. Those arrange TWO charts side by
+ * side against each other, which only /health does. They stay in health.css. */
+
+/* ---- charts ---- */
+/* min-height reserves the drawn height before the chart has measured itself. The server renders a
+   600-unit box scaled into whatever width it lands in, which is shorter than 160 on a phone; the
+   reservation is what keeps everything below from jumping when the measured version replaces it.
+   See the header comment in HealthCharts.tsx. */
+.health .chart-wrap, .training .chart-wrap { position: relative; width: 100%; min-height: 160px; }
+.health .chart-wrap svg, .training .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.health .chart-line, .training .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.health .chart-axis, .training .chart-axis { stroke: var(--border); stroke-width: 1; }
+.health .chart-axis-label, .training .chart-axis-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--muted-foreground);
+}
+.health .chart-endpoint, .training .chart-endpoint { fill: var(--signal); stroke: var(--background); stroke-width: 2; }
+.health .chart-endpoint-label, .training .chart-endpoint-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--signal);
+  /* The last point of a time series is always at the right edge, so this label is always the one
+     that flips to end-anchored and lands back on top of the line it is labelling. A halo the colour
+     of the page, painted under the glyphs, is one rule; the alternative is guessing at an offset
+     that clears a line whose slope changes with the data. */
+  paint-order: stroke;
+  stroke: var(--background);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.health .chart-crosshair, .training .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
+.health .chart-crosshair.on, .training .chart-crosshair.on { opacity: 0.6; }
+.health .chart-hit, .training .chart-hit { fill: transparent; cursor: crosshair; }
+
+.health .chart-bar, .training .chart-bar { fill: var(--muted-foreground); }
+.health .chart-bar:hover, .health .chart-bar.hot, .training .chart-bar:hover, .training .chart-bar.hot { fill: var(--foreground); }
+
+.health .tooltip, .training .tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  opacity: 0;
+  transition: opacity 80ms ease;
+  z-index: 5;
+}
+.health .tooltip.on, .training .tooltip.on { opacity: 1; }
+.health .tooltip .t-date, .training .tooltip .t-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-bottom: 2px;
+}
+.health .tooltip .t-value, .training .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }

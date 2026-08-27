@@ -12,11 +12,14 @@ import { today } from '@/lib/day';
  * "your number plus 100 m", the number comes from a calibration swim, and for a month there was
  * nowhere to record it. The plan could not be followed as written.
  *
+ * Moved to /swim on 2026-08-26 with the rest of the swim surface, and repointed at
+ * /swim/api/baseline. See that route for the two build gates the move had to be extended into.
+ *
  * The BUOY toggle is the load-bearing control here, not the distance. The reason the number was
  * unknown is that the lap data says 600 m unbroken while he remembered 200 m, and nothing in the
  * watch export records a pull buoy. A baseline swum with one between the legs is a different
  * number, so it is captured rather than assumed, and it defaults to the honest answer. */
-export default function SwimBaselineForm({
+export default function BaselineForm({
   current,
 }: {
   current: { measuredOn: string; metres: number; noBuoy: boolean } | null;
@@ -30,7 +33,7 @@ export default function SwimBaselineForm({
     setState('saving');
     setErr(null);
     try {
-      const r = await fetch('/gym/api/swim-baseline', {
+      const r = await fetch('/swim/api/baseline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ metres: Number(metres), noBuoy, measuredOn: today() }),

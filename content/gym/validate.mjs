@@ -18,10 +18,6 @@ const warmups = readJson('warmups.json');
 const cooldowns = readJson('cooldowns.json');
 const equipment = readJson('equipment.json');
 const conditioning = readJson('conditioning.json');
-const swimStandards = readJson('swim-standards.json');
-const swimTeaching = readJson('swim-teaching.json');
-const swimCoaching = readJson('swim-coaching.json');
-
 let FAIL = 0;
 const out = [];
 function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
@@ -459,211 +455,18 @@ if (!conditioning.week?.restRule) {
   }
 }
 
-// ---------------------------------------------------------------------------------------------
-// SWIM STANDARDS: every tier has to say where its numbers came from. Added 2026-08-22.
-//
-// He asked for levels knowing the honest answer would be mixed: "you're probably only going to
-// find reference for elite and whatever and really high-performing athletes. We'll have to make
-// up our own tiers." Three of these tiers are published standards for men 35-39 and two are
-// multiples of one of them that an agent chose. The whole value of the sourced rows depends on
-// the constructed ones being visibly labelled, so `provenance` is mandatory and a sourced tier
-// must name a source that exists.
-//
-// The alternative, remembering to write it down, is the shape of rule this workspace has broken
-// every single time.
-// ---------------------------------------------------------------------------------------------
-/* 'third-party' sits between sourced and constructed: published by somebody real, but not by the
-   governing body. Openlane's masters tables are the case that created it. It must still name a
-   source, because the whole point of the value is that a reader can go and look. */
-const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'third-party', 'constructed', 'capability']);
-
-{
-  const srcIds = new Set((swimStandards.sources || []).map((s) => s.id));
-  for (const s of swimStandards.sources || []) {
-    if (!s.url || !/^https?:\/\//.test(s.url)) fail('swim-standards.json', `source "${s.id}" has no usable url`);
-  }
-  const tiers = swimStandards.tiers || [];
-  if (!tiers.length) fail('swim-standards.json', 'no tiers');
-  const ids = new Set(tiers.map((t) => t.id));
-  for (const t of tiers) {
-    const where = `swim-standards.json/${t.id || "?"}`;
-    if (!t.id || !t.name) fail(where, 'tier needs an id and a name');
-    if (!PROVENANCE.has(t.provenance)) {
-      fail(where, `provenance must be one of ${[...PROVENANCE].join(" | ")}, got ${JSON.stringify(t.provenance ?? null)}. Every tier has to say whether its numbers were published by somebody or picked by us.`);
-    }
-    if ((t.provenance === 'sourced' || t.provenance === 'sourced-other-course' || t.provenance === 'third-party')) {
-      if (!t.sourceId) fail(where, `provenance is "${t.provenance}" but no sourceId. A sourced tier must name the source it came from.`);
-      else if (!srcIds.has(t.sourceId)) fail(where, `sourceId "${t.sourceId}" is not in sources[]`);
-      if (!t.times) fail(where, `provenance is "${t.provenance}" but the tier carries no times`);
-    }
-    if (t.provenance === 'constructed' && !t.derivedFrom && !t.times) {
-      fail(where, 'a constructed tier must either carry its own times or say what it is derived from');
-    }
-    if (t.derivedFrom) {
-      if (!ids.has(t.derivedFrom.tier)) fail(where, `derivedFrom names tier "${t.derivedFrom.tier}", which does not exist`);
-      if (!(t.derivedFrom.multiplier > 0)) fail(where, `derivedFrom.multiplier must be a positive number`);
-    }
-    if (!t.what || t.what.length < 20) fail(where, `tier needs a "what" of at least 20 characters explaining who swims this`);
-  }
-
-  /* Tiers must get slower as they get easier, at every distance. A table where "National" is
-     slower than "Qualifier" would place him in the wrong band and nobody would notice by reading
-     it: the numbers are all plausible on their own. */
-  /* h:mm:ss, m:ss, or plain seconds. The two-part-only version returned the HOURS field for a 5 km
-     time, so every rung at that distance parsed as 1.00 and the ordering check compared 1 to 1.
-     The same parser had been written three times in this feature and was wrong in all three. */
-  const parse = (str) => {
-    const p = String(str).split(':').map(Number);
-    if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2];
-    if (p.length === 2) return p[0] * 60 + p[1];
-    return p[0];
-  };
-  const resolve = (tier, dist, seen = new Set()) => {
-    if (tier.times && tier.times[dist] != null) return parse(tier.times[dist]);
-    if (tier.derivedFrom && !seen.has(tier.id)) {
-      seen.add(tier.id);
-      const base = tiers.find((x) => x.id === tier.derivedFrom.tier);
-      const b = base ? resolve(base, dist, seen) : null;
-      return b == null ? null : b * tier.derivedFrom.multiplier;
-    }
-    return null;
-  };
-  const dists = [...new Set(tiers.flatMap((t) => Object.keys(t.times || {})))];
-  for (const d of dists) {
-    let prev = null;
-    let prevName = null;
-    for (const t of tiers) {
-      const v = resolve(t, d);
-      if (v == null) continue;
-      if (prev != null && v <= prev) {
-        fail('swim-standards.json', `at ${d} m, tier "${t.name}" (${v.toFixed(2)}s) is not slower than "${prevName}" (${prev.toFixed(2)}s). Tiers are listed hardest first and must get slower going down, or a swimmer lands in the wrong band.`);
-      }
-      prev = v;
-      prevName = t.name;
-    }
-  }
-  out.push(`ok    [swim-standards.json] ${tiers.length} tiers over ${dists.length} distances, provenance on all of them`);
-}
-
-// ---------------------------------------------------------------------------------------------
-// SWIM TEACHING: nothing goes in the handbook without a source or an admission. 2026-08-22.
-//
-// This is the one surface on the site where being wrong could hurt somebody who is not him. He
-// is going to read these lines out to a stranger in a swimming pool. The kitchen already proved
-// what happens when an agent writes instructions from memory: on 2026-08-09 every one of the
-// four failures came from a sentence an agent wrote, and not one came from a figure a source
-// gave. In a kitchen that burnt dinner.
-//
-// So each cue must carry a TEST, and each must declare a confidence. `sourced` must name a URL.
-// `convention` may not, and that is exactly what it is for: it is how a line admits that nobody
-// studied it.
-// ---------------------------------------------------------------------------------------------
-const TEACH_CONF = new Set(['sourced', 'convention']);
-
-{
-  const stages = swimTeaching.stages || [];
-  if (!stages.length) fail('swim-teaching.json', 'no stages');
-  if (!swimTeaching.beforeYouStart?.body?.length) {
-    fail('swim-teaching.json', 'beforeYouStart is missing. That block is the safety line and it is the first thing on the page: he is being handed a script to read to a stranger in deep water.');
-  }
-  const srcIds = new Set((swimTeaching.sources || []).map((x) => x.id));
-  const stageIds = new Set(stages.map((x) => x.id));
-  for (const st of stages) {
-    const where = `swim-teaching.json/${st.id || "?"}`;
-    if (!st.name || !st.who) fail(where, 'a stage needs a name and a `who` so he can pick it by recognising the person in front of him');
-    if (st.sourceId && !srcIds.has(st.sourceId)) fail(where, `sourceId "${st.sourceId}" is not in sources[]`);
-    if (!st.cues?.length) fail(where, 'a stage with no cues teaches nothing');
-    for (const c of st.cues || []) {
-      const w2 = `${where}/${c.name || "?"}`;
-      if (!c.cue) fail(w2, 'no cue');
-      if (!c.test || c.test.length < 20) {
-        fail(w2, 'every teaching point needs a TEST of at least 20 characters. He is on a pool deck looking at somebody: it has to be something he can SEE, not something they have to feel.');
-      }
-      if (!TEACH_CONF.has(c.confidence)) {
-        fail(w2, `confidence must be ${[...TEACH_CONF].join(" | ")}, got ${JSON.stringify(c.confidence ?? null)}`);
-      }
-      if (c.confidence === 'sourced' && !c.url) {
-        fail(w2, 'confidence is "sourced" but there is no url. A sourced claim about what to do in water has to name where it came from, or it is an agent writing swim instruction from memory.');
-      }
-    }
-  }
-  for (const i of swimTeaching.whatToLookFor?.items || []) {
-    if (!stageIds.has(i.stage)) {
-      fail('swim-teaching.json', `whatToLookFor points at stage "${i.stage}", which does not exist`);
-    }
-  }
-  const nCues = stages.reduce((a, x) => a + (x.cues?.length || 0), 0);
-  out.push(`ok    [swim-teaching.json] ${stages.length} stages, ${nCues} cues, all with a test and a stated confidence`);
-}
-
-/* NO CUE WITHOUT A QUOTE. Added 2026-08-22, at his instruction and in his words:
+/* THE SWIM CHECKS LEFT THIS FILE on 2026-08-26 and are content/swim/validate.mjs, which the build
+ * runs beside this one. They moved with their content: swim-standards.json, swim-teaching.json and
+ * swim-coaching.json are content/swim/{standards,teaching,coaching}.json now, because swim stopped
+ * being a tab on /gym/conditioning and became its own route.
  *
- *   "Again I don't want hallucination here so try to keep it as literal as you can. Same thing for
- *    coach them: the actual grounding has to happen so I don't want the agents or whatever just
- *    coming back, coming up with their own leg cues or whatever. It has to be grounded something
- *    for both."
+ * What went with them: the provenance rule on every tier, the tier-ordering check that caught the
+ * 5 km parse bug, the safety-block requirement on the teaching handbook, and `checkGroundedCues`,
+ * which is the "no sourced cue without a verbatim quote" rule he asked for in his own words.
  *
- * swim-coaching.json is him coaching HIMSELF in the water; swim-teaching.json is him coaching
- * somebody else from the deck. Both are pure prose, which means both are exactly the kind of file
- * an agent can fill with confident invented technique advice that reads perfectly and is checked by
- * nothing. This is the check.
- *
- *   confidence 'sourced'    must carry a verbatim `quote` and a `source` that resolves to a URL
- *                           in the file's own `sources` list.
- *   confidence 'inference'  must name the `from` source and the `fromQuote` it reasons from, so the
- *                           reasoning is visible and the reader can go and disagree with it.
- *   confidence 'convention' is allowed and means common practice with no trial behind it. It has to
- *                           say so on the page, which the renderer does.
- *
- * A quote is not proof it was quoted correctly. Nothing here can check that, and pretending
- * otherwise would be worse than admitting it: what this stops is the case with no source at all,
- * which is the one that has actually happened. */
-function checkGroundedCues(fileLabel, doc, entries) {
-  const sourceIds = new Set((doc.sources || []).map((x) => x.id));
-  for (const src of doc.sources || []) {
-    if (!/^https?:\/\//.test(String(src.url || ''))) {
-      fail(fileLabel, `source "${src.id}" has no usable url (${JSON.stringify(src.url ?? null)}). Every source must be a link he can open and check.`);
-    }
-  }
-  for (const c of entries) {
-    const where = `${fileLabel}/${c.id || c.name || c.say || '?'}`;
-    const hasSource = sourceIds.has(c.source) || /^https?:\/\//.test(String(c.url || ''));
-    const conf = c.confidence;
-    if (!['sourced', 'inference', 'convention'].includes(conf)) {
-      fail(where, `confidence must be sourced | inference | convention, got ${JSON.stringify(conf ?? null)}. An unlabelled cue is an agent's opinion wearing a coach's voice.`);
-      continue;
-    }
-    if (conf === 'sourced') {
-      if (!c.quote || String(c.quote).trim().length < 15) {
-        fail(where, 'marked "sourced" with no verbatim quote. Paste the sentence from the guide, or mark it convention.');
-      }
-      /* Either a `source` id into this file's list, or a `url` on the cue itself. The teaching
-         file already used the second shape and the first version of this gate did not know about
-         it, which made it report nine ungrounded cues that were not ungrounded. They were missing
-         the QUOTE, which is the half that matters and the half that is still enforced below. */
-      if (!hasSource) {
-        fail(where, `marked "sourced" but names neither a source id from this file's list (${[...sourceIds].join(', ')}) nor a url of its own.`);
-      }
-    }
-    if (conf === 'inference') {
-      if (!sourceIds.has(c.from)) {
-        fail(where, `marked "inference" but ${JSON.stringify(c.from ?? null)} is not one of this file's sources. An inference has to say what it reasons FROM.`);
-      }
-      if (!c.fromQuote || String(c.fromQuote).trim().length < 15) {
-        fail(where, 'marked "inference" with no fromQuote. Paste the sentence the reasoning starts from so he can judge the leap himself.');
-      }
-    }
-    if (!c.test || String(c.test).trim().length < 15) {
-      fail(where, 'no test. Every cue must come with something he can actually check, not a sensation he is supposed to have.');
-    }
-  }
-}
-
-checkGroundedCues('swim-coaching.json', swimCoaching, swimCoaching.checks || []);
-checkGroundedCues('swim-teaching.json', swimTeaching, (swimTeaching.stages || []).flatMap((st) => st.cues || []));
-if ((swimCoaching.checks || []).length) {
-  out.push(`ok    [swim-coaching.json] ${swimCoaching.checks.length} self-checks, every one carrying a test, a stated confidence and a source`);
-}
+ * The planned-week check ABOVE stays here, deliberately. It reads week.assignedDays, and the swim
+ * slot is still one of the things arranged across seven days: swim left the gym page, not the week.
+ * src/lib/gym/week.ts still counts a swim toward the training streak for the same reason. */
 
 console.log(out.join('\n'));
 console.log('-'.repeat(70));

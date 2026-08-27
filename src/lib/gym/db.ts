@@ -214,31 +214,7 @@ export async function getNotes(opts: { limit?: number; onlyUnhandled?: boolean }
   return rows as unknown as NoteRow[];
 }
 
-/* THE SWIM BASELINE: the one number the whole ladder is measured from.
- *
- * A HISTORY, not a single value. Re-calibrating in eight weeks is the point of the ladder, and
- * overwriting would throw away the evidence that it moved. `getSwimBaseline` returns the newest. */
-export interface SwimBaseline {
-  measuredOn: string;
-  metres: number;
-  noBuoy: boolean;
-  note: string | null;
-}
+/* THE SWIM BASELINE moved to src/lib/swim/db.ts on 2026-08-26 with the rest of swim. The TABLE is
+ * still gym_swim_baseline: renaming a live table to tidy a prefix would need a migration on the
+ * store holding the only copy of his calibration number. See content/swim/baseline.sql. */
 
-export async function addSwimBaseline(b: SwimBaseline): Promise<void> {
-  await sql`
-    insert into gym_swim_baseline (measured_on, metres, no_buoy, note)
-    values (${b.measuredOn}, ${b.metres}, ${b.noBuoy}, ${b.note})
-  `;
-}
-
-export async function getSwimBaseline(): Promise<SwimBaseline | null> {
-  const rows = await sql`
-    select measured_on, metres, no_buoy, note
-    from gym_swim_baseline
-    order by measured_on desc, id desc
-    limit 1
-  `;
-  const r = rows[0] as { measured_on: string; metres: number; no_buoy: boolean; note: string | null } | undefined;
-  return r ? { measuredOn: r.measured_on, metres: Number(r.metres), noBuoy: r.no_buoy, note: r.note } : null;
-}

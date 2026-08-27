@@ -1,0 +1,196 @@
+{
+  "$comment": [
+    "The swim plan. Lived in content/gym/conditioning.json until 2026-08-26, when swim left /gym",
+    "and became its own route: the schedule half of SwimOS was killed and the tracker half was",
+    "promoted, so /swim is now the single home for everything swim. Evidence for every number is in",
+    "HealthOS/knowledge/training-programme-evidence.md, the same file the run and bike plans cite.",
+    "",
+    "The scheduling reasoning that places this in the week is NOT repeated here. It is one argument",
+    "about three disciplines sharing seven days and it stays in conditioning.json, where the other",
+    "two live. src/lib/gym/week.ts still counts a swim toward the training streak for the same",
+    "reason: swim is still training, it is just no longer a gym tab.",
+    "",
+    "CORRECTED 2026-08-21, from the per-length lap data rather than from session totals. Three claims",
+    "in this file were false, and all three pushed the swim the same way, towards rebuilding something",
+    "he can already do:",
+    "  1. \"600 m matches your best unbroken swim of the year, from 2026-06-27.\" The DISTANCE was right",
+    "     and the DATE was wrong. 600 m happened twice in one session on 2026-05-22. The 26 June swim",
+    "     (the watch files it as the 27th, in UTC) topped out at 500 m in 9:35.",
+    "  2. \"Your current best continuous effort is around 3 minutes.\" It is 11:36.",
+    "  3. The ladder placed 500 m at weeks 9 to 10. He has passed 500 m on four separate days since",
+    "     April, and 600 m in May.",
+    "",
+    "The watch resting_time field misses wall stops, so a naive read of the laps is not enough: it",
+    "reports a 1,000 m \"unbroken\" piece on 2026-04-22 that contains a 76-second length sitting next to",
+    "a 34-second one. A piece is only counted here if it also survives splitting at any length longer",
+    "than 1.5x the median of that piece, which is this file own published test (\"any length 4 or more",
+    "seconds slower than its predecessor was a rest at the wall\") applied backwards over the history.",
+    "",
+    "THE LADDER NO LONGER CARRIES AN OPENING DISTANCE. The lap data says 600 m unbroken, he said 200 m",
+    "unassisted, the difference is almost certainly the pull buoy, and the export does not record a",
+    "buoy. Asked directly, he did not remember which swims used it. So the rungs are written relative",
+    "to a number he measures in one swim, rather than to a constant that would be wrong by up to 400 m",
+    "in an unpredictable direction."
+  ],
+  "title": "Swim",
+  "sessionsPerWeek": "3 to 4, unchanged",
+  "baseline": [
+    {
+      "label": "Longest unbroken piece in the lap data",
+      "value": "600 m twice in one session, 11:36 and 12:11, on 2026-05-22. Then 500 m on 8 April, 22 April, 26 June and 14 August. Local dates, not the watch UTC dates."
+    },
+    {
+      "label": "What you said your limit was",
+      "value": "200 m without the buoy, on 2026-08-16. Both can be true if the buoy was in on the long ones, and on 2026-08-21 you did not remember which. Nothing in the export records a buoy, so the week-0 swim settles it."
+    },
+    {
+      "label": "What you actually do most swims",
+      "value": "About 1,000 m in pieces of 50 to 150 m. Longest piece in your last ten swims: 100, 100, 100, 500, 125, 250, 150, 100, 150 m. The long one happens monthly, not weekly. That is the gap, not fitness."
+    },
+    {
+      "label": "Moving pace",
+      "value": "1:48 to 2:05 per 100 m on repeats. The 600s came in at 1:56 and 2:02, the 14 August 500 at 1:55. Pace is not what stops you.",
+      "secondary": true
+    },
+    {
+      "label": "Paddles ruled out",
+      "value": "Stroke count on the 600s was 8.9 to 9.0 per length against 8.5 to 9.0 on your 50s and 100s. Paddles would drop that visibly, so those swims were unpaddled.",
+      "secondary": true
+    }
+  ],
+  "theGoal": {
+    "target": "1,000 m without stopping",
+    "whatThatActuallyIs": "About 21 minutes, and 40 lengths of a 25 m pool. This file used to say your best continuous effort was \"around 3 minutes\". It is 11:36, and you did it twice in one session on 2026-05-22. The open question is whether the buoy was in, not whether you can swim for eleven minutes.",
+    "whyItIsAchievable": "You already cover the distance, at a decent pace, and have held more than half of it unbroken. The limiter is frequency: the long piece happens about monthly, so the skill never compounds."
+  },
+  "theOneTechniqueChange": {
+    "what": "Swim the continuity piece 10 to 15 seconds per 100 m SLOWER than your normal 100 repeats. Around 2:05 to 2:10 per 100 m.",
+    "why": "This is the single thing that decides whether a long continuous swim works. Almost everyone who fails a distance swim fails it by starting at repeat pace. Going out slower is not cheating, it is the skill being trained.",
+    "howToKnow": "Set the pace off last session length times, per the calibration cue, and check length 1 afterwards. Do not judge pace by your breathing. If you need air, take it: dropping to every 2nd stroke is written into the plan, not a sign you went out fast."
+  },
+  "onDrills": "Not prescribed, deliberately. Your strokes per length run 8.5 to 9.3 in a 25 m pool and your SWOLF is 35.6 to 39, which is a reasonable stroke, and the evidence that isolated drills improve adult freestyle endurance is thin. Pacing is the higher-value target. If you want drills later, they are a separate conversation with a real reason attached.",
+  "structure": {
+    "note": "Continuity piece FIRST, fresh and unassisted. After it the session is yours, around 1,000 to 1,200 m total. Every row below is measured from YOUR NUMBER, because how far you can swim unbroken is not yet known.",
+    "ladder": [
+      {
+        "weeks": "1 to 2",
+        "piece": "Your number, then your number minus 100 m",
+        "rest": "60 s",
+        "note": "Nothing new is being asked. This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of monthly."
+      },
+      {
+        "weeks": "3 to 4",
+        "piece": "Your number plus 100 m, then your number minus 100 m",
+        "rest": "60 s"
+      },
+      {
+        "weeks": "5 to 6",
+        "piece": "Your number plus 200 m, then your number minus 100 m",
+        "rest": "45 s"
+      },
+      {
+        "weeks": "7 to 8",
+        "piece": "Your number plus 300 m, then your number minus 200 m",
+        "rest": "45 s"
+      },
+      {
+        "weeks": "9 to 10",
+        "piece": "Your number plus 400 m, unbroken, then easy swimming with whatever is left",
+        "rest": "none",
+        "note": "If your number was 600 m this row IS the goal. If it was 200 m this row is 600 m, which the data already shows you holding on a good day."
+      },
+      {
+        "weeks": "11 on",
+        "piece": "Add 100 m a fortnight until the piece is 1,000 m",
+        "rest": "none",
+        "note": "A fortnight, not a week. Never add distance after a fortnight where you missed swims: repeat the last one you completed."
+      }
+    ],
+    "calibration": {
+      "name": "Week 0: the swim that sets every number below",
+      "what": "First thing in the session, one continuous piece. No buoy and no paddles, both left on the deck. Set the pace with the calibration length. Swim until the stop rule fires, stop at that wall, read the distance and round DOWN to the nearest 25 m. That is your number.",
+      "test": "Was the buoy on the deck the whole time, and did you write the distance down before you left? If the buoy was between your legs the number does not count.",
+      "why": "The data says 600 m, you said 200 m, and the buoy explains the gap but is not recorded. A fixed rung would be wrong by up to 400 m in either direction: written at 3 x 200 m it spends two months on a capacity you have, at 2 x 400 m it may not hold. One swim removes the guess."
+    }
+  },
+  "paddleRule": {
+    "rule": "DORMANT: on 2026-08-21 you said you have not used paddles at all. Kept because it returns the day you pick them up: twice a week max, 200 m max, never in the continuity piece.",
+    "why": [
+      "Withdrawn as a live constraint. The shoulder flag needed paddles and heavy pulling together, and",
+      "the paddles are not happening.",
+      "",
+      "Schorn 2018, 193 amateur triathletes: paddle users had 24% overuse injuries against 10% for",
+      "non-users (p = 0.014), and paddles were an independent risk factor (p = 0.038) while swim",
+      "DURATION was not (p = 0.428). Heavier weekly weight training was a separate risk factor for acute",
+      "shoulder injury (p = 0.007), and that half still applies: pulldowns, rows and pressing four times",
+      "a week. Which is why the cap comes back on its own rather than being renegotiated."
+    ]
+  },
+  "pullBuoyRule": "Never in the continuity piece, so the number means something. The buoy is the only thing that explains 600 m in the data against the 200 m you reported, and nothing records it. Useful afterwards: a longer piece WITH the buoy teaches the pacing for a distance you cannot yet hold alone.",
+  "cues": [
+    {
+      "name": "The stop",
+      "cue": "You are allowed to stop, and a stop is not a failed swim. This rule outranks every other cue here. Three things end the swim, and you act on them in the water, not afterwards. (1) You take a breath you had not planned, twice, after you have already dropped to breathing every 2nd stroke. (2) You swallow water and cough. (3) You want to stop. That third one has no test attached and that is deliberate: wanting to stop is enough. When any of the three happens, finish to the nearest wall, stand up, and the swim is over at that distance. Write the distance down and go home. Swim in a lifeguarded lane, and swim in the lane closest to the wall or the lane rope so there is always something within one arm's reach. Do not use your watch's heart rate as a live guide in the water: wrist heart rate is unreliable when the sensor is wet and moving, so pace and breathing are the guide, not a number.",
+      "test": "Post-swim, one question with a yes or no answer: if you wanted to stop at any point, did you stop at the next wall? If you wanted to stop and kept swimming, this rule was broken, no matter how the swim ended. Separate post-swim check on the effort: the average heart rate the watch recorded for the continuous piece should be lower than the average heart rate it records for the 4 minute hard blocks on the gym bike. If it is higher, the swim was not easy, whatever the pace said.",
+      "why": "Nowhere in a swim is there a safe version of pushing through. Being short of air in water is not the same event as being short of air on a treadmill, and a 5x extension of his longest continuous swim is exactly where a novice runs out of options. A plan with no written stop turns every other cue into a reason to keep going.",
+      "confidence": "convention",
+      "grounding": "Instruction itself is CONVENTION. Context, fetched and verified: Toubekis AG, Beidaris N, Botonis PG, Koskolou M. Severe hypoxemia induced by prolonged expiration and reduced frequency breathing during submaximal swimming. J Sports Sci. 2017;35(11):1025-1033. Ten male swimmers (23.1 +/- 2.2 y, VO2max 47.3 +/- 7.2 ml/kg/min), 75 to 400 m at 90% critical speed. With prolonged expiration plus reduced-frequency breathing, 'oxygen saturation during recovery was decreased compared to starting values after 75, 100, 175, 275 and 375 m (78-91%, P < 0.05), while it remained unchanged after all trials in N condition (98 +/- 2%)'. Lactate 4.3 +/- 1.5 vs 3.3 +/- 1.7 mmol/L after 400 m. That is a harder breathing restriction at a harder pace than anything prescribed here, so it is not a prediction about his swim; it is the reason 'short of air' in water gets a written exit.",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:%2210.1080/02640414.2016.1209304%22&resultType=core&format=json"
+    },
+    {
+      "name": "Set the target from last week, then buy it with one length",
+      "cue": "Do not use a fixed pace number. Your target for the continuity swim is the middle length time from your last repeat session, plus 3 seconds. A length is one 25 m trip down the pool and the watch records a time for each one. If last session's lengths came in at 28 seconds, target 31. If they came in at 31, target 34. Your repeat pace spans 1:48 to 2:05 per 100 m, which is 27 to 31 seconds per length, so one printed number is wrong at one end of that range and the plan's '2:05 to 2:10' only fits the middle of it. Then buy the pace before the clock starts: push off, swim ONE length trying to hit the target, stop at the wall, look at the time on the watch. This is the only stop you are allowed, and it happens before the continuous swim begins. Came in fast by 2 seconds or more? Swim one more calibration length, aiming 2 seconds slower again. Then start the continuous swim.",
+      "test": "Post-swim, open the length list. Length 1 of the continuous swim must be within 1 second of your target and must not be faster than the target. Target 32 means length 1 reads 32, 33 or 34. Length 1 reading 30 means the swim started at repeat pace and the calibration did not transfer, whatever the rest of the swim looked like.",
+      "why": "The whole change in this block is 3 seconds per length. That is small enough that a first length which is only 'slightly quick' is not slightly quick, it is the old pace. And slow is the one thing he has never practised, so it will feel wrong and cannot be set by feel. The calibration length converts 'slower' into a number he has just watched appear on his own wrist thirty seconds ago. Arithmetic worth stating: 40 lengths at 31 to 33 seconds is 20:40 to 22:00, so this is a 21 minute swim.",
+      "confidence": "convention",
+      "grounding": "CONVENTION. There is no study behind this; it is arithmetic plus the watch's own definition of a length ('one trip down the pool'), which I read in the Garmin fenix swim terminology page.",
+      "url": null
+    },
+    {
+      "name": "Every 3, and drop to every 2 on the next stroke, not at the next wall",
+      "cue": "Two words first. An ARM STROKE is one hand entering the water. An ARM CYCLE is both hands entering once, so one cycle equals two strokes. Start the swim breathing on every 3rd arm stroke, which makes the breathing side alternate: left hand in, right hand in, left hand in, breathe right; then three more, breathe left. The moment you notice you did not get enough air on a breath, take a breath on the very next stroke and stay on every 2nd stroke, same side each time, for the rest of the swim. Do not wait for the wall. That switch is written into the plan; it is not a failure and you do not revisit it mid-swim. Never go the other way: no every 4, no every 5, no seeing how far you can get without breathing.",
+      "test": "Count your own breaths on the length right after the halfway wall, and write the number down when you get out. On every 3rd stroke the number of breaths on a length equals your hand entries divided by 3, which at your stroke count is about 6. On every 2nd it is hand entries divided by 2, about 9. Intending every 3 and counting 7 or 8 means you were sneaking extra breaths in, which is every-3 already not holding: switch to every 2 for the rest of that swim.",
+      "why": "The symmetry case for alternating sides is real, and the endurance case for every 3 over every 2 is not, so the plan's 'keep it there' is over-firm and points at the exact failure the block exists to prevent. Given a snorkel and free breathing, swimmers took MORE than one breath per arm cycle at every intensity measured. Every 3 delivers 0.67 breaths per cycle and every 2 delivers 1.0, so every 2 is the closer match to what a swimming body spontaneously asks for.",
+      "confidence": "contested",
+      "grounding": "Both fetched and verified. Symmetry: Seifert L, Chehensse A, Tourny-Chollet C, Lemaitre F, Chollet D. Effect of breathing pattern on arm coordination symmetry in front crawl. J Strength Cond Res. 2008;22(5):1670-1676. DOI 10.1519/jsc.0b013e318182029d. Eleven expert male swimmers, seven randomised breathing patterns at 100 m race pace: 'breathing to the preferential side led to an asymmetry, in contrast to the other breathing patterns'; coordination was symmetric when breathing was bilateral, snorkel-axed, or removed. Demand: Monteiro AS, Magalhaes JF, Knechtle B, Buzzachera CF, Vilas-Boas JP, Fernandes RJ. Acute ventilatory responses to swimming at increasing intensities. PeerJ. 2023;11:e15042. DOI 10.7717/peerj.15042. Eighteen well-trained swimmers, 7 x 200 m incremental with an Aquatrainer snorkel; breathing-frequency to stroke-rate ratio 1.12 low, 1.19 moderate, 1.26 heavy, 1.32 severe, 1.23 extreme. Note the full range is 1.12 to 1.32, not 1.12 to 1.26; every value exceeds 1.0. Neither population is a 104.9 kg 34-year-old novice, and no trial I could find compares every-2 to every-3 for a 20 minute continuous swim.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10019328/"
+    },
+    {
+      "name": "Hum the whole time your face is in",
+      "cue": "Air should be leaving you continuously from the moment your face goes back into the water to the moment your mouth clears it, through nose and mouth, so that when you turn to breathe the lungs are already empty and the only job is to suck in. You cannot see your own bubbles, so make it audible instead: hum. A low continuous hum you can hear inside your own head. Humming and holding your breath are physically impossible at the same time, so a continuous hum IS a continuous exhale. One boundary, and it matters: this is about arriving empty so the inhale is full. It is not breath training. Never stretch the gap between breaths to make it harder.",
+      "test": "Two yes-or-no checks on one length. First: was the hum unbroken from face-in to face-out? A silent gap means you were holding air. Second: at the instant your mouth clears the water, is your first action a suck? If you have to blow air out before you can breathe in, the exhale was late.",
+      "why": "Breathing in water is mechanically harder than on the gym bike, so every breathing window has to be a full breath, and a full breath is impossible if the lungs are still full when the window opens.",
+      "confidence": "convention",
+      "grounding": "Mechanism fetched and verified: Leahy MG, Summers MN, Peters CM, Molgat-Seon Y, Geary CM, Sheel AW. The Mechanics of Breathing during Swimming. Med Sci Sports Exerc. 2019;51(7):1467-1476. DOI 10.1249/MSS.0000000000001902. Eight collegiate swimmers, tethered incremental swim vs incremental cycle on separate days, oesophageal balloon for work of breathing. Similar peak VO2 (3.87 +/- 0.92 vs 4.20 +/- 0.83 L/min, P = 0.143) but significantly lower peak minute ventilation in swimming (118 +/- 3 vs 154 +/- 25 L/min) and higher inspired work of breathing at 50, 75 and 100 L/min, attributed to horizontal body position and hydrostatic pressure on the chest wall. The 'exhale continuously, hum to prove it' instruction itself is CONVENTION; I found no trial testing it.",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22The%20Mechanics%20of%20Breathing%20during%20Swimming%22&resultType=core&format=json"
+    },
+    {
+      "name": "Eyes on the bottom, and find the wall by the cross",
+      "cue": "One word first. BODY ROLL is your whole trunk turning around the line that runs from your head to your feet, like a log rolling, so one shoulder lifts out of the water while the other drops. Your head belongs to that roll. Look straight down at the bottom of the pool, not forward, so the waterline crosses the crown of your head. To breathe, let the head turn with the roll instead of picking it up: one goggle lens stays under the water the whole time your mouth is in the air. Because you are no longer looking forward, you need another way to know the wall is coming. Before you get in, stand on the deck and look at the far end of the black line down the middle of your lane: in most lap pools it stops short of the wall and finishes in a cross bar. On your first easy length, count hand entries from the moment that cross passes underneath you until your hand touches the wall. That number, probably 3 or 4, is your wall count. From then on: cross passes under you, count that many hand entries, reach.",
+      "test": "Two checks, both yes-or-no. (1) Name out loud, after the swim, what you could see while swimming. Correct is: the tiles and the black line directly under you and about a metre ahead. Wrong is: you could see the far end of the pool. Seeing the far wall while swimming means the head is up. (2) At the breath: if both goggle lenses come out of the water you lifted the head. One lens still under means you rolled. Check it on three separate breaths in one length. Wall count check: did you touch the wall with a straight arm and no surprise, or did you have to look up to find it? Looking up means recount the cross-to-wall hand entries on the next easy swim.",
+      "why": "A head-up position costs measurable drag, and drag is the thing he is fighting for 21 continuous minutes. The cross-mark count exists because a cue that forbids forward vision, in a swim with 39 walls, otherwise sends a novice into a wall blind with an outstretched arm.",
+      "confidence": "evidence",
+      "grounding": "Fetched and verified: Cortesi M, Gatta G. Effect of the swimmer's head position on passive drag. J Hum Kinet. 2015;49:37-45. DOI 10.1515/hukin-2015-0106. Ten regional-level male swimmers (21 +/- 2 y, 1.80 +/- 0.06 m, 75.9 +/- 6.9 kg), towing-line test at 1.5, 1.7 and 1.9 m/s. Head-up = looking directly forward, ears above the forearms; head-middle = looking downward at 90 degrees, neutral; head-down = looking backwards, ears below the forearms. Head-down and head-middle cut passive drag by 10.4-10.9% (p < 0.05) with the arms extended overhead and by 4-5.2% with the arms alongside the body, versus head-up. Three limits stated out loud: this was PASSIVE TOWING, not swimming; the speeds tested are roughly double his 0.86 m/s; and on my own read of the full text the paper reports NO hip, trim or body-alignment outcome, so the common claim that a high head sinks your hips is not in this paper and is not asserted here. The cross-mark wall count is CONVENTION.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4723180/"
+    },
+    {
+      "name": "Turn without standing up, and learn it on a different swim",
+      "cue": "1,000 m in a 25 m pool is 40 lengths and 39 walls, and the wall is the only place where stopping is easy and invisible. Three actions, nothing more. Touch the wall with one hand. Bring your knees up under you and plant both feet on the wall, taking your one breath as your head comes up. Push off on your side with both arms straight in front and your head between them, looking at the bottom. Do not put a foot on the floor. Do not hold the gutter, which is the overflow channel running along the edge at the waterline. Do not take a second breath. Learn this on a separate easy swim, NOT on a continuity attempt: 8 lengths with nothing else to think about. Only when 8 walls in a row happen without a foot on the floor does a continuity attempt use it.",
+      "test": "On the practice swim: did all 8 consecutive walls happen without a foot touching the floor and without a hand on the gutter? Count them; 8 out of 8 or it is not learned yet. On the continuity swim, post-swim: read the length list and compare each length only with the one immediately before it. Any length 4 or more seconds slower than its predecessor was a rest at the wall, whatever it felt like at the time.",
+      "why": "His stated gap is continuity, not fitness: he already covers 1,000 m in a session, in 100 to 150 m pieces with 50 to 90 second standing rests. So he has been stopping at walls, not turning at them, 39 times per attempt. There is no version of this swim that skips the wall, which is why the cue stays; what the skeptics were right about is the load, so the learning moves off the hard swim and the mechanics are cut to three actions. The push-off shape is the same reason as the head cue: arms overhead with the head neutral or down was the lowest-drag towed position measured. Threshold note: the sanctioned pace band is itself 3 seconds wide, so 4 seconds is the smallest gap that means something.",
+      "confidence": "convention",
+      "grounding": "Turn mechanics and the 8-out-of-8 gate: CONVENTION, no study, and the lap-time test is derived from the watch's definition of a length rather than from research. Push-off shape only: Cortesi M, Gatta G. Effect of the swimmer's head position on passive drag. J Hum Kinet. 2015;49:37-45 (fetched; 10.4-10.9% passive drag reduction for head-down or head-middle with arms extended overhead at 1.5-1.9 m/s, passive towing, sample and speed caveats as in the previous cue).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4723180/"
+    },
+    {
+      "name": "Your SWOLF is going to rise, and that is arithmetic",
+      "cue": "SWOLF for a length is nothing more than the length's time in seconds plus the number of strokes the watch counted for that length. That is the whole definition. Because you are deliberately adding about 3 seconds per length, your SWOLF will rise by about 3, from 36-39 to about 39-42. Nothing has got worse and there is nothing to fix. SWOLF only means something compared with another swim at the same pace. One thing to settle once, on an easy swim and never on a continuity attempt: count your own hand entries on one length and compare with the stroke count the watch reports for that length. Garmin counts one stroke per full cycle of the watch arm, so a watch reporting 9 should match about 18 hand entries. If your watch reports roughly the same number as your hand entries instead, it is counting differently and every stroke number in this document halves. Check your own watch's manual for its wording before trusting it.",
+      "test": "After the swim, pick one length, read its time and its stroke count, and add them together yourself. Does your number equal the SWOLF the watch displays for that length? Yes means you have understood the metric and can stop looking at it. No means your watch defines it differently and the number is not comparable to anything here.",
+      "why": "Left unexplained, a rising SWOLF reads as decline, and the way a swimmer fixes a rising SWOLF is by swimming faster, which is precisely the one thing this block is designed to stop him doing.",
+      "confidence": "convention",
+      "grounding": "Garmin fenix owner's manual, swim terminology page, fetched and quoted verbatim: 'Your swolf score is the sum of the time for one pool length and the number of strokes for that length', 'A stroke is counted every time your arm wearing the watch completes a full cycle', 'Length: One trip down the pool', 'Interval: One or more consecutive lengths. A new interval starts after a rest.' This is a device definition plus arithmetic, not research, so CONVENTION. Note also that the brief only says he owns a smartwatch; it does not say the watch is a Garmin, and that needs confirming before the calibration expectation is trusted.",
+      "url": "https://www8.garmin.com/manuals/webhelp/GUID-C001C335-A8EC-4A41-AB0E-BAC434259F92/EN-US/GUID-9481691E-B9E0-4793-BDF7-4F78D8703E2B.html"
+    }
+  ],
+  "cuesNote": "WHAT I DROPPED, AND WHY.\n\n1. DROPPED \"Small, unbroken kick, and never kick harder\", entirely. Four independent reasons, any one sufficient. (a) The test was unperformable: he cannot see his own heels, knees or feet while looking at the bottom tiles, and the audible criterion was a third party's report from three lanes away. (b) The citation caveat was inverted. I fetched Morris 2016 myself (EJAP 2016;116:1075-1085, DOI 10.1007/s00421-016-3372-4, 20 Australian national-level swimmers): all three stroke-rate bands were IMPOSED, not preferred (low 22-26, moderate 30-34, high 38-42 cycles/min), and 'C did not differ between WB and AO at any SR for both sexes'. So cost equivalence held AT forced rates, the opposite of what the row claimed, and the paper manipulated stroke rate, never kick effort, so it cannot license 'never kick harder' in either direction. (c) The prescribed number, two kicks per arm cycle, had no source at all, and the only kick-quantity paper anyone in this chain opened points the other way. (d) It self-contradicted: 'keep the legs going continuously' and 'about two kicks per arm cycle' are two different leg actions. I have no grounded, testable kick cue to replace it with, so the plan ships with nothing about the kick. That is the honest outcome.\n\n2. DROPPED \"Rising stroke count is the abort signal\". The action was mid-swim, the test was a post-swim lap-list read, and no post-swim read can end a swim. The trigger number (+2 strokes, about a 22% rise) appeared in a row labelled 'evidence' while the cited paper detected a 7% stroke-frequency rise, so the threshold was roughly three times its own evidence and came from nowhere. Its populations were elite swimmers held at 1.57 m/s; he swims about 0.86 m/s. And it collided arithmetically with the SWOLF cue's own sanctioned band: 'get slower by putting less force into each stroke' produces more strokes per length, driving him across an abort set one integer away. The safety function it was pretending to serve is now cue 1, which fires in the water and needs no watch.\n\n3. DROPPED \"Open by the clock\" as written, and rebuilt it as cue 2. Reasons: the conversion was wrong (31 to 33 seconds per length is 2:04 to 2:12 per 100 m, not 2:05 to 2:10); 'length 1 must not be the fastest length of the whole swim' returns FAIL on a correctly paced swim and so is not a test; 'take length 2 deliberately slower' gave no magnitude and was executed by feel two sentences after banning feel; and reading a watch at the wall is a pause at the wall, which the turn cue exists to prevent. The rebuild moves the reading to a calibration length BEFORE the continuous piece starts, targets last session's own numbers plus 3 seconds instead of a fixed band, and keeps only the one binary that worked.\n\n4. DROPPED the 'hunt for and eliminate dead glide' half of the SWOLF cue. Its direct support was seven national-level BREASTSTROKE specialists (Seifert 2014, n=7, off-stroke) in a row labelled 'evidence'; its worked example of a fault, 35 seconds with 8 strokes, is inside what his own plan permits on a 2:05 repeat day (plan-compliant continuity pace would then be 2:15 to 2:20, or 34 to 35 seconds per length); and the anomaly it was built on is probably not an anomaly. The 2.78 m per cycle figure ignores the push-off, which in a 25 m pool eats several metres before the first hand entry, and the elite comparison range it was measured against ('2.2 to 2.6 m per cycle at about 1.5 m/s') carried no citation anywhere. Told to eliminate glide he probably does not have, the way he would comply is by cutting his push-off short and adding strokes, which makes him slower. The surviving useful part, that SWOLF rises when you slow down and the watch counts cycles not hand entries, is cue 7.\n\n5. DROPPED the 'stopping is the failure' framing wholesale. It was the only thing the set said about stopping, it sat in the cue that also prescribes restricted breathing, and the escape it offered was a breathing pattern rather than the wall. Cue 1 replaces it with the opposite default.\n\nMYTHS I AM CONFIDENT ENOUGH TO NAME.\n\nMYTH 1: 'The kick is wasted energy over distance, so distance swimmers barely kick.' Not supported. In Morris 2016 (fetched, verified) arms-only front crawl was consistently about 11.0% slower than whole-body at every imposed stroke rate (p < 0.01) with metabolic cost not differing between conditions. The legs were not free speed and they were not free of cost either, but the popular claim that they are dead weight over distance has this against it. What that does NOT license is any specific kick prescription, which is why there is no kick cue above.\n\nMYTH 2: 'A lower SWOLF always means a better swim.' False by arithmetic whenever pace changes, since SWOLF is literally time plus strokes. Deliberately slowing down raises it. Only same-pace comparisons mean anything.\n\nMYTH 3: 'Drills fix your stroke, so a beginner should be doing drills.' The plan's no-drills call is right and I would keep it. I fetched Lopez-Contreras G, Campana-Montilla MP, Cuenca-Fernandez F, Arellano R, 'Changes in Front Crawl Technique Caused by Different Technical Exercises', Apunts Educacion Fisica y Deportes 2022;148:34-41, DOI 10.5672/apunts.2014-0983.es.(2022/2).148.05, and read the full abstract. IMPORTANT CORRECTION to what the earlier draft and one skeptic both got wrong: the big asymmetry belongs to the ARM-CLOSE protocols (ACBR and ACBL, non-executing arm held at the side, breathing to that side), not the arm-extended ones, and the degree figures are a PAIR, not a magnitude. Verbatim: 'ACBR and ACBL showed lower rotation ranges than the other protocols, but produced significant asymmetries between the executing arm side (shoulder: 8-19 degrees; hip: 12-17 degrees) and non-executing arm side (shoulder: 66-77 degrees; hip: 51-68 degrees).' The asymmetry is that 50 to 60 degree gap. Conclusion verbatim: 'Coaches should reconsider including these exercises in swimming programs.' Sample is 16 trained swimmers aged 14 to 18, national level, so it is not adults learning, and it measures rotation angles rather than endurance. I found no RCT or controlled trial showing isolated freestyle drills improve adult freestyle endurance.\n\nWHERE THE PLAN IS WRONG, three things.\n\n(a) THE 19 MINUTES IS WRONG. 40 lengths at the prescribed 31 to 33 seconds is 20:40 to 22:00. 1,000 m at 2:05 to 2:10 per 100 m is 20:50 to 21:40. 'About 19 minutes' corresponds to roughly 28.5 seconds per length, which is INSIDE his current repeat range and faster than the entire prescribed continuity band. Told both numbers, he has a standing reason to push. Correct the plan to about 21 minutes.\n\n(b) 'BREATHE EVERY 3 AND KEEP IT THERE' is over-firm and points at the failure the block exists to prevent. The symmetry case is real (Seifert 2008, fetched). The endurance case for every 3 over every 2 is not: free-breathing swimmers on a snorkel took more than one breath per arm cycle at every intensity measured (fR/SR 1.12 / 1.19 / 1.26 / 1.32 / 1.23, Monteiro 2023, fetched), while every 3 delivers 0.67. Cue 3 rewrites it as every 3 by default with an immediate, planned drop to every 2.\n\n(c) THE PLAN'S FIXED PACE BAND does not survive his own repeat range. At a 1:48 repeat day the plan's rule gives 1:58 to 2:03; at a 2:05 day it gives 2:15 to 2:20. The printed 2:05 to 2:10 only fits the middle. Cue 2 replaces the printed band with last session's median length time plus 3 seconds.\n\nWHAT I SEARCHED FOR AND COULD NOT GROUND.\n\n- The wall cross-mark distance. World Aquatics facilities rules reportedly specify that each lane marking ends 2.0 m from the end wall with a 1.0 m cross line, and that text appears in search snippets, but every primary PDF I fetched (the 2021-2025 World Aquatics rules, the 2017-2021 Swiss Aquatics copy, the lifesaving.org copy, the NFHS pool diagrams) returned unextractable compressed content, and worldaquatics.com/rules/competition-regulations/facilities-rules 404s. So I did not assert the 2.0 m figure. Cue 5 instead has him measure his own pool's cross-to-wall distance in hand entries, which is more robust anyway and works in a gym pool that may not be to any standard.\n- No trial testing 'exhale continuously and arrive empty'. Mechanism only (Leahy 2019).\n- No study comparing 2-beat and 6-beat kick for energy cost over a long swim. This is why there is no kick cue.\n- No validated normative SWOLF table for adult recreational swimmers. Correcting the earlier draft on two counts: the claim that a Europe PMC search on SWOLF 'returns only two papers that measure it at all' is overstated and a skeptic falsified it (hitCount 114, with other swimming papers using the metric in the first page of results); and the percentile paper is Madou T, Vanluyten K, Martens J, Iserbyt P, 'Assessment and Prediction of Swimming Performance Using the SWOLF Index', Int J Kinesiology in Higher Education 2023;7(1):76-85, DOI 10.1080/24711616.2021.1946452, so 'Iserbyt et al.' misnames it (Iserbyt is last author) and the abstract is openly readable even though the full text is paywalled. Nothing above is built on it; the within-person, same-pace framing stands.\n- No head-to-head trial of breathing every 2 vs 3 vs 4 for a long continuous swim. The only one located is a 50 m sprint study in a low-quality publisher with no effect sizes reported, and it is not used.\n\nONE OPEN ITEM WORTH ONE LENGTH OF HIS TIME. His stroke numbers are internally consistent (SWOLF 35.6 = 27.1 s + 8.5 strokes; SWOLF 39 = 29.7 s + 9.3), but every stroke-count statement here depends on whether the watch counts arm cycles or hand entries, and the brief never says the watch is a Garmin. The one-length hand-entry count in cue 7 settles it, and it costs nothing. Do it on an easy swim, not on a continuity attempt.\n\nSOURCES I FETCHED MYSELF FOR THIS FINAL PASS, all URLs opened and read, not taken from a result list: https://pmc.ncbi.nlm.nih.gov/articles/PMC4723180/ (Cortesi and Gatta 2015, head position and passive drag; confirmed no hip or trim outcome is reported), https://pmc.ncbi.nlm.nih.gov/articles/PMC10019328/ (Monteiro 2023, fR/SR 1.12 to 1.32 across five domains), https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:18714216&resultType=core&format=json (Seifert 2008, breathing pattern and arm coordination symmetry), https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE:%22The%20Mechanics%20of%20Breathing%20during%20Swimming%22&resultType=core&format=json (Leahy 2019, 118 +/- 3 vs 154 +/- 25 L/min, peak VO2 3.87 vs 4.20 L/min P = 0.143), https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:%2210.1080/02640414.2016.1209304%22&resultType=core&format=json (Toubekis 2017, SpO2 78-91%, lactate 4.3 +/- 1.5 vs 3.3 +/- 1.7), https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:27052972&resultType=core&format=json (Morris 2016, imposed stroke rates, AO 11.0% slower, cost not different), https://revista-apunts.com/en/changes-in-front-crawl-technique-caused-by-different-technical-exercises/ (Lopez-Contreras 2022, full abstract quoted verbatim), https://www8.garmin.com/manuals/webhelp/GUID-C001C335-A8EC-4A41-AB0E-BAC434259F92/EN-US/GUID-9481691E-B9E0-4793-BDF7-4F78D8703E2B.html (Garmin swim terminology, verbatim definitions)."
+}
