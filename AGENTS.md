@@ -76,12 +76,12 @@ always lose to the thing that exists.
 |---|---|---|
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
-| `/gym` | Lifting log + a note box, and lifting ONLY since 2026-08-27. `content/gym/` + `gym_*` tables | yes |
+| `/gym` | Lifting log + a note box, and lifting ONLY since 2026-08-27. The notes are READABLE from the page as of the same day, collapsed at the bottom with the count of unanswered ones in the summary; `gym_note` was write-only from the web before that. `content/gym/` + `gym_*` tables | yes |
 | ~~`/gym/conditioning`~~ | **Deleted 2026-08-27.** It held the whole week behind two levels of query parameters and every one of its URLs now 307s from `next.config.ts`: `?p=run` to `/run`, `?p=bike` to `/bike`, `?p=swim` to `/swim`, everything else to `/health`, sub-tab preserved in all three | n/a |
 | `/run` | Running. Three sub-tabs on the `?s=` idiom: Now (last session the watch saw), Plan (the ten-week walk-to-run build, belt settings in both units, the week table), How (cues). Source: `conditioning.json`, unchanged in the move | no writes |
 | `/bike` | Cycling. Same three sub-tabs. **The watch records a heart rate and nothing else on a bike**, so the page says so and the resistance levels get typed instead. Source: `conditioning.json` | via `/bike/api/ride` |
 | `/bike/api/ride` | One ride: date, minutes, the resistance level he finished EACH interval on, effort, note. Writes `bike_ride`. Four levels rather than one because `conditioning.json` already tells him to write down all four, and 1 to 20 is his dial. Shipped before the form, so its gates were built while somebody was looking | **cookie** |
-| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, what actually happened over a fortnight, attendance behind a tap), Weight (body composition, read-only from `healthos.db`), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen). Was a dead end nothing linked to and which linked to nothing | n/a |
+| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Weight (all 8 body-composition columns, not the 2 it drew before: the fat/lean split of every kilo lost, plus watch-only muscle and water), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen). Was a dead end nothing linked to and which linked to nothing | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
@@ -235,6 +235,12 @@ definition: `/health` showed a best of 1:31 per 100 m, off a 300 m session that 
 4 minutes of swimming in it, **faster than the official 100 m PB of 1:38.71**. Two numbers answering
 "how fast can he swim", on two pages, neither linking to the other.
 
+**Every discipline's `now` tab draws the last TEN sessions, not one, since 2026-08-27**, via
+`getRecentSessions`, which had existed since 2026-08-22 with zero importers. The trend each one gets
+was chosen by counting populated rows in Neon first: percent-under-110 for lifting (80 sessions),
+SWOLF for swimming (8 of the last 10 carry it, and the caption says so), cadence for running (5
+sessions, all with it), and nothing at all for cycling, which has exactly one session ever.
+
 **The four activities are NOT equal and no page should pretend otherwise.** Audited 2026-08-22:
 
 | Activity | What the watch records | What a page can honestly say |
@@ -315,6 +321,13 @@ harmless, and PSN is not surfaced on the hub.
   stack (evidenced by the 72.5 and 87.5 he has logged on it) and a per-exercise `rangeWidth` on the
   dumbbell lifts. It cannot live in `validate.mjs`, which is offline by design, so the 07:15 sync
   task runs it daily: the check depends on his current loads and can break with no file edited.
+- **`.ex` ON /gym MEANS AN EXERCISE, and nothing else may answer to it.** `scripts/probe-gym.js`
+  selects it to find the day's cards. On 2026-08-27 a notes block reused it and **all 22 tests
+  passed** while the harness's `cardNames()` went from 10 entries to 28, because `wholeDayIsShown`
+  compares that count against itself. Third borrow on this surface after `.tab`/`.surf-tab` (17
+  failing tests) and swap-revert/swap-toggle, and the first two were each "fixed" with a comment
+  saying not to do it again. `exSelectorMeansExercise` is the gate now: every `.ex` must carry
+  `data-slot`. A shared look is a CSS decision; a shared class name is an API.
 - **Touching `/gym`? Run `node scripts/gym-notes.mjs` FIRST.** There is a note box at the bottom of
   the workout, added 2026-08-16 at his request, and it writes to `gym_note`. It is the only place
   the app records anything in his own words: everything else is numbers typed into boxes, and a

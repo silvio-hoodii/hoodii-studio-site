@@ -86,6 +86,71 @@ living in different files. Both were found by screenshotting at 390 px, neither 
 `/gym` is 10.18 screens and Phase C did not change that. It is the workout runner with every
 exercise of the day open, and it is the tallest thing on the site by a factor of three.
 
+### PHASE D, FOUR ITEMS SHIPPED, 2026-08-27
+
+Commits `cda7aae`, `2f0d767`, `e142cd3`. Items 1, 3, 4 and 5 of "What gets built, in order of
+value". Item 2, the swim level page, is NOT started.
+
+**1. `getRecentSessions` has callers.** All four disciplines draw the last ten beside the last one.
+What each kind gets was decided by querying Neon first, not by assuming four equal disciplines:
+
+```
+strength   80 sessions, all with minutes, avg HR, percent under 110. Trend = percent under 110.
+swimming   60 sessions, but only 8 of the last 10 carry lengths and SWOLF. Trend = SWOLF, from
+           the 8, and the caption says it is 8 of 10.
+treadmill  5 sessions ever, all with cadence. Trend = cadence, 80 to 142 spm since May.
+cycling    ONE session, ever. It says so and draws nothing.
+```
+
+Each page also went from two reads to one: `getRecentSessions` returns newest first, so its head IS
+the last session and the `getLastSession` call beside it was fetching the same row twice.
+
+**A defect the screenshot caught.** `Trace` normalises min to max and fills its height, which is
+right for a heart rate over one session and wrong across sessions: ten swims spanning SWOLF 35.5 to
+37.7, a 6% spread, drawn as a mountain range. There is now a sentence, and it fires on ANY series
+whose spread is under 8% rather than being a note about swimming.
+
+**3. Body composition draws 8 of 8 columns.** `fat_kg` and `lean_kg` were in every row
+`getBodyCompSeries` already returned. Between 2026-05-06 and 2026-08-24 his weight moved -8.2 kg, of
+which **-8.0 fat and -0.2 lean: 98% of the loss was fat**, derivable and invisible the whole time.
+Fat plus lean equals weight to the decimal, so it is arithmetic, and the page says so. It also
+carries the caveat that outranks it: both are inferred from a bioimpedance reading and move with
+hydration, so a kilo of lean movement may be water and the set log is the better witness.
+
+Skeletal muscle, water and BMR are on 101 of 101 Watch rows and **0 of 102 Scale rows**, counted.
+`getWatchComposition` filters at the read so no caller can draw a line through a scale day and
+invent the value in between.
+
+**4. Run gets its belt-speed trace.** `detail.speed` was stored on every run and drawn by nothing.
+**The unit was checked, not assumed**: the series is metres per second on all five runs, matching
+distance over duration and never the 3.6x figure. Rendered in km/h because that is what the console
+shows and what conditioning.json tells him to dial.
+
+**5. Notes are readable.** `gym_note` was write-only from the web since 2026-08-16. Eighteen notes,
+**nine not acted on**, collapsed at the bottom of /gym with the unanswered count in the summary.
+
+### THE THING WORTH CARRYING FORWARD FROM PHASE D
+
+**A test can pass while measuring the wrong thing, and a count compared against itself never
+notices.** The notes block first shipped using `.ex`, the class the probe harness selects to find
+the day's exercises. All 22 tests passed. `cardNames()` silently went from 10 entries to 28, and
+`wholeDayIsShown` compared that inflated number against itself, saw no change, and reported green.
+
+Third borrow on this surface. `.tab` versus `.surf-tab` cost 17 failing tests, then swap-revert
+versus swap-toggle, now this. Each previous time the fix was a rename plus a comment saying not to
+do it again. **The comment does not execute.** This one has `exSelectorMeansExercise`: every `.ex`
+on /gym must carry `data-slot`, which real cards have and nothing else does. Broken on purpose
+before it was trusted, 23 ran and 1 failed and it was the right one.
+
+### STILL OPEN in Phase D
+
+- **Item 2, the swim level page.** The biggest remaining body of work and the richest material:
+  SWOLF per piece, PB progression from `standingFor()`'s unused `history` array, pace against body
+  weight on the same date, the gym-proximity effect, work-to-rest ratio, stroke type per length,
+  season gaps. All recovered and specified, none built.
+- **Lift, run and bike depth beyond the trend.** The `now` tabs are wired; the disciplines have no
+  level or progression view of their own.
+
 ### OPEN after Phase C, none of it blocking
 
 - **The hub has no row for `/run` or `/bike`.** Both are reachable from the nav on any training
