@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSyncLiveness } from '@/lib/health/db';
 import { loadConditioning, loadProgram } from '@/lib/gym/program';
 import { getTrainingWeek } from '@/lib/gym/week';
-import { getLastSession } from '@/lib/gym/session';
+import { getRecentSessions } from '@/lib/gym/session';
 import { AdherenceStrip, LineChart } from './HealthCharts';
 import { RunStanding, RecoveryNotice, PlanWeek, ActualDays } from './Week';
 import LastSession from '@/components/training/LastSession';
+import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
 import { daysAgoText } from '@/lib/format';
 
@@ -88,7 +89,8 @@ export default async function HealthPage({
     ? await Promise.all([loadConditioning(), loadProgram()])
     : [null, null];
   const week = conditioning && program ? await getTrainingWeek(program, conditioning) : null;
-  const lastLift = sub === 'now' ? await getLastSession('strength') : null;
+  const recentLifts = sub === 'now' ? await getRecentSessions('strength', 10) : [];
+  const lastLift = recentLifts[0] ?? null;
 
   const [bodySummary, weightSeries, bfSeries] =
     sub === 'weight'
@@ -153,6 +155,7 @@ export default async function HealthPage({
           <RecoveryNotice week={week} />
 
           <LastSession s={lastLift} />
+          <RecentSessions sessions={recentLifts} kind="strength" />
 
           <div className="exgroup">
             <div className="exgroup-label">What actually happened</div>

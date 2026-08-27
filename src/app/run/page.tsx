@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
-import { getLastSession } from '@/lib/gym/session';
+import { getRecentSessions } from '@/lib/gym/session';
 import LastSession from '@/components/training/LastSession';
+import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 
@@ -57,7 +58,10 @@ export default async function RunPage({
   /* One session read, and only on the tab that draws it. The plan and how tabs had no database
      dependency when they were query parameters and they still do not: this page opens at the side
      of a treadmill. */
-  const lastSession = sub === 'now' ? await getLastSession('treadmill') : null;
+  /* One read for the whole Now tab. getRecentSessions returns newest first, so the head of it IS
+     the last session and a separate getLastSession call would be the same row fetched twice. */
+  const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
+  const lastSession = recent[0] ?? null;
 
   return (
     <div className="wrap">
@@ -76,6 +80,7 @@ export default async function RunPage({
             last one the watch saw is below.
           </p>
           <LastSession s={lastSession} />
+          <RecentSessions sessions={recent} kind="treadmill" />
         </>
       )}
 

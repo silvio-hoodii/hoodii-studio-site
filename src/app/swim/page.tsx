@@ -5,10 +5,11 @@ import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
 } from '@/lib/swim/level';
-import { getLastSession } from '@/lib/gym/session';
+import { getRecentSessions } from '@/lib/gym/session';
 import { BarChart } from '../health/HealthCharts';
 import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
+import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 import { shortDate } from '@/lib/format';
@@ -377,13 +378,16 @@ export default async function SwimPage({
   const baseline = sub === 'plan' ? await getSwimBaseline() : null;
   const now = sub === 'now'
     ? await (async () => {
-        const [standards, pbs, lastSession, history] = await Promise.all([
-          loadSwimStandards(), getSwimPbs(), getLastSession('swimming'), getSwimHistory(90),
+        /* getRecentSessions returns newest first, so its head IS the last session. Calling
+           getLastSession as well would fetch the same row a second time. */
+        const [standards, pbs, recent, history] = await Promise.all([
+          loadSwimStandards(), getSwimPbs(), getRecentSessions('swimming', 10), getSwimHistory(90),
         ]);
         return {
           standards,
           standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)),
-          lastSession,
+          lastSession: recent[0] ?? null,
+          recent,
           history,
         };
       })()
@@ -398,6 +402,7 @@ export default async function SwimPage({
       {sub === 'now' && now && (
         <>
           <LastSession s={now.lastSession} />
+          <RecentSessions sessions={now.recent} kind="swimming" />
 
           <SwimLevel standards={now.standards} standings={now.standings} />
 

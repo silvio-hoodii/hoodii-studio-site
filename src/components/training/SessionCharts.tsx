@@ -19,6 +19,7 @@ export function Trace({
   label,
   unit,
   floor,
+  over = 'the session',
 }: {
   values: number[];
   height?: number;
@@ -26,6 +27,11 @@ export function Trace({
   unit: string;
   /** Draws a horizontal rule at this value, for a threshold that means something. */
   floor?: number;
+  /** What the x axis is, for the screen-reader label only. Defaults to one session, which is what
+   *  every caller wanted until RecentSessions started drawing one point PER session on 2026-08-27.
+   *  A chart that tells a screen reader it covers "the session" when it covers three months is
+   *  wrong in the one place nobody looking at the page would ever catch it. */
+  over?: string;
 }) {
   const v = values.filter((x) => Number.isFinite(x));
   if (v.length < 3) return null;
@@ -52,7 +58,7 @@ export function Trace({
         height={height}
         preserveAspectRatio="none"
         role="img"
-        aria-label={`${label}, ${Math.round(min)} to ${Math.round(max)} ${unit} over the session`}
+        aria-label={`${label}, ${Math.round(min)} to ${Math.round(max)} ${unit} over ${over}`}
       >
         <path className="trace-area" d={area} />
         <path className="trace-line" d={line} />

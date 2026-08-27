@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
-import { getLastSession } from '@/lib/gym/session';
+import { getRecentSessions } from '@/lib/gym/session';
 import LastSession from '@/components/training/LastSession';
+import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 
@@ -47,7 +48,8 @@ export default async function BikePage({
   const sp = await searchParams;
   const sub = SUB_TABS.find((t) => t.id === sp.s)?.id ?? 'now';
   const c = await loadConditioning();
-  const lastSession = sub === 'now' ? await getLastSession('cycling') : null;
+  const recent = sub === 'now' ? await getRecentSessions('cycling', 10) : [];
+  const lastSession = recent[0] ?? null;
 
   return (
     <div className="wrap">
@@ -71,6 +73,7 @@ export default async function BikePage({
             Which is why the resistance levels get typed instead. Somewhere to type them is the next
             thing to land here.
           </p>
+          <RecentSessions sessions={recent} kind="cycling" />
         </>
       )}
 
