@@ -10,7 +10,7 @@ everything".
 |---|---|---|
 | D1 five routes, /health the index | **DONE** | Live, five nav chips on all five |
 | D2 bike write path | **DONE** | `POST /bike/api/ride` live and gated. No form yet, by design |
-| D3 all 19,327 lengths | **DONE** | `health_swim_length`. **Nothing reads it yet** |
+| D3 all 19,327 lengths | **DONE** | `health_swim_length`, and `/swim/deep` reads it as of 2026-08-27 |
 | C1 one streak | **DONE** | `cycle.ts` mentions streak only in comments |
 | C2 swim was three pools | **DONE** | Schedule deleted, PBs and history both on /swim |
 | C3 contested 100 m PB | **OPEN** | `HealthOS\official-pbs.js` still present AND still wired as `npm run pbs`. Wrong about types 15 and 16 |
@@ -22,11 +22,17 @@ everything".
 | Phase B correctness | **PART** | C1, C6 done. C3, C4 open |
 | Phase B2 two new mirrors | **DONE** | |
 | Phase C the shell | **DONE** | Live |
-| Phase D depth | **4 of 5** | Item 2, the swim level page, **NOT STARTED** |
+| Phase D depth | **DONE, 5 of 5** | Item 2 shipped 2026-08-27 as `/swim/deep`, a route rather than a sixth sub-tab |
 | Phase E verify | **DONE** for what shipped | Live routes, live redirects, live write gates, heights at 390 px |
 
-**The one thing he keeps asking for and has not got is Phase D item 2**, and the table filled for it
-yesterday is still read by nothing.
+**Phase D is closed.** Item 2 shipped on 2026-08-27 as `/swim/deep`. What is left on this plan is
+C3, C4 and C5, all three of which need a decision from him rather than a fix, and all three are
+described at the bottom of this file.
+
+**Two defects were found by building it, both now fixed and neither on the plan.** The swim table's
+`date` column is UTC, so 94 of 475 swims were filed a day late and /swim printed two different dates
+for the same swim one screen apart. And the farmer carry's three competing units were settled: he
+said seconds.
 
 
 ## SHIPPED SO FAR, 2026-08-26
@@ -171,14 +177,53 @@ do it again. **The comment does not execute.** This one has `exSelectorMeansExer
 on /gym must carry `data-slot`, which real cards have and nothing else does. Broken on purpose
 before it was trusted, 23 ran and 1 failed and it was the right one.
 
+### PHASE D ITEM 2 SHIPPED, 2026-08-27: `/swim/deep`
+
+Commits `b174edb` (the route), `f2238bf` (the date defect it exposed). Every item of the recovered
+specification is on the page: SWOLF over time and per piece, PB progression out of `standingFor()`'s
+unused `history` array, pace against body weight, the gym-proximity effect, work to rest, stroke
+type, season gaps, and a limits section.
+
+**A route, not a sixth sub-tab, which was his call.** The five chips on /swim end at 317px of a
+390px screen and `.subtabs` has neither wrap nor scroll, so a sixth breaks the nav invariant. The
+other option, folding it into the Now tab, lengthens the one view he opens at a poolside.
+
+**THREE OF THE RECOVERED NUMBERS WERE WRONG, and the corrections are the useful part.** They had
+been carried between handoffs as facts.
+
+| Recovered claim | What the lengths actually say |
+|---|---|
+| Best SWOLF 34.6, currently 40 to 41 | 30.9 on 6 Jun 2025; last swim 37.1; 2026 average near 38 |
+| Swims after lifting about 7% faster | 39 swims at 2:02 against 13 at 2:08, and n=13 is the control |
+| Fastest at 116 to 120 kg proves fitness beats weight | True that his fastest swimming was not at his lightest. NOT true that volume confounds it in the direction assumed: 2023 is his biggest year, 186 swims at 104 kg, and 2025 his fastest, 118 kg on 102 |
+
+**A fourth wrong claim was written by this session and killed by a screenshot.** The weight section
+first read "the heaviest band is also the period he swam most". It is the obvious confound, it is
+false, and it sat three lines beneath a table contradicting it. Reading the rendered page found it;
+reading the source did not. A tile labelled "Best this year" over a date from the previous September,
+and "100 m" breaking into "100" over "M", came from the same pass.
+
+**`rest_after_ms` does not exist before 2025.** Zero rows across 10,037 lengths from 2018 to 2024. A
+zero there means unrecorded, not "no rest", so work-to-rest is computed as session duration minus
+the sum of the lengths, which works in every year, and the per-length reading is used only to split
+a session into pieces.
+
+**SWOLF has two definitions and the page names which one it used**, with its own agreement figure:
+identical to 0.0 on continuous swims, diverging up to 21.1 on interval ones, tracking rest. Same
+shape as the pace column that put a 1:31 best on /health off a session that was 82% rest.
+
+**The chart draws twelve months, not eight years, and says so.** Three February 2023 sessions sit at
+82 to 96 against a median of 39. They are internally consistent real swims, so dropping them would
+falsify the record, but on one axis they flatten everything since into a straight line. Narrow the
+window and say so, never the data.
+
+Measured at 390px on the built server: 4.23 screens, 0 horizontal overflow, 5 nav chips on 1 row
+with exactly 1 active. /swim went 4.59 to 4.68 for the link.
+
 ### STILL OPEN in Phase D
 
-- **Item 2, the swim level page.** The biggest remaining body of work and the richest material:
-  SWOLF per piece, PB progression from `standingFor()`'s unused `history` array, pace against body
-  weight on the same date, the gym-proximity effect, work-to-rest ratio, stroke type per length,
-  season gaps. All recovered and specified, none built.
 - **Lift, run and bike depth beyond the trend.** The `now` tabs are wired; the disciplines have no
-  level or progression view of their own.
+  level or progression view of their own. Swim now has one and is the template.
 
 ### OPEN after Phase C, none of it blocking
 

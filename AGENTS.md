@@ -85,7 +85,8 @@ always lose to the thing that exists.
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
-| `/swim` | **His own swimming, since 2026-08-26.** Five sub-tabs on the same `?s=` idiom: Now (last session drawn, tier ladder, personal bests, 90-day history), Plan (the ten-week continuity ladder), How, Coach me, Coach them. The Calgary pool schedule that used to be here is DELETED, along with six scrapers, the `HOODII-SwimOS-Daily` task and the four `swim_*` tables; backup at `_archive/SwimOS-2026-08-26/`. Sources: `content/swim/*.json` and `health_swim_pb` / `health_swim_session` / `health_session_detail` in Neon | `/swim/api/baseline` only |
+| `/swim` | **His own swimming, since 2026-08-26.** Five sub-tabs on the same `?s=` idiom: Now (last session drawn, tier ladder, personal bests, 90-day history, and a link to `/swim/deep`), Plan (the ten-week continuity ladder), How, Coach me, Coach them. **Five and not six: the chips end at 317px of a 390px screen and `.subtabs` has neither wrap nor scroll, so the deep dive is a route.** The Calgary pool schedule that used to be here is DELETED, along with six scrapers, the `HOODII-SwimOS-Daily` task and the four `swim_*` tables; backup at `_archive/SwimOS-2026-08-26/`. Sources: `content/swim/*.json` and `health_swim_pb` / `health_swim_session` / `health_session_detail` in Neon | `/swim/api/baseline` only |
+| `/swim/deep` | **The whole record, since 2026-08-27.** The only thing that reads `health_swim_length`, 19,327 lengths back to 2018. Stroke efficiency over time, PB progression out of `standingFor()`'s `history` array, weight against pace, swimming after lifting, work to rest, stroke mix, the last session split at the walls he stopped at, season gaps, and a limits section. `noindex`. Read `src/lib/swim/deep.ts` before adding a figure: its header records the three data traps that produced wrong answers here | no writes |
 | `/swim/api/baseline` | The one number the swim ladder is measured from. Every rung reads "your number plus 100 m" and for a month there was nowhere to put it. Writes `gym_swim_baseline` (the table keeps its `gym_` prefix on purpose), a history not a value, and records whether the pull buoy was out. Was `/gym/api/swim-baseline` | **cookie** |
 | `/reading` | The live queue (what to read next) + acquisition status. Read-only mirror of `ReadingOS/data/{queue,acquire}.json`, pushed by `content/reading/sync.mjs` run by hand after `refill.mjs` / `acquire.mjs`. `acquire.mjs` needs Silvio's own logged-in Chrome over CDP, so it stays off Vercel too | no writes |
 | `/reading/shelf` | **The browse surface, and the main one.** Every scored book, for two moments: in a shop (search a spine, or walk the alphabet by author surname) and at home (sort by best, shortest, best-rated, newest, oldest). One collapsed Filters control and one Sort control, copied in shape from the StoryGraph and the Calgary library catalogue after screenshotting both; the sort doubles as a MODE, so the 27-letter rail renders only in author order. Covers, descriptions and reader ratings from Open Library. `noindex` + robots Disallow. Mirror of `reading_shelf_entry`, pushed by `content/reading/sync-shelf.mjs` | no writes |
@@ -234,6 +235,35 @@ performs on it is a minimum, and a minimum over a mixed column always selects th
 definition: `/health` showed a best of 1:31 per 100 m, off a 300 m session that ran 25 minutes with
 4 minutes of swimming in it, **faster than the official 100 m PB of 1:38.71**. Two numbers answering
 "how fast can he swim", on two pages, neither linking to the other.
+
+**`health_swim_session.date` AND `health_swim_length.date` ARE UTC. `health_session_detail.date` AND
+`health_watch_session.date` ARE LOCAL.** Four date columns describing the same swims, two of them a
+day out for any swim starting after 18:00 in Calgary: 94 of 475 rows. Found 2026-08-27, and it had
+been rendering the whole time: /swim showed a card headed "Your last session (Aug 25)" and, one
+screen below it, "Last swim the watch export has reached: Aug 26", about the same swim. The comment
+above `getSwimHistory` asserted that "every row in these tables was stamped in local time", which
+was true of the tables it was written for and is why nobody looked.
+
+**Do not add a swim figure keyed on `date`.** Recover the instant instead: neither
+`health_swim_session` nor the mirror filling it carries a start time, so join
+`health_swim_length.session_start_time` or `health_session_detail.start_time` and convert through
+`America/Edmonton`. The evidence that this is the right direction rather than a preference: the
+conversion reproduces the date `health_watch_session` independently recorded on 359 of 361 sessions
+where both exist, against 271 for the raw column. `SWIM_LOCAL_DATE` in `src/lib/swim/db.ts` is the
+expression; `src/lib/swim/deep.ts` derives every date it prints and never selects `date`. The 108
+sessions with no start time anywhere keep the raw value rather than being dropped. **The real repair
+is in the importer on the laptop, which git still does not track.**
+
+**A SENTENCE CAN SIT THREE LINES ABOVE THE TABLE THAT DISPROVES IT.** /swim/deep shipped its weight
+section reading "the heaviest band is also the period he swam most", which is the obvious confound
+and is false: 2023 is his biggest year by distance, 186 swims at 104 kg, and 2025 is his fastest at
+118 kg on 102. Weight and volume did not move together. Typecheck, lint, build and a full text dump
+of the rendered page all passed with it in place, because none of them compares prose against the
+numbers beside it. The screenshot caught it, along with a tile labelled "Best this year" above a date
+from the previous September and a "100 m" breaking into "100" over "M". **The rule this repo keeps
+relearning: read the rendered screen.** The corollary that is cheaper than a screenshot: derive the
+claim. Every figure on that page is returned from `deep.ts` and none is typed into a sentence, which
+is what made three recovered "facts" falsifiable in the first place.
 
 **Every discipline's `now` tab draws the last TEN sessions, not one, since 2026-08-27**, via
 `getRecentSessions`, which had existed since 2026-08-22 with zero importers. The trend each one gets
