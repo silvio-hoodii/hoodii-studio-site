@@ -39,8 +39,12 @@ export function dueInText(days: number | null | undefined): string {
   return `${days} d left`;
 }
 
-/** 2026-08-14 -> "Aug 14". The year is never in question on the windows this site draws: a 28-day
+/** 2026-08-14 -> "Aug 14". The year is never in question on MOST windows this site draws: a 28-day
  *  training block, a 14-day strip, the date on a session that happened this month.
+ *
+ *  THAT PREMISE STOPPED BEING UNIVERSAL ON 2026-08-27, when the session logs started drawing the
+ *  whole record: /bike/log lists 76 rides from 2021 to 2026 and had two rows reading "Aug 12" with
+ *  no way to tell them apart. Use `logDate` for any list that can span more than one year.
  *
  *  Lived in src/app/gym/conditioning/page.tsx until 2026-08-26. It moved here the moment a second
  *  surface (/swim) needed it, rather than after the two copies had already disagreed, which is the
@@ -51,4 +55,17 @@ export function shortDate(iso: string): string {
     day: 'numeric',
     timeZone: 'UTC',
   });
+}
+
+/** 2024-08-12 -> "Aug 12 '24". For lists that span years, where the month and day alone are
+ *  ambiguous. Two-digit year because the column is 12px mono on a 390px screen and the century has
+ *  never been in doubt.
+ *
+ *  Callers should not choose between this and `shortDate` by hand. `SessionLog` counts the distinct
+ *  years in its own rows and picks, so a list that grows past a new year starts showing years on its
+ *  own rather than waiting for someone to notice. */
+export function logDate(iso: string): string {
+  const d = new Date(`${iso}T12:00:00Z`);
+  const md = d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  return `${md} '${String(d.getUTCFullYear()).slice(2)}`;
 }

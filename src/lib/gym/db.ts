@@ -18,6 +18,36 @@ export const sql = neon(DATABASE_URL);
 
 const num = (v: unknown): number | null => (v === '' || v === null || v === undefined ? null : Number(v));
 
+/** Sets the programme asks for on a given day, right now, counting every logged exercise in every
+ *  block including partners and the primer.
+ *
+ *  This is the SAME definition as the "0/29 sets" counter on the page (GymClient's `totals`), on
+ *  purpose: the history row has to be comparable to the number he watched all session. If that
+ *  definition changes, both have to change together, which is why this comment names the other one.
+ *
+ *  Returns null on an unknown day rather than 0, because 0 would render as "14/0 sets". */
+async function prescribedSetsFor(day: string | null | undefined): Promise<number | null> {
+  if (!day) return null;
+  try {
+    const { loadProgram } = await import('./program');
+    const program = await loadProgram();
+    const d = program.days[day as keyof typeof program.days];
+    if (!d) return null;
+    let total = 0;
+    for (const block of d.blocks) {
+      for (const ex of block.exercises) {
+        if (ex.log === false) continue;
+        total += ex.sets || 1;
+      }
+    }
+    return total || null;
+  } catch {
+    /* A session must never fail to record because the programme could not be read. The set write is
+       the thing that matters; the denominator is a nicety. */
+    return null;
+  }
+}
+
 export interface SetInput {
   date: string;
   day?: string | null;
@@ -53,13 +83,32 @@ export interface SessionSets {
   sets: SetRow[];
 }
 
-/** Ensures a session row exists and bumps day_title. Ported from HealthOS db.mjs upsertSession. */
-export async function upsertSession(opts: { date: string; day?: string | null; dayTitle?: string | null }) {
+/** Ensures a session row exists and bumps day_title. Ported from HealthOS db.mjs upsertSession.
+ *
+ *  `sets_prescribed` IS STAMPED HERE AND NEVER RECOMPUTED, added 2026-08-27 with the session log.
+ *
+ *  The history view prints "30/42 sets": logged against asked-for. The second number cannot be
+ *  derived at read time. A day's prescription changed five times in August 2026, so rendering an
+ *  older session against today's program.json would report a gap that did not exist on the day.
+ *  `coalesce(gym_session.sets_prescribed, excluded.sets_prescribed)` on the conflict path means the
+ *  first write of a session wins: edit program.json mid-session and the row keeps what the day asked
+ *  for when it started.
+ *
+ *  The 33 rows that predate the column stay NULL and the log prints them with no denominator. See
+ *  content/gym/migrate-sets-prescribed.mjs for why they are not backfilled. */
+export async function upsertSession(opts: {
+  date: string;
+  day?: string | null;
+  dayTitle?: string | null;
+  setsPrescribed?: number | null;
+}) {
   await sql`
-    insert into gym_session (date, day, day_title, started_at, status)
-    values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, now(), 'active')
+    insert into gym_session (date, day, day_title, started_at, status, sets_prescribed)
+    values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, now(), 'active',
+            ${opts.setsPrescribed ?? null})
     on conflict (date, day) do update set
-      day_title = coalesce(excluded.day_title, gym_session.day_title)
+      day_title = coalesce(excluded.day_title, gym_session.day_title),
+      sets_prescribed = coalesce(gym_session.sets_prescribed, excluded.sets_prescribed)
   `;
 }
 
@@ -68,7 +117,15 @@ export async function upsertSession(opts: { date: string; day?: string | null; d
  *  value change should look "dirty" to anything downstream that watches for changes. */
 export async function upsertSet(s: SetInput) {
   if (s.date && s.day !== undefined) {
-    await upsertSession({ date: s.date, day: s.day, dayTitle: s.dayTitle });
+    await upsertSession({
+      date: s.date,
+      day: s.day,
+      dayTitle: s.dayTitle,
+      /* Read off the programme on the SERVER, never taken from the request body. The client already
+         knows the number, and accepting it would let a stale tab or a replayed queued write stamp a
+         prescription that no version of the file ever had. */
+      setsPrescribed: await prescribedSetsFor(s.day),
+    });
   }
   await sql`
     insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done,

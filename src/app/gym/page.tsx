@@ -2,6 +2,8 @@ import { loadProgram, loadWarmups, loadCooldowns, loadRirGuide } from '@/lib/gym
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
 import { getNotes } from '@/lib/gym/db';
+import { getGymLog, countGymLog } from '@/lib/gym/log';
+import SessionLog from '@/components/training/SessionLog';
 import { today } from '@/lib/day';
 import { shortDate } from '@/lib/format';
 import GymClient from './GymClient';
@@ -21,6 +23,14 @@ export default async function GymHome() {
     getTrainingStreak(),
     getNotes({ limit: 20 }),
   ]);
+  /* THE LAST FIVE SESSIONS, added 2026-08-27 on his ruling. `gym_session` had been written on every
+     session since 2026-05-25 and displayed by nothing at all: he asked "where is the history of
+     sessions in the app" and the honest answer was that the app had kept one for three months and
+     never shown him a row.
+
+     FIVE, and the count of the rest is on screen beside them. A cap that does not say it is a cap is
+     finding 37 in the audit (the notes list silently holds 20). */
+  const [logRows, logTotal] = await Promise.all([getGymLog(5), countGymLog()]);
   const unacted = notes.filter((n) => !n.handled).length;
 
   return (
@@ -42,6 +52,44 @@ export default async function GymHome() {
         * description of the app belongs: on the page that indexes it, for someone deciding whether
         * to open it. Not inside it. */}
       <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} streak={streak} />
+
+      {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he
+        * reads the page in: do the session, glance at what the last few looked like, then write a
+        * note about today.
+        *
+        * A SERVER COMPONENT AND NOT PART OF GymClient, on purpose. GymClient is the client bundle
+        * that runs the whole logging interaction, and history is read-only: putting it there would
+        * ship five sessions of data into the bundle for no interactivity, and would put new markup
+        * inside the component `scripts/probe-gym.js` drives.
+        *
+        * `SETS LOGGED OVER SETS PRESCRIBED` is the column that matters and the reason this exists.
+        * On 2026-08-16 the watch recorded 68 minutes of lifting and this app logged ONE set. Nothing
+        * displayed those two facts together, so for three months the only available reading was that
+        * he had done one set. He had not. */}
+      <SessionLog
+        rows={logRows}
+        total={logTotal}
+        variant="log-gym"
+        moreHref="/gym/log"
+        moreLabel="the whole record"
+        columns={[
+          { head: 'Day', cell: (r) => (r.dayTitle ? (r.dayTitle.split(':')[0] ?? null) : (r.day ?? null)) },
+          {
+            head: 'Time',
+            num: true,
+            /* The watch, not the page timer. `finished_at - started_at` is how long the tab was
+               open: one session reads 330 minutes and another 130 against the watch's 65. */
+            cell: (r) => (r.watchMinutes != null ? `${r.watchMinutes}m` : null),
+          },
+          {
+            head: 'Sets',
+            num: true,
+            cell: (r) =>
+              r.setsPrescribed != null ? `${r.setsLogged}/${r.setsPrescribed}` : `${r.setsLogged}`,
+          },
+        ]}
+        caption="Sets you ticked over sets the day asked for. Time is what the watch recorded, not how long the page was open."
+      />
 
       {/* THE NOTE BOX HAD NO OTHER END. Notes have been written from the bottom of this page since
           2026-08-16, at his request, and `gym_note` was write-only from the web: the only thing

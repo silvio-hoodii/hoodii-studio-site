@@ -74,6 +74,14 @@ export default async function BikePage({
             thing to land here.
           </p>
           <RecentSessions sessions={recent} kind="cycling" />
+          {/* THE BLOCK ABOVE SAYS "the only one the watch has ever recorded" AND THAT IS FALSE.
+              It reads health_session_detail, which holds one cycling row. The watch holds 76, back
+              to 2021. Correcting the block itself is finding 54 and needs its own ruling; this link
+              at least gives him the real number in the meantime. */}
+          <p className="ex-cue" style={{ marginTop: 14 }}>
+            <Link href="/bike/log">Every ride the watch recorded</Link>, back to 2021. There are more
+            than the block above can see.
+          </p>
         </>
       )}
 

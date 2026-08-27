@@ -81,6 +81,13 @@ export default async function RunPage({
           </p>
           <LastSession s={lastSession} />
           <RecentSessions sessions={recent} kind="treadmill" />
+          {/* The recent block above reads health_session_detail, which has 5 rows for running.
+              The log reads health_watch_session, which has 318 going back to 2019. Both are honest
+              about their own source; only one answers "how much have I run". */}
+          <p className="ex-cue" style={{ marginTop: 14 }}>
+            <Link href="/run/log">Every session the watch recorded</Link>, treadmill and outdoors,
+            back to 2019.
+          </p>
         </>
       )}
 

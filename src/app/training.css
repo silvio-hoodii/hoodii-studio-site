@@ -101,6 +101,96 @@
   max-width: 46ch;
 }
 
+/* ---- THE SESSION LOG. Added 2026-08-27, Decision 7. ----
+ *
+ * `log-*` and not `ex-*`. On /gym, `.ex` means an exercise in today's workout and probe-gym.js
+ * selects it to find the day's cards; `.exgroup-n` marks a day block and the probe counts them. A
+ * history row is neither, so it gets its own names. Third time this rule has been paid for on this
+ * surface (`.tab` vs `.surf-tab`, `swap-revert` vs `swap-toggle`, then `.ex` on a notes block).
+ *
+ * A GRID, NOT A TABLE ELEMENT, so the columns line up across rows at 390px without a wide table
+ * forcing the page body to scroll sideways. `grid-template-columns` is set per surface below,
+ * because a gym row and a run row carry different columns. `role="table"` keeps it announced
+ * correctly to a screen reader, which a bare div grid would not be. */
+.training .log { margin-top: 26px; }
+.training .log-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--foreground);
+  padding-bottom: 6px;
+}
+.training .log-more { color: var(--foreground); text-transform: none; letter-spacing: 0; }
+.training .log-table { font-family: var(--font-mono); font-size: 12px; }
+.training .log-row {
+  display: grid;
+  gap: 8px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+/* The header row is a label strip, not data: quieter, and it does not get its own rule under it. */
+.training .log-row-head {
+  border-bottom: 0;
+  padding: 6px 0 2px;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.training .log-date { white-space: nowrap; }
+.training .log-cell { color: var(--muted-foreground); }
+.training .log-cell.tnum { text-align: right; }
+/* A missing reading is drawn quieter than a real one, so scanning the column does not stop on it. */
+.training .log-none { opacity: 0.45; }
+.training .log-caption {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  margin-top: 8px;
+}
+.training .log-empty { font-size: 13.5px; line-height: 1.5; color: var(--muted-foreground); margin-top: 10px; }
+
+/* Per-surface column widths. Date first, then the columns each surface actually has. */
+.training .log-gym .log-row { grid-template-columns: 52px 1fr 46px 62px; }
+.training .log-watch .log-row { grid-template-columns: 52px 1fr 46px 52px; }
+/* A list spanning years prints "Aug 12 '24", which does not fit 52px at 12px mono. SessionLog adds
+ * `log-years` when it decides to show the year, so the column widens with the format rather than
+ * being sized by hand for the widest case a list might one day reach. */
+.training .log.log-years .log-row { grid-template-columns: 76px 1fr 46px 52px; }
+.training .log-gym.log-years .log-row { grid-template-columns: 76px 1fr 46px 62px; }
+
+/* A row that opens into its sets. `display: block` and the two marker kills: a `summary` is
+ * `list-item` by default, and the triangle would sit inside the first grid column and shove the date
+ * out of alignment with the header row above it. The whole row is the hit target, which on a phone
+ * matters more than a disclosure affordance: the rows are 30px+ tall and full width. */
+.training .log-detail > summary { display: block; cursor: pointer; list-style: none; }
+.training .log-detail > summary::-webkit-details-marker { display: none; }
+.training .log-detail > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+/* Open rows get a hairline of emphasis on the left so it is obvious which one is expanded when two
+ * are open at once. */
+.training .log-detail[open] > summary .log-row { border-bottom-color: var(--foreground); }
+.training .log-sets {
+  padding: 4px 0 12px 52px;
+  border-bottom: 1px solid var(--border);
+}
+.training .log-set-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: baseline;
+  padding: 4px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.training .log-set-name { color: var(--foreground); }
+.training .log-set-vals { color: var(--muted-foreground); text-align: right; }
+
 /* ---- blocks + exercises ---- */
 /* ---- a block reads as a block ----
    The boundary between two blocks was a 30px margin, and the boundary between two exercises inside
