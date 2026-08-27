@@ -56,10 +56,16 @@
     "",
     "EVERY BLOCK CARRIES `why`, one line, required by the validator. He said the programme reads as",
     "arbitrary because he had never seen the evidence file, and a programme he does not believe is one",
-    "he stops finishing. Where a block has no evidence behind it (calf raise, rotator cuff, Copenhagen",
-    "plank, biceps) the line says so rather than dressing it up.",
+    "he stops finishing. Where a block has no evidence behind it the line is SUPPOSED to say so.",
+    "Audited 2026-08-27: it does not. The honest admissions are the Monday calf raise and the",
+    "Copenhagen. The carries, the single-leg work, the four-times-a-week glute bridge, the shoulder",
+    "taps and the five dumbbell partners invented on 2026-08-22 are equally unsourced and admit",
+    "nothing. This list also used to name \"rotator cuff\", which has not been a block in this file",
+    "since the bands moved to warmups.json.",
     "",
-    "EVERY BLOCK IS A SUPERSET, from 2026-08-22. Sourced, because he asked for it to be:",
+    "EVERY BLOCK IS A PAIR, from 2026-08-22, and 22 of the 25 are supersets. Friday \"Biceps, then",
+    "Carry\" is deliberately `sequence` and its own `why` explains why. An earlier version of this",
+    "heading read \"EVERY BLOCK IS A SUPERSET\", three lines above the exception. Sourced:",
     "",
     "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient",
     "Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Medicine 2021.",
@@ -84,11 +90,21 @@
     "  2. THE PARTNER IS CARRIED, NEVER FIXED. Dumbbells and kettlebells go with him to any station,",
     "     which is his own constraint: \"everywhere that I go I can take a dumbbell or pair of",
     "     dumbbells or kettlebell with me. It is just that I am not going to go ahead on the cable",
-    "     section and bring a mat.\" So every partner is `station: null` and needs no floor, and the",
-    "     cable section and machine bank are no longer dead ends.",
-    "  3. THE PARTNER IS LOGGED AND THE NUMBER MOVES. All five are dumbbell exercises progressed by",
-    "     weight. Nothing goes in a session that cannot be progressively overloaded; that is what put",
-    "     the bands in warmups.json on 2026-08-21 and it is not being undone."
+    "     section and bring a mat.\" So almost every partner is `station: null`, and the cable section",
+    "     and machine bank are no longer dead ends. NINE PARTNER PLACEMENTS DO NEED THE FLOOR, though:",
+    "     the glute bridge four times, the dead bug three, the shoulder taps and the Copenhagen once",
+    "     each. All nine sit in zones equipment.json marks `floor: true`, so nothing is illegal and the",
+    "     validator is right to pass them. His constraint was about the CABLE section specifically, and",
+    "     an earlier version of this line generalised it into \"needs no floor\" and then broke the",
+    "     general version nine times while honouring the specific one. The Copenhagen also occupies a",
+    "     bench, which makes it the one partner holding a fixture.",
+    "  3. THE PARTNER IS LOGGED AND THE NUMBER MOVES. Five of the ELEVEN distinct partners are",
+    "     dumbbell exercises progressed by weight. The other six are not, and three of those print a",
+    "     rep count that never moves: the glute bridge at 2x12/leg, the dead bug at 3x10/side, the",
+    "     shoulder taps at 3x30. An earlier version of this line said \"all five\", which counted only",
+    "     the cases that complied. Nothing goes in a session that cannot be progressively overloaded;",
+    "     that is what put the bands in warmups.json on 2026-08-21 and it is not being undone, though",
+    "     four band exercises remain as swap ALTERNATIVES here and were never reconciled against it."
   ],
   "days": {
     "monday": {
@@ -777,7 +793,7 @@
               "whyHere": "The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time."
             }
           ],
-          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, and second also means he never walks back to the dumbbells: bench, then this, then everything else is at the cables. The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time. That pairing bends this file's own first rule: an overhead press already loads the front of the shoulder that a plank shoulder tap holds up, so it is not the antagonist preloading the review describes. He was shown exactly that on 2026-08-27 and chose to keep it. It is also the only partner in the programme that is not a dumbbell, which is why it progresses by reps rather than by weight."
+          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells. It is not the last time he needs them: every one of the four cable blocks after it has a dumbbell partner, so three separate loads still travel to the cable stack. The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time. That pairing bends this file's own first rule: an overhead press already loads the front of the shoulder that a plank shoulder tap holds up, so it is not the antagonist preloading the review describes. He was shown exactly that on 2026-08-27 and chose to keep it. It progresses by reps rather than weight, which is true of four of the eleven partners in this file: the glute bridge, the dead bug, these taps and the Copenhagen. An earlier version of this line called it the only one, which was false the day it was written."
         },
         {
           "role": "main",
@@ -1000,7 +1016,7 @@
               "whyHere": "Pushdown and curl are direct opposites, which is the pairing the review actually studied"
             }
           ],
-          "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
+          "why": "Arms do not earn twice a week on the frequency evidence, so this block is first to go when time is short. It does not follow that arms get one exposure: counted across the week they get three each, because every partner slot that needed filling got filled with an arm or a delt. That is a live problem with the file and not a justification. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
         },
         {
           "role": "accessory",
@@ -1555,10 +1571,10 @@
                 }
               ],
               "progression": "weight",
-              "whyHere": "Calves were once a week against a programme whose rule is twice. This is also where a calf raise actually belongs"
+              "whyHere": "Calves are twice a week here and the evidence file does not ask for that"
             }
           ],
-          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs and the glute bridge; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves were once a week against a programme whose rule is twice. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the deadlift on a lower day, which is the same reasoning."
+          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs and the glute bridge; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves are twice a week here and the evidence file does not ask for that: it says squat, hinge, press and pull go twice, and that arms, calves and delts do not need to. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the deadlift on a lower day, which is the same reasoning."
         }
       ]
     },
@@ -2116,7 +2132,7 @@
               "whyHere": "The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel"
             }
           ],
-          "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."
+          "why": "This is the third biceps exposure of the week, not the first: DB Hammer Curl runs on Tuesday and again on Friday. An earlier version of this line said biceps get one a week, which the same file falsifies. Nothing in the evidence file compares a preacher curl to a standing curl, and he has asked why this exercise is here. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."
         }
       ]
     }

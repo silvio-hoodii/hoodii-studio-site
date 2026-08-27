@@ -128,6 +128,95 @@ export async function getSetsForDates(dates: string[]): Promise<Record<string, L
   return out;
 }
 
+/* ONE TABLE, NOT TWO TIERS. Rewritten 2026-08-27 within the hour, on his reading of the first
+ * version: "all says strenght so whats the point i think the important part is the first one, or
+ * either one table with all of it".
+ *
+ * He is right twice. The second table had a `Kind` column reading "strength" on all 31 rows, on a
+ * page whose entire subject is lifting, and splitting the record in two cost a heading, three
+ * paragraphs of explanation and a duplicate set of column labels to say something the data says by
+ * itself: a session with an empty Sets cell is one the app has no record of. **The absence is the
+ * finding, and it needs no prose.**
+ *
+ * This is the same mistake as the header prose cut earlier today, one level up: explaining a
+ * structure instead of building one that does not need explaining. */
+export interface CombinedRow {
+  date: string;
+  /** The programme day KEY as stored (monday/tuesday/...), or null where only the watch saw it. Raw
+   *  on purpose: the display label is derived from the live programme by the caller, because sixteen
+   *  distinct `day_title` strings exist in this table across three generations of the programme
+   *  model, four of them containing an EM DASH ("Upper A - Press" with U+2014) and four from a model
+   *  that had no day names at all ("BB Back Squat Lead"). Rendering the stored string put an em dash
+   *  on his screen, which lint-prose cannot see because it is data, not repo text. */
+  dayKey: string | null;
+  /** The stored title, kept so a row from a generation the programme no longer has can still say
+   *  something rather than nothing. */
+  dayTitle: string | null;
+  /** Null where only the watch saw it. Zero is a real and different answer: the app opened a session
+   *  that day and nothing was typed into it. */
+  setsLogged: number | null;
+  setsPrescribed: number | null;
+  minutes: number | null;
+  pctEasy: number | null;
+  /** True where `gym_session` has a row, so the caller knows whether an expansion exists. */
+  hasApp: boolean;
+}
+
+/** The app's record and the watch's, merged on date, newest first.
+ *
+ *  A date the app knows takes the app's row and the watch's minutes; a date only the watch knows
+ *  becomes a row with no day and no sets. Watch minutes are summed per date because two sessions can
+ *  share one, and the page shows one row per date rather than pretending to know which was which. */
+export async function getCombinedLog(limit = 100): Promise<CombinedRow[]> {
+  const rows = await sql`
+    with app as (
+      select g.date, g.day, g.day_title, g.sets_prescribed,
+        (select count(*)::int from gym_set s
+           where s.date = g.date and s.done = true and s.reps is not null and s.reps > 0) as sets_logged
+      from gym_session g
+    ),
+    watch as (
+      select w.date, sum(coalesce(w.minutes, 0))::int as minutes
+      from health_watch_session w where w.kind = 'strength' group by w.date
+    ),
+    dates as (
+      select date from app union select date from watch
+    )
+    select d.date, a.day, a.day_title, a.sets_prescribed, a.sets_logged,
+      w.minutes,
+      (select round(avg(x.pct_easy))::int from health_session_detail x
+         where x.date = d.date and x.kind = 'strength') as pct_easy,
+      (a.date is not null) as has_app
+    from dates d
+    left join app a on a.date = d.date
+    left join watch w on w.date = d.date
+    order by d.date desc
+    limit ${limit}
+  `;
+  return (rows as unknown as Record<string, unknown>[]).map((r) => ({
+    date: String(r.date).slice(0, 10),
+    dayKey: (r.day as string) ?? null,
+    dayTitle: (r.day_title as string) ?? null,
+    setsLogged: r.has_app ? Number(r.sets_logged ?? 0) : null,
+    setsPrescribed: r.sets_prescribed == null ? null : Number(r.sets_prescribed),
+    minutes: r.minutes ? Number(r.minutes) : null,
+    pctEasy: r.pct_easy == null ? null : Number(r.pct_easy),
+    hasApp: Boolean(r.has_app),
+  }));
+}
+
+/** How many dates exist across both records, so the cap can be stated honestly. */
+export async function countCombinedLog(): Promise<number> {
+  const rows = await sql`
+    select count(*)::int n from (
+      select date from gym_session
+      union
+      select date from health_watch_session where kind = 'strength'
+    ) t
+  `;
+  return Number((rows[0] as { n: number }).n);
+}
+
 /* ---------------------------------------------------------------------------------------------
  * THE WATCH'S RECORD, for the surfaces whose whole history is the watch.
  * ------------------------------------------------------------------------------------------- */

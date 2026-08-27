@@ -1,6 +1,5 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadRirGuide } from '@/lib/gym/program';
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getTrainingStreak } from '@/lib/gym/week';
 import { getNotes } from '@/lib/gym/db';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
@@ -14,13 +13,12 @@ export default async function GymHome() {
   /* `streak` comes from week.ts rather than from computeNextUp, as of 2026-08-26. It used to be a
      field on nextUp counted off this app's own log, while a second, watch-based count of the same
      name sat one click away on the conditioning page. There is one now, and it sees both. */
-  const [program, warmups, cooldowns, rirGuide, nextUp, streak, notes] = await Promise.all([
+  const [program, warmups, cooldowns, rirGuide, nextUp, notes] = await Promise.all([
     loadProgram(),
     loadWarmups(),
     loadCooldowns(),
     loadRirGuide(),
     computeNextUp(today()),
-    getTrainingStreak(),
     getNotes({ limit: 20 }),
   ]);
   /* THE LAST FIVE SESSIONS, added 2026-08-27 on his ruling. `gym_session` had been written on every
@@ -51,7 +49,7 @@ export default async function GymHome() {
         * The hub row at src/app/page.tsx still carries the one-line version, which is where a
         * description of the app belongs: on the page that indexes it, for someone deciding whether
         * to open it. Not inside it. */}
-      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} streak={streak} />
+      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} />
 
       {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he
         * reads the page in: do the session, glance at what the last few looked like, then write a

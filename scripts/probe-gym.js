@@ -323,7 +323,6 @@
       const groups = positionEls.map((el) => el.closest('.exgroup')).filter(Boolean);
       const claimedTotal = Number((text(positionEls[0]) || '').split('/')[1] || 0);
       const optionalTags = $$('.tag.opt').length;
-      const positioned = groups.length;
 
       /* Nothing may collapse the list. Waiting a beat and recounting catches a late effect that
          filters blocks after hydration, which is exactly how the budget used to arrive. */

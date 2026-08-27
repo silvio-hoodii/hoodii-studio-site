@@ -165,6 +165,15 @@
 .training .log.log-years .log-row { grid-template-columns: 76px 1fr 46px 52px; }
 .training .log-gym.log-years .log-row { grid-template-columns: 76px 1fr 46px 62px; }
 
+/* /gym/log: ONE table with five columns, replacing the two-table version he read and rejected
+ * ("all says strenght so whats the point"). Day is the flexible column because "Upper B" and a blank
+ * both fit anything; the three numeric columns are fixed so they line up down the page. */
+.training .log-gymlog .log-row { grid-template-columns: 52px 1fr 44px 40px 56px; }
+.training .log-gymlog.log-years .log-row { grid-template-columns: 76px 1fr 44px 40px 56px; }
+/* A row with nothing to expand is a plain div, not a details. It must sit flush with the ones that
+ * are, so the column grid is identical and only the cursor differs. */
+.training .log-plain > .log-row { cursor: default; }
+
 /* A row that opens into its sets. `display: block` and the two marker kills: a `summary` is
  * `list-item` by default, and the triangle would sit inside the first grid column and shove the date
  * out of alignment with the header row above it. The whole row is the hit target, which on a phone

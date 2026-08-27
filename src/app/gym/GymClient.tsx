@@ -3,11 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
 import { today } from '@/lib/day';
-import { shortDate } from '@/lib/format';
 import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
-import type { TrainingStreak } from '@/lib/gym/week';
 import {
   DAY_ORDER, exType, findExercise,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
@@ -19,9 +17,11 @@ interface Props {
   cooldowns: Record<string, CooldownItem>;
   rirGuide: { rir: string; desc: string; highlight?: boolean }[];
   nextUp: NextUp;
-  /* Its own prop rather than a field on nextUp, because it is no longer counted off the same
-     evidence. See the note on the NextUp interface in lib/gym/cycle.ts. */
-  streak: TrainingStreak;
+  /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
+     that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
+     day: declared in an interface, sent on every render, used by nothing. Removing it also drops a
+     Neon round trip from every load of this page. The hub still counts a streak; /health is where
+     days-in-a-row belongs. */
 }
 
 /* No `rir`. It was declared here, sent on every POST as null, stored in a column, and never once
@@ -129,7 +129,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp, streak }: Props) {
+export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -580,44 +580,22 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
       <div className="progress-row">
         <span>{totals.done}/{totals.total} sets</span>
-        {/* THE STREAK IS DATED NOW, and it is one tap for what it counts. Both on his ruling,
-            2026-08-27, after: "it also says 12 day streak wichi im not even sure its true".
-            He was right to doubt it, and it was not the arithmetic.
-
-            It said "12-day streak, over the max of 3": a bare number, printed today, about a run
-            that ENDED 2026-08-25. That is the last date the watch mirror has reached, and the
-            counter deliberately stops there rather than resetting to zero every morning before the
-            sync catches up. Sound reasoning, invisible on screen, so a two-day-old fact read as a
-            fact about right now.
-
-            `TrainingStreak` already carried `from` for exactly this, with a comment saying "so a
-            sentence can name the date rather than print a bare count", and the page printed the
-            bare count anyway. `to` was added for the end of the run.
-
-            AND IT DOES NOT MEAN LIFTING. A day counts if the watch saw ANY session or the app
-            logged a set, so of the 12 days to 2026-08-25, three are swim-only and 2026-08-24 is a
-            run plus a 12-minute session Samsung's watch auto-detected by itself. That is the right
-            definition for a rest rule, and it is not what "streak" implies on a page about lifting,
-            so the summary now has to say so.
-
-            A `details` whose summary IS the line, so the closed state costs the same 18px it did
-            before. `.src` is the block-level fold and carries its own margins; this is one row in a
-            flex strip. */}
-        {streak.run > 0 && (
-          <details className="streakfold">
-            <summary>
-              {streak.to ? `${streak.run} days to ${shortDate(streak.to)}` : `${streak.run} days in a row`}
-              {streak.overRule ? `, over ${streak.maxConsecutive}` : ''}
-            </summary>
-            <div className="streak-body">
-              {streak.run} days in a row up to {streak.to}, which is the last day the watch data
-              reaches, not today. A day counts if the watch recorded any session or this app logged
-              a set, so swims and runs are in it as well as lifts. The rest rule it is measured
-              against is a maximum of {streak.maxConsecutive} consecutive days, and that comes from
-              conditioning.json rather than from this page.
-            </div>
-          </details>
-        )}
+        {/* NO STREAK HERE, AND THAT IS A DECISION. Removed 2026-08-27, hours after being dated.
+          * Do not restore it.
+          *
+          * It read "12-day streak, over the max of 3": a bare number, printed today, about a run that
+          * ended 2026-08-25. He said "im not even sure its true", so it was dated and given a tap
+          * explaining what it counts. He read that and said: "whats the point ... what does this
+          * add?"
+          *
+          * He was right and the first fix was wrong. Answering a complaint about a misleading number
+          * by adding 349 characters of explanation, on the same day he had cut 296px of header prose
+          * for being explanatory, made the page worse in the way he had just objected to. The number
+          * also counts ANY activity: three of those twelve days were swim-only and one was a run plus
+          * a session the watch invented by itself, on a page about lifting.
+          *
+          * Days in a row lives on /health, which is the page about the shape of the week, and the
+          * rest rule it is judged against comes from conditioning.json rather than from here. */}
       </div>
 
       {/* Says WHY the same day came round again. Re-offering it silently would read as the app
@@ -647,7 +625,15 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         * 2026-08-11 when both were present the whole time. */}
       {warmupList.length > 0 && (
         <details className="fold" style={{ marginTop: 18 }} open>
-          <summary>Warmup ({warmupList.length} min)</summary>
+          {/* NOT "min". This read "Warmup ({warmupList.length} min)" until 2026-08-27, printing the
+            * COUNT OF WARMUP EXERCISES with a time unit attached. `WarmupItem` is
+            * {name, search?, cue, media?}: there is no duration anywhere in the schema and never was.
+            * Both lists happen to hold 4 items, so it read "4 min" by coincidence, on every page
+            * load, above the fold. Add a fifth drill and it would have said "5 min".
+            *
+            * Fixed to the truth rather than by inventing durations, which would mean an agent typing
+            * a number per exercise with nothing to derive it from. */}
+          <summary>Warmup ({warmupList.length} exercises)</summary>
           {warmupList.map((w) => (
             <div className="warm-item" key={w.name}>
               <div className="name">{w.name}</div>
@@ -858,11 +844,15 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
         <div className="exgroup-label">
           Note <span className="tag">(anything worth telling me)</span>
         </div>
-        <p className="ex-cue" style={{ marginBottom: 8 }}>
-          Tap the microphone on your keyboard and talk. It arrives as text. Machines taken, something
-          that hurt, a swap you made, a question: whatever it is, it gets read before the next change
-          to the programme.
-        </p>
+        {/* NO INSTRUCTIONS ON THE NOTE BOX. Removed 2026-08-27 on his ruling, and do not restore.
+          *
+          * It read: "Tap the microphone on your keyboard and talk. It arrives as text. Machines
+          * taken, something that hurt, a swap you made, a question: whatever it is, it gets read
+          * before the next change to the programme." 201 characters, always visible, explaining a box
+          * HE asked for on 2026-08-16 and has since used nineteen times.
+          *
+          * His words: "also this text is useless ... thats what i mean with walls of useless text".
+          * The placeholder in the textarea already says what the box is for. */}
         <textarea
           className="note-box"
           value={note}
