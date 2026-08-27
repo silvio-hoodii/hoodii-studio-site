@@ -6,6 +6,7 @@ import { today } from '@/lib/day';
 import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
+import type { TrainingStreak } from '@/lib/gym/week';
 import {
   DAY_ORDER, dayTimeBreakdown, exType, findExercise,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
@@ -17,6 +18,9 @@ interface Props {
   cooldowns: Record<string, CooldownItem>;
   rirGuide: { rir: string; desc: string; highlight?: boolean }[];
   nextUp: NextUp;
+  /* Its own prop rather than a field on nextUp, because it is no longer counted off the same
+     evidence. See the note on the NextUp interface in lib/gym/cycle.ts. */
+  streak: TrainingStreak;
 }
 
 /* No `rir`. It was declared here, sent on every POST as null, stored in a column, and never once
@@ -124,7 +128,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp }: Props) {
+export default function GymClient({ program, warmups, cooldowns, rirGuide, nextUp, streak }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -563,7 +567,15 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
 
       <div className="progress-row">
         <span>{totals.done}/{totals.total} sets</span>
-        {nextUp.streak > 0 && <span>{nextUp.streak}-day streak{nextUp.restNudge ? ', consider a rest day' : ''}</span>}
+        {/* The nudge now fires at the rule's own ceiling, not at a separate number. This line used
+            to say "consider a rest day" at five consecutive days while conditioning.json's rest
+            rule has been a maximum of three since it was written, so /gym stayed quiet through two
+            days the week page was already calling an overrun. */}
+        {streak.run > 0 && (
+          <span>
+            {streak.run}-day streak{streak.overRule ? `, over the max of ${streak.maxConsecutive}` : ''}
+          </span>
+        )}
       </div>
 
       {/* Says WHY the same day came round again. Re-offering it silently would read as the app

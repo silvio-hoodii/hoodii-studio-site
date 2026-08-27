@@ -1,5 +1,5 @@
 import 'server-only';
-import { getLastTrainingRow, getSessionDay, getTrainingDates } from './db';
+import { getLastTrainingRow, getSessionDay } from './db';
 import { DAY_ORDER } from './program-shared';
 import type { DayKey } from './types';
 
@@ -17,8 +17,16 @@ export interface NextUp {
   lastDate: string | null;
   daysSince: number | null;
   nextDay: DayKey;
-  streak: number;
-  restNudge: boolean;
+  /* NO STREAK HERE, and that absence is the point. Removed 2026-08-26.
+   *
+   * This module used to return one, counted off the app's own log, and it was rendered on /gym and
+   * on the hub while a SECOND, watch-based count was rendered on /gym/conditioning. Two numbers of
+   * the same shape and name, computed from different evidence, shown as though interchangeable.
+   *
+   * There is now exactly one, `getTrainingStreak` in ./week.ts, and it counts a day the app logged
+   * as well as a day the watch saw, so it is more complete than this one was. Do not reintroduce a
+   * streak field here: the reason the old pair could disagree for weeks without anyone noticing is
+   * that nothing structural stopped them existing side by side. */
   /** The day already recorded against today, if there is one.
    *
    * `nextDay` is the answer to "what should I train next", and the hub asks exactly that. It is the
@@ -35,11 +43,14 @@ export interface NextUp {
 
 /** Rolling "what's next": dropped weekday-locking, train any day, rest = days you didn't.
  *
- * Deliberately NOT porting the watch-augmented layoff detection from HealthOS server.mjs (it reads
- * a `watch_sessions` table fed by a separate Samsung Health import pipeline that isn't part of this
- * migration). This reads the app's own log only, same as the app did before that addition: the gap
- * it closed was "trained but didn't open the app to log it", which stays a real but smaller
- * inaccuracy until/unless the watch import gets ported too. */
+ * READS THE APP'S OWN LOG ONLY, and for this question that is correct rather than a compromise.
+ * "Which lifting day comes next" is a fact about the rotation, and only the app knows which day was
+ * performed: the watch records that a strength session happened, never that it was Lower B. The
+ * layoff reset below is the same, it turns on the gap since the last LOGGED day.
+ *
+ * What used to be wrong here was the streak, which asked a different question ("have I been
+ * training") off this narrower evidence. That has moved to `getTrainingStreak` in ./week.ts, which
+ * sees the watch too. See the note on the NextUp interface above. */
 export async function computeNextUp(today: string): Promise<NextUp> {
   const lastRow = await getLastTrainingRow();
 
@@ -69,18 +80,7 @@ export async function computeNextUp(today: string): Promise<NextUp> {
         : DAY_ORDER[(idx + 1) % DAY_ORDER.length]!;
   }
 
-  const dates = await getTrainingDates();
-  let streak = 0;
-  if (dates.length) {
-    streak = 1;
-    for (let i = 1; i < dates.length; i++) {
-      if (dateDiffDays(dates[i - 1]!, dates[i]!) === 1) streak++;
-      else break;
-    }
-    if (daysSince != null && daysSince > 1) streak = 0; // currently resting
-  }
-
   const todayDay = (await getSessionDay(today)) as DayKey | null;
 
-  return { today, lastDay, lastDate, daysSince, nextDay, streak, restNudge: streak >= 5, todayDay, cutShort };
+  return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort };
 }

@@ -187,7 +187,45 @@ Two other gates worth knowing before you edit anything under `content/kitchen/`:
 Everything under `/gym` that is not a plan comes from the Samsung Health export on the laptop, via
 `healthos.db`, via `content/health/sync.mjs`, into Neon. The 07:15 scheduled task
 (`HealthOS/sync/run-health-sync.ps1`) runs the whole chain: pull the newest export from Drive, unzip
-it, `import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
+it **and verify the unzip**, `parse-body-metrics.js` + `server/migrate-body-comp.mjs`,
+`import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
+
+**A HALF-EXTRACTED EXPORT LOOKS EXACTLY LIKE AN EXPORT WITH LESS DATA IN IT, and that cost a day on
+2026-08-26.** The 2026-08-21 export extracted 244 of its 88,838 entries. All 80 CSVs landed and 164
+of 88,757 JSON blobs did, so nothing crashed and nothing looked wrong: attendance, body composition
+and the swim PBs were all correct, because those come from CSVs. Only the per-session detail was
+starved. Two research agents then read that directory carefully and both concluded, in writing and
+with evidence, that Samsung had stopped shipping HRV, GPS and per-length swim data. All of it was in
+the .zip.
+
+Two faults, and the second is why it lasted five days rather than one. `Expand-Archive` failed
+partway and the catch logged a WARN, because every step in that task is non-fatal on purpose, which
+is right for a Drive pull and wrong for an extraction. Then `if (Test-Path $dest) { "already
+unpacked" }` meant the half-empty directory satisfied every later run. **The partial state was
+self-perpetuating.**
+
+Both are now gates rather than intentions:
+
+- **Extraction gate**, in that task. Extract to staging, count the archive's file entries against the
+  files on disk, refuse to promote below 98%, and re-count an existing directory rather than
+  trusting that it exists. Verified against both real cases: the broken export refuses at 244
+  against a floor of 87,061, the good one promotes at 89,186 of 89,186.
+- **Regeneration gate**, `HealthOS/guard-regen.mjs`, wired into `parse-swim-laps.js` and
+  `parse-swimming.js`. **Any script that regenerates an accumulated artifact from one export must go
+  through it.** It refuses to write fewer records than the file already holds, keeps a `.prev`, and
+  `--force` overrides while saying so. This is the more general of the two: a truncated download, a
+  schema change, a filter typo and an interrupted unzip all present identically to the script doing
+  the writing, so the check belongs where the loss happens. `parse-swim-laps.js` was one documented
+  command (`npm run laps`) from replacing 18,804 lengths going back to 2018 with about 1,300, and
+  its own header called rerunning it cheap.
+
+**`pace_per_100m_ms` and `moving_pace_per_100m_ms` are two columns because one column was two
+metrics.** Wall clock always, rest-excluded only where the per-length detail was read, null
+otherwise and never a fallback. A single mixed column mattered because the only operation anything
+performs on it is a minimum, and a minimum over a mixed column always selects the flattering
+definition: `/health` showed a best of 1:31 per 100 m, off a 300 m session that ran 25 minutes with
+4 minutes of swimming in it, **faster than the official 100 m PB of 1:38.71**. Two numbers answering
+"how fast can he swim", on two pages, neither linking to the other.
 
 **The four activities are NOT equal and no page should pretend otherwise.** Audited 2026-08-22:
 

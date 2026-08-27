@@ -1,6 +1,7 @@
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
+import { getTrainingStreak } from '@/lib/gym/week';
 import { today } from '@/lib/day';
 import { daysAgoText } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
@@ -116,9 +117,10 @@ async function kitchenRow(): Promise<Row> {
 
 async function gymRow(): Promise<Row> {
   try {
-    const [nextUp, program] = await Promise.all([
+    const [nextUp, program, streak] = await Promise.all([
       computeNextUp(today()),
       loadProgram(),
+      getTrainingStreak(),
     ]);
     const day = program.days[nextUp.nextDay];
     const next = day ? splitName(day) : nextUp.nextDay;
@@ -138,7 +140,10 @@ async function gymRow(): Promise<Row> {
              one click away. Nothing in this branch is a live number, so nothing is green. */
           <>Next up <b>{next}</b></>
         ),
-      sub: nextUp.streak > 0 ? `${nextUp.streak}-day streak` : 'logged between sets',
+      /* The streak here and the streak on the week page are now the same number out of the same
+         function. Until 2026-08-26 this row counted only days the app logged, so a swim or a run
+         the watch recorded advanced the count one click away and not here. */
+      sub: streak.run > 0 ? `${streak.run}-day streak` : 'logged between sets',
       href: '/gym',
     };
   } catch {

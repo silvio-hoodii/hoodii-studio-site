@@ -132,21 +132,35 @@ export async function getSwimSummary(days = 90): Promise<SwimSummary> {
       where date >= ${cutoff}
       order by date asc
     `,
+    /* TWO MINIMA, over two columns that mean two different things. See the note in
+       content/health/schema.sql. Taking one minimum over the old mixed column is what put a 1:31
+       "best pace" on this page, faster than his official 100 m personal best, off a 300 m session
+       that was 82% rest. */
     sql`
       select
         max(distance_m) filter (where distance_m > 0) as longest,
-        min(pace_per_100m_ms) filter (where pace_per_100m_ms > 0) as best_pace,
+        min(pace_per_100m_ms) filter (where pace_per_100m_ms > 0) as best_wall_pace,
+        min(moving_pace_per_100m_ms) filter (where moving_pace_per_100m_ms > 0) as best_moving_pace,
+        count(*) filter (where moving_pace_per_100m_ms > 0) as moving_sessions,
         count(*) as total
       from health_swim_session
     `,
   ]);
-  const pr = prRows[0] as { longest: number | null; best_pace: number | null; total: string };
+  const pr = prRows[0] as {
+    longest: number | null;
+    best_wall_pace: number | null;
+    best_moving_pace: number | null;
+    moving_sessions: string;
+    total: string;
+  };
   return {
     sessions: (sessionRows as unknown as { date: string; distance_m: number | null; pace_per_100m_ms: number | null }[]).map(
       (r) => ({ date: r.date, distanceM: r.distance_m, pacePer100mMs: r.pace_per_100m_ms }),
     ),
     longestDistanceM: pr.longest,
-    bestPacePer100mMs: pr.best_pace,
+    bestWallPacePer100mMs: pr.best_wall_pace,
+    bestMovingPacePer100mMs: pr.best_moving_pace,
+    movingPaceSessions: Number(pr.moving_sessions),
     totalSessions: Number(pr.total),
   };
 }

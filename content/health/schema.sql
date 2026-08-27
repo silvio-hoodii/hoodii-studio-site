@@ -37,8 +37,9 @@ create table if not exists health_watch_session (
 );
 create index if not exists health_watch_session_date on health_watch_session (kind, date);
 
--- Session-level swim history (not per-lap: swim-laps.json has ~18.8k individual lengths, which is
--- more granularity than any v1 chart needs; can migrate later if a per-lap view gets built).
+-- Session-level swim history (not per-lap: swim-laps.json holds 19.3k individual lengths back to
+-- 2018, which is more granularity than any v1 chart needed; a per-lap mirror is planned, see
+-- hoodii-studio-site/docs/TRAINING-REDESIGN-PLAN-2026-08-26.md).
 create table if not exists health_swim_session (
   uuid              text primary key,
   date              text not null,
@@ -49,6 +50,24 @@ create table if not exists health_swim_session (
   total_lengths     integer
 );
 create index if not exists health_swim_session_date on health_swim_session (date);
+
+-- TWO PACES, added 2026-08-26, because one column was holding two different metrics.
+--
+-- `pace_per_100m_ms` is now ALWAYS wall clock: session duration over distance, rest included, so it
+-- is comparable across every row. `moving_pace_per_100m_ms` is the rest-EXCLUDED figure that only
+-- exists where the per-length detail was actually read, and it is null everywhere else rather than
+-- falling back.
+--
+-- The old single column was computed whichever way the export allowed, which mattered because the
+-- only thing anything did with it was take a minimum, and a minimum over a mixed column always
+-- picks the definition that yields the smaller number. So /health's "Best pace / 100m" read 1:31,
+-- which was a moving pace off a 300 m session on 2025-01-22 that ran 1534 s with 272 s of swimming
+-- in it, under a label that reads as a time trial, and FASTER than the official 100 m personal best
+-- of 1:38.71. Two numbers describing "how fast can he swim" that could not both be right, on two
+-- pages, neither linking to the other.
+--
+-- `if not exists` because this table already holds 463 rows on a live database.
+alter table health_swim_session add column if not exists moving_pace_per_100m_ms real;
 
 -- Every run of content/health/sync.mjs writes a row here, successful or not.
 --

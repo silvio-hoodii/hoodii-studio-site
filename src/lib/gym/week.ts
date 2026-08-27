@@ -1,6 +1,7 @@
 import 'server-only';
 import { sql } from '../health/db';
 import { today, dayOf, daysAgo } from '../day';
+import { loadConditioning } from './program';
 import type { Conditioning, Program } from './types';
 
 /* THE INTEGRATED WEEK. Built 2026-08-21, because until now the week was four separate surfaces and
@@ -166,20 +167,33 @@ export function plannedWeek(program: Program, conditioning: Conditioning): Train
   };
 }
 
-/**
- * The real week from the watch, plus the run-length arithmetic the rule is judged on.
+/* ONE CONSECUTIVE-DAY COUNTER, AND ONLY ONE. Extracted 2026-08-26.
  *
- * `days` counts back far enough to see the run he is currently in, not just the last seven: a
- * seven-day block read through a seven-day window reports a run of seven with no idea whether day
- * eight is also training. 28 days is four weeks of context for a few hundred bytes.
+ * Until today this project had two, and showed them as if they were the same number. This one, from
+ * the watch, on /gym/conditioning. And a second in cycle.ts built from the app's own log, on /gym
+ * and on the hub. They disagreed BY DESIGN, and cycle.ts said so in its own words: the gap it left
+ * open was "trained but didn't open the app to log it". Train without logging and one advanced while
+ * the other reset, and no page mentioned the other's existence.
+ *
+ * Deleting the cycle.ts one is what makes the disagreement unrepresentable, rather than a thing
+ * every future edit has to remember. That deletion is only SAFE because of the `trained` line
+ * below: the surviving counter now counts a day the APP logged as well as a day the WATCH saw, so
+ * it is strictly more complete than either of the two it replaces. Removing a counter without that
+ * line would have made the days the watch missed worse, not better.
  */
-export async function getTrainingWeek(
-  program: Program,
-  conditioning: Conditioning,
-  days = 28,
-): Promise<TrainingWeek> {
+interface ActualBlock {
+  days: ActualDay[];
+  currentRun: number;
+  currentRunFrom: string | null;
+  longestRun: number;
+  longestRunFrom: string | null;
+  longestRunTo: string | null;
+  horizon: string | null;
+}
+
+async function actualBlock(days: number, maxConsecutive: number): Promise<ActualBlock> {
   const cutoff = daysAgo(days);
-  const [sessionRows, loggedRows, horizonRows, recoveryRows] = await Promise.all([
+  const [sessionRows, loggedRows, horizonRows] = await Promise.all([
     sql`select date, kind, coalesce(minutes, 0)::int as minutes
         from health_watch_session
         where date >= ${cutoff}
@@ -190,7 +204,6 @@ export async function getTrainingWeek(
        day; an absence of lifting rows does not. Past this date the strip knows nothing and says so
        rather than drawing rest, which is the distinction /health learned to make on 2026-08-14. */
     sql`select max(date) as last from health_watch_session`,
-    sql`select metric, last_seen from health_recovery order by metric`,
   ]);
 
   const byDate = new Map<string, { kind: string; minutes: number }[]>();
@@ -202,14 +215,19 @@ export async function getTrainingWeek(
   const logged = new Set((loggedRows as unknown as { date: string }[]).map((r) => r.date));
   const horizon = (horizonRows[0] as { last: string | null } | undefined)?.last ?? null;
 
-  const now = today();
   const out: ActualDay[] = [];
   let run = 0;
   for (let i = days - 1; i >= 0; i--) {
     const date = daysAgo(i);
     const sessions = byDate.get(date) ?? [];
-    const trained = sessions.length > 0;
     const isLogged = logged.has(date);
+    /* A LOGGED DAY IS A TRAINED DAY, added 2026-08-26 with the counter merge above.
+       The watch is the better witness but it is not the only one: it misses a session recorded on
+       the phone, one where the watch was flat, and one it recorded but could not classify. Before
+       this line those days broke the run, which is precisely the hole the second counter existed to
+       cover. `logged` stays a separate field because "the app has load for this day" is still a
+       different and useful fact from "something trained here". */
+    const trained = sessions.length > 0 || isLogged;
     run = trained ? run + 1 : 0;
     out.push({
       date,
@@ -221,12 +239,9 @@ export async function getTrainingWeek(
       /* A day the app logged is known on the app's own evidence, whatever the mirror has reached. */
       known: isLogged || (horizon != null && date <= horizon),
       runLength: run,
-      overRule: false, // filled in below, once maxConsecutive is known
+      overRule: run > maxConsecutive,
     });
   }
-
-  const maxConsecutive = conditioning.week?.restRule?.maxConsecutive ?? 3;
-  for (const d of out) d.overRule = d.runLength > maxConsecutive;
 
   /* The CURRENT run ends at the last day anything is KNOWN about, not at today. Counting to today
      would reset the run to zero every morning before the mirror has caught up, and would then
@@ -246,6 +261,67 @@ export async function getTrainingWeek(
       longestEndIdx = i;
     }
   });
+
+  return {
+    days: out,
+    currentRun,
+    currentRunFrom,
+    longestRun,
+    longestRunFrom:
+      longestEndIdx >= 0 ? (out[longestEndIdx - (longestRun - 1)]?.date ?? null) : null,
+    longestRunTo: longestEndIdx >= 0 ? (out[longestEndIdx]?.date ?? null) : null,
+    horizon,
+  };
+}
+
+/** The streak on its own, for surfaces that want the number without the whole week.
+ *
+ *  Loads conditioning itself rather than taking it as a parameter, so a caller cannot accidentally
+ *  judge the run against a different rest rule than the week page uses. The count and the ceiling
+ *  it is judged against come from the same place or they do not come at all: /gym used to nudge at
+ *  five consecutive days while conditioning.json's rule has been a maximum of three. */
+export interface TrainingStreak {
+  /** Consecutive training days ending on the most recent KNOWN day. */
+  run: number;
+  /** Where that run started, so a sentence can name the date rather than print a bare count. */
+  from: string | null;
+  maxConsecutive: number;
+  overRule: boolean;
+}
+
+export async function getTrainingStreak(days = 28): Promise<TrainingStreak> {
+  const conditioning = await loadConditioning();
+  const maxConsecutive = conditioning.week?.restRule?.maxConsecutive ?? 3;
+  const block = await actualBlock(days, maxConsecutive);
+  return {
+    run: block.currentRun,
+    from: block.currentRunFrom,
+    maxConsecutive,
+    overRule: block.currentRun > maxConsecutive,
+  };
+}
+
+/**
+ * The real week from the watch, plus the run-length arithmetic the rule is judged on.
+ *
+ * `days` counts back far enough to see the run he is currently in, not just the last seven: a
+ * seven-day block read through a seven-day window reports a run of seven with no idea whether day
+ * eight is also training. 28 days is four weeks of context for a few hundred bytes.
+ */
+export async function getTrainingWeek(
+  program: Program,
+  conditioning: Conditioning,
+  days = 28,
+): Promise<TrainingWeek> {
+  const maxConsecutive = conditioning.week?.restRule?.maxConsecutive ?? 3;
+  const [block, recoveryRows] = await Promise.all([
+    actualBlock(days, maxConsecutive),
+    sql`select metric, last_seen from health_recovery order by metric`,
+  ]);
+  const {
+    days: out, currentRun, currentRunFrom, longestRun, longestRunFrom, longestRunTo, horizon,
+  } = block;
+  const now = today();
 
   const metrics: RecoveryFreshness[] = (
     recoveryRows as unknown as { metric: string; last_seen: string | null }[]
@@ -271,9 +347,8 @@ export async function getTrainingWeek(
       currentRun,
       currentRunFrom,
       longestRun,
-      longestRunFrom:
-        longestEndIdx >= 0 ? (out[longestEndIdx - (longestRun - 1)]?.date ?? null) : null,
-      longestRunTo: longestEndIdx >= 0 ? (out[longestEndIdx]?.date ?? null) : null,
+      longestRunFrom,
+      longestRunTo,
       horizon,
       overRule: currentRun > maxConsecutive,
     },

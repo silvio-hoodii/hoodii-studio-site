@@ -167,14 +167,11 @@ export async function getLastTrainingRow(): Promise<{ date: string; day: string 
   return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
 }
 
-/** Distinct training dates, newest first, powers the consecutive-day streak. */
-export async function getTrainingDates(limit = 30): Promise<string[]> {
-  const rows = await sql`
-    select distinct date from gym_set where done = true and reps is not null and reps > 0
-    order by date desc limit ${limit}
-  `;
-  return (rows as unknown as { date: string }[]).map((r) => r.date);
-}
+/* `getTrainingDates` was here and is GONE, 2026-08-26. It existed to power a consecutive-day streak
+ * counted off this table alone, which was one of two streaks in the app. The survivor is
+ * `getTrainingStreak` in ./week.ts, which runs the same distinct-date query against `gym_set` AND
+ * the watch's own sessions in one pass, so a helper that sees only half the evidence has no callers
+ * and should not get new ones. */
 
 /** A note written at the end of a session. Added 2026-08-16, at his request: "maybe a note place in
  *  the end for when I find something that I wanna write it down or tell you."

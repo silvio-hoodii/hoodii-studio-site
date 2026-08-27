@@ -230,12 +230,18 @@ for (const s of swims) {
   if (!s.uuid || !s.date) continue;
   const avgHr = s.liveHR?.avg ?? s.csvHR?.mean ?? null;
   await q(
-    `insert into health_swim_session (uuid, date, duration_ms, distance_m, pace_per_100m_ms, avg_hr, total_lengths)
-     values ($1,$2,$3,$4,$5,$6,$7)
+    `insert into health_swim_session (uuid, date, duration_ms, distance_m, pace_per_100m_ms, moving_pace_per_100m_ms, avg_hr, total_lengths)
+     values ($1,$2,$3,$4,$5,$6,$7,$8)
      on conflict (uuid) do update set
        date = excluded.date, duration_ms = excluded.duration_ms, distance_m = excluded.distance_m,
-       pace_per_100m_ms = excluded.pace_per_100m_ms, avg_hr = excluded.avg_hr, total_lengths = excluded.total_lengths`,
-    [s.uuid, s.date, s.durationMs || null, s.distanceM || null, s.pacePer100mMs || null, avgHr, s.totalLengths || null],
+       pace_per_100m_ms = excluded.pace_per_100m_ms,
+       moving_pace_per_100m_ms = excluded.moving_pace_per_100m_ms,
+       avg_hr = excluded.avg_hr, total_lengths = excluded.total_lengths`,
+    /* `?? null` rather than `|| null` on the two paces. `|| null` maps 0 to null, which is right for
+       a distance and wrong here in principle, and more to the point it hides the difference between
+       "not measured" and "measured as zero" on the exact column whose ambiguity is being fixed. */
+    [s.uuid, s.date, s.durationMs || null, s.distanceM || null,
+     s.pacePer100mMs ?? null, s.movingPacePer100mMs ?? null, avgHr, s.totalLengths || null],
   );
   swWritten++;
 }

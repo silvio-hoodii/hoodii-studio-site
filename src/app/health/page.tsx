@@ -122,15 +122,47 @@ export default async function HealthPage() {
 
       <div className="section">
         <div className="section-head"><h2>Swim history</h2></div>
+        {/* The explanation goes here, once, rather than into the tiles. Same shape as the lifting
+            section below, which explains watch-versus-app in prose and then shows numbers. */}
+        {swim.bestMovingPacePer100mMs != null && (
+          <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
+            Two paces, because a swim includes standing at the wall. Whole session counts that rest;
+            swimming pace removes it, and exists for{' '}
+            <span className="tnum">{swim.movingPaceSessions}</span> of{' '}
+            <span className="tnum">{swim.totalSessions}</span> sessions, the ones the watch timed
+            length by length.
+          </p>
+        )}
         <div className="stats">
           <div>
             <div className="stat-k">Longest</div>
             <div className="stat-v">{Math.round(swim.longestDistanceM ?? 0)}<span className="stat-u">m</span></div>
           </div>
+          {/* "Best pace / 100m" was ONE tile reading 1:31, and it was wrong in the way that is
+              hardest to notice: not out of range, just quietly answering a different question than
+              its label asked. It came from a column computed two ways (see content/health/schema.sql)
+              and a minimum always picks the flattering one, so it reported a rest-excluded pace off a
+              300 m session that ran 25 minutes with 4 minutes of swimming in it, and it was FASTER
+              than his official 100 m personal best of 1:38.71. Two tiles now, each saying which
+              clock it ran on, because the honest version of this number needs the qualifier more
+              than it needs to be a single figure. */}
+          {/* CAPTIONS STAY SHORT because `.stats` is a wrap-flex and a tile is as wide as its widest
+              child. The first version of this said "whole session, rest included" and "rest
+              excluded, from 364 of 475 sessions", which measured at 390px as four tiles on four
+              rows with the captions spilling across the row above. Two words each, and the
+              distinction lives in the label. */}
           <div>
             <div className="stat-k">Best pace / 100m</div>
-            <div className="stat-v">{msToPace(swim.bestPacePer100mMs)}</div>
+            <div className="stat-v">{msToPace(swim.bestWallPacePer100mMs)}</div>
+            <div className="stat-d">whole session</div>
           </div>
+          {swim.bestMovingPacePer100mMs != null && (
+            <div>
+              <div className="stat-k">Swimming pace / 100m</div>
+              <div className="stat-v">{msToPace(swim.bestMovingPacePer100mMs)}</div>
+              <div className="stat-d">rest removed</div>
+            </div>
+          )}
           <div>
             <div className="stat-k">Total sessions</div>
             <div className="stat-v">{swim.totalSessions}</div>
