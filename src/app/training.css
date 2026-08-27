@@ -495,6 +495,17 @@
 }
 .training details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 .training details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+/* The ordinal on the swim self-checks. Muted and narrow: it is a position in a list of twelve, not
+   a value, so it must not read louder than the name beside it. Fixed width so twelve names start
+   on one vertical line rather than stepping right at 10. */
+.training details.cue > summary .cue-n {
+  flex: 0 0 auto;
+  min-width: 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
 .training .cue-name { flex: 1; min-width: 0; }
 .training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
 

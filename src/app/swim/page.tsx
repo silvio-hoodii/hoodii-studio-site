@@ -221,38 +221,52 @@ function SwimCoachMe({ c }: { c: SwimCoaching }) {
         <Prose text={c.theQuestion.body} />
       </div>
 
-      {c.checks.map((k) => {
-        const src = byId.get(k.source ?? k.from ?? '');
-        const quote = k.quote ?? k.fromQuote;
-        return (
-          <div className="exgroup" key={k.id}>
-            <div className="exgroup-label">
-              <span className="exgroup-n tnum">{k.n}/{c.checks.length}</span>
-              {k.name}
-              {k.confidence !== 'sourced' && <span className="tag opt">{k.confidence}</span>}
-            </div>
-            <p className="ex-cue">{k.say}</p>
-            {k.say2 && <p className="ex-cue">{k.say2}</p>}
-            <div className="lookfor">
-              <div className="lf">
-                <div className="lf-see">How you check it</div>
-                <div className="lf-say">{k.test}</div>
-              </div>
-            </div>
-            {quote && (
-              <div className="stale">
-                <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>
-                <p className="ex-cue">&ldquo;{quote}&rdquo;</p>
-                {src && (
-                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+      {/* COLLAPSED BY DEFAULT, and the same markup as `Cues` rather than a second pattern for the
+          same job. Rendered open, these twelve took this tab to 8.21 phone screens at 390px, which
+          is LONGER than the 7.9-screen page whose length he complained about in the first place.
+          The wall was inherited, not introduced by the swim migration, and it had probably never
+          been measured: the 2.2-screen figure in the docs was about the Now view. Closed, the
+          twelve names are a checklist he can scan and each opens on its own, which is also how he
+          would use them, one at a time, between lengths. */}
+      <div className="exgroup-label" style={{ marginTop: 22 }}>
+        What to check <span className="tag">({c.checks.length})</span>
+      </div>
+      <p className="lede" style={{ marginBottom: 6 }}>
+        Each one is a test you perform, not a feeling you have to have. Tap to open.
+      </p>
+      <div className="cuelist">
+        {c.checks.map((k) => {
+          const src = byId.get(k.source ?? k.from ?? '');
+          const quote = k.quote ?? k.fromQuote;
+          return (
+            <details className="cue" key={k.id}>
+              <summary>
+                <span className="cue-n tnum">{k.n}</span>
+                <span className="cue-name">{k.name}</span>
+                {k.confidence !== 'sourced' && (
+                  <span className={`conf ${k.confidence}`}>{k.confidence}</span>
+                )}
+              </summary>
+              <div className="cue-body">
+                <div className="ex-cue">{k.say}</div>
+                {k.say2 && <div className="ex-cue">{k.say2}</div>}
+                <div className="ex-meta cue-test"><b>How you check it.</b> {k.test}</div>
+                {quote && (
+                  <div className="stale cue-quote">
+                    <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>
+                    <p className="ex-cue">&ldquo;{quote}&rdquo;</p>
+                    {src && (
+                      <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        );
-      })}
+            </details>
+          );
+        })}
+      </div>
 
-      <div className="exgroup">
+      <div className="exgroup" style={{ marginTop: 22 }}>
         <div className="exgroup-label">Where all of this comes from</div>
         <div className="tierlist">
           {c.sources.map((src) => (
