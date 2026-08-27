@@ -14,8 +14,21 @@ const client = new Client(url);
 await client.connect();
 await client.query(readFileSync(join(HERE, 'schema.sql'), 'utf8'));
 console.log('schema applied');
+/* The readback names the tables EXPLICITLY rather than matching a prefix. It used to filter on
+   `like 'gym_%'`, and bike_ride, added 2026-08-27 by this same file, does not start with gym_. A
+   verification that cannot see the table it just created reports success and confirms nothing. */
+const EXPECTED = ['gym_session', 'gym_set', 'gym_note', 'bike_ride'];
 const res = await client.query(
-  `select table_name from information_schema.tables where table_schema='public' and table_name like 'gym_%' order by table_name`,
+  `select table_name from information_schema.tables
+   where table_schema='public' and table_name = any($1) order by table_name`,
+  [EXPECTED],
 );
-console.log('gym tables now present:', res.rows.map((r) => r.table_name));
+const present = res.rows.map((r) => r.table_name);
+console.log('tables now present:', present);
+const missing = EXPECTED.filter((t) => !present.includes(t));
+if (missing.length) {
+  console.error('MISSING after apply:', missing.join(', '));
+  await client.end();
+  process.exit(1);
+}
 await client.end();

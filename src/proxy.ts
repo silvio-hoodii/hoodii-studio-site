@@ -69,9 +69,14 @@ export function proxy(req: NextRequest) {
    * the calibration-baseline write with it. TWO edits were needed, not one: this prefix, and
    * '/swim/api/:path*' in the `config.matcher` at the bottom of this file. The matcher named no
    * /swim path at all, so adding the prefix on its own would have read as a gate and been none. */
+  /* /bike/api joined on 2026-08-27 with POST /bike/api/ride, the first write route on this site
+   * that exists before its page does. Same two edits as /swim, and for the same reason: this
+   * prefix, AND '/bike/api/:path*' in `config.matcher` below. A prefix without a matcher entry
+   * reads as a gate and is none, because the proxy never runs on a path the matcher does not
+   * name. Verified in the failing direction rather than assumed. */
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
       || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')
-      || pathname.startsWith('/swim/api')) {
+      || pathname.startsWith('/swim/api') || pathname.startsWith('/bike/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
     return NextResponse.json(
       { ok: false, error: 'locked', hint: 'Sign in once and this device stays signed in.' },
@@ -102,5 +107,7 @@ export const config = {
     '/reading/api/:path*',
     /* Only the API, not the pages: /swim is public like every other page on this site. */
     '/swim/api/:path*',
+    /* Same, and /bike has no pages at all yet. Added with the route, not after it. */
+    '/bike/api/:path*',
   ],
 };

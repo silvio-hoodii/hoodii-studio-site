@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Every POST route under /gym/api or /swim/api must be stubbed by scripts/probe-gym.js.
+ * Every POST route under /gym/api, /swim/api or /bike/api must be stubbed by scripts/probe-gym.js.
  *
  * WHY THIS EXISTS. probe-gym.js patches window.fetch so that no test can write to the real Neon
  * store, which holds his actual training log. There is no development database. The patch works off
@@ -27,6 +27,10 @@ import { join } from 'node:path';
 const API_ROOTS = [
   { dir: join(process.cwd(), 'src', 'app', 'gym', 'api'), url: '/gym/api' },
   { dir: join(process.cwd(), 'src', 'app', 'swim', 'api'), url: '/swim/api' },
+  /* Added 2026-08-27 with POST /bike/api/ride, in the same commit as the route. /bike has no page
+     yet, so nothing on the site calls this route and no probe touches it today. That is exactly
+     when a write route escapes a harness: when adding it to the list feels like paperwork. */
+  { dir: join(process.cwd(), 'src', 'app', 'bike', 'api'), url: '/bike/api' },
 ];
 const PROBE = join(process.cwd(), 'scripts', 'probe-gym.js');
 

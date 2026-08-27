@@ -180,7 +180,7 @@
       "bandAnchor": false,
       "stations": {
         "treadmill": { "name": "Treadmill", "confidence": "stated", "note": "Where the run progression starts. His call: 'I don't want to risk anything.'" },
-        "bike": { "name": "Stationary bike", "confidence": "stated", "note": "He listed it and does not know what to do on it. No resistance scale recorded yet." },
+        "bike": { "name": "Stationary bike", "confidence": "stated", "resistanceScale": { "min": 1, "max": 20, "confidence": "stated", "on": "2026-08-27" }, "note": "Numbered resistance levels, 1 to 20, stated by him on 2026-08-27 when the bike write path needed a real bound. That number is enforced in two places, POST /bike/api/ride and the bike_ride_levels_scale constraint in content/gym/schema.sql, so a different machine means changing both. The conditioning cues assumed a numbered dial and now do not have to." },
         "elliptical": { "name": "Elliptical", "confidence": "stated" },
         "stairmaster": { "name": "Stairmaster", "confidence": "stated" }
       }

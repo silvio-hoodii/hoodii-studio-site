@@ -47,15 +47,24 @@
  * that does not need a reload and tells you which ones it skipped.
  */
 (() => {
-  /* EVERY write route under /gym/api AND /swim/api must be listed here. A route missing from this
+  /* EVERY write route under /gym/api, /swim/api AND /bike/api must be listed here. A route missing from this
      list is not stubbed, so the probe posts it to the real Neon store for real.
      /gym/api/note was added to the app on 2026-08-16 and not to this list, and the first probe of
      the note box went out over the network. It was refused, but only because the browser had no
      unlock cookie: with one, a test would have written a fake note into his actual log. Adding a
      write route means adding it here in the same change.
      /swim/api/baseline is the same route /gym/api/swim-baseline was: it moved on 2026-08-26 when
-     swim left /gym, and scripts/lint-probe-routes.mjs was widened to keep watching it there. */
-  const WRITE_ROUTES = ['/gym/api/set', '/gym/api/finish', '/gym/api/note', '/swim/api/baseline'];
+     swim left /gym, and scripts/lint-probe-routes.mjs was widened to keep watching it there.
+     /bike/api/ride was added on 2026-08-27, BEFORE anything calls it: /bike is Phase C and has no
+     page. A route listed here that no test exercises costs nothing; a route this list is missing on
+     the day somebody builds the form costs a fake ride in the real store. */
+  const WRITE_ROUTES = [
+    '/gym/api/set',
+    '/gym/api/finish',
+    '/gym/api/note',
+    '/swim/api/baseline',
+    '/bike/api/ride',
+  ];
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has
      said yes, not whether the server says yes; that is the unlock route's own business. */

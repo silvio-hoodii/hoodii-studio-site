@@ -67,3 +67,68 @@ create table if not exists gym_note (
   created_at timestamptz not null default now()
 );
 create index if not exists gym_note_date on gym_note (date desc);
+
+-- The bike, added 2026-08-27. THE ONLY TABLE HERE THE WATCH CANNOT FILL.
+--
+-- Every other number in this database arrives from the Samsung export or from a box he types on a
+-- page that already exists. The bike has neither: src/lib/gym/session.ts:135 says of a bike session
+-- "no rpm, no power, no resistance", the watch contributes a heart rate and nothing else, and the
+-- resistance level is the one number the session is actually steered by. So the app starts owning
+-- what the watch cannot see. This is the only new WRITE PATH in the training redesign
+-- (docs/TRAINING-REDESIGN-PLAN-2026-08-26.md, D2).
+--
+-- NO PAGE READS THIS YET, and that is the plan's intent: /bike is Phase C. The API ships first so
+-- the gates around it are built while somebody is looking at them, rather than bolted on afterwards.
+-- "Afterwards" is how /gym/api/note shipped outside the probe harness on 2026-08-16 and the first
+-- test posted into the real training log.
+--
+-- FOUR LEVELS, NOT ONE. The plan said a single `resistance` column. Checking that against what the
+-- session actually asks him to do killed it: content/gym/conditioning.json, cue "Do not touch the
+-- resistance before 2:00", ends "Write down the level you finished each effort on, so next week
+-- starts from real numbers." That is four numbers, one per interval of the Norwegian 4x4, and the
+-- whole point of writing them down is the comparison across weeks that one column throws away at
+-- the moment of entry. Silvio chose the four on 2026-08-27, asked directly. THIS IS A DEVIATION
+-- FROM THE PLAN'S LETTER and it is recorded here rather than only in a handoff.
+--
+-- An array rather than r1/r2/r3/r4 because the session has two published shapes: four rounds at 43
+-- minutes, three at 31 when the morning is tight. Four columns make a three-interval ride carry a
+-- null that means "did not happen" in the same slot where a null would otherwise mean "did not
+-- write it down". A list of the intervals that happened cannot express the difference wrongly.
+--
+-- 1 TO 20 is his bike's dial, answered 2026-08-27 and recorded in content/gym/equipment.json, which
+-- until that day said "No resistance scale recorded yet". The bound is enforced here as well as in
+-- the route, because a check in one route protects one route.
+--
+-- A HISTORY with no unique key on `date`, the same shape as gym_swim_baseline. Two rides in a day
+-- is unlikely but not wrong, and a unique key would refuse the real one to prevent a duplicate that
+-- has not happened yet.
+--
+-- `bike_ride`, not `gym_bike_ride`: the prefixes in this shared Neon database are per APP, and bike
+-- becomes its own route in Phase C. gym_swim_baseline keeps its gym_ prefix for the opposite
+-- reason, that renaming a live table holding the only copy of a number buys nothing.
+create table if not exists bike_ride (
+  id          bigserial   primary key,
+  date        text        not null,
+  minutes     integer     not null,
+  -- One entry per interval, in order, holding the level he FINISHED that interval on. Expect the
+  -- number to fall across a session: conditioning.json says so, and says it is not a failure.
+  resistance  integer[]   not null,
+  -- How hard the whole ride felt, 1 to 10, optional. The watch already records what his heart did;
+  -- this is the half it cannot see. Null means he did not say, never "easy".
+  effort      integer,
+  note        text,
+  created_at  timestamptz not null default now(),
+  constraint bike_ride_minutes_sane   check (minutes > 0 and minutes <= 300),
+  constraint bike_ride_effort_scale   check (effort is null or effort between 1 and 10),
+  /* cardinality, not array_length: array_length('{}', 1) is NULL, and a CHECK that evaluates to
+     NULL PASSES, so the obvious spelling would have accepted a ride with no intervals at all. */
+  constraint bike_ride_levels_flat    check (array_ndims(resistance) = 1),
+  constraint bike_ride_levels_count   check (cardinality(resistance) between 1 and 8),
+  /* array_position searches with IS NOT DISTINCT FROM semantics, so it genuinely finds a NULL
+     element and this rejects {12, null, 11}. Without it the scale check below is not enough: a
+     containment test involving NULL does not reliably return false. */
+  constraint bike_ride_levels_filled  check (array_position(resistance, null::integer) is null),
+  constraint bike_ride_levels_scale
+    check (resistance <@ '{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}'::integer[])
+);
+create index if not exists bike_ride_date on bike_ride (date desc);
