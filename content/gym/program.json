@@ -174,7 +174,8 @@
               "progression": "weight",
               "zone": "benchDb",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The reverse fly rides in the rest because it is upper back: a jump does not use it"
             }
           ],
           "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, not broad jump, because you step down instead of absorbing a landing. The reverse fly rides in the rest because it is upper back: a jump does not use it, so the jump stays as fresh as it would have been standing still."
@@ -262,7 +263,8 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "whyHere": "The bridge goes in the squat rest, not on top of it."
             }
           ],
           "why": "Squat is one of the four patterns that earns twice a week. Pelland 2025, 67 studies: strength rises with frequency at matched volume (posterior 100%), size does not care about the split. The bridge goes in the squat rest, not on top of it."
@@ -339,7 +341,8 @@
               "progression": "weight",
               "zone": "rack",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
             }
           ],
           "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions. The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
@@ -423,7 +426,8 @@
                   "progression": "time"
                 }
               ],
-              "progression": "time"
+              "progression": "time",
+              "whyHere": "Resisting sideways lean. Both loaded, both at the dumbbells, so these two genuinely alternate."
             }
           ],
           "why": "Single-leg strength, and resisting sideways lean. Both loaded, both at the dumbbells, so these two genuinely alternate."
@@ -500,7 +504,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "whyHere": "The calf raise is not sourced."
             }
           ],
           "why": "Frontal-plane hip strength is injury insurance for the running: weak abductors feed pelvic drop, which feeds knee valgus, a documented route into shin and knee trouble in novice runners. The calf raise is not sourced."
@@ -597,7 +602,8 @@
                   "progression": "time"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "whyHere": "The dead bug goes in the rest gaps, and it is here for a reason rather than because core is good"
             }
           ],
           "why": "Pressing twice a week, heavy here and moderate Friday. The dead bug goes in the rest gaps, and it is here for a reason rather than because core is good: core work moved knee valgus by d = -1.25 to -1.44, the same running insurance as the sideways work."
@@ -691,7 +697,14 @@
                   "progression": "time"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "open": [
+                {
+                  "q": "Why do plank shoulder taps sit in the DB Overhead Press rest? This block's why explains the press and never mentions them, so there is no clause to show on the card. It may be a real defect rather than an omission: rule 1 in this file is that the partner works a muscle the lead lift does not, and an overhead press already loads the shoulders that a shoulder tap holds up. Either the pairing has a reason nobody wrote down, or the partner is wrong.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, and second also means he never walks back to the dumbbells: bench, then this, then everything else is at the cables."
@@ -777,7 +790,8 @@
               "zone": "cable",
               "station": null,
               "log": true,
-              "rangeWidth": 4
+              "rangeWidth": 4,
+              "whyHere": "The triceps do nothing during a pulldown, so they are what goes in its rest."
             }
           ],
           "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank."
@@ -841,7 +855,8 @@
               "progression": "weight",
               "zone": "cable",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The side delt goes in its rest because a row does not use it, and because nothing else in the week does"
             }
           ]
         },
@@ -911,7 +926,8 @@
               "zone": "cable",
               "station": null,
               "log": true,
-              "rangeWidth": 5
+              "rangeWidth": 5,
+              "whyHere": "Pushdown and curl are direct opposites, which is the pairing the review actually studied"
             }
           ],
           "why": "Arms do not earn twice a week on the frequency evidence, so this is first to go when time is short. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
@@ -980,7 +996,14 @@
               "progression": "weight",
               "zone": "cable",
               "station": null,
-              "log": true
+              "log": true,
+              "open": [
+                {
+                  "q": "Why does the reverse fly sit in the Cable Pallof rest? This block's why is entirely about anti-rotation and never mentions the fly, so there is no clause to show on the card.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "The week trained the trunk to resist bending forward (dead bugs, planks) and sideways (carries, Copenhagen) and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running."
@@ -1070,7 +1093,8 @@
               "progression": "weight",
               "zone": "benchDb",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The lateral raise rides in the rest for the same reason as Monday: it is upper body, so the bound stays fresh."
             }
           ],
           "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest for the same reason as Monday: it is upper body, so the bound stays fresh."
@@ -1151,7 +1175,8 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "whyHere": "Bridge in the rest gaps."
             }
           ],
           "why": "The heavy hinge, the one that gets progressed. Squat went 135x10 to 185x6 since May on this heavy-then-light pattern. Bridge in the rest gaps."
@@ -1228,7 +1253,8 @@
               "progression": "weight",
               "zone": "rack",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position"
             }
           ],
           "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
@@ -1306,7 +1332,8 @@
                   "progression": "time"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "whyHere": "Dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
             }
           ],
           "why": "Single-leg work, dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
@@ -1385,7 +1412,8 @@
                   "progression": "time"
                 }
               ],
-              "progression": "time"
+              "progression": "time",
+              "whyHere": "The Copenhagen appears nowhere in the evidence file: common practice, not a trial."
             }
           ],
           "why": "Single-leg hinge, and the Copenhagen for the groin. The Copenhagen appears nowhere in the evidence file: common practice, not a trial."
@@ -1456,7 +1484,8 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "whyHere": "Calves were once a week against a programme whose rule is twice. This is also where a calf raise actually belongs"
             }
           ],
           "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs and the glute bridge; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves were once a week against a programme whose rule is twice. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the deadlift on a lower day, which is the same reasoning."
@@ -1542,7 +1571,8 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "whyHere": "Friday already runs dead bugs with the row, and a pushup uses nothing below the waist."
             }
           ],
           "why": "Both upper days had no power or bodyweight work at all while both lower days opened with jumps, and The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) opens every one of its upper days with a pushup variation. This is the first bodyweight pushing in the programme, it is free, and it is the one thing here that gets easier as he gets lighter rather than heavier. First and fresh for the same reason the jumps are: Deng 2024. Its partner is the glute bridge rather than another dead bug: Friday already runs dead bugs with the row, and a pushup uses nothing below the waist."
@@ -1624,7 +1654,14 @@
                   "progression": "time"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "open": [
+                {
+                  "q": "Why do dead bugs sit in the BB Row rest? This block's why is about pulling frequency and never mentions them, so there is no clause to show on the card.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "Pulling twice a week, heavy here and moderate Tuesday. Six loaded pulling sets in a week is the thinnest part of the programme, which is why this is the spine of the day and not the chest press."
@@ -1702,10 +1739,11 @@
               "zone": "machines",
               "station": null,
               "log": true,
-              "rangeWidth": 5
+              "rangeWidth": 5,
+              "whyHere": "Biceps do nothing during a chest press, so that is what goes there."
             }
           ],
-          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a pair of dumbbells, which you carry in. Biceps do nothing during a chest press, so that is what goes there."
+          "why": "The second press of the week, moderate. It CANNOT share a window with the row: the row holds a rack and this holds a machine, and the validator refuses that pairing. What it CAN share it with is a pair of dumbbells, which you carry in. Biceps do nothing during a chest press, so that is what goes there. He asked on 2026-08-25 whether more of this day could have happened at the barbell station he started at (note #14), and ruled on 2026-08-27 to keep the machines. The barbell versions do exist: he has logged BB bench to 185 and BB OHP to 115 in that rack. What a machine buys is the cheap half of a twice-a-week pattern, which is the entire reason a second exposure is not a second heavy one. The walking is already bounded by a gate rather than by good intentions: validate.mjs refuses a day whose route doubles back, so Friday visits the rack, the machines, the cable stack and the preacher seat once each and finishes with each before leaving it."
         },
         {
           "role": "main",
@@ -1766,7 +1804,8 @@
               "progression": "weight",
               "zone": "machines",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "Side delts go in the rest because a pull-up does not use them."
             }
           ]
         },
@@ -1829,7 +1868,8 @@
               "progression": "weight",
               "zone": "machines",
               "station": null,
-              "log": true
+              "log": true,
+              "whyHere": "The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set."
             }
           ]
         },
@@ -1907,7 +1947,8 @@
               "zone": "cable",
               "station": null,
               "log": true,
-              "rangeWidth": 4
+              "rangeWidth": 4,
+              "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
             }
           ],
           "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
@@ -2001,7 +2042,8 @@
                   "progression": "time"
                 }
               ],
-              "progression": "time"
+              "progression": "time",
+              "whyHere": "The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel"
             }
           ],
           "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."

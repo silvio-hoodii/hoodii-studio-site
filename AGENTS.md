@@ -191,6 +191,71 @@ Two other gates worth knowing before you edit anything under `content/kitchen/`:
 - `provenance.cookedResult: "failed"` drops a dish from the offered list whatever else it passes.
   Piccata is currently `failed` and is being rewritten from a source.
 
+## CO-BUILDING WITH HIM, rather than designing for him
+
+His ask, 2026-08-27: *"whenever i let the agents design we still have shortcomings so lets come up
+with a way to co build it"*. This is that protocol. Four rules, each with the mechanism named, per
+the meta-law in `.agents/ENGINEERING.md`: **a rule that does not execute is decoration.**
+
+**1. Agents author MECHANISM. He authors JUDGMENT.** The kitchen's rule, transplanted. `AGENTS DO
+NOT WRITE COOKING STEPS` was written 2026-08-09 after a dish that had passed a six-source
+cross-check burnt anyway, because **all four failures came from a sentence an agent wrote and none
+from a figure a source gave.** The gym produces the same shape of defect.
+
+| An agent may author | Only he can author |
+|---|---|
+| Arithmetic, unit consistency, gates, validators | What is actually in the gym, and where |
+| Evidence lookup and verbatim quotation from a source | How much time he really has that day |
+| Rendering, refactors, migrations | What a cue must say to be followable |
+| An option set with the cost of each attached | Whether a reason is legible where it appears |
+| Anything a test can prove | How much text is too much |
+
+*Mechanism:* `validate.mjs` refuses an exercise with no `cue`, `station` or `zone`, and refuses a
+`whyHere` that is not a verbatim span of an accepted `why`. Agent prose in a judgment field does not
+compile.
+
+**2. Judgment calls get batched into ONE pass, with costs, before anything is written.** Not buried
+in prose: a real question with real options and the consequence of each. The farmer carry proved it
+(see the `open` bullet under Commits and deploy): five days of three contradictory answers, then one
+word from him and a same-hour ship.
+
+**3. Every ruling is written where the thing lives, and he is never asked twice.** An unanswered
+question is an `open` row on the exercise or station. An answered one is deleted and the answer
+written into the `why`, the `cue` or `equipment.json`, dated, with the note number. *Mechanism:*
+`gym-notes.mjs` prints every `open` row and exits non-zero past its `due` date.
+
+**4. The pairing session has a fixed shape, so it does not become an audit.** An audit produces a
+document. This produces a decision and a shipped change.
+
+```
+1. READ    gym-notes.mjs --all, program.json's $comment, and the block the notes point at.
+           NO PROPOSALS YET.
+2. LOCATE  which KIND of failure this is (table below). If it is a new kind, say so.
+3. ASK     one batch of judgment calls, options plus costs, in his words not a field name.
+4. BUILD   only what he ruled on. All the gates. Screenshot at 390px and LOOK at it. Ship.
+5. CLOSE   mark the notes handled, write the ruling where the thing lives.
+```
+
+**Step 2 is the one that is new, and it is what stops the session becoming another redesign.** The
+taxonomy, from all eighteen notes as of 2026-08-27:
+
+| Kind of failure | Notes | What the work actually is |
+|---|---|---|
+| Placement unexplained at the point of asking | #6 #8 #9 #13 #17 | **Reach, not reasoning.** The answer usually already exists |
+| Equipment reality an agent could not know | #14 #15 #16 #18 | Ask him, then write it into `equipment.json` |
+| Unit guessed instead of declared | #5 #19 | Three options with costs; he rules |
+| Time budget assumed, not asked | #2 #7 #11 | 40 minutes is the real constraint on at least three days |
+| Form and feel, which only he can report | #3 #4 | Cannot be derived. Only he has the instrument |
+| Volume of text | #12 | The counterweight to the five at the top. Measure at 390px |
+| Improvisation the app did not offer | #10 | The app was missing an option, not wrong |
+
+**"Done" has to mean it changed what he knows, not that it was rendered.** The block `why` was
+required by a validator, present on all 24 blocks, named the questioned exercise in 9 of 11 cases,
+was backed by 61 KB of sourced evidence, and shipped specifically to answer this complaint. He asked
+the same question five more times over nine days. Nothing was broken. **The note box is currently the
+only instrument in this system that measures reach, which is why an unanswered note is worse than no
+note box at all.**
+
 ## THE GYM DATA PIPELINE, and what each activity actually holds
 
 Everything under `/gym` that is not a plan comes from the Samsung Health export on the laptop, via
@@ -391,6 +456,57 @@ harmless, and PSN is not surfaced on the hub.
   `node scripts/gym-notes.mjs --handled <id>`. The kitchen already learned what happens otherwise:
   a captured question nobody answers is worse than no capture, because he stops believing the box
   does anything.
+
+  **That command also prints the `open` questions and exits non-zero on an overdue one.** See the
+  co-build section below.
+- **A PARTNER EXERCISE CARRIES `whyHere`, AND IT MAY NOT SAY ANYTHING NEW.** `validate.mjs` requires
+  the last exercise of every block to have either a `whyHere` or an `open` question, and refuses a
+  `whyHere` that is not a **verbatim span of its own block's `why`**, first-character case aside.
+
+  **The failure it fixes was REACH, not reasoning, and that distinction is the whole design.** Five
+  of his eighteen gym notes ask a version of "why is this here" (#6 #8 #9 #13 #17), and every
+  exercise they name resolves to **eleven placements, all at partner position 2, not one a lead
+  lift**. The answer was already there: `why` is required on all 24 blocks, is rendered, is backed by
+  61 KB of sourced evidence in `HealthOS/knowledge/training-programme-evidence.md`, and **names the
+  questioned partner in 10 of those 11 cases**. It shipped on 2026-08-16 for exactly this complaint.
+  He then asked five more times over the next nine days, because the block heading said "Main Lift:
+  BB Row", the control said "Why this is here", and he was looking at a calf raise in position 2.
+  Nothing told him the tap would explain the calf raise.
+
+  **A fix can ship, validate, render, and still not reach him, and every gate will call that done.**
+  An agent handed "explain the programme better" writes more reasoning. There was already more
+  reasoning than he had ever seen.
+
+  **Why the verbatim-span gate and not a free-text field.** Note #12, eight days after the others:
+  *"Walls of text again why do I need all this, just leave the cue and thats it, it can even be
+  hidden"*. A per-exercise prose field is exactly how that wall comes back one honest-looking clause
+  at a time, invisible in any diff review. Text that is not already in the accepted `why` does not
+  compile. Measured at 390px on the shipped build: 4 to 6 clauses a day, 164 to 246px, **2.1% to
+  3.2% of the page, nothing longer than three lines.** Re-measure if you touch it; do not estimate
+  it from the source.
+
+  A partner whose block `why` does not explain it **does not get a reason invented for it.** It gets
+  an `open` question, which is the honest state. Three currently do.
+- **`content/gym/validate.test.mjs` is that validator's regression suite, and `scripts/verify.mjs`
+  runs it.** Ten cases; each mutates a copy of `content/gym` in a temp directory and asserts the real
+  validator refuses it. **A gate that has only ever been seen to pass has not been seen to work**: it
+  may be matching nothing. This one earned its place on its first run by catching a hole in the gate
+  it was written to cover, which normalised the first character's case in one direction only. It is
+  in `verify.mjs` and deliberately NOT in `pnpm build`: it spawns ten processes and copies a
+  directory ten times, which belongs in what a person types before pushing, not in the deploy path.
+- **AN OPEN QUESTION FOR SILVIO LIVES ON THE THING IT IS ABOUT.** An `open: [{q, asked, due}]` array
+  on an exercise in `program.json` or a station in `equipment.json`. His ruling, 2026-08-27, chosen
+  over a second `UNKNOWNS.md`: the question goes where the next agent is already reading.
+  `validate.mjs` gates the shape; **`scripts/gym-notes.mjs` surfaces every one and exits non-zero
+  past `due`**, which is the command AGENTS.md already requires before any `/gym` edit. It is not in
+  the validator because a due date that turns the build red overnight with no file edited would
+  block an unrelated deploy, the same reason `check-ladder.mjs` is not in there.
+
+  **The failure it exists to stop:** the farmer carry had three contradictory answers live in the app
+  for five days, the card saying 40 reps, his note saying seconds, the cue saying count steps. A
+  2026-08-22 audit had already concluded it was *"a decision to put to Silvio, not to invent"*. Nobody
+  put it to him. Put as three options with the cost of each, he answered in one word and it shipped
+  the same hour. Cost to him: seconds.
 - **Adding a POST route under `/gym/api`, `/swim/api` or `/bike/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
   Nothing is optional about this: the probe drives a real browser against the real Neon store, and
   an unstubbed write route means a test posts into his actual training log. `/gym/api/note` was

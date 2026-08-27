@@ -273,6 +273,98 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       fail(where, `${block.pairing} block has ${block.exercises.length} exercises, expected exactly 2`);
     }
 
+    /* ------ THE PARTNER SAYS WHY IT IS THERE, ON ITS OWN ROW. Added 2026-08-27, on his ruling.
+     *
+     * Five of his eighteen gym notes ask a version of "why is this here", and every exercise they
+     * name resolves to a PARTNER at position 2, never a lead lift. The reason was already written:
+     * `why` above is required, present on all 24 blocks, and names the questioned partner in 10 of
+     * the 11 cases. It was collapsed behind a summary reading "Why this is here" while he was
+     * looking at a calf raise, so nothing told him the tap would explain the calf raise. He asked
+     * five more times over nine days, after the fix shipped.
+     *
+     * THE FAILURE WAS REACH, NOT REASONING, and that is the only reason this is not a second `why`.
+     * `whyHere` may not say anything new. It must be a VERBATIM SPAN of the block's own `why`, the
+     * one licence being the case of the first character so a mid-sentence span reads as a sentence.
+     *
+     * That gate is the point of the field. Note #12, eight days after the others: "Walls of text
+     * again why do I need all this, just leave the cue and thats it, it can even be hidden". A
+     * per-exercise prose field is exactly how an agent rebuilds that wall one honest-looking clause
+     * at a time, and no reviewer reading a diff would catch it. Here it cannot start: text that is
+     * not already in the accepted `why` does not compile.
+     *
+     * A partner with no such span in its block's `why` is not given one. It gets an `open` question
+     * instead, which is the honest state: nobody has written down why it is there. */
+    if (block.exercises.length >= 2) {
+      const partner = block.exercises[block.exercises.length - 1];
+      const clause = partner.whyHere;
+      const open = Array.isArray(partner.open) ? partner.open : [];
+
+      if (clause === undefined && !open.length) {
+        fail(where, `partner "${partner.id}" has no "whyHere" and no "open" question. It sits at position 2 and every "why is this here" note he has written names a position-2 exercise. Either lift a verbatim span out of this block's "why" that explains this exercise, or, if the "why" does not explain it, record an open question on the exercise rather than inventing a reason.`);
+      }
+      if (clause !== undefined && open.length) {
+        fail(where, `partner "${partner.id}" carries both a "whyHere" and an "open" question. One of them is stale: either the reason is written or it is not.`);
+      }
+      if (clause !== undefined) {
+        if (typeof clause !== 'string' || clause.trim().length < 20) {
+          fail(where, `"whyHere" on "${partner.id}" must be a string of at least 20 characters, got ${JSON.stringify(clause)}`);
+        } else {
+          // Modulo the first character's case, in EITHER direction, and nothing else. Both
+          // directions because a span can be lifted from mid-sentence (needs capitalising) or from
+          // the start of one (needs lowering if it lands mid-clause). Only one direction was
+          // implemented first, and validate.test.mjs caught it on its first run.
+          const variants = [
+            clause,
+            clause[0].toLowerCase() + clause.slice(1),
+            clause[0].toUpperCase() + clause.slice(1),
+          ];
+          if (!variants.some((v) => block.why.includes(v))) {
+            fail(where, `"whyHere" on "${partner.id}" is NOT a verbatim span of this block's "why". This field exists to move reasoning he has already accepted onto the row where he asks for it, and for no other purpose. Nothing new may be said here. Either quote the "why" exactly, or change the "why" first.\n    whyHere: ${JSON.stringify(clause)}\n    why:     ${JSON.stringify(block.why)}`);
+          }
+        }
+      }
+      // One field, one meaning. The lead lift's reason is the block label plus the `why`.
+      block.exercises.slice(0, -1).forEach((lead) => {
+        if (lead.whyHere !== undefined) {
+          fail(where, `"whyHere" on "${lead.id}", which is a lead lift, not the partner. The lead's reason is the block label and the "why"; this field answers "why is this second thing here", which is the only question he has actually asked.`);
+        }
+      });
+    }
+
+    /* ------ AN OPEN QUESTION LIVES ON THE THING IT IS ABOUT. Added 2026-08-27, on his ruling.
+     *
+     * Four of his notes were equipment facts nobody could have known without standing at the rack:
+     * kettlebells stop at 50 lb, the cable does the overhead tricep, the barbell station could have
+     * held more of Friday. KitchenOS/UNKNOWNS.md solves the same problem with a file whose one job
+     * is "Silvio should never be asked the same question twice", and it works.
+     *
+     * He ruled against a second file here: the question goes on the exercise or station it is about,
+     * where the next agent is already reading, and a gate keeps it honest. This validator checks the
+     * SHAPE only. The DUE DATE is checked by scripts/gym-notes.mjs, which AGENTS.md already requires
+     * before any /gym edit, because a build that goes red overnight with no file edited would block
+     * an unrelated deploy: the same reason check-ladder.mjs is not in here. */
+    for (const ex of block.exercises) {
+      if (ex.open === undefined) continue;
+      if (!Array.isArray(ex.open) || !ex.open.length) {
+        fail(where, `"open" on "${ex.id}" must be a non-empty array of questions, got ${JSON.stringify(ex.open)}. Delete the field when the question is answered; do not leave an empty one.`);
+        continue;
+      }
+      ex.open.forEach((q, qi) => {
+        const at = `"open"[${qi}] on "${ex.id}"`;
+        if (typeof q.q !== 'string' || q.q.trim().length < 30) {
+          fail(where, `${at}: "q" must be a question of at least 30 characters, got ${JSON.stringify(q.q ?? null)}. He answers in one word; the question has to carry the context so he does not have to reconstruct it.`);
+        }
+        for (const f of ['asked', 'due']) {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(String(q[f]))) {
+            fail(where, `${at}: "${f}" must be YYYY-MM-DD, got ${JSON.stringify(q[f] ?? null)}`);
+          }
+        }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(String(q.asked)) && /^\d{4}-\d{2}-\d{2}$/.test(String(q.due)) && q.due <= q.asked) {
+          fail(where, `${at}: "due" (${q.due}) is not after "asked" (${q.asked}). A question with no runway is a question nobody will surface.`);
+        }
+      });
+    }
+
     // ------ THE HEADER MAY NOT PROMISE WHAT THE BLOCK DOES NOT CONTAIN. See PAIR_PROMISE above.
     const label = String(block.label || '');
     if (block.exercises.length === 1) {

@@ -664,6 +664,22 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
               <div className="ex" key={ex.id} data-slot={ex.id} data-eff={eff.id}>
                 <div className="ex-name">{eff.name}</div>
                 <div className="ex-meta">{eff.sets}×{eff.reps} · {eff.rest} rest</div>
+                {/* WHY THIS SECOND EXERCISE IS HERE, on its row, no tap. His ruling, 2026-08-27.
+                  *
+                  * Five notes ask it (#6 #8 #9 #13 #17) and every exercise they name is a partner
+                  * at position 2. The answer has been on this page since 2026-08-16 and names the
+                  * questioned partner in 10 of the 11 cases, one tap under "Why this is here" a few
+                  * lines above. He asked five more times over nine days. Nothing was broken: the
+                  * reasoning was right, the evidence was real, the gate was green, the pixels were
+                  * on the screen, and the tap was labelled for a different question.
+                  *
+                  * `ex.whyHere`, NOT `eff.whyHere`. The reason belongs to the SLOT, not to whatever
+                  * is filling it: "side delts go in the rest because a pull-up does not use them"
+                  * is equally true of a standing raise, a seated raise or a kettlebell raise, and
+                  * an alt carries no whyHere at all. Swaps are where every previous defect on this
+                  * surface lived (four of the five found on 2026-08-14), so read the slot on
+                  * purpose rather than by accident. */}
+                {ex.whyHere && <div className="ex-why">{ex.whyHere}</div>}
                 {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
                      "Walls of text again why do I need all this, just leave the cue and thats it,
                      it can even be hidden" (gym_note #12, 2026-08-25), after the same complaint on

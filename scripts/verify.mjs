@@ -21,7 +21,7 @@
  * Deliberately NOT wired into `pnpm build`. This RUNS the build. Its job is to be the thing a person
  * or an agent types before pushing, in place of four commands whose exit codes have to be watched.
  *
- *   node scripts/verify.mjs           # the four gates
+ *   node scripts/verify.mjs           # the five gates
  *   node scripts/verify.mjs --probe <base-url>   # and drive the real kitchen pages in a browser
  */
 import { spawnSync } from 'node:child_process';
@@ -37,6 +37,18 @@ const GATES = [
   ['typecheck', 'pnpm', ['typecheck']],
   ['lint', 'pnpm', ['lint']],
   ['build', 'pnpm', ['build']],
+  /* THE GYM VALIDATOR'S OWN REGRESSION SUITE. Added 2026-08-27 with the `whyHere` gate.
+   *
+   * A gate that has only ever been seen to PASS has not been seen to work: it may be matching
+   * nothing at all. This suite mutates a copy of content/gym in a temp directory and asserts the
+   * real validator refuses each mutation, so the checks are watched failing on purpose. It earned
+   * its place on its first run by catching a hole in the gate it was written to cover: the
+   * verbatim-span check normalised the first character's case in one direction only.
+   *
+   * Here rather than in `pnpm build`, on purpose. It spawns ten node processes and copies a
+   * directory ten times, which belongs in the thing a person types before pushing, not in the
+   * deploy path. The pre-push hook runs this file, so it executes on every push either way. */
+  ['gym-validator-tests', process.execPath, ['content/gym/validate.test.mjs']],
 ];
 if (probeAt) GATES.push(['probe', process.execPath, ['scripts/probe-kitchen.mjs', probeAt]]);
 

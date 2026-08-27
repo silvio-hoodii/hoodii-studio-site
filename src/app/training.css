@@ -139,6 +139,15 @@
 .training .ex:first-child { border-top: 0; }
 .training .ex-name { font-size: 16.5px; font-weight: 600; margin: 0 0 3px; }
 .training .ex-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin-bottom: 8px; }
+/* WHY THE SECOND EXERCISE IS HERE. Sans, not mono: it is a sentence, and the site's type split puts
+ * sentences in sans and data in mono. The one before it, `.ex-meta`, is mono 12px, so the change of
+ * face is what separates "3x12, 45s rest" from the reason underneath it with no rule or box.
+ *
+ * NOT behind a `details`. That is the entire point of the field: the reason was already one tap away
+ * under "Why this is here" and he asked for it five more times over nine days. Measured cost at
+ * 390px, which is the only width that counts here: 6 partner rows per day, one to two lines each. */
+.training .ex-why { font-size: 13.5px; line-height: 1.5; color: var(--muted-foreground); margin: -2px 0 8px; }
+
 .training .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
 .training .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
 

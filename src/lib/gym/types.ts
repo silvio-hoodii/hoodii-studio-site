@@ -67,7 +67,42 @@ export interface Exercise {
   /** Widens the double-progression rep range so the next load step is actually reachable from the
    *  top of it. See the RANGE_WIDTH note in progression.ts. Default 2. */
   rangeWidth?: number;
+  /** ONE CLAUSE SAYING WHY THIS PARTNER IS IN THIS BLOCK, printed on its own row, no tap.
+   *
+   *  Only the PARTNER (last exercise of the block) may carry it, and validate.mjs fails the build
+   *  if the string is not a verbatim span of its own block's `why`, first-character case aside.
+   *
+   *  Both halves of that are load-bearing. Five of his eighteen gym notes ask "why is this here",
+   *  and all eleven exercises they name sit at position 2, never a lead lift. The reason was
+   *  already written and already rendered, collapsed behind a summary reading "Why this is here"
+   *  while he was looking at a calf raise, so the failure was REACH, not reasoning. And note #12,
+   *  eight days later: "Walls of text again why do I need all this, just leave the cue and thats
+   *  it, it can even be hidden". The verbatim-span gate is what keeps this field from becoming that
+   *  wall one honest-looking clause at a time; nothing new can be said here.
+   *
+   *  A partner whose block `why` does not explain it gets `open` instead, not an invented reason. */
+  whyHere?: string;
+  /** Questions only he can answer, parked on the thing they are about. His ruling, 2026-08-27, over
+   *  a second UNKNOWNS.md file: the question lives where the next agent is already reading.
+   *
+   *  validate.mjs checks the shape; `scripts/gym-notes.mjs` surfaces them and goes red past `due`,
+   *  because a build that turns red overnight with no file edited would block an unrelated deploy.
+   *  Same reason check-ladder.mjs is not in the validator. */
+  open?: OpenQuestion[];
   alts?: Alt[];
+}
+
+/** One question for Silvio, recorded where the thing it is about lives. */
+export interface OpenQuestion {
+  /** The question, with enough context that he does not have to reconstruct it. He answers in one
+   *  word; carrying the context is this field's job, not his. */
+  q: string;
+  /** YYYY-MM-DD. */
+  asked: string;
+  /** YYYY-MM-DD, after `asked`. Past this, gym-notes.mjs reports it as overdue. The farmer carry
+   *  had three contradictory answers live in the app for five days because a 2026-08-22 audit
+   *  concluded it was "a decision to put to Silvio, not to invent" and then nobody put it to him. */
+  due: string;
 }
 
 /** What a block is FOR. */
