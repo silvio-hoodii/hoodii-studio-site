@@ -24,7 +24,8 @@ export default async function GymHome() {
       <h1>Gym</h1>
       <p className="lede">
         Upper/lower split, logged between sets. Every main pattern twice a week since 2026-08-16,
-        heavy on one day and light on the other. Run, bike and swim are on the conditioning tab.
+        heavy on one day and light on the other. Swim, run and bike have their own pages now, in
+        the row above.
       </p>
       <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} streak={streak} />
     </div>

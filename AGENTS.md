@@ -44,9 +44,11 @@ that it scrolls.** Drive a real wheel or CDP touch event.
 - **Styling.** shadcn tokens in `globals.css` are the system. Per-surface CSS (`hub.css`,
   `kitchen/kitchen.css`) is scoped under a root class and **must consume the tokens, never hardcode
   a colour.** Fonts are IBM Plex Sans and Mono. Two files are shared rather than per-surface:
-  `src/app/training.css` (root class `.training`, used by `/gym` and `/swim`, and named `gym.css`
-  with a `.gym` root until 2026-08-26) and `src/app/charts.css` (`/health` and `/swim`). Both were
-  renamed or extracted the day a second route needed them, rather than copied.
+  `src/app/training.css` (root class `.training`, used by ALL FIVE training routes since
+  2026-08-27, and named `gym.css` with a `.gym` root until 2026-08-26) and `src/app/charts.css`
+  (`/health` and `/swim`). Both were renamed or extracted the day a second route needed them,
+  rather than copied. `/health` carries `.training` AND `.health`, and loads health.css LAST so it
+  wins the four selectors both files define.
 
 **The palette is a decision, not a default.** Monochrome, one chromatic colour (`--signal`) used
 only for a value that is true right now, radius near zero, rules instead of cards, no shadows or
@@ -74,9 +76,12 @@ always lose to the thing that exists.
 |---|---|---|
 | `/` | The hub index. Rows show real state, never a link label | n/a |
 | `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
-| `/gym` | Lifting log + a note box. `content/gym/` + `gym_*` tables | yes |
-| `/gym/conditioning` | **The whole week**, with TWO levels of tabs. Discipline across the top (Overview, Run, Bike), then sub-tabs by WHEN YOU ASK: **Now** (what is true today, changes on its own), **Plan** (the coming weeks), **How** (technique, barely changes). That split took the worst view from 7.9 phone screens to 2.2. Every view is a URL: `?p=run&s=how`. **Swim left this page on 2026-08-26** and `?p=swim` 307s to `/swim`, sub-tab preserved. The week Overview still counts swims toward the streak: `src/lib/gym/week.ts` reads the watch mirror, not the tab list. Sources: `conditioning.json`, `program.json`, and `health_session_detail` / `health_watch_session` in Neon | no writes |
-| `/health` | Body composition, read-only from `healthos.db` | n/a |
+| `/gym` | Lifting log + a note box, and lifting ONLY since 2026-08-27. `content/gym/` + `gym_*` tables | yes |
+| ~~`/gym/conditioning`~~ | **Deleted 2026-08-27.** It held the whole week behind two levels of query parameters and every one of its URLs now 307s from `next.config.ts`: `?p=run` to `/run`, `?p=bike` to `/bike`, `?p=swim` to `/swim`, everything else to `/health`, sub-tab preserved in all three | n/a |
+| `/run` | Running. Three sub-tabs on the `?s=` idiom: Now (last session the watch saw), Plan (the ten-week walk-to-run build, belt settings in both units, the week table), How (cues). Source: `conditioning.json`, unchanged in the move | no writes |
+| `/bike` | Cycling. Same three sub-tabs. **The watch records a heart rate and nothing else on a bike**, so the page says so and the resistance levels get typed instead. Source: `conditioning.json` | via `/bike/api/ride` |
+| `/bike/api/ride` | One ride: date, minutes, the resistance level he finished EACH interval on, effort, note. Writes `bike_ride`. Four levels rather than one because `conditioning.json` already tells him to write down all four, and 1 to 20 is his dial. Shipped before the form, so its gates were built while somebody was looking | **cookie** |
+| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, what actually happened over a fortnight, attendance behind a tap), Weight (body composition, read-only from `healthos.db`), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen). Was a dead end nothing linked to and which linked to nothing | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
@@ -317,7 +322,7 @@ harmless, and PSN is not surfaced on the hub.
   `node scripts/gym-notes.mjs --handled <id>`. The kitchen already learned what happens otherwise:
   a captured question nobody answers is worse than no capture, because he stops believing the box
   does anything.
-- **Adding a POST route under `/gym/api` or `/swim/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
+- **Adding a POST route under `/gym/api`, `/swim/api` or `/bike/api`? It must go in `WRITE_ROUTES` in `scripts/probe-gym.js`.**
   Nothing is optional about this: the probe drives a real browser against the real Neon store, and
   an unstubbed write route means a test posts into his actual training log. `/gym/api/note` was
   added without it and the first probe went out over the network. `scripts/lint-probe-routes.mjs`
@@ -326,6 +331,9 @@ harmless, and PSN is not surfaced on the hub.
   `/swim/api/baseline` and would have left its scope silently. It walks a list of API roots now, and
   `src/proxy.ts` needed TWO edits for the same move: the path-prefix check AND `config.matcher`,
   which named no `/swim` path at all. A prefix added without the matcher reads as a gate and is none.
+  **That was demonstrated rather than asserted on 2026-08-27**, when `/bike/api` was added: with
+  the prefix present and the matcher entry deleted, an unauthenticated POST reached the handler
+  and returned 400 from the route instead of 401 from the gate. Do the same to any new prefix.
 - **Touching `/gym`? Run `node scripts/run-probe-gym.mjs <base-url>` as well**, and the reload pair
   with `node scripts/run-probe-gym.mjs <base-url> swapSurvivesReload`. Together that is 24 checks;
   it exits non-zero on any failure. The four other gates are static: they all passed on a build

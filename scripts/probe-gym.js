@@ -231,30 +231,41 @@
       return { pass: before !== after && onNow === wanted, detail: { before, after, tabClicked: wanted, tabOnNow: onNow } };
     },
 
-    /* The two gym pages are reachable from each other, and the surface nav does NOT answer to
-       `.tab`.
+    /* All five training routes are reachable from here, and the nav does NOT answer to `.tab`.
        Both halves are real defects that happened. Silvio, 2026-08-16: "There is no way for me to go
        to conditioning other than actually type in the URL... it's not evident that it's a clickable
-       piece of text." The fix put two chips at the top of both pages. The first version of those
-       chips carried className="tab", which is what dayTabsSwitch selects, so the harness clicked
-       "Conditioning", navigated off /gym, and SEVENTEEN tests failed with "no set row" and "no note
-       box". A cascade like that says something is broken but not what. This says what.
+       piece of text." The fix put chips at the top of both pages. The first version of those chips
+       carried className="tab", which is what dayTabsSwitch selects, so the harness clicked through,
+       navigated off /gym, and SEVENTEEN tests failed with "no set row" and "no note box". A cascade
+       like that says something is broken but not what. This says what.
+
+       WAS TWO CHIPS UNTIL 2026-08-27: Workout and The week, pointing at /gym and
+       /gym/conditioning. That second route is deleted and its contents are four routes now, so this
+       asserts the five that exist. Asserting a COUNT and the exact set, not just "contains /gym",
+       because a nav that quietly loses a route is the failure this test is for, and a nav that
+       still lists a deleted one is the other half of it.
        Does not navigate, so it stays in the normal run. */
     async surfaceNavIsPresentAndDistinct() {
       const nav = $('.surface-nav');
       if (!nav) return { pass: false, detail: 'no .surface-nav on the page' };
+      const want = ['/gym', '/swim', '/run', '/bike', '/health'];
       const links = $$('.surf-tab', nav);
       const hrefs = links.map((a) => new URL(a.href).pathname);
+      const missing = want.filter((w) => !hrefs.includes(w));
+      const extra = hrefs.filter((h) => !want.includes(h));
       const dayTabTexts = $$('.tab').map((t) => text(t));
-      const leaked = dayTabTexts.filter((t) => /workout|conditioning/i.test(t || ''));
+      /* "conditioning" stays in this regex on purpose. It is the word that leaked last time, and a
+         test that stops looking for the specific string that broke it is a test that has forgotten
+         why it exists. */
+      const leaked = dayTabTexts.filter((t) => /workout|conditioning|swim|run|bike|body/i.test(t || ''));
       return {
         pass:
-          links.length === 2 &&
-          hrefs.includes('/gym') &&
-          hrefs.includes('/gym/conditioning') &&
+          links.length === want.length &&
+          missing.length === 0 &&
+          extra.length === 0 &&
           leaked.length === 0 &&
-          links.some((a) => a.classList.contains('on')),
-        detail: { hrefs, dayTabTexts, leakedIntoDayTabs: leaked, activeCount: links.filter((a) => a.classList.contains('on')).length },
+          links.filter((a) => a.classList.contains('on')).length === 1,
+        detail: { hrefs, missing, extra, dayTabTexts, leakedIntoDayTabs: leaked, activeCount: links.filter((a) => a.classList.contains('on')).length },
       };
     },
 

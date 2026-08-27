@@ -32,6 +32,42 @@ const nextConfig: NextConfig = {
        * URL move, and a permanent redirect is cached by browsers forever. */
       { source: '/reading/all', destination: '/reading/shelf', permanent: false },
 
+      /* /gym/conditioning IS DELETED, 2026-08-27, and every URL it ever had lands somewhere real.
+       *
+       * It held the whole week behind two levels of query parameters: ?p=run, ?p=bike, ?p=swim and
+       * ?p=week, each with a ?s=now|plan|how under it. Swim escaped on 2026-08-26 and its redirect
+       * was written inside the page component, because the page still existed. It does not now, so
+       * all four live here where a deleted route can still answer for itself.
+       *
+       * ORDER MATTERS: first match wins, so the three discipline rules come before the bare one.
+       * THE PAIRED RULES ARE NOT REDUNDANT. `has` only matches when the key is PRESENT, so the
+       * s-carrying rule cannot serve a bare ?p=run, and a single rule with `s` optional does not
+       * exist. He was told to bookmark these at the poolside and at the treadmill; a sub-tab
+       * dropped in the move is a bookmark that lands on the wrong half of a page.
+       *
+       * 307, not 308, matching /reading/all above and for the same reason: a permanent redirect is
+       * cached by browsers forever, and this is an architecture decision rather than a law. */
+      ...(['run', 'bike', 'swim'].flatMap((d) => [
+        {
+          source: '/gym/conditioning',
+          has: [
+            { type: 'query' as const, key: 'p', value: d },
+            { type: 'query' as const, key: 's', value: '(?<s>.*)' },
+          ],
+          destination: `/${d}?s=:s`,
+          permanent: false,
+        },
+        {
+          source: '/gym/conditioning',
+          has: [{ type: 'query' as const, key: 'p', value: d }],
+          destination: `/${d}`,
+          permanent: false,
+        },
+      ])),
+      /* Everything else that page was: the Overview tab, and a bare /gym/conditioning. Overview
+       * became /health, which is the index now. */
+      { source: '/gym/conditioning', destination: '/health', permanent: false },
+
       /* The vercel.app copy of the whole site, sent home.
        *
        * Silvio, 2026-08-14: "why do we need the Hoodii Studio site, Vercel app? We can erase that."

@@ -3,6 +3,7 @@ import '../training.css';
 import '../charts.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import TrainingNav from '@/components/training/TrainingNav';
 
 /* THE SWIM SURFACE. Rebuilt 2026-08-26.
  *
@@ -40,6 +41,7 @@ export default function SwimLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="training">
       <SiteHeader app="Swim" />
+      <TrainingNav />
       {children}
       <SiteFooter standalone />
     </div>

@@ -372,16 +372,25 @@
 .training .note-actions .btn { min-height: 44px; }
 .training .note-actions .btn:disabled { opacity: 0.45; cursor: default; }
 
-/* ---- surface nav: the gym is two pages ----
+/* ---- surface nav: five routes, one row ----
  *
  * Reuses .tab so it reads as the same kind of control as the day tabs, but sits above the h1 so the
  * hierarchy is page -> title -> day rather than two identical rows meaning different things.
- * Constrained to --measure like everything else so it lines up with the column below it. */
+ * Constrained to --measure like everything else so it lines up with the column below it.
+ *
+ * WAS TWO CHIPS, Workout and The week, when the gym was two pages. Five since 2026-08-27:
+ * Lift, Swim, Run, Bike, Body. Measured at 390 px rather than eyeballed, because five mono chips at
+ * a 44 px tap floor is exactly the width where a row stops fitting and nobody notices on a laptop.
+ *
+ * `flex-wrap` is the safety net and not the plan. If a sixth discipline ever lands, the row breaks
+ * onto two lines instead of overflowing the page sideways, which is the failure the /swim rebuild
+ * had to check for on every tab. */
 .training .surface-nav {
   max-width: var(--measure);
   margin: 0 auto;
   padding: 14px var(--pad) 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 .training .surface-nav .surf-tab { text-decoration: none; }
