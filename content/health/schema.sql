@@ -192,3 +192,47 @@ create table if not exists health_session_detail (
 );
 create index if not exists health_session_detail_kind on health_session_detail (kind, date desc);
 
+
+-- EVERY INDIVIDUAL LENGTH HE HAS EVER SWUM, added 2026-08-26 (plan D3).
+--
+-- 19,327 lengths across 364 sessions back to 2018-01-03, which have sat in
+-- C:\Users\sneyr\Desktop\HOODII\HealthOS\swim-laps.json since the parser was written and have never
+-- reached a database. `health_session_detail` carries a per-length array too, but it only backfills
+-- about 120 days, so eight years of the richest data in this whole system was reachable from the
+-- laptop and nowhere else.
+--
+-- THE KEY IS (session_uuid, length_index) AND NOTHING ELSE. `swim_session` lost two real sessions to
+-- a key that merely looked sufficient and said nothing when it dropped them, which is why the sync
+-- asserts the destination count against the source count rather than trusting a success message.
+-- Checked before this table existed: the source JSON has 19,327 rows and 19,327 distinct pairs of
+-- these two columns, no nulls in either.
+--
+-- `date` is denormalised from the session on purpose. Every question worth asking of this table is
+-- "what happened over time", and a join to health_swim_session for a text date on 19,000 rows buys
+-- nothing. `stroke_type` is one of Freestyle, Backstroke, Breaststroke, Butterfly, Mixed, Kickboard,
+-- stored as the export's own word rather than an enum: a stroke this build has not seen must arrive
+-- and be visible, not fail the mirror.
+create table if not exists health_swim_length (
+  session_uuid       text    not null,
+  length_index       integer not null,
+  date               text    not null,
+  session_start_time text,
+  lengths_in_session integer,
+  pool_length        integer,
+  duration_ms        integer,
+  stroke_type        text,
+  stroke_count       integer,
+  rest_after_ms      integer,
+  primary key (session_uuid, length_index)
+);
+create index if not exists health_swim_length_date on health_swim_length (date);
+create index if not exists health_swim_length_session on health_swim_length (session_uuid, length_index);
+
+-- The liveness figure for the lengths mirror goes in the row health_sync already writes, rather
+-- than into a table of its own.
+--
+-- D3 asked for "its own liveness row, like swim_sync and health_sync have". This IS that, in the
+-- run record the same script already writes on every run, successful or not. A second table would
+-- be a second thing to consult that can only ever agree with this one, and `swim_sync`, the other
+-- half of the comparison it was modelled on, was dropped with SwimOS on 2026-08-26.
+alter table health_sync add column if not exists length_rows integer;

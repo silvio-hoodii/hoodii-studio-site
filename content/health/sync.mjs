@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Mirrors HealthOS/healthos.db (body_comp, watch_sessions) and HealthOS/swimming-sessions.json
- * into health_body_comp / health_watch_session / health_swim_session in Postgres, so the dashboard
- * does not depend on the laptop being reachable. healthos.db stays canonical; nothing here is
- * re-derived, only copied.
+ * Mirrors HealthOS/healthos.db (body_comp, watch_sessions, recovery_freshness, swim_pb,
+ * session_detail), HealthOS/swimming-sessions.json and HealthOS/swim-laps.json into the health_*
+ * tables in Postgres, so the dashboard does not depend on the laptop being reachable. healthos.db
+ * stays canonical; nothing here is re-derived, only copied.
  *
  *   node content/health/sync.mjs [--dry-run]
  *
@@ -41,6 +41,7 @@ if (existsSync('.env.local')) {
 const HEALTHOS_DIR = resolve(import.meta.dirname, '..', '..', '..', 'HealthOS');
 const SQLITE_PATH = resolve(HEALTHOS_DIR, 'healthos.db');
 const SWIM_JSON_PATH = resolve(HEALTHOS_DIR, 'swimming-sessions.json');
+const SWIM_LAPS_PATH = resolve(HEALTHOS_DIR, 'swim-laps.json');
 const CURRENT_JSON_PATH = resolve(HEALTHOS_DIR, 'current.json');
 
 const url = process.env.HEALTH_DATABASE_URL || process.env.GYM_DATABASE_URL || process.env.KITCHEN_DATABASE_URL;
@@ -59,6 +60,7 @@ const before = DRY
       client.query('select count(*)::int n from health_body_comp'),
       client.query('select count(*)::int n from health_watch_session'),
       client.query('select count(*)::int n from health_swim_session'),
+      client.query('select count(*)::int n from health_swim_length'),
     ]).then((r) => r.map((x) => x.rows[0].n))
   : null;
 
@@ -77,6 +79,8 @@ let targetWritten = 0;
 let recWritten = 0;
 let pbWritten = 0;
 let detailWritten = 0;
+let laps = [];
+let lapWritten = 0;
 
 try {
 
@@ -246,6 +250,71 @@ for (const s of swims) {
   swWritten++;
 }
 
+/* --- every individual length, from swim-laps.json ---------------------------------------------
+ *
+ * 19,327 of them back to 2018-01-03. Written in CHUNKS rather than one statement per row like every
+ * other block in this file, and that is not a style choice: at one round trip per row this is
+ * nineteen thousand round trips to Neon, which is minutes of wall clock on a scheduled task that
+ * has a whole export to get through. One `unnest` per 1,000 rows makes it twenty.
+ *
+ * Guarded on the file existing rather than assumed, the same way the sqlite tables above are. An
+ * older HealthOS that predates parse-swim-laps.js must not fail the mirror that also carries his
+ * weight.
+ *
+ * THE KEY IS CHECKED HERE, NOT ASSUMED. `swim_session` lost two real sessions to a key that looked
+ * sufficient, and the run that lost them reported success. So the distinct-pair count is compared
+ * against the row count BEFORE anything is written: if the JSON ever ships two rows for one
+ * (session, index), the upsert would silently keep the last one and the destination count would come
+ * out short with no explanation. Better to refuse and say which key collided. */
+if (existsSync(SWIM_LAPS_PATH)) {
+  laps = JSON.parse(readFileSync(SWIM_LAPS_PATH, 'utf8')).filter(
+    (l) => l.sessionUuid && l.lengthIndex != null && l.date,
+  );
+  const keys = new Set(laps.map((l) => `${l.sessionUuid}|${l.lengthIndex}`));
+  if (keys.size !== laps.length) {
+    throw new Error(
+      `swim-laps.json has ${laps.length} usable rows but only ${keys.size} distinct ` +
+        `(sessionUuid, lengthIndex) pairs. The key this table is built on is not unique in the ` +
+        `source, so ${laps.length - keys.size} ${laps.length - keys.size === 1 ? 'length' : 'lengths'} ` +
+        `would be discarded silently. Fix HealthOS/parse-swim-laps.js before mirroring.`,
+    );
+  }
+
+  const CHUNK = 1000;
+  for (let i = 0; i < laps.length; i += CHUNK) {
+    const c = laps.slice(i, i + CHUNK);
+    await q(
+      `insert into health_swim_length (session_uuid, length_index, date, session_start_time,
+         lengths_in_session, pool_length, duration_ms, stroke_type, stroke_count, rest_after_ms)
+       select * from unnest($1::text[], $2::int[], $3::text[], $4::text[], $5::int[], $6::int[],
+         $7::int[], $8::text[], $9::int[], $10::int[])
+       on conflict (session_uuid, length_index) do update set
+         date = excluded.date, session_start_time = excluded.session_start_time,
+         lengths_in_session = excluded.lengths_in_session, pool_length = excluded.pool_length,
+         duration_ms = excluded.duration_ms, stroke_type = excluded.stroke_type,
+         stroke_count = excluded.stroke_count, rest_after_ms = excluded.rest_after_ms`,
+      [
+        c.map((l) => l.sessionUuid),
+        c.map((l) => l.lengthIndex),
+        c.map((l) => l.date),
+        c.map((l) => l.sessionStartTime ?? null),
+        c.map((l) => l.lengthsInSession ?? null),
+        c.map((l) => l.poolLength ?? null),
+        /* `?? null` and not `|| null`, for the reason the two paces below record: a zero rest and an
+           unmeasured rest are different facts, and `||` maps the first onto the second. A length
+           with no gap after it is the normal case in a continuous swim. */
+        c.map((l) => l.durationMs ?? null),
+        c.map((l) => l.strokeType ?? null),
+        c.map((l) => l.strokeCount ?? null),
+        c.map((l) => l.restAfterMs ?? null),
+      ],
+    );
+    lapWritten += c.length;
+  }
+} else {
+  console.log('swim-laps.json not on disk yet: run HealthOS/parse-swim-laps.js');
+}
+
 // --- the published target ----------------------------------------------------------------
 // Not recomputed here. publish-current.mjs derives it from lean mass and this copies the answer,
 // so there is exactly one place that knows the formula.
@@ -283,12 +352,14 @@ console.log(`${DRY ? '[dry run] ' : ''}recovery: ${recWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim PBs: ${pbWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}session detail: ${detailWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
+console.log(`${DRY ? '[dry run] ' : ''}swim_length: ${lapWritten} rows (json had ${laps.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 
 const checks = await Promise.all([
   client.query('select count(*)::int n from health_body_comp'),
   client.query('select count(*)::int n from health_watch_session'),
   client.query('select count(*)::int n from health_swim_session'),
+  client.query('select count(*)::int n from health_swim_length'),
 ]);
 console.log('Postgres row counts now:', checks.map((c) => c.rows[0].n));
 
@@ -305,6 +376,22 @@ if (!DRY && !failure) {
         ? 'Postgres is holding rows sqlite no longer has, so something was renamed or deleted upstream without being deleted here.'
         : 'The run did not finish writing.');
   }
+  /* Same gate on the lengths, and it is the one that matters most here: 19,000 rows written in
+     chunks is the block in this file most able to stop halfway and still print a friendly line.
+     Only asserted when the source file was actually read, because a missing swim-laps.json is a
+     skipped block and not a short write. Fewer in Postgres than the JSON holds means the run did
+     not finish. MORE means rows are sitting here that the parser no longer produces, which is what
+     a regenerated export with a changed uuid would look like, and it is worth being told about
+     rather than left to accumulate the way the 87 duplicate sessions did. */
+  if (laps.length) {
+    const pgLaps = checks[3].rows[0].n;
+    if (pgLaps !== laps.length) {
+      failure = `mirror disagrees with swim-laps.json: health_swim_length has ${pgLaps} rows, the file has ${laps.length}. ` +
+        (pgLaps > laps.length
+          ? 'Postgres is holding lengths the parser no longer produces, so a session was re-keyed upstream without the old rows being deleted here.'
+          : 'The run did not finish writing.');
+    }
+  }
 }
 if (DRY && before) console.log('Postgres row counts before:', before, '(unchanged, nothing was written)');
 
@@ -312,8 +399,8 @@ if (DRY && before) console.log('Postgres row counts before:', before, '(unchange
    the case the page has to be able to see. Not written on a dry run, which is not a sync. */
 if (!DRY) {
   await client.query(
-    'insert into health_sync (ok, body_rows, watch_rows, swim_rows, error) values ($1,$2,$3,$4,$5)',
-    [failure == null, bcWritten, wsWritten, swWritten, failure],
+    'insert into health_sync (ok, body_rows, watch_rows, swim_rows, length_rows, error) values ($1,$2,$3,$4,$5,$6)',
+    [failure == null, bcWritten, wsWritten, swWritten, lapWritten, failure],
   );
 }
 await client.end();
