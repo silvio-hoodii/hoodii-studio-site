@@ -199,6 +199,13 @@ Everything under `/gym` that is not a plan comes from the Samsung Health export 
 it **and verify the unzip**, `parse-body-metrics.js` + `server/migrate-body-comp.mjs`,
 `import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
 
+**That chain lives in its own repo: `silvio-hoodii/HealthOS`, PRIVATE, on `master`.** Worth knowing
+because three handoffs in a row recorded it as "not tracked by git", which sent nobody looking for a
+remote that already existed. What was actually true, until 2026-08-27, is that `guard-regen.mjs` was
+untracked and the extraction gate plus both parser rewrites had sat uncommitted for three weeks.
+Both gates below are committed and pushed now. If you change something in `HealthOS/`, commit it
+there: nothing in this repo will carry it.
+
 **A HALF-EXTRACTED EXPORT LOOKS EXACTLY LIKE AN EXPORT WITH LESS DATA IN IT, and that cost a day on
 2026-08-26.** The 2026-08-21 export extracted 244 of its 88,838 entries. All 80 CSVs landed and 164
 of 88,757 JSON blobs did, so nothing crashed and nothing looked wrong: attendance, body composition
