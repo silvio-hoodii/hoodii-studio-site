@@ -59,6 +59,49 @@ machine means changing both and the comment says where.
 
 **Not yet pushed**, so this is committed and not deployed.
 
+### PHASE C SHIPPED, 2026-08-27
+
+Commit `5c83177`. Five routes, one nav row in all five LAYOUTS, `/health` is the index, and
+`/gym/conditioning` is deleted with every URL it ever had redirected in `next.config.ts`.
+
+`/health` gained three sub-tabs on the same `?s=` idiom the disciplines use: Now, Weight, Plan.
+Stacking the old Overview tab's nine blocks on top of the body charts would have been about six
+phone screens.
+
+**Two defects the pixels caught and the source could not.** The middle tab was labelled Body, one
+row under a nav chip also labelled Body: two controls a row apart, same word, different scopes. And
+`/bike` opened with a sentence `LastSession` already prints verbatim one paragraph below it, the two
+living in different files. Both were found by screenshotting at 390 px, neither by reading the code.
+**Read the rendered screen, not the data**, again.
+
+**Measured at 390 px on the built server**, not estimated:
+
+```
+/run     1.28 screens   ?s=plan 3.63   ?s=how 1.27
+/bike    1.18           ?s=plan 2.01   ?s=how 1.34
+/health  2.61           ?s=weight 1.31 ?s=plan 2.34
+0 horizontal overflows, 0 wrapped nav rows, 5 chips and exactly 1 active on all eleven views
+```
+
+`/gym` is 10.18 screens and Phase C did not change that. It is the workout runner with every
+exercise of the day open, and it is the tallest thing on the site by a factor of three.
+
+### OPEN after Phase C, none of it blocking
+
+- **The hub has no row for `/run` or `/bike`.** Both are reachable from the nav on any training
+  route, so nothing is stranded, but the front door still lists eight apps and not ten. A hub row
+  shows real state rather than a label, and `/bike` has no state until the ride form exists.
+- **`?p=` rides along on every redirect**, so an old bookmark lands on `/run?p=run&s=plan`. Next
+  forwards query params the destination does not consume; the pages ignore `p`. Cosmetic.
+- **`/swim` is indexable and `/gym`, `/health`, `/run` and `/bike` are not.** The two new routes
+  deliberately copied the noindex majority rather than the sibling they were modelled on. Four
+  routes holding the same kind of thing should not disagree about this. His call, one line either
+  way.
+- **Nine unhandled rows in `gym_note`**, 2026-08-23 and 2026-08-25, read at the start of this
+  session and not acted on because they are programme content rather than Phase C. One of them,
+  #12, is the same complaint this redesign answers: "Walls of text again why do I need all this,
+  just leave the cue and thats it, it can even be hidden."
+
 ### C4 was not a defect
 
 `/health` already showed the 5,000 m: `getSwimSummary` takes `max(distance_m)` with no date filter.
