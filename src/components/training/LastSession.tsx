@@ -39,6 +39,23 @@ export default function LastSession({ s }: { s: SessionDetail | null }) {
       {isRun && s.series.cadence && (
         <Trace values={s.series.cadence} label="Cadence" unit="spm" floor={170} />
       )}
+      {/* BELT SPEED, stored on every run the watch ever recorded and drawn by nothing until
+          2026-08-27. This is the chart that shows the walk and run blocks as blocks: the plan is
+          intervals on a clock, and until now the only way to see whether he actually ran them was
+          the cadence trace, which answers a different question.
+
+          CONVERTED TO km/h, AND THE UNIT WAS CHECKED RATHER THAN ASSUMED. The stored series is
+          metres per second: on all five runs its average matches distance divided by duration in
+          m/s and never the 3.6x figure. km/h is what it is drawn in because km/h is what the
+          treadmill console shows and what content/gym/conditioning.json tells him to dial, and a
+          speed he cannot find on the machine in front of him is a number he cannot use. */}
+      {isRun && s.series.speed && s.series.speed.length > 2 && (
+        <Trace
+          values={s.series.speed.map((v) => v * 3.6)}
+          label="Belt speed"
+          unit="km/h"
+        />
+      )}
       {/* Heart rate last for the two that have other data, and alone for the two that do not.
           The 110 rule is drawn only on a lifting session, where it is the whole point. */}
       {s.series.hr?.length > 2 && (

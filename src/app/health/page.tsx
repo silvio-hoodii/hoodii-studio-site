@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSyncLiveness } from '@/lib/health/db';
+import {
+  getBodyCompSeries,
+  getBodyCompSummary,
+  getLiftingAdherence,
+  getSyncLiveness,
+  getWatchComposition,
+} from '@/lib/health/db';
 import { loadConditioning, loadProgram } from '@/lib/gym/program';
 import { getTrainingWeek } from '@/lib/gym/week';
 import { getRecentSessions } from '@/lib/gym/session';
@@ -92,18 +98,38 @@ export default async function HealthPage({
   const recentLifts = sub === 'now' ? await getRecentSessions('strength', 10) : [];
   const lastLift = recentLifts[0] ?? null;
 
-  const [bodySummary, weightSeries, bfSeries] =
+  /* ONE read of the series, four charts off it. It used to call getBodyCompSeries TWICE for two
+     charts, which was two identical round trips to Neon, and `fat_kg` and `lean_kg` were already in
+     every row it fetched and had never been drawn. Counting round trips rather than work is the
+     lesson /reading/shelf paid for: this site's entire external-API bill is Neon. */
+  const [bodySummary, comp, watchComp] =
     sub === 'weight'
-      ? await Promise.all([
-          getBodyCompSummary(),
-          getBodyCompSeries(120).then((rows) =>
-            rows.filter((r) => r.kg != null).map((r) => ({ date: r.date, value: r.kg as number })),
-          ),
-          getBodyCompSeries(120).then((rows) =>
-            rows.filter((r) => r.bf_pct != null).map((r) => ({ date: r.date, value: r.bf_pct as number })),
-          ),
-        ])
+      ? await Promise.all([getBodyCompSummary(), getBodyCompSeries(120), getWatchComposition(120)])
       : [null, null, null];
+  const seriesOf = (key: 'kg' | 'bf_pct' | 'fat_kg' | 'lean_kg') =>
+    (comp ?? []).filter((r) => r[key] != null).map((r) => ({ date: r.date, value: r[key] as number }));
+  const weightSeries = seriesOf('kg');
+  const bfSeries = seriesOf('bf_pct');
+  const fatSeries = seriesOf('fat_kg');
+  const leanSeries = seriesOf('lean_kg');
+
+  /* WHERE THE WEIGHT WENT, and it is exact arithmetic rather than a model: fat mass plus lean mass
+     equals weight to the decimal on every row (29.98 + 73.72 = 103.70, checked). Taken between the
+     first and last readings in the window that carry BOTH, so the two deltas always describe the
+     same interval as the weight delta does. */
+  const split = (() => {
+    const both = (comp ?? []).filter((r) => r.fat_kg != null && r.lean_kg != null && r.kg != null);
+    const a = both[0];
+    const b = both[both.length - 1];
+    if (!a || !b || a.date === b.date) return null;
+    const dFat = (b.fat_kg as number) - (a.fat_kg as number);
+    const dLean = (b.lean_kg as number) - (a.lean_kg as number);
+    const dKg = (b.kg as number) - (a.kg as number);
+    /* Only stated while the weight is actually moving. A share of a delta near zero is a very large
+       percentage of nothing. */
+    const fatShare = Math.abs(dKg) > 1 ? Math.round((dFat / dKg) * 100) : null;
+    return { from: a.date, to: b.date, dFat, dLean, dKg, fatShare };
+  })();
   /* ATTENDANCE IS TRAINING, NOT BODY COMPOSITION, so it is read on the Now tab. It sat next to the
      weight charts for as long as /health was only about weight, and the tab split is what made that
      visible: nothing about a 30-cell trained/rested strip answers "what is my body doing". */
@@ -246,6 +272,95 @@ export default async function HealthPage({
               <p className="empty">No body composition data yet.</p>
             )}
           </div>
+
+          {/* SIX OF EIGHT COLUMNS WERE MIRRORED AND NEVER DRAWN. fat_kg and lean_kg were already in
+              every row getBodyCompSeries fetched; skeletal muscle, water and BMR needed a
+              watch-only read, because a scale reading does not carry them at all.
+
+              Lean mass is not decoration. HealthOS computes the protein target FROM it, so it has
+              been load-bearing and invisible at the same time. The target itself stays in
+              HealthOS/CURRENT.md: this draws the shape, it does not restate the number. */}
+          {fatSeries.length > 1 && leanSeries.length > 1 && (
+            <div className="section">
+              <div className="section-head"><h2>Where the weight went</h2></div>
+              {split && (
+                <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
+                  {/* "your weight", not "the scale". This page names Scale and Watch as different
+                      sources two sections down, and both endpoints of this delta are usually Watch
+                      readings. Saying "the scale" on the one page that draws that distinction is
+                      the kind of small wrongness that teaches a reader the labels do not mean
+                      anything. */}
+                  Between {split.from} and {split.to} your weight moved{' '}
+                  <span className="live tnum">{split.dKg > 0 ? '+' : ''}{split.dKg.toFixed(1)} kg</span>:{' '}
+                  <span className="tnum">{split.dFat > 0 ? '+' : ''}{split.dFat.toFixed(1)}</span> of that
+                  was fat and <span className="tnum">{split.dLean > 0 ? '+' : ''}{split.dLean.toFixed(1)}</span> was
+                  lean{split.fatShare != null ? `, so ${Math.abs(split.fatShare)}% of the change was fat` : ''}.
+                  Fat mass plus lean mass equals weight exactly, so this is arithmetic rather than a model.
+                </p>
+              )}
+              <div className="pair">
+                <figure className="chartfig">
+                  <figcaption className="chart-cap">Fat mass, kg</figcaption>
+                  <LineChart points={fatSeries} unit="kg" decimals={1} />
+                </figure>
+                <figure className="chartfig">
+                  <figcaption className="chart-cap">Lean mass, kg</figcaption>
+                  <LineChart points={leanSeries} unit="kg" decimals={1} />
+                </figure>
+              </div>
+              {/* THE CAVEAT THAT OUTRANKS THE SPLIT. Neither of those two lines is measured. Both
+                  are inferred from a bioimpedance reading, a small current through the body, and
+                  that reading moves with hydration. A kilo off the lean line across a few weeks is
+                  as likely to be water as muscle, and the set log is the better witness. */}
+              <p className="ex-cue">
+                Neither line is measured directly. Both are inferred from a bioimpedance reading, a
+                small current passed through the body, and that reading moves with how hydrated you
+                were that morning. Treat a kilo of lean movement over a few weeks as possibly water.
+                If the weights on the bar went up over the same period, the muscle did not leave.
+              </p>
+            </div>
+          )}
+
+          {/* WATCH ONLY, and the section says so rather than letting a line quietly skip scale days. */}
+          {(watchComp?.length ?? 0) > 1 && (
+            <div className="section">
+              <div className="section-head"><h2>What only the watch sees</h2></div>
+              <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
+                Skeletal muscle and total body water are recorded on watch readings and not on scale
+                readings, so these two are drawn from{' '}
+                <span className="tnum">{watchComp?.length}</span> watch readings alone and the scale
+                days are absent rather than guessed at.
+                {watchComp?.at(-1)?.bmr_cal != null && (
+                  <>
+                    {' '}Resting burn on the newest of them was{' '}
+                    <span className="tnum">{watchComp?.at(-1)?.bmr_cal}</span> cal a day.
+                  </>
+                )}
+              </p>
+              <div className="pair">
+                <figure className="chartfig">
+                  <figcaption className="chart-cap">Skeletal muscle, kg</figcaption>
+                  <LineChart
+                    points={(watchComp ?? [])
+                      .filter((r) => r.skm_kg != null)
+                      .map((r) => ({ date: r.date, value: r.skm_kg as number }))}
+                    unit="kg"
+                    decimals={1}
+                  />
+                </figure>
+                <figure className="chartfig">
+                  <figcaption className="chart-cap">Total body water, kg</figcaption>
+                  <LineChart
+                    points={(watchComp ?? [])
+                      .filter((r) => r.water_kg != null)
+                      .map((r) => ({ date: r.date, value: r.water_kg as number }))}
+                    unit="kg"
+                    decimals={1}
+                  />
+                </figure>
+              </div>
+            </div>
+          )}
         </>
       )}
 

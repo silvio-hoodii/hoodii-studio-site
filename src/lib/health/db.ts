@@ -1,6 +1,6 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
-import type { AdherenceDay, BodyCompPoint, BodyCompSummary, TrendDelta } from './types';
+import type { AdherenceDay, BodyCompPoint, BodyCompSummary, TrendDelta, WatchCompPoint } from './types';
 import { today, daysAgo } from '../day';
 
 // Same underlying Neon database as Kitchen/Gym (health_ prefix keeps the tables apart), see
@@ -40,6 +40,23 @@ export async function getBodyCompSeries(days = 120): Promise<BodyCompPoint[]> {
     order by date asc, (source = 'Watch') desc
   `;
   return rows as unknown as BodyCompPoint[];
+}
+
+/** Skeletal muscle, total body water and BMR. WATCH ROWS ONLY, and the filter is the point.
+ *
+ *  A Scale reading carries weight, body fat, fat mass and lean mass and nothing else: 102 scale rows
+ *  in this table, none of them with a skeletal-muscle figure. Selecting across both sources would
+ *  draw a line from one watch reading to the next straight through a scale day, inventing the value
+ *  in between. Filtering here rather than in the page means no caller can forget. */
+export async function getWatchComposition(days = 120): Promise<WatchCompPoint[]> {
+  const cutoff = isoDaysAgo(days);
+  const rows = await sql`
+    select date, skm_kg, water_kg, bmr_cal
+    from health_body_comp
+    where source = 'Watch' and skm_kg is not null and date >= ${cutoff}
+    order by date asc
+  `;
+  return rows as unknown as WatchCompPoint[];
 }
 
 /** Latest reading + smoothed trend, same method as HealthOS/server/publish-current.mjs: a median

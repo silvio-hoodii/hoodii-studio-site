@@ -6,6 +6,20 @@ export interface BodyCompPoint {
   lean_kg: number | null;
 }
 
+/* WHAT ONLY THE WATCH RECORDS. Checked against Neon on 2026-08-27 rather than assumed:
+ * health_body_comp holds 102 Scale rows and 101 Watch rows, and skeletal muscle, total body water
+ * and BMR are populated on 101 of the Watch rows and on ZERO of the Scale rows.
+ *
+ * So these three cannot share a series with weight and body fat. A chart drawn across both sources
+ * would join two watch readings straight through a scale day and invent the value in between, which
+ * is the interpolation the redesign plan warns about by name. This type exists to keep them apart. */
+export interface WatchCompPoint {
+  date: string;
+  skm_kg: number | null;
+  water_kg: number | null;
+  bmr_cal: number | null;
+}
+
 export interface BodyCompSummary {
   latest: BodyCompPoint | null;
   smoothedKg: number | null;
