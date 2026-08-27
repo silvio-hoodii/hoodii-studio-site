@@ -393,13 +393,14 @@
               "id": "suitcase-carry",
               "name": "Suitcase Carry",
               "sets": 3,
-              "reps": "30/side",
+              "reps": "30s/side",
               "rest": "60s",
+              "timed": true,
               "zone": "benchDb",
               "station": null,
               "bodyweight": false,
               "log": true,
-              "cue": "One heavy dumbbell in ONE hand, nothing in the other. Walk the number of STEPS shown, counting them standing as tall as you can. The whole exercise is refusing to lean toward the weight: imagine a broomstick down your spine that must stay vertical. Swap hands each set. This trains your side, which nothing else in the programme does. If you cannot stop leaning, the weight is too heavy. COUNT STEPS, not seconds, and type the count: with a dumbbell in each hand you cannot start a timer, which is the same reason the shoulder taps stopped being timed on 2026-08-22. Get the steps first, then go heavier.",
+              "cue": "One heavy dumbbell in ONE hand, nothing in the other. Walk for the seconds shown, standing as tall as you can. The whole exercise is refusing to lean toward the weight: imagine a broomstick down your spine that must stay vertical. Swap hands each set. This trains your side, which nothing else in the programme does. If you cannot stop leaning, the weight is too heavy. COUNT SECONDS, and type the seconds. This one has a hand free, so start the timer as you pick the dumbbell up. Get to the top of the range on time first, then go heavier.",
               "alts": [
                 {
                   "id": "farmer-carry",
@@ -422,7 +423,7 @@
                   "progression": "time"
                 }
               ],
-              "progression": "weight"
+              "progression": "time"
             }
           ],
           "why": "Single-leg strength, and resisting sideways lean. Both loaded, both at the dumbbells, so these two genuinely alternate."
@@ -1960,13 +1961,14 @@
               "id": "farmer-carry",
               "name": "Farmer Carry",
               "sets": 3,
-              "reps": "40",
+              "reps": "40s",
               "rest": "60s",
+              "timed": true,
               "zone": "benchDb",
               "station": null,
               "bodyweight": false,
               "log": true,
-              "cue": "Done after the curls rather than alternating with them, because it needs room to walk and the preacher seat does not travel. A heavy dumbbell in each hand, stand as tall as you can, shoulders back, stomach tight, and walk for the steps shown. Grip, posture and everything down your sides at once. Put them down before your form falls apart, not after. COUNT STEPS, not seconds, and type the count: with a dumbbell in each hand you cannot start a timer, which is the same reason the shoulder taps stopped being timed on 2026-08-22. Get the steps first, then go heavier.",
+              "cue": "Done after the curls rather than alternating with them, because it needs room to walk and the preacher seat does not travel. A heavy dumbbell in each hand, stand as tall as you can, shoulders back, stomach tight, and walk for the seconds shown. Grip, posture and everything down your sides at once. Put them down before your form falls apart, not after. COUNT SECONDS, and type the seconds. Start the watch before you pick the dumbbells up, because you cannot press anything with both hands full. Get to the top of the range on time first, then go heavier.",
               "alts": [
                 {
                   "id": "suitcase-carry",
@@ -1999,7 +2001,7 @@
                   "progression": "time"
                 }
               ],
-              "progression": "weight"
+              "progression": "time"
             }
           ],
           "why": "Biceps get one exposure a week, which the frequency evidence says is enough for arms. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."

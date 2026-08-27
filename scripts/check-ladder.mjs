@@ -107,8 +107,10 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       const bottom = parseInt(String(ex.reps), 10);
       if (!Number.isFinite(bottom) || bottom <= 0) continue;
       /* EPLEY IS NOT VALID UP HERE, so neither is this check. Added 2026-08-22, twenty minutes
-         after the check itself, when it fired on the farmer carry: 40 "reps" of a carry are STEPS,
-         and 50 lb times (1 + 40/30) is not an estimated one-rep max, it is a meaningless number. It
+         after the check itself, when it fired on the farmer carry: 40 "reps" of a carry are SECONDS
+         (his ruling on 2026-08-27, closing notes #17 and #19; this comment said STEPS until then,
+         which was one of the three answers that were live at once), and 50 lb times (1 + 40/30) is
+         not an estimated one-rep max, it is a meaningless number. It
          then demanded a 47-step carry to earn the next dumbbell. Every rep-to-max formula of this
          shape is fitted on sets of roughly one to ten and drifts badly past twelve to fifteen, so
          anything prescribed above fifteen is out of scope and says so rather than being silently
