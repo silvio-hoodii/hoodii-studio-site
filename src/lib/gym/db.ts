@@ -27,7 +27,6 @@ export interface SetInput {
   setIdx: number;
   weight?: number | string | null;
   reps?: number | string | null;
-  rir?: number | string | null;
   done?: boolean;
   swappedFrom?: string | null;
   loggedAt?: string;
@@ -36,10 +35,17 @@ export interface SetInput {
   estimated?: boolean | null;
 }
 
+/* NO `rir`. The column was dropped from gym_set on 2026-08-27, his call, after holding null in 0 of
+   569 rows for its entire life: it was declared in three interfaces, sent on every POST, written by
+   the insert, carried by the upsert and selected back out again, and not one of those steps ever
+   moved a value. Nothing read it either, so removing it changes no behaviour.
+
+   The RIR GUIDE STAYS on /gym, and it is a different thing: content/gym/rir-guide.json teaches what
+   reps-in-reserve means, which is useful whether or not the number is ever logged. Deleting the
+   teaching along with the dead plumbing is the mistake available here. */
 export interface SetRow {
   weight: number | null;
   reps: number | null;
-  rir: number | null;
 }
 
 export interface SessionSets {
@@ -65,10 +71,10 @@ export async function upsertSet(s: SetInput) {
     await upsertSession({ date: s.date, day: s.day, dayTitle: s.dayTitle });
   }
   await sql`
-    insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, rir, done,
+    insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done,
       swapped_from, logged_at, suggested_weight, suggested_reps, estimated)
     values (${s.date}, ${s.day ?? null}, ${s.exerciseId}, ${s.exerciseName ?? null}, ${s.setIdx},
-      ${num(s.weight)}, ${num(s.reps)}, ${num(s.rir)}, ${!!s.done}, ${s.swappedFrom ?? null},
+      ${num(s.weight)}, ${num(s.reps)}, ${!!s.done}, ${s.swappedFrom ?? null},
       ${s.loggedAt ?? new Date().toISOString()}, ${num(s.suggW)}, ${num(s.suggR)},
       ${s.estimated == null ? null : !!s.estimated})
     on conflict (date, exercise_id, set_idx) do update set
@@ -76,7 +82,6 @@ export async function upsertSet(s: SetInput) {
       day           = excluded.day,
       weight        = excluded.weight,
       reps          = excluded.reps,
-      rir           = excluded.rir,
       done          = excluded.done,
       swapped_from  = excluded.swapped_from,
       logged_at     = excluded.logged_at,
@@ -105,7 +110,7 @@ export async function getLastSession(exerciseId: string, beforeDate: string): Pr
 
 async function setsForExDate(exerciseId: string, date: string): Promise<SetRow[]> {
   const rows = await sql`
-    select weight, reps, rir from gym_set
+    select weight, reps from gym_set
     where exercise_id = ${exerciseId} and date = ${date} and done = true and reps is not null and reps > 0
     order by set_idx asc
   `;

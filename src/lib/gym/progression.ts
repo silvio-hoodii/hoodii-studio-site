@@ -16,7 +16,6 @@ export type ExerciseType = 'weighted' | 'bodyweight' | 'timed';
 export interface SetRecord {
   weight: number | null;
   reps: number | null;
-  rir?: number | null;
 }
 
 export interface LastSession {

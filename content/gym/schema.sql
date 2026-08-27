@@ -30,7 +30,10 @@ create table if not exists gym_set (
   set_idx           int         not null,
   weight            real,
   reps              real,
-  rir               real,
+  -- `rir real` was here and was DROPPED 2026-08-27, his call. It held a value in 0 of 569 rows for
+  -- its whole life: written on every insert as null, carried by the upsert, selected back out, and
+  -- read by nothing. Do not re-add it without an input that fills it. The RIR guide on /gym is
+  -- separate content and stays.
   done              boolean     not null default false,
   swapped_from      text,
   logged_at         timestamptz,

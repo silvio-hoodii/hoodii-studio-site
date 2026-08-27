@@ -36,24 +36,27 @@ for (const s of sessions) {
 }
 
 const sets = db.prepare(`
-  select date, day, exercise_id, exercise_name, set_idx, weight, reps, rir, done, swapped_from,
+  select date, day, exercise_id, exercise_name, set_idx, weight, reps, done, swapped_from,
     logged_at, suggested_weight, suggested_reps, estimated
   from sets
 `).all();
 let setsWritten = 0;
 for (const s of sets) {
   await client.query(
-    `insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, rir, done,
+    `insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done,
        swapped_from, logged_at, suggested_weight, suggested_reps, estimated)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+     /* THIRTEEN, not fourteen. Dropping the rir column on 2026-08-27 removed a value from the
+        array below and left this list one long, which Postgres reports as a bind mismatch rather
+        than filling it with null. Count these against the array whenever a column moves. */
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
      on conflict (date, exercise_id, set_idx) do update set
        exercise_name = excluded.exercise_name, day = excluded.day, weight = excluded.weight,
-       reps = excluded.reps, rir = excluded.rir, done = excluded.done,
+       reps = excluded.reps, done = excluded.done,
        swapped_from = excluded.swapped_from, logged_at = excluded.logged_at,
        suggested_weight = excluded.suggested_weight, suggested_reps = excluded.suggested_reps,
        estimated = excluded.estimated`,
     [
-      s.date, s.day, s.exercise_id, s.exercise_name, s.set_idx, s.weight, s.reps, s.rir,
+      s.date, s.day, s.exercise_id, s.exercise_name, s.set_idx, s.weight, s.reps,
       !!s.done, s.swapped_from, s.logged_at, s.suggested_weight, s.suggested_reps, !!s.estimated,
     ],
   );

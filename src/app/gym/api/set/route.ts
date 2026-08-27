@@ -22,7 +22,6 @@ export async function POST(req: Request) {
       setIdx: Number(b.setIdx),
       weight: b.weight,
       reps: b.reps,
-      rir: b.rir,
       done: !!b.done,
       swappedFrom: b.swappedFrom ?? null,
       suggW: b.suggW,
