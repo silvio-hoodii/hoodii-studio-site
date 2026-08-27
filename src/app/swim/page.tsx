@@ -406,6 +406,19 @@ export default async function SwimPage({
 
           <SwimLevel standards={now.standards} standings={now.standings} />
 
+          {/* THE WAY INTO THE DEEP DIVE, and the only thing this page gained on 2026-08-27.
+              A LINK AND NOT A SIXTH SUB-TAB. The five chips above measure 337px of a 390px screen
+              and `.subtabs` is a flex row with neither wrap nor scroll, so a sixth breaks the "0
+              horizontal overflows, 0 wrapped nav rows" invariant that holds across all eleven
+              training views. Folding eight sections of analysis into this tab instead would add
+              height to the one view he opens at the side of a pool, which is the complaint the
+              sub-tabs exist to answer. It sits under the tier table because that is the question it
+              extends: the table says what level he is, this says how he got there. */}
+          <p className="ex-cue" style={{ marginTop: 14 }}>
+            <Link href="/swim/deep">The whole record, eight years of lengths</Link>. Stroke
+            efficiency over time, how each personal best got there, and what the data cannot say.
+          </p>
+
           {/* THE HISTORY, which lived on /health until today.
               It was a section about swimming on a page about body composition, and the two numbers
               that matter most here (best pace on the wall clock, best pace with the rest removed)
