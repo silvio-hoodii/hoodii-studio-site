@@ -16,7 +16,7 @@ everything".
 | C3 contested 100 m PB | **DONE 2026-08-27** | Confirmed wrong about 15 and 16, and wrong about being authoritative. Corrected in place, not deleted: `HealthOS\official-pbs.js` now names the importer as the authority |
 | C3b two pace metrics in one column | **DONE** | Two columns, moving pace never a fallback |
 | C4 the 5,000 m | **DONE 2026-08-27, and the answer is DO NOT import type 3** | Samsung's type 3 log says his longest swim is 900 m on 2023-09-12; the sessions hold 4,500 m on 2023-05-27. Importing it would understate the record. Derived instead as a running maximum and drawn on `/swim/deep`: 9 events, 1,025 m in 2018 to 5,000 m in 2025 |
-| C5 dead `gym_set` columns | **NARROWED to ONE, 2026-08-27** | `rir` is 0 of 569 rows, ever: genuinely dead, his call to drop it or build the input. **`estimated` is NOT dead and must not be dropped**: 54 rows are `true`, and `src\lib\gym\db.ts:97` filters `coalesce(estimated, false) = false` so progression only walks back to measured sets |
+| C5 dead `gym_set` columns | **DONE 2026-08-27** | `rir` DROPPED, his call: 0 of 569 rows ever carried a value. Removed from five layers, shipped, then the column dropped once production was confirmed on the commit. **`estimated` kept and must stay**: 54 rows are `true` and `src\lib\gym\db.ts` filters `coalesce(estimated, false) = false` so progression only walks back to measured sets |
 | C6 body comp on a schedule | **DONE** | Step 2b of the 07:15 task |
 | Phase A kill the schedule | **DONE** | |
 | Phase B correctness | **DONE 2026-08-27** | C1, C3, C4, C6 done. C5 narrowed to one column awaiting his call |
@@ -25,11 +25,14 @@ everything".
 | Phase D depth | **DONE, 5 of 5** | Item 2 shipped 2026-08-27 as `/swim/deep`, a route rather than a sixth sub-tab |
 | Phase E verify | **DONE** for what shipped | Live routes, live redirects, live write gates, heights at 390 px |
 
-**Phase D is closed, and so is Phase B.** Item 2 shipped on 2026-08-27 as `/swim/deep`. C3 and C4
-were then settled by query and acted on, and C5 turned out to be one dead column rather than two.
+**THIS PLAN IS COMPLETE.** Every row above is DONE. Phase D item 2 shipped on 2026-08-27 as
+`/swim/deep`, C3 and C4 were settled by query and acted on, and C5 closed the same day: `rir`
+dropped on his call, `estimated` kept because it turned out to be load-bearing.
 
-**The only thing left on this plan needing him is one line: drop `gym_set.rir` or build the input
-for it.** Everything else is done.
+**Two things remain that are not on this plan**, both needing a line from him rather than work:
+note #14 (station order on Friday, to be raised with note #11), and whether the suitcase carry
+should stay on steps now that the farmer carry moved to seconds. And one standing item outside it:
+`check-ladder.mjs` has nine findings on dumbbell and cable lifts, unchanged and pre-existing.
 
 **Two defects were found by building it, both now fixed and neither on the plan.** The swim table's
 `date` column is UTC, so 94 of 475 swims were filed a day late and /swim printed two different dates

@@ -235,6 +235,25 @@ Both are now gates rather than intentions:
   command (`npm run laps`) from replacing 18,804 lengths going back to 2018 with about 1,300, and
   its own header called rerunning it cheap.
 
+**`gym_set.rir` IS GONE, dropped 2026-08-27 on his call, and `gym_set.estimated` MUST NOT FOLLOW
+IT.** The plan listed both as dead columns that could not be filled. Only one was. `rir` held a
+value in 0 of 569 rows across its whole life while being declared in three interfaces, sent on every
+POST, written, upserted and selected back out. `estimated` is load-bearing: 54 rows are `true`, and
+`getLastSession` filters `coalesce(estimated, false) = false` so progression only ever walks back to
+a set whose numbers were actually typed rather than recalled. Dropping it would feed 54 backfilled
+sets into the weight suggestions. The 178 nulls since 2026-08-14 are correct, because null means
+measured live.
+
+**The order was code first, column second**, and it matters for any future column drop here: the
+deployed app was still running `select weight, reps, rir`, so dropping first would have 500'd every
+read of /gym. Ship the code, confirm production is READY on that commit
+(`vercel api /v13/deployments/<url>` returns `readyState` and `meta.githubCommitSha`), then drop. The
+drop script re-counted the column's non-null rows and would have refused if any had appeared.
+
+**And the RIR guide stayed.** `content/gym/rir-guide.json` teaches what reps-in-reserve means, which
+is worth having whether the number is logged or not. Deleting the teaching along with the dead
+plumbing is the mistake available whenever a name is shared by a feature and its explainer.
+
 **`pace_per_100m_ms` and `moving_pace_per_100m_ms` are two columns because one column was two
 metrics.** Wall clock always, rest-excluded only where the per-length detail was read, null
 otherwise and never a fallback. A single mixed column mattered because the only operation anything
