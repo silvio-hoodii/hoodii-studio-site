@@ -185,6 +185,11 @@ interface ActualBlock {
   days: ActualDay[];
   currentRun: number;
   currentRunFrom: string | null;
+  /** The last day OF the current run, which is the last day anything is KNOWN about and is not
+   *  today. Added 2026-08-27: /gym printed the bare count with no date, so a run that ended two
+   *  days earlier read as a run in progress. `currentRunFrom` already existed for the same reason
+   *  and the page was throwing it away. */
+  currentRunTo: string | null;
   longestRun: number;
   longestRunFrom: string | null;
   longestRunTo: string | null;
@@ -266,6 +271,7 @@ async function actualBlock(days: number, maxConsecutive: number): Promise<Actual
     days: out,
     currentRun,
     currentRunFrom,
+    currentRunTo: currentRun > 0 && lastKnown ? lastKnown.date : null,
     longestRun,
     longestRunFrom:
       longestEndIdx >= 0 ? (out[longestEndIdx - (longestRun - 1)]?.date ?? null) : null,
@@ -285,6 +291,11 @@ export interface TrainingStreak {
   run: number;
   /** Where that run started, so a sentence can name the date rather than print a bare count. */
   from: string | null;
+  /** Where it ENDED, which is the last day anything is known about and is not today. /gym printed
+   *  `run` with neither date until 2026-08-27, so "12-day streak" was a claim about 2026-08-25
+   *  rendered on the 27th. He said "i'm not even sure its true"; the arithmetic was right and the
+   *  sentence was not. */
+  to: string | null;
   maxConsecutive: number;
   overRule: boolean;
 }
@@ -296,6 +307,7 @@ export async function getTrainingStreak(days = 28): Promise<TrainingStreak> {
   return {
     run: block.currentRun,
     from: block.currentRunFrom,
+    to: block.currentRunTo,
     maxConsecutive,
     overRule: block.currentRun > maxConsecutive,
   };

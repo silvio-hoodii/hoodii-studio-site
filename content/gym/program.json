@@ -522,6 +522,82 @@
       ],
       "blocks": [
         {
+          "role": "primer",
+          "pairing": "fill",
+          "label": "Upper Primer",
+          "tag": "(floor, first and fresh)",
+          "exercises": [
+            {
+              "id": "pushup",
+              "name": "Pushup",
+              "sets": 3,
+              "reps": "8",
+              "rest": "60s",
+              "zone": "benchDb",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "cue": "On the floor by the benches, first thing, while you are fresh. Hands slightly wider than your shoulders, body in one straight line from head to heels, and it STAYS that way: squeeze your bum and your stomach before you lower. Lower until your chest is a fist off the floor, elbows going back at about 45 degrees from your body rather than straight out sideways. Push back up. Success looks like: your hips arrive at the top at the same time as your chest. If your hips sag or lead, put your hands on a bench and do the same thing from there. THEIR VERSION IS A PLYO PUSHUP, where you push hard enough to leave the floor. That is not prescribed here: you weigh 105 kg and have never done either, and landing on your hands from a jump is not something to try because a PDF said so. Get to three clean sets of ten first, then ask. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"B2. Pushup Variations\", whose own instruction is to choose the variation you can perform 10 to 12 reps of.",
+              "alts": [
+                {
+                  "id": "incline-pushup",
+                  "name": "Incline Pushup",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "bodyweight": true,
+                  "cue": "The same pushup with your hands on a bench instead of the floor. Higher hands make it easier. Use this one if the hips sag on the floor version.",
+                  "progression": "reps"
+                },
+                {
+                  "id": "assisted-dip",
+                  "name": "Assisted Dip",
+                  "zone": "machines",
+                  "station": "assisted-dip",
+                  "cue": "The machine version of the same pushing pattern, with a counterweight so you pick the difficulty. He had 5 strict dips at the May intake. Lower until the upper arms are parallel to the floor, no further.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "reps"
+            },
+            {
+              "id": "single-leg-glute-bridge",
+              "name": "Single-Leg Glute Bridge",
+              "sets": 2,
+              "reps": "12/leg",
+              "rest": "60s",
+              "zone": "benchDb",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "cue": "Done on the floor by the benches while you rest between sets of the pushups above. This is the only lower-body work on an upper day: it is here because it costs almost nothing to do lying down in a rest period, and glutes respond to being trained often. Lie on your back, one heel pulled in close to your bum, toes pointed up, other leg straight out. Flatten your lower back into the floor, then push through the heel until your hips are level with your knee. Squeeze for two seconds at the top. LEFT leg first and give it one extra set. You should feel this in the back of your hip, not the back of your thigh: if it is all hamstring, bring the heel closer in.",
+              "alts": [
+                {
+                  "id": "frog-pump",
+                  "name": "Frog Pump",
+                  "zone": "benchDb",
+                  "station": null,
+                  "needsFloor": true,
+                  "cue": "On your back, soles of the feet together, knees fallen wide, heels close to you. Push the hips up and squeeze. 2x20.",
+                  "progression": "reps"
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Short band above the knees, seated on a bench or standing. Push the knees apart against the band and hold two seconds. 2x20.",
+                  "progression": "reps"
+                }
+              ],
+              "progression": "reps",
+              "whyHere": "The glute bridge rides in the rest because a pushup uses nothing below the waist."
+            }
+          ],
+          "why": "The other upper day's primer. Upper A was the only one of the four days with no primer at all, which he spotted from the page on 2026-08-27: \"the upper primer is only present on one session thats the inconstincey im talking about\". The reason written on Upper B's primer already covered both upper days and said so, and it had been applied to one of them. Same source (The Motion Blueprint, Jason & Lauren Pak, Theory of Motion, 2025, which opens every one of its upper days with a pushup variation) and the same dose. One cost he accepted knowingly: pushups before a DB bench press pre-fatigue the same muscles, which is the opposite of why the jumps go first on the lower days, so this stays at three easy sets and the bench press numbers are the thing to watch. The glute bridge rides in the rest because a pushup uses nothing below the waist."
+        },
+        {
           "role": "main",
           "pairing": "fill",
           "label": "Main Lift: DB Bench Press",
@@ -698,16 +774,10 @@
                 }
               ],
               "progression": "reps",
-              "open": [
-                {
-                  "q": "Why do plank shoulder taps sit in the DB Overhead Press rest? This block's why explains the press and never mentions them, so there is no clause to show on the card. It may be a real defect rather than an omission: rule 1 in this file is that the partner works a muscle the lead lift does not, and an overhead press already loads the shoulders that a shoulder tap holds up. Either the pairing has a reason nobody wrote down, or the partner is wrong.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "whyHere": "The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time."
             }
           ],
-          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, and second also means he never walks back to the dumbbells: bench, then this, then everything else is at the cables."
+          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, and second also means he never walks back to the dumbbells: bench, then this, then everything else is at the cables. The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time. That pairing bends this file's own first rule: an overhead press already loads the front of the shoulder that a plank shoulder tap holds up, so it is not the antagonist preloading the review describes. He was shown exactly that on 2026-08-27 and chose to keep it. It is also the only partner in the programme that is not a dumbbell, which is why it progresses by reps rather than by weight."
         },
         {
           "role": "main",

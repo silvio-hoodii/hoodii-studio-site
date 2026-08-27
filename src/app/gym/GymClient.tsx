@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
 import { today } from '@/lib/day';
+import { shortDate } from '@/lib/format';
 import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import type { TrainingStreak } from '@/lib/gym/week';
 import {
-  DAY_ORDER, dayTimeBreakdown, exType, findExercise,
+  DAY_ORDER, exType, findExercise,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
@@ -537,44 +538,85 @@ export default function GymClient({ program, warmups, cooldowns, rirGuide, nextU
       </div>
 
       <div className="count" style={{ marginTop: 22 }}>{day.title}</div>
-      {/* COMPUTED, not typed. program.json used to carry time: "75-85 min" on days this model puts
-        * at 100 to 106 and whose real sessions ran 81 to 120. The split is the point: the work is
-        * not what makes the session long. */}
-      <p className="lede" style={{ marginTop: 4 }}>{day.desc}</p>
-      <p className="lede quiet" style={{ marginTop: 2 }}>
-        {(() => {
-          const t = dayTimeBreakdown(day);
-          return `The whole day is about ${t.total} min at the pace you have actually been working: ${t.sets} sets, ${t.restMin} min of that prescribed rest and ${t.overheadMin} min of standing around at 2.5 min a set. The standing around is the part worth attacking.`;
-        })()}
-      </p>
 
-      {/* WHAT TO DROP, said once, instead of a cap that decides for him.
+      {/* THREE PARAGRAPHS WERE HERE AND THEY ARE NOT COMING BACK. Removed 2026-08-27 on his ruling,
+        * with the blurb under the h1 in page.tsx. Read this before restoring any of them.
         *
-        * The list is already in priority order and the roles already say which end is which, so the
-        * only thing missing was a sentence naming the direction. Everything from the first
-        * `accessory` block down is the tail. The two `main` blocks and the primer are the spine. */}
-      {(() => {
-        const firstAccessory = day.blocks.findIndex((b) => b.role === 'accessory');
-        const spineCount = firstAccessory < 0 ? day.blocks.length : firstAccessory;
-        const tail = day.blocks.slice(spineCount).flatMap((b) => b.exercises.map((e) => effOf(e).name));
-        if (!tail.length) return null;
-        return (
-          <p className="lede quiet drop-order" style={{ marginTop: 6 }}>
-            {`Do it in this order. Short on time, cut from the bottom: ${tail.join(', ')}. The first ${spineCount} blocks are the session.`}
-          </p>
-        );
-      })()}
+        * His words, holding the page: "the walls of text are all still there, the text after gym
+        * titel is useless, the text after pull heavy is useless, etc etc". MEASURED at 390px on the
+        * live build before cutting, which is the only reason this was actionable rather than a
+        * matter of taste:
+        *
+        *   93px  193ch  the blurb under "Gym" (page.tsx)
+        *   23px   38ch  {day.desc}, which RESTATED the day title printed directly above it
+        *  100px  212ch  the computed time breakdown
+        *   80px  181ch  "Do it in this order. Short on time, cut from the bottom: ..."
+        *  ----------------
+        *  296px  624ch  of prose between the title and the first exercise
+        *
+        * For scale: every per-exercise reason on the whole day comes to 246px. The header alone was
+        * bigger than all of them, and two of the four pieces said nothing new.
+        *
+        * WHAT EACH ONE WAS FOR, so the loss is understood rather than rediscovered:
+        *
+        * - `day.desc` was a duplicate. "Upper B: pull heavy, press moderate" then "Pull heavy,
+        *   press moderate, swim catch". It is still in program.json and still typechecked; it just
+        *   has no reader. Delete the field only after checking nothing else wants it.
+        *
+        * - The time breakdown replaced a TYPED `time: "75-85 min"` on 2026-08-21, because the typed
+        *   string was the only one of three numbers nothing could check. That reasoning was sound
+        *   and the sentence still went. It said "about 164 min" on Upper B while his watch says his
+        *   real sessions run 81 to 120 and his own note #11 said "about 40 min", so the number it
+        *   was defending was not obviously right either. `dayTimeBreakdown` is untouched in
+        *   program-shared.ts and /health can render it if a page ever wants it.
+        *
+        * - The drop order answered notes #7 and #11 (he ran out of time twice). It is not lost:
+        *   every block already prints its position (1/7 ... 7/7) and every accessory block already
+        *   carries an "optional" tag, which says the same thing in the place he is standing when he
+        *   needs it, at zero height. That is the trade that made cutting it safe.
+        *
+        * The rule this is an instance of: a page that explains itself to its only user, who built
+        * it, above the fold, on a phone, in a gym. */}
 
       <div className="progress-row">
         <span>{totals.done}/{totals.total} sets</span>
-        {/* The nudge now fires at the rule's own ceiling, not at a separate number. This line used
-            to say "consider a rest day" at five consecutive days while conditioning.json's rest
-            rule has been a maximum of three since it was written, so /gym stayed quiet through two
-            days the week page was already calling an overrun. */}
+        {/* THE STREAK IS DATED NOW, and it is one tap for what it counts. Both on his ruling,
+            2026-08-27, after: "it also says 12 day streak wichi im not even sure its true".
+            He was right to doubt it, and it was not the arithmetic.
+
+            It said "12-day streak, over the max of 3": a bare number, printed today, about a run
+            that ENDED 2026-08-25. That is the last date the watch mirror has reached, and the
+            counter deliberately stops there rather than resetting to zero every morning before the
+            sync catches up. Sound reasoning, invisible on screen, so a two-day-old fact read as a
+            fact about right now.
+
+            `TrainingStreak` already carried `from` for exactly this, with a comment saying "so a
+            sentence can name the date rather than print a bare count", and the page printed the
+            bare count anyway. `to` was added for the end of the run.
+
+            AND IT DOES NOT MEAN LIFTING. A day counts if the watch saw ANY session or the app
+            logged a set, so of the 12 days to 2026-08-25, three are swim-only and 2026-08-24 is a
+            run plus a 12-minute session Samsung's watch auto-detected by itself. That is the right
+            definition for a rest rule, and it is not what "streak" implies on a page about lifting,
+            so the summary now has to say so.
+
+            A `details` whose summary IS the line, so the closed state costs the same 18px it did
+            before. `.src` is the block-level fold and carries its own margins; this is one row in a
+            flex strip. */}
         {streak.run > 0 && (
-          <span>
-            {streak.run}-day streak{streak.overRule ? `, over the max of ${streak.maxConsecutive}` : ''}
-          </span>
+          <details className="streakfold">
+            <summary>
+              {streak.to ? `${streak.run} days to ${shortDate(streak.to)}` : `${streak.run} days in a row`}
+              {streak.overRule ? `, over ${streak.maxConsecutive}` : ''}
+            </summary>
+            <div className="streak-body">
+              {streak.run} days in a row up to {streak.to}, which is the last day the watch data
+              reaches, not today. A day counts if the watch recorded any session or this app logged
+              a set, so swims and runs are in it as well as lifts. The rest rule it is measured
+              against is a maximum of {streak.maxConsecutive} consecutive days, and that comes from
+              conditioning.json rather than from this page.
+            </div>
+          </details>
         )}
       </div>
 

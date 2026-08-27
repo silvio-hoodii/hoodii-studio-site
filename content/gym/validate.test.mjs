@@ -18,6 +18,23 @@ import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
+/* FIXTURES ADDRESS BLOCKS BY LABEL, NEVER BY INDEX.
+ *
+ * The first version used `days.tuesday.blocks[1]`. Inserting the Upper A primer at position 0 on
+ * 2026-08-27 shifted every Tuesday index by one, and three cases then mutated the wrong block and
+ * crashed the runner mid-suite. An index into a hand-edited content file is not a stable address.
+ *
+ * `partnerOf` also encodes what a partner IS in one place: the LAST exercise of the block. */
+const blockBy = (program, day, label) => {
+  const b = (program.days[day]?.blocks || []).find((x) => x.label === label);
+  if (!b) throw new Error(`no block labelled "${label}" on ${day}; have: ${(program.days[day]?.blocks || []).map((x) => x.label).join(' | ')}`);
+  return b;
+};
+const partnerOf = (block) => block.exercises[block.exercises.length - 1];
+/** The two blocks the fixtures use, named once. Any block with an `open` row works for the second. */
+const SPAN_BLOCK = ['friday', 'Second Vertical Pull'];
+const OPEN_BLOCK = ['friday', 'Main Lift: BB Row'];
+
 /** @type {{name: string, mutate: (p: any) => void, expect: string | null}[]} */
 const CASES = [
   {
@@ -28,7 +45,7 @@ const CASES = [
   {
     name: 'agent prose in whyHere is refused',
     mutate: (p) => {
-      p.days.friday.blocks[3].exercises[1].whyHere =
+      partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere =
         'Side delts are important for shoulder health and balanced development.';
     },
     expect: 'NOT a verbatim span',
@@ -36,30 +53,30 @@ const CASES = [
   {
     name: 'a true span with a different first-character case is allowed',
     mutate: (p) => {
-      const b = p.days.friday.blocks[3];
-      b.exercises[1].whyHere = 'side delts go in the rest because a pull-up does not use them.';
+      const b = blockBy(p, ...SPAN_BLOCK);
+      partnerOf(b).whyHere = 'side delts go in the rest because a pull-up does not use them.';
     },
     expect: null,
   },
   {
     name: 'a span from ANOTHER block is refused',
     mutate: (p) => {
-      p.days.friday.blocks[3].exercises[1].whyHere =
-        p.days.monday.blocks[4].why.slice(0, 60);
+      partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere =
+        blockBy(p, 'monday', 'Sideways + Calves').why.slice(0, 60);
     },
     expect: 'NOT a verbatim span',
   },
   {
     name: 'a partner with neither whyHere nor open is refused',
     mutate: (p) => {
-      delete p.days.friday.blocks[3].exercises[1].whyHere;
+      delete partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere;
     },
     expect: 'no "whyHere" and no "open"',
   },
   {
     name: 'whyHere on a lead lift is refused',
     mutate: (p) => {
-      p.days.friday.blocks[3].exercises[0].whyHere =
+      blockBy(p, ...SPAN_BLOCK).exercises[0].whyHere =
         'The second vertical pull. Lat Pulldown on Tuesday was the only one in the week';
     },
     expect: 'which is a lead lift',
@@ -67,29 +84,29 @@ const CASES = [
   {
     name: 'both whyHere and open on one partner is refused',
     mutate: (p) => {
-      const ex = p.days.tuesday.blocks[1].exercises[1];
-      ex.whyHere = 'The second overhead exposure of the week after Friday machine press';
+      const blk = blockBy(p, ...OPEN_BLOCK);
+      partnerOf(blk).whyHere = blk.why.slice(0, 60);
     },
     expect: 'carries both',
   },
   {
     name: 'an open question due before it was asked is refused',
     mutate: (p) => {
-      p.days.tuesday.blocks[1].exercises[1].open[0].due = '2026-08-01';
+      partnerOf(blockBy(p, ...OPEN_BLOCK)).open[0].due = '2026-08-01';
     },
     expect: 'is not after "asked"',
   },
   {
     name: 'an open question with no context is refused',
     mutate: (p) => {
-      p.days.tuesday.blocks[1].exercises[1].open[0].q = 'why is this here';
+      partnerOf(blockBy(p, ...OPEN_BLOCK)).open[0].q = 'why is this here';
     },
     expect: 'at least 30 characters',
   },
   {
     name: 'an emptied open array is refused rather than ignored',
     mutate: (p) => {
-      p.days.tuesday.blocks[1].exercises[1].open = [];
+      partnerOf(blockBy(p, ...OPEN_BLOCK)).open = [];
     },
     expect: 'non-empty array',
   },

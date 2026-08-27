@@ -286,24 +286,63 @@
     async wholeDayIsShown() {
       if ($('.budgets')) return { pass: false, detail: 'the time-budget chips are back' };
       const before = $$('.ex').length;
-      const line = text($('.drop-order'));
       if (!before) return { pass: false, detail: 'no exercises rendered at all' };
-      if (!line) return { pass: false, detail: { rendered: before, dropOrder: null, note: 'no .drop-order sentence' } };
-      /* Every name after the colon must be on the page. Split on the comma list the page builds. */
-      const named = (line.split('cut from the bottom:')[1] || '')
-        .split('. The first')[0]
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean);
-      const onPage = new Set(cardNames());
-      const missing = named.filter((n) => !onPage.has(n));
+
+      /* THE DROP-ORDER SENTENCE IS GONE, 2026-08-27, and this test changed WITH it rather than being
+       * deleted. Silvio, holding the page: "the walls of text are all still there ... the text after
+       * pull heavy is useless, etc etc". Measured at 390px, 296px and 624 characters of prose sat
+       * between the day title and the first exercise, and that sentence was 80px of it.
+       *
+       * Its JOB has to survive the cut or the cut was a regression: he ran out of time twice (notes
+       * #7, #11) and something has to tell him which end to drop. Two things already did, at zero
+       * height, which is what made removing the sentence safe rather than lossy:
+       *
+       *   - every block prints its position, "1/7" ... "7/7"  (.exgroup-n)
+       *   - every accessory block carries an "optional" tag    (.tag.opt)
+       *
+       * So this now asserts the replacement is really there. If a future session deletes the tags,
+       * this fails instead of the page quietly losing the answer.
+       *
+       * AND IT ASSERTS THE SENTENCE HAS NOT COME BACK. Restoring it would reverse a ruling he made
+       * after being shown the measurement; per ENGINEERING.md, absence here is a decision, and the
+       * only kind of decision that holds is one something checks. */
+      if ($('.drop-order')) {
+        return { pass: false, detail: 'the .drop-order sentence is back. He cut it on 2026-08-27 after seeing it measured at 80px; the block counters and the "optional" tags carry its job now.' };
+      }
+      /* A DAY BLOCK IS AN `.exgroup` THAT CARRIES A POSITION COUNTER, and the first version of this
+       * check got that wrong: it counted `.exgroup` and found 9 against 7 blocks. Unlike `.ex`,
+       * `.exgroup` is a DECLARED shared idiom (training.css says so) and the note box and the notes
+       * list both use it legitimately. So the discriminator is `.exgroup-n`, the same way `.ex`
+       * needs `data-slot`.
+       *
+       * The counter also states the total, "1/7", so the page says how many blocks it believes it
+       * has. Reading the denominator and counting the blocks is a real check: a dropped block makes
+       * the two disagree, which is the failure this test exists for now that the drop-order sentence
+       * is not here to name the tail. */
+      const positionEls = $$('.exgroup-n');
+      const groups = positionEls.map((el) => el.closest('.exgroup')).filter(Boolean);
+      const claimedTotal = Number((text(positionEls[0]) || '').split('/')[1] || 0);
+      const optionalTags = $$('.tag.opt').length;
+      const positioned = groups.length;
+
       /* Nothing may collapse the list. Waiting a beat and recounting catches a late effect that
          filters blocks after hydration, which is exactly how the budget used to arrive. */
       await sleep(400);
       const after = $$('.ex').length;
       return {
-        pass: missing.length === 0 && after === before && named.length > 0,
-        detail: { rendered: before, afterSettle: after, namedInDropOrder: named, missingFromPage: missing },
+        pass:
+          after === before &&
+          groups.length > 0 &&
+          claimedTotal === groups.length &&
+          optionalTags > 0,
+        detail: {
+          rendered: before,
+          afterSettle: after,
+          blocksRendered: groups.length,
+          blocksTheCounterClaims: claimedTotal,
+          optionalTags,
+          dropOrderSentence: 'absent, as ruled 2026-08-27',
+        },
       };
     },
 

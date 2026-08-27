@@ -74,6 +74,33 @@
   margin-top: 16px;
 }
 
+/* THE STREAK IS A FOLD WHOSE CLOSED STATE COSTS NOTHING. Added 2026-08-27.
+ *
+ * It has to sit inside `.progress-row`, which is a mono 12px flex strip, and it has to be exactly as
+ * tall closed as the plain span it replaced, or fixing an undated number would have cost height on
+ * the page he had just told me was too tall. Inherits everything from the row; no margins, no
+ * padding, no border, no disclosure triangle. `.src` and `.cuefold` are the block-level folds and
+ * both carry their own box, which is why this is a third name and not a reuse.
+ *
+ * `list-style: none` plus the WebKit pseudo-element: the marker needs killing in both engines, and
+ * the marker is the whole reason a naive `details` here would be a pixel taller than the span. */
+/* The sets counter is the other child of the same flex row, and it wrapped to "0/42 / sets" the
+ * moment the fold opened and took the width. Caught by looking at the open state, which is a state
+ * no measurement of the closed page would ever have reached. */
+.training .progress-row > span:first-child { white-space: nowrap; }
+.training .streakfold > summary { list-style: none; cursor: pointer; }
+.training .streakfold > summary::-webkit-details-marker { display: none; }
+.training .streakfold > summary { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
+.training .streakfold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+.training .streak-body {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  margin-top: 6px;
+  max-width: 46ch;
+}
+
 /* ---- blocks + exercises ---- */
 /* ---- a block reads as a block ----
    The boundary between two blocks was a 30px margin, and the boundary between two exercises inside

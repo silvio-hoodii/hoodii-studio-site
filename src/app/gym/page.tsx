@@ -26,11 +26,21 @@ export default async function GymHome() {
   return (
     <div className="wrap">
       <h1>Gym</h1>
-      <p className="lede">
-        Upper/lower split, logged between sets. Every main pattern twice a week since 2026-08-16,
-        heavy on one day and light on the other. Swim, run and bike have their own pages now, in
-        the row above.
-      </p>
+      {/* NO BLURB UNDER THE TITLE, AND THAT IS A DECISION. Removed 2026-08-27 on his ruling, along
+        * with three more paragraphs in GymClient. Do not restore it.
+        *
+        * It read: "Upper/lower split, logged between sets. Every main pattern twice a week since
+        * 2026-08-16, heavy on one day and light on the other. Swim, run and bike have their own
+        * pages now, in the row above." 93px and 193 characters at 390px, explaining a programme he
+        * designed, to him, above the fold, on the page he opens between sets in a gym.
+        *
+        * His words: "the walls of text are all still there, the text after gym titel is useless".
+        * Measured before cutting: 296px and 624 characters of prose sat between the title and the
+        * first exercise. That is more than every per-exercise reason on the whole day put together.
+        *
+        * The hub row at src/app/page.tsx still carries the one-line version, which is where a
+        * description of the app belongs: on the page that indexes it, for someone deciding whether
+        * to open it. Not inside it. */}
       <GymClient program={program} warmups={warmups} cooldowns={cooldowns} rirGuide={rirGuide} nextUp={nextUp} streak={streak} />
 
       {/* THE NOTE BOX HAD NO OTHER END. Notes have been written from the bottom of this page since
