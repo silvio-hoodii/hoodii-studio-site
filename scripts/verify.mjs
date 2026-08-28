@@ -59,6 +59,21 @@ const GATES = [
    * Here rather than in `pnpm build`, for the gym suite's reason: it copies a directory and spawns a
    * process per case. */
   ['kitchen-validator-tests', process.execPath, ['content/kitchen/validate.test.mjs']],
+  /* THE PROGRESSION ENGINE'S OWN SUITE. Added 2026-08-28.
+   *
+   * `suggest` decides what goes on the bar and had no tests at all, which is how three defects
+   * reached his cards at once: a bodyweight branch that asked for FEWER reps than he had just done
+   * and wrote the number into his log, a stall detector that read two single-set days as a stall and
+   * put "deload to 105" on the front squat, and a weighted branch that ADDED counterweight to the
+   * assisted pull-up directly above a cue saying that number should go down.
+   *
+   * Every case uses his real logged numbers, and each fix is paired with the case that catches it
+   * overshooting: the deload must still fire on three genuine sessions, and an ordinary lift must
+   * still go up.
+   *
+   * `--experimental-strip-types` because it imports the .ts directly. No build step, no tsx
+   * dependency, same reasoning as `coverage.mts` being .mts. */
+  ['progression-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/progression.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

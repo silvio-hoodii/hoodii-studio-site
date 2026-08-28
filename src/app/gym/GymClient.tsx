@@ -397,7 +397,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       const eff = effOf(e);
       return {
         id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff),
-        increment: eff.increment, rangeWidth: eff.rangeWidth,
+        increment: eff.increment, rangeWidth: eff.rangeWidth, assistance: eff.assistance,
       };
     })),
     [blocks, effOf],

@@ -147,10 +147,21 @@ for (const [dayKey, day] of Object.entries(program.days)) {
          anything prescribed above fifteen is out of scope and says so rather than being silently
          wrong. Carries and long holds progress on load and on distance, which nobody needs an
          equation for. */
-      if (bottom > EPLEY_LIMIT) { outOfScope.push(`${dayKey}/${ex.id} (${bottom} reps)`); continue; }
+      if (bottom > EPLEY_LIMIT) { outOfScope.push(`${dayKey}/${ex.id} (${bottom} reps, above the Epley limit)`); continue; }
       const width = ex.rangeWidth != null ? Number(ex.rangeWidth) : DEFAULT_WIDTH;
       const top = bottom + width;
       const increment = ex.increment != null ? Number(ex.increment) : 5;
+      /* AN ASSISTANCE LIFT IS OUT OF SCOPE FOR THIS CHECK, added 2026-08-28.
+         The assisted pull-up logs COUNTERWEIGHT: less of it is harder, so the next rung is
+         `w - increment`, not `w + increment`, and every quantity below has its sign inverted. This
+         check produced a finding out of the wrong assumption ("friday/assisted-pullup at 40 lb: 6-8
+         banks 50.7 but +10 lb demands 60.0"), which is a report disagreeing with reality rather than
+         with a gate, and 03-gym recorded that finding as real. It is not.
+         Declared out of scope rather than inverted, for the same reason the Epley limit above is a
+         refusal and not a correction: e1RM against a counterweight is not a quantity anyone has
+         validated, and inventing an equation to keep a line in a report is how the carry's 47-step
+         demand happened. The engine handles the direction; this says it cannot judge it. */
+      if (ex.assistance) { outOfScope.push(`${dayKey}/${ex.id} (assistance, counterweight goes down)`); continue; }
       const cur = working.get(ex.id);
       if (!cur) { unlogged.push(`${dayKey}/${ex.id}`); continue; }
       const banked = e1rm(cur.w, top);
@@ -179,7 +190,14 @@ if (!QUIET) {
   }
   if (unlogged.length) console.log(`\nnot yet logged, nothing to check against: ${unlogged.join(', ')}`);
   // Never a silent skip: a check that quietly drops rows reads as coverage it does not have.
-  if (outOfScope.length) console.log(`\nabove ${EPLEY_LIMIT} reps, where the estimate stops holding, so deliberately not checked: ${outOfScope.join(', ')}`);
+  /* The reason travels with each ENTRY rather than in this heading, since 2026-08-28. The heading
+     read "above N reps, where the estimate stops holding", and that became false the moment a second
+     reason for skipping existed: the assisted pull-up is skipped because it logs counterweight, not
+     because of its rep count. A heading asserting otherwise is a small lie inside a report whose
+     whole job is being trusted about numbers. */
+  if (outOfScope.length) {
+    console.log(`\ndeliberately not checked, reason per entry: ${outOfScope.join(', ')}`);
+  }
 }
 
 if (gaps.length) {

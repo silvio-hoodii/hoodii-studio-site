@@ -32,6 +32,12 @@ export interface PlanInput {
   rangeWidth?: number;
   today?: string;
   recent?: LastSession[] | null;
+  /** True when the logged number is COUNTERWEIGHT rather than load, so progress means it goes DOWN.
+   *
+   *  The assisted pull-up is the case: less assistance is harder. Its cue has always said so, in the
+   *  words he reads at the machine, while the engine added an increment and made the next set easier.
+   *  This is a fact about the machine, not a judgement about his training. */
+  assistance?: boolean;
 }
 
 export interface Suggestion {
@@ -128,7 +134,25 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     const repsList = sets.map((s) => s.reps ?? 0);
     const minReps = Math.min(...repsList);
     if (minReps >= top) {
-      return { weight: null, reps: top, reason: `Hit ${repsList.join('/')}: add load or progress the movement.` };
+      /* NEVER SUGGEST FEWER THAN HE ALREADY DID. This read `reps: top`, so once he passed the top of
+       * the range the card asked him to go BACKWARDS, and the app wrote the number into his log:
+       *
+       *   box-jump      2026-08-27   reps 10    suggested_reps 5     (three sets, three sessions)
+       *   farmer-carry  2026-08-25   reps 130   suggested_reps 40
+       *   pushup        2026-08-25   reps 20    suggested_reps 8
+       *
+       * `top` is the ceiling of a prescribed RANGE, not a target, and for a bodyweight or timed
+       * movement he can exceed it without anything being wrong. Found by 10-gym P1-3.
+       *
+       * This is the arithmetic half only. WHAT a box jump should actually progress on is his open
+       * question in program.json, parked and due 2026-09-10, and it is not answered here: intent and
+       * ground contact time are not things a card can measure. Holding is the honest instruction
+       * until he rules. */
+      return {
+        weight: null,
+        reps: Math.max(top, minReps),
+        reason: `Hit ${repsList.join('/')}, past the top of the range: hold here, or add load and drop back to ${bottom}.`,
+      };
     }
     return { weight: null, reps: Math.min(minReps + 1, top), reason: `Got ${repsList.join('/')}: add a rep where you can.` };
   }
@@ -142,13 +166,35 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
 
   // Stall detection: 3 straight sessions at the same working weight with no rep progress, still
   // below the top of the range -> deload ~10% and rebuild. A multi-session signal, not a bad day.
-  const rec = Array.isArray(plan.recent) ? plan.recent : null;
+  /* A DATE IS NOT A SESSION. `getRecentSessions` groups by date and takes whatever that date holds,
+   * so a day with ONE logged set counted the same as a day with three, and the deload fired on the
+   * strength of two single-set days:
+   *
+   *   2026-08-27   115x8  115x8  115x8     (three sets, against a prescription of two)
+   *   2026-08-23   115x8                   (one set)
+   *   2026-08-18   115x8                   (one set)
+   *
+   * The card then read "deload to 105" two days after he did MORE work than the day asked for. This
+   * file's own header says a deload is a multi-session stall signal and that one bad day never
+   * triggers it; a partial log is not a bad day, it is a missing one, and `/gym/log` exists because
+   * his sessions are systematically under-logged: 31 lifting sessions in June and July have no app
+   * rows at all. A detector that reads a partial log as a full session is guaranteed to misfire on
+   * this user specifically. Found by 10-gym P1-4.
+   *
+   * Two sets is the floor, and it is deliberately not "half the prescription": that would need a
+   * programme lookup in a pure function, and one logged set is the shape that carries no information
+   * about whether he stalled, whatever the prescription was. */
+  const MIN_SETS_FOR_A_SESSION = 2;
+  const recAll = Array.isArray(plan.recent) ? plan.recent : null;
+  const rec = recAll
+    ? recAll.filter((sess) => (sess.sets || []).filter((s) => (s.reps ?? 0) > 0).length >= MIN_SETS_FOR_A_SESSION)
+    : null;
   if (rec && rec.length >= 3) {
     const last3 = rec.slice(0, 3).map((sess) => {
       const ss = (sess.sets || []).filter((s) => (s.reps ?? 0) > 0);
       const w = workingWeight(ss);
       const reps = ss.filter((s) => s.weight === w).map((s) => s.reps ?? 0);
-      return { w, min: reps.length ? Math.min(...reps) : null };
+      return { w, min: reps.length ? Math.min(...reps) : null, sets: ss.length };
     });
     const sameW = last3.every((x) => x.w != null && x.w === last3[0]!.w);
     const noProgress =
@@ -156,13 +202,45 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       && last3[0]!.min! <= last3[1]!.min! && last3[1]!.min! <= last3[2]!.min!;
     if (sameW && noProgress && last3[0]!.min! < top && last3[0]!.w != null) {
       const dl = roundLoad(last3[0]!.w! * 0.9, increment);
-      return { weight: dl, reps: bottom, reason: `Stalled 3 sessions at ${last3[0]!.w}: deload to ${dl}, build back up.` };
+      /* The reason carries its own evidence. "Stalled 3 sessions" is not something he can judge;
+       * "3 sessions (3, 2 and 2 sets logged)" is, and it is the sentence that would have made the
+       * front-squat misfire obvious on the card rather than in an audit. */
+      const counted = last3.map((x) => x.sets).join(', ');
+      return {
+        weight: dl,
+        reps: bottom,
+        reason: `Stalled 3 sessions at ${last3[0]!.w} (${counted} sets logged): deload to ${dl}, build back up.`,
+      };
     }
   }
 
   if (minReps >= top && ww != null) {
-    const next = roundLoad(ww + increment, increment);
-    return { weight: next, reps: bottom, reason: `Hit ${wd} at ${ww}: +${increment} lb.` };
+    /* AN ASSISTANCE LIFT PROGRESSES DOWNWARD, and until 2026-08-28 nothing in the engine knew that.
+     *
+     * The assisted pull-up logs the COUNTERWEIGHT: less of it is harder, and getting stronger means
+     * the number falls. Its own cue says so on the same card, in the same words he reads at the
+     * machine: "it is the one number here that should go DOWN over time. When 6 feels easy, take
+     * 10 lb of assistance off." The engine added. So the first time he got 8/8/8 at 40 lb the card
+     * would have read "50 lb x 6, Hit 8/8/8 at 40: +10 lb", which is MORE help and an easier set,
+     * directly contradicting the sentence underneath it. Found by 10-gym P1-5.
+     *
+     * `assistance: true` on the slot is the flag, and it is a fact about the machine rather than a
+     * judgement about his training: on this equipment the weight opposes bodyweight instead of adding
+     * to it. `check-ladder.mjs` inherited the same assumption and produced a finding out of it
+     * (friday/assisted-pullup "+10 lb demands 60.0"), which is a report disagreeing with reality
+     * rather than with a gate.
+     *
+     * Floored at one increment: a counterweight of zero is an unassisted pull-up, which is a
+     * different exercise and a milestone he should reach on purpose rather than by the card silently
+     * arriving there. */
+    const assisted = plan.assistance === true;
+    const next = assisted
+      ? Math.max(increment, roundLoad(ww - increment, increment))
+      : roundLoad(ww + increment, increment);
+    const reason = assisted
+      ? `Hit ${wd} at ${ww}: take ${increment} lb of assistance off, down to ${next}.`
+      : `Hit ${wd} at ${ww}: +${increment} lb.`;
+    return { weight: next, reps: bottom, reason };
   }
   const goal = minReps < bottom ? bottom : top;
   return { weight: ww, reps: goal, reason: `Got ${wd} at ${ww}: hold, build to ${goal}.` };

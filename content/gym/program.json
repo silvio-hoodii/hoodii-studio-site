@@ -748,7 +748,7 @@
                   "due": "2026-09-10"
                 },
                 {
-                  "q": "Five lifts cannot reach their own next weight, this one twice over: at 20 lb, the top of 12 to 14 reps banks an estimated 29.3 and the next dumbbell up demands 35.0, so maxing out the range earns a jump you will fail. The others are the DB lateral lunge, the assisted pull-up and the DB reverse fly. Two ways out and they apply to all five. Widen the rep range so the top of it actually earns the jump, which here means 12 to 23 reps and a long set. Or accept that these four stall at their current weight and progress only on reps. Which one, and is a 23-rep set of lateral raises something you would actually do?",
+                  "q": "FOUR lifts cannot reach their own next weight, this one twice over (it was five until 2026-08-28, when the assisted pull-up came off the list: it logs COUNTERWEIGHT, so its next rung is 10 lb LESS assistance and the check had its sign inverted. That was a wrong finding, not a fixed lift): at 20 lb, the top of 12 to 14 reps banks an estimated 29.3 and the next dumbbell up demands 35.0, so maxing out the range earns a jump you will fail. The others are the DB lateral lunge and the DB reverse fly. Two ways out and they apply to all five. Widen the rep range so the top of it actually earns the jump, which here means 12 to 23 reps and a long set. Or accept that these three stall at their current weight and progress only on reps. Which one, and is a 23-rep set of lateral raises something you would actually do?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -1450,7 +1450,8 @@
                   "progression": "weight",
                   "cue": "If the assisted machine is taken. Same job, elbows down to the ribs, all the way straight at the top."
                 }
-              ]
+              ],
+              "assistance": true
             }
           ]
         },

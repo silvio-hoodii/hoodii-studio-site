@@ -24,6 +24,12 @@ interface PlanExerciseIn {
    *  shipped five days ago: nothing was wrong with the fix, it never arrived. A field silently
    *  dropped by a type is not a check anyone can run, which is why check-ladder exists. */
   rangeWidth?: number;
+  /** Same hazard as `rangeWidth` above, so it is listed here in the same commit that introduces it.
+   *  Counterweight rather than load: the assisted pull-up gets HARDER as this number falls, and the
+   *  engine added an increment until 2026-08-28 while the card's own cue told him to take assistance
+   *  off. A field the client sends, `PlanInput` declares and this interface omits is dropped in the
+   *  middle with nothing to notice, which is exactly how the ladder fix sat dead for five days. */
+  assistance?: boolean;
 }
 
 /** Last-session + a suggested target for each of today's prescribed lifts. */
@@ -46,6 +52,7 @@ export async function POST(req: Request) {
           targetReps: ex.targetReps,
           increment: ex.increment,
           rangeWidth: ex.rangeWidth,
+          assistance: ex.assistance,
           today: date,
           recent: recent.slice(0, 3),
         });

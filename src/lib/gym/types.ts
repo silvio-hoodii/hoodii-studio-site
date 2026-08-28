@@ -45,6 +45,11 @@ export interface Alt {
   /** Widens the double-progression rep range so the next load step is actually reachable from the
    *  top of it. See the RANGE_WIDTH note in progression.ts. Default 2. */
   rangeWidth?: number;
+  /** Counterweight rather than load: less of it is HARDER, so progress means this number falls.
+   *  The assisted pull-up is the only one today. Its cue has always told him "it is the one number
+   *  here that should go DOWN over time" while the engine added an increment, which would have put
+   *  "+10 lb" on a card directly above that sentence. A fact about the machine, not a judgement. */
+  assistance?: boolean;
   log?: boolean;
 }
 
@@ -67,6 +72,11 @@ export interface Exercise {
   /** Widens the double-progression rep range so the next load step is actually reachable from the
    *  top of it. See the RANGE_WIDTH note in progression.ts. Default 2. */
   rangeWidth?: number;
+  /** Counterweight rather than load: less of it is HARDER, so progress means this number falls.
+   *  The assisted pull-up is the only one today. Its cue has always told him "it is the one number
+   *  here that should go DOWN over time" while the engine added an increment, which would have put
+   *  "+10 lb" on a card directly above that sentence. A fact about the machine, not a judgement. */
+  assistance?: boolean;
   /** ONE CLAUSE SAYING WHY THIS PARTNER IS IN THIS BLOCK, printed on its own row, no tap.
    *
    *  Only the PARTNER (last exercise of the block) may carry it, and validate.mjs fails the build
