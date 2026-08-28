@@ -462,6 +462,27 @@ harmless, and PSN is not surfaced on the hub.
   `src/app/french/page.tsx`, where an unset secret showed every anonymous visitor the edit controls.
   The cookie is SET in two places only, `src/lib/login-server.ts` (the four login forms) and
   `/kitchen/api/unlock` (the inline unlock), and both are in that linter's allowlist by name.
+- **THE 44px TAP FLOOR IS MEASURED NOW: `node scripts/probe-taps.mjs <base-url>`.** 31 surfaces at
+  390px, every sub-tab of every route, checking three geometric things in one visit: every control
+  against the floor, horizontal overflow, and whether the nav chip row still fits. Its first full run
+  found **79 findings**, all real once narrowed, including six `Why this is here` summaries at 32px on
+  /gym, which is the one control that answers the question he asks most; the warmup and cooldown at
+  16.5px, opened mid-session with one hand; and three kitchen section summaries at 22px. All 31 are
+  clean as of 2026-08-28 and it has been watched refusing (restoring the old `.kos .dots` CSS and
+  rebuilding makes it report the sideways scroll).
+
+  **It is not in `verify.mjs`, for the reason the other probes are not: it needs a server.** Run it
+  the way you run the kitchen probe. Exceptions live in `ALLOW` inside the script with the reason
+  written beside each, and `PROBE_TAPS_SHOW_ALLOWED=1` prints what the list is hiding, because a broad
+  allow-regex silently swallowing dozens of findings is the failure the script exists to prevent.
+
+  **FOUR OF ITS OWN BUGS ARE WORTH KNOWING, because three of them were false PASSES.** A Git-Bash
+  mangled path (`/health` became `C:/Program Files/Git/health`) measured the wrong URL and reported
+  ok; it refuses now. Measuring before the webfont settled gave `/reading` a 324px chip row and
+  `/reading/about` a clipped one on identical markup, so the wait is now for the geometry to stop
+  changing rather than for any event. And the label-formatting regex got its escape wrong three times
+  running, because an expression built as a string in one language and executed in another has two
+  escape layers: **nothing escapable goes inside the injected expression any more**, prose included.
 - **NO COLOUR LITERAL OUTSIDE `globals.css`.** `scripts/lint-tokens.mjs`, in `pnpm build`, with a
   `--selftest` of 26 cases that runs first on every invocation. The codebase was already clean when
   the audit swept it, which was the finding: the state was held by vigilance alone, and `french.css`'s

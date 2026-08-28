@@ -125,7 +125,16 @@
   border-bottom: 1px solid var(--foreground);
   padding-bottom: 6px;
 }
-.training .log-more { color: var(--foreground); text-transform: none; letter-spacing: 0; }
+/* 44px: measured at 16.5px on /gym. It is the link to the whole training record, so it is a
+   destination and not an annotation. inline-flex so it keeps sitting inside the row it belongs to. */
+.training .log-more {
+  color: var(--foreground);
+  text-transform: none;
+  letter-spacing: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .training .log-table { font-family: var(--font-mono); font-size: 12px; }
 .training .log-row {
   display: grid;
@@ -396,6 +405,12 @@
 
 /* ---- warmup / cooldown / RIR ---- */
 .training details.fold { border-top: 1px solid var(--border); padding: 12px 0; }
+/* 44px, MEASURED AT 16.5px ON THE LIVE /gym PAGE on 2026-08-28 by scripts/probe-taps.mjs.
+   These are the warmup and cooldown blocks. They are opened mid-session with one hand, and this same
+   file gives `details.src.wk > summary` 44px and `details.cue > summary` 48px, so the floor was
+   applied to both neighbours and missed here. Named by 08-ux-ui P2-1 item 1 and then measured rather
+   than taken on trust. `display: flex` with `align-items: center` so the taller box centres its label
+   instead of hanging it at the top of 44px of nothing. */
 .training details.fold summary {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -404,6 +419,9 @@
   text-transform: uppercase;
   color: var(--muted-foreground);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
 }
 /* The technique cue on an exercise card, folded. Added 2026-08-27 from gym_note #12.
  *
@@ -652,7 +670,21 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-foreground);
-  min-height: 32px;
+  /* 44, NOT 32, since 2026-08-28. This was 32 "on purpose", and the note on `.src.wk` below recorded
+     the reasoning: bare `.src` summaries are tertiary "where this came from" citations under a cue,
+     and `.wk` existed to lift the one that is "the main way to read why the rule has the shape it
+     has".
+
+     The premise did not survive measurement. `scripts/probe-taps.mjs` at 390px found six of these on
+     /gym reading "Why this is here", which is not a tertiary citation: it is THE control that answers
+     the question he has asked more times than any other, and AGENTS.md devotes a section to how that
+     control fails to reach him. It also found "The rest of the numbers" on /swim. A tertiary citation
+     is still something a thumb has to hit between sets, and the existence of the `.wk` override was
+     already the admission that 32 was wrong wherever it mattered.
+
+     `.src.wk`'s own min-height is now redundant and is kept only as the record of which control
+     needed it first. Height cost measured after the change, not estimated. */
+  min-height: 44px;
   display: flex;
   align-items: center;
 }

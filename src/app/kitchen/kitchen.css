@@ -278,6 +278,12 @@
   padding-left: 13px;
   margin: 0 0 15px;
 }
+/* 44px, MEASURED. `scripts/probe-taps.mjs` at 390px found these at 22px on /kitchen ("No recipe
+   really needed", "Everything else in here"), at 22px on /kitchen/find ("Narrow it down", "Not here?
+   Name it, or paste a link"), and at 33px on /kitchen/want (the paste box). Every one of them is a
+   control that opens a section, on a surface used with wet hands, and two of them are the only route
+   to a filter. `list-item` display keeps the native marker, so the box grows with padding rather than
+   with flex, which would drop the triangle. */
 .kos .devs summary {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -286,6 +292,9 @@
   text-transform: uppercase;
   color: var(--muted-foreground);
   cursor: pointer;
+  min-height: 44px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 .kos .devs summary:hover { color: var(--foreground); }
 .kos .devs .dev { margin-top: 11px; font-size: 15px; line-height: 1.55; }
@@ -801,6 +810,8 @@
 
 /* A fold, for everything that is not an answer to "what can I cook". Reachable, not unavoidable. */
 .kos details.fold { margin: 14px 0 0; border-top: 1px solid var(--border); padding-top: 12px; }
+/* 44px, measured at 40px on /kitchen/shop ("What one purchase would unlock the most dishes"). Four
+   pixels under, which is exactly the kind nobody catches by looking. */
 .kos details.fold > summary {
   cursor: pointer;
   font-family: var(--font-mono);
@@ -810,6 +821,9 @@
   text-transform: uppercase;
   color: var(--muted-foreground);
   list-style-position: outside;
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding: 2px 0;
 }
 .kos details.fold[open] > summary { margin-bottom: 10px; color: var(--foreground); }

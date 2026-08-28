@@ -107,8 +107,21 @@ export default function ListClient({ open, got, pricedTotal, pricedCount, unpric
                 <button disabled={!!pending[r.id]} onClick={() => void send('got', r.id, r.name)} style={{ fontSize: 15, padding: '0 18px' }}>
                   Got it
                 </button>
+                {/* 44px, measured at 20px by scripts/probe-taps.mjs at 390px on 2026-08-28. It sits
+                    beside a 56px "Got it" button in the same row, which is the comparison that makes
+                    it obvious: two controls on one line, one of them nearly three times the other,
+                    and this is the one pressed while standing in an aisle holding a basket. `.quiet`
+                    is a TYPE class in globals.css shared by a dozen surfaces, so the box is set here
+                    rather than there: making every `.quiet` span 44px tall would add height to
+                    paragraphs that are not controls at all. */}
                 {r.price?.url && (
-                  <a className="quiet" href={r.price.url} target="_blank" rel="noreferrer" style={{ alignSelf: 'center' }}>
+                  <a
+                    className="quiet"
+                    href={r.price.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ alignSelf: 'center', display: 'inline-flex', alignItems: 'center', minHeight: 44 }}
+                  >
                     check the price
                   </a>
                 )}
