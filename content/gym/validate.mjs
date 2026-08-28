@@ -42,6 +42,37 @@ let FAIL = 0;
 const out = [];
 function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
 
+/* NOTHING IN THE CATALOGUE MAY RESTATE WHAT program.json ALREADY SAYS. Added 2026-08-27.
+ *
+ * movements.json carried an `inProgramme` boolean on all 103 variants and nine of them were already
+ * wrong on the day the file shipped: that morning's rebuild edited program.json and never touched
+ * the flags, so db-rdl read false while being prescribed and pushup read true after being cut. The
+ * only consumer was the `*` marker in gym-catalogue.mjs --options, which is the exact view the
+ * handoff pointed the next agent at.
+ *
+ * This workspace has had the same failure twice at larger scale (body metrics 2026-08-01,
+ * immigration status 2026-08-11) and drew the same conclusion both times: EVERY COPY OF A FACT IS A
+ * FACT THAT GOES STALE SILENTLY. The flag is deleted and the marker is derived. This check exists
+ * because the alternative was a comment in movements.json asking the next author not to add it
+ * back, and a comment does not execute.
+ *
+ * Deliberately a whole class rather than one key: any field here whose value is a restatement of
+ * program.json belongs on this list the day someone reaches for it. */
+const DERIVED_NOT_STORED = {
+  inProgramme: 'whether a variant is prescribed. Derive it from program.json, as gym-catalogue.mjs does.',
+};
+if (MOVEMENTS) {
+  const seen = new Set();
+  for (const [id, v] of Object.entries(MOVEMENTS)) {
+    for (const [key, why] of Object.entries(DERIVED_NOT_STORED)) {
+      if (key in v && !seen.has(`${id}/${key}`)) {
+        seen.add(`${id}/${key}`);
+        fail('movements.json', `variant "${id}" carries "${key}", which is derived and must not be stored: ${why}`);
+      }
+    }
+  }
+}
+
 const REQUIRED_EX_FIELDS = ['id', 'name', 'sets', 'reps', 'rest', 'cue', 'zone', 'station'];
 
 /* IF IT IS IN THE LOG, THE THING THAT CHANGES MUST BE RECORDED. Added 2026-08-22.

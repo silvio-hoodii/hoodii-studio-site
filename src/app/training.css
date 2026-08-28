@@ -1147,3 +1147,31 @@
 .training .extra-name:focus-visible, .training .extra-num:focus-visible {
   outline: 2px solid var(--signal); outline-offset: 1px;
 }
+
+/* ---- weekly volume, /health?s=volume ----
+ *
+ * The muscle table is six or seven columns on a 390px phone, which is exactly what .table-scroll
+ * exists for: the table scrolls inside its own box and the page body never does.
+ *
+ * .vol-state is a WORD, not a colour, and only the two ends of the scale get any emphasis at all.
+ * --signal is reserved on this site for a value that is true right now, and "under the minimum
+ * dose" qualifies: it is the one state in this table that is a problem rather than a reading. Past
+ * the efficient zone is diminishing returns, not harm, so it is quiet grey and not a warning. */
+.training .vol-table td { padding-top: 9px; padding-bottom: 9px; }
+.training .vol-table td.tnum,
+.training .vol-table th.tnum { text-align: right; font-variant-numeric: tabular-nums; }
+.training .vol-state {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.training .vol-state.under { color: var(--signal); }
+/* The day headers wrap to two lines instead of forcing a 55px nowrap column each. 'Lower A' over
+   two lines is still the tab label he knows; 'LA' would be a second vocabulary for the same four
+   days. Overrides .plan-table th's nowrap, which is right for a distance and wrong for a name. */
+.training .vol-table th.vol-day { white-space: normal; min-width: 3.4rem; }
+/* The source line under the tables. Smaller than a cue and it WRAPS: the first version reused
+   .quiet-inline, whose nowrap is right for a date beside a number and ran the journal name off the
+   right edge of a 390px screen. */
+.training .vol-cite { font-size: 11.5px; line-height: 1.55; }

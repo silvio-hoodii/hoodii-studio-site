@@ -49,6 +49,21 @@ const GATES = [
    * directory ten times, which belongs in the thing a person types before pushing, not in the
    * deploy path. The pre-push hook runs this file, so it executes on every push either way. */
   ['gym-validator-tests', process.execPath, ['content/gym/validate.test.mjs']],
+  /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
+   *
+   * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which
+   * is the same enforcement the em dash rule had for four months while being violated constantly.
+   * Neither is in `pnpm build`: they read content/gym and nothing else, they take under a second,
+   * and they answer questions about the PROGRAMME rather than about the code, so failing a deploy
+   * on them would block an unrelated push. Failing a push is exactly right.
+   *
+   * gym-coverage could not be here until today, because it exited 1 on every run by design. It
+   * compares against content/gym/coverage-baseline.json now, so its exit code carries information.
+   *
+   * Still NOT here: scripts/check-ladder.mjs. It reads his real working weights out of Neon, so it
+   * cannot run offline and it can go red with no file edited. The 07:15 sync task runs that one. */
+  ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
+  ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];
 if (probeAt) GATES.push(['probe', process.execPath, ['scripts/probe-kitchen.mjs', probeAt]]);
 

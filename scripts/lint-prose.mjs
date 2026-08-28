@@ -43,6 +43,50 @@ const EXT = /\.(tsx?|jsx?|mjs|cjs|css|md|json|sql|html)$/;
 
 const EM = '\u2014';   // from escapes, so this detector cannot trip over itself
 const EN = '\u2013';
+
+/* INVISIBLE CHARACTERS, added 2026-08-27. A separate class from the dashes and a worse one, because
+ * a dash at least renders.
+ *
+ * On 2026-08-27 two BACKSPACE characters (0x08) were baked into a regex by a bad escape, so
+ * `/friday/i` could never match "Friday" and every cross-reference in that pass read as stale. The
+ * repo's whole gate suite passed with them in place: typecheck, lint, build, the validator, the
+ * validator's own regression suite and the probe. Nothing greps for a byte it cannot see, and no
+ * human review catches a character that occupies no width on screen.
+ *
+ * Same shape as the em dash rule one paragraph up: it is not that people are careless, it is that
+ * the check has to exist somewhere other than in someone's attention.
+ *
+ * WHAT IS FLAGGED. Every C0 control character except tab (0x00 to 0x1F, tab excluded; LF and CR are
+ * already gone, the file was split on them), DEL (0x7F), and the three invisibles that read as a
+ * space and are not one: no-break space, zero-width space, and a byte-order mark anywhere but the
+ * very start of a file. Reported by code point, because "there is an invisible character on line 44"
+ * is unactionable and "U+0008 at column 12" is a fix.
+ *
+ * NOT flagged: any other Unicode. Accented letters, the degree sign and the multiplication sign all
+ * appear legitimately in this repo's content, and a rule that fires on those would be turned off. */
+const INVISIBLE = {
+  '\u00a0': 'U+00A0 no-break space',
+  '\u200b': 'U+200B zero-width space',
+  '\ufeff': 'U+FEFF byte-order mark',
+};
+/* Written as escapes, exactly like EM and EN above, so this detector does not contain the thing it
+ * detects and cannot report itself. */
+function invisibleHits(line, isFirstLine) {
+  const hits = [];
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    const code = line.charCodeAt(i);
+    if (c === '\ufeff' && isFirstLine && i === 0) continue;   // a BOM at the top of a file is a BOM
+    if (c === '\t') continue;
+    const named = INVISIBLE[c];
+    if (named) { hits.push(`${named} at column ${i + 1}`); continue; }
+    if (code < 0x20 || code === 0x7f) {
+      hits.push(`U+${code.toString(16).toUpperCase().padStart(4, '0')} control character at column ${i + 1}`);
+    }
+  }
+  return hits;
+}
+
 const bad = [];
 
 function walk(dir) {
@@ -78,6 +122,7 @@ function walk(dir) {
       if (line.includes(EM)) hits.push('U+2014 em dash');
       if (line.includes(EN)) hits.push('U+2013 en dash');
       if (/&mdash;|&#8212;|&ndash;|&#8211;/.test(line)) hits.push('em/en dash HTML entity');   // lint-prose-allow
+      hits.push(...invisibleHits(line, i === 0));
       if (hits.length) bad.push({ file: relative(ROOT, full), line: i + 1, what: hits.join(' + '), text: line.trim().slice(0, 100) });
     });
   }
@@ -94,9 +139,11 @@ for (const b of bad) {
 
 console.log('-'.repeat(70));
 if (bad.length) {
-  console.log(`${bad.length} lines contain a dash character that is not allowed in this repo.`);
-  console.log('Use a comma, a period, a colon, or parentheses. If the line exists to STRIP these');
-  console.log('characters, add the marker lint-prose-allow in a comment on that same line.');
+  console.log(`${bad.length} lines carry a character this repo does not allow.`);
+  console.log('For a dash: use a comma, a period, a colon, or parentheses. If the line exists to');
+  console.log('STRIP these characters, add the marker lint-prose-allow in a comment on that line.');
+  console.log('For an invisible character: it is almost always a bad escape or a paste from a web');
+  console.log('page. Delete it. Write it as \\uXXXX if a literal one is genuinely needed.');
   process.exit(1);
 }
-console.log('No em dashes, no en dashes, no dash entities.');
+console.log('No em dashes, no en dashes, no dash entities, no invisible characters.');

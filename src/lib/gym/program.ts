@@ -2,6 +2,7 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Program, WarmupItem, CooldownItem, Conditioning } from './types';
+import type { MovementCatalogue } from './coverage.mjs';
 
 export * from './program-shared';
 
@@ -53,6 +54,13 @@ export async function loadConditioning(): Promise<Conditioning> {
  * deliberate small copy: it is eight lines with no state, and the alternative was a lib/shared
  * module existing solely to hold it. */
 
+
+/** The movement catalogue: one entry per job, every way to do it in his gym, and which muscles each
+ *  way trains. `/health?s=volume` counts weekly sets off it, using the same computation the terminal
+ *  gate runs. See src/lib/gym/coverage.mts for why that computation lives outside both callers. */
+export async function loadMovements(): Promise<MovementCatalogue> {
+  return readJson<MovementCatalogue>('movements.json');
+}
 
 /** Every exercise name the gym can do, for the off-plan capture box's autocomplete. Read from the
  *  movement catalogue rather than typed, so a variant added there shows up here with no second

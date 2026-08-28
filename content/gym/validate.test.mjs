@@ -53,7 +53,10 @@ function assertAnchor(program, anchor, needs) {
 const SPAN_BLOCK = ['thursday', 'Hamstrings + Calves'];
 const OPEN_BLOCK = ['tuesday', 'Second Pattern: Vertical Pull'];
 
-/** @type {{name: string, mutate: (p: any) => void, expect: string | null}[]} */
+/** `file` names which content file the case mutates, and defaults to program.json. Added when the
+ *  validator learned a rule about movements.json: a suite that can only mutate one file can only
+ *  test the gates on one file, and the untested gate is the one that quietly matches nothing.
+ *  @type {{name: string, file?: string, mutate: (p: any) => void, expect: string | null}[]} */
 const CASES = [
   {
     name: 'unmodified programme passes',
@@ -141,6 +144,19 @@ const CASES = [
     },
     expect: 'non-empty array',
   },
+  {
+    /* The nine stale `inProgramme` flags of 2026-08-27, made unrepresentable. Deleting them from
+     * movements.json fixed the instances; this asserts the class cannot come back, which is the only
+     * part of that fix that survives the next author who wants a convenient boolean. */
+    name: 'a restated inProgramme flag in the catalogue is refused',
+    file: 'movements.json',
+    mutate: (cat) => {
+      const first = Object.values(cat.movements)[0];
+      if (!first?.variants?.length) throw new Error('movements.json has no variants to mutate');
+      first.variants[0].inProgramme = true;
+    },
+    expect: 'derived and must not be stored',
+  },
 ];
 
 let failed = 0;
@@ -148,14 +164,17 @@ for (const c of CASES) {
   const dir = mkdtempSync(join(tmpdir(), 'gymvalidate-'));
   try {
     cpSync(HERE, dir, { recursive: true });
-    const file = join(dir, 'program.json');
-    const program = JSON.parse(readFileSync(file, 'utf8'));
-    // Check the fixtures the cases rely on BEFORE mutating, so a stale anchor is a loud failure
-    // rather than five cases quietly passing against a lead lift.
+    // Check the fixtures the program cases rely on BEFORE mutating, so a stale anchor is a loud
+    // failure rather than five cases quietly passing against a lead lift. Done on every case,
+    // whichever file it edits: an anchor that has gone stale is news either way.
+    const program = JSON.parse(readFileSync(join(dir, 'program.json'), 'utf8'));
     assertAnchor(program, SPAN_BLOCK, 'whyHere');
     assertAnchor(program, OPEN_BLOCK, 'open');
-    c.mutate(program);
-    writeFileSync(file, JSON.stringify(program, null, 2));
+
+    const file = join(dir, c.file ?? 'program.json');
+    const doc = c.file ? JSON.parse(readFileSync(file, 'utf8')) : program;
+    c.mutate(doc);
+    writeFileSync(file, JSON.stringify(doc, null, 2));
 
     const run = spawnSync(process.execPath, [join(dir, 'validate.mjs')], { encoding: 'utf8' });
     const out = `${run.stdout || ''}${run.stderr || ''}`;

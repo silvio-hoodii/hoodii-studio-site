@@ -6,11 +6,13 @@ import {
   getSyncLiveness,
   getWatchComposition,
 } from '@/lib/health/db';
-import { loadConditioning, loadProgram } from '@/lib/gym/program';
+import { loadConditioning, loadProgram, loadMovements, splitName } from '@/lib/gym/program';
+import { computeCoverage } from '@/lib/gym/coverage.mts';
 import { getTrainingWeek } from '@/lib/gym/week';
 import { getRecentSessions } from '@/lib/gym/session';
 import { AdherenceStrip, LineChart } from './HealthCharts';
 import { RunStanding, RecoveryNotice, PlanWeek, ActualDays } from './Week';
+import Volume from './Volume';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
@@ -52,6 +54,11 @@ const TABS = [
    * things, which is the inverted hierarchy that made the blocks unreadable in August." */
   { id: 'weight', label: 'Weight' },
   { id: 'plan', label: 'Plan' },
+  /* 'Volume', added 2026-08-27, and it is the answer to a question he asked three times and got a
+   * document for three times: "how all those 4 days add up to volume within one period?" Its own
+   * tab rather than a block under Plan, because Plan is already four sections and the wall of text
+   * is the thing this whole redesign is undoing. Four chips measured at 390px, not estimated. */
+  { id: 'volume', label: 'Volume' },
 ] as const;
 
 function SubNav({ sub }: { sub: string }) {
@@ -95,6 +102,22 @@ export default async function HealthPage({
     ? await Promise.all([loadConditioning(), loadProgram()])
     : [null, null];
   const week = conditioning && program ? await getTrainingWeek(program, conditioning) : null;
+
+  /* THE VOLUME TAB READS TWO JSON FILES OFF DISK AND NOTHING ELSE. No Neon round trip, because this
+     is what the PROGRAMME asks of him rather than what he did, and the arithmetic is the same code
+     scripts/gym-coverage.mjs runs. Two implementations of one computation drift silently, and this
+     is a number he will quote back. */
+  const volume = sub === 'volume' ? await (async () => {
+    const [prog, movements] = await Promise.all([loadProgram(), loadMovements()]);
+    const coverage = computeCoverage(prog, movements);
+    return {
+      coverage,
+      dayLabels: coverage.dayOrder.map((k) => {
+        const d = prog.days[k as keyof typeof prog.days];
+        return d ? splitName(d) : k;
+      }),
+    };
+  })() : null;
   const recentLifts = sub === 'now' ? await getRecentSessions('strength', 10) : [];
   const lastLift = recentLifts[0] ?? null;
 
@@ -362,6 +385,10 @@ export default async function HealthPage({
             </div>
           )}
         </>
+      )}
+
+      {sub === 'volume' && volume && (
+        <Volume coverage={volume.coverage} dayLabels={volume.dayLabels} />
       )}
 
       {sub === 'plan' && week && conditioning && (

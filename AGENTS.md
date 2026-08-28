@@ -81,7 +81,7 @@ always lose to the thing that exists.
 | `/run` | Running. Three sub-tabs on the `?s=` idiom: Now (last session the watch saw), Plan (the ten-week walk-to-run build, belt settings in both units, the week table), How (cues). Source: `conditioning.json`, unchanged in the move | no writes |
 | `/bike` | Cycling. Same three sub-tabs. **The watch records a heart rate and nothing else on a bike**, so the page says so and the resistance levels get typed instead. Source: `conditioning.json` | via `/bike/api/ride` |
 | `/bike/api/ride` | One ride: date, minutes, the resistance level he finished EACH interval on, effort, note. Writes `bike_ride`. Four levels rather than one because `conditioning.json` already tells him to write down all four, and 1 to 20 is his dial. Shipped before the form, so its gates were built while somebody was looking | **cookie** |
-| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Weight (all 8 body-composition columns, not the 2 it drew before: the fat/lean split of every kilo lost, plus watch-only muscle and water), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen). Was a dead end nothing linked to and which linked to nothing | n/a |
+| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Weight (all 8 body-composition columns, not the 2 it drew before: the fat/lean split of every kilo lost, plus watch-only muscle and water), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen), Volume (weekly fractional sets per muscle with a column per day, per lift behind a tap, and the pairings that cost the lift in front of them). Volume is the one thing on this site that answers a question he asked three times and got a document for three times, so /gym carries a one-line link to it under the finish buttons. Was a dead end nothing linked to and which linked to nothing | n/a |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
@@ -539,7 +539,47 @@ harmless, and PSN is not surfaced on the hub.
   refuses to run rather than blaming the app, and `run-probe-gym.mjs` sets
   `Emulation.setFocusEmulationEnabled`. Verified both directions on one build: 5 failed without the
   flag, 0 with it.
-- **A pre-push hook now runs `node scripts/verify.mjs` and refuses a red tree.** `.githooks/pre-push`,
+- **`node scripts/gym-coverage.mjs` MEANS SOMETHING NOW, and it is in `verify.mjs`.** It exited 1
+  on every run until 2026-08-27 and the handoff that shipped it said so and called that correct:
+  11 of 16 muscles sit past the efficient zone and four exercises carry no source, all known. A
+  light that is always red is not a light, and it could not get redder, so pushing a muscle BELOW
+  its minimum dose would not have moved the exit code by one bit. It compares against
+  `content/gym/coverage-baseline.json` instead, a dated snapshot of the three states nobody argues
+  should be tolerated (a muscle under 4 fractional sets, a strict Zhang pairing, an unsourced
+  exercise). Past-efficient is printed, never gated. Every run also prints which muscles moved and
+  by how much since the baseline was stamped, which is how a pairing change gets quoted as a number
+  rather than as an intention. To accept a change: `node scripts/gym-coverage.mjs --accept`, which
+  REFUSES while a regression is present unless `--accept-regression` is also passed.
+- **The arithmetic behind it is `src/lib/gym/coverage.mts`, and `/health?s=volume` imports the same
+  file.** That page is the answer to a question he asked three times and got a document for three
+  times: "how all those 4 days add up to volume within one period?" The alternative was
+  reimplementing fractional sets in the page, which is two implementations of one computation, and
+  they drift while both keep printing plausible numbers. It is `.mts` so node runs it with no build
+  step; `tsconfig.json` carries `allowImportingTsExtensions` for it, because Turbopack resolves the
+  literal path and will not rewrite a `.mjs` specifier to `.mts`.
+- **`inProgramme` IS GONE FROM `movements.json` AND MAY NOT COME BACK.** All 103 variants carried
+  it and nine were already wrong the day the file shipped, because that morning's rebuild edited
+  `program.json` and never touched the flags. `gym-catalogue.mjs` derives the `*` marker now, and
+  `validate.mjs` fails the build on the key's return with a regression case behind it. Same disease
+  as the body-metrics and immigration copies: every copy of a fact is a fact that goes stale
+  silently.
+- **`--pairing` compares STATIONS, not zones.** It compared zones until 2026-08-27 and printed the
+  results under the word "station", which made it recommend the exact three swaps that had been
+  tried and reversed that same hour (cable lateral raise behind the seated row, cable curl behind
+  the pushdown, reverse pec deck behind the machine shoulder press). All three fail `validate.mjs`.
+  A tool that suggests work the gate will reject is worse than no tool: the suggestion is free and
+  the rejection arrives after the work is done.
+- **`scripts/lint-prose.mjs` also refuses invisible characters**, added 2026-08-27: every C0 control
+  character except tab, DEL, and no-break/zero-width space. Two BACKSPACE bytes baked into a regex
+  by a bad escape made `/friday/i` unable to match "Friday", and every gate in this repo passed with
+  them in place. Its first live finding was real and legitimate (the kitchen validator's own nbsp
+  stripper, now written as `\u00a0`).
+- **A pre-push hook now runs `node scripts/guard-live-session.mjs` and then `node scripts/verify.mjs`,
+  and refuses a red tree.** The first asks `gym_session` for a row with no `finished_at`: "he trains
+  off this app, do not deploy while he is mid-session" was the first warning in the 2026-08-27
+  handoff and was pure prose, because `verify.mjs` is offline by design and nothing executed it. It
+  exits 0 and says so on a machine with no database URL. `GYM_GUARD_OFF=1` overrides an abandoned
+  session. Both live in `.githooks/pre-push`,
   wired with `git config core.hooksPath .githooks`. 49 seconds: install, typecheck, lint, build, one
   GREEN or RED line whose exit code agrees with it. `verify.mjs` had existed for this since
   2026-08-17 and its own header called itself "the thing a person or an agent types before pushing";

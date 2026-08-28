@@ -44,22 +44,11 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@neondatabase/serverless';
+import { databaseUrl } from './lib/db-url.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 const QUIET = process.argv.includes('--quiet');
-
-function databaseUrl() {
-  for (const k of ['GYM_DATABASE_URL', 'HEALTH_DATABASE_URL', 'KITCHEN_DATABASE_URL', 'DATABASE_URL']) {
-    if (process.env[k]) return process.env[k];
-  }
-  try {
-    const env = readFileSync(join(ROOT, '.env.local'), 'utf8');
-    const m = /(?:GYM|HEALTH|KITCHEN)_DATABASE_URL\s*=\s*"?([^"\n\r]+)"?/.exec(env);
-    if (m) return m[1].trim();
-  } catch { /* no local env file */ }
-  return null;
-}
 
 const url = databaseUrl();
 if (!url) {

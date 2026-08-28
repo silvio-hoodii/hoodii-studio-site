@@ -10,6 +10,12 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    /* Lets a .mts file be imported by its real name. One module needs it: src/lib/gym/coverage.mts,
+       which node runs directly (type stripping, no build step) and Next bundles. TypeScript's usual
+       trick of writing the import as ".mjs" does not work here, because Turbopack resolves the
+       literal path and there is no coverage.mjs on disk. Legal only under noEmit, which is what this
+       config already is: nothing here emits JavaScript, tsc only checks it. */
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

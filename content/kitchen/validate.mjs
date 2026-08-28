@@ -35,7 +35,7 @@ const normQuote = (s) => String(s)
   .replace(/[‘’ʼ]/g, "'")
   .replace(/[“”]/g, '"')
   .replace(/[‐-―]/g, '-')
-  .replace(/ /g, ' ')
+  .replace(/\u00a0/g, ' ')
   .replace(/\s+/g, ' ')
   .trim()
   .toLowerCase();

@@ -34,8 +34,20 @@
     "  convention  standard practice, no trial. Most variant choices are honestly this.",
     "  unsourced   no basis at all, and it says so.",
     "",
-    "`inProgramme` is whether a variant is currently prescribed. `false` does NOT mean rejected; it",
-    "means available and unused, which is the whole point of listing it."
+    "WHETHER A VARIANT IS CURRENTLY PRESCRIBED IS NOT STORED HERE, AND MAY NOT BE. There was an",
+    "`inProgramme` boolean on all 103 variants until 2026-08-27. It was already wrong on nine of them",
+    "the day the file shipped: the same session's rebuild edited program.json and never touched the",
+    "flags, so db-rdl read false while being prescribed and pushup read true after being cut. Its only",
+    "consumer was the `*` marker in gym-catalogue.mjs --options, which is the very view the handoff",
+    "pointed the next agent at.",
+    "",
+    "This is the workspace's own stale-copy disease (body metrics 2026-08-01, immigration 2026-08-11)",
+    "reproduced inside one repo on day one: every copy of a fact is a fact that goes stale silently.",
+    "So the copy is deleted rather than corrected. program.json is the only place that says what is",
+    "prescribed, and gym-catalogue.mjs derives the marker from it at read time. content/gym/validate.mjs",
+    "refuses the key if anyone reintroduces it, because a comment saying 'do not add this back' does",
+    "not execute. `false` never meant rejected anyway: it meant available and unused, which is what a",
+    "variant's presence in this file already says."
   ],
   "muscles": {
     "quads": "Quadriceps",
@@ -77,8 +89,7 @@
           "implement": "barbell",
           "zone": "rack",
           "station": "rack",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "front-squat",
@@ -87,7 +98,6 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "inProgramme": true,
           "primary": [
             "quads"
           ],
@@ -104,8 +114,7 @@
           "implement": "smith",
           "zone": "smith",
           "station": "smith",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "heavy-goblet-squat",
@@ -114,7 +123,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "note": "Capped by what he can hold at the chest, so it ceilings well below a barbell squat."
         },
         {
@@ -124,7 +132,6 @@
           "zone": "machines",
           "station": "leg-press",
           "loadable": true,
-          "inProgramme": false,
           "primary": [
             "quads",
             "glutes"
@@ -156,8 +163,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "reverse-lunge",
@@ -166,7 +172,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "confidence": "unsourced",
           "note": "NO REASON RECORDED for having this AND the split squat. They train the same thing."
         },
@@ -176,8 +181,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "db-step-up",
@@ -185,8 +189,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "smith-split-squat",
@@ -195,7 +198,6 @@
           "zone": "smith",
           "station": "smith",
           "loadable": true,
-          "inProgramme": false,
           "note": "Removes the balance ceiling, so the legs limit the set instead of the balance."
         },
         {
@@ -204,8 +206,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "box-step-up-explosive",
@@ -213,8 +214,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": "box",
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         },
         {
           "id": "cossack-squat",
@@ -223,7 +223,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "primary": [
             "adductors",
             "quads"
@@ -239,8 +238,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "leg-press",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -264,8 +262,7 @@
           "implement": "barbell",
           "zone": "rack",
           "station": "rack",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "conventional-deadlift",
@@ -274,7 +271,6 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "inProgramme": false,
           "primary": [
             "hamstrings",
             "glutes",
@@ -294,7 +290,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "note": "Holds no fixture, so unlike the barbell RDL it can pair with anything. Ceilings at the heaviest pair of dumbbells he can hold."
         },
         {
@@ -303,8 +298,7 @@
           "implement": "smith",
           "zone": "smith",
           "station": "smith",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "good-morning",
@@ -313,7 +307,6 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "inProgramme": false,
           "note": "Logged 6 sets in May and June at up to 95 lb, then dropped with no reason recorded."
         },
         {
@@ -323,7 +316,6 @@
           "zone": "machines",
           "station": "back-extension",
           "loadable": true,
-          "inProgramme": false,
           "primary": [
             "glutes",
             "erectors"
@@ -343,7 +335,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "note": "Ballistic hinge. Trains the hinge fast rather than heavy, so it does not substitute for the RDL."
         }
       ]
@@ -367,7 +358,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "note": "Capped by balance rather than by the hamstrings, stuck at 40 lb, which is why it has never progressed."
         },
         {
@@ -377,7 +367,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "note": "The back toe stays down, which removes the balance ceiling that stalls the single-leg version."
         },
         {
@@ -386,8 +375,7 @@
           "implement": "kettlebell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -407,8 +395,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "leg-curl",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "stability-ball-ham-curl",
@@ -416,8 +403,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -437,8 +423,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "leg-extension",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -461,7 +446,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": true,
           "note": "NOT LOADABLE, so it can never progress. On all four days by accretion, never by a decision."
         },
         {
@@ -471,7 +455,6 @@
           "zone": "smith",
           "station": "smith",
           "loadable": true,
-          "inProgramme": false,
           "note": "The loadable version. The gym has no hip thrust machine; the Smith is the recorded workaround."
         },
         {
@@ -480,8 +463,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -505,7 +487,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "primary": [
             "adductors",
             "quads"
@@ -521,7 +502,6 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": false,
-          "inProgramme": true,
           "secondary": [
             "abs"
           ],
@@ -536,8 +516,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -558,7 +537,6 @@
           "zone": "machines",
           "station": "calf-raise",
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "machine-calf-raise"
           ]
@@ -570,7 +548,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "note": "Holds no fixture, so it can ride in any rest gap. The machine version cannot."
         },
         {
@@ -579,8 +556,7 @@
           "implement": "smith",
           "zone": "smith",
           "station": "smith",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "single-leg-calf-raise",
@@ -588,8 +564,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -612,7 +587,6 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true,
-          "inProgramme": true,
           "note": "At 75 lb dumbbells he presses 150 lb, against a 185 lb BARBELL bench he logged on 2026-05-25 before it was dropped with no reason recorded. This is the lift that has moved least."
         },
         {
@@ -622,7 +596,6 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "inProgramme": false,
           "note": "Logged 6 sets to 185 lb in May and early August, then dropped. Higher ceiling and a finer load step than the dumbbells.",
           "aliases": [
             "bench-press"
@@ -634,8 +607,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "chest-press",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "db-incline-press",
@@ -643,8 +615,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "smith-bench-press",
@@ -652,8 +623,7 @@
           "implement": "smith",
           "zone": "smith",
           "station": "smith",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "pushup",
@@ -662,7 +632,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": true,
           "confidence": "unsourced",
           "secondary": [
             "front-delts",
@@ -676,8 +645,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "assisted-dip",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "incline-pushup",
@@ -685,8 +653,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -706,8 +673,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "pec-deck",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "cable-fly",
@@ -715,8 +681,7 @@
           "implement": "cable",
           "zone": "cable",
           "station": "cable-adjustable",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -741,7 +706,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks."
         },
         {
@@ -750,8 +714,7 @@
           "implement": "machine",
           "zone": "machines",
           "station": "shoulder-press",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "db-seated-ohp",
@@ -760,7 +723,6 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true,
-          "inProgramme": false,
           "aliases": [
             "db-ohp-seated"
           ]
@@ -772,7 +734,6 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "inProgramme": false,
           "note": "Logged to 105 lb in May and June, then dropped. A barbell moves in 5 lb total, which is a 2.5 lb step per side against the dumbbells' 5 lb per hand.",
           "aliases": [
             "bb-ohp"
@@ -784,8 +745,7 @@
           "implement": "smith",
           "zone": "smith",
           "station": "smith",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "half-kneeling-sa-press",
@@ -794,7 +754,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "secondary": [
             "side-delts",
             "abs"
@@ -824,8 +783,7 @@
           "implement": "barbell",
           "zone": "rack",
           "station": "rack",
-          "loadable": true,
-          "inProgramme": true
+          "loadable": true
         },
         {
           "id": "seated-cable-row",
@@ -834,7 +792,6 @@
           "zone": "cable",
           "station": "cable-row",
           "loadable": true,
-          "inProgramme": true,
           "secondary": [
             "biceps",
             "rear-delts"
@@ -848,7 +805,6 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true,
-          "inProgramme": false,
           "secondary": [
             "biceps",
             "rear-delts"
@@ -861,8 +817,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "trx-row",
@@ -870,8 +825,7 @@
           "implement": "bodyweight",
           "zone": "rack",
           "station": "trx",
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -896,7 +850,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "lat-pulldown-alt"
           ]
@@ -908,7 +861,6 @@
           "zone": "machines",
           "station": "assisted-pullup",
           "loadable": true,
-          "inProgramme": true,
           "note": "Assistance moves in 10 lb steps off 40 lb, a 25% change, which is why it cannot reach its next rung."
         },
         {
@@ -917,8 +869,7 @@
           "implement": "bodyweight",
           "zone": "rack",
           "station": "rack-pullup-bar",
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         },
         {
           "id": "pullup-smith-bar",
@@ -927,7 +878,6 @@
           "zone": "smith",
           "station": "smith-pullup-bar",
           "loadable": false,
-          "inProgramme": false,
           "note": "Second bar in the gym. Listed so no station is unreachable, not because a second pull-up bar changes anything."
         }
       ]
@@ -949,7 +899,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "band-straight-arm-pulldown"
           ]
@@ -960,8 +909,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -984,7 +932,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "note": "Its 20 lb dumbbell steps 25% to the next weight, so it cannot progress."
         },
         {
@@ -994,7 +941,6 @@
           "zone": "cable",
           "station": "cable-adjustable",
           "loadable": true,
-          "inProgramme": false,
           "note": "2.5 lb steps, which fixes the unreachable-weight problem the dumbbell version has."
         },
         {
@@ -1004,7 +950,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": false,
           "note": "Logged 6 sets in May and June at up to 35 lb, then dropped."
         },
         {
@@ -1014,7 +959,6 @@
           "zone": "machines",
           "station": "pec-deck",
           "loadable": true,
-          "inProgramme": false,
           "aliases": [
             "pec-deck-rear-delt"
           ]
@@ -1025,8 +969,7 @@
           "implement": "band",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         },
         {
           "id": "chest-supported-reverse-fly",
@@ -1034,8 +977,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -1056,7 +998,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "note": "Stuck at a 25% load step from 20 lb to 25 lb.",
           "aliases": [
             "db-lateral-raise-seated",
@@ -1070,7 +1011,6 @@
           "zone": "cable",
           "station": "cable-adjustable",
           "loadable": true,
-          "inProgramme": false,
           "note": "2.5 lb steps. This is the fix for the unreachable next weight, per evidence file section 17."
         }
       ]
@@ -1094,7 +1034,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "hammer-curl"
           ]
@@ -1106,7 +1045,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": false,
           "aliases": [
             "db-curl-supinated"
           ]
@@ -1118,7 +1056,6 @@
           "zone": "cable",
           "station": "cable-row",
           "loadable": true,
-          "inProgramme": false,
           "note": "HIS OWN EXAMPLE, 2026-08-27: if the block before it is a straight-arm pulldown, this keeps him at the cable stack instead of walking to the dumbbells. 2.5 lb steps as well."
         },
         {
@@ -1128,7 +1065,6 @@
           "zone": "ezPreacher",
           "station": "preacher",
           "loadable": true,
-          "inProgramme": true,
           "note": "SHOULDER FLEXED, so the biceps work shortened. Genuinely different from a standing curl, and therefore the systematic kind of variation. MISPLACED though: he asked on 2026-08-15 for the EZ bar as a SWAP on the dumbbell curl card, and the next commit made it Friday's lead."
         },
         {
@@ -1138,7 +1074,6 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true,
-          "inProgramme": false,
           "note": "SHOULDER EXTENDED, so the biceps work lengthened. The genuine opposite of the preacher curl, and the one pairing of curls that is not redundant."
         },
         {
@@ -1147,8 +1082,7 @@
           "implement": "kettlebell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -1169,7 +1103,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": true,
           "note": "Shoulder neutral, long head SHORTENED. 2.5 lb steps.",
           "aliases": [
             "tricep-pushdown-alt"
@@ -1182,7 +1115,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "note": "Shoulder flexed, long head LENGTHENED, which is what makes this and the pushdown non-redundant. CAVEAT: the meta-analysis favouring longer muscle length studied quadriceps in five of eight trials and no triceps, so applying it here extrapolates across muscles.",
           "source": "Strey B, Irigoyen A, McMahon G, Pinto RS. Sport Sci Health. 2025;22(33):1-14. DOI 10.1007/s11332-025-01586-5. Eight studies, longer length ES 0.283 p=0.036. EXTRAPOLATED to triceps."
         },
@@ -1193,7 +1125,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": false,
           "note": "Same lengthened position as the dumbbell version, at the cable stack and in 2.5 lb steps."
         },
         {
@@ -1202,8 +1133,7 @@
           "implement": "ezbar",
           "zone": "ezPreacher",
           "station": "preacher",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         },
         {
           "id": "db-skullcrusher",
@@ -1211,8 +1141,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -1233,7 +1162,6 @@
           "zone": "cable",
           "station": "cable-adjustable",
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "pallof-press",
             "half-kneeling-pallof"
@@ -1245,8 +1173,7 @@
           "implement": "band",
           "zone": "rack",
           "station": "rack",
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         },
         {
           "id": "plank-shoulder-taps",
@@ -1255,7 +1182,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": true,
           "secondary": [
             "front-delts"
           ]
@@ -1266,8 +1192,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -1287,7 +1212,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": true,
           "note": "NOT LOADABLE. 9 sets a week, more than any main lift, and it sits in the rest gap of a bent-over row, which is already the largest trunk brace in the week."
         },
         {
@@ -1297,7 +1221,6 @@
           "zone": "rack",
           "station": "rack-pullup-bar",
           "loadable": false,
-          "inProgramme": false,
           "secondary": [
             "grip"
           ],
@@ -1310,7 +1233,6 @@
           "zone": "cable",
           "station": "cable-pulldown",
           "loadable": true,
-          "inProgramme": false,
           "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress."
         },
         {
@@ -1319,8 +1241,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -1344,7 +1265,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "aliases": [
             "db-hold"
           ]
@@ -1356,7 +1276,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "inProgramme": true,
           "primary": [
             "abs",
             "grip"
@@ -1376,8 +1295,7 @@
           "implement": "kettlebell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "inProgramme": false
+          "loadable": true
         }
       ]
     },
@@ -1401,7 +1319,6 @@
           "zone": "benchDb",
           "station": "box",
           "loadable": false,
-          "inProgramme": true,
           "note": "He has swapped to this from broad jump every single time, 20 sets since 2026-06-09. Lower-impact landing at his bodyweight because he steps down."
         },
         {
@@ -1411,7 +1328,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": false,
           "primary": [
             "calves"
           ],
@@ -1426,7 +1342,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": false,
           "note": "REMOVED as a default. He has swapped away from it every time and has said it does not fit a crowded commercial gym."
         }
       ]
@@ -1450,8 +1365,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": true
+          "loadable": false
         },
         {
           "id": "lateral-line-hop",
@@ -1459,8 +1373,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         }
       ]
     },
@@ -1481,7 +1394,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": false,
           "note": "Logged 12 sets to 2026-08-05, then removed."
         },
         {
@@ -1491,7 +1403,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "inProgramme": false,
           "note": "Currently in the WARM-UP, not the programme body."
         },
         {
@@ -1500,8 +1411,7 @@
           "implement": "band",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "inProgramme": false
+          "loadable": false
         },
         {
           "id": "cable-hip-abduction",
@@ -1510,7 +1420,6 @@
           "zone": "cable",
           "station": "cable-adjustable",
           "loadable": true,
-          "inProgramme": false,
           "note": "The only LOADABLE abduction option in the gym. The band versions cannot progress."
         }
       ]

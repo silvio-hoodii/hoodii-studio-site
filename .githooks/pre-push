@@ -20,6 +20,21 @@
 # --no-verify skips this. If you are reaching for it, the honest move is to say out loud what you
 # are skipping and why, because the next deploy after yours inherits it.
 
+# IS HE IN THE GYM RIGHT NOW. Added 2026-08-27.
+#
+# "He trains off this app. Do not deploy while he is mid-session" was the first warning in the
+# 2026-08-27 handoff and it was prose: verify.mjs is offline by design, so nothing executed it.
+# This asks gym_session for a row with no finished_at. It runs FIRST because it is one query and
+# the gate chain below is 49 seconds, and there is no point building a tree you must not push.
+#
+# It exits 0 and says so when there is no database URL on this machine, which is the same posture
+# check-ladder.mjs takes. GYM_GUARD_OFF=1 overrides it for an abandoned session.
+echo "pre-push: checking whether a workout is open right now"
+node scripts/guard-live-session.mjs
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
 echo "pre-push: running the full gate chain before this reaches main and deploys"
 node scripts/verify.mjs
 status=$?

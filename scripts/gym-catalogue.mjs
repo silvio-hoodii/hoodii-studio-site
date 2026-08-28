@@ -90,6 +90,14 @@ for (const [zid, z] of Object.entries(equip.zones)) {
 
 const prescribed = new Set();
 const days = program.days ?? program;
+
+/* WHETHER A VARIANT IS PRESCRIBED IS DERIVED, NEVER STORED. movements.json carried an
+ * `inProgramme` boolean until 2026-08-27 and nine of the 103 were already wrong on the day the file
+ * shipped, because that morning's rebuild edited program.json and left the flags behind. This
+ * function reads the one place that knows. Aliases count: program.json still names some slots by an
+ * older id that the catalogue resolves through `aliases`, and a variant reached that way is just as
+ * prescribed as one reached by its own id. */
+const isPrescribed = (v) => prescribed.has(v.id) || (v.aliases ?? []).some((a) => prescribed.has(a));
 const dayBlocks = [];
 for (const [dayKey, day] of Object.entries(days)) {
   if (!day?.blocks) continue;
@@ -113,7 +121,7 @@ if (mode === 'options') {
     for (const v of m.variants) (byZone[v.zone] ??= []).push(v);
     for (const [zone, vs] of Object.entries(byZone)) {
       const zname = equip.zones[zone]?.name ?? zone;
-      console.log(`    ${pad(zname, 30)} ${vs.map((v) => (v.inProgramme ? '*' : '') + v.name + (v.loadable ? '' : ' (no load)')).join(',  ')}`);
+      console.log(`    ${pad(zname, 30)} ${vs.map((v) => (isPrescribed(v) ? '*' : '') + v.name + (v.loadable ? '' : ' (no load)')).join(',  ')}`);
     }
   }
   console.log('');
@@ -122,36 +130,73 @@ if (mode === 'options') {
 
 /* ==================== PAIRING ==================== */
 
+/* THE FREE-PARTNER TEST, AND IT IS ABOUT STATIONS, NOT ZONES.
+ *
+ * From the handoff of 2026-08-27, learned by making the mistake:
+ *
+ *     A fill partner must EITHER hold no fixture at all, so he carries it to the lead lift,
+ *     OR hold the exact same fixture.
+ *
+ * SAME ZONE IS NOT SAME STATION, and this function compared zones until 2026-08-27. The cable
+ * section is one zone and three separate columns: the seated row holds the low pulley, a cable
+ * lateral raise needs the adjustable one, and nobody can do both in one rest gap. So the zone
+ * comparison called three impossible swaps free and PRINTED THEM UNDER THE WORD "station":
+ * cable lateral raise behind the seated row, cable curl behind the pushdown, reverse pec deck
+ * behind the machine shoulder press. All three were tried on 2026-08-27 and reversed within the
+ * hour, all three fail content/gym/validate.mjs today, and this tool was recommending them back.
+ *
+ * A tool that suggests work the gate will reject is worse than no tool: the suggestion is free and
+ * the rejection arrives after the work is done. Same rule as validate.mjs's one-station check, so
+ * the suggestion and the gate cannot disagree.
+ *
+ * ONE THING THIS DOES NOT CHECK: whether a partner needing the floor has floor in that zone.
+ * movements.json carries no `needsFloor`; program.json does, per slot, and validate.mjs checks it
+ * there. A candidate below can still be refused for that reason. */
+const holdsNothing = (v) => v.station === null || v.station === undefined;
+const stationName = (v) => (holdsNothing(v) ? 'no fixture' : (equip.zones[v.zone]?.stations?.[v.station]?.name ?? v.station));
+/* At most ONE fixture across the two, which is validate.mjs's own test verbatim: a lead that holds
+ * nothing leaves the partner free to hold something, and two exercises on the same bench occupy one
+ * bench. Anything stricter would refuse pairings the gate allows, which is the same disagreement in
+ * the other direction. */
+const ridesFree = (partner, lead) =>
+  partner.zone === lead.zone &&
+  (holdsNothing(partner) || holdsNothing(lead) || partner.station === lead.station);
+
 if (mode === 'pairing') {
   console.log('\nWHAT EACH PAIRED BLOCK COSTS IN WALKING');
-  console.log('A partner only rides free in the lead lift\'s rest gap if it is AT the lead lift.');
-  console.log('Where they differ, the catalogue is asked what else could do the partner\'s job on the spot.');
+  console.log('A partner rides free in the lead lift\'s rest gap only if it is in the same ZONE and');
+  console.log('either holds NO fixture (dumbbell, handheld band, bodyweight) or holds the lead\'s OWN');
+  console.log('fixture. Same zone is not the same station: the cable section is three columns.');
+  console.log('Where a partner fails that, the catalogue is asked what else could do its job on the spot.');
   rule('=');
   let splits = 0;
   for (const b of dayBlocks) {
     if (b.exercises.length < 2) continue;
     const lead = byId.get(b.exercises[0].id);
     if (!lead) continue;
+    const leadWhere = `${equip.zones[lead.zone]?.name ?? lead.zone} / ${stationName(lead)}`;
     for (const ex of b.exercises.slice(1)) {
       const p = byId.get(ex.id);
       if (!p) continue;
-      const sameSpot = p.zone === lead.zone;
-      if (sameSpot) continue;
+      if (ridesFree(p, lead)) continue;
       splits++;
+      const why = p.zone !== lead.zone ? 'different zone, a walk every set'
+                                       : 'same zone, but a second fixture he cannot also hold';
       console.log(`\n  ${b.day}  ${b.label}`);
-      console.log(`    lead    ${pad(lead.name, 30)} at ${equip.zones[lead.zone]?.name ?? lead.zone}`);
-      console.log(`    partner ${pad(p.name, 30)} at ${equip.zones[p.zone]?.name ?? p.zone}   <-- different place`);
+      console.log(`    lead    ${pad(lead.name, 30)} at ${leadWhere}`);
+      console.log(`    partner ${pad(p.name, 30)} at ${equip.zones[p.zone]?.name ?? p.zone} / ${stationName(p)}`);
+      console.log(`            ${why}`);
       const here = cat.movements[p.movement].variants
         .map((v) => ({ ...v, primary: v.primary ?? cat.movements[p.movement].primary }))
-        .filter((v) => v.zone === lead.zone && v.id !== p.id);
+        .filter((v) => v.id !== p.id && ridesFree(v, lead));
       if (here.length) {
-        console.log(`    same job at the lead's station: ${here.map((v) => v.name + (v.loadable ? '' : ' (no load)')).join(',  ')}`);
+        console.log(`    same job WITHOUT leaving the lead: ${here.map((v) => v.name + (v.loadable ? '' : ' (no load)')).join(',  ')}`);
       } else {
-        console.log(`    same job at the lead's station: NONE in the catalogue.`);
+        console.log(`    same job WITHOUT leaving the lead: NONE in the catalogue.`);
       }
     }
   }
-  console.log(`\n${splits} paired block(s) send him to a second station mid-block.`);
+  console.log(`\n${splits} paired block(s) cost him a walk or a second fixture mid-block.`);
   console.log('');
   process.exit(0);
 }
@@ -176,7 +221,7 @@ for (const s of unreached) {
 /* 2. stations in the catalogue that nothing prescribes */
 console.log('\n2. STATIONS THE CATALOGUE REACHES BUT THE PROGRAMME NEVER VISITS\n');
 const usedInProgramme = new Set(
-  variants.filter((v) => prescribed.has(v.id) && v.station).map((v) => `${v.zone}/${v.station}`));
+  variants.filter((v) => isPrescribed(v) && v.station).map((v) => `${v.zone}/${v.station}`));
 const idle = stations.filter((s) => reached.has(`${s.zone}/${s.station}`) && !usedInProgramme.has(`${s.zone}/${s.station}`));
 if (!idle.length) console.log('   none.');
 for (const s of idle) {
@@ -190,7 +235,7 @@ console.log('   A muscle trained only by bodyweight work can never be progressed
 console.log('');
 let gaps = 0;
 for (const [mus, label] of Object.entries(cat.muscles)) {
-  const inProg = variants.filter((v) => prescribed.has(v.id) && v.primary.includes(mus));
+  const inProg = variants.filter((v) => isPrescribed(v) && v.primary.includes(mus));
   const loadableInProg = inProg.filter((v) => v.loadable);
   if (inProg.length && !loadableInProg.length) {
     gaps++;
@@ -210,7 +255,7 @@ for (const [mid, m] of Object.entries(cat.movements)) {
   const cells = zoneKeys.map((z) => {
     const vs = m.variants.filter((v) => v.zone === z);
     if (!vs.length) return pad('.', 10);
-    return pad(vs.some((v) => prescribed.has(v.id)) ? `${vs.length} *` : String(vs.length), 10);
+    return pad(vs.some((v) => isPrescribed(v)) ? `${vs.length} *` : String(vs.length), 10);
   });
   console.log('   ' + pad(m.name.length > 27 ? m.name.slice(0, 26) + '…' : m.name, 28) + cells.join(''));
 }
