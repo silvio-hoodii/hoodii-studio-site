@@ -45,6 +45,7 @@ const equip = read('content/gym/equipment.json');
 
 const mode = process.argv.includes('--options') ? 'options'
            : process.argv.includes('--pairing') ? 'pairing'
+           : process.argv.includes('--fill') ? 'fill'
            : 'audit';
 
 const pad = (s, n) => String(s).padEnd(n);
@@ -149,6 +150,18 @@ if (mode === 'options') {
  * the rejection arrives after the work is done. Same rule as validate.mjs's one-station check, so
  * the suggestion and the gate cannot disagree.
  *
+ * AND IT READS THE SLOT, NOT THE CATALOGUE, FOR WHAT IS ALREADY PRESCRIBED. Second correction the
+ * same day. A dumbbell holds no fixture, so it is CARRIED to whatever lift it partners: the
+ * catalogue files every dumbbell variant under `benchDb` because that is where the rack of them
+ * lives, and program.json records the zone he actually stands in. Comparing catalogue zones called
+ * three legal blocks a walk (lateral raise behind the seated row, hammer curl behind the pushdown,
+ * reverse fly behind the machine press) when the whole point of choosing a dumbbell there was that
+ * it travels. content/gym/validate.mjs compares slot zones and passes all three, so this now agrees
+ * with the gate in both directions.
+ *
+ * The catalogue is still the authority for CANDIDATES, which is the one question it can answer:
+ * what else could do this partner's job, and where does that thing stand.
+ *
  * ONE THING THIS DOES NOT CHECK: whether a partner needing the floor has floor in that zone.
  * movements.json carries no `needsFloor`; program.json does, per slot, and validate.mjs checks it
  * there. A candidate below can still be refused for that reason. */
@@ -170,25 +183,42 @@ if (mode === 'pairing') {
   console.log('Where a partner fails that, the catalogue is asked what else could do its job on the spot.');
   rule('=');
   let splits = 0;
+  let sequences = 0;
   for (const b of dayBlocks) {
     if (b.exercises.length < 2) continue;
-    const lead = byId.get(b.exercises[0].id);
+    /* A `sequence` BLOCK IS NOT A WALK, IT IS TWO EXERCISES DONE IN TURN, and content/gym/validate.mjs
+     * exempts it from the one-station rule for exactly that reason: you finish the first and walk
+     * away before starting the second, so occupying two fixtures one after the other is fine.
+     * Reporting them here as blocks that "cost him a walk" was a false finding on two of the five,
+     * and both of them are the calf raise, whose Monday block says in its own `why` that it follows
+     * rather than alternating. A tool that reports a cost the programme deliberately chose teaches
+     * the reader to discount the other three. */
+    if (b.pairing === 'sequence') { sequences++; continue; }
+    const leadSlot = b.exercises[0];
+    const lead = byId.get(leadSlot.id);
     if (!lead) continue;
-    const leadWhere = `${equip.zones[lead.zone]?.name ?? lead.zone} / ${stationName(lead)}`;
+    // Where he actually stands for the lead lift, which for a travelling implement is the slot's
+    // answer and not the catalogue's. `where` is the placement; `lead` stays the catalogue entry
+    // because only it knows the movement and the muscles.
+    const leadAt = { zone: leadSlot.zone, station: leadSlot.station ?? null };
+    const leadWhere = `${equip.zones[leadAt.zone]?.name ?? leadAt.zone} / ${stationName(leadAt)}`;
     for (const ex of b.exercises.slice(1)) {
       const p = byId.get(ex.id);
       if (!p) continue;
-      if (ridesFree(p, lead)) continue;
+      const pAt = { zone: ex.zone, station: ex.station ?? null };
+      if (ridesFree(pAt, leadAt)) continue;
       splits++;
-      const why = p.zone !== lead.zone ? 'different zone, a walk every set'
-                                       : 'same zone, but a second fixture he cannot also hold';
+      const why = pAt.zone !== leadAt.zone ? 'different zone, a walk every set'
+                                           : 'same zone, but a second fixture he cannot also hold';
       console.log(`\n  ${b.day}  ${b.label}`);
       console.log(`    lead    ${pad(lead.name, 30)} at ${leadWhere}`);
-      console.log(`    partner ${pad(p.name, 30)} at ${equip.zones[p.zone]?.name ?? p.zone} / ${stationName(p)}`);
+      console.log(`    partner ${pad(p.name, 30)} at ${equip.zones[pAt.zone]?.name ?? pAt.zone} / ${stationName(pAt)}`);
       console.log(`            ${why}`);
+      /* A candidate that holds NOTHING travels to the lead wherever the lead is, so it is judged at
+         the lead's own zone rather than at the one the catalogue files it under. */
       const here = cat.movements[p.movement].variants
         .map((v) => ({ ...v, primary: v.primary ?? cat.movements[p.movement].primary }))
-        .filter((v) => v.id !== p.id && ridesFree(v, lead));
+        .filter((v) => v.id !== p.id && ridesFree(holdsNothing(v) ? { zone: leadAt.zone, station: null } : v, leadAt));
       if (here.length) {
         console.log(`    same job WITHOUT leaving the lead: ${here.map((v) => v.name + (v.loadable ? '' : ' (no load)')).join(',  ')}`);
       } else {
@@ -197,6 +227,142 @@ if (mode === 'pairing') {
     }
   }
   console.log(`\n${splits} paired block(s) cost him a walk or a second fixture mid-block.`);
+  console.log(`${sequences} block(s) skipped: they are "sequence", where doing one then the other is the point.`);
+  console.log('');
+  process.exit(0);
+}
+
+/* ==================== FILL ==================== */
+
+/* WHAT COULD RIDE IN A LEAD LIFT'S REST, FOR THE LEADS THAT HAVE NOTHING IN IT.
+ *
+ * --pairing answers "does an existing pair cost a walk", and as of 2026-08-27 the answer is none:
+ * every pair in the week is already legal. That is not the complaint. The complaint is:
+ *
+ *   "I have all this time between the sets on the 2, 3, and 4 lifts that I'm just resting. The whole
+ *    thing was supposed to save time."
+ *
+ * The 2026-08-27 rebuild applied "a partner may not share a muscle with the lead" by DELETING
+ * partners rather than replacing them, so ten blocks are a single lift with three minutes of rest
+ * between sets, while the accessories with forty-five-second rests kept theirs. Exactly backwards.
+ * --pairing could not see that at all: a block of one has nothing to compare.
+ *
+ * THREE FILTERS, AND EVERY ONE OF THEM IS A RULE THAT ALREADY EXISTS SOMEWHERE ELSE:
+ *
+ *   rides free    same zone as the lead, and holds either no fixture or the lead's own. Identical
+ *                 to content/gym/validate.mjs's one-station rule, so nothing suggested here can
+ *                 fail the build.
+ *   no overlap    no shared PRIMARY muscle with the lead. Zhang 2025, the rule that replaced
+ *                 "every block is a pair" and made a block of one legal in the first place.
+ *   with a price  every candidate carries what it would do to the week's volume, because the answer
+ *                 to "what can go here" is worthless without it: abdominals are already at 16
+ *                 fractional sets against an efficient zone that tops out at 10.
+ *
+ * The last one is why this imports src/lib/gym/coverage.mts rather than counting sets itself.
+ *
+ * IT PROPOSES, IT DOES NOT CHOOSE. Which partner goes where is his call, and the two things this
+ * cannot know are whether he wants the extra volume and whether the cue would be followable.
+ */
+if (mode === 'fill') {
+  const { computeCoverage } = await import('../src/lib/gym/coverage.mts');
+  const coverage = computeCoverage(program, cat);
+  const setsFor = new Map(coverage.perMuscle.map((m) => [m.muscle, m.sets]));
+  const SHOW = 8;
+
+  /* WHERE an exercise already sits, WITH THE REST IT IS SITTING IN, because that rest is the whole
+     argument. His complaint is not that the week is short of exercises, it is that the three-minute
+     rests are empty while the forty-five-second ones are full:
+
+       "I have all this time between the sets on the 2, 3, and 4 lifts that I'm just resting."
+
+     So a move is only worth making in one direction, from a short rest into a long one, and a line
+     that does not print both numbers cannot be read as a decision. It also records whether the
+     block it would leave becomes a single lift, which is the cost side of the same move. */
+  const prescribedAt = new Map();
+  for (const b of dayBlocks) {
+    for (const e of b.exercises) {
+      if (prescribedAt.has(e.id)) continue;
+      prescribedAt.set(e.id, { day: b.day, label: b.label, rest: e.rest, leavesSolo: b.exercises.length === 2 });
+    }
+  }
+
+  console.log('\nWHAT COULD RIDE IN THE REST OF A LIFT THAT HAS NOTHING IN IT');
+  console.log('Filters: rides free at the lead (validate.mjs\'s own one-station rule), shares no main');
+  console.log('muscle with the lead (Zhang 2025), and every option priced in weekly sets.');
+  console.log('"in the week" = already prescribed somewhere, so using it here MOVES work instead of');
+  console.log('adding it. That is the only kind of fill that costs nothing.');
+  rule('=');
+
+  const soloBlocks = dayBlocks.filter((b) => b.exercises.length === 1);
+  for (const b of soloBlocks) {
+    const slot = b.exercises[0];
+    const lead = byId.get(slot.id);
+    if (!lead) continue;
+    const leadAt = { zone: slot.zone, station: slot.station ?? null };
+    const leadPrimary = new Set(lead.primary);
+
+    /* The role is printed because it changes the answer. A `primer` is pinned first and done fresh
+       (Deng 2024, quoted in content/gym/validate.mjs's zone-order rule), so filling its rest with
+       fatiguing work is a different proposition from filling a main lift's three minutes. This tool
+       does not decide that; it declines to hide it. */
+    console.log(`\n  ${b.day}  ${b.label}   [${b.role}]`);
+    console.log(`    lead    ${pad(lead.name, 30)} ${slot.sets} x ${slot.reps}, rest ${slot.rest}`);
+    console.log(`            at ${equip.zones[leadAt.zone]?.name ?? leadAt.zone} / ${stationName(leadAt)}`);
+    console.log(`            trains ${lead.primary.map((x) => cat.muscles[x]).join(', ')}`);
+
+    const options = variants
+      .filter((v) => v.id !== lead.id)
+      .filter((v) => ridesFree(holdsNothing(v) ? { zone: leadAt.zone, station: null } : v, leadAt))
+      .filter((v) => !v.primary.some((m) => leadPrimary.has(m)))
+      .map((v) => {
+        const where = prescribedAt.get(v.id) ?? (v.aliases ?? []).map((a) => prescribedAt.get(a)).find(Boolean);
+        return {
+          v,
+          where,
+          /* THE PRICE OF AN OPTION ALREADY IN THE WEEK IS ZERO, and the first version of this
+             printed the ADD price for those too. Moving three sets of dead bug out of Tuesday and
+             into this rest window does not create three sets; it relocates them. Printing "abs 16
+             to 19" next to a move is a false number, and a false number beside a real one is worse
+             than no report. Priced at the lead's own set count, because a partner runs one set per
+             set of the lead, and reported per muscle rather than summed: separate denominators. */
+          price: where ? null : v.primary.map((m) => {
+            const now = setsFor.get(m) ?? 0;
+            return { m, now, then: now + Number(slot.sets || 0) };
+          }),
+          /* How much room its worst-served muscle has left before the efficient zone runs out.
+             Negative means it is already past 10, which is where 11 of 16 muscles sit. */
+          headroom: Math.min(...v.primary.map((m) => 10 - (setsFor.get(m) ?? 0))),
+        };
+      })
+      /* Already in the week first: those move work rather than adding it, and are the only option
+         that does not have to argue with the volume numbers at all. Then whichever adds to the
+         muscle with the most room left. */
+      .sort((a, x) => Number(Boolean(x.where)) - Number(Boolean(a.where))
+        || x.headroom - a.headroom
+        || a.v.name.localeCompare(x.v.name));
+
+    if (!options.length) {
+      console.log('    nothing in the catalogue rides free here without sharing a muscle.');
+      continue;
+    }
+    /* CAPPED, and the cap is the point. Twenty-four options is not a decision, it is a wall, and a
+       wall is what note #12 is about. The sort puts the ones worth reading first. */
+    for (const o of options.slice(0, SHOW)) {
+      const price = o.where
+        ? `move from ${o.where.day} ${o.where.label}, rest ${o.where.rest} to ${slot.rest}` +
+          (o.where.leavesSolo ? ', leaves that block solo' : '')
+        : o.price.map((p) => `${cat.muscles[p.m] ?? p.m} ${p.now} to ${p.then}${p.then > 10 ? ' PAST 10' : ''}`).join(', ');
+      console.log(`      ${o.where ? '*' : ' '} ${pad(o.v.name, 28)} ${o.v.loadable ? '        ' : 'no load '}${price}`);
+    }
+    if (options.length > SHOW) {
+      console.log(`        ... and ${options.length - SHOW} more that ride free here, all of them adding sets to a muscle already past 10.`);
+    }
+  }
+
+  console.log(`\n${soloBlocks.length} block(s) are a single lift with nobody in the rest.`);
+  console.log('* = already in the week, so it MOVES rather than adds. Read the two rests: a move out');
+  console.log('of a 45s rest into a 3 min rest is the whole point. Anything without a star ADDS the');
+  console.log('sets shown, to a muscle whose current count is printed beside it.');
   console.log('');
   process.exit(0);
 }

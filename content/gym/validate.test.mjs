@@ -32,6 +32,21 @@ const blockBy = (program, day, label) => {
 };
 const partnerOf = (block) => block.exercises[block.exercises.length - 1];
 
+/** The real movement catalogue, flattened by id and alias, so a case can ask "does the catalogue put
+ *  this at a fixture?" instead of naming an exercise that a rebuild may move. Read from the repo
+ *  rather than from the temp copy: the cases that use it mutate program.json, never this. */
+const CATALOGUE = () => {
+  const cat = JSON.parse(readFileSync(join(HERE, 'movements.json'), 'utf8'));
+  const out = {};
+  for (const m of Object.values(cat.movements)) {
+    for (const v of m.variants) {
+      out[v.id] = v;
+      for (const a of v.aliases ?? []) out[a] = v;
+    }
+  }
+  return out;
+};
+
 /* A fixture that no longer holds what a case needs must stop the run, not skip it. */
 function assertAnchor(program, anchor, needs) {
   const b = blockBy(program, ...anchor);
@@ -143,6 +158,51 @@ const CASES = [
       partnerOf(blockBy(p, ...OPEN_BLOCK)).open = [];
     },
     expect: 'non-empty array',
+  },
+  {
+    /* THURSDAY'S CALF RAISE, in one line. It carried `station: null` while movements.json correctly
+     * placed it on the calf machine, and that null was the only reason a leg-curl-machine plus
+     * calf-machine block passed the one-station rule. The block passed because the data lied.
+     *
+     * Found generically rather than by name: any exercise the catalogue puts at a fixture will do,
+     * so this case does not go stale the way a hardcoded block label does. */
+    name: 'a slot that hides its fixture with station null is refused',
+    mutate: (p) => {
+      const cat = CATALOGUE();
+      for (const d of Object.values(p.days)) {
+        for (const b of d.blocks || []) {
+          for (const e of b.exercises) {
+            if (cat[e.id] && cat[e.id].station != null && e.station != null) {
+              e.station = null;
+              return;
+            }
+          }
+        }
+      }
+      throw new Error('no exercise in the programme holds a fixture; repoint this case');
+    },
+    expect: 'movements.json says',
+  },
+  {
+    name: 'a slot that invents a fixture the catalogue does not know is refused',
+    mutate: (p) => {
+      const cat = CATALOGUE();
+      for (const d of Object.values(p.days)) {
+        for (const b of d.blocks || []) {
+          for (const e of b.exercises) {
+            if (cat[e.id] && cat[e.id].station == null && e.station == null) {
+              /* `bench` rather than an invented name, because an unknown station is already refused
+                 by the equipment check one branch earlier and would test that instead of this. */
+              e.station = 'bench';
+              e.zone = 'benchDb';
+              return;
+            }
+          }
+        }
+      }
+      throw new Error('no exercise in the programme holds nothing; repoint this case');
+    },
+    expect: 'holds no fixture',
   },
   {
     /* The nine stale `inProgramme` flags of 2026-08-27, made unrepresentable. Deleting them from

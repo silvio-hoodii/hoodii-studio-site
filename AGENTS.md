@@ -563,7 +563,34 @@ harmless, and PSN is not surfaced on the hub.
   `validate.mjs` fails the build on the key's return with a regression case behind it. Same disease
   as the body-metrics and immigration copies: every copy of a fact is a fact that goes stale
   silently.
-- **`--pairing` compares STATIONS, not zones.** It compared zones until 2026-08-27 and printed the
+- **A SLOT MAY NOT DISAGREE WITH THE CATALOGUE ABOUT WHERE IT IS DONE.** Until 2026-08-27 nothing
+  compared `program.json`'s per-slot zone and station against `movements.json`, so any slot could
+  claim any placement. Four disagreed. One was load-bearing: Thursday's calf raise carried
+  `station: null` while the catalogue correctly put it on the calf machine, and that null was the
+  only reason a leg-curl-machine plus calf-machine block passed the one-station rule. **The block
+  passed because the data lied.** The rule is derived rather than a new field: a catalogue station
+  means the slot must name it in that zone, and a null station means the slot must be null too while
+  its ZONE is free, because a thing that holds no fixture is carried to whatever lift it partners.
+  That last clause is the old unmodelled "traveling dumbbell" convention, now executable. Two
+  regression cases cover it.
+- **AN ALIAS MEANS THE SAME JOB, NOT THE SAME FIXTURE.** Three alts were aliased onto a variant that
+  stands somewhere else: a seated lateral raise holds the bench, a side plank is on the floor where
+  the Copenhagen it pointed at holds the bench, and a banded straight-arm pulldown anchors to a rack
+  post while the cable version is at the high pulley across the gym. All three are their own
+  variants now. If the placement gate fires on an alias, the answer is a new variant, never a
+  changed slot.
+- **`node scripts/gym-catalogue.mjs --fill` is the tool for the partners work**, and `--pairing` is
+  not. `--pairing` asks whether an existing pair costs a walk, and as of 2026-08-27 the answer is
+  none: every pair in the week is already legal. His complaint is the other shape, ten blocks that
+  are a single lift with nobody in the rest, eight of them `main` lifts on two or three minutes.
+  `--fill` lists what could ride in each, filtered by the validator's own one-station rule and
+  Zhang's no-shared-muscle rule, **with the price attached**: an option already in the week shows
+  which block it would move out of and both rest lengths, because moving work from a 45s rest into a
+  3 min rest is the entire point; anything else shows what it would do to that muscle's weekly sets.
+  It imports `src/lib/gym/coverage.mts` rather than counting sets itself.
+- **`--pairing` compares STATIONS, not zones**, and reads the SLOT rather than the catalogue for
+  what is already prescribed. It also skips `sequence` blocks, which are two exercises done in turn
+  by definition. Each of those three was a batch of false findings. It compared zones until 2026-08-27 and printed the
   results under the word "station", which made it recommend the exact three swaps that had been
   tried and reversed that same hour (cable lateral raise behind the seated row, cable curl behind
   the pushdown, reverse pec deck behind the machine shoulder press). All three fail `validate.mjs`.

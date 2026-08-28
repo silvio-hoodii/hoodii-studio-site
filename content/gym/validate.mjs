@@ -170,7 +170,10 @@ function checkPlacement(where, item, kind) {
     fail(where, `${kind} "${item.id}" has zone "${item.zone}", which is not in equipment.json`);
     return;
   }
-  if (item.station === null || item.station === undefined) return;
+  if (item.station === null || item.station === undefined) {
+    checkAgainstCatalogue(where, item, kind);
+    return;
+  }
   const zoneOfStation = STATION_ZONE.get(item.station);
   if (!zoneOfStation) {
     fail(where, `${kind} "${item.id}" names station "${item.station}", which is not in equipment.json`);
@@ -178,6 +181,62 @@ function checkPlacement(where, item, kind) {
   }
   if (zoneOfStation !== item.zone) {
     fail(where, `${kind} "${item.id}" is in zone "${item.zone}" but station "${item.station}" lives in zone "${zoneOfStation}"`);
+  }
+  checkAgainstCatalogue(where, item, kind);
+}
+
+/* A SLOT MAY NOT DISAGREE WITH THE CATALOGUE ABOUT WHERE IT IS DONE. Added 2026-08-27.
+ *
+ * Until today nothing compared a slot's zone and station against the ones movements.json gives the
+ * same exercise, so any slot could claim any placement and pass every gate. Four disagreed, and one
+ * of them was load-bearing: Thursday's calf raise carried `station: null` while the catalogue
+ * correctly said it holds the calf machine, and that null is the only reason a leg-curl-machine
+ * plus calf-machine block passed the one-station rule. Two selectorised machines in one rest window
+ * is the exact arrangement he rejected in August ("you're saying on the fore exercise I should use
+ * two machines"). The block passed BECAUSE THE DATA LIED, which is the worst direction per
+ * equipment.json's own safe-defaults rule: a false "you can do this here" sends him to a fixture
+ * somebody else is using.
+ *
+ * THE RULE IS DERIVED, NOT A NEW FIELD. An earlier plan added `travels: true` to implement-carried
+ * variants. It was not needed: `station: null` ALREADY means "occupies nothing another member could
+ * want", which is exactly what makes a thing portable. So:
+ *
+ *   station in the catalogue    the slot must name that station, in that zone. A fixture is
+ *                               somewhere. It cannot be somewhere else on Thursday.
+ *   station null                the slot must be null too, and its ZONE is free: a dumbbell is
+ *                               carried to whatever lift it partners, which is the whole reason
+ *                               dumbbells and kettlebells live under `portable` in equipment.json
+ *                               rather than under a zone.
+ *
+ * That last line is what the unmodelled "traveling dumbbell" convention was: three slots claimed
+ * zone `cable` or `machines` for a dumbbell the catalogue files under `benchDb`, and they were
+ * right to. Now it is a rule instead of a habit.
+ *
+ * AN ALIAS MAY NOT CARRY A DIFFERENT PLACEMENT, and that is not an extra rule, it falls out of this
+ * one. An alias means "the same job by another name". Three alts were aliased onto a variant that
+ * stands somewhere else entirely: a SEATED lateral raise holds the bench, a side plank is on the
+ * floor where the Copenhagen it pointed at holds the bench, and a banded straight-arm pulldown
+ * anchors to a rack post while the cable version is at the high pulley across the gym. Those are
+ * different fixtures, which is the one thing an alias cannot express, so all three are their own
+ * variants now. If this check fires on an alias, the answer is a new variant, never a changed slot.
+ */
+function checkAgainstCatalogue(where, item, kind) {
+  if (!MOVEMENTS) return;                       // absent catalogue is reported at its own call site
+  const v = MOVEMENTS[item.id];
+  if (!v) return;                               // unknown ids are the shared-muscle rule's business
+  const catStation = v.station ?? null;
+  const slotStation = item.station ?? null;
+  if (catStation === null) {
+    if (slotStation !== null) {
+      fail(where, `${kind} "${item.id}" claims station "${slotStation}", but movements.json says it holds no fixture. One of the two is wrong, and a slot that claims a fixture the catalogue does not know about is how a block passes the one-station rule while being impossible to do. If this is genuinely a different way of doing it, at a different fixture, it is a new variant in movements.json rather than a placement typed into a slot.`);
+    }
+    return;                                     // it travels: the zone is the slot's to choose
+  }
+  if (slotStation !== catStation) {
+    fail(where, `${kind} "${item.id}" says station "${slotStation}", movements.json says "${catStation}". A fixture is in one place. Fix whichever is wrong, and if they are two different exercises, give the second one its own variant instead of an alias.`);
+  }
+  if (item.zone !== v.zone) {
+    fail(where, `${kind} "${item.id}" is in zone "${item.zone}" but movements.json places it in "${v.zone}". Only an exercise holding NO fixture may be carried into another zone.`);
   }
 }
 

@@ -1252,7 +1252,7 @@
         },
         {
           "role": "accessory",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Hamstrings + Calves",
           "tag": "(machine)",
           "exercises": [
@@ -1295,7 +1295,7 @@
               "reps": "12",
               "rest": "45s",
               "zone": "machines",
-              "station": null,
+              "station": "calf-raise",
               "log": true,
               "cue": "Done holding dumbbells at the machine bank, standing, so it needs no fixture of its own. Stand on the edge of a step or a plate if you have one, heels hanging. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
               "alts": [
