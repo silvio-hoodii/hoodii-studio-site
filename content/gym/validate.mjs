@@ -272,6 +272,81 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       fail(where, 'empty exercises[]');
       continue;
     }
+    /* A BLOCK'S `why` MAY NOT NAME AN EXERCISE THAT IS NOT IN THE BLOCK.
+     *
+     * Note #21, 2026-08-27, from the gym floor: "There's still old text in the why is here things."
+     * He was right, and it was twelve blocks. The 2026-08-27 rebuild removed the glute bridge, both
+     * pushup primers, two of three dead bugs, the plank taps and two of four reverse flys, and left
+     * every `why` still explaining why they were there. A reason that describes an exercise he
+     * cannot see is worse than no reason: it is the app telling him something false about the screen
+     * in front of him, which is the one thing this project cannot afford.
+     *
+     * THIS IS THE CLASS, NOT THE TWELVE INSTANCES. Any future edit that removes an exercise now
+     * fails the build unless the reasoning is updated in the same commit. That is the only reliable
+     * ordering, because the removal and the prose live in different parts of the file and nobody has
+     * ever remembered to do both.
+     *
+     * Matching is on the catalogue's own names, lowercased, longest first so "single-leg glute
+     * bridge" is checked before "glute bridge". A name that also appears in the block is fine: the
+     * rule is about ABSENT exercises only. */
+    if (block.why && MOVEMENTS) {
+      /* Two refinements, both found by running the first version against the real file.
+       *
+       * ALIASES. The catalogue name is "DB Reverse Fly" but the prose says "the reverse fly", so
+       * matching whole names alone missed five of the twelve stale clauses. Every name is therefore
+       * also matched with its implement prefix stripped.
+       *
+       * CROSS-REFERENCES ARE LEGAL. "the assisted pull-up on Friday is the second" is a true and
+       * useful sentence in a Tuesday block. A mention is only stale if its SENTENCE does not also
+       * name another day, which is what a cross-reference always does. */
+      const stripImplement = (n) => n
+        .replace(/^(db|bb|ez bar|ez|cable|machine|smith|kb|barbell|dumbbell|single-leg|seated|standing|incline|assisted)\s+/i, '')
+        .trim();
+
+      const present = new Set();
+      for (const ex of block.exercises) {
+        const info = MOVEMENTS[ex.id];
+        for (const n of [info?.name, ex.name].filter(Boolean)) {
+          present.add(String(n).toLowerCase());
+          present.add(stripImplement(String(n).toLowerCase()));
+        }
+      }
+
+      /* Three forms per exercise, because prose does not use full names. "Single-Leg Glute Bridge"
+       * is written as "the glute bridge" and as "Bridge in the rest gaps", and the first version of
+       * this gate caught neither. Full name, implement stripped, and the trailing noun. */
+      const catalogue = new Set();
+      for (const v of Object.values(MOVEMENTS)) {
+        const full = v.name.toLowerCase();
+        catalogue.add(full);
+        catalogue.add(stripImplement(full));
+        const words = stripImplement(full).split(/[\s-]+/);
+        if (words.length > 1) catalogue.add(words[words.length - 1]);
+      }
+      // 6, not 8: the first version missed "Bridge in the rest gaps" because "bridge" is six letters.
+      // Short generic words are excluded by name below rather than by length.
+      const TOO_GENERIC = new Set(["pull-up", "pushup", "plank", "carry", "squat", "row", "curl", "hinge", "press", "jump", "machine", "raise", "extension", "fly", "bound", "lunge", "hold"]);
+      const named = [...catalogue].filter((n) => n.length >= 6 && !TOO_GENERIC.has(n)).sort((a, b) => b.length - a.length);
+
+      const DAY_WORD = /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|lower a|lower b|upper a|upper b)/i;
+      const sentences = block.why.split(/(?<=[.!?])\s+/);
+      const absent = new Set();
+
+      for (const sentence of sentences) {
+        if (DAY_WORD.test(sentence.toLowerCase())) continue;               // a cross-reference, and it says so
+        let remaining = sentence.toLowerCase();
+        for (const n of named) {
+          if (!remaining.includes(n)) continue;
+          remaining = remaining.split(n).join(' ');           // longest name wins over its suffix
+          if (![...present].some((pn) => pn.includes(n) || n.includes(pn))) absent.add(n);
+        }
+      }
+
+      if (absent.size) {
+        fail(where, `the block's "why" names ${[...absent].map((a) => `"${a}"`).join(', ')}, which ${absent.size === 1 ? 'is' : 'are'} not in this block and not marked as being on another day. Its exercises are: ${block.exercises.map((e) => e.name).join(', ')}. Remove the clause, or name the day it is actually on. A reason that describes something he cannot see on the card is a false statement about his own screen.`);
+      }
+    }
+
     /* A PARTNER MAY NOT SHARE A MUSCLE WITH THE LIFT IT SITS BEHIND.
      *
      * THIS REPLACES "EVERY BLOCK IS A PAIR", which was here from 2026-08-22 to 2026-08-27 and made

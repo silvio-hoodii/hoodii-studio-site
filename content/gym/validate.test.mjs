@@ -85,8 +85,15 @@ const CASES = [
   {
     name: 'a span from ANOTHER block is refused',
     mutate: (p) => {
-      partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere =
-        blockBy(p, 'monday', 'Sideways + Calves').why.slice(0, 60);
+      /* The donor block is FOUND, not named. Naming it hardcoded "Sideways + Calves", which was
+       * renamed on 2026-08-27 and took the whole suite down with it. Any block with a `why` that is
+       * not the anchor will do, and there are always several. */
+      const anchor = blockBy(p, ...SPAN_BLOCK);
+      const donor = Object.values(p.days)
+        .flatMap((d) => d.blocks || [])
+        .find((b) => b !== anchor && typeof b.why === 'string' && b.why.length >= 60);
+      if (!donor) throw new Error('no other block carries a why long enough to borrow from');
+      partnerOf(anchor).whyHere = donor.why.slice(0, 60);
     },
     expect: 'NOT a verbatim span',
   },

@@ -109,7 +109,7 @@
   "days": {
     "monday": {
       "name": "Monday",
-      "title": "Lower A: squat heavy, hinge light",
+      "title": "Lower A: squat heavy, second hinge",
       "desc": "Squat heavy, hinge light, sideways loaded",
       "warmup": "lower",
       "cooldown": [
@@ -160,10 +160,17 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "open": [
+                {
+                  "q": "The card says 3 sets of 3 and on 2026-08-27 you logged 10 reps a set. One of the two is wrong and nobody has established which. Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
-          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, not broad jump, because you step down instead of absorbing a landing. The reverse fly rides in the rest because it is upper back: a jump does not use it, so the jump stays as fresh as it would have been standing still."
+          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, because you step down out of it instead of absorbing a landing at your bodyweight."
         },
         {
           "role": "main",
@@ -218,33 +225,25 @@
               "progression": "weight"
             }
           ],
-          "why": "Squat is one of the four patterns that earns twice a week. Pelland 2025, 67 studies: strength rises with frequency at matched volume (posterior 100%), size does not care about the split. The bridge goes in the squat rest, not on top of it."
+          "why": "Squat is one of the four patterns that earns twice a week. Pelland 2025, 67 studies: strength rises with frequency at matched volume (posterior 100%), size does not care about the split."
         },
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Pattern: Hinge, light",
-          "tag": "(rack)",
+          "label": "Second Pattern: Hinge",
+          "tag": "(dumbbells)",
           "exercises": [
             {
-              "id": "romanian-deadlift",
-              "name": "BB Romanian Deadlift",
+              "id": "db-rdl",
+              "name": "DB Romanian Deadlift",
               "sets": 2,
               "reps": "8",
               "rest": "2 min",
-              "zone": "rack",
-              "station": "rack",
+              "zone": "benchDb",
+              "station": null,
               "log": true,
               "cue": "This is the SECOND time this week you hinge, and it is deliberately light: roughly what you did for 6 on Thursday minus 30 to 40 lb. The job is a clean groove, not a hard set. Bar touching your legs the whole way, knees slightly bent and then FROZEN. Push your hips backward toward the wall behind you until you feel a strong stretch down the back of your thighs, usually around knee height. Then squeeze your bum and drive the hips forward to stand. Stop the moment your lower back wants to round. No straps needed on this one: it is light on purpose, and if the bar is slipping at this weight the weight is wrong, not your hands.",
               "alts": [
-                {
-                  "id": "db-rdl",
-                  "name": "DB Romanian Deadlift",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Two dumbbells in front of your thighs, same hip push backward. Good when the racks are busy.",
-                  "progression": "weight"
-                },
                 {
                   "id": "back-extension",
                   "name": "Back Extension",
@@ -262,10 +261,17 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "open": [
+                {
+                  "q": "This was a second BB Romanian Deadlift called light, at 2x8. It was never light: the app gave it the same weight as the heavy day because both days shared one exercise id, and on 2026-08-27 you did 185x6 twice against a 2x8. It is a DB Romanian Deadlift now, which has its own weight and its own history, the way the front squat does against the back squat. THE CUE STILL DESCRIBES THE BARBELL. Read it and say what it should say.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
-          "why": "The week second hinge, deliberately light. Frequency is what helps strength, so this is the cheap half of the hinge two sessions. The lateral raise rides in the rest because a hinge does not use the side of the shoulder, which is the one area nothing else in the week trains."
+          "why": "The second hinge of the week, and a different lift rather than a lighter copy of Thursday. Pelland 2025, 67 studies: at matched volume, frequency raises strength (posterior 100%) while size does not care about the split. Nothing in the evidence file ever said the second exposure should be light, and while both days shared one exercise id the app handed this one Thursday heavy weight. Dumbbells have their own ladder and hold no fixture, so this block also stops occupying a rack."
         },
         {
           "role": "accessory",
@@ -354,9 +360,9 @@
         },
         {
           "role": "accessory",
-          "pairing": "alternate",
-          "label": "Sideways + Calves",
-          "tag": "(dumbbells, on the floor)",
+          "pairing": "sequence",
+          "label": "Sideways, then Calves",
+          "tag": "(dumbbells, then the machine)",
           "exercises": [
             {
               "id": "db-lateral-lunge",
@@ -397,13 +403,13 @@
               "progression": "weight"
             },
             {
-              "id": "db-calf-raise",
-              "name": "DB Calf Raise",
+              "id": "standing-calf-raise",
+              "name": "DB Standing Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
+              "zone": "machines",
+              "station": "calf-raise",
               "log": true,
               "cue": "Done holding dumbbells on the floor by the bench, NOT on the calf machine, so this pairs with the lunge without occupying two machines. Stand on the edge of a step or a plate if you have one, heels hanging. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
               "alts": [
@@ -427,14 +433,14 @@
               "progression": "weight",
               "open": [
                 {
-                  "q": "This slot moved from standing-calf-raise to db-calf-raise on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "q": "Moved to a dumbbell calf raise on 2026-08-27 to keep it in the lateral lunge rest, and moved back the same night: you worked 180 to 210 lb on the machine and did not touch the dumbbell version. A walk is cheaper than losing 170 lb of load. Its NAME still says DB, which was wrong before today too. What should it be called?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
               ]
             }
           ],
-          "why": "Frontal-plane hip strength is injury insurance for the running: weak abductors feed pelvic drop, which feeds knee valgus, a documented route into shin and knee trouble in novice runners. The calf raise is not sourced."
+          "why": "Frontal-plane hip strength is injury insurance for the running: weak abductors feed pelvic drop, which feeds knee valgus, a documented route into shin and knee trouble in novice runners. The calf raise is not sourced. The calf raise follows rather than alternating: it is a machine across the floor, so sharing one rest window would mean walking between them every set."
         }
       ]
     },
@@ -589,7 +595,7 @@
               "rangeWidth": 4
             }
           ],
-          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells. It is not the last time he needs them: every one of the four cable blocks after it has a dumbbell partner, so three separate loads still travel to the cable stack. The shoulder taps are here for the trunk, not the shoulders, and they ride in the rest gaps so they cost no time. That pairing bends this file's own first rule: an overhead press already loads the front of the shoulder that a plank shoulder tap holds up, so it is not the antagonist preloading the review describes. He was shown exactly that on 2026-08-27 and chose to keep it. It progresses by reps rather than weight, which is true of four of the eleven partners in this file: the glute bridge, the dead bug, these taps and the Copenhagen. An earlier version of this line called it the only one, which was false the day it was written."
+          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells."
         },
         {
           "role": "main",
@@ -681,7 +687,7 @@
           "pairing": "fill",
           "label": "Second Horizontal Pull",
           "tag": "(cable, dumbbells in hand)",
-          "why": "The second horizontal pull of the week; before 2026-08-22 BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a calf raise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
+          "why": "The second horizontal pull of the week; before 2026-08-22 BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a lower-body exercise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -913,13 +919,13 @@
               ]
             }
           ],
-          "why": "The week trained the trunk to resist bending forward (dead bugs, planks) and sideways (carries, Copenhagen) and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running."
+          "why": "The week trained the trunk to resist bending forward and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running."
         }
       ]
     },
     "thursday": {
       "name": "Thursday",
-      "title": "Lower B: hinge heavy, squat light",
+      "title": "Lower B: hinge heavy, second squat",
       "desc": "Hinge heavy, squat light, sideways explosive",
       "warmup": "lower",
       "cooldown": [
@@ -970,7 +976,14 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps"
+              "progression": "reps",
+              "open": [
+                {
+                  "q": "The card says 3 sets of 3 and on 2026-08-27 you logged 10 reps a set. One of the two is wrong and nobody has established which. Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             },
             {
               "id": "db-lateral-raise",
@@ -1051,12 +1064,12 @@
               "progression": "weight"
             }
           ],
-          "why": "The heavy hinge, the one that gets progressed. Squat went 135x10 to 185x6 since May on this heavy-then-light pattern. Bridge in the rest gaps."
+          "why": "The heavy hinge, the one that gets progressed. Squat went 135x10 to 185x6 since May while this pattern ran twice a week."
         },
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Pattern: Squat, light",
+          "label": "Second Pattern: Squat",
           "tag": "(rack)",
           "exercises": [
             {
@@ -1098,7 +1111,7 @@
               "progression": "weight"
             }
           ],
-          "why": "The week second squat, light and technical. Same frequency argument as Monday light hinge. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
+          "why": "The week second squat, and a different lift rather than a lighter copy of Monday: the front squat carries its own weight and its own history. Same frequency argument as the second hinge on Lower A. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
         },
         {
           "role": "accessory",
@@ -1290,7 +1303,7 @@
               "whyHere": "Calves are twice a week here and the evidence file does not ask for that"
             }
           ],
-          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs and the glute bridge; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves are twice a week here and the evidence file does not ask for that: it says squat, hinge, press and pull go twice, and that arms, calves and delts do not need to. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the deadlift on a lower day, which is the same reasoning."
+          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves are twice a week here and the evidence file does not ask for that: it says squat, hinge, press and pull go twice, and that arms, calves and delts do not need to. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the hinge on a lower day, which is the same reasoning."
         }
       ]
     },
@@ -1348,7 +1361,7 @@
               "progression": "weight"
             }
           ],
-          "why": "Pulling twice a week, heavy here and moderate Tuesday. Six loaded pulling sets in a week is the thinnest part of the programme, which is why this is the spine of the day and not the chest press."
+          "why": "Pulling twice a week, heavy here and moderate Tuesday. Six loaded pulling sets in a week is the thinnest part of the programme, which is why this is the spine of the day and leads it."
         },
         {
           "role": "main",
@@ -1435,7 +1448,7 @@
           "pairing": "fill",
           "label": "Second Overhead Press",
           "tag": "(machine, dumbbells in hand)",
-          "why": "The second overhead press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set.",
+          "why": "The second shoulder press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set.",
           "exercises": [
             {
               "id": "machine-shoulder-press",
@@ -1680,10 +1693,10 @@
                 }
               ],
               "progression": "time",
-              "whyHere": "The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel"
+              "whyHere": "The carry follows rather than alternating: it needs room to walk, so alternating means giving up the bench"
             }
           ],
-          "why": "This is the third biceps exposure of the week, not the first: DB Hammer Curl runs on Tuesday and again on Friday. An earlier version of this line said biceps get one a week, which the same file falsifies. Nothing in the evidence file compares a preacher curl to a standing curl, and he has asked why this exercise is here. The carry follows rather than alternating: it needs room to walk and the preacher seat does not travel, so alternating means losing the seat. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."
+          "why": "This is the third biceps exposure of the week, not the first: DB Hammer Curl runs on Tuesday and again on Friday. An earlier version of this line said biceps get one a week, which the same file falsifies. Kassiano 2022 is the reason this one is an incline curl: the shoulder sits BEHIND the torso so the biceps work lengthened, which is a different stimulus from Tuesday rather than the same curl with a different handle. The carry follows rather than alternating: it needs room to walk, so alternating means giving up the bench. That was true before 2026-08-22, I overrode it that afternoon to make every block a superset, and it was wrong. The Motion Blueprint makes the same caveat: supersets are \"logistically challenging in a busy gym setting\"."
         }
       ]
     }
