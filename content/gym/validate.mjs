@@ -152,6 +152,15 @@ const TAG_PROSE = new Set([
 // machine that is not in the building.
 // ---------------------------------------------------------------------------------------------
 const ZONES = equipment.zones;
+
+/** One station's record, or undefined. Used by the shareable-station rule below, which must be able
+ *  to tell "declared not shareable" from "this station does not exist": the second is already caught
+ *  by the placement gate, and conflating them here would let a typo read as a permission. */
+const stationOf = (zone, station) => {
+  if (!zone || !station) return undefined;
+  const s = ZONES[zone]?.stations?.[station];
+  return s && typeof s === 'object' ? s : undefined;
+};
 const STATION_ZONE = new Map();
 for (const [zoneKey, zone] of Object.entries(ZONES)) {
   for (const stationKey of Object.keys(zone.stations || {})) {
@@ -683,6 +692,40 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       const stations = [...new Set([a.station, b.station].filter((s) => s != null))];
       if (stations.length > 1) {
         fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one: the partner must need no fixture (floor, handheld band, bodyweight, dumbbells).`);
+      }
+
+      /* THE DEDUPE ABOVE IS WHY THIS KEPT PASSING, and he found it at the rack on 2026-08-28.
+       *
+       * HIS WORDS, note #27: "You are still making pairings of two machines lat pull down and overhead
+       * triceps cable can't be done at the same time, could be straight arm pull down not sure why
+       * this same thing keeps happening after all the audits."
+       *
+       * He is right about all three parts. `new Set` collapses two exercises on ONE station to a
+       * single entry, so `stations.length > 1` can never fire on them and the block passes. Every
+       * audit that checked this checked the station, and the stations matched. The rule read "at most
+       * one station" and was silently enforcing "at most one station NAME".
+       *
+       * The comment above is correct about the bench and wrong as a generalisation. A bench is shared
+       * without touching it: you lie on it for one exercise and put a foot on it for the other. A
+       * cable column is not, because the attachment and the seat change between a lat pulldown and an
+       * overhead tricep extension, so alternating means reconfiguring the machine every single set.
+       * That is two exercises with setup in between, not a superset. The model had stations and no
+       * concept of what has to be UNCLIPPED, so the two cases were indistinguishable.
+       *
+       * FAIL-CLOSED, and that is the whole design. `sharedInOneWindow` is declared per station in
+       * equipment.json and defaults to false, so a station nobody has ruled on refuses rather than
+       * permits. The safe-defaults rule in equipment.json's own header says a wrong "you can" costs a
+       * session and a wrong "you cannot" costs a walk. Today exactly two stations are shareable, the
+       * bench and the plyo box, and both carry the reason. Answering the open question on
+       * cable-pulldown UNLOCKS pairings rather than removing them. */
+      if (stations.length === 1 && a.station != null && b.station != null) {
+        const st = stationOf(a.zone, a.station);
+        if (!st?.sharedInOneWindow) {
+          fail(where, `${block.pairing} block puts two exercises on "${a.station}" at once, and that station is not declared shareable. `
+            + `Two exercises on ONE station is only a superset when neither has to reconfigure it: a bench is shared without touching it, a cable column is not. `
+            + `Set sharedInOneWindow on that station in equipment.json WITH the reason, or make this block a sequence. `
+            + `This rule exists because the check above deduped the two stations into one and passed, which is how a lat pulldown ended up paired with an overhead tricep extension on the same pulley (his note #27, 2026-08-28).`);
+        }
       }
 
       if (a.zone !== b.zone) {

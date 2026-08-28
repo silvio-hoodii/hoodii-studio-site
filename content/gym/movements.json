@@ -707,12 +707,19 @@
       "variants": [
         {
           "id": "db-overhead-press",
-          "name": "Standing DB Overhead Press",
+          "name": "Seated DB Overhead Press",
           "implement": "dumbbell",
           "zone": "benchDb",
-          "station": null,
+          "station": "bench",
           "loadable": true,
-          "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks."
+          "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks.\n\nIT WAS CALLED \"Standing DB Overhead Press\" UNTIL 2026-08-28 AND HE HAS NEVER DONE IT STANDING. His note #26 at the rack: \"Also whatever history is on standing db has always been seated, ive never done standing db\", and #25: \"Standing db overhead is not really practical either Standing barbell or seated db\". Twenty sets of history sit under this id going back to 2026-05-26, all of them seated, and the logged rows are stamped \"DB Overhead Press\" with no \"Standing\" in them: the word was added by the catalogue and never by him.\n\nSo the station is `bench` now, not null. That is not cosmetic. A null station means the exercise holds no fixture and can partner anything, which is how a seated press could have been paired with something that needs the bench. His name for it is the true one.\n\nWHETHER THE PROGRAMME SHOULD KEEP SEATED DUMBBELLS OR MOVE TO A STANDING BARBELL IS HIS CALL, and it is parked as an open question on this variant. Renaming records what he has been doing; it does not decide what he should do.",
+          "open": [
+            {
+              "q": "You said standing DB overhead is not practical, and offered two alternatives: standing barbell, or seated DB. The card now says Seated DB, which is what your twenty logged sets actually were, so nothing is mislabelled any more. The programme question is separate and it is yours. (a) KEEP SEATED DB. Cost: nothing changes, your 65 lb history carries straight through, and it stays stuck where the note above says it is stuck, because the next dumbbell up is a jump the rep range cannot bank. (b) STANDING BARBELL. Cost: it moves to the rack, so it stops being pairable with anything in the dumbbell area, and it starts from a separate history (`bb-ohp` holds 3 sets at 115 lb from 2026-08-04). The upside is the one that matters: a barbell goes up in 5 lb steps, which is the ladder problem this lift has had all year. Which one?",
+              "asked": "2026-08-28",
+              "due": "2026-09-11"
+            }
+          ]
         },
         {
           "id": "machine-shoulder-press",

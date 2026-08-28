@@ -217,6 +217,58 @@ const CASES = [
     },
     expect: 'derived and must not be stored',
   },
+  {
+    name: 'two exercises on one non-shareable station in a fill block is refused',
+    mutate: (p) => {
+      /* HIS NOTE #27, 2026-08-28, made mechanical. The old rule deduped the two stations into one
+         entry and could never fire on this shape, which is why three blocks like it were live and
+         why he asked "why does this same thing keep happening after all the audits". Built from a
+         real block rather than typed: take any concurrent pair whose lead holds a cable station and
+         put the partner on the same one. */
+      const block = Object.values(p.days)
+        .flatMap((d) => d.blocks || [])
+        .find((b) => ['fill', 'alternate'].includes(b.pairing)
+          && b.exercises.length === 2
+          && b.exercises[0].station
+          && b.exercises[0].zone === 'cable');
+      if (!block) throw new Error('no concurrent cable block to mutate; repoint this case');
+      block.exercises[1].zone = block.exercises[0].zone;
+      block.exercises[1].station = block.exercises[0].station;
+    },
+    expect: 'not declared shareable',
+  },
+  {
+    name: 'the same shape on a SHAREABLE station is allowed, and this is what stops it refusing everything',
+    /* THE PERMITTED DIRECTION, and it took a second file to reach. The first attempt forced two
+       exercises onto the bench in program.json alone and failed for an unrelated reason: the
+       PLACEMENT gate refuses a slot claiming a fixture the catalogue says the movement does not
+       hold, which is a different rule doing its job correctly. Fighting that would have tested the
+       wrong thing.
+       
+       So the mutation is the honest one: take the real cable block, which the rule refuses today,
+       and DECLARE that station shareable. Nothing else changes. If it still fails, the rule is
+       refusing on something other than the permission and would refuse the bench too. */
+    mutate: (p) => {
+      const block = Object.values(p.days)
+        .flatMap((d) => d.blocks || [])
+        .find((b) => b.exercises?.length === 2
+          && b.exercises[0].zone === 'cable'
+          && b.exercises[0].station);
+      if (!block) throw new Error('no two-exercise cable block to mutate; repoint this case');
+      block.pairing = 'fill';
+      block.exercises[1].zone = block.exercises[0].zone;
+      block.exercises[1].station = block.exercises[0].station;
+    },
+    also: {
+      file: 'equipment.json',
+      mutate: (e) => {
+        for (const s of Object.values(e.zones.cable.stations)) {
+          if (s && typeof s === 'object') s.sharedInOneWindow = true;
+        }
+      },
+    },
+    expect: null,
+  },
 ];
 
 let failed = 0;
@@ -235,6 +287,18 @@ for (const c of CASES) {
     const doc = c.file ? JSON.parse(readFileSync(file, 'utf8')) : program;
     c.mutate(doc);
     writeFileSync(file, JSON.stringify(doc, null, 2));
+
+    /* A SECOND FILE, for the rules that live across two of them. Added 2026-08-28 with the
+       shareable-station rule, which reads a placement out of program.json and a permission out of
+       equipment.json: a case that can only touch one of them can only test half the rule, and the
+       half it cannot reach is the PERMITTED direction. A gate watched refusing and never watched
+       permitting is a gate that might refuse everything. */
+    if (c.also) {
+      const alsoPath = join(dir, c.also.file);
+      const alsoDoc = JSON.parse(readFileSync(alsoPath, 'utf8'));
+      c.also.mutate(alsoDoc);
+      writeFileSync(alsoPath, JSON.stringify(alsoDoc, null, 2));
+    }
 
     const run = spawnSync(process.execPath, [join(dir, 'validate.mjs')], { encoding: 'utf8' });
     const out = `${run.stdout || ''}${run.stderr || ''}`;

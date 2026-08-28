@@ -553,7 +553,7 @@
               "reps": "8",
               "rest": "90s",
               "zone": "benchDb",
-              "station": null,
+              "station": "bench",
               "log": true,
               "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
               "alts": [
@@ -592,14 +592,21 @@
                 }
               ],
               "progression": "weight",
-              "rangeWidth": 4
+              "rangeWidth": 4,
+              "open": [
+                {
+                  "q": "Your note #28: \"Here you are adding superset to the first main lift and no superset for the 2nd lift? What's the logic in that\". THERE IS NO LOGIC. This is one of ten blocks in the week that are a single lift with nobody in the rest, eight of them main lifts, and it is the same complaint you made as \"I have all this time between the sets on the 2, 3 and 4 lifts that I'm just resting. The whole thing was supposed to save time.\" It is unfinished work, not a design decision, and you have now found it from the other direction. `node scripts/gym-catalogue.mjs --fill` prices every option for this 90-second rest. The ones that add NO new sets, because they move work already in the week into a longer rest: DB Lateral Raise (from Second Horizontal Pull, 45s to 90s), DB Hammer Curl (from Triceps + Biceps, 45s to 90s), Dead Bug (from the bench press block), DB Reverse Fly (from Friday). Each leaves the block it came from solo, so it is a swap and not a gain. Everything else adds sets to a muscle already past the efficient zone. Which one, or leave it solo?",
+                  "asked": "2026-08-28",
+                  "due": "2026-09-11"
+                }
+              ]
             }
           ],
           "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells."
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Second Pattern: Vertical Pull",
           "tag": "(cable)",
           "exercises": [
@@ -680,7 +687,8 @@
               ]
             }
           ],
-          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank."
+          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank.",
+          "$sequenceBecause": "SEQUENCE, NOT A PAIR, since 2026-08-28. His note #27 at the rack: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" He is right, and the reason it kept happening is that the one-station rule deduped two exercises on ONE station into a single entry, so it could never fire on them. Every audit checked the station and the stations matched. The gate compares equipment.json's `sharedInOneWindow` now, which defaults to FALSE, and it found two more blocks like this one that nobody had reported. Do the first exercise, then set the machine up for the second. That is what was actually happening anyway. It goes back to a pair the moment the open question on cable-pulldown is answered: answering it UNLOCKS pairings rather than removing them."
         },
         {
           "role": "main",
@@ -797,7 +805,14 @@
                 }
               ],
               "progression": "weight",
-              "increment": 2.5
+              "increment": 2.5,
+              "open": [
+                {
+                  "q": "Your note #29: \"Much rather do the assisted dip than the tricep.pushdown but not sure about the order\". It is not a one-line swap and the gates said so when it was tried: the assisted dip is in the MACHINE bank and the pushdown is on the cable, so three things break at once. (1) The block would span two zones, so the hammer curl cannot stay in its rest window. (2) Tuesday's walk order doubles back: the day currently goes dumbbells, dumbbells, cable, cable, machines, cable, and moving this to machines makes it worse, so the whole day would need reordering. (3) A catalogue bug surfaced by the attempt: assisted-dip lists itself as its own alt. So the real question is bigger than the swap. (a) KEEP THE PUSHDOWN. Cost: nothing, and you do a movement you like less. (b) SWAP AND REORDER TUESDAY so the machine bank is visited once, in order. Cost: the day's shape changes and the hammer curl needs a new home, which is the same question as the Overhead block above. (c) PUT THE DIP SOMEWHERE ELSE, most obviously Friday, which already visits the machine bank three times. Cost: Tuesday loses a triceps exposure and Friday gains one, and triceps are already at 22 fractional sets against an efficient zone topping out at 10. On order: you asked and it depends on which of these you pick, so it is not answered here rather than guessed at.",
+                  "asked": "2026-08-28",
+                  "due": "2026-09-11"
+                }
+              ]
             },
             {
               "id": "db-hammer-curl",
@@ -847,7 +862,7 @@
         },
         {
           "role": "accessory",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Anti-Rotation + Rear Delts",
           "tag": "(cable)",
           "exercises": [
@@ -924,7 +939,8 @@
               ]
             }
           ],
-          "why": "The week trained the trunk to resist bending forward and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running."
+          "why": "The week trained the trunk to resist bending forward and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running.",
+          "$sequenceBecause": "SEQUENCE, NOT A PAIR, since 2026-08-28. His note #27 at the rack: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" He is right, and the reason it kept happening is that the one-station rule deduped two exercises on ONE station into a single entry, so it could never fire on them. Every audit checked the station and the stations matched. The gate compares equipment.json's `sharedInOneWindow` now, which defaults to FALSE, and it found two more blocks like this one that nobody had reported. Do the first exercise, then set the machine up for the second. That is what was actually happening anyway. It goes back to a pair the moment the open question on cable-pulldown is answered: answering it UNLOCKS pairings rather than removing them."
         }
       ]
     },
@@ -1537,7 +1553,7 @@
         },
         {
           "role": "accessory",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Swim Catch + Triceps",
           "tag": "(cable)",
           "exercises": [
@@ -1611,7 +1627,8 @@
               ]
             }
           ],
-          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle."
+          "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle.",
+          "$sequenceBecause": "SEQUENCE, NOT A PAIR, since 2026-08-28. His note #27 at the rack: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" He is right, and the reason it kept happening is that the one-station rule deduped two exercises on ONE station into a single entry, so it could never fire on them. Every audit checked the station and the stations matched. The gate compares equipment.json's `sharedInOneWindow` now, which defaults to FALSE, and it found two more blocks like this one that nobody had reported. Do the first exercise, then set the machine up for the second. That is what was actually happening anyway. It goes back to a pair the moment the open question on cable-pulldown is answered: answering it UNLOCKS pairings rather than removing them."
         },
         {
           "role": "accessory",

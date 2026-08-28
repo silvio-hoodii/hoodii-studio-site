@@ -29,18 +29,15 @@
     "and an unverified item is confidence:'unknown', because a false 'you have this' sends him to a",
     "machine that is not there, while a false 'you lack this' only costs a swap."
   ],
-
   "lastConfirmed": "2026-08-22",
   "poolLengthM": 25,
   "weightUnit": "lb",
-
   "confidenceLevels": {
     "logged": "He has recorded working sets on it in gym_set. Cannot be wrong.",
     "stated": "He described it in session on 2026-08-15.",
     "archive": "Recorded in HealthOS/HANDOFF.md during the 2026-05-23 intake.",
     "unknown": "Not established. Never prescribe as if it exists."
   },
-
   "zones": {
     "rack": {
       "name": "Rack section",
@@ -53,22 +50,24 @@
           "name": "Squat rack",
           "count": "unknown",
           "confidence": "logged",
-          "evidence": "Back squat to 185, BB bench to 185, BB row to 185, RDL to 225, BB OHP 115, front squat 115"
+          "evidence": "Back squat to 185, BB bench to 185, BB row to 185, RDL to 225, BB OHP 115, front squat 115",
+          "sharedInOneWindow": false
         },
         "rack-pullup-bar": {
           "name": "Pull-up bar on top of the rack uprights",
           "confidence": "stated",
-          "evidence": "'All these sections also have sort of spaces with these bars on top that you can use as a pull-up bar'"
+          "evidence": "'All these sections also have sort of spaces with these bars on top that you can use as a pull-up bar'",
+          "sharedInOneWindow": false
         },
         "trx": {
           "name": "TRX straps",
           "confidence": "stated",
           "evidence": "'There are also the TRX things with one of the pull-up bars'",
-          "note": "Hangs off one pull-up bar, so it occupies that bar. Unused so far. Opens rows, fallouts and single-leg work with no floor and no machine."
+          "note": "Hangs off one pull-up bar, so it occupies that bar. Unused so far. Opens rows, fallouts and single-leg work with no floor and no machine.",
+          "sharedInOneWindow": false
         }
       }
     },
-
     "benchDb": {
       "name": "Dumbbell and bench area",
       "floor": true,
@@ -80,16 +79,19 @@
           "name": "Bench, flat and incline",
           "count": "unknown",
           "confidence": "logged",
-          "evidence": "DB bench to 75/hand; chest-supported row 65 needs an incline"
+          "evidence": "DB bench to 75/hand; chest-supported row 65 needs an incline",
+          "sharedInOneWindow": true,
+          "sharedNote": "Two exercises may hold this at once. The validator's own comment records the case: a single-leg RDL alternating with a Copenhagen plank on the same bench is the one arrangement that is obviously fine, because neither reconfigures it. You lie on it or you put a foot on it, and the other person's set does not have to undo yours."
         },
         "box": {
           "name": "Plyo box",
           "confidence": "logged",
-          "evidence": "He has swapped broad jump to box jump on every single Lower B session"
+          "evidence": "He has swapped broad jump to box jump on every single Lower B session",
+          "sharedInOneWindow": true,
+          "sharedNote": "Nothing to change between exercises. A box is a box."
         }
       }
     },
-
     "cable": {
       "name": "Cable section",
       "floor": false,
@@ -101,22 +103,34 @@
         "cable-pulldown": {
           "name": "Lat pulldown / high pulley",
           "confidence": "logged",
-          "evidence": "Lat pulldown to 200, straight-arm pulldown 65, tricep pushdown 87.5"
+          "evidence": "Lat pulldown to 200, straight-arm pulldown 65, tricep pushdown 87.5",
+          "sharedInOneWindow": false,
+          "sharedNote": "HIS RULING, note #27 on 2026-08-28, in his own words: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" Two exercises on this column are not one station in any useful sense: the attachment and the seat have to change between them, so alternating means reconfiguring the machine every set. That is not a superset, it is two exercises with setup in between. Which cable exercises CAN share one window is an open question on this station.",
+          "open": [
+            {
+              "q": "WHICH CABLE EXERCISES CAN ACTUALLY SHARE ONE REST WINDOW ON THE HIGH PULLEY? Your note #27 settled that the lat pulldown and the cable overhead tricep extension cannot, and Tuesday's block is a sequence now rather than a pair. You suggested the straight-arm pulldown instead. Friday already pairs the straight-arm pulldown with that same tricep extension, so if those two DO work together the same swap fixes Tuesday. Three things to say at the machine, and they are all about what has to be unclipped: (a) can the straight-arm pulldown and the overhead tricep extension run off the same attachment, so nothing changes between sets? (b) does the tricep pushdown share an attachment with either of them, since it is paired with a curl on Tuesday? (c) is there more than one high pulley column, which would make this whole question moot. The gate now refuses ANY two exercises on one station unless the station is declared shareable, so answering this unlocks pairings rather than removing them.",
+              "asked": "2026-08-28",
+              "due": "2026-09-11"
+            }
+          ]
         },
         "cable-row": {
           "name": "Seated cable row / low pulley",
           "confidence": "archive",
-          "evidence": "Seeded as a sub in the 2026-05-23 exercise set"
+          "evidence": "Seeded as a sub in the 2026-05-23 exercise set",
+          "sharedInOneWindow": false,
+          "sharedNote": "Same reasoning as cable-pulldown. Not confirmed separately."
         },
         "cable-adjustable": {
           "name": "Adjustable-height cable column",
           "confidence": "stated",
           "evidence": "2026-08-22, in his words: 'all the cables are adjustable so if that was the limitation, it doesn't really exist because all the cable columns are adjustable for bottom and for top.'",
-          "note": "This was 'unknown' from 2026-08-15 to 2026-08-22 and it was load-bearing: it is why the Pallof press was cut, and cutting the Pallof press is why the week had no rotational or anti-rotation work at all. An unverified NO cost a whole movement pattern for a week. Worth remembering the next time something is marked unknown: the safe default protects against prescribing what is not there, and it does nothing about the training that quietly goes missing."
+          "note": "This was 'unknown' from 2026-08-15 to 2026-08-22 and it was load-bearing: it is why the Pallof press was cut, and cutting the Pallof press is why the week had no rotational or anti-rotation work at all. An unverified NO cost a whole movement pattern for a week. Worth remembering the next time something is marked unknown: the safe default protects against prescribing what is not there, and it does nothing about the training that quietly goes missing.",
+          "sharedInOneWindow": false,
+          "sharedNote": "Same reasoning, and this one has a second reason: the height is the whole point of the column, so two exercises at different heights reconfigure it by definition."
         }
       }
     },
-
     "machines": {
       "name": "Selectorised machine bank",
       "floor": false,
@@ -125,15 +139,60 @@
       "bandAnchor": false,
       "note": "Each machine is its own station. Two machines is never a legal superset, which is his 'you're saying on the fore exercise I should use two machines' complaint.",
       "stations": {
-        "leg-press": { "name": "Leg press", "confidence": "archive", "evidence": "2026-05-23 intake: 'leg press + leg ext both strong'; restated 2026-08-15" },
-        "leg-extension": { "name": "Leg extension", "confidence": "archive", "evidence": "Same" },
-        "leg-curl": { "name": "Leg curl", "confidence": "stated", "evidence": "Listed 2026-08-15. The only direct knee-flexion hamstring option in the building." },
-        "chest-press": { "name": "Chest press machine", "confidence": "archive", "evidence": "Seeded as a sub in May; restated 2026-08-15" },
-        "shoulder-press": { "name": "Shoulder press machine", "confidence": "stated", "evidence": "'a shoulder press machine for chest press'. The phrasing was ambiguous, read as two machines. Confirm before it carries a main lift." },
-        "pec-deck": { "name": "Chest fly / rear delt fly machine", "confidence": "stated", "evidence": "'a machine for flies, like a chest fly and rear delt fly machine'. One machine, both directions." },
-        "assisted-pullup": { "name": "Assisted pull-up", "confidence": "archive", "evidence": "Seeded as a sub in May; restated 2026-08-15" },
-        "assisted-dip": { "name": "Assisted dip", "confidence": "stated", "evidence": "Listed 2026-08-15. He had 5 strict dips at the May intake." },
-        "back-extension": { "name": "45-degree back extension", "confidence": "logged", "evidence": "Glute-biased back extension logged 40 to 50" },
+        "leg-press": {
+          "name": "Leg press",
+          "confidence": "archive",
+          "evidence": "2026-05-23 intake: 'leg press + leg ext both strong'; restated 2026-08-15",
+          "sharedInOneWindow": false
+        },
+        "leg-extension": {
+          "name": "Leg extension",
+          "confidence": "archive",
+          "evidence": "Same",
+          "sharedInOneWindow": false
+        },
+        "leg-curl": {
+          "name": "Leg curl",
+          "confidence": "stated",
+          "evidence": "Listed 2026-08-15. The only direct knee-flexion hamstring option in the building.",
+          "sharedInOneWindow": false
+        },
+        "chest-press": {
+          "name": "Chest press machine",
+          "confidence": "archive",
+          "evidence": "Seeded as a sub in May; restated 2026-08-15",
+          "sharedInOneWindow": false
+        },
+        "shoulder-press": {
+          "name": "Shoulder press machine",
+          "confidence": "stated",
+          "evidence": "'a shoulder press machine for chest press'. The phrasing was ambiguous, read as two machines. Confirm before it carries a main lift.",
+          "sharedInOneWindow": false
+        },
+        "pec-deck": {
+          "name": "Chest fly / rear delt fly machine",
+          "confidence": "stated",
+          "evidence": "'a machine for flies, like a chest fly and rear delt fly machine'. One machine, both directions.",
+          "sharedInOneWindow": false
+        },
+        "assisted-pullup": {
+          "name": "Assisted pull-up",
+          "confidence": "archive",
+          "evidence": "Seeded as a sub in May; restated 2026-08-15",
+          "sharedInOneWindow": false
+        },
+        "assisted-dip": {
+          "name": "Assisted dip",
+          "confidence": "stated",
+          "evidence": "Listed 2026-08-15. He had 5 strict dips at the May intake.",
+          "sharedInOneWindow": false
+        },
+        "back-extension": {
+          "name": "45-degree back extension",
+          "confidence": "logged",
+          "evidence": "Glute-biased back extension logged 40 to 50",
+          "sharedInOneWindow": false
+        },
         "calf-raise": {
           "name": "Standing calf raise",
           "confidence": "logged",
@@ -144,11 +203,11 @@
               "asked": "2026-08-27",
               "due": "2026-09-10"
             }
-          ]
+          ],
+          "sharedInOneWindow": false
         }
       }
     },
-
     "smith": {
       "name": "Smith machine",
       "floor": true,
@@ -159,16 +218,17 @@
         "smith": {
           "name": "Smith machine",
           "confidence": "archive",
-          "evidence": "Smith squat, Smith hip thrust and 'Smith bar at hip height' all seeded as subs in May; restated 2026-08-15"
+          "evidence": "Smith squat, Smith hip thrust and 'Smith bar at hip height' all seeded as subs in May; restated 2026-08-15",
+          "sharedInOneWindow": false
         },
         "smith-pullup-bar": {
           "name": "Pull-up bar over the Smith section",
           "confidence": "stated",
-          "evidence": "'All these sections also have sort of spaces with these bars on top'"
+          "evidence": "'All these sections also have sort of spaces with these bars on top'",
+          "sharedInOneWindow": false
         }
       }
     },
-
     "ezPreacher": {
       "name": "EZ bar and preacher bench",
       "floor": false,
@@ -179,24 +239,47 @@
           "name": "EZ bar with preacher seat",
           "confidence": "stated",
           "evidence": "'The EZ bar has the seat too so you can do preacher curls there'",
-          "note": "Never recorded anywhere before today, which is why bicep-curl has exactly one alternative."
+          "note": "Never recorded anywhere before today, which is why bicep-curl has exactly one alternative.",
+          "sharedInOneWindow": false
         }
       }
     },
-
     "cardio": {
       "name": "Cardio floor",
       "floor": false,
       "floorConfidence": "unknown",
       "bandAnchor": false,
       "stations": {
-        "treadmill": { "name": "Treadmill", "confidence": "stated", "note": "Where the run progression starts. His call: 'I don't want to risk anything.'" },
-        "bike": { "name": "Stationary bike", "confidence": "stated", "resistanceScale": { "min": 1, "max": 20, "confidence": "stated", "on": "2026-08-27" }, "note": "Numbered resistance levels, 1 to 20, stated by him on 2026-08-27 when the bike write path needed a real bound. That number is enforced in two places, POST /bike/api/ride and the bike_ride_levels_scale constraint in content/gym/schema.sql, so a different machine means changing both. The conditioning cues assumed a numbered dial and now do not have to." },
-        "elliptical": { "name": "Elliptical", "confidence": "stated" },
-        "stairmaster": { "name": "Stairmaster", "confidence": "stated" }
+        "treadmill": {
+          "name": "Treadmill",
+          "confidence": "stated",
+          "note": "Where the run progression starts. His call: 'I don't want to risk anything.'",
+          "sharedInOneWindow": false
+        },
+        "bike": {
+          "name": "Stationary bike",
+          "confidence": "stated",
+          "resistanceScale": {
+            "min": 1,
+            "max": 20,
+            "confidence": "stated",
+            "on": "2026-08-27"
+          },
+          "note": "Numbered resistance levels, 1 to 20, stated by him on 2026-08-27 when the bike write path needed a real bound. That number is enforced in two places, POST /bike/api/ride and the bike_ride_levels_scale constraint in content/gym/schema.sql, so a different machine means changing both. The conditioning cues assumed a numbered dial and now do not have to.",
+          "sharedInOneWindow": false
+        },
+        "elliptical": {
+          "name": "Elliptical",
+          "confidence": "stated",
+          "sharedInOneWindow": false
+        },
+        "stairmaster": {
+          "name": "Stairmaster",
+          "confidence": "stated",
+          "sharedInOneWindow": false
+        }
       }
     },
-
     "pool": {
       "name": "Pool",
       "floor": false,
@@ -205,12 +288,12 @@
         "pool": {
           "name": "25 m pool, same building",
           "confidence": "logged",
-          "evidence": "Every swim session in the lap data reads poolLength: 25. 'The pool is there of course, 25 m. It's all in the same place.'"
+          "evidence": "Every swim session in the lap data reads poolLength: 25. 'The pool is there of course, 25 m. It's all in the same place.'",
+          "sharedInOneWindow": false
         }
       }
     }
   },
-
   "portable": {
     "$comment": [
       "Occupies NO station, so these carry `station: null` in program.json. They are the only legal",
@@ -226,14 +309,20 @@
       "name": "Dumbbells",
       "needsFloor": false,
       "confidence": "stated",
-      "range": { "maxLb": 90 },
+      "range": {
+        "maxLb": 90
+      },
       "evidence": "'Dumbbells, I think they're up to like 90 lbs'. Logged to 75/hand."
     },
     "kettlebells": {
       "name": "Kettlebells",
       "needsFloor": false,
       "confidence": "stated",
-      "range": { "minLb": 20, "maxLb": 50, "pairsOfEach": 2 },
+      "range": {
+        "minLb": 20,
+        "maxLb": 50,
+        "pairsOfEach": 2
+      },
       "evidence": "'There are kettlebells from like 20 up to 50, two of each'",
       "note": "Never used, never prescribed before 2026-08-16. The only loadable implement here that swings, which is why it now appears as a hinge-power and carry alternative."
     },
@@ -263,7 +352,6 @@
       "confidence": "logged"
     }
   },
-
   "absent": {
     "hip-thrust-machine": {
       "name": "Hip thrust machine",
@@ -272,7 +360,6 @@
       "workaround": "smith-hip-thrust, already in program.json as an alt"
     }
   },
-
   "unexplored": {
     "accessory-boxes": {
       "name": "Bins of accessories on the gym floor",
