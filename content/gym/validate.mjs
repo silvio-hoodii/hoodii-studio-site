@@ -874,6 +874,52 @@ if (!conditioning.week?.restRule) {
   }
 }
 
+/* ---------------------------------------------------------------------------------------------
+ * A SLOT MAY NOT DISAGREE WITH THE CATALOGUE ABOUT WHAT THE EXERCISE IS CALLED. Added 2026-08-28.
+ *
+ * The 2026-08-27 gate made a slot agree with the catalogue about WHERE an exercise is done. It said
+ * nothing about the NAME, and the name is copied into every slot, so the two drifted while both
+ * files kept reading correctly on their own.
+ *
+ * Found by renaming one variant. His note #26 that morning: "whatever history is on standing db has
+ * always been seated, ive never done standing db". The catalogue became Seated DB Overhead Press and
+ * the SLOT went on rendering Standing DB Overhead Press on the live page, because the slot copy is
+ * what the card shows. Three more were already wrong: the calf raise slot says DB Standing Calf
+ * Raise for a machine he works at 180 to 210 lb, which his own open question is about, and the
+ * Copenhagen plank slot carried a qualifier its own cue explains far better than a name can.
+ *
+ * This is the inProgramme disease exactly. 103 variants carried a copied flag, nine were wrong the
+ * day the file shipped, and the fix was to delete the copy and derive it. Every copy of a fact is a
+ * fact that goes stale silently.
+ *
+ * THE BETTER FIX IS DELETION AND IT IS NOT DONE HERE. `ex.name` is read by GymClient, the log page
+ * and coverage.mts, so removing it from the slots means teaching every consumer to resolve the name
+ * from the catalogue. That is a cross-cutting change in a surface another session was editing on
+ * 2026-08-28, and shipping a refactor inside a behaviour change is how the refactor gets read as a
+ * no-op. Whoever picks it up: delete the key, resolve from movements.json, and turn this check into
+ * the same refusal inProgramme gets.
+ * ------------------------------------------------------------------------------------------- */
+if (MOVEMENTS) {
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    for (const nameBlock of day.blocks || []) {
+      for (const ex of nameBlock.exercises || []) {
+        if (!ex.name) continue;
+        const v = MOVEMENTS[ex.id];
+        if (!v) continue;   // an id the catalogue does not know is the placement gate's finding
+        if (v.name === ex.name) continue;
+        fail(
+          dayKey + '/' + nameBlock.label,
+          'slot "' + ex.id + '" is called ' + JSON.stringify(ex.name)
+            + ' but movements.json calls it ' + JSON.stringify(v.name)
+            + '. The CARD renders the slot copy, so that is what he reads at the rack while every'
+            + ' tool and report reads the other one. The catalogue owns the name: make them match,'
+            + ' or rename the variant if the catalogue is the one that is wrong.',
+        );
+      }
+    }
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
 

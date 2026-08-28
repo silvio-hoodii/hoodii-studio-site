@@ -404,7 +404,7 @@
             },
             {
               "id": "standing-calf-raise",
-              "name": "DB Standing Calf Raise",
+              "name": "Standing Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -548,7 +548,7 @@
           "exercises": [
             {
               "id": "db-overhead-press",
-              "name": "Standing DB Overhead Press",
+              "name": "Seated DB Overhead Press",
               "sets": 3,
               "reps": "8",
               "rest": "90s",
@@ -1225,7 +1225,7 @@
             },
             {
               "id": "copenhagen-plank",
-              "name": "Copenhagen Plank (short lever)",
+              "name": "Copenhagen Plank",
               "sets": 3,
               "reps": "20/side",
               "rest": "60s",
@@ -1306,7 +1306,7 @@
             },
             {
               "id": "standing-calf-raise",
-              "name": "DB Standing Calf Raise",
+              "name": "Standing Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
