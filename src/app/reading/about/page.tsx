@@ -35,11 +35,17 @@ export default async function ReadingAbout() {
 
       <h1>How this works</h1>
 
+      {/* THE FOUR PAGES ARE THE FOUR TABS IN THE NAV DIRECTLY ABOVE THIS LIST, and until 2026-08-28
+          they were not. It described "All books", which was retired into the shelf on 2026-08-21 and
+          307s away, never mentioned Want, which shipped the same day, and called the third page
+          "Shelf check" while every tab and title on the site says "Browse". This is the one page whose
+          entire job is describing the app, so it was describing an app that had stopped existing five
+          days earlier (04-reading P1-2). Names here must match the nav one row up. */}
       <h2 className="sec">The four pages</h2>
       <ul className="lines">
         <li><strong>Next up</strong>: the ten books I have actually committed to. It re-ranks on every run rather than topping itself up, so an unread book has no tenure: if something better shows up it loses the slot. Anything I have started is pinned and never evicted.</li>
-        <li><strong>All books</strong>: everything scored, ranked. A book disappears from here the moment it enters the ten.</li>
-        <li><strong>Shelf check</strong>: for standing in a second-hand shop. Section, then author letter, because that is the order the aisles are physically walked. The other pages answer &quot;what should I read next&quot;; this one answers &quot;I am holding this spine, is it worth pulling&quot;, which is a different question and needs a different shape.</li>
+        <li><strong>Browse</strong>: every scored book, for two moments. In a shop, searching a spine or walking the alphabet by author surname, because that is the order the aisles are physically walked. At home, sorted by best, shortest, best-rated or newest. Next up answers &quot;what should I read next&quot;; this answers &quot;I am holding this spine, is it worth pulling&quot;, which is a different question and needs a different shape.</li>
+        <li><strong>Want</strong>: books saved for the next shop trip. Not the queue, and the difference is the whole point: a want costs nothing and evicts nothing, where adding to the ten pushes something out.</li>
         <li><strong>Finished</strong>: recall decks, one per book actually finished. Nothing here for a book owned but not started, or one I&apos;m planning to trade rather than read.</li>
       </ul>
 

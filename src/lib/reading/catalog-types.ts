@@ -4,7 +4,9 @@
  * and ./types: this file can be imported by a client component later without dragging the DB
  * client with it. */
 
-export type Track = 'canon' | 'current' | 'nonfiction' | 'genre' | 'spanish';
+import type { Track } from './queue-types';
+
+export type { Track };
 
 export interface CatalogEntry {
   key: string;
@@ -25,9 +27,10 @@ export interface CatalogEntry {
   why: string | null;
 }
 
-export const trackLabel: Record<Track, string> = {
-  canon: 'canon', current: '🔥 current', nonfiction: 'non-fiction', genre: 'genre', spanish: 'Spanish',
-};
+/* IMPORTED, not declared. This was a byte-identical copy of queue-types.ts's map, and the copy is
+ * how the fire emoji survived being removed from one of them: a shared literal in two files is one
+ * file going stale. 08-ux-ui P2-3. */
+export { trackLabel } from './queue-types';
 
 export interface CatalogFilters {
   q?: string;

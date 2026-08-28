@@ -83,8 +83,22 @@ create table if not exists cook_log (
   step      int,
   step_of   int,
   kind      text,                       -- broke|confusing|question
-  step_text text
+  step_text text,
+  /* HAS ANYBODY ACTED ON IT. Added 2026-08-28, the same column gym_note has had since it shipped.
+   *
+   * `gym_note.handled` plus `scripts/gym-notes.mjs` is what turns a note box into a channel; the
+   * kitchen had the box, the rows, and a prose rule in HOODII/CLAUDE.md saying to read them at
+   * session start, and nothing that could tell an answered question from an unanswered one. The
+   * 2026-08-26 audit's theme T7 counted the cost: nine unhandled gym notes and one kitchen
+   * `kind:"question"` from 2026-08-19, on a surface whose own comment says "a captured question
+   * nobody answers is worse than no capture, because he stops believing the box does anything".
+   *
+   * Surfaced by `scripts/kitchen-notes.mjs`. Default false, so every existing row starts unhandled
+   * and has to be answered or explicitly marked, which is the correct direction for a backlog. */
+  handled   boolean     not null default false
 );
+alter table cook_log add column if not exists handled boolean not null default false;
+create index if not exists cook_log_unhandled on cook_log (handled, at desc);
 create index if not exists cook_log_dish_at on cook_log (dish, at desc);
 create index if not exists cook_log_at      on cook_log (at desc);
 

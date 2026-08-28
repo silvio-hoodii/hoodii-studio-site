@@ -4,7 +4,9 @@
  * nobody chose rather than one that was made on purpose.
  */
 
-export type Track = 'canon' | 'current' | 'nonfiction' | 'genre';
+/* `spanish` is a shelf/catalogue track, not a queue one, and it is in this union so ONE label map
+ * can serve both files. The queue never emits it. */
+export type Track = 'canon' | 'current' | 'nonfiction' | 'genre' | 'spanish';
 
 export interface QueueEntry {
   key: string;
@@ -81,11 +83,22 @@ export interface AcquirePayload {
   price: Record<string, AcquirePriceChannel> | null;
 }
 
+/* THE ONE TRACK LABEL MAP on this side of /reading. `catalog-types.ts` imports it rather than
+ * declaring its own, which is why `spanish` lives here too even though the queue never carries it:
+ * the pair existed as two identical literals and drifted, both spelling `current` with a fire emoji
+ * that nobody had looked at in a while (08-ux-ui P2-3).
+ *
+ * NO EMOJI. The design brief is a monochrome instrument with exactly one chromatic colour, and
+ * `music.css` refuses album art for precisely this reason: "a grid of full-colour covers is the one
+ * thing that would visibly break a monochrome system built on purpose". A full-colour glyph at 14px
+ * is the same break in miniature, it is a decorative-emoji tell, and the word "current" already says
+ * what the flame was there to say. `scripts/lint-prose.mjs` refuses the emoji blocks now. */
 export const trackLabel: Record<Track, string> = {
   canon: 'canon',
-  current: '🔥 current',
+  current: 'current',
   nonfiction: 'non-fiction',
   genre: 'genre',
+  spanish: 'Spanish',
 };
 
 /** picked_via is refill.mjs's own audit trail (README: "for auditability"), not reader-facing

@@ -49,6 +49,16 @@ const GATES = [
    * directory ten times, which belongs in the thing a person types before pushing, not in the
    * deploy path. The pre-push hook runs this file, so it executes on every push either way. */
   ['gym-validator-tests', process.execPath, ['content/gym/validate.test.mjs']],
+  /* THE KITCHEN VALIDATOR'S REGRESSION SUITE. Added 2026-08-28, for the same reason and by the same
+   * argument as the gym one above, and it earned its place the same way: the bare-colour-endpoint
+   * gate it was written around got four out of four wrong on its first live run, and that was caught
+   * by a person reading the output. A suite is what makes that not luck. Ten cases, five of which
+   * assert the gate lets CORRECT data through, because a checker whose first real finding is false
+   * is a checker nobody runs.
+   *
+   * Here rather than in `pnpm build`, for the gym suite's reason: it copies a directory and spawns a
+   * process per case. */
+  ['kitchen-validator-tests', process.execPath, ['content/kitchen/validate.test.mjs']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

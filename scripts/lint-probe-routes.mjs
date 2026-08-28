@@ -22,7 +22,7 @@
  * Run: node scripts/lint-probe-routes.mjs
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 const API_ROOTS = [
   { dir: join(process.cwd(), 'src', 'app', 'gym', 'api'), url: '/gym/api' },
@@ -48,6 +48,71 @@ const READ_ONLY_POSTS = new Set([
    * place rather than deleted as part of a change about note-taking; a candidate for removal. */
   '/gym/api/next',
 ]);
+
+/* ---------------------------------------------------------------------------------------------
+ * SERVER ACTIONS ARE A WRITE CHANNEL AND NO GATE WATCHED THEM. Added 2026-08-28 per audit theme T9.
+ *
+ * This file's whole subject is "every route that can change state is inside a harness". It walked
+ * `route.ts` files under three API roots and nothing else, and `'use server'` is a second, entirely
+ * separate way to POST into this app: `src/app/kitchen/want/actions.ts` exists, takes a form
+ * submission, and is reached by no matcher, no prefix check and no probe stub. It happens to be
+ * read-only, which is luck rather than a property anything enforces.
+ *
+ * `src/proxy.ts` cannot cover it: the proxy gates paths, and a server action posts to the page's own
+ * URL. So the only mechanism available is an INVENTORY, and an inventory that is not compared against
+ * anything is a comment. Each action file is declared here as read-only or gated, and a NEW one fails
+ * the build until somebody says which it is. That is the cheap half of the problem: the expensive half
+ * is nobody noticing the file exists.
+ *
+ * The four login pages' `signIn` actions are here for completeness rather than as an exemption. They
+ * set the cookie, which is how a device becomes authorised, so they cannot require being authorised;
+ * `src/lib/login-server.ts` is the one place that happens and `scripts/lint-auth.mjs` gates it.
+ * ------------------------------------------------------------------------------------------- */
+const SERVER_ACTION_FILES = new Map([
+  ['src/app/kitchen/want/actions.ts', 'READ ONLY: scores a pasted ingredient list, returns strings, writes nothing'],
+  ['src/app/kitchen/login/page.tsx', 'PUBLIC BY NECESSITY: signIn, the gate itself. See src/lib/login-server.ts'],
+  ['src/app/gym/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
+  ['src/app/health/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
+  ['src/app/french/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
+]);
+
+function auditServerActions() {
+  const SRC = join(process.cwd(), 'src');
+  const found = [];
+  (function walk(dir) {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) { walk(full); continue; }
+      if (!/\.(ts|tsx)$/.test(entry)) continue;
+      const src = readFileSync(full, 'utf8');
+      /* The directive, at the top of a file or inside a function body, which are the two forms
+       * Next accepts. Quoted either way. */
+      if (/(['"])use server\1/.test(src)) {
+        found.push(relative(process.cwd(), full).split(sep).join('/'));
+      }
+    }
+  })(SRC);
+
+  let bad = 0;
+  for (const f of found) {
+    if (SERVER_ACTION_FILES.has(f)) continue;
+    console.error(`FAIL  ${f} declares "use server" and is not in SERVER_ACTION_FILES.`);
+    console.error('      A server action is a POST that no matcher and no probe can see. Decide what it');
+    console.error('      is and record it here: read-only, or a write that must check `isAuthed()` from');
+    console.error('      src/lib/auth-server.ts itself, because src/proxy.ts cannot gate it.');
+    bad++;
+  }
+  for (const f of SERVER_ACTION_FILES.keys()) {
+    if (found.includes(f)) continue;
+    console.error(`FAIL  SERVER_ACTION_FILES lists ${f}, which no longer declares "use server".`);
+    console.error('      A stale entry describes a channel that moved, which is how the /swim matcher');
+    console.error('      omission happened: a list that reads correct and covers nothing.');
+    bad++;
+  }
+  return { found: found.length, bad };
+}
+
+const actions = auditServerActions();
 
 const probeSrc = readFileSync(PROBE, 'utf8');
 const listMatch = probeSrc.match(/const WRITE_ROUTES = \[([^\]]*)\]/);
@@ -75,7 +140,7 @@ for (const root of API_ROOTS) {
   walk(root.dir, root.url);
 }
 
-let fail = 0;
+let fail = actions.bad;
 for (const r of routes.sort()) {
   if (READ_ONLY_POSTS.has(r)) continue;
   if (!stubbed.has(r)) {
@@ -96,6 +161,7 @@ for (const s of stubbed) {
 console.log('-'.repeat(70));
 console.log(
   `${routes.length} POST route(s) under ${API_ROOTS.map((r) => r.url).join(' + ')}, ${stubbed.size} stubbed, ` +
-    `${READ_ONLY_POSTS.size} read-only by declaration, ${fail} failures`,
+    `${READ_ONLY_POSTS.size} read-only by declaration, ${actions.found} server-action file(s) declared, ` +
+    `${fail} failures`,
 );
 process.exit(fail ? 1 : 0);

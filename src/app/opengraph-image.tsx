@@ -19,10 +19,10 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'Silvio Neyra';
 
-const BACKGROUND = '#fdfcfa'; // --background, oklch(0.993 0.0015 100)
-const FOREGROUND = '#262420'; // --foreground, oklch(0.19 0.004 100)
-const MUTED = '#807d78'; // --muted-foreground, oklch(0.55 0.004 100)
-const SIGNAL = '#00784a'; // --signal, oklch(0.48 0.12 158)
+const BACKGROUND = '#fdfcfa'; // lint-tokens-allow: --background, oklch(0.993 0.0015 100)
+const FOREGROUND = '#262420'; // lint-tokens-allow: --foreground, oklch(0.19 0.004 100)
+const MUTED = '#807d78'; // lint-tokens-allow: --muted-foreground, oklch(0.55 0.004 100)
+const SIGNAL = '#00784a'; // lint-tokens-allow: --signal, oklch(0.48 0.12 158)
 
 export default function Image() {
   return new ImageResponse(

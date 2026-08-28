@@ -105,6 +105,53 @@ const BANNED_CUE = [
   { re: /\bsome\b(?= (?:salt|pepper|oil|water|butter))/i, why: 'Give the amount.' },
 ];
 
+/* A BARE COLOUR WORD AS THE DONENESS TEST. Added 2026-08-28, from cook_log #17.
+ *
+ * HIS WORDS, 2026-08-11, mid-cook on Beef and Mushrooms Over Rice: "When it says brown, do you mean
+ * brown like a little bit burnt, like when that happens on the stainless steel pan?" He is a
+ * beginner and he has only ever been taught the SEARING technique, the stainless-steel water test,
+ * so "brown" reads as that: a dark crust, near the edge of burnt. This dish wanted nothing of the
+ * kind. It wanted red meat to stop being red.
+ *
+ * There are three states and the word covers all of them:
+ *   COOKED  red or pink has gone grey-brown all the way through the piece. Most dishes want this.
+ *   SEARED  a deep crust from dry high heat in a wide pan. Tastes nutty. A choice, not a default.
+ *   BURNT   black and bitter. This is what happened to piccata's second batch on 2026-08-09.
+ *
+ * So a doneness test may say brown, and it may not say ONLY brown. It has to name which one, or
+ * describe what the surface looks like, which is what every good step on this card already does
+ * ("deep golden all over", "opaque white to see-through", "red or pink goes grey-brown").
+ *
+ * NARROW ON PURPOSE, and it checks only `doneness.test`, not the whole blob. `look` prose explaining
+ * that brown garlic is bitter must not trip it, the source's own sentence in `text` must not trip it
+ * (the verbatim law outranks a punctuation-shaped rule), and a heat target describing brown film on
+ * the bottom of a pot is a description rather than an endpoint. The one place the word decides
+ * whether he takes something off the heat is the doneness test, and that is where it is gated.
+ *
+ * THE FIRST VERSION OF THIS RULE GOT FOUR OUT OF FOUR WRONG, and that is worth the space because it
+ * is the same lesson the workspace's bare-path hook learned on 2026-08-26. It flagged arroz step 3
+ * ("They should not be brown"), creamytomatochicken step 5 (the same sentence), eggs step 4 ("foaming
+ * rather than browning") and piccata step 11 ("Brown is right. BLACK is burnt"). Every one of those is
+ * the well-written case: each already tells him which state is meant, three of them by ruling brown
+ * OUT. A checker whose first real output is entirely false teaches whoever reads it to dismiss the
+ * checker, so recall matters less here than precision.
+ *
+ * The fix is that DISCRIMINATION is what the rule looks for, not a keyword list. A doneness test
+ * earns its "brown" by doing any one of: naming another colour or state beside it, negating it, or
+ * contrasting it with something. A test that says brown and nothing else is the defect. */
+const COLOUR_ENDPOINT = /\bbrown(?:ed|ing)?\b/i;
+const COLOUR_DISCRIMINATED = new RegExp(
+  [
+    /* another colour or state named alongside it, which is what makes brown mean something */
+    'golden|deep|dark|light|pale|black|white|grey|gray|red|pink|charred|burnt|burned|nutty',
+    /* the shape of the thing, which is a description rather than a bare endpoint */
+    'crust|edge|patch|film|fond|layer|all over|throughout',
+    /* ruling it out, or contrasting it, which is the strongest discrimination of the three */
+    'not|no longer|never|rather than|instead of|without',
+  ].join('|'),
+  'i',
+);
+
 /* Cups of water per cup of dry rice. Carried over from lint.mjs, but now computed from structured
  * quantities instead of regexed out of prose, which is why it can actually be trusted. */
 /* Every key an ingredient may carry, and every one of these reaches a screen. Mirrors the
@@ -329,6 +376,16 @@ function validate(r, file) {
         continue;
       }
       fail(id, 'cue', `${where} uses a banned cue: ${b.re.source}`, b.why);
+    }
+
+    /* The bare colour endpoint. See COLOUR_ENDPOINT above for the incident. */
+    const doneTest = String(s.doneness?.test || '');
+    if (COLOUR_ENDPOINT.test(doneTest) && !COLOUR_DISCRIMINATED.test(doneTest)) {
+      fail(id, 'cue', `${where} ends on the bare word "brown" with nothing qualifying it`,
+        'He asked in the middle of a cook whether brown meant "a little bit burnt". Three states share '
+        + 'that word: COOKED (red or pink gone grey-brown), SEARED (a deep crust from dry high heat) '
+        + 'and BURNT. Say which, or say what the surface looks like: "deep golden all over", '
+        + '"grey-brown with no pink left".');
     }
 
     // A heat level in the instruction with nothing observable attached to it.

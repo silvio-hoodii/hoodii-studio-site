@@ -37,7 +37,7 @@
  *   node scripts/probe-kitchen.mjs https://hoodii.studio
  */
 import { spawn } from 'node:child_process';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 
@@ -284,7 +284,46 @@ try {
    * globals.css once carried overflow:hidden for the deleted WebGL room and shipped /kitchen
    * completely unscrollable on a phone, with the content present and measurable the whole time.
    * Measuring a page's height is not testing that it scrolls. */
-  for (const path of ['/kitchen', '/kitchen/find', '/kitchen/shop', '/kitchen/want']) {
+  /* THE LONGEST OFFERED DISH IS IN THIS LOOP, and it was not until 2026-08-28.
+   *
+   * The loop visited /kitchen, /kitchen/find, /kitchen/shop and /kitchen/want, which is every
+   * kitchen page EXCEPT the one DESIGN.md says matters most: the step screen he actually cooks from.
+   * So when `.kos .dots` overflowed at thirteen steps the probe reported the whole surface fitting a
+   * phone, and gnocchi was being offered with fourteen. The audit found it by arithmetic on the CSS
+   * (02-kitchen P1-4), which is not a thing that happens twice.
+   *
+   * FOUND, NOT NAMED. The longest recipe on disk changes with every card added, and a hardcoded id
+   * would test the geometry of whatever used to be longest. Reading the files here rather than
+   * asking the page keeps the probe read-only. */
+  const longestDish = (() => {
+    const dir = join(process.cwd(), 'content', 'kitchen', 'recipes');
+    let best = null;
+    for (const f of readdirSync(dir).filter((x) => x.endsWith('.json'))) {
+      try {
+        const r = JSON.parse(readFileSync(join(dir, f), 'utf8'));
+        if (r.provenance?.cookedResult === 'failed') continue;
+        const n = (r.steps || []).length;
+        if (!best || n > best.n) best = { id: r.id || f.replace(/\.json$/, ''), n };
+      } catch { /* a card this probe cannot parse is the validator's problem, not this loop's */ }
+    }
+    return best;
+  })();
+  if (!longestDish) {
+    check('a dish page could be found to measure', false, 'no parseable recipe in content/kitchen/recipes');
+  } else {
+    console.log(`  (longest dish for the fit loop: ${longestDish.id}, ${longestDish.n} steps)`);
+  }
+
+  const FIT_PATHS = ['/kitchen', '/kitchen/find', '/kitchen/shop', '/kitchen/want'];
+  /* `?step=` AND NOT THE OVERVIEW. The step progress dots, which are what overflowed, only render
+     once cooking has started: `CookClient` keeps the step in the URL as `?step=N` so a reload
+     mid-cook does not lose his place. The first version of this addition visited the bare dish page,
+     which fits at any recipe length because it has no dots on it, and would have passed on the exact
+     build the audit found broken. Mid-recipe, so the dots are all rendered and none is the first or
+     last special case. */
+  if (longestDish) FIT_PATHS.push(`/kitchen/${longestDish.id}?step=${Math.ceil(longestDish.n / 2)}`);
+
+  for (const path of FIT_PATHS) {
     const t2 = await openTab(BASE + path);
     const c2 = connect(t2);
     await c2.ready;
@@ -329,7 +368,16 @@ try {
       + 'for(var i=0;i<k.length;i++){tops[Math.round(k[i].getBoundingClientRect().top)]=1;}'
       + 'return {rows:Object.keys(tops).length,tabs:k.length};})())',
     ) || '{}');
-    check(path + ' nav sits on one line', nav.rows === 1, nav.tabs + ' tabs across ' + nav.rows + ' rows');
+    /* ONLY ON THE PAGES THAT HAVE A NAV. The cook screen deliberately carries no `.kosnav`: it is one
+       step filling the screen with a back arrow, and putting three index tabs on it is the wall this
+       surface exists to avoid. Adding the dish page to this loop made the check report "0 tabs across
+       0 rows" as a failure, which is a checker complaining that a page is built the way it was
+       designed. `path.startsWith` rather than a second list, so a new index page joins automatically
+       and a new cook-shaped page does not. */
+    const hasNav = !path.includes('?step=');
+    if (hasNav) {
+      check(path + ' nav sits on one line', nav.rows === 1, nav.tabs + ' tabs across ' + nav.rows + ' rows');
+    }
 
     /* ---- THE HOME PAGE MUST BE READING THE ENGINE ----
      *

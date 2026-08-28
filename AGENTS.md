@@ -93,9 +93,10 @@ always lose to the thing that exists.
 | `/reading/want` | Books saved for the next shop trip. NOT the queue: a want costs nothing and evicts nothing, where adding to the ten pushes something out. Reads `reading_want` | via `/reading/api/want` |
 | `/reading/api/want` | The only write under `/reading`. Cookie-gated in `src/proxy.ts` like `/kitchen/api` and `/gym/api` | **cookie** |
 | ~~`/reading/all`~~ | **Retired 2026-08-21**, 307s to `/reading/shelf`. Both browsed the same pool and the shelf page does everything it did plus covers, sorts, tiers, want and surprise. Its two unique features, Spanish books and pagination, moved across first. `src/lib/reading/catalog-*.ts` survive because `/reading/about` still uses them to list the sources | n/a |
-| `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists the 33 real source lists behind the scores. Static-shaped, reads `reading_source_list` | no writes |
+| `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists every real source list behind the scores, counted from `reading_source_list` rather than typed. This line said "33" until 2026-08-28 and the table held 55, which is the drift a hand-typed number always ends in; the hub row carried the same typed 55 and now derives it. Static-shaped | no writes |
 | `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
+| `/work/brixel`, `/work/kitchen`, `/work/themoment`, `/work/versatile` | Four case-study pages, static, no data layer. **Omitted from this table until 2026-08-28**, which is the drift the note under this table already describes: a hand-maintained list of what exists will always lose to the thing that exists. **The clause 7(c) check applies here and nowhere else on the site**: these are the only pages that could read as advertising availability for outside work while an immigration file is pending. The 2026-08-26 audit verified they carry zero availability claims. Read `work-permit/CLAUDE.md` before adding a sentence to any of them | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
 | `/kitchen/login`, `/gym/login`, `/health/login`, `/french/login` | The gate, one cookie for all | public |
 
@@ -135,21 +136,48 @@ node content/reading/sync-shelf.mjs && node content/reading/sync-catalog.mjs && 
 Neon updates immediately; no redeploy for data-only changes. `refill.mjs` re-ranks rather than
 tops up: an unread book has no tenure, but anything he has STARTED or OWNS is pinned.
 
+**That sequence was a data-loss bug on 2026-08-26 and it was the only P0 the full-site audit found.**
+`enrich-openlibrary.mjs` with no flag walks the browse tier, 778 books today, and wrote that straight
+over `data/all/enrichment.json`, which holds 6,569 from an earlier `--all` run. The next
+`sync-shelf.mjs` would then have pushed roughly 5,100 books' covers, descriptions and reader ratings
+to null, with every step logging success and nothing noticing until the shelf was opened in a shop.
+**The documented command was the loaded gun.**
+
+Fixed at the write, not in this document: `enrich-openlibrary.mjs` now MERGES its run into the file,
+which makes a shrink unrepresentable rather than merely refused, and both it and `ingest.mjs` go
+through `ReadingOS/scripts/lib/guard-regen.mjs`, whose contract is stated in the same words as
+`HealthOS/guard-regen.mjs`: **a regeneration may not shrink an accumulated artifact.** `--force`
+overrides and says so; the old file is kept at `<path>.prev` either way. Regression suite:
+`node scripts/lib/guard-regen.test.mjs` in `ReadingOS/`, 12 cases, watched refusing in both
+directions. It is not in this repo's `verify.mjs` because it is not in this repo.
+
 **Two guards in that pipeline exist because they caught something.** `sync-shelf.mjs` throws on an
 unmapped section label rather than silently dropping the books (it fired the day Spanish was added,
 which would otherwise have put 156 books in no section). `fetch-award-sources.mjs` refuses to write
 a source whose parse dropped more rows than it kept, because a half-read award list under-credits
 every book it missed while looking like full coverage.
 
-**`/reading`'s queue is `force-dynamic` on purpose.** It reads Neon at request time, same as
-`/swim`. Without that directive Next prerenders it once at build time and it never looks at the
-mirror again, which was caught 2026-08-20 by checking the build's own route table (`ƒ` vs `○`)
-rather than trusting that a page which fetches from a DB must be dynamic by default. It is not.
-Refreshing the data: run `refill.mjs` and/or `acquire.mjs` in `ReadingOS/`, then
-`node content/reading/sync.mjs` here, then redeploy nothing (Neon updates immediately, no rebuild
-needed). The green `.verdict.now` badge is the one case that earns `--signal` on this page: a copy
-on the shelf at Westbrook or Central today, not just "BORROW NOW" system-wide, which is a
-different and much less useful fact.
+**`/reading`'s queue is ISR at 300 seconds, and it was `force-dynamic` until commit `8963763`.**
+That commit ("Cache six pages: Active CPU passed the Hobby allowance") made the change deliberately
+and left a good in-file comment; this paragraph was not updated and said force-dynamic for five days,
+which meant a session obeying this document would have "restored" the exact request-time cost the
+commit removed. Corrected 2026-08-28 (04-reading P2-2). **A doc that describes the code as it used to
+be is instructions for a regression.**
+
+Five minutes of lag is not staleness here: the mirror is pushed by hand (`refill.mjs` and/or
+`acquire.mjs` in `ReadingOS/`, then `node content/reading/sync.mjs`), both deliberate acts, and Neon
+updates immediately with no redeploy. What ISR must not become is a build-time bake: without any
+directive Next prerenders the page once and never looks at the mirror again, which was caught
+2026-08-20 by reading the build's own route table (`ƒ` vs `○`) rather than assuming a page that
+fetches from a DB is dynamic by default. It is not. **Check the route table whenever you change a
+rendering mode on this repo.**
+
+The green `.verdict.now` badge is the one case that earns `--signal` on this page: a copy on the
+shelf at Westbrook or Central today, not just "BORROW NOW" system-wide, which is a different and
+much less useful fact. **It is gated on liveness since 2026-08-28**: the sync is hand-run and a hold
+moves daily, so past one day the badge keeps its label, loses the colour, and prints the date it was
+checked. `homeBranchNowStale` in `src/lib/reading/queue-db.ts` is the flag, and it is separate from
+`stale` (seven days, the whole mirror) because the two answer different questions on different clocks.
 
 **Recipes are data, and `pnpm build` runs `content/kitchen/validate.mjs --strict`.** A broken recipe
 cannot deploy. Read `content/kitchen/schema/RECIPE-SCHEMA.md` before touching a recipe.
@@ -421,7 +449,25 @@ harmless, and PSN is not surfaced on the hub.
 
 - Production deploys from `main`.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
-  All four, before any push.
+  All four, before any push. Or `node scripts/verify.mjs`, which runs all of them plus the two
+  validator regression suites and the two gym gates, and prints ONE green-or-red line.
+- **THE AUTH COMPARISON IS WRITTEN ONCE, in `src/lib/auth.ts`, and it is fail-closed.** Added
+  2026-08-28 after the security audit read `src/proxy.ts`: it compared the cookie with `===` against
+  `process.env.KITCHEN_SESSION_SECRET`, so an unset env var made every anonymous request evaluate
+  `undefined === undefined` and opened the entire write surface on a repo whose route list is public.
+  Every DB module throws on a missing connection string; the one gate that must not fail open was the
+  only one that did. `cookieAuthorises` is edge-safe for the proxy, `isAuthed()` in
+  `src/lib/auth-server.ts` is the server-component half, and **`scripts/lint-auth.mjs` fails the build
+  on a second copy of either.** Its first live run found a THIRD copy the audit had missed, in
+  `src/app/french/page.tsx`, where an unset secret showed every anonymous visitor the edit controls.
+  The cookie is SET in two places only, `src/lib/login-server.ts` (the four login forms) and
+  `/kitchen/api/unlock` (the inline unlock), and both are in that linter's allowlist by name.
+- **NO COLOUR LITERAL OUTSIDE `globals.css`.** `scripts/lint-tokens.mjs`, in `pnpm build`, with a
+  `--selftest` of 26 cases that runs first on every invocation. The codebase was already clean when
+  the audit swept it, which was the finding: the state was held by vigilance alone, and `french.css`'s
+  own header records that this surface arrived carrying its own blue and green palette. The exceptions
+  are marked in place with `lint-tokens-allow`, not listed by path: an ImageResponse cannot read a CSS
+  variable, and a `themeColor` viewport export is read by the browser chrome.
 - **A source that 403s the fetcher is not a source that cannot be checked.** Use
   `node scripts/read-source.mjs <url> ["<regex>"]`, which reads the page in the real Chrome on CDP
   9222 and prints the rendered text. On 2026-08-22 swimming.org returned 403, a swim cue was
@@ -449,6 +495,24 @@ harmless, and PSN is not surfaced on the hub.
   failing tests) and swap-revert/swap-toggle, and the first two were each "fixed" with a comment
   saying not to do it again. `exSelectorMeansExercise` is the gate now: every `.ex` must carry
   `data-slot`. A shared look is a CSS decision; a shared class name is an API.
+- **Touching `/kitchen` or a recipe? Run `node scripts/kitchen-notes.mjs` FIRST.** The kitchen twin of
+  `gym-notes.mjs`, added 2026-08-28, and the gym learned the lesson FROM the kitchen: a captured
+  question nobody answers is worse than no capture, because he stops believing the box does anything.
+  The gym got a script for it; the kitchen got a sentence in HOODII/CLAUDE.md, and the 2026-08-26
+  audit then found a `kind:"question"` from 2026-08-19 sitting unanswered with its own answer already
+  written into the log and never folded into the step (audit theme T7). `cook_log.handled` is the
+  column, `--handled <id>` marks one, and the three kinds are not the same work: a `question` gets
+  answered in session AND written into the step, a `broke` gets the step fixed and
+  `provenance.readAt` re-stamped, a `confusing` gets the step rewritten. It exits ZERO on a backlog,
+  unlike gym-notes on an overdue `open` row, because these rows carry no agreed deadline and a
+  permanently red pre-push hook is a check somebody deletes.
+- **`content/kitchen/validate.test.mjs` is that validator's regression suite**, added 2026-08-28 and
+  run by `verify.mjs`. Ten cases, five of which assert the gate lets CORRECT data through. It exists
+  because the bare-colour-endpoint gate shipped the same day got **four out of four wrong on its first
+  live run**, flagging four doneness tests that all already discriminated ("They should not be brown",
+  "foaming rather than browning", "Brown is right. BLACK is burnt"). A person reading the output caught
+  it, which is luck. The gate now looks for DISCRIMINATION rather than a keyword, and both directions
+  are watched.
 - **Touching `/gym`? Run `node scripts/gym-notes.mjs` FIRST.** There is a note box at the bottom of
   the workout, added 2026-08-16 at his request, and it writes to `gym_note`. It is the only place
   the app records anything in his own words: everything else is numbers typed into boxes, and a

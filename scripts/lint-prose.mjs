@@ -87,6 +87,39 @@ function invisibleHits(line, isFirstLine) {
   return hits;
 }
 
+/* DECORATIVE EMOJI, added 2026-08-28 per 08-ux-ui P2-3.
+ *
+ * A fire emoji was rendering next to "CURRENT" on two /reading queue rows, from `'\u{1F525} current'`
+ * duplicated byte-for-byte in `queue-types.ts` and `catalog-types.ts`. The design brief is a
+ * monochrome instrument with exactly one chromatic colour; `music.css` refuses album covers on the
+ * grounds that "a grid of full-colour covers is the one thing that would visibly break a monochrome
+ * system built on purpose", and a full-colour glyph at 14px is the same break in miniature. It is
+ * also, on its own, one of the named AI tells.
+ *
+ * THIS HAS TO BE NODE AND NOT GREP. `grep -P` for these ranges fails on this machine with "supports
+ * only unibyte and UTF-8 locales", which is the exact failure that let an agent report the repo
+ * clean of em dashes on 2026-08-13 while 118 lines carried them. The audit reproduced it.
+ *
+ * THE RANGE IS THE PICTOGRAPH BLOCKS PLUS U+FE0F, AND NOT THE DINGBATS, and that narrowing came
+ * from this check's second live finding being wrong. The audit proposed `\u{2600}-\u{27BF}`, which
+ * covers Miscellaneous Symbols and Dingbats, and the first run flagged
+ * `.reading .sortopt.on .so-name::after { content: ' ✓' }`: a CHECK MARK, which renders as a
+ * monochrome text glyph in the page's own colour and breaks nothing this rule is about. Flagging it
+ * would have made the check's first real output a false positive, which is how a checker teaches
+ * people to dismiss it (the bare-path hook in this workspace got three out of three wrong on its
+ * first live run, and the lesson written down was that precision matters more than recall here).
+ *
+ * So the rule now matches its own stated reason: U+1F000 to U+1FAFF, every actual emoji block, plus
+ * U+FE0F, the variation selector that turns a text dingbat into a colour one. A plain check mark
+ * stays legal; a check mark asking for emoji presentation does not.
+ *
+ * Deliberately NOT all of Unicode, for the same reason the invisible check stops where it does: this
+ * repo legitimately carries accented letters, the degree sign and the multiplication sign, and a rule
+ * that fires on those is a rule somebody turns off.
+ *
+ * Same `lint-prose-allow` marker as the dashes, for a line whose job is to strip them. */
+const EMOJI = /[\u{1F000}-\u{1FAFF}\u{FE0F}]/u;
+
 const bad = [];
 
 function walk(dir) {
@@ -122,6 +155,10 @@ function walk(dir) {
       if (line.includes(EM)) hits.push('U+2014 em dash');
       if (line.includes(EN)) hits.push('U+2013 en dash');
       if (/&mdash;|&#8212;|&ndash;|&#8211;/.test(line)) hits.push('em/en dash HTML entity');   // lint-prose-allow
+      const emoji = line.match(EMOJI);
+      if (emoji) {
+        hits.push(`emoji U+${emoji[0].codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}`);
+      }
       hits.push(...invisibleHits(line, i === 0));
       if (hits.length) bad.push({ file: relative(ROOT, full), line: i + 1, what: hits.join(' + '), text: line.trim().slice(0, 100) });
     });
@@ -144,6 +181,8 @@ if (bad.length) {
   console.log('STRIP these characters, add the marker lint-prose-allow in a comment on that line.');
   console.log('For an invisible character: it is almost always a bad escape or a paste from a web');
   console.log('page. Delete it. Write it as \\uXXXX if a literal one is genuinely needed.');
+  console.log('For an emoji: the word next to it already says what it says. This is a monochrome');
+  console.log('instrument and a colour glyph breaks it, at any size.');
   process.exit(1);
 }
-console.log('No em dashes, no en dashes, no dash entities, no invisible characters.');
+console.log('No em dashes, no en dashes, no dash entities, no emoji, no invisible characters.');
