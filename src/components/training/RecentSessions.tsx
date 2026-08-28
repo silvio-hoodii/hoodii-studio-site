@@ -116,8 +116,22 @@ export default function RecentSessions({
       <div className="exgroup">
         <div className="exgroup-label">Before that</div>
         <p className="ex-cue">
+          {/* THE CLAIM IS ABOUT THIS BLOCK'S SOURCE, NOT ABOUT HIS LIFE. Corrected 2026-08-28
+              (12-run-bike B3). It said "This is the only one the watch has ever recorded", and the
+              watch has recorded 76 cycling sessions across 55 dates going back to 2021-09-05. What
+              holds ONE is `health_session_detail`, the per-second table this block reads.
+
+              /bike's own comment already said the sentence was false, and the mitigation shipped
+              instead was a link placed BELOW it: "There are more than the block above can see." A
+              correction underneath a wrong claim is the pattern that destroyed a dish on 2026-08-05,
+              where the five-second test was written under the prescription. The claim itself has to
+              stop being wrong.
+
+              This component serves five surfaces, so it cannot know his real total without being
+              told. It can stop asserting one: naming its own source is both honest and something it
+              can actually check. */}
           {sessions.length === 1
-            ? 'Nothing. This is the only one the watch has ever recorded, so there is no trend to draw yet. The second one is what makes this block worth having.'
+            ? 'Only one session here so far. This block reads the per-second detail the watch exports, which holds one of these; the watch itself may hold more, and the log below is the fuller record.'
             : 'Nothing recorded yet. Sessions arrive with the daily watch export.'}
         </p>
       </div>

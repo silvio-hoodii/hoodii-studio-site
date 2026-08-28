@@ -236,7 +236,25 @@ row it is rendering today.** (shared file, coordinate)
   function serves /gym, /swim, /health and both log routes.
 - Verify: `/run?s=now` while the newest row is `kind='running'` must not contain the word "treadmill".
 
-**R9. `run.startedFrom` says three runs in 2025. The watch holds 64.** (not rendered today)
+**R9. WITHDRAWN, mostly. The "3 runs" figure is CORRECT and must not be changed.**
+
+> Corrected 2026-08-28 by the orchestrator before execution, by re-running the query split by kind.
+> `health_watch_session` holds exactly **3 sessions of kind `running`** in 2025 (2025-01-14,
+> 2025-06-23, 2025-08-15), which is precisely what the sentence claims. The 64 below counts
+> `treadmill` as well, and those 61 sessions average **48 minutes**, which is the walking the same
+> sentence credits him with in its very next clause: "65 minutes of walking a day averaged over 60
+> days". Acting on this finding would have replaced a true statement with a false one, on the premise
+> the entire ten-week build rests on.
+>
+> ONE PART SURVIVES: the last of the three is **2025-08-15**, not the 16th, and `date` on that table
+> is LOCAL, so the 16th is a UTC reading of a local row. That is the four-swim-date class again. Fixed,
+> along with a clause naming which kind is being counted so the next reader does not repeat this.
+>
+> The lesson is the report's own: a count over a set whose members answer different questions is not
+> a count. That is theme T3 in the index, and this finding is an instance of it rather than an
+> instance of what it claims.
+
+**R9 as originally filed: `run.startedFrom` says three runs in 2025. The watch holds 64.** (not rendered today)
 
 - File: `C:\Users\sneyr\Desktop\HOODII\hoodii-studio-site\content\gym\conditioning.json` line 63.
 - Evidence, quoted: `"Effectively zero. 3 runs in all of 2025, the last on 2025-08-16."` Live Neon:

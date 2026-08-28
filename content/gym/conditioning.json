@@ -60,7 +60,7 @@
     "title": "Run",
     "surface": "Treadmill",
     "sessionsPerWeek": 3,
-    "startedFrom": "Effectively zero. 3 runs in all of 2025, the last on 2025-08-16. But 65 minutes of walking a day averaged over 60 days, so the engine is there and only the tissue tolerance is missing.",
+    "startedFrom": "Effectively zero. 3 runs in all of 2025 (sessions the watch typed as RUNNING, which is the count that matters here; it also holds 61 treadmill sessions that year averaging 48 minutes, and those are the walking named in the next clause), the last on 2025-08-15. But 65 minutes of walking a day averaged over 60 days, so the engine is there and only the tissue tolerance is missing.",
     "why": [
       "Bertelsen 2018 randomised 56 novice runners at BMI 30 to 35, which is your band. The arm that",
       "started at 3 km/week had 2 injuries in 29 people (6.9%). The arm that started at 6 km/week had",
@@ -72,7 +72,7 @@
     "howHard": {
       "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down. There is no version of this plan where running harder is better.",
       "secondary": "If you want a number, keep your heart rate below about 140. Your swims run 130 to 155, so this should feel EASIER than a swim.",
-      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph), then let the talk test move it. Not a guess: on 2026-08-19 you averaged 7.8 km/h at mean heart rate 113, which passes the talk test comfortably. Whatever number it settles at is your number."
+      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph), then let the talk test move it. Not a guess: on 2026-08-18 you averaged 7.8 km/h at mean heart rate 113, which passes the talk test comfortably. Whatever number it settles at is your number."
     },
     "weeks": [
       {
@@ -212,7 +212,7 @@
       "whyBothUnits": "Both units printed, because you have said you think the console is in miles."
     },
     "whyTheClockNotTheConsole": [
-      "Minutes, not metres. On 2026-08-19 you ran 3,121 m against a 500 m prescription, 3.1 times it, at",
+      "Minutes, not metres. On 2026-08-18 you ran 3,121 m against the 1,000 m prescription, 3.1 times it, at",
       "a speed that was fine: 7.8 km/h, mean heart rate 113. The distance ran away because the target",
       "lived on a console you cannot read. A clock cannot be in the wrong unit. The km and miles below",
       "are an after-the-fact check, and when they disagree the clock wins."
