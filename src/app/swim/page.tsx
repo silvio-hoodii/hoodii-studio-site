@@ -435,6 +435,19 @@ export default async function SwimPage({
                 <span className="tnum">{now.history.movingPaceSessions}</span> of{' '}
                 <span className="tnum">{now.history.totalSessions}</span> sessions, the ones the
                 watch timed length by length.
+                {/* WHAT THE FLOOR THREW OUT, said out loud rather than left as a silently better
+                    number. Two different reasons a session has no swimming pace here, and they are
+                    not the same fact: the watch did not time the lengths, or it did and the swim was
+                    mostly standing still. */}
+                {now.history.mostlyRestSessions > 0 && (
+                  <>
+                    {' '}Of those,{' '}
+                    <span className="tnum">{now.history.mostlyRestSessions}</span> were more than half
+                    rest, so they are left out of the best: a rest-excluded pace off a swim that was
+                    mostly standing at the wall is the fastest length you happened to swim, not a pace
+                    you held.
+                  </>
+                )}
               </p>
             )}
             <div className="stats">
@@ -455,11 +468,25 @@ export default async function SwimPage({
                 <div className="stat-v">{msToPace(now.history.bestWallPacePer100mMs)}</div>
                 <div className="stat-d">whole session</div>
               </div>
+              {/* THE NUMBER NOW CARRIES THE SWIM IT CAME FROM, since 2026-08-28.
+                  Splitting the column in two on 2026-08-26 fixed the column and left the MINIMUM
+                  unguarded, so this tile still read 1:31 while the personal-best table three blocks
+                  above said 1:38.71 over 100 m. Faster over 300 m than over 100 m is not a pace.
+                  Measured: it came from a 26-minute session on 2025-01-22 with FIVE minutes of
+                  swimming in it, 82 percent rest. `getSwimHistory` now floors the minimum at
+                  half the session actually being swimming, and returns which swim won, so the tile
+                  states it. A caption saying "rest removed" was true and did not stop the reader
+                  believing the number, which is the same shape as putting a correction underneath a
+                  prescription. */}
               {now.history.bestMovingPacePer100mMs != null && (
                 <div>
                   <div className="stat-k">Swimming pace / 100m</div>
                   <div className="stat-v">{msToPace(now.history.bestMovingPacePer100mMs)}</div>
-                  <div className="stat-d">rest removed</div>
+                  <div className="stat-d">
+                    {now.history.bestMovingPaceFrom
+                      ? `rest removed, over ${now.history.bestMovingPaceFrom.distanceM} m on ${now.history.bestMovingPaceFrom.date}`
+                      : 'rest removed'}
+                  </div>
                 </div>
               )}
             </div>

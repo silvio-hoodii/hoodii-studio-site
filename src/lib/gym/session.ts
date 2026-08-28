@@ -149,3 +149,61 @@ export function sessionVerdict(s: SessionDetail): string | null {
   }
   return null;
 }
+
+/* THE HIGHEST HEART RATE HIS WATCH HAS EVER RECORDED, derived, because it was typed and it was wrong.
+ *
+ * `content/gym/conditioning.json` asserted in five rendered strings that his highest recorded heart
+ * rate is 175. Live: `select max(max_hr) from health_session_detail` returns 201, and 23 of his 60
+ * swims with a reading exceed 175. Six swims tie at exactly 175, which is almost certainly where the
+ * number came from: 175 is a MODE, not a maximum. Found by the 2026-08-28 /run and /bike audit
+ * (12-run-bike B1) and verified independently by the orchestrator before anything was changed.
+ *
+ * THE COST WAS NOT CREDIBILITY, IT WAS A STOP RULE THAT FIRES ROUTINELY. Cue 7 on /bike?s=how is the
+ * only stop rule anywhere in the week, and it read "HEART RATE ABOVE 175, higher than anything you
+ * have ever recorded". He has beaten it on 23 of his last 60 swims. A stop rule that goes off on a
+ * normal day is a stop rule he learns to ignore, which is worse than not having one.
+ *
+ * SO IT IS DERIVED AND CAN NEVER AGAIN NAME A NUMBER HE HAS PASSED. The page interpolates this rather
+ * than carrying a figure, and the same query that produces the number produces the count above it, so
+ * a page can assert "nothing above this" and be checkable.
+ *
+ * WHICH ANCHOR THE PRESCRIPTION SHOULD USE IS HIS CALL, NOT THIS FUNCTION'S. `kind` is returned
+ * because it matters: the single highest reading is a wrist sensor in a swimming pool, which is the
+ * least trustworthy case there is, and 85 to 95 percent of 201 is a real intensity increase for a
+ * beginner. `excludeSwimming` exists so the option can be priced rather than argued about. The
+ * question is parked as an `open` row on the bike block in conditioning.json.
+ */
+export interface PeakHr {
+  /** The highest single reading, whatever produced it. */
+  bpm: number;
+  /** When, so a page can date the claim instead of asserting it. */
+  date: string;
+  /** What activity it came from, because that decides how much to trust it. */
+  kind: string;
+  /** How many sessions have exceeded `bpm`. Always 0 by construction: the point is that a page can
+   *  print it and a verification step can check it, rather than the reader taking the word "highest"
+   *  on trust. That is the whole defect this replaces. */
+  sessionsAbove: number;
+}
+
+export async function getPeakHr(opts: { excludeSwimming?: boolean } = {}): Promise<PeakHr | null> {
+  const exclude = opts.excludeSwimming ? ['swimming'] : [];
+  const rows = await sql`
+    select date, kind, max_hr from health_session_detail
+    where max_hr is not null and not (kind = any(${exclude}))
+    order by max_hr desc, start_time desc
+    limit 1
+  `;
+  const top = rows[0] as { date: unknown; kind: string; max_hr: number } | undefined;
+  if (!top) return null;
+  const aboveRows = await sql`
+    select count(*)::int n from health_session_detail
+    where max_hr is not null and not (kind = any(${exclude})) and max_hr > ${top.max_hr}
+  `;
+  return {
+    bpm: top.max_hr,
+    date: top.date instanceof Date ? top.date.toISOString().slice(0, 10) : String(top.date).slice(0, 10),
+    kind: top.kind,
+    sessionsAbove: (aboveRows[0] as { n: number }).n,
+  };
+}

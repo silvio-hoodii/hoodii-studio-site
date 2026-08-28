@@ -75,11 +75,32 @@ export interface SwimHistory {
    *  and a minimum over a mixed column always picks the flattering definition. */
   bestWallPacePer100mMs: number | null;
   /** Best REST-EXCLUDED pace, and only from sessions whose per-length detail was read. Null when no
-   *  session in the store has any. Never a fallback for the wall-clock figure. */
+   *  session in the store has any. Never a fallback for the wall-clock figure.
+   *
+   *  GUARDED SINCE 2026-08-28, and the guard is the finding. Splitting the column into two on
+   *  2026-08-26 fixed the COLUMN and not the MINIMUM: `min(moving_pace_per_100m_ms)` still had no
+   *  floor, so it still returned 1:31, and /swim still rendered that three blocks under a 100 m
+   *  personal best of 1:38.71. Faster over 300 m than over 100 m is not a pace, it is an artifact.
+   *
+   *  Where it came from, measured: 2025-01-22, 300 m, a 26-minute session with FIVE minutes of
+   *  swimming in it. 82 percent rest. Rest-excluded pace over twelve lengths with long stops between
+   *  them describes the fastest length he happened to swim, not a pace he held. A minimum over a set
+   *  containing that session always returns it, whatever the column is called.
+   *
+   *  So the minimum now runs over sessions where swimming was at least half the session, and the
+   *  number arrives WITH its provenance in `bestMovingPaceFrom` so a page can state what it was
+   *  measured over. A number that says which swim it came from cannot be a silent lie. The threshold
+   *  itself is a judgment and is parked as an open question on content/swim/plan.json. */
   bestMovingPacePer100mMs: number | null;
+  /** Which session produced `bestMovingPacePer100mMs`, so the page can say so. Null when the pace is. */
+  bestMovingPaceFrom: { date: string; distanceM: number; restShare: number } | null;
   /** How many sessions carry a moving pace at all, so a page can say what the number is drawn from
    *  rather than implying it covers everything. */
   movingPaceSessions: number;
+  /** How many of those the rest-share floor EXCLUDED. A different fact from "has no detail", and a
+   *  page that conflates the two is back where it started: one means the watch did not time the
+   *  lengths, the other means it did and the swim was mostly standing at the wall. */
+  mostlyRestSessions: number;
   totalSessions: number;
   /** The newest session date the mirror holds. A page that draws a 90-day window has to be able to
    *  say where the data actually stops, or a stalled sync reads as three quiet weeks. */
@@ -118,7 +139,7 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
   /* Calgary dates on both sides of the comparison. `daysAgo` gives a Calgary day (see
      src/lib/day.ts) and the column it is compared against is now converted to one. */
   const cutoff = daysAgo(days);
-  const [sessionRows, prRows] = await Promise.all([
+  const [sessionRows, bestFromRows, prRows] = await Promise.all([
     sql`
       select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m, s.pace_per_100m_ms
       from health_swim_session s
@@ -134,12 +155,48 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
        faster than his official 100 m personal best, off a 300 m session that was 82% rest.
        `pace_per_100m_ms` is always wall clock. `moving_pace_per_100m_ms` exists only where the
        lengths were read and is NEVER a fallback for the other. */
+    /* WHICH SESSION THE MOVING-PACE MINIMUM CAME FROM, so the page can state it. A third query
+       rather than a window function, because the aggregate below has to keep reading as the
+       arithmetic it is. It repeats the floor, which is the one duplication here that earns itself: a
+       provenance row selected under a DIFFERENT floor than the minimum would name the wrong swim,
+       and a number attributed to the wrong session is worse than the number this replaces. */
+    sql`
+      select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m, s.duration_ms,
+             s.moving_pace_per_100m_ms
+      from health_swim_session s
+      left join (
+        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
+      ) l on l.session_uuid = s.uuid
+      left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
+      where s.moving_pace_per_100m_ms > 0
+        and s.duration_ms > 0
+        and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) >= s.duration_ms * 0.5
+      order by s.moving_pace_per_100m_ms asc
+      limit 1
+    `,
     sql`
       select
         max(s.distance_m) filter (where s.distance_m > 0) as longest,
         min(s.pace_per_100m_ms) filter (where s.pace_per_100m_ms > 0) as best_wall_pace,
-        min(s.moving_pace_per_100m_ms) filter (where s.moving_pace_per_100m_ms > 0) as best_moving_pace,
+        /* THE FLOOR IS THE FIX. moving_pace times distance over 100 is the milliseconds actually
+           spent swimming, so its ratio against duration_ms is the share of the session that was
+           swimming. At least half, or the figure describes a rest interval rather than a pace. See
+           the note on bestMovingPacePer100mMs above for the 82-percent-rest session this excludes.
+           NO BACKTICKS IN HERE: this is inside a tagged template and a backtick ends it. That cost a
+           typecheck today, and it is the fifth instance of the same class in one session. */
+        min(s.moving_pace_per_100m_ms) filter (
+          where s.moving_pace_per_100m_ms > 0
+            and s.duration_ms > 0
+            and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) >= s.duration_ms * 0.5
+        ) as best_moving_pace,
         count(*) filter (where s.moving_pace_per_100m_ms > 0) as moving_sessions,
+        /* How many were excluded BY THE FLOOR rather than by having no detail, because those are two
+           different facts and a page that conflates them is back where it started. */
+        count(*) filter (
+          where s.moving_pace_per_100m_ms > 0
+            and s.duration_ms > 0
+            and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) < s.duration_ms * 0.5
+        ) as mostly_rest_sessions,
         count(*) as total,
         /* THE LINE THE READER SEES, so it is the one that had to stop disagreeing with the card at
            the top of the page. Derived, per SWIM_LOCAL_DATE above. */
@@ -156,6 +213,7 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
     best_wall_pace: number | null;
     best_moving_pace: number | null;
     moving_sessions: string;
+    mostly_rest_sessions: string;
     total: string;
     last_on: string | null;
   };
@@ -166,7 +224,19 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
     longestDistanceM: pr.longest,
     bestWallPacePer100mMs: pr.best_wall_pace,
     bestMovingPacePer100mMs: pr.best_moving_pace,
+    bestMovingPaceFrom: (() => {
+      const f = bestFromRows[0] as
+        { date: string; distance_m: number; duration_ms: number; moving_pace_per_100m_ms: number } | undefined;
+      if (!f) return null;
+      const swimMs = (f.moving_pace_per_100m_ms * f.distance_m) / 100;
+      return {
+        date: f.date,
+        distanceM: f.distance_m,
+        restShare: Math.max(0, Math.round((1 - swimMs / f.duration_ms) * 100)),
+      };
+    })(),
     movingPaceSessions: Number(pr.moving_sessions),
+    mostlyRestSessions: Number(pr.mostly_rest_sessions),
     totalSessions: Number(pr.total),
     lastSessionOn: pr.last_on,
   };

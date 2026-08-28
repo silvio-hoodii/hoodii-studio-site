@@ -773,6 +773,64 @@ if (!conditioning.week?.restRule) {
  * slot is still one of the things arranged across seven days: swim left the gym page, not the week.
  * src/lib/gym/week.ts still counts a swim toward the training streak for the same reason. */
 
+/* ---------------------------------------------------------------------------------------------
+ * EVERY {PEAK_*} PLACEHOLDER MUST BE ONE THE RENDERER KNOWS HOW TO FILL. Added 2026-08-28.
+ *
+ * WHY. Five rendered strings on /bike asserted "your highest recorded swim heart rate is 175". The
+ * export's highest is higher and 23 of his last 60 swims beat 175; six tie at exactly 175, which is
+ * where the number came from, so it was the most common ceiling rather than the ceiling. The worst
+ * consequence was not credibility: the only stop rule anywhere in the week told him to abort an
+ * interval above a heart rate he passes routinely, under a sentence claiming he had never recorded it.
+ * Found by 12-run-bike B1 and verified against Neon before anything was changed.
+ *
+ * The figures are interpolated from the database now (`getPeakHr`, `src/lib/gym/hr-anchor.ts`), which
+ * removes the stale-number class. It introduces a new one: a placeholder nobody wired up renders as
+ * literal braces, in a stop rule, on a page he reads out of breath. So the two lists are COMPARED
+ * rather than trusted, which is the same construction `scripts/lint-probe-routes.mjs` uses for write
+ * routes and `scripts/lint-auth.mjs` for the cookie.
+ *
+ * This is in the validator and therefore in `pnpm build`, because it reads a content file and nothing
+ * else. It needs no database, unlike `check-ladder.mjs`.
+ * ------------------------------------------------------------------------------------------- */
+{
+  /* Kept in step with HR_PLACEHOLDERS in src/lib/gym/hr-anchor.ts. Reading the TS file for the list
+     would couple a build gate to a module graph; naming them twice is acceptable only because the
+     check below fails loudly on a mismatch in either direction, which is what a second copy has to
+     earn. */
+  const KNOWN = new Set(['{PEAK_BPM}', '{PEAK_DATE}', '{PEAK_KIND}']);
+  const found = new Map();
+  const walk = (node, path) => {
+    if (typeof node === 'string') {
+      for (const m of node.matchAll(/\{[A-Z][A-Z0-9_]*\}/g)) {
+        if (!found.has(m[0])) found.set(m[0], path);
+      }
+      return;
+    }
+    if (Array.isArray(node)) { node.forEach((v, i) => walk(v, `${path}[${i}]`)); return; }
+    if (node && typeof node === 'object') {
+      for (const [k, v] of Object.entries(node)) walk(v, `${path}.${k}`);
+    }
+  };
+  walk(conditioning, 'conditioning');
+
+  for (const [ph, where] of found) {
+    if (KNOWN.has(ph)) continue;
+    fail('conditioning.json', `${where} carries the placeholder ${ph}, which no renderer fills. `
+      + 'It would print as literal braces on his phone. Add it to HR_PLACEHOLDERS and to `fill` in '
+      + 'src/lib/gym/hr-anchor.ts, and to KNOWN in this check, or write the value out.');
+  }
+
+  /* THE OTHER DIRECTION, and it is the one that matters more. A placeholder the renderer supports and
+     the content no longer uses means somebody retyped a figure back into a sentence that exists
+     because a typed figure was wrong. That is exactly how 175 got there. */
+  for (const ph of KNOWN) {
+    if (found.has(ph)) continue;
+    fail('conditioning.json', `nothing uses ${ph} any more. The renderer still fills it, so either a `
+      + 'heart-rate figure has been typed back into the prose it was derived out of, or the '
+      + 'placeholder is dead and should come out of src/lib/gym/hr-anchor.ts. Check which.');
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
 

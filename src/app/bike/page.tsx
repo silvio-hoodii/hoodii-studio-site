@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
-import { getRecentSessions } from '@/lib/gym/session';
+import { getPeakHr, getRecentSessions } from '@/lib/gym/session';
+import { fill, fillCue } from '@/lib/gym/hr-anchor';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
@@ -50,6 +51,21 @@ export default async function BikePage({
   const c = await loadConditioning();
   const recent = sub === 'now' ? await getRecentSessions('cycling', 10) : [];
   const lastSession = recent[0] ?? null;
+
+  /* EVERY HEART-RATE FIGURE ON THIS ROUTE IS DERIVED, since 2026-08-28. Five rendered strings asserted
+     that his highest recorded heart rate is 175. The export's highest is higher, 23 of his last 60
+     swims beat 175, and six tie at exactly 175, which is where the number came from: it was the most
+     common ceiling, not the ceiling.
+     
+     THE COST WAS THE STOP RULE. Cue 7 is the only stop rule in the whole week and it read "HEART RATE
+     ABOVE 175, higher than anything you have ever recorded", a threshold he passes routinely. A stop
+     rule that fires on a normal day is one he learns to ignore.
+     
+     `fill` returns null rather than a default when the database has nothing, and the render below drops
+     the line instead of printing a placeholder or a fallback number. A default here would put a typed
+     figure back into the sentence that exists because a typed figure was wrong, which is the
+     catch-and-return-a-default this repo forbids in lib/music/spotify.ts. */
+  const peak = sub === 'plan' || sub === 'how' ? await getPeakHr() : null;
 
   return (
     <div className="wrap">
@@ -101,7 +117,9 @@ export default async function BikePage({
             <div className="ex">
               <div className="ex-name">How hard</div>
               <div className="ex-cue">{c.bike.howHard.hardPiece}</div>
-              <div className="ex-cue">{c.bike.howHard.heartRate}</div>
+              {fill(c.bike.howHard.heartRate, peak) && (
+                <div className="ex-cue">{fill(c.bike.howHard.heartRate, peak)}</div>
+              )}
               <div className="ex-cue">{c.bike.howHard.easyPiece}</div>
             </div>
           </div>
@@ -116,7 +134,10 @@ export default async function BikePage({
       {sub === 'how' && (
         <div className="exgroup">
           <div className="exgroup-label">How to ride</div>
-          <Cues cues={c.bike.cues ?? []} note={c.bike.cuesNote} />
+          <Cues
+            cues={(c.bike.cues ?? []).map((cue) => fillCue(cue, peak))}
+            note={c.bike.cuesNote ? (fill(c.bike.cuesNote, peak) ?? c.bike.cuesNote) : c.bike.cuesNote}
+          />
         </div>
       )}
     </div>
