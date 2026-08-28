@@ -152,14 +152,34 @@ export async function getSyncLiveness(): Promise<SyncLiveness> {
  * does not exist: this is one Neon database and the table prefixes are what keep the surfaces
  * apart, so the read moved to the page that needs it rather than the table moving anywhere. */
 
-/** Per-day lifting attendance for the last N days: watch-detected ("trained") vs logged in the gym
+/** Per-day training attendance for the last N days: watch-detected ("trained") vs logged in the gym
  *  app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than
  *  duplicating that state: the "trained but unlogged" gap is exactly what CURRENT.md already
- *  surfaces, computed the same way: attendance from the watch, load from the app. */
+ *  surfaces, computed the same way: attendance from the watch, load from the app.
+ *
+ *  `trained` IS ANY DISCIPLINE, and was `kind = 'strength'` until 2026-08-28.
+ *
+ *  The strip renders under a caption reading "Read from the watch, which records every session" and a
+ *  lede naming lifting, swimming, running and riding in one count. It was drawing lifting only, so a
+ *  day he swam was an empty cell with `aria-label` "rest". Measured over the live 30-day window: 17
+ *  strength days against 20 any-kind days, and the three it called rest were a 40-minute run on
+ *  2026-08-24, 59 minutes of swimming across three sessions on 2026-08-21, and a 43-minute swim on
+ *  2026-08-07 (09-health P1-3).
+ *
+ *  WHAT MAKES IT A LIE RATHER THAN A LIMITATION: "What actually happened", on the SAME TAB, shows
+ *  those days as trained. Two blocks one scroll apart disagreeing about whether he trained on a
+ *  Friday, one of them in a shape that reads as a verdict on his adherence.
+ *
+ *  `logged` deliberately stays LIFTING ONLY, because that is the useful gap: the watch sees
+ *  attendance and only the gym app sees load, so "trained but unlogged" means a session whose weights
+ *  are missing. The caption has to say which half is which, and the page says so.
+ *
+ *  The function keeps its name for one release rather than being renamed in the same commit as a
+ *  behaviour change: two things to review at once is how a rename gets read as a no-op. */
 export async function getLiftingAdherence(days = 30): Promise<{ days: AdherenceDay[]; horizon: string | null }> {
   const cutoff = isoDaysAgo(days);
   const [trainedRows, loggedRows, horizonRows] = await Promise.all([
-    sql`select distinct date from health_watch_session where kind = 'strength' and date >= ${cutoff}`,
+    sql`select distinct date from health_watch_session where date >= ${cutoff}`,
     sql`select distinct date from gym_set where done = true and reps is not null and reps > 0 and date >= ${cutoff}`,
     /* How far the watch export has actually reached, across every kind of session and not just
      * strength: a swim on the 9th is proof the sync ran that day, an absence of strength rows is

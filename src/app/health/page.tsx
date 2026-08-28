@@ -137,10 +137,27 @@ export default async function HealthPage({
   const fatSeries = seriesOf('fat_kg');
   const leanSeries = seriesOf('lean_kg');
 
-  /* WHERE THE WEIGHT WENT, and it is exact arithmetic rather than a model: fat mass plus lean mass
-     equals weight to the decimal on every row (29.98 + 73.72 = 103.70, checked). Taken between the
-     first and last readings in the window that carry BOTH, so the two deltas always describe the
-     same interval as the weight delta does. */
+  /* WHERE THE WEIGHT WENT. Taken between the first and last readings in the window that carry BOTH
+     fat and lean, so the two deltas always describe the same interval the weight delta does.
+
+     THE PERCENTAGE WAS BUILT TO BREAK ON GOOD NEWS, and it broke today. It was
+     `Math.round((dFat / dKg) * 100)` rendered through `Math.abs()`, and it exceeds 100 or goes
+     negative the moment LEAN MASS MOVES THE OTHER WAY FROM WEIGHT, which is exactly the outcome
+     cutting while lifting is meant to produce. Measured by the 2026-08-28 audit (09-health P1-1):
+     replaying the page's own 120-day window across all 167 readings, 23 windows print an impossible
+     share, including 233% and one where FAT ROSE while the sentence claimed a percentage of loss.
+     The 120-day window happens to print 98% today. The 34-day trend the same tab already displays
+     yields 119% right now: lean +0.8 while weight fell 4.3.
+
+     `Math.abs()` was the worst part. It hid the sign, so a recomposition (weight up, fat down) would
+     have printed a confident positive percentage for a change that went the other way, which is the
+     false "you have this" direction law 5 names as the worse one.
+
+     SO THE PERCENTAGE IS ONLY PRINTED WHEN IT IS ONE. A share requires the fat change to have the
+     same sign as the weight change and to be no larger than it. Otherwise the numbers are stated
+     plainly, which in the ordinary case is better news than the percentage was ever able to express:
+     "you lost 4.3 kg and gained 0.8 kg of lean" says more than "119% of the change was fat", and it
+     is true. */
   const split = (() => {
     const both = (comp ?? []).filter((r) => r.fat_kg != null && r.lean_kg != null && r.kg != null);
     const a = both[0];
@@ -149,10 +166,18 @@ export default async function HealthPage({
     const dFat = (b.fat_kg as number) - (a.fat_kg as number);
     const dLean = (b.lean_kg as number) - (a.lean_kg as number);
     const dKg = (b.kg as number) - (a.kg as number);
-    /* Only stated while the weight is actually moving. A share of a delta near zero is a very large
-       percentage of nothing. */
-    const fatShare = Math.abs(dKg) > 1 ? Math.round((dFat / dKg) * 100) : null;
-    return { from: a.date, to: b.date, dFat, dLean, dKg, fatShare };
+    /* Only stated while the weight is actually moving: a share of a delta near zero is a very large
+       percentage of nothing. And only when it IS a share, per the note above. */
+    const moving = Math.abs(dKg) > 1;
+    const sameDirection = dFat !== 0 && Math.sign(dFat) === Math.sign(dKg);
+    const withinTotal = Math.abs(dFat) <= Math.abs(dKg);
+    const fatShare = moving && sameDirection && withinTotal
+      ? Math.round((dFat / dKg) * 100)
+      : null;
+    /* True when lean went the OPPOSITE way from weight, which is the case the percentage could not
+       express and the one worth saying out loud. */
+    const leanHeldOrGained = moving && dKg < 0 && dLean >= 0;
+    return { from: a.date, to: b.date, dFat, dLean, dKg, fatShare, leanHeldOrGained };
   })();
   /* ATTENDANCE IS TRAINING, NOT BODY COMPOSITION, so it is read on the Now tab. It sat next to the
      weight charts for as long as /health was only about weight, and the tab split is what made that
@@ -224,11 +249,21 @@ export default async function HealthPage({
             <summary className="exgroup-label">
               Attendance, last 30 days <span className="tag">({trainedCount} trained)</span>
             </summary>
+            {/* THE TWO HALVES MEASURE DIFFERENT THINGS AND THE CAPTION HAS TO SAY SO.
+                Until 2026-08-28 the strip queried lifting only under this exact sentence about the
+                watch recording every session, so a day he swam drew as an empty cell labelled "rest".
+                Three days in the live window: a 40-minute run and 59 minutes of swimming across two
+                other days. "What actually happened", one scroll up, showed all three as trained
+                (09-health P1-3). `trained` is any discipline now; `logged` is still lifting only,
+                because a missing LOG means missing weights and that gap is the useful one. */}
             <p className="ex-cue">
-              Read from the watch, which records every session: the gym app only sees sessions
-              logged there. <span className="live tnum">{trainedCount}</span> trained,{' '}
-              <span className="tnum">{loggedCount}</span> also logged
-              {trainedCount > loggedCount ? `, ${trainedCount - loggedCount} trained but unlogged` : ''}.
+              Trained is any discipline the watch saw, lifting or swimming or running or riding.
+              Logged is lifting typed into the gym app, which is the only place the weights exist.{' '}
+              <span className="live tnum">{trainedCount}</span> trained,{' '}
+              <span className="tnum">{loggedCount}</span> with the lifting logged
+              {trainedCount > loggedCount
+                ? `, so ${trainedCount - loggedCount} day${trainedCount - loggedCount === 1 ? '' : 's'} have no weights against them`
+                : ''}.
               {unknownDays > 0 && (
                 <>
                   {' '}The watch export stops at {horizon ?? 'no date at all'}, so{' '}
@@ -326,8 +361,25 @@ export default async function HealthPage({
                   <span className="live tnum">{split.dKg > 0 ? '+' : ''}{split.dKg.toFixed(1)} kg</span>:{' '}
                   <span className="tnum">{split.dFat > 0 ? '+' : ''}{split.dFat.toFixed(1)}</span> of that
                   was fat and <span className="tnum">{split.dLean > 0 ? '+' : ''}{split.dLean.toFixed(1)}</span> was
-                  lean{split.fatShare != null ? `, so ${Math.abs(split.fatShare)}% of the change was fat` : ''}.
-                  Fat mass plus lean mass equals weight exactly, so this is arithmetic rather than a model.
+                  lean
+                  {split.fatShare != null && `, so ${split.fatShare}% of the change was fat`}
+                  {/* The case the percentage could not express, and it is the good one. Said in words
+                      because "119% of the change was fat" is what the arithmetic produced here and it
+                      is not a sentence about anything. */}
+                  {split.fatShare == null && split.leanHeldOrGained
+                    && `, so all of the loss was fat and the lean line ${split.dLean > 0 ? 'went up' : 'held'}`}
+                  .{' '}
+                  {/* THE OLD SENTENCE HERE WAS A TAUTOLOGY SOLD AS A CHECK. It read "fat mass plus
+                      lean mass equals weight exactly, so this is arithmetic rather than a model", and
+                      that identity holds because the columns are DEFINED that way: `fat_kg` is
+                      `kg * bf_pct / 100` on 196 of 197 rows and `lean_kg` is `kg - fat_kg` on all 197
+                      (09-health P1-2). One measurement restated twice cannot disagree with itself, so
+                      the agreement was evidence of nothing, and the caveat two paragraphs below
+                      already says both lines are inferred from a bioimpedance reading. A reassurance
+                      that cannot fail is worse than none: it invites trust the numbers have not
+                      earned. */}
+                  Both figures come from the same scale reading as the weight, so they add up by
+                  construction rather than by agreement.
                 </p>
               )}
               <div className="pair">
