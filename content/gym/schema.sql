@@ -40,8 +40,22 @@ create table if not exists gym_set (
   suggested_weight  real,
   suggested_reps    real,
   estimated         boolean,    -- null = not specified (treated as false downstream); true = recalled from memory, not measured live
+  /* Was this logged through the off-plan capture box rather than prescribed. Added 2026-08-28.
+   *
+   * It is NOT part of the unique key, deliberately. Giving off-plan rows their own key space would
+   * let an off-plan set and a prescribed set of the same exercise share an index, and the point of
+   * the fix is that they never collide at all: `appendOffPlanSet` derives the index from what is
+   * already in the table for that (date, exercise_id), inside the insert, so no client counter is
+   * involved. The column is here so the two kinds stay distinguishable in the record forever.
+   *
+   * What it replaces: the client counted `extraLog.filter(...).length + 1`, and that state is never
+   * rehydrated, so a reload restarted the counter at 1 and the upsert REPLACED the earlier set. It
+   * could also overwrite a prescribed set outright, because the off-plan datalist offers every
+   * catalogue name including exercises prescribed that same day. */
+  off_plan          boolean     not null default false,
   unique (date, exercise_id, set_idx)
 );
+alter table gym_set add column if not exists off_plan boolean not null default false;
 create index if not exists gym_set_ex_date on gym_set (exercise_id, date);
 create index if not exists gym_set_date    on gym_set (date);
 

@@ -57,6 +57,9 @@ if (!url) {
 }
 
 const program = JSON.parse(readFileSync(join(ROOT, 'content/gym/program.json'), 'utf8'));
+/* The catalogue, for the alias resolution below. One exercise can carry two ids in gym_set and this
+   script has to agree with the app about which rows are its history. */
+const movements = JSON.parse(readFileSync(join(ROOT, 'content/gym/movements.json'), 'utf8'));
 const DEFAULT_WIDTH = 2;
 const LOOKBACK_DAYS = 90;
 /** Above this many prescribed reps the Epley estimate is not trustworthy. See the note at its use. */
@@ -83,6 +86,45 @@ for (const r of rows) {
   const cur = working.get(r.exercise_id);
   const w = Number(r.weight);
   if (!cur || r.n > cur.n || (r.n === cur.n && w < cur.w)) working.set(r.exercise_id, { w, n: r.n });
+}
+
+/* ALIASES RESOLVE HERE TOO, since 2026-08-28, because otherwise this script and the app disagree
+   about what he has lifted.
+   
+   One exercise can hold two ids in gym_set: a swap to an ALT logs the alt's id, and some alts were
+   aliases of the slot's own variant. The calf raise had twelve bodyweight sets under
+   `standing-calf-raise` and three at 180 to 210 lb under `machine-calf-raise`, and this script
+   printed it under "not yet logged, nothing to check against" while the card offered him about 5 lb.
+   
+   `src/lib/gym/equivalent-ids.ts` fixed the app's three history reads the same day. This is the
+   FOURTH reader of that table and it is the one an agent runs before touching /gym, so leaving it
+   unaware would have kept the wrong answer in front of whoever is about to change something. Two
+   readers of one table with two definitions of "this exercise's history" is the shape this whole
+   defect had in the first place.
+   
+   Written here rather than imported: this script is offline by design and reaching into src/ would
+   drag the module graph in. The catalogue is the shared authority either way, so neither copy holds
+   a fact the other could contradict, only the same lookup. */
+{
+  const family = new Map();
+  for (const movement of Object.values(movements.movements)) {
+    for (const v of movement.variants) {
+      const ids = [v.id, ...(v.aliases ?? [])];
+      for (const id of ids) family.set(id, ids);
+    }
+  }
+  for (const [id, ids] of family) {
+    if (working.has(id)) continue;
+    /* The heaviest-used sibling stands in, chosen by the same most-used-load rule as above so the
+       answer cannot depend on which name he happened to tap. */
+    let best = null;
+    for (const sib of ids) {
+      const w = working.get(sib);
+      if (!w) continue;
+      if (!best || w.n > best.n || (w.n === best.n && w.w < best.w)) best = w;
+    }
+    if (best) working.set(id, best);
+  }
 }
 
 const gaps = [];

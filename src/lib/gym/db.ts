@@ -159,6 +159,59 @@ export async function upsertSet(s: SetInput) {
  * are aliases of the slot's own variant. The calf raise had twelve bodyweight sets under one id and
  * three sets at 180 to 210 lb under the other, and this query read only the first, so the card
  * offered him about 5 lb for a machine he had loaded to 210 the night before. */
+/* AN OFF-PLAN SET IS APPENDED, AND THE SERVER DECIDES WHERE. Added 2026-08-28 for 10-gym P0-1.
+ *
+ * THE DEFECT. `logExtra` in GymClient derived the set index from `extraLog`, a piece of React state
+ * that is never rehydrated: the hydrate effect reads /gym/api/session and writes only into `sets`.
+ * So after a reload, or after the phone drops the tab, which is the documented reason the whole
+ * queue-and-retry machinery exists, the counter restarted at 1. The write is an unconditional upsert
+ * on `(date, exercise_id, set_idx)`, so the second set of the evening REPLACED the first. `write()`
+ * returned true, the banner stayed clean, and the on-screen list showed one item because it had
+ * restarted empty too.
+ *
+ * Worse without a reload at all: off-plan rows share that key space with PRESCRIBED rows, and
+ * `loadExtraSuggestions` feeds the datalist every variant name in the catalogue, including exercises
+ * prescribed that same day. Typing "Dead Bug" into the off-plan box on Tuesday wrote
+ * `dead-bug, set_idx: 1` straight over the first prescribed dead-bug set.
+ *
+ * WHY IT MATTERS MORE THAN ITS SIZE. That box exists because of what he said walking out of the gym:
+ * "there are no knee raises here, I'm going to do them and you're not going to see it." It is the
+ * only record of substituted work, and it was the one write path on the surface that could destroy a
+ * row it had already written.
+ *
+ * THE FIX IS THAT THE CLIENT NO LONGER NAMES AN INDEX IT CANNOT KNOW. One statement: the max for that
+ * (date, exercise_id) plus one, computed inside the insert, so there is no read-then-write window and
+ * no client state involved. Plain INSERT rather than upsert, because an off-plan set is a thing he
+ * DID, and there is no edit affordance for one: appending is the only correct operation.
+ *
+ * `off_plan` is recorded so the two kinds are distinguishable in the table forever, which the audit
+ * asked for and which costs one boolean. It deliberately does NOT go in a unique key: giving off-plan
+ * rows a separate key space would let an off-plan set and a prescribed set share an index, and the
+ * point here is that they never collide at all because the index is derived from what is already
+ * there.
+ *
+ * NOT idempotent, and that is the deliberate trade. The retry queue can double-post, so a dropped
+ * connection may append the same set twice. A duplicate set he can see and delete is recoverable; a
+ * set silently overwritten by the next one is not, and that asymmetry is the whole reason this
+ * function exists. Same call the note box already makes, in its own words: "a duplicate note is a
+ * nuisance and a lost one is not recoverable."
+ */
+export async function appendOffPlanSet(s: {
+  date: string; day: string | null; dayTitle: string | null;
+  exerciseId: string; exerciseName: string | null;
+  weight: number | null; reps: number | null;
+}): Promise<number> {
+  const rows = await sql`
+    insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done, logged_at, off_plan)
+    select ${s.date}, ${s.day}, ${s.exerciseId}, ${s.exerciseName},
+           coalesce(max(g.set_idx), 0) + 1, ${s.weight}, ${s.reps}, true, now(), true
+      from gym_set g
+     where g.date = ${s.date} and g.exercise_id = ${s.exerciseId}
+    returning set_idx
+  `;
+  return (rows[0] as { set_idx: number }).set_idx;
+}
+
 export async function getLastSession(exerciseId: string, beforeDate: string): Promise<SessionSets | null> {
   const ids = await equivalentIds(exerciseId);
   const rows = await sql`
@@ -217,10 +270,17 @@ export async function finishSession(opts: { date: string; day?: string | null; s
   `;
 }
 
-/** A date's logged sets (with done + suggestion) to rehydrate an in-progress session on another device. */
+/** A date's logged sets (with done + suggestion) to rehydrate an in-progress session on another device.
+ *
+ *  `exercise_name` and `off_plan` were added 2026-08-28 so the OFF-PLAN LIST can be rehydrated too.
+ *  It could not be before: the client's `extraLog` state started empty on every load and nothing
+ *  refilled it, so after a reload the box showed nothing while the rows sat in this table. That
+ *  emptiness was also half of P0-1, because the same state was being counted to pick a set index. The
+ *  index moved to the server; this is what stops the LIST lying about what he logged. */
 export async function getSessionForHydrate(date: string) {
   return sql`
-    select exercise_id, set_idx, weight, reps, done, suggested_weight, suggested_reps, swapped_from
+    select exercise_id, exercise_name, set_idx, weight, reps, done, suggested_weight, suggested_reps,
+           swapped_from, coalesce(off_plan, false) as off_plan
     from gym_set where date = ${date} order by exercise_id, set_idx
   `;
 }

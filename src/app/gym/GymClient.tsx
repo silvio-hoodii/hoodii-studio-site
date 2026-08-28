@@ -336,12 +336,32 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       .then((data) => {
         if (cancelled || !data.sets) return;
         const rows = data.sets as {
-          exercise_id: string; set_idx: number; weight: number | null; reps: number | null;
-          done: boolean; swapped_from: string | null;
+          exercise_id: string; exercise_name: string | null; set_idx: number;
+          weight: number | null; reps: number | null;
+          done: boolean; swapped_from: string | null; off_plan: boolean | null;
         }[];
+
+        /* THE OFF-PLAN LIST COMES BACK TOO, since 2026-08-28. It started empty on every load and
+           nothing refilled it, so after a reload the box showed nothing while the rows sat in the
+           table. He would have read that as the capture having failed, on the one control that
+           exists because of "I'm going to do them and you're not going to see it".
+           
+           Set rather than merged: this IS the record for that date, and appending to whatever
+           survived a soft navigation would double the list. */
+        setExtraLog(rows
+          .filter((r) => r.off_plan)
+          .map((r) => ({
+            id: r.exercise_id,
+            name: r.exercise_name ?? r.exercise_id,
+            weight: r.weight != null ? String(r.weight) : '',
+            reps: r.reps != null ? String(r.reps) : '',
+          })));
         setSets((prev) => {
           const next = { ...prev };
-          for (const s of rows) {
+          /* OFF-PLAN ROWS ARE NOT CARD ROWS. They share the exercise_id key space with prescribed
+             sets, so without this filter an off-plan "Dead Bug" would render inside the prescribed
+             dead-bug grid at whatever index the server gave it. They have their own list below. */
+          for (const s of rows.filter((r) => !r.off_plan)) {
             const arr = (next[s.exercise_id] = next[s.exercise_id] ? [...next[s.exercise_id]!] : []);
             arr[s.set_idx - 1] = {
               weight: s.weight != null ? String(s.weight) : '',
@@ -445,14 +465,23 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     const name = extraName.trim();
     if (!name) return;
     const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const idx = extraLog.filter((e) => e.id === id).length + 1;
-    void write(`extra:${date}:${id}:${idx}`, '/gym/api/set', {
+    /* NO SET INDEX. The server derives it, inside the insert, from what is already in the table.
+     *
+     * This counted `extraLog.filter(...).length + 1`, and `extraLog` is React state the hydrate
+     * effect never refills. A reload, or the phone dropping the tab, restarted the count at 1 and the
+     * upsert on (date, exercise_id, set_idx) REPLACED the set he had already logged. It could also
+     * land on a PRESCRIBED set, because the datalist below offers every catalogue name including
+     * exercises prescribed that same day: typing "Dead Bug" on Tuesday overwrote the first prescribed
+     * dead-bug set with no reload at all.
+     *
+     * The dedupe key keeps a timestamp for the same reason: two genuine sets of the same movement in
+     * one evening are two writes, and a key of `extra:date:id` would collapse them in the offline
+     * queue exactly the way the index used to collapse them in the table. */
+    void write(`extra:${date}:${id}:${Date.now()}`, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
-      exerciseId: id, exerciseName: name, setIdx: idx,
+      exerciseId: id, exerciseName: name, offPlan: true,
       weight: extraWeight === '' ? null : Number(extraWeight),
       reps: extraReps === '' ? null : Number(extraReps),
-      done: true,
-      swappedFrom: null, suggW: null, suggR: null,
     });
     setExtraLog((prev) => [...prev, { id, name, weight: extraWeight, reps: extraReps }]);
     setExtraReps('');
