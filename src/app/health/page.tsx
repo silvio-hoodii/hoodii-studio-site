@@ -229,8 +229,8 @@ export default async function HealthPage({
           <RunStanding week={week} />
           <RecoveryNotice week={week} />
 
-          <LastSession s={lastLift} />
-          <RecentSessions sessions={recentLifts} kind="strength" />
+          <LastSession s={lastLift} noun="lift" />
+          <RecentSessions sessions={recentLifts} kind="strength" nounPlural="lifts" />
 
           <div className="exgroup">
             <div className="exgroup-label">What actually happened</div>

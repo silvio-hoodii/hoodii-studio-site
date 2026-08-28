@@ -104,9 +104,15 @@ function columns(kind: SessionKind): { head: string; num: boolean; of: (s: Sessi
 export default function RecentSessions({
   sessions,
   kind,
+  nounPlural = 'sessions',
 }: {
+  /* WHAT THESE ROWS ARE, spelled out on the surface that draws more than one discipline. The heading
+   * read "The last 10" with no noun at all, which is exact on /swim and a claim about all four
+   * disciplines on /health. See the note on LastSession for the incident. Defaulted, so the four
+   * discipline routes are untouched. */
   sessions: SessionDetail[];
   kind: SessionKind;
+  nounPlural?: string;
 }) {
   /* ONE SESSION IS NOT A HISTORY, and drawing this block around it would repeat the card above it
      with worse formatting. Nothing at all is the wrong answer too: "you have ridden once" is a real
@@ -165,7 +171,7 @@ export default function RecentSessions({
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        The last {sessions.length} <span className="tag">({shortDate(chrono[0]!.date)} to {shortDate(chrono[chrono.length - 1]!.date)})</span>
+        The last {sessions.length} {nounPlural} <span className="tag">({shortDate(chrono[0]!.date)} to {shortDate(chrono[chrono.length - 1]!.date)})</span>
       </div>
 
       {/* Trace needs three points to draw a line. Below that the table below is the honest view and

@@ -13,11 +13,28 @@ import { Trace, LengthBars, SessionStats } from './SessionCharts';
  * Shared since 2026-08-26. /gym/conditioning draws it for lifting, running and cycling; /swim draws
  * it for swimming. One component, because the swim panel is the branch that already existed inside
  * it and copying the file to a second route is how the two would drift. */
-export default function LastSession({ s }: { s: SessionDetail | null }) {
+export default function LastSession({ s, noun = 'session' }: {
+  s: SessionDetail | null;
+  /* WHAT THIS BLOCK IS ACTUALLY SHOWING. Added 2026-08-28 (09-health P1-4).
+   *
+   * The heading said "Your last session" on every surface, and on /health that is a lie: /health has
+   * been THE TRAINING INDEX since 2026-08-27, its lede names four disciplines, and this block is fed
+   * `getRecentSessions('strength')`. Live, his newest three sessions are a swim, then the lift, then
+   * an auto-detected one; the page rendered "Your last session (Aug 25)" over the lift while the swim
+   * had started ninety minutes after it finished.
+   *
+   * Same class as the "Best this year" tile over a date from the previous September that AGENTS.md
+   * records from /swim/deep. AGENTS.md's own description of this tab already uses the right word:
+   * "last lift, the last ten lifts trended".
+   *
+   * Defaulted, so /swim, /run and /bike are untouched: on a discipline route the block IS about that
+   * discipline and "session" is exact. Only the index has to say which kind. */
+  noun?: string;
+}) {
   if (!s) {
     return (
       <div className="exgroup">
-        <div className="exgroup-label">Your last session</div>
+        <div className="exgroup-label">Your last {noun}</div>
         <p className="ex-cue">
           Nothing recorded yet for this one. Sessions arrive with the daily watch export.
         </p>
@@ -30,7 +47,7 @@ export default function LastSession({ s }: { s: SessionDetail | null }) {
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        Your last session <span className="tag">({shortDate(s.date)})</span>
+        Your last {noun} <span className="tag">({shortDate(s.date)})</span>
       </div>
       <SessionStats s={s} />
       {isSwim && s.series.lengths && (
