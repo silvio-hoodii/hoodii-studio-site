@@ -1,31 +1,23 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { signInWithPassword } from '@/lib/login-server';
 
 export const dynamic = 'force-dynamic';
+export const metadata = { robots: { index: false, follow: false } };
 
 // Reuses the same cookie/secret as /kitchen, /gym and /health ('kos', KITCHEN_SESSION_SECRET) on
-// purpose: one login for the whole hub, not a second password to remember. See src/proxy.ts.
+// purpose: one login for the whole hub, not a second password to remember. See lib/login-server.ts.
 async function signIn(formData: FormData) {
   'use server';
-  const pw = String(formData.get('pw') ?? '');
   const to = String(formData.get('to') ?? '/french');
-  if (pw && pw === process.env.KITCHEN_PASSWORD) {
-    (await cookies()).set('kos', process.env.KITCHEN_SESSION_SECRET!, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-    });
-    redirect(to.startsWith('/french') ? to : '/french');
-  }
-  redirect(`/french/login?bad=1&to=${encodeURIComponent(to)}`);
+  const outcome = await signInWithPassword(String(formData.get('pw') ?? ''));
+  if (outcome === 'ok') redirect(to.startsWith('/french') ? to : '/french');
+  redirect(`/french/login?${outcome === 'not-configured' ? 'unconfigured' : 'bad'}=1&to=${encodeURIComponent(to)}`);
 }
 
 export default async function Login({
   searchParams,
 }: {
-  searchParams: Promise<{ to?: string; bad?: string }>;
+  searchParams: Promise<{ to?: string; bad?: string; unconfigured?: string }>;
 }) {
   const sp = await searchParams;
   return (
@@ -37,6 +29,11 @@ export default async function Login({
         <input type="password" name="pw" placeholder="Password" autoFocus autoComplete="current-password" />
         <input type="hidden" name="to" value={sp.to ?? '/french'} />
         {sp.bad && <p className="changes" style={{ marginTop: 12 }}>Not that one.</p>}
+        {sp.unconfigured && (
+          <p className="changes" style={{ marginTop: 12 }}>
+            No password is set on this deployment, so nothing can be unlocked here.
+          </p>
+        )}
         <button className="primary" style={{ width: '100%', marginTop: 12 }} type="submit">
           Open
         </button>

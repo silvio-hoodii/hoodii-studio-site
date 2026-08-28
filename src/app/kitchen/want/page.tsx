@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import KitchenNav from '../KitchenNav';
 import { wantByName, wantByUrl, nameOfItem, type WantHit } from '@/lib/kitchen/want';
+import { isAuthed } from '@/lib/auth-server';
 import { thumb } from '@/lib/kitchen/corpus';
 import PasteBox from './PasteBox';
 
@@ -19,6 +20,12 @@ export const dynamic = 'force-dynamic';
  * Paste a URL and it reads that page live. That is the route for NYT Cooking and Maangchi, which both
  * ask AI crawlers not to harvest them and which we therefore do not harvest. One page he hands over, to
  * answer a question he asked about a dish he means to cook, is him using an agent as a browser.
+ *
+ * THE URL HALF NEEDS THE UNLOCK COOKIE since 2026-08-28, and only that half. "One page HE hands us"
+ * was the argument for the feature and it was doing something else: an anonymous arbitrary-URL
+ * server-side fetch off a public page whose `?url=` hrefs are crawlable. 15,367 invocations during
+ * the meta-externalagent scrape. The refusal lives in `wantByUrl` itself, not here, so no future call
+ * site can reintroduce it; this page only has to say so honestly. Search by name stays public.
  */
 
 function Ingredients({ hit, label }: { hit: WantHit; label: (id: string) => string }) {
@@ -100,6 +107,7 @@ export default async function Want({
   const q = (sp.q ?? '').trim();
   const url = (sp.url ?? '').trim();
 
+  const unlocked = await isAuthed();
   const byUrl = url ? await wantByUrl(url) : null;
   const byName = !url && q ? await wantByName(q) : null;
   const stock = byUrl?.stock ?? byName?.stock ?? null;
@@ -125,17 +133,28 @@ export default async function Want({
           />
           <button type="submit" className="primary">Check</button>
         </form>
-        <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 8 }}>
-          <input
-            type="url"
-            name="url"
-            defaultValue={url}
-            placeholder="or paste a recipe link, including one behind your own subscription"
-            aria-label="Paste a recipe web address"
-            enterKeyHint="go"
-          />
-          <button type="submit" className="primary">Read it</button>
-        </form>
+        {/* Honest states only, which on this site means a control that cannot work does not render
+            as a control. A locked device gets told what the field would do and where the password
+            is, rather than a box that answers "unlock this first" after being typed into. */}
+        {unlocked ? (
+          <form action="/kitchen/want" method="get" className="searchrow" style={{ marginTop: 8 }}>
+            <input
+              type="url"
+              name="url"
+              defaultValue={url}
+              placeholder="or paste a recipe link, including one behind your own subscription"
+              aria-label="Paste a recipe web address"
+              enterKeyHint="go"
+            />
+            <button type="submit" className="primary">Read it</button>
+          </form>
+        ) : (
+          <p className="lede" style={{ marginTop: 10 }}>
+            Reading a link you point at is the one thing here that needs the device unlocked, because
+            it fetches that page from this server. <Link href="/kitchen/login?to=/kitchen/want">Unlock</Link>{' '}
+            to use it. Searching by name is open to anyone.
+          </p>
+        )}
         <PasteBox />
       </div>
 
@@ -143,8 +162,15 @@ export default async function Want({
 
       {byUrl?.error && (
         <div className="box warn" style={{ marginTop: 18 }}>
-          <span className="k">Could not read that page</span>
+          <span className="k">{byUrl.locked ? 'This device is locked' : 'Could not read that page'}</span>
           <div>{byUrl.error}</div>
+          {byUrl.locked && (
+            <div style={{ marginTop: 6 }}>
+              <Link href={`/kitchen/login?to=${encodeURIComponent(`/kitchen/want?url=${url}`)}`}>
+                Unlock and read it
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
@@ -181,9 +207,22 @@ export default async function Want({
                     : <div className="mealthumb" />}
                   <div className="mealbody">
                     <div className="mealtop">
-                      <Link href={`/kitchen/want?url=${encodeURIComponent(h.source ?? '')}`}>
+                      {/* Locked devices get the publisher's own page instead of a `?url=` link that
+                          would only tell them to unlock. It is also where the crawlable `?url=`
+                          space came from: those hrefs are what turned this page into 15,367
+                          invocations, and they are now rendered only for a device that can use
+                          them. */}
+                      {unlocked ? (
+                        <Link href={`/kitchen/want?url=${encodeURIComponent(h.source ?? '')}`}>
+                          <b>{h.name}</b>
+                        </Link>
+                      ) : h.source ? (
+                        <a href={h.source} target="_blank" rel="noreferrer nofollow">
+                          <b>{h.name}</b>
+                        </a>
+                      ) : (
                         <b>{h.name}</b>
-                      </Link>
+                      )}
                       <span className={`v ${n === 0 ? 'ok' : ''}`}>{n === 0 ? 'can make now' : `buy ${n}`}</span>
                     </div>
                     <div className="mealmeta">
@@ -220,9 +259,11 @@ export default async function Want({
               </li>
             ))}
           </ul>
-          <p className="lede" style={{ marginTop: 14 }}>
-            A pasted link works for sites this app will not crawl, like NYT Cooking or Serious Eats.
-          </p>
+          {unlocked && (
+            <p className="lede" style={{ marginTop: 14 }}>
+              A pasted link works for sites this app will not crawl, like NYT Cooking or Serious Eats.
+            </p>
+          )}
         </>
       )}
     </div>

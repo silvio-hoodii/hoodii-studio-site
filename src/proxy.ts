@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { AUTH_COOKIE, cookieAuthorises } from '@/lib/auth';
 
 /* What is gated, and why it is so little.
  *
@@ -41,7 +42,13 @@ function loginPathFor(pathname: string): string {
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const authed = req.cookies.get('kos')?.value === process.env.KITCHEN_SESSION_SECRET;
+  /* FAIL-CLOSED, and the comparison is not written here. This line read
+   *   req.cookies.get('kos')?.value === process.env.KITCHEN_SESSION_SECRET
+   * until 2026-08-28, which with the env var unset is `undefined === undefined` and admits every
+   * anonymous request to every write route on a repo whose route list is public. See
+   * `src/lib/auth.ts` for the full account; the one thing to know here is that a second copy of
+   * this comparison anywhere fails `scripts/lint-auth-compare.mjs`. */
+  const authed = cookieAuthorises(req.cookies.get(AUTH_COOKIE)?.value);
 
   /* The unlock route is how a device BECOMES authorised, so it cannot require being authorised.
    * Added 2026-08-11 with the inline unlock: /kitchen/login still exists, but a write that fails

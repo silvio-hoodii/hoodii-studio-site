@@ -1,4 +1,6 @@
 import { cookies } from 'next/headers';
+import { AUTH_COOKIE } from '@/lib/auth';
+import { WRONG_PASSWORD_DELAY_MS } from '@/lib/login-server';
 
 /* Unlock this device from wherever the write failed, without leaving the page.
  *
@@ -33,12 +35,16 @@ export async function POST(req: Request) {
   if (pw !== expected) {
     /* An endpoint that anyone may POST to is a password-guessing target, and this one has to be
      * open by definition. A deliberate delay on failure is the cheapest thing that makes an online
-     * guessing attack impractical without adding state to track attempts. */
-    await new Promise((r) => setTimeout(r, 600));
+     * guessing attack impractical without adding state to track attempts.
+     *
+     * The constant moved to `src/lib/login-server.ts` on 2026-08-28, when the four login pages got
+     * the same brake. They had none, which meant the same password against the same cookie was
+     * guessable at whatever rate the network allowed on four of the five doors. */
+    await new Promise((r) => setTimeout(r, WRONG_PASSWORD_DELAY_MS));
     return Response.json({ ok: false, error: 'wrong' }, { status: 401 });
   }
 
-  (await cookies()).set('kos', secret, {
+  (await cookies()).set(AUTH_COOKIE, secret, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

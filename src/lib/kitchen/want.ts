@@ -2,6 +2,7 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { deriveStock } from './stock';
+import { isAuthed } from '../auth-server';
 import { scoreRecipe, extractRecipe, splitPaste, type Score } from '../../../content/kitchen/match.mjs';
 import { loadCorpus, type CorpusMeal } from './corpus';
 
@@ -155,8 +156,41 @@ export async function wantByPaste(text: string): Promise<{ hit: WantHit | null; 
   };
 }
 
-/** Fetch and score ONE page he pointed at. Works for any site publishing recipe markup. */
-export async function wantByUrl(url: string): Promise<{ hit: WantHit | null; error: string | null; stock: Awaited<ReturnType<typeof deriveStock>> }> {
+/** Fetch and score ONE page he pointed at. Works for any site publishing recipe markup.
+ *
+ * REQUIRES THE UNLOCK COOKIE, since 2026-08-28. The feature is not the problem and it stays: it is
+ * how NYT Cooking and Maangchi become usable, which is the whole reason this file accepts a URL. Who
+ * may drive it was the problem.
+ *
+ * WHAT IT WAS. The 2026-08-26 audit's theme T1, the one finding that is security and cost at once,
+ * found from two directions (02-kitchen P1-1, 07-vercel P1-1) and verified by reading these lines:
+ * a public `force-dynamic` page took an anonymous visitor's `?url=` and fetched it server-side over
+ * http or https, with a spoofed Chrome user agent, a 20-second timeout, no host allowlist and no
+ * private-address block, from Vercel's network. `/kitchen` and `/kitchen/find` link to it with
+ * crawlable `?q=` and `?url=` hrefs, so it is a combinatorial URL space with a fetch behind every
+ * point in it. It took 15,367 invocations during the meta-externalagent scrape and sits outside
+ * firewall rule 3.
+ *
+ * WHY THE CHECK IS HERE AND NOT IN THE PAGE. Law 1: eliminate the class. A check in
+ * `src/app/kitchen/want/page.tsx` protects one call site and leaves the next one to remember. There
+ * is no code path to an anonymous server-side fetch if the function itself will not perform one.
+ *
+ * The `?q=` corpus search stays public. It is local, it costs nothing off-site, and it is the half
+ * of the page anybody could reasonably want to look at.
+ */
+export async function wantByUrl(url: string): Promise<{ hit: WantHit | null; error: string | null; stock: Awaited<ReturnType<typeof deriveStock>> | null; locked?: true }> {
+  /* The cookie is checked BEFORE the stock derivation, so a crawler walking the `?url=` hrefs off
+   * /kitchen and /kitchen/find costs one 200 with no off-site fetch AND no Neon round trip. Neon is
+   * the entire External API Requests bill on this site. */
+  if (!(await isAuthed())) {
+    return {
+      hit: null,
+      stock: null,
+      locked: true,
+      error: 'Reading a page you point at needs this device unlocked. Search by name instead, which is open to anyone.',
+    };
+  }
+
   const { stock, ids } = await usableStock();
   let parsed: URL;
   try {
