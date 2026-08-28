@@ -1,6 +1,6 @@
 # The five training routes, master index
 
-Date: 2026-08-28. Audited at HEAD `5151558`; four fixes have landed since, named below.
+Date: 2026-08-28. Audited at HEAD `5151558`. **1 P0 and 14 of 24 P1s are fixed and live as of `d690267`**, listed below; the batch order after that covers what is left.
 
 Four adversarial read-only agents, one route each, plus orchestrator verification of every load-bearing
 number against live Neon before anything was changed. **Every report is written for executor agents:**
@@ -26,26 +26,55 @@ and one audited against code that has since changed underneath it.
 | `11-swim.md` | `/swim` (five sub-tabs), `/swim/deep`, `/swim/api/baseline` | 0 | 6 | 13 | 4 (12 items) |
 | `12-run-bike.md` | `/run`, `/bike`, `/bike/api/ride`, the seven 307s | 0 | 5 | 13 | 10 |
 
-**1 P0 and 24 P1.** Four P1s are already fixed and verified live (see the next section).
+**1 P0 and 24 P1 as filed.** One of the 24 was withdrawn on verification and is marked in its own report. See the next section for what is closed.
 
-## Already done, verified on the built page
+## Already done, verified live on hoodii.studio
 
-Not queued. Fixed, gated, pushed, and read on a real render at 390px.
+Not queued. Fixed, gated, pushed, and read back off the real domain. **1 P0 and 14 of the 24 P1s.**
 
-1. **/bike's stop rule named a heart rate he beats routinely** (12-run-bike B1). Five strings said his
-   highest recorded heart rate is 175. It is **201**, and **23 of his last 60 swims** beat 175; six tie
-   at exactly 175, so it was the mode, not the max. The only stop rule in the week told him to abort
-   above a number he passes on a normal swim, under a sentence claiming he had never recorded it. Every
-   figure is interpolated from the database now, `content/gym/validate.mjs` refuses an unfilled
-   placeholder AND a vanished one, and the intensity decision is parked as an `open` row.
-2. **/swim's best pace was 82 percent rest** (11-swim P1-1). 1:31 per 100 m rendered three blocks under
-   a 1:38.71 personal best. AGENTS.md documents this in the PAST tense: the 2026-08-26 column split
-   fixed the column and left the minimum unguarded. The source was a 26-minute session with five
-   minutes of swimming in it. The minimum is floored now and the number states which swim it came from.
-3. **The 44px tap floor, measured** (`scripts/probe-taps.mjs`). 79 findings on its first run, including
-   six "Why this is here" summaries at 32px, which is the one control that answers his most-repeated
-   question. 31 of 31 surfaces clean now.
-4. **The /health P1s below are the next thing anybody picks up**, and they are not done.
+| Report | Closed | Left |
+|---|---|---|
+| `09-health.md` | P1-1, P1-2, P1-3 | P1-4 |
+| `10-gym.md` | **P0-1**, P1-1, P1-3, P1-4, P1-5, P1-8, part of P1-6 | P1-2, P1-7, P1-9, rest of P1-6 |
+| `11-swim.md` | P1-1 | P1-2 to P1-6 |
+| `12-run-bike.md` | R1, R2, B1, B2, B3, R9 (withdrawn) | none at P1 |
+
+**The P0.** The off-plan capture box overwrote a set it had already written. The index came from React
+state the hydrate effect never refills, so a reload restarted it at 1 and the upsert replaced the
+earlier set; it could also land on a PRESCRIBED set, because the box's own datalist offers exercises
+prescribed that same day. The server derives the index inside the insert now. Proven on a scratch
+date: three appends across simulated reloads gave 1, 2, 3 where the old code gave one row.
+
+**The calf raise, on his ruling.** "I swapped to machine calf raise, so it was not DB calf raise."
+The alt was an ALIAS of the slot's own variant, so choosing it wrote a second exercise_id and split
+the history: twelve bodyweight sets under one name, three at 180 to 210 lb under the other, and the
+card read the first and offered 5 lb. Every history read resolves aliases now, in the app AND in
+check-ladder, which is the fourth reader of that table. A validator rule found SIX more alias-alts;
+four are their own variants now.
+
+**The stop rule that fired on a normal swim.** "Above 175, higher than anything you have ever
+recorded", against a real maximum of 201 that 23 of his last 60 swims beat. Derived now, both
+directions gated. He ruled that the prescribed bands stay where they are.
+
+**Three progression defects**, all wrong numbers on cards: 5 box jumps suggested after he did 10 (and
+written into his log), a deload to 105 triggered by two single-set days, and the assisted pull-up
+gaining assistance while its own cue said that number should go down. `progression.test.ts`, 8 cases,
+three of which exist to catch those fixes overshooting.
+
+**Seven of thirteen partner cards said nothing**, because the gate accepts an `open` question that
+rendered nowhere. A gate that accepts an invisible alternative cannot measure reach. Now checked on
+the SCREEN by `everyPartnerShowsAReason`, watched failing on the unfixed build first.
+
+**/swim's 1:31 per 100 m**, faster than a 1:38.71 PB three blocks above it, off a 26-minute session
+with five minutes of swimming in it. **/health's 119%** of a weight change attributed to fat.
+**Three training days drawn as rest** on the attendance strip. **A run cited on a day he did not
+run.** The 44px tap floor, 79 findings, now measured by `scripts/probe-taps.mjs`.
+
+**R9 was WITHDRAWN after verification**, and the report says so where the finding is. It claimed "3
+runs in 2025" was false by a factor of 21; split by kind, `running` holds exactly three and the other
+61 are treadmill sessions averaging 48 minutes, which is the walking the same sentence already
+credits. Acting on it would have replaced a true statement with a false one. **Re-verify a finding
+before executing it: this report is not exempt from its own theme T3.**
 
 ## Deduplicated cross-report themes
 
@@ -128,34 +157,33 @@ Sources: 12-run-bike B2 B3, 11-swim P2-13 P1-6, 09-health P1-4.
 calls the buoy question open in two places while the Plan tab renders the answer. "Your last session"
 on the training index is the last LIFT: his actual last session was a swim 90 minutes later.
 
-## Execution order
+## Execution order, for what is LEFT
 
-**Batch 1, the P0 and the numbers he acts on at the rack. GYM, so coordinate with that session first.**
-1. 10-gym P0-1, the off-plan box overwriting a set it already wrote. Data loss in his training log.
-2. 10-gym P1-1, the calf raise offering 5 lb for a 210 lb machine, and T1's whole family with it.
-   Fix the GATE (every field that names an implement), then the nine instances under it.
-3. 10-gym P1-3, bodyweight and timed suggestions capped at the range top: box jump told 5 after 10,
-   carry told 42s after 130s.
+Everything in "Already done" above is closed. This is the remainder.
 
-**Batch 2, the lies on the pages he reads. No gym overlap, do these in parallel with batch 1.**
-4. 09-health P1-1, `fatShare`. It prints 119% today. Highest value on /health.
-5. 09-health P1-3, the strip that draws three training days as rest (T5).
-6. 09-health P1-2, the tautology sold as arithmetic.
-7. 12-run-bike R1 and R2, the run cited on a date with no run and the multiplier against the wrong
-   prescription.
-8. 12-run-bike B2 and B3, the form that does not exist and the 76 rides called one.
-9. 11-swim P1-2 P1-3 P1-4 P1-6, four sentences their own data contradicts.
+**Batch 1, the P1s still open.**
+1. 10-gym P1-7, seven cards carrying a cue for the wrong implement. **HIS to author, not yours.** The
+   cue text is in the "only he can author" column of the co-build table and all seven are already
+   parked as `open` questions with due dates. Do not write them.
+2. 10-gym P1-9, two `why` texts describing a partner that left, and P1-6's remaining three parked
+   questions that state something false about their own card. Both are corrections, not inventions.
+3. 11-swim P1-2 to P1-6: a retired pace band still printed, a SWOLF section telling him to close a
+   gap the plan tells him to open, a "your last ten swims" list that is stale by four, seven in-water
+   cues bypassing the grounding gate, and the cycles-vs-strokes question held open on one page while
+   two others call it settled.
+4. 09-health P1-4, "your last session" being the last LIFT when a swim came 90 minutes later.
 
-**Batch 3, T2 in one pass.** Every typed number becomes derived or goes. Do it as ONE sweep across all
-four reports, because the fix is identical everywhere and doing it per-report is how three of them get
-missed. Includes the `104.9 kg` restatements, which are a standing-rule violation and not a typo.
+**Batch 2, T2 in one sweep.** Every typed number becomes derived or goes. One pass across all four
+reports, because the fix is identical everywhere and doing it per-report is how three get missed. The
+`{PEAK_*}` placeholder mechanism plus its validator gate is the pattern: it is already in place for
+the bike's heart rate and generalises.
 
-**Batch 4, the gates (T6) and the round trips (T7).** Gates first: a gate that checks less than it
-claims is worse than the absence of one, and two of them are load-bearing today. Then batching, in the
-cost order T7 lists.
+**Batch 3, the gates (T6) and the round trips (T7).** Gates first: a gate that checks less than it
+claims is worse than none, and 10-gym P2-9 and 11-swim P1-5 are both load-bearing today. Then
+batching, in the cost order T7 lists. `/gym` is 52 to 76 round trips per page open.
 
-**Batch 5, T8 and the remaining P3s.** Measure at 390px before and after; `scripts/probe-taps.mjs`
-covers the geometry and does not read length.
+**Batch 4, T8 and the remaining P2s and P3s.** `cuesNote` ships 11,309 bytes of developer prose to
+his phone. Measure at 390px before and after with `scripts/probe-taps.mjs`.
 
 ## Constraints that bind every executor
 
