@@ -269,6 +269,40 @@ const CASES = [
     },
     expect: null,
   },
+  {
+    name: 'a cue naming an implement the card is not is refused',
+    mutate: (p) => {
+      /* The real defect, in his own file's words: a cable exercise whose cue told him to hold "ONE
+         dumbbell in both hands, cupping the top end like a mug". Built from a real cable slot rather
+         than a named one, so a rebuild that moves ids does not quietly stop testing anything. */
+      const ex = Object.values(p.days)
+        .flatMap((d) => d.blocks || [])
+        .flatMap((b) => b.exercises || [])
+        .find((e) => typeof e.cue === 'string' && e.zone === 'cable' && e.station);
+      if (!ex) throw new Error('no cable slot with a cue to mutate; repoint this case');
+      ex.cue = 'ONE dumbbell held in both hands, cupping the top end like a mug. ' + ex.cue;
+    },
+    expect: 'opens by naming a dumbbell',
+  },
+  {
+    name: 'a cue mentioning another implement as a CONTRAST is allowed',
+    mutate: (p) => {
+      /* THE DIRECTION THAT KEEPS THE RULE HONEST, and the one its first version got wrong three times
+         out of three. The machine chest press cue reads "so a tired chest does not have to balance
+         dumbbells", which is correct and useful; the lat pulldown says "bring the bar to your upper
+         chest", which is the lat bar; the assisted pull-up says "chin over the bar". A rule matching
+         bare nouns flagged all three, and a checker whose new findings are all false is one nobody
+         runs. The patterns match HOLDING constructions, not mentions. */
+      const ex = Object.values(p.days)
+        .flatMap((d) => d.blocks || [])
+        .flatMap((b) => b.exercises || [])
+        .find((e) => typeof e.cue === 'string' && e.zone === 'machines' && e.station);
+      if (!ex) throw new Error('no machine slot with a cue to mutate; repoint this case');
+      ex.cue = 'Machine on purpose, so a tired chest does not have to balance dumbbells. '
+        + 'Bring the bar to your upper chest and keep your chin over the bar. ' + ex.cue;
+    },
+    expect: null,
+  },
 ];
 
 let failed = 0;

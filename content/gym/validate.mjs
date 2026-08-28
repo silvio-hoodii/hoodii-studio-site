@@ -967,6 +967,80 @@ if (MOVEMENTS) {
   }
 }
 
+/* ---------------------------------------------------------------------------------------------
+ * A CUE MAY NOT NAME AN IMPLEMENT THE CARD IS NOT. Added 2026-08-28 for 10-gym P1-7.
+ *
+ * The 2026-08-27 placement gate made a slot agree with the catalogue about WHERE an exercise is
+ * done. Six slot ids were rewritten to sit at the right fixture, the gate went green, and SEVEN
+ * CUES went on describing the old implement. He was standing at a cable column being told to cup
+ * the end of a dumbbell like a mug.
+ *
+ * The sharpest one: Thursday's calf raise cue said the exercise "needs no fixture of its own"
+ * above a slot declaring station calf-raise. That is the precise falsehood the placement gate was
+ * built to make unrepresentable, and the handoff's own words for it were "The block passed because
+ * the data lied". The FIELD was corrected and the identical claim survived in prose, where no gate
+ * read it. Monday's said "NOT on the calf machine" while its own block why said "it is a machine
+ * across the floor" and his ruling that morning was that it is the machine. Four statements about
+ * one exercise and two of them wrong.
+ *
+ * SO THE CUE IS DATA TOO. It names an object, and which object is a fact the catalogue already
+ * holds. This checks that one fact and nothing else: it says nothing about whether an instruction
+ * is followable, which is his to judge and stays his.
+ *
+ * Only the OPENING of the cue is read, because that is where the setup sentence lives and because
+ * a later mention is usually a contrast worth keeping ("heavier than a standing curl"). A rule that
+ * fired on those would be turned off, and a checker nobody runs protects nothing.
+ * ------------------------------------------------------------------------------------------- */
+if (MOVEMENTS) {
+  /* NOT "does this word appear", but "is this cue telling him to PICK ONE UP".
+   *
+   * The first version matched the bare nouns and got three out of three wrong on its first run, on
+   * cues that are all correct: the lat pulldown says "bring the bar to your upper chest", which is
+   * the lat bar; the assisted pull-up says "chin over the bar", which is the pull-up bar; and the
+   * machine chest press says "so a tired chest does not have to balance dumbbells", which is a
+   * CONTRAST explaining why it is the machine. A checker whose first new findings are all false is
+   * one nobody runs, and this repo has now learned that three separate times in one day.
+   *
+   * So the patterns are CONSTRUCTIONS, not nouns. Every one of the seven real defects said the
+   * implement was in his hands or was the thing being set up: "ONE dumbbell held in both hands",
+   * "A dumbbell in each hand", "Done holding dumbbells", "The zed bar with the seat", "Bar touching
+   * your legs". None of the correct cues does that about an implement it is not. A bar he pulls
+   * toward his chest is not a bar he is holding as the load. */
+  const NAMES = {
+    dumbbell: /\b(?:a |one |the )?dumbbells?\b(?=[^.]{0,24}\b(?:in (?:each|both) hands?|held|holding|hanging|touching|by your sides?))|\bholding (?:a |one |the )?dumbbells?\b/i,
+    barbell: /\b(?:the )?bar(?:bell)?\b(?=[^.]{0,20}\b(?:touching|stays|in your hands|on your back))|\bholding (?:the )?bar(?:bell)?\b/i,
+    cable: /\b(?:a |the )?cables?\b(?=[^.]{0,20}\b(?:in (?:each|both) hands?|held|holding))/i,
+    kettlebell: /\b(?:a |one |the )?kettlebells?\b(?=[^.]{0,24}\b(?:in (?:each|both) hands?|held|holding))/i,
+    ez: /\b(?:the )?(?:zed|ez)[- ]bar\b/i,
+  };
+  const LENIENT = new Set([undefined, null, "bodyweight", "band", "none"]);
+
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    for (const cueBlock of day.blocks || []) {
+      for (const ex of cueBlock.exercises || []) {
+        if (typeof ex.cue !== "string" || !ex.cue) continue;
+        const v = MOVEMENTS[ex.id];
+        if (!v || LENIENT.has(v.implement)) continue;
+        const opening = ex.cue.slice(0, 240);
+        for (const [implement, re] of Object.entries(NAMES)) {
+          if (implement === v.implement) continue;
+          /* A machine mention is fine on anything that DECLARES a station: he is standing at one. */
+          if (implement === "machine" && ex.station) continue;
+          if (!re.test(opening)) continue;
+          fail(
+            dayKey + "/" + cueBlock.label,
+            "the cue on \"" + ex.id + "\" opens by naming a " + implement
+              + " and movements.json says this exercise uses a " + v.implement
+              + ". The cue is the one thing on the card that tells him what to pick up, and it is read"
+              + " at the machine. Correct the noun, or give the slot the variant it actually is.",
+          );
+          break;
+        }
+      }
+    }
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
 
