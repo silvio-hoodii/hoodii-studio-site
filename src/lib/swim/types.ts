@@ -28,6 +28,16 @@ export interface BaselineFact {
    *  behind a tap. The flag lives in the data, not in the page's row order, because "the first two
    *  are the important ones" is a coupling that breaks silently the moment a fact is inserted. */
   secondary?: boolean;
+  /** Names a figure the PAGE computes and appends, rather than one typed into the file.
+   *
+   *  Added 2026-08-28 (11-swim P1-4). This fact carried a typed list of nine longest pieces under a
+   *  label saying ten, ending around 2026-08-22, with a diagnosis the live laps contradict: seven of
+   *  the last ten swims hold a piece of 150 m or more. The block's own comment already claimed "the
+   *  page cannot outgrow what the laps say", which was true of the LABELS and not of the numbers.
+   *
+   *  A string here rather than a boolean because more of this file will follow: every typed figure
+   *  in `baseline` is a candidate, and naming which derivation applies keeps the page from guessing. */
+  derived?: 'longestPieces';
 }
 
 /** A rung. `piece` is written RELATIVE to the number the week-0 calibration swim returns, never as

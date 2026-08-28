@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { loadSwimPlan, loadSwimCoaching, loadSwimTeaching } from '@/lib/swim/content';
-import { getSwimBaseline, getSwimHistory } from '@/lib/swim/db';
+import { getSwimBaseline, getSwimHistory, getLongestPieces } from '@/lib/swim/db';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
@@ -380,8 +380,11 @@ export default async function SwimPage({
     ? await (async () => {
         /* getRecentSessions returns newest first, so its head IS the last session. Calling
            getLastSession as well would fetch the same row a second time. */
-        const [standards, pbs, recent, history] = await Promise.all([
+        const [standards, pbs, recent, history, longestPieces] = await Promise.all([
           loadSwimStandards(), getSwimPbs(), getRecentSessions('swimming', 10), getSwimHistory(90),
+          /* The longest unbroken piece per swim, derived. It replaces a typed list of nine numbers
+             under a label saying ten, whose diagnosis the live laps contradict. See getLongestPieces. */
+          getLongestPieces(10),
         ]);
         return {
           standards,
@@ -389,6 +392,7 @@ export default async function SwimPage({
           lastSession: recent[0] ?? null,
           recent,
           history,
+          longestPieces,
         };
       })()
     : null;
@@ -524,6 +528,26 @@ export default async function SwimPage({
                   .map((f) => (
                     <div className="ex-cue" key={f.label}>
                       <b>{f.label}.</b> {f.value}
+                      {/* THE LONGEST PIECES ARE DERIVED NOW, since 2026-08-28 (11-swim P1-4).
+                          This fact used to carry a typed list: "Longest piece in your last ten swims:
+                          100, 100, 100, 500, 125, 250, 150, 100, 150 m. The long one happens monthly,
+                          not weekly. That is the gap, not fitness." Nine values under a label saying
+                          ten, ending around 2026-08-22, and a diagnosis the live laps contradict:
+                          seven of the last ten hold a piece of 150 m or more, six inside eleven days.
+                          The block's own comment two paragraphs up says the 2026-08-21 fix means "the
+                          page cannot outgrow what the laps say". It labelled the facts and left them
+                          typed, so it could and it did. */}
+                      {f.derived === 'longestPieces' && now.longestPieces.length > 0 && (
+                        <>
+                          {' '}Longest unbroken piece in each of your last{' '}
+                          <span className="tnum">{now.longestPieces.length}</span> swims:{' '}
+                          {now.longestPieces.map((x) => `${x.metres} m`).join(', ')}.{' '}
+                          <span className="tnum">
+                            {now.longestPieces.filter((x) => x.metres >= 150).length}
+                          </span>{' '}
+                          of them are 150 m or more.
+                        </>
+                      )}
                     </div>
                   ))}
                 {/* The backing numbers go behind a tap. Adding five labelled facts took this view to
