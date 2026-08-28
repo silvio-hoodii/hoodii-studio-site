@@ -673,7 +673,7 @@
               ]
             }
           ],
-          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what goes in its rest. A dumbbell comes to the cable stack with you; nothing that needs the floor can, which is why this is not a plank.",
+          "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what follows it. Not in its rest: both are on the high pulley and the attachment has to change between them, so one rest window cannot hold both.",
           "$sequenceBecause": "SEQUENCE, NOT A PAIR, since 2026-08-28. His note #27 at the rack: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" He is right, and the reason it kept happening is that the one-station rule deduped two exercises on ONE station into a single entry, so it could never fire on them. Every audit checked the station and the stations matched. The gate compares equipment.json's `sharedInOneWindow` now, which defaults to FALSE, and it found two more blocks like this one that nobody had reported. Do the first exercise, then set the machine up for the second. That is what was actually happening anyway. It goes back to a pair the moment the open question on cable-pulldown is answered: answering it UNLOCKS pairings rather than removing them."
         },
         {
@@ -737,11 +737,6 @@
               "station": null,
               "log": true,
               "open": [
-                {
-                  "q": "This slot moved from db-lateral-raise to cable-lateral-raise on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                },
                 {
                   "q": "Moved to the cable on 2026-08-27 and moved back the same hour: the seated row holds the low pulley and a cable lateral raise needs the adjustable column, so the two cannot share one rest window. A dumbbell holds nothing and travels, which is why the partner is a dumbbell.",
                   "asked": "2026-08-27",
@@ -831,11 +826,6 @@
               "log": true,
               "rangeWidth": 5,
               "open": [
-                {
-                  "q": "This slot moved from db-hammer-curl to cable-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                },
                 {
                   "q": "Same reason: the pushdown holds the high pulley and a cable curl needs the low one. Two cable exercises are only one station when they are the same column.",
                   "asked": "2026-08-27",
@@ -986,7 +976,7 @@
               "progression": "reps",
               "open": [
                 {
-                  "q": "The card says 3 sets of 3 and on 2026-08-27 you logged 10 reps a set. One of the two is wrong and nobody has established which. Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
+                  "q": "The card says 3 sets of 4 per side. The one time it is logged, 2026-08-18, you did 4, then 6, then 6. (This question used to say \"3 sets of 3\" and cite a session on 2026-08-27, and both were wrong: it was copied from the box jump row, where both are true. Corrected 2026-08-28 against gym_set.) Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -1021,10 +1011,10 @@
               "zone": "benchDb",
               "station": null,
               "log": true,
-              "whyHere": "The lateral raise rides in the rest for the same reason as Monday: it is upper body, so the bound stays fresh."
+              "whyHere": "The lateral raise rides in the rest because it is upper body, so the bound stays fresh."
             }
           ],
-          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest for the same reason as Monday: it is upper body, so the bound stays fresh."
+          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest because it is upper body, so the bound stays fresh."
         },
         {
           "role": "main",
@@ -1516,11 +1506,6 @@
               "station": null,
               "log": true,
               "open": [
-                {
-                  "q": "This slot moved from db-reverse-fly to pec-deck-reverse on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                },
                 {
                   "q": "Same reason: the shoulder press machine and the pec deck are two separate fixtures.",
                   "asked": "2026-08-27",
