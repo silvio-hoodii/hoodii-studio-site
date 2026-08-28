@@ -752,6 +752,11 @@
                   "q": "Moved to the cable on 2026-08-27 and moved back the same hour: the seated row holds the low pulley and a cable lateral raise needs the adjustable column, so the two cannot share one rest window. A dumbbell holds nothing and travels, which is why the partner is a dumbbell.",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
+                },
+                {
+                  "q": "Five lifts cannot reach their own next weight, this one twice over: at 20 lb, the top of 12 to 14 reps banks an estimated 29.3 and the next dumbbell up demands 35.0, so maxing out the range earns a jump you will fail. The others are the DB lateral lunge, the assisted pull-up and the DB reverse fly. Two ways out and they apply to all five. Widen the rep range so the top of it actually earns the jump, which here means 12 to 23 reps and a long set. Or accept that these four stall at their current weight and progress only on reps. Which one, and is a 23-rep set of lateral raises something you would actually do?",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
                 }
               ]
             }
@@ -1061,7 +1066,19 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "open": [
+                {
+                  "q": "You asked for hanging knee raises in this lift's rest, holding the top of the rack you are already standing at. The data will not allow it yet: the rack and the pull-up bar on top of it are two separate stations in equipment.json, and a paired block may hold only one fixture. So, standing there: while you are in the rack with a loaded bar, could another member use that pull-up bar? If no, the bar is part of the rack and the file should say so, and this pairing ships. If yes, they are genuinely two fixtures and the knee raise cannot ride in this rest.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                },
+                {
+                  "q": "And how much trunk work do you actually want. Abdominals are already at 16 fractional sets a week, past the top of the efficient zone at 10, which you can now see on /health under Volume. Three sets of knee raises here takes them to 19. Option 1, add them anyway: past the efficient zone means each extra set buys less, not that it hurts. Option 2, add nothing and move work that is already in the week into these rest gaps instead, for example the single-leg RDL from the front squat day, which costs zero new sets. Option 1 or option 2.",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10"
+                }
+              ]
             }
           ],
           "why": "The heavy hinge, the one that gets progressed. Squat went 135x10 to 185x6 since May while this pattern ran twice a week."

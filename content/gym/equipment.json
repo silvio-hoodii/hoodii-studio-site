@@ -134,7 +134,18 @@
         "assisted-pullup": { "name": "Assisted pull-up", "confidence": "archive", "evidence": "Seeded as a sub in May; restated 2026-08-15" },
         "assisted-dip": { "name": "Assisted dip", "confidence": "stated", "evidence": "Listed 2026-08-15. He had 5 strict dips at the May intake." },
         "back-extension": { "name": "45-degree back extension", "confidence": "logged", "evidence": "Glute-biased back extension logged 40 to 50" },
-        "calf-raise": { "name": "Standing calf raise", "confidence": "logged", "evidence": "Logged 2026-06-09, and 'that's a machine' on 2026-08-15" }
+        "calf-raise": {
+          "name": "Standing calf raise",
+          "confidence": "logged",
+          "evidence": "Logged 2026-06-09, and 'that's a machine' on 2026-08-15",
+          "open": [
+            {
+              "q": "Thursday pairs the leg curl machine with this one in the same rest window, and it only passes the one-station rule because that slot claims to hold no machine at all, which is false: your log has 180 to 210 lb on this machine. Two selectorised machines at once is the exact thing you rejected in August ('you're saying on the fore exercise I should use two machines'). So which is it on Thursday: do you alternate the two machines set for set, holding both, or do you finish the leg curl and then walk over here? The second is a sequence and is legal; the first is not, and the calf raise needs a different home.",
+              "asked": "2026-08-27",
+              "due": "2026-09-10"
+            }
+          ]
+        }
       }
     },
 
