@@ -345,6 +345,48 @@
       };
     },
 
+    /* EVERY PARTNER CARD SAYS WHY IT IS THERE, checked ON THE SCREEN.
+       Added 2026-08-28. content/gym/validate.mjs accepts EITHER a whyHere or an open question on a
+       position-2 exercise, and until today only the first of those rendered. So the 2026-08-27
+       rewrite moved seven of thirteen partners onto the open branch, the gate stayed green, and the
+       majority of partner cards silently went back to saying nothing. On Tuesday four of five showed
+       no reason, and Tuesday is the day he wrote "why is there db standing calf here".
+
+       A GATE THAT ACCEPTS AN INVISIBLE ALTERNATIVE CANNOT MEASURE REACH, and that is why this check
+       is here rather than in the validator: the validator reads the FILE and the failure was on the
+       SCREEN. AGENTS.md's account of this feature is that it shipped, validated, rendered, named the
+       questioned partner in 10 of 11 cases, and he asked the same question five more times over nine
+       days. Nothing was broken then either.
+
+       A PARTNER is any card after the first inside one block. Read from the DOM rather than from
+       program.json, because what is being asserted is what he can see. Navigates nothing, writes
+       nothing. */
+    async everyPartnerShowsAReason() {
+      const blocks = $$('.exgroup');
+      const missing = [];
+      let partners = 0;
+      for (const b of blocks) {
+        const cards = $$('.ex[data-slot]', b);
+        for (let i = 1; i < cards.length; i++) {
+          partners++;
+          const card = cards[i];
+          if (!$('.ex-why', card)) {
+            missing.push(text($('.ex-name', card)) || card.getAttribute('data-slot') || '?');
+          }
+        }
+      }
+      return {
+        pass: partners > 0 && missing.length === 0,
+        detail: {
+          partnersOnScreen: partners,
+          showingNoReason: missing,
+          note: missing.length
+            ? 'a partner card renders no reason: the file may satisfy the gate while the screen says nothing'
+            : 'every partner names why it is there',
+        },
+      };
+    },
+
     /* `.ex` MEANS AN EXERCISE, and nothing else on this page may answer to it.
        Added 2026-08-27, the day a "what you have written" notes block shipped using `.ex` for its
        rows. Every test passed. cardNames() went from 10 entries to 28, wholeDayIsShown compared a

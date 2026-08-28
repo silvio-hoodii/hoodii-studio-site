@@ -788,7 +788,28 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                   * an alt carries no whyHere at all. Swaps are where every previous defect on this
                   * surface lived (four of the five found on 2026-08-14), so read the slot on
                   * purpose rather than by accident. */}
-                {ex.whyHere && <div className="ex-why">{ex.whyHere}</div>}
+                {/* ONE OF THESE TWO ALWAYS RENDERS ON A PARTNER, since 2026-08-28.
+                    `content/gym/validate.mjs` accepts EITHER a `whyHere` or an `open` question on a
+                    position-2 exercise, and only the first of those was ever rendered. So the
+                    2026-08-27 rewrite moved seven of thirteen partners onto the `open` branch and the
+                    gate stayed green while the majority of partner cards went back to saying nothing.
+                    On Tuesday, four of five showed no reason, and Tuesday is the day he wrote "why is
+                    there db standing calf here".
+
+                    That is the exact failure AGENTS.md documents about this feature: the reasoning
+                    shipped, validated, rendered, named the questioned partner in 10 of 11 cases, and
+                    he asked the same question five more times over nine days. A GATE THAT ACCEPTS AN
+                    INVISIBLE ALTERNATIVE CANNOT MEASURE REACH.
+
+                    The open branch gets ONE LINE, not the question text. Note #12 in his words:
+                    "Walls of text again why do I need all this, just leave the cue and thats it, it
+                    can even be hidden." A parked question is a real state and the honest-states rule
+                    says a surface names it rather than showing nothing, but it is not something he
+                    should have to read mid-set. Whether the questions themselves belong on the card
+                    is his call and is parked. */}
+                {ex.whyHere
+                  ? <div className="ex-why">{ex.whyHere}</div>
+                  : (ex.open?.length ? <div className="ex-why quiet">No reason recorded yet, a question about this is open.</div> : null)}
                 {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
                      "Walls of text again why do I need all this, just leave the cue and thats it,
                      it can even be hidden" (gym_note #12, 2026-08-25), after the same complaint on
