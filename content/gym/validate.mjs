@@ -920,6 +920,53 @@ if (MOVEMENTS) {
   }
 }
 
+/* ---------------------------------------------------------------------------------------------
+ * AN ALT MAY NOT RESOLVE TO THE SLOT ITSELF. Added 2026-08-28, and he found it at the rack.
+ *
+ * The calf raise card offered him about 5 lb for a machine he works at 180 to 210. His words:
+ * "the calf raise thing I swapped to machine calf raise, so it was not DB calf raise."
+ *
+ * The slot is `standing-calf-raise` and one of its ALTS is `machine-calf-raise`, which movements.json
+ * lists as an ALIAS of that same variant. So the alt offered him a choice between an exercise and
+ * itself. Choosing it was not a swap in any real sense, but it wrote a different string into
+ * gym_set.exercise_id, and the progression read only the slot id: twelve bodyweight sets at weight 0,
+ * top weight zero, suggest the smallest step above it. The 210 lb from the previous evening sat in
+ * the same table under the other name and no query asked for it.
+ *
+ * TWO FIXES AND THIS IS THE ONE THAT PREVENTS IT. src/lib/gym/equivalent-ids.ts makes every history
+ * read resolve aliases, so the rows already in his log read correctly. This stops the shape being
+ * expressible at all: an alt has to be a genuine alternative, and an alternative to itself is not one.
+ *
+ * AGENTS.md already carries the neighbouring rule from 2026-08-27: an alias means the same JOB, not
+ * the same FIXTURE, and if the placement gate fires on an alias the answer is a new variant rather
+ * than a changed slot. This is the case that rule did not cover, because here the alias is the same
+ * job AND the same fixture, which makes it not an alias at all but a duplicate name.
+ * ------------------------------------------------------------------------------------------- */
+if (MOVEMENTS) {
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    for (const altBlock of day.blocks || []) {
+      for (const ex of altBlock.exercises || []) {
+        const slotVariant = MOVEMENTS[ex.id];
+        if (!slotVariant) continue;
+        for (const alt of ex.alts || []) {
+          const altVariant = MOVEMENTS[alt.id];
+          if (!altVariant) continue;
+          if (altVariant.id !== slotVariant.id) continue;
+          fail(
+            dayKey + '/' + altBlock.label,
+            'slot "' + ex.id + '" offers "' + alt.id + '" as an alternative, and movements.json'
+              + ' resolves both to the variant "' + slotVariant.id + '". That is a choice between an'
+              + ' exercise and itself. Picking it writes a different exercise_id into gym_set while'
+              + ' meaning the same movement, which splits the history and makes the weight suggestion'
+              + ' read the wrong half: this is how the calf raise came to offer 5 lb for a machine he'
+              + ' loads to 210. Drop the alt, or make it a genuinely different variant.',
+          );
+        }
+      }
+    }
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
 

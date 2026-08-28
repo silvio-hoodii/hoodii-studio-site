@@ -1,5 +1,6 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
+import { equivalentIds } from './equivalent-ids';
 
 // Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables, see
 // content/gym/schema.sql. GYM_DATABASE_URL is the self-documenting name for this module, but the
@@ -153,23 +154,31 @@ export async function upsertSet(s: SetInput) {
  *  estimated=false is load-bearing (see HealthOS db.mjs): progression must only walk back to a
  *  session whose numbers were actually typed, not recalled/backfilled, or a real gap gets silently
  *  smoothed over instead of triggering the probe branch in progression.ts. */
+/* `= any(ids)` AND NOT `= exerciseId`, since 2026-08-28. See src/lib/gym/equivalent-ids.ts: one
+ * exercise can hold two ids in this table, because a swap to an ALT logs the alt's id and some alts
+ * are aliases of the slot's own variant. The calf raise had twelve bodyweight sets under one id and
+ * three sets at 180 to 210 lb under the other, and this query read only the first, so the card
+ * offered him about 5 lb for a machine he had loaded to 210 the night before. */
 export async function getLastSession(exerciseId: string, beforeDate: string): Promise<SessionSets | null> {
+  const ids = await equivalentIds(exerciseId);
   const rows = await sql`
     select date from gym_set
-    where exercise_id = ${exerciseId} and date < ${beforeDate} and done = true
+    where exercise_id = any(${ids}) and date < ${beforeDate} and done = true
       and reps is not null and reps > 0 and coalesce(estimated, false) = false
     order by date desc limit 1
   `;
   const row = rows[0] as { date: string } | undefined;
   if (!row) return null;
-  const sets = await setsForExDate(exerciseId, row.date);
+  const sets = await setsForExDate(ids, row.date);
   return { date: row.date, sets };
 }
 
-async function setsForExDate(exerciseId: string, date: string): Promise<SetRow[]> {
+/* Takes the resolved id LIST rather than a single id, so a caller cannot accidentally reintroduce
+ * the split by passing the raw slot id to the second half of a two-step read. */
+async function setsForExDate(ids: string[], date: string): Promise<SetRow[]> {
   const rows = await sql`
     select weight, reps from gym_set
-    where exercise_id = ${exerciseId} and date = ${date} and done = true and reps is not null and reps > 0
+    where exercise_id = any(${ids}) and date = ${date} and done = true and reps is not null and reps > 0
     order by set_idx asc
   `;
   return rows as unknown as SetRow[];
@@ -177,14 +186,15 @@ async function setsForExDate(exerciseId: string, date: string): Promise<SetRow[]
 
 /** Last N training dates for an exercise (newest first) with sets, powers the stall-detection window. */
 export async function getRecentSessions(exerciseId: string, beforeDate: string, n = 3): Promise<SessionSets[]> {
+  const ids = await equivalentIds(exerciseId);
   const rows = await sql`
     select distinct date from gym_set
-    where exercise_id = ${exerciseId} and date < ${beforeDate} and done = true and reps is not null and reps > 0
+    where exercise_id = any(${ids}) and date < ${beforeDate} and done = true and reps is not null and reps > 0
     order by date desc limit ${n}
   `;
   const dates = rows as unknown as { date: string }[];
   const out: SessionSets[] = [];
-  for (const { date } of dates) out.push({ date, sets: await setsForExDate(exerciseId, date) });
+  for (const { date } of dates) out.push({ date, sets: await setsForExDate(ids, date) });
   return out;
 }
 

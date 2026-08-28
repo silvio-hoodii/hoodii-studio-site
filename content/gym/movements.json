@@ -538,14 +538,15 @@
       "variants": [
         {
           "id": "standing-calf-raise",
-          "name": "Standing Calf Raise",
+          "name": "Machine Calf Raise",
           "implement": "machine",
           "zone": "machines",
           "station": "calf-raise",
           "loadable": true,
           "aliases": [
             "machine-calf-raise"
-          ]
+          ],
+          "note": "HIS RULING, 2026-08-28: \"the calf raise thing I swapped to machine calf raise, so it was not DB\ncalf raise.\" It was called Standing Calf Raise and the SLOT copy said \"DB Standing Calf Raise\",\nwhich is what sent him looking for an alternative that said Machine. There was one, and it was an\nalias of this same variant, so choosing it logged a second exercise_id for one movement: twelve\nbodyweight sets here, three sets at 180 to 210 lb there, and the card read the first and offered\nhim about 5 lb.\n\n`machine-calf-raise` stays an ALIAS so those three sets still resolve to this variant, and\nsrc/lib/gym/equivalent-ids.ts makes every history read follow aliases. The redundant alt is gone."
         },
         {
           "id": "db-calf-raise",
@@ -1017,10 +1018,7 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "note": "Stuck at a 25% load step from 20 lb to 25 lb.",
-          "aliases": [
-            "kb-lateral-raise"
-          ]
+          "note": "Stuck at a 25% load step from 20 lb to 25 lb."
         },
         {
           "id": "db-lateral-raise-seated",
@@ -1039,6 +1037,15 @@
           "station": "cable-adjustable",
           "loadable": true,
           "note": "2.5 lb steps. This is the fix for the unreachable next weight, per evidence file section 17."
+        },
+        {
+          "id": "kb-lateral-raise",
+          "name": "KB Lateral Raise",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "note": "Kettlebells instead of dumbbells. Worth its own history precisely because this lift is the one stuck on a 25 percent load step from 20 to 25 lb: a different implement is a different ladder, and merging the two would hide which one stalled.\n\nPROMOTED FROM AN ALIAS OF db-lateral-raise ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now."
         }
       ]
     },
@@ -1190,8 +1197,7 @@
           "station": "cable-adjustable",
           "loadable": true,
           "aliases": [
-            "pallof-press",
-            "half-kneeling-pallof"
+            "pallof-press"
           ]
         },
         {
@@ -1220,6 +1226,15 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false
+        },
+        {
+          "id": "half-kneeling-pallof",
+          "name": "Half-Kneeling Cable Pallof Press",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-adjustable",
+          "loadable": true,
+          "note": "Half-kneeling rather than standing. Same station and same cable, and it is a harder anti-rotation position that takes less weight to load, so sharing one weight history with the standing version would read as a regression every time he knelt down.\n\nPROMOTED FROM AN ALIAS OF cable-pallof ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now."
         }
       ]
     },
@@ -1291,10 +1306,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "aliases": [
-            "db-hold"
-          ]
+          "loadable": true
         },
         {
           "id": "suitcase-carry",
@@ -1312,8 +1324,7 @@
           ],
           "note": "Single-side, so it adds anti-lateral-flexion that the two-sided farmer carry does not.",
           "aliases": [
-            "suitcase-carry-upper",
-            "kb-suitcase-hold"
+            "suitcase-carry-upper"
           ]
         },
         {
@@ -1323,6 +1334,32 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true
+        },
+        {
+          "id": "kb-suitcase-hold",
+          "name": "KB Suitcase Hold",
+          "implement": "kettlebell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "note": "A kettlebell in one hand instead of a dumbbell. Same anti-lateral-flexion job, different handle and a different weight ladder, so it earns its own history rather than sharing one.\n\nPROMOTED FROM AN ALIAS OF suitcase-carry ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now.",
+          "primary": [
+            "abs",
+            "grip"
+          ],
+          "secondary": [
+            "upper-back"
+          ]
+        },
+        {
+          "id": "db-hold",
+          "name": "DB Static Hold",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "timed": true,
+          "note": "Heavy dumbbells held at the sides, standing still rather than walking, for when the floor is too crowded to carry. PROMOTED FROM AN ALIAS OF farmer-carry ON 2026-08-28. It was offered as an alt on the farmer carry slot while resolving to that same variant, which is a choice between an exercise and itself: picking it would have written a second exercise_id for one movement and split the history, the way the calf raise did. It also progresses on TIME where the carry progresses on distance, so one shared history could not have described both. Never picked, so nothing needed migrating."
         }
       ]
     },

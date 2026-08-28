@@ -404,7 +404,7 @@
             },
             {
               "id": "standing-calf-raise",
-              "name": "Standing Calf Raise",
+              "name": "Machine Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -413,14 +413,6 @@
               "log": true,
               "cue": "Done holding dumbbells on the floor by the bench, NOT on the calf machine, so this pairs with the lunge without occupying two machines. Stand on the edge of a step or a plate if you have one, heels hanging. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
               "alts": [
-                {
-                  "id": "machine-calf-raise",
-                  "name": "Machine Calf Raise",
-                  "zone": "machines",
-                  "station": "calf-raise",
-                  "cue": "The standing calf machine, if nothing else in this block is running at the same time. Same full stretch and full squeeze.",
-                  "progression": "weight"
-                },
                 {
                   "id": "single-leg-calf-raise",
                   "name": "Single-Leg Calf Raise",
@@ -431,13 +423,7 @@
                 }
               ],
               "progression": "weight",
-              "open": [
-                {
-                  "q": "Moved to a dumbbell calf raise on 2026-08-27 to keep it in the lateral lunge rest, and moved back the same night: you worked 180 to 210 lb on the machine and did not touch the dumbbell version. A walk is cheaper than losing 170 lb of load. Its NAME still says DB, which was wrong before today too. What should it be called?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "whyHere": "The calf raise follows rather than alternating: it is a machine across the floor, so sharing one rest window would mean walking between them every set."
             }
           ],
           "why": "Frontal-plane hip strength is injury insurance for the running: weak abductors feed pelvic drop, which feeds knee valgus, a documented route into shin and knee trouble in novice runners. The calf raise is not sourced. The calf raise follows rather than alternating: it is a machine across the floor, so sharing one rest window would mean walking between them every set."
@@ -1306,7 +1292,7 @@
             },
             {
               "id": "standing-calf-raise",
-              "name": "Standing Calf Raise",
+              "name": "Machine Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
@@ -1315,14 +1301,6 @@
               "log": true,
               "cue": "Done holding dumbbells at the machine bank, standing, so it needs no fixture of its own. Stand on the edge of a step or a plate if you have one, heels hanging. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
               "alts": [
-                {
-                  "id": "machine-calf-raise",
-                  "name": "Machine Calf Raise",
-                  "zone": "machines",
-                  "station": "calf-raise",
-                  "cue": "The standing calf machine, if nothing else in this block is running at the same time. Same full stretch and full squeeze.",
-                  "progression": "weight"
-                },
                 {
                   "id": "single-leg-calf-raise",
                   "name": "Single-Leg Calf Raise",
