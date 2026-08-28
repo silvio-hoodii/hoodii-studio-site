@@ -69,22 +69,41 @@ export interface ReadingLiveness {
   /** True once the last successful sync is over a week old -- matches ACQUIRE.md's own
    *  `staleness-window: 7` (holds move daily, so acquisition status ages faster than the queue). */
   stale: boolean;
+  /** How old the acquisition snapshot is, in days, so a surface can DATE the claim instead of only
+   *  learning that it is or is not past a threshold. Added 2026-08-28: `stale` alone cannot render
+   *  "on the shelf as of Aug 20", and a sentence that has to say when is a sentence that needs the
+   *  number. Null when nothing has ever synced. */
+  ageDays: number | null;
+  /** THE ONE THAT GATES THE WORD "NOW". True when the library check is too old to support a
+   *  present-tense claim about a physical shelf.
+   *
+   *  Separate from `stale` because they answer different questions on different clocks, and 04-reading
+   *  P1-1 is what happens when one boolean tries to do both. `stale` is about the whole mirror at
+   *  ACQUIRE.md's seven-day window, which is right for "is the queue current". A hold moves DAILY:
+   *  `getLiveness`'s own comment said so and then allowed seven days before saying anything, while
+   *  the queue page rendered a green `--signal` badge and the hub row said "on a home-branch shelf
+   *  right now" off a check that was six days old at the time of the audit. --signal is reserved for
+   *  a value that is true right now, and both files' comments said exactly that about this exact
+   *  badge. */
+  homeBranchNowStale: boolean;
   lastError: string | null;
 }
 
 const STALE_AFTER_DAYS = 7;
+/* A day, because that is how often holds move. The sync is run by hand, so this fires often and is
+ * meant to: the honest rendering is "on the shelf as of Aug 20", which is still useful, rather than
+ * "right now", which is a claim nobody checked. */
+const HOME_BRANCH_NOW_AFTER_DAYS = 1;
 
-export async function getLiveness(): Promise<ReadingLiveness> {
-  const [ok] = (await sql`
-    select ran_at, queue_updated, acquire_generated
-      from reading_sync where ok = true order by ran_at desc limit 1`) as Array<{
-    ran_at: unknown; queue_updated: string | null; acquire_generated: unknown;
-  }>;
-  const [bad] = (await sql`
-    select error from reading_sync where ok = false order by ran_at desc limit 1`) as Array<{
-    error: string | null;
-  }>;
+type SyncOkRow = { ran_at: unknown; queue_updated: string | null; acquire_generated: unknown };
+type SyncBadRow = { error: string | null };
 
+/** The two rows turned into the answer, in ONE place.
+ *
+ * `getLiveness` and `getReadingFrontRow` both need this, and two thresholds computed twice is two
+ * definitions of "stale" waiting to disagree. Same reason `src/lib/gym/coverage.mts` has one home:
+ * both implementations keep printing plausible numbers while they drift. */
+function deriveLiveness(ok: SyncOkRow | undefined, bad: SyncBadRow | undefined): ReadingLiveness {
   const lastOkAt = iso(ok?.ran_at);
   const acquireGenerated = iso(ok?.acquire_generated);
   const ageSource = acquireGenerated ?? lastOkAt;
@@ -96,6 +115,81 @@ export async function getLiveness(): Promise<ReadingLiveness> {
     acquireGenerated,
     hasAcquisitionData: acquireGenerated !== null,
     stale: ageDays === null || ageDays > STALE_AFTER_DAYS,
+    ageDays: ageDays === null ? null : Math.floor(ageDays),
+    homeBranchNowStale: ageDays === null || ageDays > HOME_BRANCH_NOW_AFTER_DAYS,
     lastError: bad?.error ?? null,
+  };
+}
+
+export async function getLiveness(): Promise<ReadingLiveness> {
+  const [ok] = (await sql`
+    select ran_at, queue_updated, acquire_generated
+      from reading_sync where ok = true order by ran_at desc limit 1`) as SyncOkRow[];
+  const [bad] = (await sql`
+    select error from reading_sync where ok = false order by ran_at desc limit 1`) as SyncBadRow[];
+  return deriveLiveness(ok, bad);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * THE HUB'S READING ROW, in ONE round trip.
+ *
+ * It was five calls behind a `Promise.all`, four of which hit Neon, and it needed a fifth for the
+ * liveness above. The hub carries `revalidate = 60` and was 67.1% of the whole account's CPU before
+ * that revalidate landed, so it is the one route already known to multiply per-render cost.
+ * 04-reading P2-4, audit theme T5.
+ *
+ * A `Promise.all` makes queries concurrent, not free: Vercel bills Provisioned Memory for an
+ * instance's whole lifetime including time spent waiting on I/O, so five concurrent round trips hold
+ * five slices of that wait open. `getShelfBundle` in shelf-db.ts is the house pattern (nine became
+ * one, verified live) and this is the same construction.
+ *
+ * THE ROW NEEDS COUNTS, NOT ROWS. `getQueue()` selected eighteen columns of ten books to call
+ * `.length` on them, and `getAcquisitionMap()` built a Map of every acquisition row including its
+ * whole JSON payload to count the ones with `home_branch_now`. Both are now `count(*)`.
+ *
+ * `55 published lists` was TYPED into the sentence this feeds, in a function whose own comment bans
+ * typed facts (04-reading P3-1). It is `sourceLists` below, from the same transaction.
+ * ------------------------------------------------------------------------------------------- */
+
+export interface ReadingFrontRow {
+  queued: number;
+  borrowNowAtHome: number;
+  shelfTotal: number;
+  shelfWorth: number;
+  wants: number;
+  sourceLists: number;
+  liveness: ReadingLiveness;
+}
+
+export async function getReadingFrontRow(): Promise<ReadingFrontRow> {
+  const [queuedRows, borrowRows, shelfRows, wantRows, listRows, okRows, badRows] =
+    (await sql.transaction([
+      sql`select count(*)::int n from reading_queue_entry`,
+      sql`select count(*)::int n from reading_acquisition_entry where home_branch_now`,
+      sql`select count(*)::int total, count(*) filter (where tier <> 'maybe')::int worth
+            from reading_shelf_entry`,
+      sql`select count(*)::int n from reading_want`,
+      sql`select count(*)::int n from reading_source_list`,
+      sql`select ran_at, queue_updated, acquire_generated
+            from reading_sync where ok = true order by ran_at desc limit 1`,
+      sql`select error from reading_sync where ok = false order by ran_at desc limit 1`,
+    ], { readOnly: true })) as [
+      { n: number }[],
+      { n: number }[],
+      { total: number; worth: number }[],
+      { n: number }[],
+      { n: number }[],
+      SyncOkRow[],
+      SyncBadRow[],
+    ];
+
+  return {
+    queued: queuedRows[0]?.n ?? 0,
+    borrowNowAtHome: borrowRows[0]?.n ?? 0,
+    shelfTotal: shelfRows[0]?.total ?? 0,
+    shelfWorth: shelfRows[0]?.worth ?? 0,
+    wants: wantRows[0]?.n ?? 0,
+    sourceLists: listRows[0]?.n ?? 0,
+    liveness: deriveLiveness(okRows[0], badRows[0]),
   };
 }

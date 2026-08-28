@@ -88,17 +88,41 @@ export default async function MusicPage() {
       </p>
 
       {/* The integration is dead. This is the failure the whole build exists to make visible, so it
-        * gets the loudest thing on the page rather than a console line nobody reads. */}
-      {(now.broken || summary.liveness.stale) && (
+        * gets the loudest thing on the page rather than a console line nobody reads.
+        *
+        * THREE CONDITIONS, THREE NOTICES, since 2026-08-28. It was one block on `now.broken ||
+        * stale`, which conflated things that are not the same and one of which is not even bad news:
+        *
+        *   1. The COLLECTOR is stale. Plays are being lost right now. The alarm.
+        *   2. The last collector run SATURATED: it returned the full 50 and plays between runs are
+        *      already gone. Detected since the file was written, recorded in `music_sync.error` with
+        *      ok=true, and read by nothing until now (05-small-apps M1).
+        *   3. The render-time now-playing probe failed. That is a transient Spotify error, often a
+        *      429 caused by this page's own traffic, and the last cron may have succeeded an hour
+        *      ago. It said "The collector is not working. Plays are being lost", which may simply be
+        *      false (05-small-apps M3). It gets the quiet "Cannot tell" line below and nothing more.
+        */}
+      {summary.liveness.stale && (
         <div className="alarm">
           <strong>The collector is not working.</strong>{' '}
           {summary.liveness.lastOkAt
             ? `Last successful run was ${timeAgo(summary.liveness.lastOkAt)}.`
             : 'It has never completed a successful run.'}{' '}
           Plays are being lost while this is true, and they cannot be recovered later.
-          {(now.broken ?? summary.liveness.lastError) && (
-            <span className="why">{now.broken ?? summary.liveness.lastError}</span>
-          )}
+          {summary.liveness.lastError && <span className="why">{summary.liveness.lastError}</span>}
+        </div>
+      )}
+
+      {/* Not the same news, and not conditional on staleness: this fires on a collector that is
+        * working perfectly and still lost plays, which is the only loss mode left in the chain. */}
+      {!summary.liveness.stale && summary.liveness.lastOkWarning && (
+        <div className="alarm">
+          <strong>Some plays were lost between runs.</strong>{' '}
+          The run {summary.liveness.lastOkWarningAt ? timeAgo(summary.liveness.lastOkWarningAt) : 'just now'} came
+          back with the full fifty plays Spotify will hand over, which means the listening outran the
+          eight-hour gap between runs. Whatever fell off the end of that window is gone from Spotify
+          too, not just from here.
+          <span className="why">{summary.liveness.lastOkWarning}</span>
         </div>
       )}
 

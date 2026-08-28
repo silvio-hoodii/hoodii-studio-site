@@ -416,6 +416,11 @@
 }
 
 .reading .verdict.now { color: var(--signal); border-color: var(--signal); }
+/* The date on a BORROW NOW that has aged past a day. It is what makes the two states tellable
+   apart without the colour: `.now` and a plain verdict were the same chip in two hues, which fails
+   for anyone colourblind and for anyone who has not learned the convention (08-ux-ui). Lower case
+   against the chip's uppercase, so it reads as an annotation rather than part of the verdict. */
+.reading .verdict .asof { text-transform: none; letter-spacing: 0; opacity: 0.75; }
 /* .owned (queue page: already in hand) and .unset (catalog: not tagged yet) are two different
    facts that share one visual: dashed rather than solid, because both are a status NOTE, not a
    verdict about what to do today. Two class names on purpose, so neither reads as the other. */
@@ -821,10 +826,17 @@
 .reading .wantbtn {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 5px 12px; min-height: 32px;
+  /* 44px, THE TAP FLOOR THIS FILE ALREADY DECLARES nine hundred lines up: "Eight controls on this
+     site were found under it by measuring every control on every page, so a new surface starts at
+     the floor rather than getting measured later." This one shipped at 32 and is the page's only
+     write control, pressed one-handed in a shop, which is the worst place on the site to make him
+     aim. 04-reading P2-8 and 08-ux-ui. inline-flex so the taller box centres its label instead of
+     hanging it at the top. */
+  padding: 5px 12px; min-height: 44px;
   border: 1px solid var(--border); border-radius: var(--radius-sm);
   background: transparent; color: var(--muted-foreground);
-  cursor: pointer; text-decoration: none; display: inline-block;
+  cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center;
 }
 .reading .wantbtn:hover { border-color: var(--foreground); color: var(--foreground); }
 .reading .wantbtn.on { background: var(--signal); border-color: var(--signal); color: var(--background); }
@@ -849,7 +861,8 @@
 
 .reading .pickline { display: flex; align-items: center; gap: 12px; margin: 10px 0 0; }
 .reading .pickbtn {
-  display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px;
+  /* 44, not 40. Same floor, same reason: this is the surprise-me control on the browse page. */
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
   border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
   font-size: 14px; font-weight: 500; text-decoration: none; color: var(--foreground);
 }

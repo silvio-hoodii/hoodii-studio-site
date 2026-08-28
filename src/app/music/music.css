@@ -41,12 +41,19 @@
 /* .tnum and .live are declared once in globals.css. */
 
 /* ---- the collector alarm ----
- * A left rule in the signal colour, not a filled banner. Loud by placement, not by decoration. */
+ * A left rule, not a filled banner. Loud by placement, not by decoration.
+ *
+ * `--destructive`, NOT `--signal`, since 2026-08-28. `--signal` is the site's one chromatic colour
+ * and AGENTS.md reserves it for "a value that is true right now": a live number, a book on a shelf
+ * today, a session in progress. This is a data-loss alarm, the worst news the site can carry, and it
+ * was painted in the healthy colour, which is the whole discipline inverted. /health's equivalent
+ * stale banner has always used `--destructive` (health.css), so the two surfaces disagreed about how
+ * to say the same thing. 08-ux-ui P1-1 and 05-small-apps cross-cutting. */
 
 .music .alarm {
   margin-top: 20px;
   padding: 12px 0 12px 14px;
-  border-left: 2px solid var(--signal);
+  border-left: 2px solid var(--destructive);
   font-size: 14px;
   line-height: 1.6;
   color: var(--muted-foreground);

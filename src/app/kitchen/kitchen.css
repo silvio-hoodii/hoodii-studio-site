@@ -156,14 +156,28 @@
 
 /* Tappable, so getting back to a step is one press and not fourteen. The hit area is padded well
    past the 2px line it draws, because this is operated with a thumb and wet hands. */
+/* A GRID, NOT A FLEX ROW, since 2026-08-28, and the difference is whether the cook screen scrolls
+   sideways.
+   
+   It was `display: flex` with `gap: 3px` and no wrap, and line 572 below gives each dot
+   `min-width: 26px` for the tap target. A flex item never shrinks below its min-width and this row
+   had no overflow container, so at 390px, where the content column is 350px, thirteen dots need
+   374px and fourteen need 403px. Gnocchi is OFFERED today with fourteen steps and piccata's page has
+   eighteen. That is horizontal page scroll on the one surface DESIGN.md says matters most, operated
+   with wet hands, where the dots are also the only step navigation. Found by 02-kitchen P1-4.
+   
+   `repeat(auto-fit, minmax(26px, 1fr))` solves both ends of it. Long recipes wrap onto a second row
+   with every dot still 26px and still tappable, and short ones collapse the empty tracks so six dots
+   fill the width the way they always did. Wrapping with flex-grow would have stretched the last
+   row's two dots to full width, which reads as two enormous steps. */
 .kos .dots {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(26px, 1fr));
   gap: 3px;
   margin: 0 0 16px;
 }
 .kos .dots button {
   height: 2px;
-  flex: 1;
   min-width: 0;
   padding: 0;
   border: 0;
@@ -569,7 +583,9 @@
 .kos .chip:active { opacity: 0.65; }          /* replaces the tap highlight we just removed */
 
 /* The dots jump the recipe with no undo, so they get the most generous target on the screen. */
-.kos .dots button { min-height: 2px; min-width: 26px; }
+/* The grid's `minmax(26px, 1fr)` above owns the width now; a min-width here would fight it and
+   reintroduce the overflow the grid was for. Only the height floor stays. */
+.kos .dots button { min-height: 2px; }
 .kos .dots button::after { inset: -22px -1px; }
 
 /* Focus has to be visible on a 2px-tall borderless dot, where the UA ring is not usable. */
@@ -644,11 +660,19 @@
   color: var(--muted-foreground);
 }
 .kos .kosnav a:hover { color: var(--foreground); }
-/* The current page is stated, not hidden, so the strip keeps the same shape everywhere. */
+/* The current page is stated, not hidden, so the strip keeps the same shape everywhere.
+ *
+ * INK, NOT `--signal`, since 2026-08-28. WHERE YOU ARE IS NAVIGATION STATE, not a live value, and it
+ * was a green underline on some item on every kitchen page forever. The rest of the site already
+ * agrees: `.training .subtab.on` marks current with a `--foreground` border-bottom and the top tabs
+ * use an inverted fill. So the axis of divergence was current-marker = inverted fill (tabs) / ink
+ * underline (subtabs) / signal underline (kitchen only), and kitchen was the only one spending the
+ * one chromatic colour on it. 08-ux-ui P2-4 item 1. The bold weight above already separates it from
+ * its siblings; the underline only has to be visible. */
 .kos .kosnav .kosnav-here {
   color: var(--foreground);
   font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--signal);
+  box-shadow: inset 0 -2px 0 var(--foreground);
 }
 
 /* ---- provenance chips ----

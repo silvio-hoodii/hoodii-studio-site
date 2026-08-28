@@ -260,8 +260,20 @@ export interface AdherenceCell {
   known: boolean;
 }
 
-export function AdherenceStrip({ days }: { days: AdherenceCell[] }) {
-  const todayStr = new Date().toISOString().slice(0, 10);
+export function AdherenceStrip({ days, today }: {
+  days: AdherenceCell[];
+  /** Today in Calgary, computed on the server by `src/lib/day.ts`.
+   *
+   * It was `new Date().toISOString().slice(0, 10)` in here: UTC, in a browser, against day cells the
+   * server built with the Calgary formatter. From about 18:00 Calgary the UTC date is tomorrow, no
+   * cell matched, and the ring marking today silently disappeared every evening. Found by
+   * 05-small-apps H3. This is the same class `src/lib/day.ts` was written for on 2026-08-14, in the
+   * one component that had not been moved onto it, because it runs on the client where that file's
+   * `today()` reads the browser's clock rather than Calgary's. Passing it down is the fix; calling
+   * `today()` here would only be right for a phone that happens to be in Alberta. */
+  today: string;
+}) {
+  const todayStr = today;
   return (
     <div>
       <div className="strip">

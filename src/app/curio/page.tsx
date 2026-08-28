@@ -1,5 +1,6 @@
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
 import type { CurioDigest, CurioItem } from '@/lib/curio/db';
+import { today } from '@/lib/day';
 
 /* ISR, one hour. A one-way mirror of CuriosityOS/log.md that only changes when a sync runs, so a
  * render per request was pure waste. */
@@ -65,6 +66,17 @@ function Row(it: CurioItem) {
         {it.sourceUrl && (
           <a href={it.sourceUrl} target="_blank" rel="noreferrer">source</a>
         )}
+        {/* `verify` MEANS NOBODY HAS CHECKED IT YET. Per CuriosityOS/README.md a row is marked
+            Source=verify when the claim is numeric, dated or a myth-correction, and the weekly
+            digest job checks it before sending. Until 2026-08-28 `sourceKind` was selected and
+            rendered nowhere, so an unchecked row published on a public page indistinguishable from a
+            verified one (05-small-apps C4). On a page whose whole subject is settled facts, that is
+            the one label that has to be visible. */}
+        {it.sourceKind === 'verify' && (
+          <span className="unverified" title="Marked for checking. The weekly digest verifies these before sending.">
+            not checked yet
+          </span>
+        )}
       </div>
     </div>
   );
@@ -81,6 +93,14 @@ export default async function CurioPage() {
   const [summary, digests, items] = await Promise.all([getSummary(), getDigests(), getItems()]);
   const recent = digests.slice(0, OPEN_MORNINGS);
   const earlier = digests.slice(OPEN_MORNINGS);
+
+  /* Against the CALGARY day, from `src/lib/day.ts`, not `new Date()`. `latestDay` is a date string
+     the digest job wrote in local time, so comparing it to a UTC today reports one extra day every
+     evening after six, which is the same fault that put four swim date columns a day apart and that
+     /french's whole ceiling reset on. */
+  const staleDays = summary.latestDay
+    ? Math.floor((Date.parse(`${today()}T00:00:00Z`) - Date.parse(`${summary.latestDay}T00:00:00Z`)) / 86_400_000)
+    : null;
 
   return (
     <div className="curio">
@@ -108,6 +128,28 @@ export default async function CurioPage() {
       {/* Inside .digests rather than beside it, so the section keeps the rule under its heading:
           `.sec + .digests` is what draws it, and an empty state that skipped the wrapper would
           take the section's own top line away with it. */}
+      {/* THE JOB STOPPING IS A STATE THIS PAGE HAD NO WAY TO SHOW, and the empty state below was the
+          proof: it only rendered with ZERO rows, so once any content existed the page kept serving
+          yesterday's archive forever with no aging signal beyond the small "latest {day}" the reader
+          has to subtract from today himself. /health and /music both earned a 36-hour shout; /curio
+          had `latestDay` sitting right there and did not use it (05-small-apps C3).
+
+          Where the shout goes is the point. `CuriosityOS/digest/run-curiosity.ps1` logs `WARN: curio
+          sync exit ...` and carries on, into a log nobody reads. A warning in a log is not a
+          mechanism; a line on the page he opens is.
+
+          THREE DAYS, not 36 hours, and not seven. The digest is daily, so two missed mornings is
+          noise (a laptop off for a weekend) and three is a stopped job. Unlike /music the loss is
+          recoverable, because log.md keeps accumulating on the laptop whatever this mirror does,
+          which is why this is a note and not the alarm /music gets. */}
+      {staleDays != null && staleDays >= 3 && recent.length > 0 && (
+        <p className="empty">
+          No morning since {summary.latestDay}, {staleDays} days ago. The daily job or its sync has
+          stopped. The ledger on the laptop keeps accumulating either way, so nothing is lost: this
+          page is just behind it.
+        </p>
+      )}
+
       <div className="digests">
         {recent.length === 0 ? (
           <p className="empty">

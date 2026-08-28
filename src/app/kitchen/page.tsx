@@ -261,6 +261,29 @@ export default async function KitchenHome() {
   const lastReadItems = touched.filter((i) => i.ageDays === readAgeDays);
   const lastRead = lastReadItems[0]?.since ?? null;
 
+  /* HOW MANY ROWS ARE PAST THEIR CONFIRMATION WINDOW, which until 2026-08-28 nothing on this site
+     asked. `deriveStock` has computed `conf` per row since the rebuild ('fresh', 'modeled', 'stale',
+     'unknown') and a grep for readers of that field across src/app/kitchen and src/lib/kitchen found
+     ZERO (02-kitchen P1-2).
+
+     WHY THAT IS WORSE THAN A MISSING FEATURE. `Math.min(...ageDays)` above is the MOST RECENTLY
+     touched item, so "Stock last read today: 1 item moved" rendered truthfully while every other row
+     could be three weeks unconfirmed, and the qualifying sentence only printed on the two-days-plus
+     branch. A "ready to cook" claim resting on a twenty-day-old row was being asserted as fact.
+     KitchenOS/DESIGN.md: "Staleness is visible or it is a lie." HOODII/CLAUDE.md: "On a stale row,
+     propose anyway and say the assumption out loud." The propose-anyway half was right and stays;
+     the say-it-out-loud half did not exist anywhere in the rebuilt app.
+
+     STALE ROWS THAT MATTER, not all of them. A stale row for something that is `out` changes no dish,
+     and counting it would put a large number on the page that nothing above depends on. What
+     qualifies a cookable claim is a stale row the app is currently treating as PRESENT. */
+  const staleInUse = Object.values(stock.items).filter(
+    (i) => i.conf === 'stale' && (i.level === 'have' || i.level === 'low'),
+  );
+  const stalestDays = staleInUse.length
+    ? Math.max(...staleInUse.map((i) => i.ageDays as number))
+    : null;
+
   return (
     <div className="wrap">
       <KitchenNav here="home" />
@@ -319,6 +342,35 @@ export default async function KitchenHome() {
               ? `Stock last read yesterday: ${lastReadItems.length} item${lastReadItems.length === 1 ? '' : 's'} moved.`
               : `Stock last read ${readAgeDays} days ago, on ${lastRead}. Everything below assumes nothing has changed since.`}
         </p>
+      )}
+
+      {/* THE ASSUMPTION, SAID OUT LOUD. One line, naming the count and the worst age rather than
+          tagging every row: the dish list above is the answer he came for, and a badge on each
+          ingredient would be the "how much is left" list DESIGN.md rules out by name. Behind the tap
+          are the actual items, because a bare count is the app knowing something and not saying it,
+          which is the complaint that produced the named-not-counted rule on /kitchen/find. */}
+      {staleInUse.length > 0 && stalestDays != null && (
+        <details className="prov" style={{ marginTop: 6 }}>
+          <summary>
+            {staleInUse.length} item{staleInUse.length === 1 ? '' : 's'} above{' '}
+            {staleInUse.length === 1 ? 'is' : 'are'} assumed, not confirmed
+            {` (${stalestDays} days since the oldest was checked)`}
+          </summary>
+          <p className="quiet" style={{ marginTop: 8 }}>
+            The dishes above count {staleInUse.length === 1 ? 'this' : 'these'} as present because it is
+            the last thing the kitchen was told. Nothing is blocked on it: proposing a dish and naming
+            the assumption beats refusing to answer.
+          </p>
+          <ul className="plainlist">
+            {[...staleInUse]
+              .sort((a, b) => (b.ageDays as number) - (a.ageDays as number))
+              .map((i) => (
+                <li key={i.id}>
+                  {i.n} <span className="quiet">{i.ageDays} days</span>
+                </li>
+              ))}
+          </ul>
+        </details>
       )}
 
       {/* What today's cooking has actually put in, and nothing more than that.

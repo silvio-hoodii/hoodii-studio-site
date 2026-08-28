@@ -137,9 +137,29 @@
   vertical-align: 2px;
 }
 
-/* `myth` is the only flavour that carries a claim about the world being wrong, so it is the only
- * one that earns the signal colour. */
-.curio .flav-myth { color: var(--signal); border-color: var(--signal); }
+/* `myth` CARRIES A CLAIM ABOUT THE WORLD BEING WRONG and it used to be `--signal` for that reason.
+ *
+ * Changed to `--foreground` on 2026-08-28. 08-ux-ui P2-4 item 2 put it plainly: this is a flavour
+ * CATEGORY, green on every archived myth row permanently, and --signal on this site means "a value
+ * that is true right now". The tag's own text already says "myth", so the colour was carrying nothing
+ * the word did not, while spending the one chromatic colour the design has. Ink makes it read louder
+ * than its siblings, which is the actual intent. */
+.curio .flav-myth { color: var(--foreground); border-color: var(--foreground); }
+
+/* An answer nobody has checked yet. Not `--destructive`: it is not wrong, it is unconfirmed, and
+ * this site distinguishes those two everywhere else (a badge that is ABSENT is honest, a badge that
+ * is WRONG is not). Muted and lower case against the uppercase flavour tags, so it reads as a note
+ * about the row rather than as another category. */
+.curio .unverified {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--muted-foreground);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
 
 /* The footer is `.site-footer` in globals.css, mounted from the layout like the header. */
 

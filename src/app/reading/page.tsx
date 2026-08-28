@@ -5,6 +5,7 @@ import {
   verdictLabel,
 } from '@/lib/reading/queue-types';
 import type { AcquisitionEntry, QueueEntry } from '@/lib/reading/queue-types';
+import type { ReadingLiveness } from '@/lib/reading/queue-db';
 
 export const metadata = {
   title: 'Reading: Next up',
@@ -83,7 +84,12 @@ export default async function ReadingQueue() {
       )}
 
       {queue.map((entry) => (
-        <QueueRow key={entry.key} entry={entry} acquisition={acquisitionMap.get(entry.key)} />
+        <QueueRow
+          key={entry.key}
+          entry={entry}
+          acquisition={acquisitionMap.get(entry.key)}
+          liveness={liveness}
+        />
       ))}
 
       <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
@@ -91,9 +97,29 @@ export default async function ReadingQueue() {
   );
 }
 
-function QueueRow({ entry, acquisition }: { entry: QueueEntry; acquisition?: AcquisitionEntry }) {
+function QueueRow({ entry, acquisition, liveness }: {
+  entry: QueueEntry;
+  acquisition?: AcquisitionEntry;
+  liveness: ReadingLiveness;
+}) {
   const owned = !acquisition && (entry.status === 'reading' || entry.status === 'finished' || entry.format);
-  const actionableNow = acquisition?.homeBranchNow ?? false;
+  /* THE GREEN BADGE HAS TO EARN ITS PRESENT TENSE, since 2026-08-28.
+   *
+   * `actionableNow` was `acquisition?.homeBranchNow ?? false` and nothing gated it on liveness, so
+   * the `.now` class (which is `--signal`) rendered off a snapshot up to a week old. The banner above
+   * fires at seven days and the badge underneath stayed green even then. Both this file's comment and
+   * `reading.css` line 404 already stated the rule the code was breaking: --signal is reserved for a
+   * fact that is true right now, and a week-old BORROW NOW claim is the opposite of that.
+   * 04-reading P1-1, audit theme T3.
+   *
+   * `homeBranchNowStale` is one day, not seven, because a hold moves daily. Past it the badge keeps
+   * its label and loses its colour, and the date goes next to it: "BORROW NOW, as of Aug 20" is a
+   * useful thing to know and an honest one. */
+  const actionableNow = (acquisition?.homeBranchNow ?? false) && !liveness.homeBranchNowStale;
+  const datedShelfClaim = (acquisition?.homeBranchNow ?? false) && liveness.homeBranchNowStale;
+  const checkedOn = acquisition?.checkedAt
+    ? new Date(acquisition.checkedAt).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
+    : null;
 
   return (
     <details className="qrow">
@@ -105,8 +131,21 @@ function QueueRow({ entry, acquisition }: { entry: QueueEntry; acquisition?: Acq
         <span className="qmeta">
           <span className="qtrack">{trackLabel[entry.track]}</span>
           {owned && <span className="verdict owned">In hand</span>}
+          {/* THE WORDS CARRY THE FACT, NOT THE COLOUR. 08-ux-ui P2-2, measured on the live page at
+              390px: The Underground Railroad wore a green "BORROW NOW" chip (a copy on the
+              home-branch shelf that day) and Life After Life a grey "BORROW NOW" chip (borrowable
+              somewhere, not at his branch), same screen, same text, same shape. Colour was the only
+              carrier of the one fact `queue-types.ts` calls "the one fact that changes what to do
+              today", which leaves a colourblind reader, a greyscale print or an e-ink screen with
+              two identical chips.
+
+              So a home-branch copy says "On the shelf", and past a day it says when it was last
+              checked. The green stays where it is still true. */}
           {acquisition && (
-            <span className={`verdict${actionableNow ? ' now' : ''}`}>{verdictLabel[acquisition.verdict]}</span>
+            <span className={`verdict${actionableNow ? ' now' : ''}`}>
+              {acquisition.homeBranchNow ? 'On the shelf' : verdictLabel[acquisition.verdict]}
+              {datedShelfClaim && checkedOn && <span className="asof"> as of {checkedOn}</span>}
+            </span>
           )}
         </span>
       </summary>

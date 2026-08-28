@@ -53,11 +53,19 @@ export default function FrenchClient({
   initialSummary,
   initialActivity,
   canEdit,
+  serverToday,
 }: {
   initialSummary: FrenchSummary;
   initialActivity: ActivityDay[];
   /** Whether this device holds the cookie. Presentation only: see the note in page.tsx. */
   canEdit: boolean;
+  /** Today in Calgary, computed on the server by `src/lib/day.ts`.
+   *
+   * Passed in rather than derived here, because the strip has to line up with `french_days.date`,
+   * which is now stamped in Calgary. A client in any other zone (or the same client after 18:00,
+   * which is what the old `toISOString()` produced) draws 56 cells keyed on dates the store has no
+   * rows for, and the whole strip shifts by one silently. */
+  serverToday: string;
 }) {
   const [summary, setSummary] = useState(initialSummary);
   const [activity, setActivity] = useState(initialActivity);
@@ -262,7 +270,10 @@ export default function FrenchClient({
 
   const activityByDate = Object.fromEntries(activity.map((d) => [d.date, d.reviewed]));
   const cells: { date: string; level: string; value: number }[] = [];
-  const nowMs = new Date().getTime();
+  /* Walk BACK from the server's Calgary today rather than from the browser's clock. This was
+   * `new Date().getTime()` plus `toISOString()`, which is UTC, so from 18:00 Calgary the strip's
+   * last cell was tomorrow and every cell was keyed one day off the rows it was looking up. */
+  const nowMs = Date.parse(`${serverToday}T12:00:00Z`);
   for (let i = 55; i >= 0; i--) {
     const d = new Date(nowMs - i * 86400000).toISOString().slice(0, 10);
     const v = activityByDate[d] || 0;

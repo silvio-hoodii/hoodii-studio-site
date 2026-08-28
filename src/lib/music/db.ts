@@ -99,6 +99,23 @@ export interface Liveness {
   hoursSinceOk: number | null;
   /** True when the collector has not succeeded recently enough to outrun the 50-item window. */
   stale: boolean;
+  /** THE WARNING FROM THE LAST SUCCESSFUL RUN, and the reason this field exists.
+   *
+   * `src/lib/music/sync.ts` detects the one loss mode this app cannot recover from: a run that
+   * returned the full 50-item maximum means listening outran the poll interval and plays between
+   * runs are gone from everywhere, not just from here. It writes that sentence into
+   * `music_sync.error` with `ok: true`, because the run itself succeeded.
+   *
+   * Until 2026-08-28 `getLiveness` read `error` only from `ok = false` rows. So the detection
+   * existed, the row existed, the cron returned 200, Vercel showed a healthy job, and the exact
+   * event the whole three-a-day schedule is built to prevent looked like a quiet evening on every
+   * surface a human looks at. Found by 05-small-apps M1: this is the half-extracted-export class,
+   * a partial capture presenting as a complete one.
+   *
+   * Null when the last successful run had nothing to say. */
+  lastOkWarning: string | null;
+  /** When that run happened, so the notice can date itself. */
+  lastOkWarningAt: string | null;
 }
 
 export interface MusicSummary {
@@ -121,20 +138,38 @@ export interface MusicSummary {
 const STALE_HOURS = 36;
 
 export async function getLiveness(): Promise<Liveness> {
+  /* THE NEWEST SUCCESSFUL RUN, with its warning. One query instead of two, because the row that
+   * carries `ran_at` is the row that carries the sentence about it. */
   const [ok] = (await sql`
-    select max(ran_at) as at from music_sync where ok = true`) as Array<{ at: unknown }>;
+    select ran_at, error from music_sync where ok = true order by ran_at desc limit 1`) as Array<{
+    ran_at: unknown; error: string | null;
+  }>;
+  /* THE NEWEST FAILURE SINCE THE LAST SUCCESS, and the `and ran_at >` clause is the whole point.
+   *
+   * It selected the newest `ok = false` row EVER, unbounded. So when staleness fired because runs
+   * had simply stopped arriving, the alarm printed whatever went wrong in July as the explanation
+   * for why nothing has run since. An already-recovered failure offered as a current cause is worse
+   * than no cause, because it sends the reader to fix a thing that is not broken. 05-small-apps M4.
+   *
+   * `coalesce(..., '-infinity')` so a table that has NEVER succeeded still surfaces its failures
+   * rather than comparing against null and returning nothing. */
   const [bad] = (await sql`
-    select ran_at, error from music_sync where ok = false order by ran_at desc limit 1`) as Array<{
+    select ran_at, error from music_sync
+    where ok = false
+      and ran_at > coalesce((select max(ran_at) from music_sync where ok = true), '-infinity'::timestamptz)
+    order by ran_at desc limit 1`) as Array<{
     ran_at: unknown; error: string | null;
   }>;
 
-  const lastOkAt = ok?.at ? iso(ok.at) : null;
+  const lastOkAt = ok?.ran_at ? iso(ok.ran_at) : null;
   const hoursSinceOk = lastOkAt ? (Date.now() - new Date(lastOkAt).getTime()) / 3_600_000 : null;
 
   return {
     lastOkAt,
     lastError: bad?.error ?? null,
     lastErrorAt: bad?.ran_at ? iso(bad.ran_at) : null,
+    lastOkWarning: ok?.error ?? null,
+    lastOkWarningAt: lastOkAt,
     // Never having run counts as stale. An empty table is not a healthy one.
     stale: hoursSinceOk === null || hoursSinceOk > STALE_HOURS,
     hoursSinceOk,

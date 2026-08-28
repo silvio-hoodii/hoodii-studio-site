@@ -17,6 +17,7 @@ import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
 import { daysAgoText } from '@/lib/format';
+import { today } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
  *
@@ -236,7 +237,7 @@ export default async function HealthPage({
                 </>
               )}
             </p>
-            <AdherenceStrip days={days} />
+            <AdherenceStrip days={days} today={today()} />
           </details>
         </>
       )}
@@ -263,7 +264,15 @@ export default async function HealthPage({
                     <div className="stat-v">
                       {bodySummary.latest.kg?.toFixed(1)}<span className="stat-u">kg</span>
                     </div>
-                    <div className="stat-d down">{trendLine(bodySummary.trend30)}</div>
+                    {/* `down` IS EARNED, NOT ASSUMED. It was hardcoded, and `.health .stat-d.down`
+                        is `--signal`, the one chromatic colour this site reserves for a value that
+                        is true and good right now. He is cutting, so a fall is the good direction
+                        and a +0.4 kg/wk regain would have rendered in the same colour as progress.
+                        A colour that means "good" whichever way the number moves means nothing.
+                        08-ux-ui and 05-small-apps H2. */}
+                    <div className={`stat-d${(bodySummary.trend30?.kg ?? 0) < 0 ? ' down' : ''}`}>
+                      {trendLine(bodySummary.trend30)}
+                    </div>
                   </div>
                   {bodySummary.latest.bf_pct != null && (
                     <div>

@@ -24,7 +24,6 @@ export interface BodyCompSummary {
   latest: BodyCompPoint | null;
   smoothedKg: number | null;
   trend30: TrendDelta | null;
-  trend90: TrendDelta | null;
   /* Days between the newest reading and today. The store was filled once, by a migration script
    * that has no recurring counterpart, so without this the page would render "as of 2026-08-09"
    * forever and every reader would take it for a current weight. */

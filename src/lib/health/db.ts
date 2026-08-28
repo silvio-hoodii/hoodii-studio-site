@@ -69,7 +69,7 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   `;
   const latest = (latestRows[0] as BodyCompPoint | undefined) ?? null;
   if (!latest) {
-    return { latest: null, smoothedKg: null, trend30: null, trend90: null, daysSinceLatest: null, stale: false };
+    return { latest: null, smoothedKg: null, trend30: null, daysSinceLatest: null, stale: false };
   }
 
   /* How old the newest reading is. This store was filled by a one-shot migration with no recurring
@@ -101,8 +101,13 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
     return { fromDate: prior.date, spanDays, kg: kgDelta, perWeek: +((kgDelta / spanDays) * 7).toFixed(2) };
   };
 
-  const [trend30, trend90] = await Promise.all([trendAt(30), trendAt(90)]);
-  return { latest, smoothedKg, trend30, trend90, daysSinceLatest, stale };
+  /* THIRTY DAYS ONLY. `trendAt(90)` ran here too, in a Promise.all beside this one, and nothing has
+     ever rendered its result: it was born unused in ad68575 on 2026-08-11 and stayed that way, so
+     removing it is not undoing anybody's decision (checked with `git log -S trend90 --all`, one
+     commit, the one that added it). It was one Neon round trip per weight-tab render buying nothing,
+     and Neon is this site's entire External API Requests bill. 05-small-apps H4, audit theme T11. */
+  const trend30 = await trendAt(30);
+  return { latest, smoothedKg, trend30, daysSinceLatest, stale };
 }
 
 export interface SyncLiveness {

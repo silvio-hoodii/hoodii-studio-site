@@ -8,15 +8,13 @@ import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import SiteFooter from '@/components/SiteFooter';
 import NowPlaying from '@/components/NowPlaying';
-import { getBodyCompSummary } from '@/lib/health/db';
+import { getBodyCompSummary, getSyncLiveness } from '@/lib/health/db';
 import { getSummary as getFrenchSummary } from '@/lib/french/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import { getSummary as getMusicSummary } from '@/lib/music/db';
 import { getSwimFrontRow } from '@/lib/swim/db';
 import { allPacks } from '@/lib/reading/packs';
-import { getAcquisitionMap, getQueue } from '@/lib/reading/queue-db';
-import { getShelfStats } from '@/lib/reading/shelf-db';
-import { getWantKeys } from '@/lib/reading/want-db';
+import { getReadingFrontRow } from '@/lib/reading/queue-db';
 import './hub.css';
 
 /* ISR. Added 2026-08-22 at 60 seconds after Active CPU passed the Hobby allowance, raised to 600
@@ -159,12 +157,31 @@ async function gymRow(): Promise<Row> {
 
 async function healthRow(): Promise<Row> {
   try {
-    const summary = await getBodyCompSummary();
+    /* TWO CONDITIONS, NOT ONE, and they are genuinely different facts.
+     *
+     * `summary.stale` is "he has not weighed himself in a fortnight". `sync.stale` is "the mirror on
+     * the laptop stopped writing", which /health itself has shouted at 36 hours since it was built
+     * and which this row did not consult at all. So between 36 hours and 14 days of a dead pipeline
+     * the hub showed the weight in `.live` with "as of {date}" while /health, one tap away, said
+     * "Not syncing. Everything below is whatever it held at that point." Two surfaces disagreeing
+     * about the same condition. 05-small-apps H5.
+     *
+     * The distinction matters in the other direction too: a dead mirror is not evidence he stopped
+     * training, and telling him he has not measured when the pipeline is what broke sends him to the
+     * scale to fix a laptop. */
+    const [summary, sync] = await Promise.all([getBodyCompSummary(), getSyncLiveness()]);
     if (!summary.latest?.kg) throw new Error('no readings');
 
     /* `.live` is reserved for a value that is true right now, so a reading two weeks old must not
-     * wear it. The store is filled by a one-shot migration with no recurring sync behind it, which
-     * means "as of 2026-08-09" would otherwise sit here reading as a current weight forever. */
+     * wear it, and neither must one arriving through a pipeline that has stopped. */
+    if (sync.stale) {
+      return {
+        label: 'Health',
+        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
+        sub: 'the sync from the watch has stopped, so nothing here is moving',
+        href: '/health',
+      };
+    }
     if (summary.stale) {
       return {
         label: 'Health',
@@ -205,24 +222,48 @@ async function frenchRow(): Promise<Row> {
 
 async function readingRow(): Promise<Row> {
   try {
-    const [packs, queue, acquisitionMap, shelf, wants] = await Promise.all([
-      allPacks(), getQueue(), getAcquisitionMap(), getShelfStats(), getWantKeys(),
-    ]);
-    if (!packs.length && !queue.length) throw new Error('no packs, no queue');
-    const borrowNowAtHome = [...acquisitionMap.values()].filter((a) => a.homeBranchNow).length;
+    /* ONE Neon round trip for all six numbers plus liveness, not five concurrent ones. See
+       `getReadingFrontRow` in src/lib/reading/queue-db.ts. `allPacks()` is the filesystem and stays
+       separate. */
+    const [packs, r] = await Promise.all([allPacks(), getReadingFrontRow()]);
+    if (!packs.length && !r.queued) throw new Error('no packs, no queue');
+
     /* Counted off the files and the mirror, like every other row that has data behind it. This
        row's own history is why: the hand-written version once said "The shelf, the queue, and
        whether a book is worth keeping" before there was any queue feature at all, and it sat there
        reading perfectly plausibly until somebody opened the deployed page. Writing a fact down
-       here that a script did not just compute is the exact mistake that comment is about. */
+       here that a script did not just compute is the exact mistake that comment is about.
+
+       "55 published lists" WAS SUCH A FACT, typed into the sub line below this very comment, and it
+       is `r.sourceLists` now (04-reading P3-1). It was true when written and AGENTS.md, which
+       carries the same number in prose, already said 33.
+
+       "RIGHT NOW" IS GATED, since 2026-08-28. This row claimed "N of the next ten on a home-branch
+       shelf right now" off a snapshot that was six days old the day the audit read it, and it never
+       called getLiveness at all (04-reading P1-1, audit theme T3). The sync is run by hand and holds
+       move daily. So past a day the sentence dates itself instead of asserting a present tense: "on
+       a home-branch shelf as of Aug 20" is still a useful thing to know and is the difference
+       between a mirror and a lie. Past the seven-day window the count is dropped entirely, because
+       at that point nobody knows. */
+    const borrowNowSayable = r.borrowNowAtHome > 0 && !r.liveness.stale;
+    const asOf = r.liveness.acquireGenerated
+      ? new Date(r.liveness.acquireGenerated).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
+      : null;
+
     return {
       label: 'Reading',
-      line: borrowNowAtHome > 0
-        ? <><span className="tnum">{borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{shelf.worth.toLocaleString()}</span> worth pulling in a shop</>
-        : <><span className="tnum">{queue.length}</span> queued to read next, <span className="tnum">{shelf.worth.toLocaleString()}</span> worth pulling in a shop</>,
-      sub: wants.size > 0
-        ? `${shelf.total.toLocaleString()} books scored, ${wants.size} saved to want, ${packs.length} finished with recall cards`
-        : `${shelf.total.toLocaleString()} books scored from 55 published lists, ${packs.length} finished with recall cards`,
+      line: borrowNowSayable
+        ? (r.liveness.homeBranchNowStale
+            ? <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf as of {asOf}, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>
+            : <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>)
+        : <><span className="tnum">{r.queued}</span> queued to read next, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>,
+      /* The shout, which is the half of the /music treatment this row was missing. A hand-run sync
+         that has stopped is invisible otherwise: the page keeps rendering a queue and nothing ages. */
+      sub: r.liveness.stale
+        ? `library check last run ${r.liveness.ageDays == null ? 'never' : `${r.liveness.ageDays} days ago`}, so shelf availability is unknown`
+        : r.wants > 0
+          ? `${r.shelfTotal.toLocaleString()} books scored, ${r.wants} saved to want, ${packs.length} finished with recall cards`
+          : `${r.shelfTotal.toLocaleString()} books scored from ${r.sourceLists} published lists, ${packs.length} finished with recall cards`,
       href: '/reading',
     };
   } catch {

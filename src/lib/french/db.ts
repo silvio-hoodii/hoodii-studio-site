@@ -2,6 +2,7 @@ import 'server-only';
 import { neon } from '@neondatabase/serverless';
 import { createHash } from 'node:crypto';
 import { schedule, previewIntervals, type SchedulableCard } from './fsrs';
+import { CALGARY, today, daysAgo } from '../day';
 
 // Same underlying Neon database as Gym/Kitchen/Health (french_ prefix keeps the tables apart), see
 // content/french/schema.sql. Falls back through the same chain the other lib/*/db.ts modules use.
@@ -19,7 +20,26 @@ export const NEW_PER_DAY = 12;
 // Review queue ceiling for one sitting, sized for the stated 20-30 min/day budget.
 export const MAX_QUEUE = 40;
 
-const today = (): string => new Date().toISOString().slice(0, 10);
+/* `today` COMES FROM src/lib/day.ts, and did not until 2026-08-28.
+ *
+ * It read `new Date().toISOString().slice(0, 10)` here: UTC, on a server that runs in UTC, for a man
+ * in Calgary. Six or seven hours out, so the French "day" ran 18:00 to 18:00 local and every number
+ * on the page bent after dinner. Found by 05-small-apps F1, which is the same defect `src/lib/day.ts`
+ * was written for on 2026-08-14 after the hub's "last trained N d ago" went up by one every evening
+ * at six. /health and /gym were moved onto it then. /french was not, because /french did not exist.
+ *
+ * THE ONE THAT MATTERS IS NOT THE DISPLAY, IT IS THE CEILING. `NEW_PER_DAY = 12` is documented five
+ * lines below as a hard ceiling and it is the single rule this project died twice without: the old
+ * build put 1,359 unseen cards in front of him on day one. A ceiling that resets at 18:00 lets a
+ * 17:00 sitting and a 18:30 sitting introduce 24 new cards in one calendar day. That is the
+ * wall-of-cards failure at half scale, arriving through the mechanism built to prevent it.
+ *
+ * The other two: "N reviewed today" showed last evening's reviews as this morning's, and the streak
+ * folded two Calgary days into one row (Monday 19:00 and Tuesday 17:00 both stamp Tuesday),
+ * undercounting a real streak on a page whose design rule is honest numbers only.
+ *
+ * No schema change. `french_days.date` is text and existing rows keep whatever they were stamped
+ * with; the boundary moves for everything written from here on. */
 
 export interface CardRow extends SchedulableCard {
   id: string;
@@ -68,24 +88,55 @@ async function bumpDay(delta: { reviewed?: number; added?: number; book_work?: n
 /**
  * Insert cards from one book section. Existing cards keep their FSRS state: re-ingesting a page
  * must never reset scheduling progress. This is the ONLY card intake, see DESIGN.md rule 1.
+ *
+ * EVERY CARD MUST NAME A BOOK AND A PAGE, refused here since 2026-08-28.
+ *
+ * DESIGN.md rule 7 already said every card traces to a real page and that the source renders on the
+ * card back. It was prose, and the route comment said out loud that the discipline "lives in the
+ * caller" (`src/app/french/api/cards/route.ts`), which is another way of saying nothing executes it.
+ * The cookie limited WHO could post, never WHAT. Found by 05-small-apps F2.
+ *
+ * This is not hypothetical hygiene. Both previous deaths of this project came from content entering
+ * that no page had earned: a seeded deck the first time, 1,359 unseen cards the second. A card with
+ * no book and no page is a card he cannot check against anything, which is exactly the thing whose
+ * absence he has to be able to trust.
+ *
+ * `scripts/ingest-page.mjs` and the documented in-session flow always supply both, so nothing
+ * legitimate is refused. Rejections are COUNTED AND NAMED in the return rather than thrown, so a
+ * batch of forty with one bad row still lands thirty-nine and says which one did not.
  */
 export async function addCards(
   cards: NewCardInput[],
   source: { book?: string | null; chapter?: string | null; page?: string | null } = {},
-): Promise<{ added: number; skipped: number }> {
+): Promise<{ added: number; skipped: number; rejected: { front: string; why: string }[] }> {
   const now = new Date().toISOString();
   let added = 0;
   let skipped = 0;
+  const rejected: { front: string; why: string }[] = [];
   for (const c of cards) {
     if (!c.front || !c.back) { skipped++; continue; }
+
+    /* Resolved the same way the insert below resolves them, so the check cannot pass a card the
+     * insert then stores as null. Two different resolutions of one field is the shape of defect
+     * this file has already paid for elsewhere. */
+    const book = source.book ?? c.book ?? null;
+    const page = source.page ?? c.page ?? null;
+    if (!book || !page) {
+      rejected.push({
+        front: c.front.trim().slice(0, 60),
+        why: !book && !page ? 'no book and no page' : !book ? 'no book' : 'no page',
+      });
+      continue;
+    }
+
     const id = cardId(c.front, c.kind || 'vocab');
     const existedRows = await sql`select 1 from french_cards where id = ${id}`;
     const existed = existedRows.length > 0;
     await sql`
       insert into french_cards (id, front, back, es_hint, kind, book, chapter, page, note, created_at)
       values (${id}, ${c.front.trim()}, ${c.back.trim()}, ${c.es_hint || null}, ${c.kind || 'vocab'},
-        ${source.book ?? c.book ?? null}, ${source.chapter ?? c.chapter ?? null},
-        ${source.page ?? c.page ?? null}, ${c.note || null}, ${now})
+        ${book}, ${source.chapter ?? c.chapter ?? null},
+        ${page}, ${c.note || null}, ${now})
       on conflict (id) do update set
         back    = coalesce(nullif(excluded.back, ''), french_cards.back),
         es_hint = coalesce(nullif(excluded.es_hint, ''), french_cards.es_hint),
@@ -94,12 +145,36 @@ export async function addCards(
     if (existed) skipped++; else added++;
   }
   if (added) await bumpDay({ added });
-  return { added, skipped };
+  return { added, skipped, rejected };
 }
 
 export interface QueueCard extends CardRow {
   is_new: boolean;
   preview: Record<string, number>;
+}
+
+/** How many cards were seen for the FIRST time today, in Calgary.
+ *
+ * ONE IMPLEMENTATION, because two disagreeing ones is what 05-small-apps F4 found. `getQueue` had
+ * this inline and `getSummary`'s `queueSize` did not have it at all, so after a morning sitting that
+ * spent the new-card budget the button said "Review 12" and the overlay opened with fewer. A button
+ * that overstates what is behind it is the same class of defect as a page claiming "right now" off a
+ * week-old mirror, at a smaller scale.
+ *
+ * Counting `reps = 1` instead would undercount any card relearned in the same session, letting extra
+ * new cards leak past the daily cap.
+ *
+ * `at time zone` and not a bare `::date`. `reviewed_at` is timestamptz and Neon runs in UTC, so
+ * `x.first_seen::date` was the UTC day: from 18:00 Calgary it returned tomorrow's date, matched
+ * nothing, counted zero introduced, and handed back a fresh budget of 12 to a man who had already
+ * taken 12 that afternoon. The ceiling this whole app exists to enforce reset at dinner. */
+export async function getIntroducedToday(): Promise<number> {
+  const rows = await sql`
+    select count(*)::int as n from (
+      select card_id, min(reviewed_at) as first_seen from french_reviews group by card_id
+    ) x where (x.first_seen at time zone ${CALGARY})::date = ${today()}::date
+  `;
+  return (rows[0] as { n: number }).n;
 }
 
 /**
@@ -115,14 +190,7 @@ export async function getQueue(limit = MAX_QUEUE): Promise<QueueCard[]> {
     limit ${limit}
   `) as unknown as CardRow[];
 
-  // Cards whose FIRST-EVER review happened today. Counting reps = 1 instead would undercount any
-  // card relearned in the same session, letting extra new cards leak past the daily cap.
-  const introducedRows = await sql`
-    select count(*)::int as n from (
-      select card_id, min(reviewed_at) as first_seen from french_reviews group by card_id
-    ) x where x.first_seen::date = ${today()}
-  `;
-  const introducedToday = (introducedRows[0] as { n: number }).n;
+  const introducedToday = await getIntroducedToday();
 
   const newBudget = Math.max(0, Math.min(NEW_PER_DAY - introducedToday, limit - due.length));
   const fresh = newBudget > 0 ? ((await sql`
@@ -242,7 +310,7 @@ export async function getSummary(): Promise<FrenchSummary> {
   const now = new Date().toISOString();
   const t = today();
 
-  const [totalR, unseenR, dueR, learnedR, todayR, st, chaptersR, lastChR, streak] = await Promise.all([
+  const [totalR, unseenR, dueR, learnedR, todayR, st, chaptersR, lastChR, streak, introducedToday] = await Promise.all([
     sql`select count(*)::int n from french_cards where suspended = false`,
     sql`select count(*)::int n from french_cards where suspended = false and reps = 0`,
     sql`select count(*)::int n from french_cards where suspended = false and reps > 0 and next_review_at <= ${now}`,
@@ -252,6 +320,7 @@ export async function getSummary(): Promise<FrenchSummary> {
     sql`select count(*)::int n from french_chapters`,
     sql`select book, chapter, title from french_chapters order by done_at desc limit 1`,
     getStreak(),
+    getIntroducedToday(),
   ]);
 
   const total = (totalR[0] as { n: number }).n;
@@ -265,9 +334,16 @@ export async function getSummary(): Promise<FrenchSummary> {
     daysToExam = Math.ceil((Date.parse(st.exam_date + 'T00:00:00Z') - Date.parse(t + 'T00:00:00Z')) / 86400000);
   }
 
+  /* THE SAME ARITHMETIC `getQueue` PERFORMS, not a plausible-looking version of it. It read
+   * `Math.min(dueNow + Math.min(unseen, NEW_PER_DAY), MAX_QUEUE)`, which ignored the new cards
+   * already taken today, so the Review button promised twelve after a morning sitting had spent
+   * them and the overlay opened with fewer. `newBudget` here mirrors getQueue's line for line
+   * against the same `introducedToday`. */
+  const newBudget = Math.max(0, Math.min(NEW_PER_DAY - introducedToday, unseen));
+
   return {
     total, unseen, dueNow, learned,
-    queueSize: Math.min(dueNow + Math.min(unseen, NEW_PER_DAY), MAX_QUEUE),
+    queueSize: Math.min(dueNow + newBudget, MAX_QUEUE),
     reviewedToday: todayRow.reviewed,
     streak,
     chapters: (chaptersR[0] as { n: number }).n,
@@ -278,11 +354,16 @@ export async function getSummary(): Promise<FrenchSummary> {
   };
 }
 
-/** 365-day review counts for the activity strip. */
+/** 365-day review counts for the activity strip.
+ *
+ * The window is computed in Calgary, not by `to_char(now() - interval '365 days')`, which is the UTC
+ * day and drops or keeps an extra row at the far end every evening. It matters less than the ceiling
+ * above, and it is one line, and two definitions of "a day" in one file is how the first one comes
+ * back. */
 export async function getActivity(): Promise<{ date: string; reviewed: number }[]> {
   return (await sql`
     select date, reviewed from french_days
-    where date >= to_char(now() - interval '365 days', 'YYYY-MM-DD')
+    where date >= ${daysAgo(365)}
     order by date asc
   `) as unknown as { date: string; reviewed: number }[];
 }
