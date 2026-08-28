@@ -1118,3 +1118,32 @@
    hidden behind a generic failure state. */
 .training .baseline-err { color: var(--destructive); margin-top: 8px; }
 
+
+/* ---- OFF-PLAN CAPTURE, added 2026-08-27 ------------------------------------------------------
+ *
+ * Sits directly above the note box and below the last block, so it is passed on the way to Finish
+ * rather than hidden behind a tap. He named the failure himself: he does knee raises the plan never
+ * asked for, the app cannot see them, and every completion number since has been measuring the plan
+ * against itself. Reuses the note box's own metrics so it reads as part of the same footer. */
+.training .extra-box { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--border); }
+.training .extra-hint { margin: 2px 0 10px; }
+.training .extra-name {
+  width: 100%; padding: 10px 12px; font: inherit; font-size: 15px;
+  color: var(--foreground); background: var(--background);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.training .extra-row { display: flex; gap: 8px; margin-top: 8px; align-items: stretch; }
+.training .extra-num {
+  flex: 1 1 0; min-width: 0; padding: 10px 12px; font: inherit; font-size: 15px;
+  color: var(--foreground); background: var(--background);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.training .extra-row .btn { flex: 0 0 auto; white-space: nowrap; }
+.training .extra-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.training .extra-item {
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 13px;
+  color: var(--muted-foreground);
+}
+.training .extra-name:focus-visible, .training .extra-num:focus-visible {
+  outline: 2px solid var(--signal); outline-offset: 1px;
+}

@@ -52,3 +52,14 @@ export async function loadConditioning(): Promise<Conditioning> {
  * went with it. The stripComments function above is duplicated there rather than shared, which is a
  * deliberate small copy: it is eight lines with no state, and the alternative was a lib/shared
  * module existing solely to hold it. */
+
+
+/** Every exercise name the gym can do, for the off-plan capture box's autocomplete. Read from the
+ *  movement catalogue rather than typed, so a variant added there shows up here with no second
+ *  edit. Sorted, deduplicated, and it is a HINT: the box accepts anything he types. */
+export async function loadExtraSuggestions(): Promise<string[]> {
+  const cat = await readJson<{ movements: Record<string, { variants: { name: string }[] }> }>('movements.json');
+  const names = new Set<string>();
+  for (const m of Object.values(cat.movements)) for (const v of m.variants) names.add(v.name);
+  return [...names].sort((a, b) => a.localeCompare(b));
+}

@@ -15,6 +15,7 @@ interface Props {
   program: Program;
   warmups: { lower: WarmupItem[]; upper: WarmupItem[] };
   cooldowns: Record<string, CooldownItem>;
+  extraSuggestions: string[];
   nextUp: NextUp;
   /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
      that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
@@ -133,7 +134,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, nextUp }: Props) {
+export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -154,6 +155,27 @@ export default function GymClient({ program, warmups, cooldowns, nextUp }: Props
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
   const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
   const [openAlts, setOpenAlts] = useState<Set<string>>(new Set());
+
+  /* OFF-PLAN CAPTURE. Added 2026-08-27, and it is the most load-bearing thing on this page.
+   *
+   * His words, walking out the door: "I'm going to go there right now, I'm going to do whatever,
+   * like lower A. Because there are no knee raises here, I'm going to do them and you're not going
+   * to see it. Then you're going to conclude, oh you did this and that, but because you didn't do
+   * this, you didn't train completely."
+   *
+   * He is describing a measurement error, not a feature request. Ten sessions read 7% to 71%
+   * complete, and every analysis built on those numbers, including the one that cut this programme
+   * from 148 sets to 110 today, treated the shortfall as work he skipped. Some of it was work he
+   * SUBSTITUTED and had nowhere to record. The app could only ever see its own plan, so the plan
+   * was the only thing it could measure against, and reality had no way in.
+   *
+   * OFF-PLAN IS DERIVED, NEVER STORED. A row whose exercise_id is not in that day's blocks is
+   * off-plan by definition. No column, no migration, no flag to go stale, and it stays correct when
+   * the programme changes underneath old rows. */
+  const [extraName, setExtraName] = useState('');
+  const [extraWeight, setExtraWeight] = useState('');
+  const [extraReps, setExtraReps] = useState('');
+  const [extraLog, setExtraLog] = useState<{ id: string; name: string; weight: string; reps: string }[]>([]);
   const [timer, setTimer] = useState<{ label: string; targetEnd: number } | null>(null);
   const [finished, setFinished] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -408,6 +430,32 @@ export default function GymClient({ program, warmups, cooldowns, nextUp }: Props
       suggW: p?.suggestion.weight ?? null,
       suggR: p?.suggestion.reps ?? null,
     });
+  }
+
+  /* Logs something he did that the plan never asked for. Reuses `write` and therefore the same
+   * offline queue and the same 401 handling as every other set on this page: an off-plan set that
+   * cannot reach the server is retried, not lost, which matters more here than anywhere because
+   * there is no card on screen holding the number for him.
+   *
+   * The id is slugified from what he typed. If it matches a catalogue exercise the history lines up
+   * with every other set of that lift; if it does not, it is still a row with a name on it, which is
+   * infinitely better than the nothing that existed before. Never block the capture on recognising
+   * the name: a set he did and could not record is the failure this exists to end. */
+  function logExtra() {
+    const name = extraName.trim();
+    if (!name) return;
+    const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const idx = extraLog.filter((e) => e.id === id).length + 1;
+    void write(`extra:${date}:${id}:${idx}`, '/gym/api/set', {
+      date, day: activeDay, dayTitle: day.title,
+      exerciseId: id, exerciseName: name, setIdx: idx,
+      weight: extraWeight === '' ? null : Number(extraWeight),
+      reps: extraReps === '' ? null : Number(extraReps),
+      done: true,
+      swappedFrom: null, suggW: null, suggR: null,
+    });
+    setExtraLog((prev) => [...prev, { id, name, weight: extraWeight, reps: extraReps }]);
+    setExtraReps('');
   }
 
   /** Sends the note, and clears the box only if it actually landed. A queued note stays on screen
@@ -834,6 +882,42 @@ export default function GymClient({ program, warmups, cooldowns, nextUp }: Props
         * The text is NOT cleared unless the write actually landed. Sets are different: the input
         * itself holds the value and a queued set can be re-read off the screen. A note that failed
         * to send and got wiped out of the box is gone from the world. */}
+      <div className="extra-box">
+        <div className="section-label">Did something else? Log it</div>
+        <p className="quiet extra-hint">
+          Anything not on this list. It counts as training, and without it the app reads the session as unfinished.
+        </p>
+        <input
+          className="extra-name"
+          list="gym-extra-names"
+          value={extraName}
+          onChange={(e) => setExtraName(e.target.value)}
+          placeholder="Hanging knee raise"
+          autoCapitalize="sentences"
+        />
+        <datalist id="gym-extra-names">
+          {extraSuggestions.map((n) => <option key={n} value={n} />)}
+        </datalist>
+        <div className="extra-row">
+          <input className="extra-num" inputMode="decimal" value={extraWeight}
+                 onChange={(e) => setExtraWeight(e.target.value)} placeholder="lb" />
+          <input className="extra-num" inputMode="numeric" value={extraReps}
+                 onChange={(e) => setExtraReps(e.target.value)} placeholder="reps" />
+          <button className="btn" onClick={logExtra} disabled={!extraName.trim()}>Add set</button>
+        </div>
+        {extraLog.length > 0 && (
+          <div className="extra-list">
+            {extraLog.map((e, i) => (
+              <div className="extra-item" key={`${e.id}-${i}`}>
+                {e.name}
+                {e.weight ? ` ${e.weight} lb` : ''}
+                {e.reps ? ` x ${e.reps}` : ''}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="exgroup">
         <div className="exgroup-label">
           Note <span className="tag">(anything worth telling me)</span>
