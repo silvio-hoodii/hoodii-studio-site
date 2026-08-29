@@ -202,6 +202,39 @@ const CASES = [
     expect: 'does not end in a question mark',
   },
   {
+    /* An alias written in the wrong field. `formerIds` says "this id is dead and its rows are
+     * stranded"; if the id is still live the two are either one movement, which is an alias in
+     * movements.json and merges the histories, or two movements, which are two histories. */
+    name: 'a formerId that is still a live id is refused',
+    mutate: (p) => {
+      const all = Object.values(p.days).flatMap((d) => d.blocks || []).flatMap((b) => b.exercises || []);
+      const target = all.find((e) => Array.isArray(e.formerIds));
+      if (!target) throw new Error('no slot carries formerIds; repoint this case');
+      target.formerIds = [all.find((e) => e.id !== target.id).id];
+    },
+    expect: 'STILL a live id',
+  },
+  {
+    name: 'a formerId naming the slot itself is refused',
+    mutate: (p) => {
+      const target = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .flatMap((b) => b.exercises || []).find((e) => Array.isArray(e.formerIds));
+      if (!target) throw new Error('no slot carries formerIds; repoint this case');
+      target.formerIds = [target.id];
+    },
+    expect: "the slot's own id",
+  },
+  {
+    name: 'an emptied formerIds is refused rather than ignored',
+    mutate: (p) => {
+      const target = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .flatMap((b) => b.exercises || []).find((e) => Array.isArray(e.formerIds));
+      if (!target) throw new Error('no slot carries formerIds; repoint this case');
+      target.formerIds = [];
+    },
+    expect: 'non-empty array',
+  },
+  {
     /* THE ORDER IS THE DATA. Both readers take the first entry above the working weight, so a rung
      * inserted in the wrong place returns a wrong dumbbell on a card and throws nowhere. */
     name: 'an out-of-order dumbbell ladder is refused',

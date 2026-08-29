@@ -195,6 +195,18 @@ for (const [key, item] of Object.entries(equipment.portable ?? {})) {
   }
 }
 
+/** Every id the programme currently knows, slots and alts alike. Used by the `formerIds` gate, which
+ *  has to be able to say "that id is still live, so its history is not orphaned". */
+const ALL_IDS = new Set();
+for (const day of Object.values(program.days ?? {})) {
+  for (const b of day.blocks ?? []) {
+    for (const e of b.exercises ?? []) {
+      ALL_IDS.add(e.id);
+      for (const a of e.alts ?? []) ALL_IDS.add(a.id);
+    }
+  }
+}
+
 /** The closed set of subjects an `open` question may be about. See the long note under
  *  `checkOpenRow` below for why this exists and what it makes representable. */
 const OPEN_TOPICS = new Set(['placement', 'cue', 'prescription', 'equipment', 'volume']);
@@ -695,7 +707,38 @@ for (const [dayKey, day] of Object.entries(program.days)) {
      * SHAPE only. The DUE DATE is checked by scripts/gym-notes.mjs, which AGENTS.md already requires
      * before any /gym edit, because a build that goes red overnight with no file edited would block
      * an unrelated deploy: the same reason check-ladder.mjs is not in here. */
+    /* ------ A RENAMED SLOT SAYS WHAT IT USED TO BE CALLED. Added 2026-08-29, 10-gym P1-2.
+     *
+     * On 2026-08-27 six slot ids were rewritten so partners sat at the right fixture. Nothing warned
+     * that an id had changed and its HISTORY had not followed, so three cards now say "First time:
+     * log your working weight" for movements he did on 2026-08-25, and the trend line, which needs
+     * three points under one name, disappeared with it.
+     *
+     * "He has never done this" and "he did this under another name three days ago" look identical in
+     * program.json and have opposite fixes. `formerIds` is what makes them different, and
+     * `check-ladder.mjs`, which has the database this file deliberately does not, reports any id in
+     * `gym_set` that program.json no longer knows and no slot claims.
+     *
+     * NOT AN ALIAS, and the distinction is load-bearing. An alias in movements.json means one
+     * movement and one history, and `equivalent-ids.ts` merges the sets on every read. That is right
+     * for a machine calf raise and a standing calf raise, and wrong here: 50 lb of dumbbell is not
+     * 50 lb of cable. So this gate refuses a `formerId` that is a LIVE id, which would be an alias
+     * written in the wrong field, and refuses one that equals its own slot. */
     for (const ex of block.exercises) {
+      if (ex.formerIds !== undefined) {
+        const at = `"formerIds" on "${ex.id}"`;
+        if (!Array.isArray(ex.formerIds) || !ex.formerIds.length || !ex.formerIds.every((s) => typeof s === 'string' && s)) {
+          fail(where, `${at}: must be a non-empty array of the ids this slot used to carry, got ${JSON.stringify(ex.formerIds)}. Delete the field rather than leaving an empty one.`);
+        } else {
+          for (const f of ex.formerIds) {
+            if (f === ex.id) {
+              fail(where, `${at}: names "${f}", which is the slot's own id. A slot did not used to be called what it is called.`);
+            } else if (ALL_IDS.has(f)) {
+              fail(where, `${at}: names "${f}", which is STILL a live id in program.json. Then its history is not orphaned and this is not a rename. If the two are one movement with one load scale, make it an alias in movements.json, which merges the histories on every read. If they are two movements, they are two histories and neither points at the other.`);
+            }
+          }
+        }
+      }
       if (ex.open === undefined) continue;
       if (!Array.isArray(ex.open) || !ex.open.length) {
         fail(where, `"open" on "${ex.id}" must be a non-empty array of questions, got ${JSON.stringify(ex.open)}. Delete the field when the question is answered; do not leave an empty one.`);

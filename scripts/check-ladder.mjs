@@ -96,7 +96,7 @@ const e1rm = (w, reps) => w * (1 + reps / 30);
 const client = new Client(url);
 await client.connect();
 const { rows } = await client.query(
-  `select exercise_id, weight, count(*)::int n
+  `select exercise_id, weight, count(*)::int n, max(date) last_date
      from gym_set
     where done = true and reps > 0 and weight is not null and weight > 0
       and date >= (current_date - ($1 || ' days')::interval)::text
@@ -225,7 +225,77 @@ if (!QUIET) {
       + `${r.step > 0 ? (r.margin >= 0 ? '+' : '') + r.margin.toFixed(1) : '-'}`,
     );
   }
+  /* "NEW EXERCISE" AND "RENAMED EXERCISE WHOSE HISTORY IS STRANDED" LOOKED THE SAME HERE, and they
+     have opposite fixes. This line printed nine slots under "not yet logged, nothing to check
+     against" on 2026-08-28, and three of them were movements he had done three days earlier under
+     the id they replaced. The audit that found it (10-gym P1-2) asked for exactly this: the report
+     must name the orphan pairs rather than folding them into the unlogged list.
+
+     Two directions, because a rename can be recorded or not:
+       DECLARED   the slot carries `formerIds` and the old id still holds rows. Named, with what is
+                  in them, so the next reader knows the history exists and where.
+       UNDECLARED an id in gym_set with recent rows that program.json no longer knows at all. That
+                  is a rename nobody wrote down, and it is the state this whole finding came from.
+                  It cannot be caught in validate.mjs, which has no database by design. */
+  /* FOURTEEN DAYS, AND THE CAP SAYS IT IS A CAP. Its first run over the full 90-day window returned
+     eleven ids, and nine of them were a programme retired in June: a retired exercise is not a
+     stranded rename, it is an exercise he stopped doing, and a report whose first live output is
+     nine-elevenths noise is one nobody reads twice. The two real ones were the two most recent, and
+     the incident this exists to catch had three days between the last set and the rename. */
+  const ORPHAN_WINDOW_DAYS = 14;
+  const lastSeen = new Map();
+  for (const r of rows) {
+    const d = String(r.last_date ?? '');
+    if (!lastSeen.has(r.exercise_id) || d > lastSeen.get(r.exercise_id)) lastSeen.set(r.exercise_id, d);
+  }
+  const cutoff = new Date(Date.now() - ORPHAN_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+
+  const orphanLines = [];
+  const undeclared = new Map(
+    [...lastSeen].filter(([, d]) => d >= cutoff).map(([id, d]) => [id, d]),
+  );
+  const declaredFormer = new Set();
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    for (const block of day.blocks) {
+      for (const ex of block.exercises) {
+        for (const f of ex.formerIds ?? []) {
+          declaredFormer.add(f);
+          const w = working.get(f);
+          if (w) orphanLines.push(`  ${dayKey}/${ex.id} has no rows of its own; its predecessor ${f} works at ${w.w} lb over ${w.n} set(s). Declared, so this is known.`);
+        }
+        /* The whole alias family, not just the two ids written here. `machine-calf-raise` is an
+           alias of `standing-calf-raise`, so `equivalent-ids.ts` already merges their histories on
+           every read and it is not stranded. Reporting it would be this script disagreeing with the
+           app about what counts as one exercise, which is the fault the alias block above exists to
+           prevent. */
+        for (const id of [ex.id, ...(ex.alts ?? []).map((a) => a.id)]) {
+          undeclared.delete(id);
+          for (const movement of Object.values(movements.movements)) {
+            for (const v of movement.variants) {
+              const fam = [v.id, ...(v.aliases ?? [])];
+              if (fam.includes(id)) for (const s of fam) undeclared.delete(s);
+            }
+          }
+        }
+      }
+    }
+  }
+  for (const f of declaredFormer) undeclared.delete(f);
+
   if (unlogged.length) console.log(`\nnot yet logged, nothing to check against: ${unlogged.join(', ')}`);
+  if (orphanLines.length) {
+    console.log('\nhistory under a former id, so "first time" on the card is a rename and not a fact:');
+    for (const l of orphanLines) console.log(l);
+  }
+  if (undeclared.size) {
+    console.log(`\nIDS LIFTED IN THE LAST ${ORPHAN_WINDOW_DAYS} DAYS THAT program.json NO LONGER KNOWS, and no slot claims as a formerId:`);
+    for (const [id, when] of undeclared) {
+      const w = working.get(id);
+      console.log(`  ${id}  last ${when}${w ? `, works at ${w.w} lb over ${w.n} set(s)` : ''}`);
+    }
+    console.log('  Either a slot was renamed and nothing recorded it, which is 10-gym P1-2 happening again,');
+    console.log('  or it is an off-plan exercise he typed into the capture box, which is fine and needs nothing.');
+  }
   // Never a silent skip: a check that quietly drops rows reads as coverage it does not have.
   /* The reason travels with each ENTRY rather than in this heading, since 2026-08-28. The heading
      read "above N reps, where the estimate stops holding", and that became false the moment a second

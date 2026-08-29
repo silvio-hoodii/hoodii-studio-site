@@ -688,9 +688,18 @@
                   "q": "YOU HAVE NOW SKIPPED THIS TWICE AND SAID WHY BOTH TIMES, so the question is no longer about the cue. Note #37, 2026-08-28: \"Didn't do ever head extension because as i said before taht pairing doesn't make sense\". Note #27 before it made this block a sequence rather than a pair, so the card no longer asks you to hold two things on one pulley, and you skipped it anyway. THE ARITHMETIC SAYS YOU ARE RIGHT AND IT IS NOT CLOSE. Run node scripts/gym-coverage.mjs: triceps sit at 22 fractional sets a week against an efficient zone that tops out at 10, this exercise is 6 of the 22, and you do 3 sets of pushdowns later in the same session. Dropping it takes triceps to about 16, still past the zone, and costs nothing measurable. THREE OPTIONS. (a) DROP IT. Cost: the lat pulldown becomes a solo lift with a 90-second empty rest, which is the exact thing your note #28 complained about, so you trade an exercise you refuse for a rest you dislike. (b) KEEP IT AND FIX THE CUE. Cost: the cue below still describes the DUMBBELL version, so it is wrong on the card either way, and this is only worth doing if you would actually do the exercise. (c) REPLACE IT with something that belongs in that rest. Cost: nothing at the high pulley can pair with a pulldown until the shared-column question on cable-pulldown is answered, so this option waits on that one. Which?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
+                },
+                {
+                  "topic": "prescription",
+                  "q": "THREE CARDS WILL SAY \"FIRST TIME: LOG YOUR WORKING WEIGHT\" FOR THINGS YOU DID ON 2026-08-25, and it is a rename rather than a mistake. On 2026-08-27 two slots changed id so the partner would sit at the lead lift's own station: the overhead tricep extension went from the dumbbell to the cable (you had done 42.5x10, 50x10, 50x10), and the preacher curl became an incline dumbbell curl (you had done 90x6, 90x5). The rows are still in the log under the old names; nothing is lost. What is gone is the trend line, which needs three points under one name. THE ARITHMETIC HALF IS NOT ARGUABLE and it is why this is not just done for you: 50 lb of dumbbell held in two hands is not 50 lb of cable, and 90 lb on an EZ bar is not 90 lb in each hand. Whatever is decided, the WEIGHTS cannot simply be reused. So the real question is what the card should say. (a) LEAVE IT. The three cards say \"first time\" for two sessions, you type a working weight once, and the trend restarts. Cost: nothing, and it is already true. (b) SHOW THE OLD LINE UNDER IT, something like \"first time on the cable, and on Aug 25 you did 50x10 on the dumbbell version\". Cost: one more line of text on three cards, which is the thing note #12 was about. (c) MOVE THE OLD ROWS onto the new names in the log. Cost: the trend line would then draw a dumbbell weight and a cable weight as one series, so the chart would show a drop that never happened. Which?",
+                  "asked": "2026-08-29",
+                  "due": "2026-09-19"
                 }
               ],
-              "whyHere": "The triceps do nothing during a pulldown, so they are what follows it"
+              "whyHere": "The triceps do nothing during a pulldown, so they are what follows it",
+              "formerIds": [
+                "db-overhead-tricep-extension"
+              ]
             }
           ],
           "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what follows it. Not in its rest: both are on the high pulley and the attachment has to change between them, so one rest window cannot hold both.",
@@ -1609,7 +1618,10 @@
                   "due": "2026-09-10"
                 }
               ],
-              "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle"
+              "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle",
+              "formerIds": [
+                "db-overhead-tricep-extension"
+              ]
             }
           ],
           "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle.",
@@ -1666,6 +1678,9 @@
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
+              ],
+              "formerIds": [
+                "ez-preacher-curl"
               ]
             },
             {

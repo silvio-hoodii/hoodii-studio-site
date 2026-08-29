@@ -99,6 +99,20 @@ export interface Exercise {
    *  because a build that turns red overnight with no file edited would block an unrelated deploy.
    *  Same reason check-ladder.mjs is not in the validator. */
   open?: OpenQuestion[];
+  /** Ids this slot used to carry, whose rows are still in `gym_set` under the old name.
+   *
+   *  NOT AN ALIAS, and the difference decides what happens to his numbers. An alias in
+   *  `movements.json` means one movement and one history, and `equivalent-ids.ts` merges the sets
+   *  on every read; that is right for a machine calf raise and a standing calf raise. These are two
+   *  movements: 50 lb of dumbbell held in two hands is not 50 lb of cable. So this is a pointer for
+   *  a reader, never a merge, and nothing in the progression path reads it.
+   *
+   *  It exists because "he has never done this" and "he did it under another name three days ago"
+   *  were indistinguishable, and three cards said "First time: log your working weight" for
+   *  movements he did on 2026-08-25. `scripts/check-ladder.mjs` names both states now, and reports
+   *  a recent id the programme no longer knows that no slot claims, which is the same rename
+   *  happening again with nobody recording it. */
+  formerIds?: string[];
   alts?: Alt[];
 }
 
