@@ -18,7 +18,7 @@ import Volume from './Volume';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
-import { daysAgoText, shortDate } from '@/lib/format';
+import { daysAgoText, longDate, shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
@@ -307,23 +307,42 @@ export default async function HealthPage({
                 <span className="yearline-u">kg</span>
               </div>
               <div className="yearline-body">
+                {/* THE BOLD LINE IS THE DATE RANGE AND NOTHING ELSE, on his instruction, 2026-08-28:
+                    "I want the title or the bold text to be the dates ... Without the need for the
+                    initial or final weight, I just need the difference between those two points and
+                    the dates and that's it. I'm going to screenshot that."
+
+                    So the two lines above and below it are a complete claim on their own: a number
+                    and the window it covers. Everything else on this block is context for the page
+                    rather than for the picture, and it stays because he said it was fine, not
+                    because the headline needs it.
+
+                    Both dates are DERIVED from the readings, so the line cannot drift from the
+                    number over it: the next weigh-in moves both together or neither. */}
                 <div className="yearline-rule">
-                  Highest to lowest weight recorded in {yearBody.year}
+                  {longDate(yearBody.peak.date)} to {longDate(yearBody.low.date)}
                 </div>
-                {/* `shortDate`, not the raw ISO string. Both dates are inside the year the line
-                    above names, so the year is not ambiguous and "Feb 13" reads as a day where
-                    "2026-02-13" reads as a database. This is the one number he asked to see. */}
+                {/* THE DATES ARE NOT REPEATED HERE. They are the bold line directly above, and
+                    printing them again three lines later is the kind of small redundancy he reads
+                    as the page not knowing what it is saying. The weights keep their order instead,
+                    which is what "down to" means.
+
+                    THE CAVEAT IS TWO DIFFERENT SENTENCES because the peak and the first reading of
+                    the year are the same day today and will not always be. While they are the same,
+                    the honest thing to say is that the record simply starts there and January is
+                    absent; once a heavier reading appears after the first one, that stops being
+                    true and the sentence has to change with it. Derived, not chosen. */}
                 <p className="ex-cue" style={{ marginTop: 0 }}>
-                  <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> on{' '}
-                  {shortDate(yearBody.peak.date)} down to{' '}
-                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span> on{' '}
-                  {shortDate(yearBody.low.date)}, which is{' '}
+                  <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> down to{' '}
+                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span>, which is{' '}
                   <span className="tnum">{yearBody.spanDays}</span> days at{' '}
                   <span className="tnum">
                     {yearBody.kgPerWeek > 0 ? '+' : ''}{yearBody.kgPerWeek.toFixed(2)} kg
                   </span>{' '}
-                  a week. The first weigh-in of the year is {shortDate(yearBody.recordStarts)}, so
-                  that is the heaviest reading on record rather than the heaviest you were.
+                  a week.{' '}
+                  {yearBody.peak.date === yearBody.recordStarts
+                    ? `That first date is also the first weigh-in of ${yearBody.year}, so it is where the record starts rather than a peak you climbed to, and whatever you weighed in January is not in this database at all.`
+                    : `The first weigh-in of ${yearBody.year} is ${shortDate(yearBody.recordStarts)}, so that is the heaviest reading on record rather than the heaviest you were.`}
                 </p>
                 <Link href="/health/deep" className="deeplink">
                   The whole year, every measurement &rarr;

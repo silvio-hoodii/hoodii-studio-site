@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
 import { LineChart } from '../HealthCharts';
 import { KIND_LABEL } from '@/lib/gym/week';
+import { longDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -86,13 +87,15 @@ function Headline({ body }: { body: YearBody }) {
     <div className="yearline">
       <div className="yearline-n tnum">{signed(body.deltaKg)}<span className="yearline-u">kg</span></div>
       <div className="yearline-body">
+        {/* THE BOLD LINE IS THE DATE RANGE, on his instruction, 2026-08-28, and it is the same line
+            on /health so one screenshot means the same thing wherever he took it. The number and the
+            window are a complete claim together; everything under them is context for the page. */}
         <div className="yearline-rule">
-          Highest to lowest weight recorded in {body.year}.
+          {longDate(body.peak.date)} to {longDate(body.low.date)}
         </div>
         <p className="ex-cue">
-          <span className="tnum">{body.peak.kg.toFixed(1)} kg</span> on {when(body.peak.date)}, the
-          heaviest reading of the year, down to{' '}
-          <span className="tnum">{body.low.kg.toFixed(1)} kg</span> on {when(body.low.date)}.
+          <span className="tnum">{body.peak.kg.toFixed(1)} kg</span>, the heaviest reading of the
+          year, down to <span className="tnum">{body.low.kg.toFixed(1)} kg</span>.
           That is <span className="tnum">{body.spanDays}</span> days and{' '}
           <span className="tnum">{signed(body.kgPerWeek, 2)} kg</span> a week.
           {body.lowIsLatest

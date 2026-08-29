@@ -69,3 +69,22 @@ export function logDate(iso: string): string {
   const md = d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', timeZone: 'UTC' });
   return `${md} '${String(d.getUTCFullYear()).slice(2)}`;
 }
+
+/** 2026-02-13 -> "February 13, 2026". The month written out, unlike every other formatter here.
+ *
+ *  IT EXISTS FOR ONE LINE AND THAT LINE IS A SCREENSHOT. His ask, 2026-08-28: "I want the title or
+ *  the bold text to be the dates, just from February 13 to August 24, 2026 ... That's what I'm going
+ *  to screenshot and that's what I'm going to use regularly." A heading that leaves the phone as an
+ *  image has no page around it to supply context, so "Feb 13" is not enough and neither is a
+ *  two-digit year: whoever sees the picture in six months has only what is inside the frame.
+ *
+ *  Noon UTC for the same reason every other date helper in this file does it, so a date-only string
+ *  cannot land on the previous day in a western timezone. */
+export function longDate(iso: string): string {
+  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+}
