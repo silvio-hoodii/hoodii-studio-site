@@ -177,14 +177,42 @@
  * six months. Colouring a fall green would also mean colouring a rise, and the same colour cannot
  * mean "good" in both directions: that is the argument that removed the hardcoded `down` class from
  * the trend line the same day. */
+/* GRID, NOT A FLEX ROW, since the year label arrived on 2026-08-28.
+ *
+ * The year has to sit ABOVE the number and the prose has to sit BESIDE it on a wide screen, which a
+ * single wrapping flex row cannot express: the label would either share the baseline with a 68px
+ * numeral or push the prose onto its own line at every width. Two columns and two rows says it
+ * once. On a phone it collapses to one column and the reading order is unchanged, which is the
+ * order it is written in. */
 .health .yearline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 22px;
+  display: grid;
+  grid-template-columns: auto;
+  gap: 2px 22px;
   margin-top: 30px;
   padding-bottom: 22px;
   border-bottom: 1px solid var(--border);
+}
+@media (min-width: 560px) {
+  .health .yearline {
+    grid-template-columns: auto minmax(240px, 1fr);
+    align-items: baseline;
+  }
+  /* The year sits over the number in column one; the prose spans both rows in column two. */
+  .health .yearline-year { grid-column: 1; grid-row: 1; }
+  .health .yearline-n { grid-column: 1; grid-row: 2; }
+  .health .yearline-body { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+}
+
+/* The year, as a label rather than as part of a date. Mono, small, the same 12px/0.13em this site
+   uses for every other label, so it reads as an eyebrow and not as a number competing with the one
+   under it. */
+.health .yearline-year {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  color: var(--muted-foreground);
+  margin-bottom: 2px;
 }
 .health .yearline-n {
   font-family: var(--font-mono);
@@ -204,8 +232,19 @@
 }
 /* min-width 0 so the prose wraps inside the flex row instead of forcing it wider than the page,
    and a basis wide enough that on a phone it takes its own line rather than a 90px column. */
-.health .yearline-body { flex: 1 1 260px; min-width: 0; }
+.health .yearline-body { min-width: 0; }
 .health .yearline-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; }
+/* The duration, in brackets after the dates. Lighter and mono, because it is a RESTATEMENT of the
+   two dates beside it rather than a third fact, and setting it at the same weight would read as
+   three separate things to hold. Same line as the dates whenever they fit, which they do at 390px:
+   measured, not assumed. */
+.health .yearline-span {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
 
 /* The link to it from the Weight tab. A tap target, so it meets the 44px floor the rest of this
    surface meets: `probe-taps.mjs` measures every control on this route at 390px. */

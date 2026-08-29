@@ -87,6 +87,16 @@ const GATES = [
    * is a gate that might refuse everything, which is how the bare-colour-endpoint check shipped with
    * four false findings out of four on the same day. */
   ['health-split-tests', process.execPath, ['--experimental-strip-types', 'src/lib/health/split.test.ts']],
+  /* THE DATE HELPERS BEHIND THE /health HEADLINE. Added 2026-08-28.
+   *
+   * `spanInMonths` does calendar arithmetic, and its month-end clamp CANNOT FIRE on today's data:
+   * without a test it is a line nobody has ever seen work, which is the same shape as the {PEAK_*}
+   * gate that sat dead after process.exit() and reported zero failures while checking nothing.
+   *
+   * The three clamp cases were chosen by running the function with the clamp removed, not by
+   * reasoning about it, and the first three written turned out to pass on the broken version. One of
+   * the three that survived prints a NEGATIVE remainder unclamped. Watched refusing before trusted. */
+  ['format-tests', process.execPath, ['--experimental-strip-types', 'src/lib/format.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

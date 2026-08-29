@@ -91,8 +91,11 @@ export interface YearBody {
   latest: Reading;
   /** low.kg minus peak.kg. Negative when he lost, which is the number he asked for. */
   deltaKg: number;
-  /** Calendar days from the peak reading to the low reading. */
-  spanDays: number;
+  /** Kilos a week across that window. There is no `spanDays` beside it and one was removed on
+   *  2026-08-28: the headline states the span in MONTHS now, in the bracket he asked for, and the
+   *  day count was the same fact in a second unit three lines apart. It is still computed, as the
+   *  divisor below, and a field returned to nobody is a field a later session counts as evidence a
+   *  feature exists. */
   kgPerWeek: number;
   lowIsLatest: boolean;
   readings: number;
@@ -413,7 +416,6 @@ function buildBody(
     low,
     latest,
     deltaKg,
-    spanDays,
     kgPerWeek,
     lowIsLatest: low.date === latest.date,
     readings: readings.length,

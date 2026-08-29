@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
 import { LineChart } from '../HealthCharts';
 import { KIND_LABEL } from '@/lib/gym/week';
-import { longDate } from '@/lib/format';
+import { dayMonth, spanInMonths } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,18 +85,23 @@ function hours(minutes: number): string {
 function Headline({ body }: { body: YearBody }) {
   return (
     <div className="yearline">
+      {/* The year as a label above the number, so the two dates below stop repeating it. */}
+      <div className="yearline-year">{body.year}</div>
       <div className="yearline-n tnum">{signed(body.deltaKg)}<span className="yearline-u">kg</span></div>
       <div className="yearline-body">
-        {/* THE BOLD LINE IS THE DATE RANGE, on his instruction, 2026-08-28, and it is the same line
-            on /health so one screenshot means the same thing wherever he took it. The number and the
-            window are a complete claim together; everything under them is context for the page. */}
+        {/* THE SAME THREE LINES AS /health, deliberately identical, so one screenshot means the same
+            thing wherever he took it. The whole argument is written once, over there. */}
         <div className="yearline-rule">
-          {longDate(body.peak.date)} to {longDate(body.low.date)}
+          {dayMonth(body.peak.date)} to {dayMonth(body.low.date)}{' '}
+          <span className="yearline-span">
+            ({spanInMonths(body.peak.date, body.low.date)})
+          </span>
         </div>
         <p className="ex-cue">
+          {/* The day count is in the bracket above in months. Here it is only the rate, which is the
+              one thing the bracket cannot express. */}
           <span className="tnum">{body.peak.kg.toFixed(1)} kg</span>, the heaviest reading of the
-          year, down to <span className="tnum">{body.low.kg.toFixed(1)} kg</span>.
-          That is <span className="tnum">{body.spanDays}</span> days and{' '}
+          year, down to <span className="tnum">{body.low.kg.toFixed(1)} kg</span>, at{' '}
           <span className="tnum">{signed(body.kgPerWeek, 2)} kg</span> a week.
           {body.lowIsLatest
             ? ' The lowest reading is also the most recent one, so this is where you are now.'

@@ -18,7 +18,7 @@ import Volume from './Volume';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
-import { daysAgoText, longDate, shortDate } from '@/lib/format';
+import { dayMonth, daysAgoText, shortDate, spanInMonths } from '@/lib/format';
 import { today } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
@@ -302,25 +302,37 @@ export default async function HealthPage({
               Attendance block already makes. */}
           {yearBody && (
             <div className="yearline">
+              {/* THE YEAR IS PROMOTED, NOT REPEATED. His call, 2026-08-28: "maybe the year goes on
+                  top, like 2026 15 something, and then from this date to this date". It was inside
+                  both dates and said 2026 twice on one line; as a label above the number it is said
+                  once and the picture still carries it. */}
+              <div className="yearline-year">{yearBody.year}</div>
               <div className="yearline-n tnum">
                 {yearBody.deltaKg > 0 ? '+' : ''}{yearBody.deltaKg.toFixed(1)}
                 <span className="yearline-u">kg</span>
               </div>
               <div className="yearline-body">
-                {/* THE BOLD LINE IS THE DATE RANGE AND NOTHING ELSE, on his instruction, 2026-08-28:
-                    "I want the title or the bold text to be the dates ... Without the need for the
-                    initial or final weight, I just need the difference between those two points and
-                    the dates and that's it. I'm going to screenshot that."
+                {/* THREE THINGS AND NOTHING ELSE: the window, and how long it is.
+                    "I feel like saying February to August is too much ... I also want to make it
+                    evident that it's about 6 months."
 
-                    So the two lines above and below it are a complete claim on their own: a number
-                    and the window it covers. Everything else on this block is context for the page
-                    rather than for the picture, and it stays because he said it was fine, not
-                    because the headline needs it.
+                    So the dates are numeric and the duration is stated rather than left to be
+                    worked out from two dates, which is arithmetic nobody does while looking at a
+                    photograph. In brackets, as he suggested, because it is a restatement of the two
+                    dates rather than a third fact.
 
-                    Both dates are DERIVED from the readings, so the line cannot drift from the
-                    number over it: the next weigh-in moves both together or neither. */}
+                    THE DURATION IS CALENDAR MONTHS, not 192 days over 30.44. "6.3 months" is a
+                    number nobody feels; 13 Feb to 13 Aug is exactly six months and the eleven days
+                    after it are exactly eleven days. See spanInMonths in lib/format.ts, which has a
+                    suite because its month-end clamp cannot fire on today's data.
+
+                    Everything here is DERIVED from the two readings, so the dates, the duration and
+                    the number above them move together or not at all. */}
                 <div className="yearline-rule">
-                  {longDate(yearBody.peak.date)} to {longDate(yearBody.low.date)}
+                  {dayMonth(yearBody.peak.date)} to {dayMonth(yearBody.low.date)}{' '}
+                  <span className="yearline-span">
+                    ({spanInMonths(yearBody.peak.date, yearBody.low.date)})
+                  </span>
                 </div>
                 {/* THE DATES ARE NOT REPEATED HERE. They are the bold line directly above, and
                     printing them again three lines later is the kind of small redundancy he reads
@@ -332,10 +344,13 @@ export default async function HealthPage({
                     the honest thing to say is that the record simply starts there and January is
                     absent; once a heavier reading appears after the first one, that stops being
                     true and the sentence has to change with it. Derived, not chosen. */}
+                {/* THE DAY COUNT IS GONE FROM HERE TOO. "192 days" and "6 months, 11 days" are the
+                    same fact in two units, three lines apart, and the bracket above is the one he
+                    asked for. Same reason the dates left this sentence when they became the bold
+                    line: a block that says a thing twice reads as not knowing it said it once. */}
                 <p className="ex-cue" style={{ marginTop: 0 }}>
                   <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> down to{' '}
-                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span>, which is{' '}
-                  <span className="tnum">{yearBody.spanDays}</span> days at{' '}
+                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span>, at{' '}
                   <span className="tnum">
                     {yearBody.kgPerWeek > 0 ? '+' : ''}{yearBody.kgPerWeek.toFixed(2)} kg
                   </span>{' '}

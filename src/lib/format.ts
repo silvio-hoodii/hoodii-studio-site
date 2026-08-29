@@ -70,21 +70,51 @@ export function logDate(iso: string): string {
   return `${md} '${String(d.getUTCFullYear()).slice(2)}`;
 }
 
-/** 2026-02-13 -> "February 13, 2026". The month written out, unlike every other formatter here.
+/** 2026-02-13 -> "13/02". Day then month, numeric, no year.
  *
- *  IT EXISTS FOR ONE LINE AND THAT LINE IS A SCREENSHOT. His ask, 2026-08-28: "I want the title or
- *  the bold text to be the dates, just from February 13 to August 24, 2026 ... That's what I'm going
- *  to screenshot and that's what I'm going to use regularly." A heading that leaves the phone as an
- *  image has no page around it to supply context, so "Feb 13" is not enough and neither is a
- *  two-digit year: whoever sees the picture in six months has only what is inside the frame.
+ *  HIS CALL, 2026-08-28: "I don't want the full date, like long words. Just regular day, day, month,
+ *  month, and maybe the year goes on top." The year is not dropped, it is PROMOTED: it sits above the
+ *  number as its own label, so the two dates stop repeating it and the picture still says which year
+ *  it is. Both endpoints of this range are always inside one calendar year, which is what makes that
+ *  safe here and would not make it safe anywhere else on this site.
  *
- *  Noon UTC for the same reason every other date helper in this file does it, so a date-only string
- *  cannot land on the previous day in a western timezone. */
-export function longDate(iso: string): string {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
+ *  DAY FIRST, on his instruction. It is ambiguous in the general case and it is not ambiguous in
+ *  this one: 13 and 24 are both past 12, so neither can be read as a month. If a future range ever
+ *  runs between the 1st and the 12th at both ends, that stops being true, which is why this helper
+ *  is used on ONE line on two pages and is not offered as a general date format. */
+export function dayMonth(iso: string): string {
+  return `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
+}
+
+/** How long between two dates, in the unit a person actually thinks in: "6 months, 11 days".
+ *
+ *  HIS ASK, and it is the third thing the screenshot has to say: "I also want to make it evident
+ *  that it's about 6 months. I don't know if we should put maybe brackets or something."
+ *
+ *  CALENDAR MONTHS, NOT DAYS DIVIDED BY 30. 192 days over 30.44 is "6.3 months", which is a number
+ *  nobody feels and which rounds to a claim. 13 February to 13 August is exactly six months and the
+ *  remaining eleven days are exactly eleven days, so the sentence is true rather than approximate
+ *  and it costs the same space.
+ *
+ *  THE ANCHOR DAY IS CLAMPED to the target month's length. Without it, 31 January plus one month is
+ *  31 February, which JavaScript rolls forward into March, and the remainder then comes back
+ *  NEGATIVE. It cannot fire on today's data and it is two lines. */
+export function spanInMonths(fromIso: string, toIso: string): string {
+  const a = new Date(`${fromIso}T12:00:00Z`);
+  const b = new Date(`${toIso}T12:00:00Z`);
+  let months = (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + (b.getUTCMonth() - a.getUTCMonth());
+  if (b.getUTCDate() < a.getUTCDate()) months--;
+  if (months < 0) months = 0;
+
+  const targetMonth = a.getUTCMonth() + months;
+  const daysInTarget = new Date(Date.UTC(a.getUTCFullYear(), targetMonth + 1, 0)).getUTCDate();
+  const anchor = new Date(Date.UTC(
+    a.getUTCFullYear(), targetMonth, Math.min(a.getUTCDate(), daysInTarget), 12,
+  ));
+  const days = Math.max(0, Math.round((b.getTime() - anchor.getTime()) / 86400000));
+
+  const m = months === 1 ? '1 month' : `${months} months`;
+  if (months === 0) return days === 1 ? '1 day' : `${days} days`;
+  if (days === 0) return m;
+  return `${m}, ${days === 1 ? '1 day' : `${days} days`}`;
 }
