@@ -62,30 +62,96 @@ export default function Volume({
         them.
       </p>
 
-      {/* THE WHOLE WEEK, BLOCK BY BLOCK, AND IT GOES FIRST.
-        *
-        * His ask, 2026-08-28: "I need to view the whole thing in maybe just one big table because
-        * otherwise I can't understand everything you're saying. It doesn't make sense when you write
-        * it in prose." Every conversation about this programme has been about one superset or one
-        * day, and the join he has been asked to make in his head is between two screens: which
-        * exercise is in which rest, and what that muscle already carries for the week.
-        *
-        * SO THE JOIN IS DONE IN THE ROW. Each exercise prints the muscles it feeds WITH the weekly
-        * total each of those muscles already has, which is the number the table below repeats. One
-        * line now says "this feeds triceps" and "triceps are at 22" together.
-        *
-        * AN EMPTY REST IS A ROW, NOT AN ABSENCE. Nine blocks have nothing in the rest and no page
-        * has ever shown him where they are: the fill tool prints them in a terminal, and prose named
-        * three of them at a time. A gap you cannot see is a gap you cannot decide about.
-        *
-        * NO PROSE INSIDE IT, on his instruction: "I don't want any fluff or text (introduction or
-        * explanation) in the table. The table needs to be explained by itself." Every column header
-        * is a noun and every cell is a fact. */}
+
       <div className="exgroup">
         <div className="exgroup-label">
+          Weekly sets per muscle <span className="tag">({perMuscle.length} muscles)</span>
+        </div>
+        <div className="table-scroll">
+          <table className="plan-table vol-table">
+            <thead>
+              <tr>
+                <th className="wide">Muscle</th>
+                <th className="tnum">Wk</th>
+                {dayLabels.map((d) => (
+                  <th className="tnum vol-day" key={d}>{d}</th>
+                ))}
+              </tr>
+            </thead>
+            {/* THE EXERCISES LIVE IN THE CELL THEY WERE COUNTED INTO. His third attempt at asking
+                for this, and he was right every time: "you're saying glute, lower A, 13.5. Now I
+                have to go up and somehow figure out glutes from lower A from the week, block by
+                block, which doesn't really make sense ... I want the table that's on the end but I
+                want the detail that's on the first part. Combine those two into one."
+
+                Two tables meant the totals were in one and the exercises in the other, and the join
+                between them was work he had to do by eye across two scroll positions. A cell reading
+                "13.5" now shows its own arithmetic underneath it.
+
+                A synergist prints at half weight and with its half-set value, because that is what
+                went into the sum: BB Back Squat contributes 4 to quadriceps and 2 to spinal
+                erectors, and printing "4" in both cells would make the column stop adding up.
+
+                IT IS WIDE AND IT SCROLLS, on his instruction: "I don't care if it doesn't fit or
+                anything. I want to see one table." */}
+            <tbody>
+              {perMuscle.map((m) => (
+                <tr key={m.muscle}>
+                  <td className="wide">
+                    {m.label}
+                    <State below={m.belowMinimum} past={m.pastEfficient} />
+                  </td>
+                  <td className="tnum live">{fmt(m.sets)}</td>
+                  {m.byDay.map((v, i) => (
+                    <td className="daycell" key={dayLabels[i] ?? i}>
+                      {v ? (
+                        <>
+                          <div className="tnum daysum">{fmt(v)}</div>
+                          <div className="whichlifts">
+                            {(m.byDayDetail[i] ?? []).map((c, k) => (
+                              <div className={c.primary ? 'lift' : 'lift half'} key={`${c.name}-${k}`}>
+                                {c.name} <span className="tnum">{fmt(c.sets)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <span className="log-none">.</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="ex-cue">
+          <span className="tnum">{MIN_EFFECTIVE_DOSE}</span> sets a week is the smallest dose that
+          produced measurable growth. From <span className="tnum">{MIN_EFFECTIVE_DOSE + 1}</span> to{' '}
+          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> is where each extra set buys the most,
+          and a muscle with no note under its name is in that band. Past{' '}
+          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> the extra sets still work, they just buy
+          less than the ones before them. Right now <span className="tnum">{totals.below}</span>{' '}
+          muscle{totals.below === 1 ? ' is' : 's are'} under the minimum and{' '}
+          <span className="tnum">{totals.pastEfficient}</span> are over the top of the band. The four
+          day columns scroll sideways inside the table.
+        </p>
+      </div>
+
+      {/* BEHIND A TAP AND BELOW THE MATRIX, since 2026-08-28.
+       *
+       * "I want to see one table." The matrix above is that table. This one answers a different
+       * question, which is WHERE THE EMPTY RESTS ARE, and it is the only place they appear at all,
+       * so it stays. It does not get to be the second thing on screen, and it certainly does not
+       * get to be the first, which it was for about an hour. */}
+      {/* BEHIND A TAP, since 2026-08-28. "I want to see one table." This one answers a different
+          question from the matrix above, which is where the empty rests are, and it is the only
+          place they appear at all, so it stays. It does not get to be the second thing on screen. */}
+      <details className="exgroup ladder-all">
+        <summary className="exgroup-label">
           The week, block by block{' '}
           <span className="tag">({weekBlocks.length} blocks, {soloCount} with an empty rest)</span>
-        </div>
+        </summary>
         <div className="table-scroll">
           <table className="plan-table vol-table weekgrid">
             {/* THREE COLUMNS, NOT SIX, AND THE SCREEN DECIDED THAT.
@@ -147,53 +213,7 @@ export default function Volume({
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div className="exgroup">
-        <div className="exgroup-label">
-          Weekly sets per muscle <span className="tag">({perMuscle.length} muscles)</span>
-        </div>
-        <div className="table-scroll">
-          <table className="plan-table vol-table">
-            <thead>
-              <tr>
-                <th className="wide">Muscle</th>
-                <th className="tnum">Wk</th>
-                {dayLabels.map((d) => (
-                  <th className="tnum vol-day" key={d}>{d}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {perMuscle.map((m) => (
-                <tr key={m.muscle}>
-                  <td className="wide">
-                    {m.label}
-                    <State below={m.belowMinimum} past={m.pastEfficient} />
-                  </td>
-                  <td className="tnum live">{fmt(m.sets)}</td>
-                  {m.byDay.map((v, i) => (
-                    <td className="tnum" key={dayLabels[i] ?? i}>
-                      {v ? fmt(v) : <span className="log-none">.</span>}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="ex-cue">
-          <span className="tnum">{MIN_EFFECTIVE_DOSE}</span> sets a week is the smallest dose that
-          produced measurable growth. From <span className="tnum">{MIN_EFFECTIVE_DOSE + 1}</span> to{' '}
-          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> is where each extra set buys the most,
-          and a muscle with no note under its name is in that band. Past{' '}
-          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> the extra sets still work, they just buy
-          less than the ones before them. Right now <span className="tnum">{totals.below}</span>{' '}
-          muscle{totals.below === 1 ? ' is' : 's are'} under the minimum and{' '}
-          <span className="tnum">{totals.pastEfficient}</span> are over the top of the band. The four
-          day columns scroll sideways inside the table.
-        </p>
-      </div>
+      </details>
 
       {/* THE SECOND DENOMINATOR, AND ADDING IT TO THE FIRST IS THE MISTAKE. Pelland reports
           hypertrophy per MUSCLE and strength per ASSESSED EXERCISE, so a lift can be well dosed for

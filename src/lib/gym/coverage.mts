@@ -120,6 +120,14 @@ export function tierFor(tiers: Tier[], n: number): Tier {
  *  every per-day column in every report reads left to right as Lower A, Upper A, Lower B, Upper B. */
 export const COVERAGE_DAY_ORDER = ['monday', 'tuesday', 'thursday', 'friday'];
 
+/** One exercise's contribution to ONE muscle on ONE day. */
+export interface Contribution {
+  name: string;
+  /** Fractional sets: the full count for a muscle the lift trains directly, half for a synergist. */
+  sets: number;
+  primary: boolean;
+}
+
 export interface MuscleRow {
   muscle: string;
   label: string;
@@ -128,6 +136,13 @@ export interface MuscleRow {
   belowMinimum: boolean;
   pastEfficient: boolean;
   byDay: number[];
+  /* WHICH EXERCISES MAKE UP EACH OF THOSE DAY NUMBERS, added 2026-08-28 on his third attempt at
+     asking for it: "you're saying glute, lower A, 13.5. Now I have to go up and somehow figure out
+     glutes from lower A from the week, block by block, which doesn't really make sense."
+     He was right and the two tables were the problem: one held the totals and the other held the
+     exercises, and joining them was work he had to do by eye. One array per day, aligned with
+     `byDay` and with `dayOrder`, so a cell can print its own arithmetic. */
+  byDayDetail: Contribution[][];
 }
 export interface LiftRow {
   id: string;
@@ -244,6 +259,8 @@ export function computeCoverage(
   const missing: string[] = [];
   const perMuscle = new Map<string, number>();
   const perMuscleByDay = new Map<string, Map<string, number>>();
+  /** muscle -> day -> the exercises that fed it that day, in session order. */
+  const perMuscleDetail = new Map<string, Map<string, Contribution[]>>();
   const perExercise = new Map<string, { sets: number; days: Set<string>; name: string; loadable: boolean }>();
   const redundantPairs: RedundantPair[] = [];
   const unloadableInMain: UnloadableRow[] = [];
@@ -273,13 +290,26 @@ export function computeCoverage(
         }
         const sets = Number(ex.sets) || 0;
 
+        /* THE CONTRIBUTION IS RECORDED WHERE THE SET IS COUNTED, in the same two loops, so a cell
+           printing "BB Back Squat 4, Bulgarian Split Squat 3" is printing the very numbers that were
+           added into the total beside it. Building this list from a second walk of the programme is
+           how a breakdown comes to disagree with the sum it breaks down. */
+        const note = (m: string, n: number, primary: boolean) => {
+          let byDay = perMuscleDetail.get(m);
+          if (!byDay) perMuscleDetail.set(m, (byDay = new Map()));
+          const list = byDay.get(dayKey) ?? [];
+          list.push({ name: ex.name, sets: n, primary });
+          byDay.set(dayKey, list);
+        };
         for (const m of info.primary) {
           bump(perMuscle, m, sets);
           bump(dayMap, m, sets);
+          note(m, sets, true);
         }
         for (const m of info.secondary) {
           bump(perMuscle, m, sets * 0.5);
           bump(dayMap, m, sets * 0.5);
+          note(m, sets * 0.5, false);
         }
 
         const seen = perExercise.get(ex.id) ?? { sets: 0, days: new Set<string>(), name: ex.name, loadable: info.loadable };
@@ -361,6 +391,7 @@ export function computeCoverage(
         belowMinimum: sets < MIN_EFFECTIVE_DOSE,
         pastEfficient: sets > EFFICIENT_ZONE_TOP,
         byDay: dayOrder.map((d) => perMuscleByDay.get(d)?.get(muscle) ?? 0),
+        byDayDetail: dayOrder.map((d) => perMuscleDetail.get(muscle)?.get(d) ?? []),
       };
     });
 

@@ -1217,6 +1217,23 @@
    two lines is still the tab label he knows; 'LA' would be a second vocabulary for the same four
    days. Overrides .plan-table th's nowrap, which is right for a distance and wrong for a name. */
 .training .vol-table th.vol-day { white-space: normal; min-width: 3.4rem; }
+
+/* ---- the day cell, once it started carrying its own exercises ----
+ *
+ * His third ask, and each time it was the same one: "you're saying glute, lower A, 13.5. Now I have
+ * to go up and somehow figure out glutes from lower A from the week, block by block." The number and
+ * the exercises behind it were in two different tables and joining them was work he did by eye.
+ *
+ * IT IS WIDE ON PURPOSE, on his instruction: "I don't care if it doesn't fit or anything. I want to
+ * see one table." Four day columns each holding exercise names will not fit 390px and are not meant
+ * to. `.table-scroll` already sends it sideways inside its own box, so the page body still does not
+ * scroll, which is the invariant that matters. */
+.training .vol-table td.daycell { vertical-align: top; min-width: 8.5rem; }
+.training .vol-table td.daycell .daysum { font-weight: 600; text-align: right; }
+.training .vol-table td.daycell .whichlifts { margin-top: 4px; font-size: 11.5px; line-height: 1.45; }
+/* A synergist counted half, so it reads at half weight and prints its HALF-SET value. Printing the
+   full set count in both cells would make the column stop adding up to the total beside it. */
+.training .vol-table td.daycell .lift.half { color: var(--muted-foreground); }
 /* The source line under the tables. Smaller than a cue and it WRAPS: the first version reused
    .quiet-inline, whose nowrap is right for a date beside a number and ran the journal name off the
    right edge of a 390px screen. */
