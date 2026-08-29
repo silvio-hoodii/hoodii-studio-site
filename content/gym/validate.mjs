@@ -589,13 +589,47 @@ for (const [dayKey, day] of Object.entries(program.days)) {
 
     // ------ THE HEADER MAY NOT PROMISE WHAT THE BLOCK DOES NOT CONTAIN. See PAIR_PROMISE above.
     const label = String(block.label || '');
+
+    /* ------ A BLOCK LABEL MAY NOT COUNT.
+     *
+     * His note #34, at the rack on 2026-08-28: "You are saying secon horizontal pull on seated rows,
+     * second to what?" Nothing on Tuesday is a first horizontal pull. The one it was counting from is
+     * BB Row, three days LATER on Friday, so the label was unanswerable from the day in front of him
+     * and, taken chronologically, false: Tuesday's row is the week's first.
+     *
+     * SEVEN LABELS CARRIED AN ORDINAL AND ONE OF THEM CONTRADICTED ITS OWN CARD. "Second Pattern:
+     * Vertical Pull" sat directly above a `why` opening "The week's first vertical pull", so the chip
+     * and the explanation under it disagreed about the same lift. Every one of the seven whys already
+     * named the counterpart, which is the answer to his question: the reason was there and the LABEL
+     * was what sent him looking for something that was not.
+     *
+     * So the ordinal moves to the `why`, where the referent can be named, and the label says what the
+     * block is. Same shape as the reach failure AGENTS.md records for `whyHere`: there was already
+     * more reasoning than he had ever seen, and nothing told him where to find it.
+     *
+     * A word list rather than a movement lookup on purpose. A gate that resolved "second" against the
+     * week's real order would need the catalogue, would have to guess whether "Second Pattern:" counts
+     * the day or the week, and would fire on labels that are fine. This one has no judgement in it:
+     * a label counts, or it does not. */
+    const ORDINAL = /\b(second|third|fourth|2nd|3rd|4th)\b/i;
+    const counting = label.match(ORDINAL);
+    if (counting) {
+      fail(
+        where,
+        `label "${label}" counts ("${counting[0]}"), and a block label is read on one day. `
+        + 'Whatever it is counting from is on another day and he cannot check it from the card: note #34, '
+        + '"second to what?". Name the pattern in the label and put the other exposure in the "why", '
+        + 'which is where every one of these already was.',
+      );
+    }
+
     if (block.exercises.length === 1) {
       const promise = PAIR_PROMISE.find((c) => label.toLowerCase().includes(c));
       if (promise) {
         fail(where, `one-exercise block, but its label "${label}" contains "${promise.trim()}", which reads as a pair. Either add the second exercise or say what is actually there.`);
       }
       if (label.trim().toLowerCase() === String(block.exercises[0].name || '').trim().toLowerCase()) {
-        fail(where, `label "${label}" is the name of its only exercise, printed a second time. A block label says why the slot exists ("Second Vertical Pull"); the exercise says what fills it.`);
+        fail(where, `label "${label}" is the name of its only exercise, printed a second time. A block label says why the slot exists ("Vertical Pull"); the exercise says what fills it.`);
       }
     }
     for (const raw of String(block.tag || '').toLowerCase().match(/[a-z]+/g) || []) {

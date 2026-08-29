@@ -230,7 +230,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Pattern: Hinge",
+          "label": "Hinge",
           "tag": "(dumbbells)",
           "exercises": [
             {
@@ -477,7 +477,7 @@
                   "name": "DB Incline Press",
                   "zone": "benchDb",
                   "station": "bench",
-                  "cue": "Bench set one or two notches up from flat. Hits the top of the chest and the front of the shoulder more.",
+                  "cue": "Bench set one or two notches up from flat. Hits the top of the chest and the front of the shoulder more. Your note #31 asked what the difference is. Measured, not asserted: Rodriguez-Ridao et al. 2020 (Int J Environ Res Public Health 17:7339) put electrodes on the chest at 0, 15, 30, 45 and 60 degrees. \"The maximal EMG activity for PMUP occurred at a bench inclination of 30 degrees\" for the UPPER chest, while \"PMMP and PMLP showed higher EMG activity at a 0 degree bench inclination\" for the middle and lower chest. The front of the shoulder climbs the whole way, peaking at 60. Triceps do not care: \"TB showed similar EMG activities at all bench inclinations\". So neither is better, they are different halves of the same muscle, and about 30 degrees is where the upper half wins without the shoulders taking over. If you are doing this instead of flat, SWAP TO IT on the card so your log says what you actually pressed.",
                   "progression": "weight"
                 }
               ],
@@ -528,9 +528,9 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
+          "pairing": "sequence",
           "label": "Overhead",
-          "tag": "(dumbbells, floor right there)",
+          "tag": "(dumbbells, then the rack)",
           "exercises": [
             {
               "id": "db-overhead-press",
@@ -581,19 +581,34 @@
               "rangeWidth": 4,
               "open": [
                 {
-                  "q": "Your note #28: \"Here you are adding superset to the first main lift and no superset for the 2nd lift? What's the logic in that\". THERE IS NO LOGIC. This is one of ten blocks in the week that are a single lift with nobody in the rest, eight of them main lifts, and it is the same complaint you made as \"I have all this time between the sets on the 2, 3 and 4 lifts that I'm just resting. The whole thing was supposed to save time.\" It is unfinished work, not a design decision, and you have now found it from the other direction. `node scripts/gym-catalogue.mjs --fill` prices every option for this 90-second rest. The ones that add NO new sets, because they move work already in the week into a longer rest: DB Lateral Raise (from Second Horizontal Pull, 45s to 90s), DB Hammer Curl (from Triceps + Biceps, 45s to 90s), Dead Bug (from the bench press block), DB Reverse Fly (from Friday). Each leaves the block it came from solo, so it is a swap and not a gain. Everything else adds sets to a muscle already past the efficient zone. Which one, or leave it solo?",
+                  "q": "TWO THINGS, and the first is thirty seconds at the bar. (1) THE HANGING KNEE RAISE CUE BELOW IS A DRAFT AND NOBODY HAS READ IT ON THE BAR. You have logged six sets of these in August and no cue was ever written for them, so this one was drafted rather than taken off a published page, and it says so on the card. Read it hanging there and say what it should say. (2) The card lists the knee raise AFTER the three press sets, and your note #33 says you did them BETWEEN: \"Hanging knee raises between overhead db 3x10\". Alternating is what you did and it is exactly what this block's old question was asking for, but the press is at the bench and the bar is in the rack section, and validate.mjs refuses a paired block that spans two zones because doing both in one window means walking between them every set. You walked, and did not report it as a cost. So: was the walk from the bench to the pull-up bar fine, or did it only work because the gym was quiet? If it was fine this becomes a real superset, and the same permission may unlock others.",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
               ]
+            },
+            {
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
+              "sets": 3,
+              "reps": "10",
+              "rest": "45s",
+              "zone": "rack",
+              "station": "rack-pullup-bar",
+              "bodyweight": true,
+              "log": true,
+              "progression": "reps",
+              "cue": "Hang from the pull-up bar on top of the rack with your arms straight and your feet clear of the floor. Bring both knees up towards your chest until your thighs pass level, then lower them under control until your legs are straight again. Success looks like: you come to a stop at the bottom before the next rep, so every one starts from still rather than from a swing. If you are swinging, do fewer. THIS CUE IS A DRAFT: it was written for you rather than taken off a published page, and nobody has read it standing at the bar. Say what it should say.",
+              "whyHere": "The hanging knee raise is in this block because it was put there at the gym on 2026-08-28, three sets of ten in this rest, before any card asked for it."
             }
           ],
-          "why": "The second overhead exposure of the week after Friday machine press, and it is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells."
+          "why": "Pressing overhead twice a week, dumbbells here and the machine on Friday, and this is the earlier of the two. It is the only main lift that did not move all year: 60x10 in May, 65x8 in June, back to 60x8 in August. Two things were wrong and both are fixed. Its rep range could not reach the next dumbbell (see scripts/check-ladder.mjs), and it sat fourth in the session. Nunes 2021, 11 studies: strength gains are largest in the exercises performed at the beginning of a session. It is second now, which is also the last block whose LEAD is at the dumbbells. The hanging knee raise is in this block because it was put there at the gym on 2026-08-28, three sets of ten in this rest, before any card asked for it.",
+          "$sequenceBecause": "SEQUENCE RATHER THAN A PAIR, and the card is a step behind what he actually did. Note #33 on 2026-08-28, unprompted: \"Hanging knee raises between overhead db 3x10\". BETWEEN, so he alternated them with the press sets, which is a true superset and is what this block's open question was asking for. The card cannot say that yet: the press is at the bench in benchDb and the pull-up bar is in the rack section, and validate.mjs refuses a paired block spanning two zones because doing both in one window means walking between them every set. He walked, and reported it as a good thing rather than a cost, which is one data point against a rule that exists to stop absurd pairings. Changing a zone rule off one session is the kind of invention this whole protocol exists to stop, so the exercise ships in the block today, listed after rather than alongside, and turning it into a true pair is one word from him. The related question, whether the rack and the pull-up bar on top of it are one fixture or two, is already open on Thursday's Romanian deadlift and is not asked twice here."
         },
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Second Pattern: Vertical Pull",
+          "label": "Vertical Pull",
           "tag": "(cable)",
           "exercises": [
             {
@@ -666,9 +681,9 @@
               "rangeWidth": 4,
               "open": [
                 {
-                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
+                  "q": "YOU HAVE NOW SKIPPED THIS TWICE AND SAID WHY BOTH TIMES, so the question is no longer about the cue. Note #37, 2026-08-28: \"Didn't do ever head extension because as i said before taht pairing doesn't make sense\". Note #27 before it made this block a sequence rather than a pair, so the card no longer asks you to hold two things on one pulley, and you skipped it anyway. THE ARITHMETIC SAYS YOU ARE RIGHT AND IT IS NOT CLOSE. Run node scripts/gym-coverage.mjs: triceps sit at 22 fractional sets a week against an efficient zone that tops out at 10, this exercise is 6 of the 22, and you do 3 sets of pushdowns later in the same session. Dropping it takes triceps to about 16, still past the zone, and costs nothing measurable. THREE OPTIONS. (a) DROP IT. Cost: the lat pulldown becomes a solo lift with a 90-second empty rest, which is the exact thing your note #28 complained about, so you trade an exercise you refuse for a rest you dislike. (b) KEEP IT AND FIX THE CUE. Cost: the cue below still describes the DUMBBELL version, so it is wrong on the card either way, and this is only worth doing if you would actually do the exercise. (c) REPLACE IT with something that belongs in that rest. Cost: nothing at the high pulley can pair with a pulldown until the shared-column question on cable-pulldown is answered, so this option waits on that one. Which?",
+                  "asked": "2026-08-28",
+                  "due": "2026-09-11"
                 }
               ]
             }
@@ -679,9 +694,9 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Horizontal Pull",
+          "label": "Horizontal Pull",
           "tag": "(cable, dumbbells in hand)",
-          "why": "The second horizontal pull of the week; before 2026-08-22 BB Row on Friday was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025). The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a lower-body exercise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
+          "why": "One of the week's two rows, and the earlier one: BB Row on Friday is the other, and the heavy one. Until 2026-08-22 that Friday row was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025), so this is the exposure that was added. The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a lower-body exercise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -852,7 +867,7 @@
               "station": "cable-adjustable",
               "increment": 2.5,
               "log": true,
-              "cue": "Set the cable at chest height. Stand SIDEWAYS to the machine, feet shoulder width, and hold the handle at your breastbone with both hands. The cable is now trying to twist you toward it. Press your hands straight out in front of your chest until the arms are locked, hold for two seconds, and come back to your chest. The whole exercise is refusing to rotate: your shoulders and hips stay square to the wall in front of you. Success looks like: someone standing behind you could not tell which side the cable is on from the way your body is facing. If your ribs twist toward the machine, stand closer or go lighter. Do all reps one side, then turn around. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"C2. Multi-Planar / Anti-Rotation\".",
+              "cue": "Set the cable at chest height. Stand SIDEWAYS to the machine and step away from it until the cable is already TIGHT with the handle held against your breastbone, arms bent: if there is slack before you start, you are too close. Feet shoulder width. The cable is now trying to twist you toward it. Press your hands straight out in front of your chest until the arms are locked, hold for two seconds, and come back to your breastbone. The whole exercise is refusing to rotate. TWO CHECKS YOU CAN DO ALONE, and they replaced one that needed somebody standing behind you: (1) keep your eyes on a fixed point on the wall straight ahead, and if your hands drift out of the middle of your chest towards the machine as you press, you are rotating. (2) Your feet must not move. If either foot slides or you have to re-plant it during a set, go lighter. Do all reps one side, then turn around. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 3-day Day 3, \"C2. Multi-Planar / Anti-Rotation\".",
               "alts": [
                 {
                   "id": "band-pallof",
@@ -870,7 +885,14 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "open": [
+                {
+                  "q": "YOUR NOTE #35: \"Cable pallof feels weird no idea on how form.should be\". The cue was already long and sourced and it still did not tell you, and one line is why: the success test was \"someone standing behind you could not tell which side the cable is on\", which is not a test you can run on your own. That is the same mistake as a doneness cue you have to have a feel for. It has been replaced with two checks you can do alone (hands drifting off the middle of your chest, and a foot that slides), and the distance from the machine is now stated instead of only appearing as a fix. TWO THINGS TO SAY AT THE MACHINE. (1) Read the new cue standing there and say whether those two checks are things you can actually notice mid-set. (2) \"Feels weird\" may be the exercise rather than the cue: a Pallof is meant to feel like almost nothing is happening, because the work is what does NOT move. If that is what you meant, say so and the cue should say it out loud, because nobody would guess it.",
+                  "asked": "2026-08-28",
+                  "due": "2026-09-11"
+                }
+              ]
             },
             {
               "id": "cable-reverse-fly",
@@ -1078,7 +1100,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Pattern: Squat",
+          "label": "Squat",
           "tag": "(rack)",
           "exercises": [
             {
@@ -1367,7 +1389,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Pattern: Horizontal Press",
+          "label": "Horizontal Press",
           "tag": "(machine)",
           "exercises": [
             {
@@ -1386,7 +1408,7 @@
                   "name": "DB Incline Press",
                   "zone": "benchDb",
                   "station": "bench",
-                  "cue": "Bench one or two notches up from flat, dumbbells. More work for the top of the chest and the shoulders.",
+                  "cue": "Bench one or two notches up from flat, dumbbells. More work for the top of the chest and the shoulders. Your note #31 asked what the difference is. Measured, not asserted: Rodriguez-Ridao et al. 2020 (Int J Environ Res Public Health 17:7339) put electrodes on the chest at 0, 15, 30, 45 and 60 degrees. \"The maximal EMG activity for PMUP occurred at a bench inclination of 30 degrees\" for the UPPER chest, while \"PMMP and PMLP showed higher EMG activity at a 0 degree bench inclination\" for the middle and lower chest. The front of the shoulder climbs the whole way, peaking at 60. Triceps do not care: \"TB showed similar EMG activities at all bench inclinations\". So neither is better, they are different halves of the same muscle, and about 30 degrees is where the upper half wins without the shoulders taking over. If you are doing this instead of flat, SWAP TO IT on the card so your log says what you actually pressed.",
                   "progression": "weight"
                 },
                 {
@@ -1414,7 +1436,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Vertical Pull",
+          "label": "Vertical Pull",
           "tag": "(machine)",
           "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up. Side delts go in the rest because a pull-up does not use them.",
           "exercises": [
@@ -1448,7 +1470,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Second Overhead Press",
+          "label": "Overhead Press",
           "tag": "(machine, dumbbells in hand)",
           "why": "The second shoulder press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set.",
           "exercises": [

@@ -18,18 +18,9 @@ import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
-/* FIXTURES ADDRESS BLOCKS BY LABEL, NEVER BY INDEX.
- *
- * The first version used `days.tuesday.blocks[1]`. Inserting the Upper A primer at position 0 on
- * 2026-08-27 shifted every Tuesday index by one, and three cases then mutated the wrong block and
- * crashed the runner mid-suite. An index into a hand-edited content file is not a stable address.
- *
- * `partnerOf` also encodes what a partner IS in one place: the LAST exercise of the block. */
-const blockBy = (program, day, label) => {
-  const b = (program.days[day]?.blocks || []).find((x) => x.label === label);
-  if (!b) throw new Error(`no block labelled "${label}" on ${day}; have: ${(program.days[day]?.blocks || []).map((x) => x.label).join(' | ')}`);
-  return b;
-};
+/* What a partner IS, in one place: the LAST exercise of the block. The `blockBy(day, label)` helper
+ * that used to sit here went with the named anchors below, unused: nothing addresses a block by name
+ * any more, and a lookup helper kept for nobody is an invitation to start again. */
 const partnerOf = (block) => block.exercises[block.exercises.length - 1];
 
 /** The real movement catalogue, flattened by id and alias, so a case can ask "does the catalogue put
@@ -47,26 +38,38 @@ const CATALOGUE = () => {
   return out;
 };
 
-/* A fixture that no longer holds what a case needs must stop the run, not skip it. */
-function assertAnchor(program, anchor, needs) {
-  const b = blockBy(program, ...anchor);
-  if (!b) throw new Error(`anchor block ${anchor.join('/')} no longer exists; repoint it`);
-  if (b.exercises.length < 2) throw new Error(`anchor block ${anchor.join('/')} is no longer a pair, so partnerOf() returns the lead lift; repoint it`);
-  const partner = partnerOf(b);
-  if (!partner[needs]) throw new Error(`anchor block ${anchor.join('/')} partner "${partner.id}" has no ${needs}; repoint it`);
-}
-/** The two blocks the fixtures use, named once. Any block with an `open` row works for the second. */
-/* THESE TWO ANCHORS ARE FIXTURES AND THEY GO STALE. Repointed 2026-08-27: the 2026-08-27 programme
- * rebuild left `friday/Second Vertical Pull` and `friday/Main Lift: BB Row` as SINGLE-exercise
- * blocks, so `partnerOf` returned the lead lift and five of these cases silently stopped testing
- * anything. They did not error, they PASSED for the wrong reason, which is the failure mode this
- * suite exists to catch in the validator.
+/* THE ANCHORS ARE FOUND, NOT NAMED, AND THAT IS THE THIRD LESSON THIS BLOCK HAS LEARNED.
  *
- * SPAN_BLOCK must be a paired block whose partner carries a `whyHere`.
- * OPEN_BLOCK must be a paired block whose partner carries an `open` question.
- * If a future edit unpairs either one, the first case below fails loudly rather than passing. */
-const SPAN_BLOCK = ['thursday', 'Hamstrings + Calves'];
-const OPEN_BLOCK = ['tuesday', 'Second Pattern: Vertical Pull'];
+ * First it addressed blocks by INDEX, and inserting the Upper A primer at position 0 on 2026-08-27
+ * shifted every Tuesday index by one. So it moved to labels. Then the 2026-08-27 rebuild left two
+ * labelled blocks holding a single exercise, `partnerOf` returned the lead lift, and five cases
+ * silently stopped testing anything while still printing ok. So `assertAnchor` was added to make
+ * that loud. Then on 2026-08-28 seven block labels were renamed, one of them the OPEN_BLOCK anchor,
+ * and the whole suite died on its first case with a stale string.
+ *
+ * A hand-edited content file has no stable address. Not an index, not a label. So the anchors are
+ * now DESCRIBED by what the case needs and located at run time:
+ *
+ *   spanBlock  a paired block whose partner carries a `whyHere`
+ *   openBlock  a paired block whose partner carries an `open` question
+ *
+ * The programme always has several of each, and if it ever has none the finder throws with the
+ * requirement in the message, which is the same loud failure `assertAnchor` bought, without a
+ * fixture to maintain. */
+const findBlock = (program, needs) => {
+  const b = Object.values(program.days || {})
+    .flatMap((d) => d.blocks || [])
+    .find((x) => (x.exercises || []).length >= 2 && partnerOf(x)?.[needs]);
+  if (!b) {
+    throw new Error(
+      `no paired block in the programme has a partner carrying "${needs}". Either the programme `
+      + 'changed shape or the gate under test no longer applies; do not "fix" this by weakening the case.',
+    );
+  }
+  return b;
+};
+const spanBlock = (p) => findBlock(p, 'whyHere');
+const openBlock = (p) => findBlock(p, 'open');
 
 /** `file` names which content file the case mutates, and defaults to program.json. Added when the
  *  validator learned a rule about movements.json: a suite that can only mutate one file can only
@@ -81,7 +84,7 @@ const CASES = [
   {
     name: 'agent prose in whyHere is refused',
     mutate: (p) => {
-      partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere =
+      partnerOf(spanBlock(p)).whyHere =
         'Side delts are important for shoulder health and balanced development.';
     },
     expect: 'NOT a verbatim span',
@@ -93,7 +96,7 @@ const CASES = [
       // line was a true span of a block that stopped existing on 2026-08-27, and it then tested
       // nothing except that the validator still rejects strings. Take a real span and flip its
       // first character's case, which is exactly the tolerance under test.
-      const b = blockBy(p, ...SPAN_BLOCK);
+      const b = spanBlock(p);
       const span = b.why.slice(0, 60);
       const flipped = (span[0] === span[0].toUpperCase() ? span[0].toLowerCase() : span[0].toUpperCase()) + span.slice(1);
       partnerOf(b).whyHere = flipped;
@@ -106,7 +109,7 @@ const CASES = [
       /* The donor block is FOUND, not named. Naming it hardcoded "Sideways + Calves", which was
        * renamed on 2026-08-27 and took the whole suite down with it. Any block with a `why` that is
        * not the anchor will do, and there are always several. */
-      const anchor = blockBy(p, ...SPAN_BLOCK);
+      const anchor = spanBlock(p);
       const donor = Object.values(p.days)
         .flatMap((d) => d.blocks || [])
         .find((b) => b !== anchor && typeof b.why === 'string' && b.why.length >= 60);
@@ -118,14 +121,14 @@ const CASES = [
   {
     name: 'a partner with neither whyHere nor open is refused',
     mutate: (p) => {
-      delete partnerOf(blockBy(p, ...SPAN_BLOCK)).whyHere;
+      delete partnerOf(spanBlock(p)).whyHere;
     },
     expect: 'no "whyHere" and no "open"',
   },
   {
     name: 'whyHere on a lead lift is refused',
     mutate: (p) => {
-      blockBy(p, ...SPAN_BLOCK).exercises[0].whyHere =
+      spanBlock(p).exercises[0].whyHere =
         'The second vertical pull. Lat Pulldown on Tuesday was the only one in the week';
     },
     expect: 'which is a lead lift',
@@ -133,7 +136,7 @@ const CASES = [
   {
     name: 'both whyHere and open on one partner is refused',
     mutate: (p) => {
-      const blk = blockBy(p, ...OPEN_BLOCK);
+      const blk = openBlock(p);
       partnerOf(blk).whyHere = blk.why.slice(0, 60);
     },
     expect: 'carries both',
@@ -141,21 +144,21 @@ const CASES = [
   {
     name: 'an open question due before it was asked is refused',
     mutate: (p) => {
-      partnerOf(blockBy(p, ...OPEN_BLOCK)).open[0].due = '2026-08-01';
+      partnerOf(openBlock(p)).open[0].due = '2026-08-01';
     },
     expect: 'is not after "asked"',
   },
   {
     name: 'an open question with no context is refused',
     mutate: (p) => {
-      partnerOf(blockBy(p, ...OPEN_BLOCK)).open[0].q = 'why is this here';
+      partnerOf(openBlock(p)).open[0].q = 'why is this here';
     },
     expect: 'at least 30 characters',
   },
   {
     name: 'an emptied open array is refused rather than ignored',
     mutate: (p) => {
-      partnerOf(blockBy(p, ...OPEN_BLOCK)).open = [];
+      partnerOf(openBlock(p)).open = [];
     },
     expect: 'non-empty array',
   },
@@ -303,6 +306,32 @@ const CASES = [
     },
     expect: null,
   },
+  /* ---- A BLOCK LABEL MAY NOT COUNT. His note #34, 2026-08-28: "second to what?" ---------------- */
+  {
+    name: 'a label that counts is refused',
+    mutate: (p) => {
+      /* The block is FOUND rather than named, for the reason the donor block above is: seven labels
+         were renamed the day this case was written, and a case that names one of them is a case that
+         breaks on the next rename. Any block with a label will do. */
+      const b = Object.values(p.days).flatMap((d) => d.blocks || []).find((x) => x.label);
+      if (!b) throw new Error('no labelled block to mutate');
+      b.label = `Second ${b.label}`;
+    },
+    expect: 'counts',
+  },
+  {
+    name: 'an ordinary label without an ordinal still passes',
+    mutate: (p) => {
+      /* THE PAIRED PERMIT CASE, and it is not decoration here. The rule matches on a word list, so
+         the way to get it wrong is a pattern too greedy: "Second Pattern" and "seconds" share five
+         letters, and the carry blocks are measured in seconds. A gate watched refusing and never
+         watched permitting is a gate that might refuse everything. */
+      const b = Object.values(p.days).flatMap((d) => d.blocks || []).find((x) => x.label);
+      if (!b) throw new Error('no labelled block to mutate');
+      b.label = 'Horizontal Pull, 40 seconds of rest';
+    },
+    expect: null,
+  },
 ];
 
 let failed = 0;
@@ -314,8 +343,8 @@ for (const c of CASES) {
     // failure rather than five cases quietly passing against a lead lift. Done on every case,
     // whichever file it edits: an anchor that has gone stale is news either way.
     const program = JSON.parse(readFileSync(join(dir, 'program.json'), 'utf8'));
-    assertAnchor(program, SPAN_BLOCK, 'whyHere');
-    assertAnchor(program, OPEN_BLOCK, 'open');
+    spanBlock(program);
+    openBlock(program);
 
     const file = join(dir, c.file ?? 'program.json');
     const doc = c.file ? JSON.parse(readFileSync(file, 'utf8')) : program;
