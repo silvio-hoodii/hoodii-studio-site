@@ -306,6 +306,34 @@
       "range": {
         "maxLb": 90
       },
+      "ladderLb": [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90],
+      "ladderConfidence": "stated",
+      "ladderNote": [
+        "THE RACK HAS TWO DIFFERENT STEPS AND THE MODEL COULD NOT EXPRESS THAT. Every weighted lift",
+        "carried ONE `increment` number, so a dumbbell lift stepped by a single amount at every",
+        "weight, and `roundLoad` in progression.ts then rounded the result to the nearest 5 lb. From",
+        "12.5 lb that gives 20: it skips 15 and 17.5, two dumbbells that are on the rack, and asks",
+        "for a 60% jump. A rung that is not there and a rung that is skipped are the same defect,",
+        "and neither is fixable by choosing a better single increment, because no single number is",
+        "right at both ends of this rack.",
+        "",
+        "HIS WORDS, 2026-08-28: dumbbells are 10, 12.5, 15, 17.5, 20, then 25, 30. A 2.5 lb step to",
+        "20 and a 5 lb step after it. That agrees with what he said earlier for the top half, in",
+        "section 17 of HealthOS/knowledge/training-programme-evidence.md: 'Dumbells jump on 5 from",
+        "20 25 30 etc until 90.' The two statements cover different halves of the same rack and do",
+        "not disagree anywhere they overlap.",
+        "",
+        "WHAT THIS DOES NOT CLAIM. Nothing below 10 lb: he named 10 as the bottom and lighter pairs",
+        "were never mentioned, so they are not listed. The rungs above 30 are his 'etc until 90'",
+        "rather than a pair-by-pair reading of the rack, which is why `ladderConfidence` is stated",
+        "and not logged. A missing rung here costs him one look at the rack; an invented one costs a",
+        "set. If a rung turns out not to exist, delete it here and every card moves with it.",
+        "",
+        "WHY THE LIST AND NOT A RULE. A rule ('2.5 below 20, 5 above') is a second place for the",
+        "rack to be described, and it goes stale the day he uses a gym with a different rack. The",
+        "list IS the rack. progression.ts picks the next entry strictly above the working weight and",
+        "has no idea what the step is."
+      ],
       "evidence": "'Dumbbells, I think they're up to like 90 lbs'. Logged to 75/hand."
     },
     "kettlebells": {

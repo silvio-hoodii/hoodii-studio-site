@@ -60,6 +60,33 @@ const program = JSON.parse(readFileSync(join(ROOT, 'content/gym/program.json'), 
 /* The catalogue, for the alias resolution below. One exercise can carry two ids in gym_set and this
    script has to agree with the app about which rows are its history. */
 const movements = JSON.parse(readFileSync(join(ROOT, 'content/gym/movements.json'), 'utf8'));
+const equipment = JSON.parse(readFileSync(join(ROOT, 'content/gym/equipment.json'), 'utf8'));
+
+/* THE NEXT WEIGHT IS A RUNG, NOT AN ADDITION, and this script asked for the wrong one on every
+   dumbbell lift under 20 lb. `w + increment` is the question "what does the arithmetic give"; the
+   question that matters is "what is the next dumbbell on the rack". His rack steps by 2.5 up to 20
+   and by 5 after, so at 12.5 lb this demanded the e1RM for 17.5 while the engine, rounding to the
+   nearest 5, was actually going to ask for 20. Two numbers, neither of them the rack.
+
+   Same source as src/lib/gym/ladder.ts and the same reasoning as the alias block below: read the
+   catalogue and equipment.json directly rather than importing src/, which would drag the module
+   graph into a script that is offline by design. Neither copy holds a fact the other could
+   contradict, only the same lookup. */
+const DUMBBELL_LADDER = [...new Set(
+  (equipment.portable?.dumbbells?.ladderLb ?? []).filter((n) => typeof n === 'number' && n > 0),
+)].sort((a, b) => a - b);
+const IMPLEMENT = new Map();
+for (const movement of Object.values(movements.movements)) {
+  for (const v of movement.variants) {
+    if (!v.implement) continue;
+    for (const id of [v.id, ...(v.aliases ?? [])]) IMPLEMENT.set(id, v.implement);
+  }
+}
+/** The weight the engine will actually suggest next, which is what this check has to measure. */
+const nextWeight = (id, w, increment) => {
+  if (IMPLEMENT.get(id) !== 'dumbbell' || !DUMBBELL_LADDER.length) return w + increment;
+  return DUMBBELL_LADDER.find((x) => x > w) ?? w;
+};
 const DEFAULT_WIDTH = 2;
 const LOOKBACK_DAYS = 90;
 /** Above this many prescribed reps the Epley estimate is not trustworthy. See the note at its use. */
@@ -164,10 +191,15 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       if (ex.assistance) { outOfScope.push(`${dayKey}/${ex.id} (assistance, counterweight goes down)`); continue; }
       const cur = working.get(ex.id);
       if (!cur) { unlogged.push(`${dayKey}/${ex.id}`); continue; }
+      const next = nextWeight(ex.id, cur.w, increment);
       const banked = e1rm(cur.w, top);
-      const demanded = e1rm(cur.w + increment, bottom);
-      const row = { dayKey, id: ex.id, name: ex.name, w: cur.w, bottom, top, increment, banked, demanded, margin: banked - demanded };
+      const demanded = e1rm(next, bottom);
+      const row = { dayKey, id: ex.id, name: ex.name, w: cur.w, bottom, top, increment, next, step: next - cur.w, banked, demanded, margin: banked - demanded };
       checked.push(row);
+      /* AT THE TOP OF THE RACK THERE IS NO NEXT RUNG, so there is nothing to reach and nothing to
+         report. The engine holds him at 90 lb rather than asking for 95, and a "ladder does not
+         close" finding on a lift that has no next weight is a finding with no available fix. */
+      if (row.step <= 0) continue;
       if (row.margin < 0) {
         let need = width;
         while (need < 20 && e1rm(cur.w, bottom + need) < demanded) need++;
@@ -180,12 +212,17 @@ for (const [dayKey, day] of Object.entries(program.days)) {
 
 if (!QUIET) {
   console.log(`ladder check, working weights from the last ${LOOKBACK_DAYS} days\n`);
-  console.log('exercise                       day        reps    inc   working   banked  demanded   margin');
+  /* `step` and `next`, NOT `inc`. On a dumbbell lift `increment` is no longer the distance to the
+     next weight and printing it under a column called "inc" beside a demand computed from the rack
+     would be two numbers that disagree, in a report whose whole job is being trusted about numbers.
+     A `step` of 0 means the top of the rack: there is no next rung and nothing to reach. */
+  console.log('exercise                       day        reps  working   next   step   banked  demanded   margin');
   for (const r of checked.sort((a, b) => a.margin - b.margin)) {
     console.log(
-      `${r.id.padEnd(30)} ${r.dayKey.padEnd(9)} ${`${r.bottom}-${r.top}`.padStart(6)} ${String(r.increment).padStart(5)} `
-      + `${String(r.w).padStart(9)} ${r.banked.toFixed(1).padStart(8)} ${r.demanded.toFixed(1).padStart(9)} `
-      + `${(r.margin >= 0 ? '+' : '') + r.margin.toFixed(1)}`,
+      `${r.id.padEnd(30)} ${r.dayKey.padEnd(9)} ${`${r.bottom}-${r.top}`.padStart(6)} `
+      + `${String(r.w).padStart(8)} ${String(r.next).padStart(6)} ${(r.step > 0 ? `+${r.step}` : 'top').padStart(6)} `
+      + `${r.banked.toFixed(1).padStart(8)} ${r.demanded.toFixed(1).padStart(9)} `
+      + `${r.step > 0 ? (r.margin >= 0 ? '+' : '') + r.margin.toFixed(1) : '-'}`,
     );
   }
   if (unlogged.length) console.log(`\nnot yet logged, nothing to check against: ${unlogged.join(', ')}`);
@@ -204,9 +241,9 @@ if (gaps.length) {
   console.error(`\n${gaps.length} lift(s) whose next weight is unreachable from the top of their own rep range:`);
   for (const r of gaps) {
     console.error(
-      `  ${r.dayKey}/${r.id} at ${r.w} lb: ${r.bottom}-${r.top} banks ${r.banked.toFixed(1)} but +${r.increment} lb demands `
-      + `${r.demanded.toFixed(1)}. Either drop the increment below ${r.increment} lb if the equipment has a smaller step `
-      + `he has actually used, or set "rangeWidth": ${r.needWidth} on it (reps ${r.bottom} to ${r.bottom + r.needWidth}).`,
+      `  ${r.dayKey}/${r.id} at ${r.w} lb: ${r.bottom}-${r.top} banks ${r.banked.toFixed(1)} but the next rung, `
+      + `${r.next} lb (+${r.step}), demands ${r.demanded.toFixed(1)}. Either find a smaller step he has actually `
+      + `used on this equipment, or set "rangeWidth": ${r.needWidth} on it (reps ${r.bottom} to ${r.bottom + r.needWidth}).`,
     );
   }
   process.exit(1);

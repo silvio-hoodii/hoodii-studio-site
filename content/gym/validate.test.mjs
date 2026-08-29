@@ -202,6 +202,44 @@ const CASES = [
     expect: 'does not end in a question mark',
   },
   {
+    /* THE ORDER IS THE DATA. Both readers take the first entry above the working weight, so a rung
+     * inserted in the wrong place returns a wrong dumbbell on a card and throws nowhere. */
+    name: 'an out-of-order dumbbell ladder is refused',
+    file: 'equipment.json',
+    mutate: (e) => {
+      const l = e.portable.dumbbells.ladderLb;
+      if (!Array.isArray(l) || l.length < 3) throw new Error('no dumbbell ladder to mutate; repoint this case');
+      [l[1], l[2]] = [l[2], l[1]];
+    },
+    expect: 'strictly ascending',
+  },
+  {
+    name: 'a duplicated rung is refused, because ascending means strictly',
+    file: 'equipment.json',
+    mutate: (e) => {
+      const l = e.portable.dumbbells.ladderLb;
+      l[2] = l[1];
+    },
+    expect: 'strictly ascending',
+  },
+  {
+    name: 'a ladder claiming a weight heavier than the rack holds is refused',
+    file: 'equipment.json',
+    mutate: (e) => {
+      const d = e.portable.dumbbells;
+      d.ladderLb = [...d.ladderLb, Number(d.range.maxLb) + 5];
+    },
+    expect: 'tops out at',
+  },
+  {
+    name: 'a ladder with no provenance is refused',
+    file: 'equipment.json',
+    mutate: (e) => {
+      delete e.portable.dumbbells.ladderConfidence;
+    },
+    expect: '"ladderConfidence" must be one of',
+  },
+  {
     name: 'a station question with a bad due date is refused',
     file: 'equipment.json',
     mutate: (e) => {

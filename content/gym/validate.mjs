@@ -97,7 +97,25 @@ const REQUIRED_EX_FIELDS = ['id', 'name', 'sets', 'reps', 'rest', 'cue', 'zone',
  * Declared rather than sniffed, because a band is `bodyweight: true` and would sail through any
  * rule that inferred "bodyweight means reps progress". An author adding one now has to write down
  * which number moves, and for a band there is no true answer to write. */
-const PROGRESSION = new Set(['weight', 'reps', 'time']);
+/* `fixed` added 2026-08-29, and it exists because of ONE SENTENCE FROM HIM:
+ *
+ *   "I NEVER KNEW 3 REPS WAS A THING I JUST THOUGHT I SHOULD DO AS MANY AS I CAN."
+ *
+ * The box jump card said 3 x 3 and he logged 10 reps a set, three sessions running. The card was
+ * right; nobody had ever told him why the number was low, so he read it as a floor. And the engine
+ * agreed with him: `progression: "reps"` on a bodyweight lift means "add a rep where you can", so
+ * once his log said 10 the card asked for 10, and every gate stayed green while the app and the cue
+ * gave opposite instructions on the same screen.
+ *
+ * A PLYOMETRIC DOES NOT PROGRESS ON REPS AND THE EVIDENCE FILE ALREADY SAID SO. Section 4 of
+ * HealthOS/knowledge/training-programme-evidence.md, on Deng 2024: "Progress by quality and contact
+ * count, not height or distance." Contact count is SETS. The fourth jump in a set is slower than
+ * the first, and a slow jump trains something else. So the rep count is a ceiling set by a person
+ * and the engine may not move it in either direction.
+ *
+ * This is a third state, not a rename of `reps`: `weight` and `reps` and `time` all say WHICH
+ * NUMBER THE ENGINE MAY RAISE, and `fixed` says there is not one. */
+const PROGRESSION = new Set(['weight', 'reps', 'time', 'fixed']);
 const REQUIRED_ALT_FIELDS = ['id', 'name', 'cue', 'zone', 'station'];
 const ROLES = new Set(['primer', 'main', 'accessory']);
 // 'fill' added 2026-08-21: the partner is done inside the lift's rest gaps. It is bound by the SAME
@@ -147,6 +165,36 @@ const TAG_PROSE = new Set([
 ]);
 
 // ---------------------------------------------------------------------------------------------
+/* ------ A LADDER IS READ POSITIONALLY, SO ITS ORDER IS LOAD-BEARING. Added 2026-08-29.
+ *
+ * `portable.<thing>.ladderLb` is the list of weights that exist for an implement, and both readers
+ * take the FIRST entry above the working weight and the LAST entry below it. An unsorted array, a
+ * duplicate or a zero does not throw anywhere: it returns a weight that is silently wrong, on a
+ * card, at the rack. `suggest()` and `ladder.ts` both sort defensively at the seam, and this is why
+ * neither of those sorts is the real protection: a stored file nobody can read in order is a file
+ * whose next editor inserts a rung in the wrong place and sees every gate stay green. */
+for (const [key, item] of Object.entries(equipment.portable ?? {})) {
+  if (!item || item.ladderLb === undefined) continue;
+  const at = `portable "${key}"`;
+  const l = item.ladderLb;
+  if (!Array.isArray(l) || l.length < 2) {
+    fail('equipment.json', `${at}: "ladderLb" must be an array of at least two weights, got ${JSON.stringify(l)}`);
+    continue;
+  }
+  if (!l.every((n) => typeof n === 'number' && Number.isFinite(n) && n > 0)) {
+    fail('equipment.json', `${at}: every entry in "ladderLb" must be a positive number, got ${JSON.stringify(l)}`);
+  }
+  if (!l.every((n, i) => i === 0 || n > l[i - 1])) {
+    fail('equipment.json', `${at}: "ladderLb" must be strictly ascending, and it is read positionally in two places. Got ${JSON.stringify(l)}`);
+  }
+  if (item.range?.maxLb != null && l[l.length - 1] > item.range.maxLb) {
+    fail('equipment.json', `${at}: "ladderLb" tops out at ${l[l.length - 1]} but "range.maxLb" says ${item.range.maxLb}. One of the two is wrong and the safe direction is the lower: a rung that is not on the rack sends him looking for it.`);
+  }
+  if (!item.ladderConfidence || !Object.keys(equipment.confidenceLevels || {}).includes(item.ladderConfidence)) {
+    fail('equipment.json', `${at}: "ladderConfidence" must be one of ${Object.keys(equipment.confidenceLevels || {}).join(', ')}, got ${JSON.stringify(item.ladderConfidence ?? null)}. A list of weights with no provenance is exactly the kind of "you have this" the safe-defaults rule in this file's own header refuses.`);
+  }
+}
+
 /** The closed set of subjects an `open` question may be about. See the long note under
  *  `checkOpenRow` below for why this exists and what it makes representable. */
 const OPEN_TOPICS = new Set(['placement', 'cue', 'prescription', 'equipment', 'volume']);

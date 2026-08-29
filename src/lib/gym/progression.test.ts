@@ -125,6 +125,116 @@ check(
   '160: the assistance flag must not leak into normal lifts',
 );
 
+/* ---- the rack, which is a list and not a step size --------------------------------------------- */
+
+/** His rack, as he described it on 2026-08-28. Duplicated here ON PURPOSE rather than imported from
+ *  equipment.json: a test that reads the same file as the code under test asserts only that the code
+ *  agrees with itself, which is the fault `content/kitchen/validate.mjs` had for a week when it
+ *  compared a step's text against a sourceText an agent had typed into the same object. */
+const RACK = [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+
+check(
+  'dumbbell at 12.5: the next rung is 15, not the 20 that rounding gave',
+  suggest(session('2026-08-25', 3, 12.5, 14), plan({
+    type: 'weighted', targetReps: 12, increment: 5, ladder: RACK,
+  })),
+  (s) => s.weight === 15,
+  '15, a dumbbell that is on the rack. +5 then round-to-nearest-5 returned 20 and skipped two',
+);
+
+check(
+  'dumbbell at 17.5: still 2.5 lb steps below 20',
+  suggest(session('2026-08-25', 3, 17.5, 14), plan({
+    type: 'weighted', targetReps: 12, increment: 5, ladder: RACK,
+  })),
+  (s) => s.weight === 20,
+  '20',
+);
+
+check(
+  'dumbbell at 20: the step becomes 5 without anything being told it changed',
+  suggest(session('2026-08-25', 3, 20, 14), plan({
+    type: 'weighted', targetReps: 12, increment: 5, ladder: RACK,
+  })),
+  (s) => s.weight === 25,
+  '25, because 22.5 is not on this rack',
+);
+
+check(
+  'dumbbell at 90: the answer is 90, not a dumbbell that does not exist',
+  suggest(session('2026-08-25', 3, 90, 14), plan({
+    type: 'weighted', targetReps: 12, increment: 5, ladder: RACK,
+  })),
+  (s) => s.weight === 90,
+  '90, the heaviest in the building. 95 sends him looking for something that is not there',
+);
+
+check(
+  'an unsorted rack still answers correctly, because the engine sorts what it is given',
+  suggest(session('2026-08-25', 3, 12.5, 14), plan({
+    type: 'weighted', targetReps: 12, increment: 5, ladder: [20, 10, 17.5, 15, 12.5],
+  })),
+  (s) => s.weight === 15,
+  '15: read positionally, an unsorted array returns a wrong weight rather than throwing',
+);
+
+check(
+  'a deload lands ON a rung, and never rounds UPWARD off one',
+  suggest(session('2026-08-27', 3, 30, 8), plan({
+    type: 'weighted', targetReps: 8, increment: 5, ladder: RACK,
+    recent: [session('2026-08-27', 3, 30, 8), session('2026-08-23', 3, 30, 8), session('2026-08-18', 3, 30, 8)],
+  })),
+  (s) => s.weight === 25,
+  '25: 90% of 30 is 27, and the rung at or below it is 25. A deload that rounds up is not one',
+);
+
+check(
+  'no ladder supplied: the barbell and the cable stacks are untouched',
+  suggest(session('2026-08-22', 3, 155, 7), plan({ type: 'weighted', targetReps: 5, increment: 5 })),
+  (s) => s.weight === 160,
+  '160, the same answer as before the ladder existed',
+);
+
+check(
+  'a 2.5 lb cable stack with no ladder still steps by 2.5',
+  suggest(session('2026-08-22', 3, 80, 14), plan({ type: 'weighted', targetReps: 12, increment: 2.5 })),
+  (s) => s.weight === 82.5,
+  '82.5: the pin positions the single increment already describes correctly',
+);
+
+/* ---- a rep count a person set, which the engine may not move ----------------------------------- */
+
+check(
+  'box jump: a fixed rep count holds at 3 even though his log says 10',
+  suggest(session('2026-08-27', 3, null, 10), plan({ type: 'bodyweight', targetReps: 3, fixedReps: true })),
+  (s) => s.reps === 3,
+  '3. The "never suggest fewer than he did" floor is the right rule everywhere except here, where '
+  + 'his 10 is the thing being corrected: "I never knew 3 reps was a thing"',
+);
+
+check(
+  'box jump: the card says WHY it is three, because the bare number is what he read as a floor',
+  suggest(session('2026-08-27', 3, null, 10), plan({ type: 'bodyweight', targetReps: 3, fixedReps: true })),
+  (s) => /SETS/.test(s.reason) && /fast/.test(s.reason),
+  'a reason naming sets as the lever and speed as the point',
+);
+
+check(
+  'box jump: a long logging gap does not turn it into a probe either',
+  suggest(session('2026-06-01', 3, null, 10), plan({
+    type: 'bodyweight', targetReps: 3, fixedReps: true, today: '2026-08-29',
+  })),
+  (s) => s.reps === 3,
+  '3: the gap probe adds a rep, which is the same defect arriving by another branch',
+);
+
+check(
+  'a bodyweight lift WITHOUT the flag still progresses on reps',
+  suggest(session('2026-08-25', 3, null, 9), plan({ type: 'bodyweight', targetReps: 8 })),
+  (s) => s.reps === 10,
+  '10: the flag must not leak into the pushup',
+);
+
 console.log('-'.repeat(70));
-console.log(`8 cases, ${failed} failed`);
+console.log(`20 cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);

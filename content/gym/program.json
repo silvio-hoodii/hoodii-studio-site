@@ -126,14 +126,14 @@
             {
               "id": "box-jump",
               "name": "Box Jump",
-              "sets": 3,
+              "sets": 5,
               "reps": "3",
-              "rest": "90s",
+              "rest": "60s",
               "zone": "benchDb",
               "station": "box",
               "bodyweight": true,
               "log": true,
-              "cue": "Stand a forearm's length from the box. Swing the arms back, bend the knees about a quarter of the way, and jump ONTO the box. Land with both feet flat and knees bent, quietly. Then STEP down one foot at a time, never jump down. Success looks like: you hear almost nothing when you land, and you could hold the landing still for two seconds. If you land with a thud or stumble, the box is too high. Three reps only, because this is about speed, not tiredness.",
+              "cue": "THREE JUMPS A SET, AND THAT IS THE WHOLE SET. Not as many as you can: three, then stop and rest. This is the one exercise here where being tired makes it worse rather than better, because what you are training is how fast you leave the floor, and the fourth jump is always slower than the first. A slow jump is just a squat you did standing up. Five sets of three is fifteen jumps, and every one of them should feel like the first. HOW TO DO IT. Stand a forearm's length from the box. Swing the arms back, bend the knees about a quarter of the way, and jump ONTO the box. Land with both feet flat and knees bent, quietly. Then STEP down one foot at a time, never jump down. Success looks like: you hear almost nothing when you land, and you could hold the landing still for two seconds. If you land with a thud or stumble, the box is too high. If the third jump feels slower than the first, rest longer before the next set rather than pushing through.",
               "alts": [
                 {
                   "id": "lateral-bound",
@@ -160,18 +160,18 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps",
+              "progression": "fixed",
               "open": [
                 {
                   "topic": "prescription",
-                  "q": "The card says 3 sets of 3 and on 2026-08-27 you logged 10 reps a set. One of the two is wrong and nobody has established which. Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
+                  "q": "THIS IS THE HALF YOUR RULING DID NOT SETTLE, and it is note #20 again. You are at five sets of three now, up from three sets, because contact count is the one progression the evidence file actually supports (Deng 2024: progress by quality and contact count, not height or distance). What happens when five sets is easy is NOT sourced. A taller box is not it, because stepping down removes the landing so height mostly buys a deeper tuck rather than more force; more reps is not it either, and that is the thing you just ruled on. What coaching practice does next is drop from a low box so the landing is absorbed, which is a genuinely harder exercise and a real injury question at your bodyweight, and NO trial was found for that ladder. So: when five sets of three stops feeling hard, would you rather add a sixth and seventh set, or should this stop progressing and just stay where it is?",
+                  "asked": "2026-08-29",
+                  "due": "2026-09-19"
                 }
               ]
             }
           ],
-          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, because you step down out of it instead of absorbing a landing at your bodyweight."
+          "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, because you step down out of it instead of absorbing a landing at your bodyweight. Five sets of three, not three of three, and the reps stay at three on purpose: his ruling on 2026-08-28 was \"I NEVER KNEW 3 REPS WAS A THING I JUST THOUGHT I SHOULD DO AS MANY AS I CAN\", and he had logged 10 a set for three sessions. Deng is dosed in sessions a week and the same evidence file progresses a jump by quality and contact count rather than height or distance, so contact count is the lever: 15 jumps instead of 9, each one still fast. Rest drops to 60s because three jumps cost almost nothing to recover from, which keeps five sets inside the time three sets used."
         },
         {
           "role": "main",
@@ -968,7 +968,7 @@
               "station": null,
               "bodyweight": true,
               "log": true,
-              "cue": "Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
+              "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump on Monday: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
               "alts": [
                 {
                   "id": "box-jump",
@@ -995,13 +995,13 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "reps",
+              "progression": "fixed",
               "open": [
                 {
                   "topic": "prescription",
-                  "q": "The card says 3 sets of 4 per side. The one time it is logged, 2026-08-18, you did 4, then 6, then 6. (This question used to say \"3 sets of 3\" and cite a session on 2026-08-27, and both were wrong: it was copied from the box jump row, where both are true. Corrected 2026-08-28 against gym_set.) Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
+                  "q": "SAME QUESTION AS THE BOX JUMP, and your ruling on that one probably answers it. The card says 3 sets of 4 per side. The one time it is logged, 2026-08-18, you did 4, then 6, then 6, which is the same \"as many as I can\" the box jump turned out to be. The reps here are now fixed the way the box jump's are, so the app will stop asking for more of them. What is left is how many SETS. (a) MATCH THE BOX JUMP: 5 sets of 3 per side, 30 contacts. Cost: it is the most jumping in the week and it sits in front of a Romanian deadlift, so if Thursday already feels long this is where the length comes from. (b) 4 SETS OF 3 PER SIDE, 24 contacts, the same as the card gives you today but in shorter, faster sets. Cost: nothing, and it is the smaller change. (c) LEAVE IT at 3 x 4 per side. Cost: the last rep of a 4 is already the slow one, which is the thing you now know is worth avoiding. Which?",
+                  "asked": "2026-08-29",
+                  "due": "2026-09-19"
                 }
               ]
             },

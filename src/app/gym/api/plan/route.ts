@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getLastSession, getRecentSessions } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
+import { ladderFor, hasFixedReps } from '@/lib/gym/ladder';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -53,6 +54,14 @@ export async function POST(req: Request) {
           increment: ex.increment,
           rangeWidth: ex.rangeWidth,
           assistance: ex.assistance,
+          /* DERIVED HERE, NOT SENT. Twice now a field the client sent, `PlanInput` declared and
+             this interface omitted was dropped in the middle with nothing to notice: `rangeWidth`
+             sat dead for five days and `assistance` was added in the same commit that documented
+             the hazard. The rack is a fact about the building, identical for every caller, and
+             `movements.json` already knows which lifts are dumbbells. So the seam that keeps
+             failing is removed rather than widened: nothing about the ladder crosses the wire. */
+          ladder: ladderFor(ex.id),
+          fixedReps: hasFixedReps(ex.id),
           today: date,
           recent: recent.slice(0, 3),
         });
