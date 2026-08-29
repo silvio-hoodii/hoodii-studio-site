@@ -451,6 +451,94 @@ const CASES = [
   },
   /* ---- A BLOCK LABEL MAY NOT COUNT. His note #34, 2026-08-28: "second to what?" ---------------- */
   {
+    /* HIS OWN CARD, 2026-08-29. "Hamstrings + Calves" is a sequence, and he called it "impossible
+     * leg curl with calf machine raise" in the same message that asked why the vertical rule was
+     * missing from it. It was missing because the block is not a pair. */
+    name: 'a sequence labelled with a plus is refused',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => x.pairing === 'sequence' && (x.exercises || []).length >= 2);
+      if (!b) throw new Error('no sequence block; repoint this case');
+      b.label = 'Hamstrings + Calves';
+      b.tag = '(machine, then the other machine)';
+    },
+    expect: 'reads as "do these together"',
+  },
+  {
+    name: 'a sequence that never says "then" is refused',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => x.pairing === 'sequence' && (x.exercises || []).length >= 2);
+      if (!b) throw new Error('no sequence block; repoint this case');
+      b.label = 'Hamstrings and Calves';
+      b.tag = '(machine)';
+    },
+    expect: 'never says "then"',
+  },
+  {
+    name: 'a fill block with a plus in its label is still fine, because it IS a pair',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => x.pairing === 'fill' && (x.exercises || []).length >= 2);
+      if (!b) throw new Error('no fill block; repoint this case');
+      b.label = 'Single Leg + Anti-Lean';
+    },
+    expect: null,
+  },
+  {
+    /* `upper b` MATCHED "UPPER BACK". Thursday's solo front squat carried "The reverse fly rides in
+     * the rest because a front squat uses nothing in the upper back", and the sentence exempted
+     * itself from the stale-exercise gate using an anatomical noun. */
+    name: 'a body part may not stand in for a day and exempt a stale clause',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => (x.exercises || []).length === 1 && x.why);
+      if (!b) throw new Error('no solo block with a why; repoint this case');
+      b.why = `${b.why} The Copenhagen Plank works the upper back here.`;
+    },
+    expect: 'not in this block',
+  },
+  {
+    name: 'a real cross-reference to another day still passes',
+    mutate: (p) => {
+      // Copenhagen Plank is on Thursday, so a Monday block may name it AS BEING on Thursday.
+      const b = p.days.monday.blocks.find((x) => x.why);
+      b.why = `${b.why} The Copenhagen Plank is on Thursday, not here.`;
+    },
+    expect: null,
+  },
+  {
+    name: 'a cross-reference to a day that does NOT have the exercise is refused',
+    mutate: (p) => {
+      const b = p.days.monday.blocks.find((x) => x.why);
+      b.why = `${b.why} The Copenhagen Plank is on Friday, not here.`;
+    },
+    expect: 'it is not there either',
+  },
+  {
+    /* The lunge block, which the clause above cannot catch: "dead bugs in the rest gaps for the same
+     * reason as Tuesday" names a day that really does have dead bugs. What is checkable without
+     * semantics is that a block of one has no rest for anything to ride in. */
+    name: 'a solo block whose why says something rides in its rest is refused',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => (x.exercises || []).length === 1 && x.why);
+      if (!b) throw new Error('no solo block with a why; repoint this case');
+      b.why = `${b.why} The carry rides in the rest here.`;
+    },
+    expect: 'Nothing is in its rest',
+  },
+  {
+    name: 'a PAIRED block whose why says something rides in its rest is fine',
+    mutate: (p) => {
+      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((x) => (x.exercises || []).length === 2 && x.pairing === 'fill');
+      if (!b) throw new Error('no paired fill block; repoint this case');
+      b.why = `${b.why} The ${b.exercises[1].name} rides in the rest.`;
+    },
+    expect: null,
+  },
+  {
     name: 'a label that counts is refused',
     mutate: (p) => {
       /* The block is FOUND rather than named, for the reason the donor block above is: seven labels

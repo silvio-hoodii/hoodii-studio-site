@@ -611,8 +611,8 @@
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Vertical Pull",
-          "tag": "(cable)",
+          "label": "Vertical Pull, then Triceps",
+          "tag": "(cable, then the same cable)",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -860,8 +860,8 @@
         {
           "role": "accessory",
           "pairing": "sequence",
-          "label": "Anti-Rotation + Rear Delts",
-          "tag": "(cable)",
+          "label": "Anti-Rotation, then Rear Delts",
+          "tag": "(cable, then the same cable)",
           "exercises": [
             {
               "id": "cable-pallof",
@@ -1151,10 +1151,18 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight"
+              "progression": "weight",
+              "open": [
+                {
+                  "topic": "prescription",
+                  "q": "YOUR WORDS: \"Front Squat at 2 sets seems like a waste, why would I do 2 sets of anything.\" The reason exists and had never been put on the card, which is now fixed: two exposures of a pattern beat one at the SAME weekly volume (Pelland 2025), so the second visit is a second visit and not extra work, and quadriceps already sit at 23 fractional sets a week against an efficient zone topping out at 10. BUT THE REASON DOES NOT MAKE IT WORTH DOING and that part is yours: two sets of a rack lift still costs walking to the rack, loading a bar and a warm-up ramp, and the setup is the same for two sets as for four. THREE OPTIONS. (a) KEEP IT AT TWO. Cost: you keep paying the setup for two working sets, which is exactly what annoyed you. (b) RAISE IT TO FOUR. Cost: quads go 23 to 25, and Thursday gets longer by about six minutes at 2 min rests. Past the efficient zone means each extra set buys less, not that it hurts. (c) DROP THE BLOCK. Cost: the squat pattern goes back to once a week, which is the one thing the frequency evidence is actually about, and Thursday loses 2 quad sets. It also frees the rack and about eight minutes. The same question applies to the DB Romanian Deadlift on Monday, which is also two sets, so answer once and both move. Which?",
+                  "asked": "2026-08-29",
+                  "due": "2026-09-12"
+                }
+              ]
             }
           ],
-          "why": "The week second squat, and a different lift rather than a lighter copy of Monday: the front squat carries its own weight and its own history. Same frequency argument as the second hinge on Lower A. The reverse fly rides in the rest because a front squat uses nothing in the upper back except to hold position, and the rest was being spent either way."
+          "why": "The week's second squat, and a different lift rather than a lighter copy of Monday: the front squat carries its own weight and its own history. Same frequency argument as the second hinge on Lower A: Pelland 2025 raises strength by training a pattern twice at the SAME weekly volume, so the second exposure is a second visit, not extra work. That is why it is two sets and not four. Quadriceps already sit at 23 fractional sets a week against an efficient zone that tops out at 10, so four here would buy almost nothing and cost the time. If two sets of a rack lift is not worth the walk and the warm-up ramp, the honest fix is to drop the block, not to pad it."
         },
         {
           "role": "accessory",
@@ -1191,10 +1199,18 @@
                 }
               ],
               "progression": "weight",
-              "rangeWidth": 6
+              "rangeWidth": 6,
+              "open": [
+                {
+                  "topic": "placement",
+                  "q": "YOUR RULING, AND IT WAS RECORDED AND NOT ACTED ON: \"IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE.\" This block is the only accessory in the week that breaks it. The box jump primer is also alone, deliberately, because anything in a jump's rest makes the next jump slower, which is the whole point of the exercise; say if you want that changed too. THE REASON THIS WAS NOT JUST FIXED IS ARITHMETIC, and it is worth seeing. Run node scripts/gym-catalogue.mjs --fill: nine blocks in the week are a single lift with an empty rest, filling them all costs 28 sets, and the muscles still under the efficient zone have 6 sets of headroom BETWEEN THEM (chest 3, calves 1, side delts 1, erectors 0.5, front delts 0.5). Every exercise already in the week that could ride in this rest is currently the second half of some other pair, so moving it here just moves the hole. FOUR OPTIONS. (a) LEAVE IT ALONE and accept that one accessory runs solo. Cost: a 90 second rest you spend standing there, which is the thing you dislike. (b) MOVE THE COPENHAGEN PLANK here from the block above it. Cost: zero new sets, it is the only move that stays on Thursday, and the single-leg RDL is then the solo one instead. (c) ADD something new, most cheaply a pushup, which is the only movement with real headroom left (chest 7 to 10). Cost: 3 new sets and a chest exercise on a leg day. (d) DROP THE LUNGE BLOCK. Cost: quads 23 to 20 and glutes 29.5 to 26.5, both still past the zone, and Thursday gets about seven minutes shorter. Which?",
+                  "asked": "2026-08-29",
+                  "due": "2026-09-12"
+                }
+              ]
             }
           ],
-          "why": "Single-leg work, dead bugs in the rest gaps for the same knee-valgus reason as Tuesday."
+          "why": "Single-leg work, for the knee-valgus reason: the loaded single-leg pattern is what frontal-plane control is trained with, and it is injury insurance for the running. It runs on its own at the moment, which is a gap rather than a decision."
         },
         {
           "role": "accessory",
@@ -1279,8 +1295,8 @@
         {
           "role": "accessory",
           "pairing": "sequence",
-          "label": "Hamstrings + Calves",
-          "tag": "(machine)",
+          "label": "Hamstrings, then Calves",
+          "tag": "(machine, then the other machine)",
           "exercises": [
             {
               "id": "leg-curl",
@@ -1546,8 +1562,8 @@
         {
           "role": "accessory",
           "pairing": "sequence",
-          "label": "Swim Catch + Triceps",
-          "tag": "(cable)",
+          "label": "Swim Catch, then Triceps",
+          "tag": "(cable, then the same cable)",
           "exercises": [
             {
               "id": "straight-arm-pulldown",

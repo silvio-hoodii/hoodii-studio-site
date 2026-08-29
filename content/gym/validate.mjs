@@ -162,6 +162,9 @@ const TAG_PROSE = new Set([
   'a', 'and', 'first', 'fresh', 'never', 'tired', 'same', 'technique', 'only', 'its', 'own',
   'dumbbell', 'dumbbells', 'on', 'the', 'floor', 'right', 'there', 'sideways', 'then', 'seat',
   'walk', 'in', 'hand', 'at', 'to', 'no', 'kit', 'up', 'of', 'per', 'side', 'light', 'heavy',
+  // Added 2026-08-29 with the sequence relabelling. "the other machine" claims nothing about what
+  // equipment is present; the word `machine` beside it is what carries the claim and is tested.
+  'other',
 ]);
 
 // ---------------------------------------------------------------------------------------------
@@ -554,22 +557,84 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       const TOO_GENERIC = new Set(["pull-up", "pushup", "plank", "carry", "squat", "row", "curl", "hinge", "press", "jump", "machine", "raise", "extension", "fly", "bound", "lunge", "hold"]);
       const named = [...catalogue].filter((n) => n.length >= 6 && !TOO_GENERIC.has(n)).sort((a, b) => b.length - a.length);
 
-      const DAY_WORD = /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|lower a|lower b|upper a|upper b)/i;
+      /* `upper b` MATCHED "UPPER BACK", AND THAT IS HOW TWO STALE CLAUSES SURVIVED THIS GATE.
+       *
+       * Silvio found one of them on the card, 2026-08-29: Thursday's front squat block is a SOLO
+       * lift and its reason read "The reverse fly rides in the rest because a front squat uses
+       * nothing in the UPPER BACK except to hold position". There is no reverse fly in that block.
+       * The gate skips any sentence naming another day, because a cross-reference is legal, and
+       * "upper b" is a substring of "upper back". So the sentence exempted ITSELF, using a body part.
+       * `lower b` does the same to "lower back", and `upper a`/`lower a` would to any word starting
+       * with those letters.
+       *
+       * Word boundaries, and an explicit refusal of the two body words that follow. A gate whose
+       * escape hatch can be opened by an anatomical noun is a gate that checks less than it claims,
+       * which is theme T6 of the 2026-08-28 audit and is now three for three on this file. */
+      const DAY_WORD = /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab])\b(?!\s*(?:back|body))/i;
+
+      /* AND NAMING A DAY IS NO LONGER A BLANK CHEQUE. 10-gym P1-9 proposed this and it was never
+       * built: a `why` that names a weekday must name something ACTUALLY ON THAT DAY. Thursday's
+       * lunge block read "Single-leg work, dead bugs in the rest gaps for the same knee-valgus
+       * reason as Tuesday" and there are no dead bugs in it. The cross-reference was doing two jobs
+       * at once, one true (Tuesday has dead bugs) and one false (so does this block), and the
+       * exemption covered both. So a mention is forgiven only if the exercise is in THIS block or on
+       * the day the sentence names. */
+      const DAY_OF = { monday: 'monday', tuesday: 'tuesday', thursday: 'thursday', friday: 'friday',
+        'lower a': 'monday', 'upper a': 'tuesday', 'lower b': 'thursday', 'upper b': 'friday' };
+      const namesOn = (dayKey) => {
+        const s = new Set();
+        for (const b of program.days?.[dayKey]?.blocks ?? []) {
+          for (const ex of b.exercises ?? []) {
+            for (const nm of [MOVEMENTS[ex.id]?.name, ex.name, ...(ex.alts ?? []).map((a) => a.name)].filter(Boolean)) {
+              s.add(String(nm).toLowerCase());
+              s.add(stripImplement(String(nm).toLowerCase()));
+            }
+          }
+        }
+        return s;
+      };
+
       const sentences = block.why.split(/(?<=[.!?])\s+/);
-      const absent = new Set();
+      const absent = new Map();
 
       for (const sentence of sentences) {
-        if (DAY_WORD.test(sentence.toLowerCase())) continue;               // a cross-reference, and it says so
-        let remaining = sentence.toLowerCase();
+        const low = sentence.toLowerCase();
+        const m = low.match(DAY_WORD);
+        const target = m ? DAY_OF[m[1].toLowerCase()] : null;
+        const elsewhere = target ? namesOn(target) : null;
+        let remaining = low;
         for (const n of named) {
           if (!remaining.includes(n)) continue;
           remaining = remaining.split(n).join(' ');           // longest name wins over its suffix
-          if (![...present].some((pn) => pn.includes(n) || n.includes(pn))) absent.add(n);
+          if ([...present].some((pn) => pn.includes(n) || n.includes(pn))) continue;
+          if (elsewhere && [...elsewhere].some((pn) => pn.includes(n) || n.includes(pn))) continue;
+          absent.set(n, target);
+        }
+      }
+
+      /* A BLOCK OF ONE HAS NO REST FOR ANYTHING TO RIDE IN, and that is checkable without knowing
+       * which exercise is meant.
+       *
+       * The clause above catches "names an exercise that is not here". It does NOT catch Thursday's
+       * lunge block, whose whole `why` is "Single-leg work, dead bugs in the rest gaps for the same
+       * knee-valgus reason as Tuesday": dead bugs really are on Tuesday, so the cross-reference is
+       * true, and it is wrapped around a claim about THIS block that is false. Telling those two
+       * readings apart is semantics and any proximity rule for it would produce the kind of
+       * confident wrong finding this file has been bitten by twice.
+       *
+       * This is the part that needs no semantics. If the block holds one exercise, nothing is in its
+       * rest, whatever the sentence calls it. */
+      if (block.exercises.length === 1) {
+        const RIDES = /\b(rides in the rest|in the rest gaps?|in its rest|during the (?:first|lead)|goes in (?:its|the) rest|in the rest window)\b/i;
+        const m = block.why.match(RIDES);
+        if (m) {
+          fail(where, `this block holds ONE exercise (${block.exercises[0].name}), and its "why" says something "${m[0]}". Nothing is in its rest. The partner was removed and the reasoning was left behind, which is the state he reads as the app having lost track of itself.`);
         }
       }
 
       if (absent.size) {
-        fail(where, `the block's "why" names ${[...absent].map((a) => `"${a}"`).join(', ')}, which ${absent.size === 1 ? 'is' : 'are'} not in this block and not marked as being on another day. Its exercises are: ${block.exercises.map((e) => e.name).join(', ')}. Remove the clause, or name the day it is actually on. A reason that describes something he cannot see on the card is a false statement about his own screen.`);
+        const parts = [...absent].map(([n, t]) => `"${n}"${t ? ` (the sentence points at ${t}, and it is not there either)` : ''}`);
+        fail(where, `the block's "why" names ${parts.join(', ')}, which ${absent.size === 1 ? 'is' : 'are'} not in this block. Its exercises are: ${block.exercises.map((e) => e.name).join(', ')}. Remove the clause, or name the day it is actually on. A reason that describes something he cannot see on the card is a false statement about his own screen.`);
       }
     }
 
@@ -795,6 +860,33 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         + '"second to what?". Name the pattern in the label and put the other exposure in the "why", '
         + 'which is where every one of these already was.',
       );
+    }
+
+    /* ------ A SEQUENCE SAYS "THEN". Added 2026-08-29, and he found it by reading his own card.
+     *
+     * Six blocks are `sequence`, which means finish the first exercise and then walk to the second.
+     * Three were labelled "A, then B" and three "A + B", and the page renders the two identically
+     * apart from one thin vertical rule down the side of a pair. His words: "if its a superset
+     * theres a line on the side thats not present on the last superset", and in the same breath
+     * "impossible leg curl with calf machine raise" about "Hamstrings + Calves", which is a sequence
+     * and always was.
+     *
+     * SO THE ONE SIGNAL THAT SEPARATES THEM WAS READ AS A FORMATTING BUG. The data was right, the
+     * one-station gate was right, and `howToRun` printed the correct sentence under both, in the same
+     * grey, in the same place, saying opposite things. That is the reach failure this whole surface
+     * keeps producing: note #27 was fixed on 2026-08-28 by making Tuesday's pulldown block a
+     * sequence, and he saw a screen that looked exactly like the one he had complained about.
+     *
+     * A `+` between two exercises means "these two go together". A sequence is the opposite claim,
+     * so it may not use one, and it must say the word that carries the meaning. */
+    if (block.pairing === 'sequence' && block.exercises.length >= 2) {
+      const joined = `${label} ${block.tag || ''}`.toLowerCase();
+      if (/\s[+&]\s/.test(label)) {
+        fail(where, `sequence block labelled "${label}", and a "+" between two exercises reads as "do these together". This block is the opposite: the second starts after the first is finished. Say "then".`);
+      }
+      if (!/\bthen\b/.test(joined)) {
+        fail(where, `sequence block "${label}" ${block.tag ? `tagged "${block.tag}" ` : ''}never says "then". On the page a sequence and a superset differ by one vertical rule, and he read that rule as a formatting inconsistency while calling a sequence "impossible". The label or the tag has to carry the word.`);
+      }
     }
 
     if (block.exercises.length === 1) {
