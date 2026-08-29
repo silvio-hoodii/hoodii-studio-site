@@ -26,6 +26,20 @@
   display: block;
   text-decoration: none;
 }
+/* AN EYEBROW THAT IS A LINK IS A TAP TARGET, and the two cases were styled identically.
+ *
+ * `.eyebrow` is a label on /health/login and a back link on /health/deep, and at 12px it renders 18px
+ * tall either way. `probe-taps.mjs` caught the link one the day it was added, 18px against the 44px
+ * floor, which is the one control on that page a thumb aims at.
+ *
+ * Scoped to `a.eyebrow` rather than `.eyebrow`, so the fix follows the thing that makes it a control
+ * instead of following the class name. A label does not need 44px and giving it 44px would open a
+ * hole in the middle of a login form. Any future eyebrow link is covered without anyone remembering. */
+.training a.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .training a.eyebrow:hover { color: var(--foreground); }
 
 /* h1 comes from globals.css: one scale for the whole site. */

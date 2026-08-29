@@ -105,7 +105,12 @@ if (!BASE) {
  * controls, and measuring only the default tab is how six of eight surfaces go unmeasured. */
 const DEFAULT_PATHS = [
   '/',
-  '/health', '/health?s=weight', '/health?s=plan', '/health?s=volume',
+  /* `?s=now` is listed even though bare `/health` now resolves to it no longer: the default moved
+     from Now to Weight on 2026-08-28 and the bare path stopped covering the streak tab, so a tab
+     with three blocks in it would have gone unmeasured on the strength of a list written when the
+     default was something else. Measure the tab, not the default. */
+  '/health', '/health?s=weight', '/health?s=now', '/health?s=plan', '/health?s=volume',
+  '/health/deep',
   '/gym',
   '/swim', '/swim?s=plan', '/swim?s=how', '/swim?s=coachme', '/swim?s=coachthem',
   '/swim/deep',
@@ -114,7 +119,11 @@ const DEFAULT_PATHS = [
   '/kitchen', '/kitchen/find', '/kitchen/shop', '/kitchen/want',
   '/french', '/curio', '/music',
   '/reading', '/reading/shelf', '/reading/want', '/reading/about', '/reading/finished',
-  '/work',
+  /* THE FOUR CASE STUDIES, ONE PATH EACH. This list said `/work` until 2026-08-28 and THERE IS NO
+     `/work` ROUTE: it renders the 404, which has a header, a heading and one link, and the old
+     readiness gate passed it as a measured surface for as long as the list has existed. So four
+     published pages went unmeasured while the run reported covering them. */
+  '/work/brixel', '/work/kitchen', '/work/themoment', '/work/versatile',
 ];
 const PATHS = process.argv.length > 3 ? process.argv.slice(3) : DEFAULT_PATHS;
 
@@ -299,7 +308,21 @@ const MEASURE = `JSON.stringify((function () {
       height: document.body.scrollHeight,
       overflow: doc.scrollWidth - window.innerWidth,
       tabs: tabInfo,
-      small: small
+      small: small,
+      /* PROOF THE PAGE RENDERED, and it is not the height. See the readiness gate below: the height
+         floor was 300px against an 844px emulated viewport, so a page that had not painted reported
+         exactly 844 and cleared the floor. These two cannot be produced by an unpainted document.
+         Every page on this site has a header, a nav and a footer, so the anchor count is never
+         zero and the body text is never short on a page that actually arrived. */
+      controls: document.querySelectorAll('a,button,summary,input,select,textarea').length,
+      chars: (document.body.innerText || '').length,
+      /* WHAT THE BROWSER ACTUALLY GOT, so a failure names its own cause. Without these three, every
+         non-arrival printed the same "rendered nothing measurable", and the three causes seen on one
+         run needed a screenshot each to tell apart: a 404 (title "Silvio Neyra", "Nothing lives at
+         this address"), a firewall challenge, and a page that had simply not painted yet. */
+      title: document.title || '',
+      href: String(location.href),
+      head: (document.body.innerText || '').replace(/\\s+/g, ' ').slice(0, 120)
     };
   } catch (e) {
     return { height: 0, err: String(e && e.message || e) };
@@ -309,6 +332,9 @@ const MEASURE = `JSON.stringify((function () {
 if (process.env.PROBE_TAPS_DEBUG) console.log(`devtools port ${PORT}, chrome ${CHROME}`);
 
 let fail = 0;
+/* Tap-floor and geometry findings only, kept apart from non-arrivals so the closing advice can
+   follow the kind of failure rather than assuming every red line is a CSS problem. */
+let tapFail = 0;
 let measured = 0;
 const report = [];
 
@@ -345,24 +371,54 @@ for (const path of PATHS) {
    * page is a probe that reports whichever answer it happened to catch. */
   const key = (x) => JSON.stringify([
     x?.height ?? 0, x?.overflow ?? 0, x?.tabs?.rightEdge ?? 0, x?.tabs?.rows ?? 0, (x?.small || []).length,
+    x?.controls ?? 0, x?.chars ?? 0,
   ]);
+  /* WHETHER THE PAGE IS THERE AT ALL, and it is a THIRD false pass out of this one wait.
+   *
+   * The readiness test was `height > 300`, and the emulated viewport is 844px tall. So a document
+   * that had not painted reported `document.body.scrollHeight` of exactly 844, cleared the 300 floor,
+   * held that value across two reads, was declared stable, and passed every check: a blank page has
+   * no overflow, no clipped nav and no small controls. Measured 2026-08-28 on the live domain: a full
+   * 31-path run reported "31 of 31, 0 findings" with TWELVE paths at exactly 844px, and /curio,
+   * measured on its own moments later, is 9458px. The same twelve pass individually.
+   *
+   * The floor could be raised past 844, but that is the instance and not the class: the next viewport
+   * height would defeat it again, and a real page shorter than the floor would start failing. So the
+   * evidence is now something an unpainted document cannot produce. Every page on this site renders a
+   * header, a nav and a footer, so a rendered one always carries anchors and a page of text. */
+  const arrived = (x) => (x?.controls ?? 0) >= 3 && (x?.chars ?? 0) >= 200;
   let m = null;
   let prev = null;
   let stable = false;
   for (let i = 0; i < 30; i++) {
     m = JSON.parse((await c.evaluate(MEASURE)) || '{}');
-    if ((m.height || 0) > 300 && prev && key(m) === key(prev)) { stable = true; break; }
+    if (arrived(m) && prev && key(m) === key(prev)) { stable = true; break; }
     prev = m;
     await sleep(600);
   }
-  if (!stable && (m?.height || 0) > 300) {
+  if (!stable && arrived(m)) {
     console.log(`      (${path}: geometry never settled across 30 reads, reporting the last one)`);
   }
   c.ws.close();
   await closeTab(target.id);
 
-  if (!m || (m.height || 0) <= 300) {
-    console.log(`FAIL  ${path}  rendered nothing measurable (${m?.height ?? 0}px tall)`);
+  if (!arrived(m)) {
+    console.log(
+      `FAIL  ${path}  rendered nothing measurable (${m?.height ?? 0}px tall, ` +
+      `${m?.controls ?? 0} control(s), ${m?.chars ?? 0} char(s) of text)`,
+    );
+    /* THE THREE CAUSES SEEN ON ONE RUN, and they need telling apart before anyone edits any CSS.
+       A 404 is a wrong path in the list below. A challenge is this script tripping the site's OWN
+       firewall: rule 4 is 150 non-/_next/ requests a minute per IP and a 33-path run at full speed
+       exceeds it, so a LIVE run measures the challenge page and a local run does not. Anything else
+       is a page that never painted. */
+    console.log(`        title "${m?.title ?? ''}"  at ${m?.href ?? '(no url)'}`);
+    console.log(`        text: ${m?.head ?? ''}`);
+    if (/nothing lives at this address/i.test(m?.head ?? '')) {
+      console.log('        That is the 404. The path is not a route: fix DEFAULT_PATHS, not the CSS.');
+    } else if (/challenge|verify|checking your browser/i.test(m?.head ?? '')) {
+      console.log('        That is the Vercel firewall. Probe a local `pnpm start`, not the live domain.');
+    }
     fail++;
     continue;
   }
@@ -404,6 +460,7 @@ for (const path of PATHS) {
     console.log(`FAIL  ${path}`);
     for (const l of lines) console.log(`        ${l}`);
     fail += lines.length;
+    tapFail += lines.length;
     report.push({ path, lines });
   } else {
     const tab = m.tabs ? `, ${m.tabs.n} chips to ${m.tabs.rightEdge}px` : '';
@@ -415,9 +472,18 @@ proc.kill();
 
 console.log('-'.repeat(70));
 console.log(`${measured} of ${PATHS.length} path(s) measured at ${WIDTH}x${HEIGHT}, ${fail} finding(s)`);
-if (fail) {
+/* THE CLOSING ADVICE FOLLOWS THE KIND OF FAILURE, and it did not. Every failing run ended with
+   "raise the min-height", including the run whose only failure was a path that is a 404, which is
+   advice to edit CSS in response to a wrong entry in a list. Wrong instructions under a correct
+   finding are how a checker teaches people to ignore it. */
+if (tapFail) {
   console.log('A control under the floor is one a thumb misses while holding something else. Raise the');
   console.log('min-height, or add its selector to ALLOW in this file with the reason, which puts the');
   console.log('exception in a diff instead of in somebody\'s judgement.');
+}
+if (fail > tapFail) {
+  console.log('A path that rendered nothing is not a styling problem. Read the title and text printed');
+  console.log('under it: a 404 means the path list is wrong, a challenge means this run tripped the');
+  console.log('site firewall and belongs against a local `pnpm start`.');
 }
 process.exit(fail ? 1 : 0);

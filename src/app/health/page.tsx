@@ -18,7 +18,7 @@ import Volume from './Volume';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
-import { daysAgoText } from '@/lib/format';
+import { daysAgoText, shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
@@ -310,17 +310,20 @@ export default async function HealthPage({
                 <div className="yearline-rule">
                   Highest to lowest weight recorded in {yearBody.year}
                 </div>
+                {/* `shortDate`, not the raw ISO string. Both dates are inside the year the line
+                    above names, so the year is not ambiguous and "Feb 13" reads as a day where
+                    "2026-02-13" reads as a database. This is the one number he asked to see. */}
                 <p className="ex-cue" style={{ marginTop: 0 }}>
                   <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> on{' '}
-                  {yearBody.peak.date} down to{' '}
+                  {shortDate(yearBody.peak.date)} down to{' '}
                   <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span> on{' '}
-                  {yearBody.low.date}, which is{' '}
+                  {shortDate(yearBody.low.date)}, which is{' '}
                   <span className="tnum">{yearBody.spanDays}</span> days at{' '}
                   <span className="tnum">
                     {yearBody.kgPerWeek > 0 ? '+' : ''}{yearBody.kgPerWeek.toFixed(2)} kg
                   </span>{' '}
-                  a week. The first weigh-in of the year is {yearBody.recordStarts}, so this is the
-                  heaviest reading on record rather than the heaviest you were.
+                  a week. The first weigh-in of the year is {shortDate(yearBody.recordStarts)}, so
+                  that is the heaviest reading on record rather than the heaviest you were.
                 </p>
                 <Link href="/health/deep" className="deeplink">
                   The whole year, every measurement &rarr;

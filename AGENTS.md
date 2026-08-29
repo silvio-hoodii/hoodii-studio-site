@@ -81,7 +81,8 @@ always lose to the thing that exists.
 | `/run` | Running. Three sub-tabs on the `?s=` idiom: Now (last session the watch saw), Plan (the ten-week walk-to-run build, belt settings in both units, the week table), How (cues). Source: `conditioning.json`, unchanged in the move | no writes |
 | `/bike` | Cycling. Same three sub-tabs. **The watch records a heart rate and nothing else on a bike**, so the page says so and the resistance levels get typed instead. Source: `conditioning.json` | via `/bike/api/ride` |
 | `/bike/api/ride` | One ride: date, minutes, the resistance level he finished EACH interval on, effort, note. Writes `bike_ride`. Four levels rather than one because `conditioning.json` already tells him to write down all four, and 1 to 20 is his dial. Shipped before the form, so its gates were built while somebody was looking | **cookie** |
-| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. Three sub-tabs: Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Weight (all 8 body-composition columns, not the 2 it drew before: the fat/lean split of every kilo lost, plus watch-only muscle and water), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen), Volume (weekly fractional sets per muscle with a column per day, per lift behind a tap, and the pairings that cost the lift in front of them). Volume is the one thing on this site that answers a question he asked three times and got a document for three times, so /gym carries a one-line link to it under the finish buttons. Was a dead end nothing linked to and which linked to nothing | n/a |
+| `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. **FOUR sub-tabs, and Weight is the first and the default since 2026-08-28**, on his complaint: "as soon as I go in, it starts talking about 2 days in a row and the length of the sessions. It doesn't make sense." The hub row for this route shows his weight, so the number he tapped and the first thing he saw were about different subjects. Weight (the YEAR HEADLINE first, peak reading to lowest with the span and the rate, linking to /health/deep; then the last weigh-in, seven of the eight body-composition columns, the fat/lean split, watch-only muscle and water), Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen), Volume (weekly fractional sets per muscle with a column per day, per lift behind a tap, and the pairings that cost the lift in front of them). The default is read off `TABS[0]`, not a literal, so reordering the chips cannot leave the landing tab behind. Volume answers a question he asked three times and got a document for three times, so /gym carries a one-line link to it under the finish buttons | n/a |
+| `/health/deep` | **THE YEAR SO FAR, since 2026-08-28.** The whole of the current calendar year in one page: the weight range as a headline number, the weight and fat lines, where the kilos came off, all seven other body-composition columns (**including `bmi`, populated on every row of `health_body_comp`, mirrored on every sync run and read by nothing in this repo until now**, 09-health P2-8), attendance by discipline and by month, the longest break, last year for scale, every lift logged on two or more days with its change, and all four swim personal bests against what stood before them. Then a limits section. A ROUTE and not a fifth sub-tab, the same call /swim/deep made: the chip row has no wrap and no scroll, and this is read on the sofa rather than at the rack. Source: `src/lib/health/year.ts`, two round trips, **every figure derived and none typed**, the year itself off `today()`. It shares `getYearBody()` with the Weight tab so the two cannot print different headlines | no writes |
 | `/french` | LanguageOS review queue. Cards enter only from a page he worked | yes |
 | `/curio` | CuriosityOS archive. One-way mirror of `CuriosityOS/log.md` | no writes |
 | `/music` | Spotify charts plus a listening history that only exists because a cron writes it | no writes |
@@ -462,27 +463,44 @@ harmless, and PSN is not surfaced on the hub.
   `src/app/french/page.tsx`, where an unset secret showed every anonymous visitor the edit controls.
   The cookie is SET in two places only, `src/lib/login-server.ts` (the four login forms) and
   `/kitchen/api/unlock` (the inline unlock), and both are in that linter's allowlist by name.
-- **THE 44px TAP FLOOR IS MEASURED NOW: `node scripts/probe-taps.mjs <base-url>`.** 31 surfaces at
+- **THE 44px TAP FLOOR IS MEASURED NOW: `node scripts/probe-taps.mjs <base-url>`.** 36 surfaces at
   390px, every sub-tab of every route, checking three geometric things in one visit: every control
   against the floor, horizontal overflow, and whether the nav chip row still fits. Its first full run
   found **79 findings**, all real once narrowed, including six `Why this is here` summaries at 32px on
   /gym, which is the one control that answers the question he asks most; the warmup and cooldown at
-  16.5px, opened mid-session with one hand; and three kitchen section summaries at 22px. All 31 are
+  16.5px, opened mid-session with one hand; and three kitchen section summaries at 22px. All 36 are
   clean as of 2026-08-28 and it has been watched refusing (restoring the old `.kos .dots` CSS and
-  rebuilding makes it report the sideways scroll).
+  rebuilding makes it report the sideways scroll; pointing it at `/work` makes it report the 404).
 
-  **It is not in `verify.mjs`, for the reason the other probes are not: it needs a server.** Run it
-  the way you run the kitchen probe. Exceptions live in `ALLOW` inside the script with the reason
-  written beside each, and `PROBE_TAPS_SHOW_ALLOWED=1` prints what the list is hiding, because a broad
-  allow-regex silently swallowing dozens of findings is the failure the script exists to prevent.
+  **RUN IT AGAINST A LOCAL `pnpm start`, NOT THE LIVE DOMAIN.** A 33-path run loads enough assets to
+  trip **the site's own firewall rule 4** (150 non-`/_next/` requests a minute per IP), and the
+  challenge page it then measures is a real page that is not this site. Confirmed 2026-08-28: against
+  hoodii.studio the same paths that pass individually fail in a full run, and against localhost all 36
+  pass. It is not in `verify.mjs`, for the reason the other probes are not: it needs a server.
+  Exceptions live in `ALLOW` inside the script with the reason written beside each, and
+  `PROBE_TAPS_SHOW_ALLOWED=1` prints what the list is hiding, because a broad allow-regex silently
+  swallowing dozens of findings is the failure the script exists to prevent.
 
-  **FOUR OF ITS OWN BUGS ARE WORTH KNOWING, because three of them were false PASSES.** A Git-Bash
+  **SIX OF ITS OWN BUGS ARE WORTH KNOWING, because five of them were false PASSES.** A Git-Bash
   mangled path (`/health` became `C:/Program Files/Git/health`) measured the wrong URL and reported
   ok; it refuses now. Measuring before the webfont settled gave `/reading` a 324px chip row and
   `/reading/about` a clipped one on identical markup, so the wait is now for the geometry to stop
   changing rather than for any event. And the label-formatting regex got its escape wrong three times
   running, because an expression built as a string in one language and executed in another has two
   escape layers: **nothing escapable goes inside the injected expression any more**, prose included.
+
+  **The two found on 2026-08-28 are the worst of the six, and they are one mistake.** The readiness
+  test was `document.body.scrollHeight > 300` and the emulated viewport is **844px tall**, so any page
+  that had not painted reported exactly 844, cleared the floor, held that value across two reads, was
+  declared stable, and passed every check: a blank page has no overflow, no clipped nav and no small
+  controls. A full live run printed **"31 of 31, 0 findings" with twelve paths at exactly 844px**,
+  while `/curio` measured on its own moments later is 9458px. And one of those twelve was **`/work`,
+  which is not a route at all**: the path list had said `/work` since the script was written, the 404
+  page cleared the old gate, and the four published case studies were never measured while the run
+  reported covering them. The floor is not raised past 844, which would be the instance and not the
+  class: readiness is now **three or more controls and 200 characters of text**, which an unpainted
+  document cannot produce, and a non-arrival prints the page title, the URL and the first 120
+  characters so a 404, a firewall challenge and a slow render are told apart without a screenshot.
 - **NO COLOUR LITERAL OUTSIDE `globals.css`.** `scripts/lint-tokens.mjs`, in `pnpm build`, with a
   `--selftest` of 26 cases that runs first on every invocation. The codebase was already clean when
   the audit swept it, which was the finding: the state was held by vigilance alone, and `french.css`'s
