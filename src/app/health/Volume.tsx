@@ -108,9 +108,19 @@ export default function Volume({
                         <>
                           <div className="tnum daysum">{fmt(v)}</div>
                           <div className="whichlifts">
+                            {/* A HALVED ROW SHOWS ITS ARITHMETIC. His question, and it was the right
+                                one: "There is one DB Romanian deadlift. It's so confusing ... Is
+                                that because it's halved?" A cell reading "Front Squat 1" looks like
+                                one set and is two counted at half; "BB Back Squat 4" is four counted
+                                in full. Identical-looking numbers meaning two different things, with
+                                nothing on the page saying which. Grey was carrying that whole
+                                distinction and grey is not a unit. */}
                             {(m.byDayDetail[i] ?? []).map((c, k) => (
                               <div className={c.primary ? 'lift' : 'lift half'} key={`${c.name}-${k}`}>
                                 {c.name} <span className="tnum">{fmt(c.sets)}</span>
+                                {!c.primary && (
+                                  <span className="halfnote"> half of {fmt(c.rawSets)}</span>
+                                )}
                               </div>
                             ))}
                           </div>

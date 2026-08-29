@@ -1234,6 +1234,9 @@
 /* A synergist counted half, so it reads at half weight and prints its HALF-SET value. Printing the
    full set count in both cells would make the column stop adding up to the total beside it. */
 .training .vol-table td.daycell .lift.half { color: var(--muted-foreground); }
+/* "half of 2" beside a halved contribution. Smaller and mono, because it is the unit rather than
+   the value: the number is the fact, this says how the number was arrived at. */
+.training .vol-table td.daycell .halfnote { font-family: var(--font-mono); font-size: 10px; }
 /* The source line under the tables. Smaller than a cue and it WRAPS: the first version reused
    .quiet-inline, whose nowrap is right for a date beside a number and ran the journal name off the
    right edge of a 390px screen. */

@@ -578,10 +578,10 @@
     "push-horizontal": {
       "name": "Horizontal press",
       "primary": [
-        "chest",
-        "triceps"
+        "chest"
       ],
       "secondary": [
+        "triceps",
         "front-delts"
       ],
       "confidence": "convention",
@@ -662,7 +662,8 @@
           "station": "bench",
           "loadable": false
         }
-      ]
+      ],
+      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not."
     },
     "chest-isolation": {
       "name": "Chest fly",
@@ -695,10 +696,10 @@
     "push-vertical": {
       "name": "Vertical press",
       "primary": [
-        "front-delts",
-        "triceps"
+        "front-delts"
       ],
       "secondary": [
+        "triceps",
         "side-delts",
         "abs"
       ],
@@ -773,7 +774,8 @@
             "abs"
           ]
         }
-      ]
+      ],
+      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not."
     },
     "pull-horizontal": {
       "name": "Horizontal pull (row)",

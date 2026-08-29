@@ -125,6 +125,12 @@ export interface Contribution {
   name: string;
   /** Fractional sets: the full count for a muscle the lift trains directly, half for a synergist. */
   sets: number;
+  /** The set count actually prescribed, BEFORE halving. Returned because without it the cell is
+   *  ambiguous and he said so: "There is one DB Romanian deadlift ... Is that because it is halved?"
+   *  A cell reading "Front Squat 1" looks like one set and is two counted at half, while "BB Back
+   *  Squat 4" is four counted in full. Same-looking number, two meanings, and nothing on the page
+   *  said which. The page prints "half of 2" beside the halved ones now. */
+  rawSets: number;
   primary: boolean;
 }
 
@@ -298,7 +304,7 @@ export function computeCoverage(
           let byDay = perMuscleDetail.get(m);
           if (!byDay) perMuscleDetail.set(m, (byDay = new Map()));
           const list = byDay.get(dayKey) ?? [];
-          list.push({ name: ex.name, sets: n, primary });
+          list.push({ name: ex.name, sets: n, rawSets: sets, primary });
           byDay.set(dayKey, list);
         };
         for (const m of info.primary) {
