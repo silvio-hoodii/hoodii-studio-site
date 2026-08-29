@@ -48,9 +48,11 @@ export default function Volume({
    *  hardcoded: the keys in program.json are weekday names and the split is a rotation. */
   dayLabels: string[];
 }) {
-  const { perMuscle, perLift, redundantPairs, totals } = coverage;
+  const { perMuscle, perLift, redundantPairs, totals, weekBlocks, dayOrder } = coverage;
   const strict = redundantPairs.filter((p) => p.strict);
   const loose = redundantPairs.filter((p) => !p.strict);
+  const labelOfDay = (d: string) => dayLabels[dayOrder.indexOf(d)] ?? d;
+  const soloCount = weekBlocks.filter((b) => b.solo).length;
 
   return (
     <>
@@ -59,6 +61,93 @@ export default function Volume({
         lift trains directly and half for one that only assists, which is how the study below counted
         them.
       </p>
+
+      {/* THE WHOLE WEEK, BLOCK BY BLOCK, AND IT GOES FIRST.
+        *
+        * His ask, 2026-08-28: "I need to view the whole thing in maybe just one big table because
+        * otherwise I can't understand everything you're saying. It doesn't make sense when you write
+        * it in prose." Every conversation about this programme has been about one superset or one
+        * day, and the join he has been asked to make in his head is between two screens: which
+        * exercise is in which rest, and what that muscle already carries for the week.
+        *
+        * SO THE JOIN IS DONE IN THE ROW. Each exercise prints the muscles it feeds WITH the weekly
+        * total each of those muscles already has, which is the number the table below repeats. One
+        * line now says "this feeds triceps" and "triceps are at 22" together.
+        *
+        * AN EMPTY REST IS A ROW, NOT AN ABSENCE. Nine blocks have nothing in the rest and no page
+        * has ever shown him where they are: the fill tool prints them in a terminal, and prose named
+        * three of them at a time. A gap you cannot see is a gap you cannot decide about.
+        *
+        * NO PROSE INSIDE IT, on his instruction: "I don't want any fluff or text (introduction or
+        * explanation) in the table. The table needs to be explained by itself." Every column header
+        * is a noun and every cell is a fact. */}
+      <div className="exgroup">
+        <div className="exgroup-label">
+          The week, block by block{' '}
+          <span className="tag">({weekBlocks.length} blocks, {soloCount} with an empty rest)</span>
+        </div>
+        <div className="table-scroll">
+          <table className="plan-table vol-table weekgrid">
+            {/* THREE COLUMNS, NOT SIX, AND THE SCREEN DECIDED THAT.
+                The first version had Day, Block, Rest, Exercise, Sets and Feeds as six columns.
+                Measured at 390px: "DB Romanian Deadlift" broke across three lines and the FEEDS
+                column, which is the entire reason the table exists, sat off the right edge behind a
+                sideways scroll. A table whose point is invisible without scrolling is a table he
+                will read once.
+                So the day, the role and the rest fold into the block cell, and the muscles fold
+                under the exercise they belong to. Nothing was dropped; the same facts are stacked
+                instead of spread. */}
+            <thead>
+              <tr>
+                <th>Day and block</th>
+                <th>Exercise and muscles</th>
+                <th className="tnum">Sets</th>
+              </tr>
+            </thead>
+            <tbody>
+              {weekBlocks.map((b) => {
+                const rows = b.solo ? [...b.slots, null] : b.slots;
+                return rows.map((s, i) => (
+                  <tr key={`${b.day}-${b.label}-${i}`} className={i === 0 ? 'blockstart' : undefined}>
+                    {i === 0 && (
+                      <td rowSpan={rows.length}>
+                        {labelOfDay(b.day)}
+                        <div className="blocklabel">{b.label}</div>
+                        <div className="quiet">{b.role} &middot; rest {b.rest}</div>
+                      </td>
+                    )}
+                    {s === null ? (
+                      <td className="emptyrest" colSpan={2}>nothing in this rest</td>
+                    ) : (
+                      <>
+                        <td>
+                          {s.name}
+                          {s.reps && <span className="quiet"> &middot; {s.reps}</span>}
+                          {/* THE SEPARATOR TRAILS ITS OWN ITEM RATHER THAN LEADING THE NEXT ONE.
+                              It led, inside a `white-space: nowrap` span, which glued the comma to
+                              the following muscle and left the line no break point at all: measured
+                              at 390px, "Quadriceps 21 over, Glutes 27.5 over, Cal" ran off the right
+                              edge. A trailing comma is a break opportunity; a leading one is not. */}
+                          <div className="feeds">
+                            {s.feeds.map((f, k) => (
+                              <span key={f.label} className={f.primary ? 'feed' : 'feed half'}>
+                                {f.label} <span className="tnum">{fmt(f.weekly)}</span>
+                                {f.weekly > EFFICIENT_ZONE_TOP && <span className="over"> over</span>}
+                                {k < s.feeds.length - 1 && ','}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="tnum">{s.sets}</td>
+                      </>
+                    )}
+                  </tr>
+                ));
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="exgroup">
         <div className="exgroup-label">

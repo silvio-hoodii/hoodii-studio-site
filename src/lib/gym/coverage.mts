@@ -40,6 +40,10 @@ export interface CoverageExercise {
   id: string;
   name: string;
   sets: number;
+  /** Read only so the week table can print it. Nothing counts reps: a set is a set here. */
+  reps?: string;
+  /** The lead's rest is what a partner would ride in, so an empty one is the size of the hole. */
+  rest?: string;
 }
 export interface CoverageBlock {
   label: string;
@@ -155,9 +159,39 @@ export interface UnsourcedRow {
   name: string;
   why: string;
 }
+/** One exercise, as the week table prints it. */
+export interface WeekSlot {
+  name: string;
+  sets: number;
+  reps: string;
+  /** Primary muscles, then synergists, each with the WEEKLY total that muscle already carries. That
+   *  pairing is the whole point of the table: it puts "this feeds triceps" next to "triceps are at
+   *  22" on one line, which is the join he has been making in his head across two screens. */
+  feeds: { label: string; weekly: number; primary: boolean }[];
+}
+
+/** One block of the week, and whether anything rides in its rest. */
+export interface WeekBlock {
+  day: string;
+  label: string;
+  role: string;
+  /** The lead's rest, which is the size of the gap a partner would fill. */
+  rest: string;
+  slots: WeekSlot[];
+  /** No partner. Nine blocks are in this state and nothing on any page has ever shown him where. */
+  solo: boolean;
+}
+
 export interface Coverage {
   dayOrder: string[];
   muscleLabels: Record<string, string>;
+  /* THE WEEK AS A LIST OF BLOCKS, added 2026-08-28 on his ask: "I need to view the whole thing in
+     maybe just one big table because otherwise I can't understand everything you're saying."
+     The per-muscle table has existed since 2026-08-27 and he had never seen it; what it cannot show
+     is WHERE the sets come from and which rest windows are empty, which is the half every decision
+     in front of him now depends on. Derived from the same pass, so it cannot disagree with the
+     muscle totals printed beside it. */
+  weekBlocks: WeekBlock[];
   /** Sorted by weekly sets, descending. */
   perMuscle: MuscleRow[];
   /** Sorted by weekly sets, descending. */
@@ -214,6 +248,10 @@ export function computeCoverage(
   const redundantPairs: RedundantPair[] = [];
   const unloadableInMain: UnloadableRow[] = [];
   const unsourced: UnsourcedRow[] = [];
+  const rawSlots: {
+    day: string; block: string; role: string; rest: string; soloBlock: boolean;
+    slot: { name: string; sets: number; reps: string; feeds: { muscle: string; primary: boolean }[] };
+  }[] = [];
 
   const bump = (map: Map<string, number>, key: string, by: number) => map.set(key, (map.get(key) ?? 0) + by);
 
@@ -283,6 +321,28 @@ export function computeCoverage(
         if (info.confidence === 'unsourced') {
           unsourced.push({ day: dayKey, id: ex.id, name: ex.name, why: info.selection });
         }
+
+        /* THE WEEK TABLE'S ROW, built in the same pass that counts the sets. The muscle names are
+           captured here and the WEEKLY totals are filled in afterwards, because the total is not
+           known until every day has been walked. Two passes over one array beats a second traversal
+           of the programme: a table built from its own second walk is a table that can disagree with
+           the numbers above it. */
+        rawSlots.push({
+          day: dayKey,
+          block: block.label,
+          role: block.role,
+          rest: String(block.exercises[0]?.rest ?? ''),
+          soloBlock: block.exercises.length === 1,
+          slot: {
+            name: ex.name,
+            sets,
+            reps: String(ex.reps ?? ''),
+            feeds: [
+              ...info.primary.map((m) => ({ muscle: m, primary: true })),
+              ...info.secondary.map((m) => ({ muscle: m, primary: false })),
+            ],
+          },
+        });
       });
     }
   }
@@ -315,9 +375,30 @@ export function computeCoverage(
       tier: tierFor(STRENGTH_TIERS, v.sets),
     }));
 
+  /* THE WEEKLY TOTAL IS JOINED ON HERE, after every day has been counted. Doing it inside the walk
+     would print each muscle's running subtotal at the moment that row was reached, which looks like
+     a number and is not one. */
+  const weekBlocks: WeekBlock[] = [];
+  for (const r of rawSlots) {
+    const last = weekBlocks[weekBlocks.length - 1];
+    const slot: WeekSlot = {
+      name: r.slot.name,
+      sets: r.slot.sets,
+      reps: r.slot.reps,
+      feeds: r.slot.feeds.map((f) => ({
+        label: cat.muscles[f.muscle] ?? f.muscle,
+        weekly: perMuscle.get(f.muscle) ?? 0,
+        primary: f.primary,
+      })),
+    };
+    if (last && last.day === r.day && last.label === r.block) last.slots.push(slot);
+    else weekBlocks.push({ day: r.day, label: r.block, role: r.role, rest: r.rest, slots: [slot], solo: r.soloBlock });
+  }
+
   return {
     dayOrder,
     muscleLabels: cat.muscles,
+    weekBlocks,
     perMuscle: muscleRows,
     perLift: liftRows,
     redundantPairs,

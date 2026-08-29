@@ -267,7 +267,7 @@ if (mode === 'fill') {
   const { computeCoverage } = await import('../src/lib/gym/coverage.mts');
   const coverage = computeCoverage(program, cat);
   const setsFor = new Map(coverage.perMuscle.map((m) => [m.muscle, m.sets]));
-  const SHOW = 8;
+  const SHOW = Number(process.env.FILL_SHOW || 8);
 
   /* WHERE an exercise already sits, WITH THE REST IT IS SITTING IN, because that rest is the whole
      argument. His complaint is not that the week is short of exercises, it is that the three-minute
