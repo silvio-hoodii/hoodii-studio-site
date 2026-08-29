@@ -7,7 +7,7 @@ import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } fr
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
-  DAY_ORDER, exType, findExercise,
+  DAY_ORDER, exType, findExercise, repSuffix,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 
@@ -396,7 +396,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     () => blocks.flatMap((b) => b.exercises.filter((e) => e.log).map((e) => {
       const eff = effOf(e);
       return {
-        id: eff.id, targetReps: parseTargetReps(eff.reps), type: exType(eff),
+        id: eff.id, targetReps: parseTargetReps(eff.reps), repSuffix: repSuffix(eff.reps), type: exType(eff),
         increment: eff.increment, rangeWidth: eff.rangeWidth, assistance: eff.assistance,
       };
     })),
@@ -851,7 +851,20 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
                 {p?.suggestion && (
                   <div className="ex-suggest">
-                    {p.suggestion.weight != null ? `${p.suggestion.weight} lb × ${p.suggestion.reps}` : `× ${p.suggestion.reps}`}
+                    {/* THE UNIT COMES BACK HERE. `parseTargetReps` strips it for the engine's
+                        arithmetic, and this line printed the bare count under a prescription that
+                        reads "3x8/leg", so the card carried 8 and 8-per-leg as two numbers for one
+                        quantity. Nine logged slots are affected.
+
+                        `eff.reps`, the same source `targetReps` is parsed from four hundred lines
+                        up, because the suffix has to belong to the number it is printed beside. No
+                        alt carries its own `reps` today, so `eff.reps` and `ex.reps` are the same
+                        string; if one ever does, this follows the count rather than diverging from
+                        it, which is the only version that cannot print a unit from one prescription
+                        against a number from another. */}
+                    {p.suggestion.weight != null
+                      ? `${p.suggestion.weight} lb × ${p.suggestion.reps}${repSuffix(eff.reps)}`
+                      : `× ${p.suggestion.reps}${repSuffix(eff.reps)}`}
                     <span className="ex-suggest-why">{p.suggestion.reason}</span>
                     {p.recent && <Trend recent={p.recent} />}
                   </div>

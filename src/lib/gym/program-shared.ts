@@ -38,6 +38,27 @@ export function parseTargetReps(reps: string | undefined): number | null {
   return m ? parseInt(m[0], 10) : null;
 }
 
+/* WHAT `parseTargetReps` THROWS AWAY, and the suggestion line has been printing the remainder as if
+ * it were the whole thing.
+ *
+ * Nine logged slots carry a unit in `reps`: "8/leg", "8/side", "10/side", "4/side", "30s/side",
+ * "20/side". The prescription line renders the string in full ("3x8/leg"), and four lines below it
+ * the suggestion rendered `x ${suggestion.reps}`, which is "x 8". Two numbers for one quantity, one
+ * of them half the other, on the same card.
+ *
+ * This is the farmer carry's fault a second time. That card said "40 reps" of something measured in
+ * SECONDS, three contradictory answers were live for five days, and the lesson written down after it
+ * was that a number without its unit is a different number. `parseTargetReps` strips the unit
+ * because the engine does arithmetic on the count; the SCREEN needs it back.
+ *
+ * The whole remainder, not a recognised list of suffixes: "30s/side" has to come back as "s/side",
+ * and a table of known units is a table that goes stale the first time somebody writes "8/arm". */
+export function repSuffix(reps: string | undefined): string {
+  const s = String(reps ?? '').trim();
+  const m = s.match(/^\s*\d+/);
+  return m ? s.slice(m[0].length) : '';
+}
+
 export function restSeconds(rest: string | undefined): number {
   const m = String(rest || '').match(/([\d.]+)\s*(min|s)/i);
   if (!m) return 60;

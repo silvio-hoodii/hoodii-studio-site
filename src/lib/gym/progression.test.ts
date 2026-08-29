@@ -220,6 +220,22 @@ check(
 );
 
 check(
+  'lateral bound: a per-side prescription says per side, and does not report half the work',
+  suggest(session('2026-08-18', 3, null, 6), plan({
+    type: 'bodyweight', targetReps: 4, fixedReps: true, repSuffix: '/side',
+  })),
+  (s) => /4\/side/.test(s.reason) && !/4 a set/.test(s.reason),
+  '"4/side", not "4 a set". The card said 4 a set under a prescription reading 3x4/side',
+);
+
+check(
+  'box jump: no suffix, so the sentence stays the plain one',
+  suggest(session('2026-08-27', 3, null, 10), plan({ type: 'bodyweight', targetReps: 3, fixedReps: true })),
+  (s) => /3 a set/.test(s.reason),
+  '"3 a set": the unit fix must not leave a dangling suffix on a lift that has none',
+);
+
+check(
   'box jump: a long logging gap does not turn it into a probe either',
   suggest(session('2026-06-01', 3, null, 10), plan({
     type: 'bodyweight', targetReps: 3, fixedReps: true, today: '2026-08-29',
@@ -236,5 +252,5 @@ check(
 );
 
 console.log('-'.repeat(70));
-console.log(`20 cases, ${failed} failed`);
+console.log(`22 cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);

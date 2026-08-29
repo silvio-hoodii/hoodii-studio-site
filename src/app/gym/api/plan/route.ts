@@ -9,6 +9,10 @@ export const dynamic = 'force-dynamic';
 interface PlanExerciseIn {
   id: string;
   targetReps?: number;
+  /** The unit `targetReps` threw away. LISTED HERE DELIBERATELY, which is the whole point of the two
+   *  notes below: a field the client sends and this interface omits is dropped in the middle with
+   *  nothing to notice, and that has now happened twice. */
+  repSuffix?: string;
   type?: ExerciseType;
   increment?: number;
   /** `rangeWidth` WAS MISSING HERE AND THE WHOLE 2026-08-22 LADDER FIX WAS DEAD BECAUSE OF IT.
@@ -62,6 +66,7 @@ export async function POST(req: Request) {
              failing is removed rather than widened: nothing about the ladder crosses the wire. */
           ladder: ladderFor(ex.id),
           fixedReps: hasFixedReps(ex.id),
+          repSuffix: ex.repSuffix,
           today: date,
           recent: recent.slice(0, 3),
         });

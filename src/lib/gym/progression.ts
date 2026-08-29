@@ -65,6 +65,9 @@ export interface PlanInput {
    *  the first and a slow jump is a different exercise. That is a decision about dose, so it is
    *  made in program.json by changing `sets`, not by an engine reading a log. */
   fixedReps?: boolean;
+  /** Whatever `reps` in program.json carries after its leading number: "/side", "/leg", "s/side".
+   *  Only used to build a sentence he reads; the arithmetic is on the count alone. */
+  repSuffix?: string;
 }
 
 export interface Suggestion {
@@ -184,10 +187,15 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
    * It says the number and the reason in the same breath, because "3" on its own is what he already
    * read as a floor. */
   if (plan.fixedReps) {
+    /* "4 a set" WAS WRONG ON THE LATERAL BOUND and the screenshot is what caught it: the
+     * prescription is 4/SIDE, `parseTargetReps` drops the unit for the arithmetic, and the sentence
+     * built from the bare count said half the work. Same fault as the farmer carry's "40 reps" of
+     * something measured in seconds. The unit travels with the number. */
+    const unit = plan.repSuffix ? `${bottom}${plan.repSuffix}` : `${bottom} a set`;
     return {
       weight: null,
       reps: bottom,
-      reason: `${bottom} a set, on purpose: this trains how fast you leave the floor, and a tired rep is a slow one. More work means more SETS, not more reps.`,
+      reason: `${unit}, on purpose: this trains how fast you leave the floor, and a tired rep is a slow one. More work means more SETS, not more reps.`,
     };
   }
 
