@@ -50,6 +50,8 @@ const mode = process.argv.includes('--options') ? 'options'
 
 const pad = (s, n) => String(s).padEnd(n);
 const rule = (c = '-') => console.log(c.repeat(78));
+/** Fractional sets are halves. One decimal, and no trailing ".0" to read as false precision. */
+const r1 = (n) => String(Math.round(n * 10) / 10);
 
 /* ---- flatten the catalogue ---- */
 
@@ -167,13 +169,23 @@ if (mode === 'options') {
  * there. A candidate below can still be refused for that reason. */
 const holdsNothing = (v) => v.station === null || v.station === undefined;
 const stationName = (v) => (holdsNothing(v) ? 'no fixture' : (equip.zones[v.zone]?.stations?.[v.station]?.name ?? v.station));
-/* At most ONE fixture across the two, which is validate.mjs's own test verbatim: a lead that holds
- * nothing leaves the partner free to hold something, and two exercises on the same bench occupy one
- * bench. Anything stricter would refuse pairings the gate allows, which is the same disagreement in
- * the other direction. */
+/* At most ONE fixture across the two: a lead that holds nothing leaves the partner free to hold
+ * something, and two exercises on the same bench occupy one bench.
+ *
+ * THE SAME-STATION CLAUSE NEEDS A PERMISSION, and this said "validate.mjs's own test verbatim"
+ * while that stopped being true on 2026-08-28. The gate gained a second half that day, on his note
+ * #27: two exercises on ONE station pass the count (a `Set` collapses them to a single entry) and
+ * are then refused unless that station declares `sharedInOneWindow`. It defaults to false, so today
+ * exactly two stations qualify, the bench and the plyo box. Without this clause the tool offers
+ * every cable-column pairing the validator refuses, which is the failure mode already written up
+ * for `--pairing`: the suggestion is free and the rejection arrives after the work is done.
+ *
+ * A comment claiming agreement with another file is worth exactly as much as the code under it. */
+const sharedStation = (v) => equip.zones[v.zone]?.stations?.[v.station]?.sharedInOneWindow === true;
 const ridesFree = (partner, lead) =>
   partner.zone === lead.zone &&
-  (holdsNothing(partner) || holdsNothing(lead) || partner.station === lead.station);
+  (holdsNothing(partner) || holdsNothing(lead)
+    || (partner.station === lead.station && sharedStation(lead)));
 
 if (mode === 'pairing') {
   console.log('\nWHAT EACH PAIRED BLOCK COSTS IN WALKING');
@@ -294,12 +306,59 @@ if (mode === 'fill') {
   rule('=');
 
   const soloBlocks = dayBlocks.filter((b) => b.exercises.length === 1);
-  for (const b of soloBlocks) {
+
+  /* TWO PASSES, BECAUSE THIS TOOL HAD NO MEMORY AND IT MADE ONE EXERCISE LOOK LIKE NINE.
+   *
+   * It priced every block against the CURRENT programme and never against the blocks it had already
+   * reported, so DB Calf Raise came out top in all nine solo blocks, each time reading "calves 9 to
+   * 12" as if it were a fresh opportunity. It is one exercise offered nine times, and the nine
+   * cannot all be taken: filling every empty rest costs 27 to 36 sets, while the five muscles still
+   * at or under the efficient zone top have SIX sets of headroom between them.
+   *
+   * A per-block price with no budget above it reads as nine cheap decisions. The budget is the
+   * finding, so it is computed first and printed first, and each option carries the number of blocks
+   * it also appears in. Nothing here chooses; it stops the report from implying a choice is free. */
+  const blockOptions = new Map();
+  const offeredIn = new Map();
+  const optionsFor = (b) => {
     const slot = b.exercises[0];
     const lead = byId.get(slot.id);
-    if (!lead) continue;
+    if (!lead) return null;
     const leadAt = { zone: slot.zone, station: slot.station ?? null };
     const leadPrimary = new Set(lead.primary);
+    return { slot, lead, leadAt, leadPrimary };
+  };
+
+  /* THE BUDGET. Headroom is counted per muscle and only where it is positive: a muscle already past
+     10 has none, and a negative does not offset another muscle's spare set. Separate denominators,
+     the same reason `price` reports per muscle rather than summing. */
+  const headroomByMuscle = coverage.perMuscle
+    .map((m) => ({ m: m.muscle, left: 10 - m.sets }))
+    .filter((x) => x.left > 0)
+    .sort((a, x) => x.left - a.left);
+  const totalHeadroom = headroomByMuscle.reduce((n, x) => n + x.left, 0);
+  const fillCost = soloBlocks.reduce((n, b) => n + Number(b.exercises[0].sets || 0), 0);
+  console.log(`  BUDGET. Filling all ${soloBlocks.length} empty rests costs ${fillCost} sets, one per set of each lead.`);
+  console.log(`  Muscles still under the efficient zone top have ${r1(totalHeadroom)} sets of headroom BETWEEN THEM:`);
+  console.log(`    ${headroomByMuscle.map((x) => `${cat.muscles[x.m] ?? x.m} ${r1(x.left)}`).join(', ') || 'none, every muscle is past 10'}`);
+  console.log('  So most of these cannot be taken together. Each price below is "if you take only this one".');
+  rule('-');
+
+  for (const b of soloBlocks) {
+    const ctx = optionsFor(b);
+    if (!ctx) continue;
+    for (const v of variants) {
+      if (v.id === ctx.lead.id) continue;
+      if (!ridesFree(holdsNothing(v) ? { zone: ctx.leadAt.zone, station: null } : v, ctx.leadAt)) continue;
+      if (v.primary.some((m) => ctx.leadPrimary.has(m))) continue;
+      offeredIn.set(v.id, (offeredIn.get(v.id) ?? 0) + 1);
+    }
+  }
+
+  for (const b of soloBlocks) {
+    const ctx = optionsFor(b);
+    if (!ctx) continue;
+    const { slot, lead, leadAt, leadPrimary } = ctx;
 
     /* The role is printed because it changes the answer. A `primer` is pinned first and done fresh
        (Deng 2024, quoted in content/gym/validate.mjs's zone-order rule), so filling its rest with
@@ -352,7 +411,11 @@ if (mode === 'fill') {
         ? `move from ${o.where.day} ${o.where.label}, rest ${o.where.rest} to ${slot.rest}` +
           (o.where.leavesSolo ? ', leaves that block solo' : '')
         : o.price.map((p) => `${cat.muscles[p.m] ?? p.m} ${p.now} to ${p.then}${p.then > 10 ? ' PAST 10' : ''}`).join(', ');
-      console.log(`      ${o.where ? '*' : ' '} ${pad(o.v.name, 28)} ${o.v.loadable ? '        ' : 'no load '}${price}`);
+      /* "also fits N others" is the memory this tool did not have. Without it the same DB Calf
+         Raise reads as nine separate cheap wins, and its price is only true for the first one. */
+      const n = (offeredIn.get(o.v.id) ?? 1) - 1;
+      const also = n > 0 ? `  (also fits ${n} other empty rest${n === 1 ? '' : 's'})` : '';
+      console.log(`      ${o.where ? '*' : ' '} ${pad(o.v.name, 28)} ${o.v.loadable ? '        ' : 'no load '}${price}${also}`);
     }
     if (options.length > SHOW) {
       console.log(`        ... and ${options.length - SHOW} more that ride free here, all of them adding sets to a muscle already past 10.`);
@@ -363,6 +426,10 @@ if (mode === 'fill') {
   console.log('* = already in the week, so it MOVES rather than adds. Read the two rests: a move out');
   console.log('of a 45s rest into a 3 min rest is the whole point. Anything without a star ADDS the');
   console.log('sets shown, to a muscle whose current count is printed beside it.');
+  console.log('');
+  console.log('Every price is measured against the programme as it stands, so THE PRICES DO NOT ADD UP.');
+  console.log('Taking the same option in two blocks costs twice what one line says, and taking a starred');
+  console.log('one twice is not possible at all. The budget at the top is the number that binds.');
   console.log('');
   process.exit(0);
 }

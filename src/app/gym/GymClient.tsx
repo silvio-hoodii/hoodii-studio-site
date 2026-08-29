@@ -806,10 +806,20 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                     can even be hidden." A parked question is a real state and the honest-states rule
                     says a surface names it rather than showing nothing, but it is not something he
                     should have to read mid-set. Whether the questions themselves belong on the card
-                    is his call and is parked. */}
+                    is his call and is parked.
+
+                    `topic === 'placement'`, NOT `open.length`, since 2026-08-29. The fallback line
+                    says "no reason recorded yet", and it was rendering on cards whose reason WAS
+                    recorded, one tap above it in the block's `why`, because the exercise happened to
+                    carry a question about its cue or its next dumbbell. Three of the thirteen
+                    partners were in that state. A line that says nothing is known, on a card where
+                    something is known, is the reach failure this whole feature exists to fix, and it
+                    was being produced by the branch meant to prevent it. */}
                 {ex.whyHere
                   ? <div className="ex-why">{ex.whyHere}</div>
-                  : (ex.open?.length ? <div className="ex-why quiet">No reason recorded yet, a question about this is open.</div> : null)}
+                  : (ex.open?.some((q) => q.topic === 'placement')
+                    ? <div className="ex-why quiet">No reason recorded yet, a question about this is open.</div>
+                    : null)}
                 {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
                      "Walls of text again why do I need all this, just leave the cue and thats it,
                      it can even be hidden" (gym_note #12, 2026-08-25), after the same complaint on

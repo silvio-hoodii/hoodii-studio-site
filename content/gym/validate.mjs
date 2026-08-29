@@ -147,6 +147,10 @@ const TAG_PROSE = new Set([
 ]);
 
 // ---------------------------------------------------------------------------------------------
+/** The closed set of subjects an `open` question may be about. See the long note under
+ *  `checkOpenRow` below for why this exists and what it makes representable. */
+const OPEN_TOPICS = new Set(['placement', 'cue', 'prescription', 'equipment', 'volume']);
+
 // The equipment map, flattened once. `station: null` is legal and means "occupies no fixture".
 // Anything else must name a station that equipment.json actually lists, so a typo cannot invent a
 // machine that is not in the building.
@@ -163,11 +167,74 @@ const stationOf = (zone, station) => {
 };
 const STATION_ZONE = new Map();
 for (const [zoneKey, zone] of Object.entries(ZONES)) {
-  for (const stationKey of Object.keys(zone.stations || {})) {
+  for (const [stationKey, station] of Object.entries(zone.stations || {})) {
     if (STATION_ZONE.has(stationKey)) {
       fail('equipment.json', `station "${stationKey}" is declared in two zones`);
     }
     STATION_ZONE.set(stationKey, zoneKey);
+    // A station may park a question too, and until 2026-08-29 nothing checked one. AGENTS.md has
+    // documented `open: [{q, asked, due}]` as living in BOTH files since the day it was introduced.
+    if (station && station.open !== undefined) {
+      const at2 = `station "${stationKey}"`;
+      if (!Array.isArray(station.open) || !station.open.length) {
+        fail('equipment.json', `${at2}: "open" must be a non-empty array of questions. Delete the field when the question is answered; do not leave an empty one.`);
+      } else {
+        station.open.forEach((q, qi) => {
+          const at = `"open"[${qi}] on ${at2}`;
+          if (typeof q.q !== 'string' || q.q.trim().length < 30) {
+            fail('equipment.json', `${at}: "q" must be a question of at least 30 characters, got ${JSON.stringify(q.q ?? null)}`);
+          }
+          for (const f of ['asked', 'due']) {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(String(q[f]))) {
+              fail('equipment.json', `${at}: "${f}" must be YYYY-MM-DD, got ${JSON.stringify(q[f] ?? null)}`);
+            }
+          }
+          checkOpenRow('equipment.json', at, q);
+        });
+      }
+    }
+  }
+}
+
+/* ------ AN OPEN QUESTION HAS TO BE A QUESTION. Added 2026-08-29, on his ruling.
+ *
+ * His words, reading the nineteen the file held on 2026-08-28: "I feel like most of the questions
+ * are either badly phrased or badly explained and for some of them I think you can come up with the
+ * answer." Measured against the file he was right, and three of the nineteen contained NO QUESTION
+ * AT ALL. Verbatim, whole rows:
+ *
+ *   "Same reason: the shoulder press machine and the pec deck are two separate fixtures."
+ *   "Same reason: the pushdown holds the high pulley and a cable curl needs the low one. ..."
+ *   "Moved to the cable on 2026-08-27 and moved back the same hour: ... which is why the partner
+ *    is a dumbbell."
+ *
+ * Every one is a true, useful station fact. None of them asks him anything. They were parked in a
+ * question slot because that slot was the nearest place to write a sentence, and `gym-notes.mjs`
+ * then printed them to him under a heading that says OPEN QUESTION(S) FOR SILVIO with a due date on
+ * each. Three of the nineteen things he was told he owed an answer on were not answerable. That is
+ * the co-build protocol's own rule 3 ("he is never asked twice") failing at the other end: he was
+ * asked once for something that was never a question.
+ *
+ * The gate is that the last character is a question mark. It is crude on purpose. Nine more rows
+ * failed it the day it landed, all of them ending in an instruction rather than an ask ("Read it on
+ * the machine and say what it should say."), and rewriting those nine into actual questions is the
+ * "badly phrased" half of his complaint, done by the same edit.
+ *
+ * `topic` is the second half. See the partner gate below for what it makes representable; here it
+ * is only checked for shape. Adding a value means teaching this list, deliberately, rather than a
+ * free-text label whose set nobody can enumerate. It is declared above the equipment sweep rather
+ * than here because a `const` does not hoist and that sweep runs at module top level; the function
+ * below does hoist, which is why only the set had to move. */
+
+/** The shape rules shared by an `open` row wherever it lives: on an exercise in program.json or on
+ *  a station in equipment.json. Equipment's rows were checked by NOTHING until today, which is how
+ *  one sat there for two days with a premise its own file had already falsified. */
+function checkOpenRow(where, at, q) {
+  if (!OPEN_TOPICS.has(q.topic)) {
+    fail(where, `${at}: "topic" must be one of ${[...OPEN_TOPICS].join(', ')}, got ${JSON.stringify(q.topic ?? null)}. The topic is what lets the partner gate tell "nobody has written down why this is here" from "the reason is written and he is asking about the cue".`);
+  }
+  if (typeof q.q === 'string' && !/\?\s*$/.test(q.q)) {
+    fail(where, `${at}: "q" does not end in a question mark, so it is a statement parked in a question slot. gym-notes.mjs prints it to him under "OPEN QUESTION(S) FOR SILVIO" with a due date, and he cannot answer a fact. Either ask him something, or move the sentence to the "why" or the cue where an explanation belongs.\n    ends: ...${JSON.stringify(q.q.slice(-70))}`);
   }
 }
 
@@ -515,17 +582,32 @@ for (const [dayKey, day] of Object.entries(program.days)) {
      * not already in the accepted `why` does not compile.
      *
      * A partner with no such span in its block's `why` is not given one. It gets an `open` question
-     * instead, which is the honest state: nobody has written down why it is there. */
+     * instead, which is the honest state: nobody has written down why it is there.
+     *
+     * THE QUESTION HAS TO BE ABOUT THE PLACEMENT, and until 2026-08-29 this read `open.length` and
+     * did not care what the question said. Three consequences, all live:
+     *
+     *   - A partner whose only open row asked about its CUE or its next dumbbell satisfied a gate
+     *     about why it is there. The card then rendered "No reason recorded yet, a question about
+     *     this is open" while the reason sat one tap above it in the block's own `why`. That is the
+     *     reach failure this whole feature exists to fix, produced by the gate meant to prevent it.
+     *   - The reverse clause refused BOTH together, on the theory that "either the reason is
+     *     written or it is not". That is a false dichotomy. Tuesday's overhead extension has a
+     *     written reason AND he has skipped it twice and wants it dropped: the reason is written and
+     *     under challenge, which is a real state the file could not express.
+     *   - So a partner with a written reason could not also carry a progression question about
+     *     itself, and Tuesday's lateral raise carries exactly one of those.
+     *
+     * `topic` makes the distinction representable rather than guessed from the prose. A `placement`
+     * row is the honest "nobody has written this down yet"; every other topic is orthogonal to it. */
     if (block.exercises.length >= 2) {
       const partner = block.exercises[block.exercises.length - 1];
       const clause = partner.whyHere;
       const open = Array.isArray(partner.open) ? partner.open : [];
+      const placement = open.filter((q) => q && q.topic === 'placement');
 
-      if (clause === undefined && !open.length) {
-        fail(where, `partner "${partner.id}" has no "whyHere" and no "open" question. It sits at position 2 and every "why is this here" note he has written names a position-2 exercise. Either lift a verbatim span out of this block's "why" that explains this exercise, or, if the "why" does not explain it, record an open question on the exercise rather than inventing a reason.`);
-      }
-      if (clause !== undefined && open.length) {
-        fail(where, `partner "${partner.id}" carries both a "whyHere" and an "open" question. One of them is stale: either the reason is written or it is not.`);
+      if (clause === undefined && !placement.length) {
+        fail(where, `partner "${partner.id}" has no "whyHere" and no open question with topic "placement". It sits at position 2 and every "why is this here" note he has written names a position-2 exercise. Either lift a verbatim span out of this block's "why" that explains this exercise, or, if the "why" does not explain it, record an open question with topic "placement" on the exercise rather than inventing a reason.${open.length ? ` It carries ${open.length} open question(s), but about ${[...new Set(open.map((q) => q && q.topic))].join(', ')}, which is a different subject.` : ''}`);
       }
       if (clause !== undefined) {
         if (typeof clause !== 'string' || clause.trim().length < 20) {
@@ -576,6 +658,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         if (typeof q.q !== 'string' || q.q.trim().length < 30) {
           fail(where, `${at}: "q" must be a question of at least 30 characters, got ${JSON.stringify(q.q ?? null)}. He answers in one word; the question has to carry the context so he does not have to reconstruct it.`);
         }
+        checkOpenRow(where, at, q);
         for (const f of ['asked', 'due']) {
           if (!/^\d{4}-\d{2}-\d{2}$/.test(String(q[f]))) {
             fail(where, `${at}: "${f}" must be YYYY-MM-DD, got ${JSON.stringify(q[f] ?? null)}`);

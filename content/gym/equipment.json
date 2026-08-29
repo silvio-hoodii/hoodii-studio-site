@@ -108,7 +108,8 @@
           "sharedNote": "HIS RULING, note #27 on 2026-08-28, in his own words: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" Two exercises on this column are not one station in any useful sense: the attachment and the seat have to change between them, so alternating means reconfiguring the machine every set. That is not a superset, it is two exercises with setup in between. Which cable exercises CAN share one window is an open question on this station.",
           "open": [
             {
-              "q": "WHICH CABLE EXERCISES CAN ACTUALLY SHARE ONE REST WINDOW ON THE HIGH PULLEY? Your note #27 settled that the lat pulldown and the cable overhead tricep extension cannot, and Tuesday's block is a sequence now rather than a pair. You suggested the straight-arm pulldown instead. Friday already pairs the straight-arm pulldown with that same tricep extension, so if those two DO work together the same swap fixes Tuesday. Three things to say at the machine, and they are all about what has to be unclipped: (a) can the straight-arm pulldown and the overhead tricep extension run off the same attachment, so nothing changes between sets? (b) does the tricep pushdown share an attachment with either of them, since it is paired with a curl on Tuesday? (c) is there more than one high pulley column, which would make this whole question moot. The gate now refuses ANY two exercises on one station unless the station is declared shareable, so answering this unlocks pairings rather than removing them.",
+              "topic": "equipment",
+              "q": "WHICH CABLE EXERCISES CAN ACTUALLY SHARE ONE REST WINDOW ON THE HIGH PULLEY? Your note #27 settled that the lat pulldown and the cable overhead tricep extension cannot, and Tuesday's block is a sequence now rather than a pair. You suggested the straight-arm pulldown instead. Friday already pairs the straight-arm pulldown with that same tricep extension, so if those two DO work together the same swap fixes Tuesday. Three things to say at the machine, and they are all about what has to be unclipped: (a) can the straight-arm pulldown and the overhead tricep extension run off the same attachment, so nothing changes between sets? (b) does the tricep pushdown share an attachment with either of them, since it is paired with a curl on Tuesday? (c) is there more than one high pulley column, which would make this whole question moot. The gate now refuses ANY two exercises on one station unless the station is declared shareable, so answering these unlocks pairings rather than removing them. So: (a), (b), and (c)?",
               "asked": "2026-08-28",
               "due": "2026-09-11"
             }
@@ -197,13 +198,6 @@
           "name": "Standing calf raise",
           "confidence": "logged",
           "evidence": "Logged 2026-06-09, and 'that's a machine' on 2026-08-15",
-          "open": [
-            {
-              "q": "Thursday pairs the leg curl machine with this one in the same rest window, and it only passes the one-station rule because that slot claims to hold no machine at all, which is false: your log has 180 to 210 lb on this machine. Two selectorised machines at once is the exact thing you rejected in August ('you're saying on the fore exercise I should use two machines'). So which is it on Thursday: do you alternate the two machines set for set, holding both, or do you finish the leg curl and then walk over here? The second is a sequence and is legal; the first is not, and the calf raise needs a different home.",
-              "asked": "2026-08-27",
-              "due": "2026-09-10"
-            }
-          ],
           "sharedInOneWindow": false
         }
       }

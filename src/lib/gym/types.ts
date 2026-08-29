@@ -104,8 +104,17 @@ export interface Exercise {
 
 /** One question for Silvio, recorded where the thing it is about lives. */
 export interface OpenQuestion {
+  /** WHAT THE QUESTION IS ABOUT, and the only one of these values that is load-bearing is
+   *  `placement`. `content/gym/validate.mjs` requires a partner exercise to carry either a
+   *  `whyHere` or a `placement` question, and the card's fallback line ("no reason recorded yet")
+   *  renders on the same condition. Before this field existed both read `open.length`, so a
+   *  question about a CUE satisfied a gate about why the exercise is there, and the card announced
+   *  that nothing was known while the reason sat one tap above it in the block's `why`. */
+  topic: 'placement' | 'cue' | 'prescription' | 'equipment' | 'volume';
   /** The question, with enough context that he does not have to reconstruct it. He answers in one
-   *  word; carrying the context is this field's job, not his. */
+   *  word; carrying the context is this field's job, not his. Ends in a question mark, and the
+   *  validator refuses it otherwise: three rows once held a true statement and asked nothing, and
+   *  gym-notes.mjs printed all three to him with due dates on them. */
   q: string;
   /** YYYY-MM-DD. */
   asked: string;

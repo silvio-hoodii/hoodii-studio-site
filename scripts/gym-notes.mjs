@@ -85,7 +85,11 @@ function reportOpenQuestions() {
   for (const { where, q } of found) {
     const late = q.due < today;
     const when = late ? `OVERDUE by ${days(q.due, today)} day(s)` : `due ${q.due}, ${days(today, q.due)} day(s) left`;
-    console.log(`  ${late ? '!!' : '  '} [${where}]  asked ${q.asked}, ${when}`);
+    /* The topic is printed because it changes what an answer is FOR. A `cue` row wants words he
+     * would follow at the machine; a `placement` row wants a yes or a swap; a `prescription` row
+     * wants a number. Reading nineteen of these in one block, he said "most of the questions are
+     * either badly phrased or badly explained", and part of that was that they all looked alike. */
+    console.log(`  ${late ? '!!' : '  '} [${where}]  ${String(q.topic || '?').toUpperCase()}  asked ${q.asked}, ${when}`);
     for (const line of String(q.q).match(/.{1,96}(\s|$)/g) || [q.q]) console.log(`       ${line.trim()}`);
     console.log('');
   }
@@ -135,7 +139,15 @@ if (!rows.length) {
 
 console.log(`${rows.length} ${all ? 'note(s)' : 'UNHANDLED note(s)'}, newest first:\n`);
 for (const r of rows) {
-  const when = String(r.created_at).slice(0, 16).replace('T', ' ');
+  /* THIS PRINTED " hu Aug 27" FOR A MONTH. `created_at` comes back from the driver as a JS Date,
+   * not an ISO string, so `String()` gives "Thu Aug 27 2026 20:15:33 GMT-0600 ...". The slice took
+   * "Thu Aug 27 2026 " and `.replace('T', ' ')` then ate the T of "Thu", because the code was
+   * written for the ISO shape and never looked at its own output. Convert deliberately instead of
+   * pattern-matching a string whose shape was assumed. */
+  const at = r.created_at instanceof Date ? r.created_at : new Date(r.created_at);
+  const when = Number.isNaN(at.getTime())
+    ? String(r.created_at)
+    : `${at.toISOString().slice(0, 10)} ${at.toISOString().slice(11, 16)} UTC`;
   console.log(`  #${r.id}  ${r.date}  ${r.day_title || r.day || ''}  (written ${when})${r.handled ? '  [handled]' : ''}`);
   for (const line of String(r.body).split('\n')) console.log(`      ${line}`);
   console.log('');

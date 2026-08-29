@@ -119,11 +119,11 @@ const CASES = [
     expect: 'NOT a verbatim span',
   },
   {
-    name: 'a partner with neither whyHere nor open is refused',
+    name: 'a partner with neither whyHere nor a placement question is refused',
     mutate: (p) => {
       delete partnerOf(spanBlock(p)).whyHere;
     },
-    expect: 'no "whyHere" and no "open"',
+    expect: 'no open question with topic "placement"',
   },
   {
     name: 'whyHere on a lead lift is refused',
@@ -134,12 +134,84 @@ const CASES = [
     expect: 'which is a lead lift',
   },
   {
-    name: 'both whyHere and open on one partner is refused',
+    /* THE PERMITTED DIRECTION FOR `topic`, and the reason the field exists. This case asserted the
+     * OPPOSITE until 2026-08-29: a partner carrying both a written reason and an open question was
+     * refused, on the theory that "either the reason is written or it is not". Tuesday's overhead
+     * extension is both at once, and so is the lateral raise with a progression question on it. The
+     * old rule forced the reason off the card, and the card then said "No reason recorded yet" with
+     * the reason one tap above it. A gate that pushes true information off the screen is worse than
+     * the state it was refusing. */
+    name: 'a whyHere plus a question about something OTHER than placement is allowed',
     mutate: (p) => {
       const blk = openBlock(p);
-      partnerOf(blk).whyHere = blk.why.slice(0, 60);
+      const partner = partnerOf(blk);
+      partner.whyHere = blk.why.slice(0, 60);
+      partner.open.forEach((q) => { q.topic = 'cue'; });
     },
-    expect: 'carries both',
+    expect: null,
+  },
+  {
+    name: 'a partner whose only question is about its cue still needs a whyHere',
+    mutate: (p) => {
+      const blk = openBlock(p);
+      const partner = partnerOf(blk);
+      delete partner.whyHere;
+      partner.open.forEach((q) => { q.topic = 'cue'; });
+    },
+    expect: 'no open question with topic "placement"',
+  },
+  {
+    /* THE THREE STATEMENTS PARKED IN A QUESTION SLOT, made unrepresentable. All three were true
+     * station facts and none asked him anything, and gym-notes.mjs printed all three to him under a
+     * heading promising questions, each with a due date. */
+    name: 'an open question that does not end in a question mark is refused',
+    mutate: (p) => {
+      const q = partnerOf(openBlock(p)).open[0];
+      q.q = q.q.replace(/\?\s*$/, '.');
+      if (/\?\s*$/.test(q.q)) throw new Error('anchor question did not end in a question mark; the gate under test is already unmet');
+    },
+    expect: 'does not end in a question mark',
+  },
+  {
+    name: 'an open question with an unknown topic is refused',
+    mutate: (p) => {
+      partnerOf(openBlock(p)).open[0].topic = 'general';
+    },
+    expect: '"topic" must be one of',
+  },
+  {
+    name: 'an open question with no topic at all is refused',
+    mutate: (p) => {
+      delete partnerOf(openBlock(p)).open[0].topic;
+    },
+    expect: '"topic" must be one of',
+  },
+  {
+    /* equipment.json's `open` rows were checked by NOTHING until 2026-08-29, and one sat there for
+     * two days asserting a premise the same file had already falsified. A gate on one of the two
+     * files this feature lives in is a gate on half the feature. */
+    name: 'a station question that is a statement is refused',
+    file: 'equipment.json',
+    mutate: (e) => {
+      const station = Object.values(e.zones)
+        .flatMap((z) => Object.values(z.stations || {}))
+        .find((s) => Array.isArray(s?.open) && s.open.length);
+      if (!station) throw new Error('no station carries an open question; repoint this case');
+      station.open[0].q = station.open[0].q.replace(/\?\s*$/, '.');
+    },
+    expect: 'does not end in a question mark',
+  },
+  {
+    name: 'a station question with a bad due date is refused',
+    file: 'equipment.json',
+    mutate: (e) => {
+      const station = Object.values(e.zones)
+        .flatMap((z) => Object.values(z.stations || {}))
+        .find((s) => Array.isArray(s?.open) && s.open.length);
+      if (!station) throw new Error('no station carries an open question; repoint this case');
+      station.open[0].due = 'next week';
+    },
+    expect: '"due" must be YYYY-MM-DD',
   },
   {
     name: 'an open question due before it was asked is refused',

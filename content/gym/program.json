@@ -163,6 +163,7 @@
               "progression": "reps",
               "open": [
                 {
+                  "topic": "prescription",
                   "q": "The card says 3 sets of 3 and on 2026-08-27 you logged 10 reps a set. One of the two is wrong and nobody has established which. Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
@@ -264,7 +265,8 @@
               "progression": "weight",
               "open": [
                 {
-                  "q": "This was a second BB Romanian Deadlift called light, at 2x8. It was never light: the app gave it the same weight as the heavy day because both days shared one exercise id, and on 2026-08-27 you did 185x6 twice against a 2x8. It is a DB Romanian Deadlift now, which has its own weight and its own history, the way the front squat does against the back squat. THE CUE STILL DESCRIBES THE BARBELL. Read it and say what it should say.",
+                  "topic": "cue",
+                  "q": "This was a second BB Romanian Deadlift called light, at 2x8. It was never light: the app gave it the same weight as the heavy day because both days shared one exercise id, and on 2026-08-27 you did 185x6 twice against a 2x8. It is a DB Romanian Deadlift now, which has its own weight and its own history, the way the front squat does against the back squat. THE CUE STILL DESCRIBES THE BARBELL. Read it at the rack: what should it say?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -581,7 +583,8 @@
               "rangeWidth": 4,
               "open": [
                 {
-                  "q": "TWO THINGS, and the first is thirty seconds at the bar. (1) THE HANGING KNEE RAISE CUE BELOW IS A DRAFT AND NOBODY HAS READ IT ON THE BAR. You have logged six sets of these in August and no cue was ever written for them, so this one was drafted rather than taken off a published page, and it says so on the card. Read it hanging there and say what it should say. (2) The card lists the knee raise AFTER the three press sets, and your note #33 says you did them BETWEEN: \"Hanging knee raises between overhead db 3x10\". Alternating is what you did and it is exactly what this block's old question was asking for, but the press is at the bench and the bar is in the rack section, and validate.mjs refuses a paired block that spans two zones because doing both in one window means walking between them every set. You walked, and did not report it as a cost. So: was the walk from the bench to the pull-up bar fine, or did it only work because the gym was quiet? If it was fine this becomes a real superset, and the same permission may unlock others.",
+                  "topic": "cue",
+                  "q": "TWO THINGS, and the first is thirty seconds at the bar. (1) THE HANGING KNEE RAISE CUE BELOW IS A DRAFT AND NOBODY HAS READ IT ON THE BAR. You have logged six sets of these in August and no cue was ever written for them, so this one was drafted rather than taken off a published page, and it says so on the card. Read it hanging there and say what it should say. (2) The card lists the knee raise AFTER the three press sets, and your note #33 says you did them BETWEEN: \"Hanging knee raises between overhead db 3x10\". Alternating is what you did and it is exactly what this block's old question was asking for, but the press is at the bench and the bar is in the rack section, and validate.mjs refuses a paired block that spans two zones because doing both in one window means walking between them every set. You walked, and did not report it as a cost. So: was the walk from the bench to the pull-up bar fine, or did it only work because the gym was quiet? If it was fine this becomes a real superset, and the same permission may unlock others. So, two answers: what should the knee raise cue say, and was that walk fine or fine only because the gym was quiet?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
@@ -681,11 +684,13 @@
               "rangeWidth": 4,
               "open": [
                 {
+                  "topic": "placement",
                   "q": "YOU HAVE NOW SKIPPED THIS TWICE AND SAID WHY BOTH TIMES, so the question is no longer about the cue. Note #37, 2026-08-28: \"Didn't do ever head extension because as i said before taht pairing doesn't make sense\". Note #27 before it made this block a sequence rather than a pair, so the card no longer asks you to hold two things on one pulley, and you skipped it anyway. THE ARITHMETIC SAYS YOU ARE RIGHT AND IT IS NOT CLOSE. Run node scripts/gym-coverage.mjs: triceps sit at 22 fractional sets a week against an efficient zone that tops out at 10, this exercise is 6 of the 22, and you do 3 sets of pushdowns later in the same session. Dropping it takes triceps to about 16, still past the zone, and costs nothing measurable. THREE OPTIONS. (a) DROP IT. Cost: the lat pulldown becomes a solo lift with a 90-second empty rest, which is the exact thing your note #28 complained about, so you trade an exercise you refuse for a rest you dislike. (b) KEEP IT AND FIX THE CUE. Cost: the cue below still describes the DUMBBELL version, so it is wrong on the card either way, and this is only worth doing if you would actually do the exercise. (c) REPLACE IT with something that belongs in that rest. Cost: nothing at the high pulley can pair with a pulldown until the shared-column question on cable-pulldown is answered, so this option waits on that one. Which?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
-              ]
+              ],
+              "whyHere": "The triceps do nothing during a pulldown, so they are what follows it"
             }
           ],
           "why": "The week's first vertical pull; the assisted pull-up on Friday is the second. The triceps do nothing during a pulldown, so they are what follows it. Not in its rest: both are on the high pulley and the attachment has to change between them, so one rest window cannot hold both.",
@@ -696,7 +701,7 @@
           "pairing": "fill",
           "label": "Horizontal Pull",
           "tag": "(cable, dumbbells in hand)",
-          "why": "One of the week's two rows, and the earlier one: BB Row on Friday is the other, and the heavy one. Until 2026-08-22 that Friday row was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025), so this is the exposure that was added. The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a lower-body exercise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor.",
+          "why": "One of the week's two rows, and the earlier one: BB Row on Friday is the other, and the heavy one. Until 2026-08-22 that Friday row was the only row in seven days, against the rule that every main pattern happens twice (Pelland 2025), so this is the exposure that was added. The side delt goes in its rest because a row does not use it, and because nothing else in the week does: every press works the front of the shoulder and every row works the back. It replaced a lower-body exercise that was here on 2026-08-22 for no reason anybody could defend, which he spotted from the gym floor. It is a dumbbell and not the cable version because the seated row holds the low pulley while a cable lateral raise needs the adjustable column, so those two cannot share one rest window; a dumbbell holds nothing and travels with you.",
           "exercises": [
             {
               "id": "seated-cable-row",
@@ -753,16 +758,13 @@
               "log": true,
               "open": [
                 {
-                  "q": "Moved to the cable on 2026-08-27 and moved back the same hour: the seated row holds the low pulley and a cable lateral raise needs the adjustable column, so the two cannot share one rest window. A dumbbell holds nothing and travels, which is why the partner is a dumbbell.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                },
-                {
+                  "topic": "prescription",
                   "q": "SOME LIFTS CANNOT REACH THEIR OWN NEXT WEIGHT, and this is one of them: at 20 lb, the top of 12 to 14 reps banks an estimated 29.3 while the next dumbbell up demands 35.0, so maxing out the range earns a jump you will fail. THE FULL LIST IS DELIBERATELY NOT WRITTEN HERE. It was, and it went stale twice in one day: it said five until 2026-08-28, when the assisted pull-up came off it because that finding was WRONG rather than because the lift was fixed (it logs counterweight, so its next rung is 10 lb LESS assistance and the check had the sign inverted), and it said four for about six hours until you logged the cable Pallof and the cable reverse fly that evening and both entered the check. Run scripts/check-ladder.mjs for the live list: it reads your real working weights out of Neon and cannot go stale. Two ways out and they apply to all five. Widen the rep range so the top of it actually earns the jump, which here means 12 to 23 reps and a long set. Or accept that these three stall at their current weight and progress only on reps. Which one, and is a 23-rep set of lateral raises something you would actually do?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
-              ]
+              ],
+              "whyHere": "The side delt goes in its rest because a row does not use it, and because nothing else in the week does"
             }
           ]
         },
@@ -804,7 +806,8 @@
               "increment": 2.5,
               "open": [
                 {
-                  "q": "Your note #29: \"Much rather do the assisted dip than the tricep.pushdown but not sure about the order\". It is not a one-line swap and the gates said so when it was tried: the assisted dip is in the MACHINE bank and the pushdown is on the cable, so three things break at once. (1) The block would span two zones, so the hammer curl cannot stay in its rest window. (2) Tuesday's walk order doubles back: the day currently goes dumbbells, dumbbells, cable, cable, machines, cable, and moving this to machines makes it worse, so the whole day would need reordering. (3) A catalogue bug surfaced by the attempt: assisted-dip lists itself as its own alt. So the real question is bigger than the swap. (a) KEEP THE PUSHDOWN. Cost: nothing, and you do a movement you like less. (b) SWAP AND REORDER TUESDAY so the machine bank is visited once, in order. Cost: the day's shape changes and the hammer curl needs a new home, which is the same question as the Overhead block above. (c) PUT THE DIP SOMEWHERE ELSE, most obviously Friday, which already visits the machine bank three times. Cost: Tuesday loses a triceps exposure and Friday gains one, and triceps are already at 22 fractional sets against an efficient zone topping out at 10. On order: you asked and it depends on which of these you pick, so it is not answered here rather than guessed at.",
+                  "topic": "placement",
+                  "q": "Your note #29: \"Much rather do the assisted dip than the tricep.pushdown but not sure about the order\". It is not a one-line swap and the gates said so when it was tried: the assisted dip is in the MACHINE bank and the pushdown is on the cable, so three things break at once. (1) The block would span two zones, so the hammer curl cannot stay in its rest window. (2) Tuesday's walk order doubles back: the day currently goes dumbbells, dumbbells, cable, cable, machines, cable, and moving this to machines makes it worse, so the whole day would need reordering. (3) A catalogue bug surfaced by the attempt: assisted-dip lists itself as its own alt. So the real question is bigger than the swap. (a) KEEP THE PUSHDOWN. Cost: nothing, and you do a movement you like less. (b) SWAP AND REORDER TUESDAY so the machine bank is visited once, in order. Cost: the day's shape changes and the hammer curl needs a new home, which is the same question as the Overhead block above. (c) PUT THE DIP SOMEWHERE ELSE, most obviously Friday, which already visits the machine bank three times. Cost: Tuesday loses a triceps exposure and Friday gains one, and triceps are already at 22 fractional sets against an efficient zone topping out at 10. On order: you asked, and it depends on which of these you pick, so it is not answered here rather than guessed at. Which of the three?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
@@ -840,16 +843,10 @@
               "station": null,
               "log": true,
               "rangeWidth": 5,
-              "open": [
-                {
-                  "q": "Same reason: the pushdown holds the high pulley and a cable curl needs the low one. Two cable exercises are only one station when they are the same column.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "whyHere": "Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it"
             }
           ],
-          "why": "Arms do not earn twice a week on the frequency evidence, so this block is first to go when time is short. It does not follow that arms get one exposure: counted across the week they get three each, because every partner slot that needed filling got filled with an arm or a delt. That is a live problem with the file and not a justification. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it."
+          "why": "Arms do not earn twice a week on the frequency evidence, so this block is first to go when time is short. It does not follow that arms get one exposure: counted across the week they get three each, because every partner slot that needed filling got filled with an arm or a delt. That is a live problem with the file and not a justification. Pushdown and curl are direct opposites, which is the pairing the review actually studied: antagonist preloading facilitates the second lift rather than blunting it. The curl is a dumbbell and not a cable one because the pushdown holds the high pulley while the cable version would need the low one, and two cable exercises are only one station when they are the same column."
         },
         {
           "role": "accessory",
@@ -888,7 +885,8 @@
               "progression": "weight",
               "open": [
                 {
-                  "q": "YOUR NOTE #35: \"Cable pallof feels weird no idea on how form.should be\". The cue was already long and sourced and it still did not tell you, and one line is why: the success test was \"someone standing behind you could not tell which side the cable is on\", which is not a test you can run on your own. That is the same mistake as a doneness cue you have to have a feel for. It has been replaced with two checks you can do alone (hands drifting off the middle of your chest, and a foot that slides), and the distance from the machine is now stated instead of only appearing as a fix. TWO THINGS TO SAY AT THE MACHINE. (1) Read the new cue standing there and say whether those two checks are things you can actually notice mid-set. (2) \"Feels weird\" may be the exercise rather than the cue: a Pallof is meant to feel like almost nothing is happening, because the work is what does NOT move. If that is what you meant, say so and the cue should say it out loud, because nobody would guess it.",
+                  "topic": "cue",
+                  "q": "YOUR NOTE #35: \"Cable pallof feels weird no idea on how form.should be\". The cue was already long and sourced and it still did not tell you, and one line is why: the success test was \"someone standing behind you could not tell which side the cable is on\", which is not a test you can run on your own. That is the same mistake as a doneness cue you have to have a feel for. It has been replaced with two checks you can do alone (hands drifting off the middle of your chest, and a foot that slides), and the distance from the machine is now stated instead of only appearing as a fix. TWO THINGS TO SAY AT THE MACHINE. (1) Read the new cue standing there and say whether those two checks are things you can actually notice mid-set. (2) \"Feels weird\" may be the exercise rather than the cue: a Pallof is meant to feel like almost nothing is happening, because the work is what does NOT move. If that is what you meant the cue should say it out loud, because nobody would guess it. So: are those two checks things you can actually notice mid-set, and is \"feels weird\" the exercise or the cue?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
@@ -925,12 +923,14 @@
               "log": true,
               "open": [
                 {
-                  "q": "Why does the reverse fly sit in the Cable Pallof rest? This block's why is entirely about anti-rotation and never mentions the fly, so there is no clause to show on the card.",
+                  "topic": "placement",
+                  "q": "Why does the reverse fly sit in the Cable Pallof rest? This block's why is entirely about anti-rotation and never mentions the fly, so there is no clause to show on the card. What is the real reason it is here?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 },
                 {
-                  "q": "This slot moved from db-reverse-fly to cable-reverse-fly on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "topic": "cue",
+                  "q": "This slot moved from db-reverse-fly to cable-reverse-fly on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it standing at the machine: what should it say?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -998,6 +998,7 @@
               "progression": "reps",
               "open": [
                 {
+                  "topic": "prescription",
                   "q": "The card says 3 sets of 4 per side. The one time it is logged, 2026-08-18, you did 4, then 6, then 6. (This question used to say \"3 sets of 3\" and cite a session on 2026-08-27, and both were wrong: it was copied from the box jump row, where both are true. Corrected 2026-08-28 against gym_set.) Note #20 asks how to progress these: a taller box is not the answer (stepping down removes the landing, so height mostly buys a deeper tuck, not more force) and neither is more reps. What is left is intent and ground contact time, and NO trial was found for that ladder, so it is not going on a card until it is sourced. How many did you mean to do?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
@@ -1083,12 +1084,14 @@
               "progression": "weight",
               "open": [
                 {
-                  "q": "You asked for hanging knee raises in this lift's rest, holding the top of the rack you are already standing at. The data will not allow it yet: the rack and the pull-up bar on top of it are two separate stations in equipment.json, and a paired block may hold only one fixture. So, standing there: while you are in the rack with a loaded bar, could another member use that pull-up bar? If no, the bar is part of the rack and the file should say so, and this pairing ships. If yes, they are genuinely two fixtures and the knee raise cannot ride in this rest.",
+                  "topic": "equipment",
+                  "q": "You asked for hanging knee raises in this lift's rest, holding the top of the rack you are already standing at. The data will not allow it yet: the rack and the pull-up bar on top of it are two separate stations in equipment.json, and a paired block may hold only one fixture. So, standing there: while you are in the rack with a loaded bar, could another member use that pull-up bar? If no, the bar is part of the rack and the file should say so, and this pairing ships. If yes, they are genuinely two fixtures and the knee raise cannot ride in this rest. Which is it?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 },
                 {
-                  "q": "And how much trunk work do you actually want. Abdominals are already at 16 fractional sets a week, past the top of the efficient zone at 10, which you can now see on /health under Volume. Three sets of knee raises here takes them to 19. Option 1, add them anyway: past the efficient zone means each extra set buys less, not that it hurts. Option 2, add nothing and move work that is already in the week into these rest gaps instead, for example the single-leg RDL from the front squat day, which costs zero new sets. Option 1 or option 2.",
+                  "topic": "volume",
+                  "q": "And how much trunk work do you actually want. Abdominals are already at 16 fractional sets a week, past the top of the efficient zone at 10, which you can now see on /health under Volume. Three sets of knee raises here takes them to 19. Option 1, add them anyway: past the efficient zone means each extra set buys less, not that it hurts. Option 2, add nothing and move work that is already in the week into these rest gaps instead, for example the single-leg RDL from the front squat day, which costs zero new sets. Option 1 or option 2?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
@@ -1472,7 +1475,7 @@
           "pairing": "fill",
           "label": "Overhead Press",
           "tag": "(machine, dumbbells in hand)",
-          "why": "The second shoulder press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set.",
+          "why": "The second shoulder press. DB Overhead Press on Tuesday was the only one, and it is the pattern with the least to show for the year: 65x8 in July, back to 60x8 now. A machine on the second exposure keeps it cheap. The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set. It is a dumbbell and not the pec deck because the shoulder press machine and the pec deck are two separate fixtures, and one rest window may hold only one.",
           "exercises": [
             {
               "id": "machine-shoulder-press",
@@ -1527,13 +1530,7 @@
               "zone": "machines",
               "station": null,
               "log": true,
-              "open": [
-                {
-                  "q": "Same reason: the shoulder press machine and the pec deck are two separate fixtures.",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "whyHere": "The reverse fly is the antagonist of a press, so it rides in the rest and may even help the next set"
             }
           ]
         },
@@ -1606,11 +1603,13 @@
               "rangeWidth": 4,
               "open": [
                 {
-                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "topic": "cue",
+                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it standing at the machine: what should it say?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
-              ]
+              ],
+              "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle"
             }
           ],
           "why": "Straight-arm pulldown for the catch position in the water. Not sourced in the evidence file, and it stays because it is loadable and it is the one lift here aimed at the swim. Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle.",
@@ -1662,7 +1661,8 @@
               "rangeWidth": 3,
               "open": [
                 {
-                  "q": "This slot moved from ez-preacher-curl to incline-db-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the machine and say what it should say.",
+                  "topic": "cue",
+                  "q": "This slot moved from ez-preacher-curl to incline-db-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the incline bench: what should it say?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }
