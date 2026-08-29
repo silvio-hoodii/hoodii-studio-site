@@ -74,6 +74,19 @@ const GATES = [
    * `--experimental-strip-types` because it imports the .ts directly. No build step, no tsx
    * dependency, same reasoning as `coverage.mts` being .mts. */
   ['progression-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/progression.test.ts']],
+  /* THE BODY-COMPOSITION SPLIT'S SUITE. Added 2026-08-28, the day the rule it guards was fixed.
+   *
+   * Two defects, both live on /health until that day. The fat share was `(dFat / dKg) * 100` through
+   * `Math.abs()`, which printed 233% over one 2025 window and 119% over the 34-day trend the same
+   * tab displays, because a ratio of two deltas stops being a share the moment lean mass moves the
+   * other way. And the two endpoints could come off two different machines, which disagree about fat
+   * mass by up to 2.45 kg on the same day.
+   *
+   * Four of the twelve cases assert the rules PERMIT: the ordinary cut must still print 75%, and an
+   * all-Watch series must keep its full window. A gate watched refusing and never watched permitting
+   * is a gate that might refuse everything, which is how the bare-colour-endpoint check shipped with
+   * four false findings out of four on the same day. */
+  ['health-split-tests', process.execPath, ['--experimental-strip-types', 'src/lib/health/split.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

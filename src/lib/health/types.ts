@@ -1,5 +1,11 @@
 export interface BodyCompPoint {
   date: string;
+  /* WHICH INSTRUMENT TOOK THIS READING, selected since 2026-08-28. It was not selected before, and
+   * that is what let the fat/lean split take its two endpoints from two different machines. On the
+   * 36 days carrying both, the two agree about WEIGHT to 0.05 kg and disagree about FAT MASS by up
+   * to 2.45 kg, so across a real change of one to three kilos the artifact can be larger than the
+   * thing being measured (09-health P2-3). `sameSourcePair` in ./split.ts is what consumes it. */
+  source: string;
   kg: number | null;
   bf_pct: number | null;
   fat_kg: number | null;

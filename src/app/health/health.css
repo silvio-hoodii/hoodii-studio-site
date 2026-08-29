@@ -162,6 +162,63 @@
 .health .strip-legend .swatch.trained { background: var(--muted-foreground); border-color: var(--muted-foreground); }
 .health .strip-legend .swatch.logged::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--background); }
 
+/* ---- the year headline ----
+ *
+ * The one number he asked for by name on 2026-08-28: "I want a big number maybe saying -14-something
+ * kg." It is the largest type on this site and that is the point, so it is declared once, here, and
+ * used once, on /health/deep.
+ *
+ * SIZED IN clamp, NOT AT A FIXED 56px. At 390px a fixed size that fits "-15.2kg" stops fitting the
+ * moment the number needs a third digit or the unit gets longer, and this surface has already paid
+ * for a "100 m" breaking into "100" over "M" on /swim/deep. The floor is what a phone can hold and
+ * the ceiling is what looks deliberate on a laptop.
+ *
+ * NO COLOUR. --signal is reserved for a value that is true right now, and this one is a change over
+ * six months. Colouring a fall green would also mean colouring a rise, and the same colour cannot
+ * mean "good" in both directions: that is the argument that removed the hardcoded `down` class from
+ * the trend line the same day. */
+.health .yearline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 22px;
+  margin-top: 30px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.health .yearline-n {
+  font-family: var(--font-mono);
+  font-size: clamp(46px, 13vw, 68px);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.health .yearline-u {
+  font-size: 0.4em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted-foreground);
+  margin-left: 4px;
+}
+/* min-width 0 so the prose wraps inside the flex row instead of forcing it wider than the page,
+   and a basis wide enough that on a phone it takes its own line rather than a 90px column. */
+.health .yearline-body { flex: 1 1 260px; min-width: 0; }
+.health .yearline-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; }
+
+/* The link to it from the Weight tab. A tap target, so it meets the 44px floor the rest of this
+   surface meets: `probe-taps.mjs` measures every control on this route at 390px. */
+.health .deeplink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  margin-top: 6px;
+}
+
 /* ---- staleness ----
    The store behind this page was filled once, by a migration script with no recurring counterpart.
    Without this the newest reading renders as the current weight forever. */

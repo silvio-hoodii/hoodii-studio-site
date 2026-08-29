@@ -6,6 +6,8 @@ import {
   getSyncLiveness,
   getWatchComposition,
 } from '@/lib/health/db';
+import { getYearBody } from '@/lib/health/year';
+import { splitOf, sameSourcePair } from '@/lib/health/split';
 import { loadConditioning, loadProgram, loadMovements, splitName } from '@/lib/gym/program';
 import { computeCoverage } from '@/lib/gym/coverage.mts';
 import { getTrainingWeek } from '@/lib/gym/week';
@@ -46,14 +48,20 @@ export const dynamic = 'force-dynamic';
  * tab's nine blocks on top of this page's charts would have been six phone screens, which is the
  * wall the whole redesign is undoing. */
 const TABS = [
-  { id: 'now', label: 'Now' },
   /* 'Weight', NOT 'Body'. The nav chip for this route is already labelled Body, one row above, and
    * two controls a row apart carrying the same word mean two different scopes: the chip is the
    * whole page, the sub-tab is a third of it. Caught by reading the rendered markup rather than the
    * source, which is the only way that kind of collision shows up. It is the same inverted
    * hierarchy GymNav's own comment warned about: "two rows of identical chips meaning two different
-   * things, which is the inverted hierarchy that made the blocks unreadable in August." */
+   * things, which is the inverted hierarchy that made the blocks unreadable in August."
+   *
+   * IT IS FIRST, AND IT IS THE DEFAULT, since 2026-08-28. His words: "as soon as I go in, it starts
+   * talking about 2 days in a row and the length of the sessions. It doesn't make sense. Redesign
+   * all that so it leads with the weight." The hub row for this route shows his weight, so the
+   * number he taps and the first thing he was shown were about different subjects; that is the
+   * failure, not the streak. The streak is a good block and it is one tap away. */
   { id: 'weight', label: 'Weight' },
+  { id: 'now', label: 'Now' },
   { id: 'plan', label: 'Plan' },
   /* 'Volume', added 2026-08-27, and it is the answer to a question he asked three times and got a
    * document for three times: "how all those 4 days add up to volume within one period?" Its own
@@ -91,7 +99,10 @@ export default async function HealthPage({
   searchParams: Promise<{ s?: string }>;
 }) {
   const sp = await searchParams;
-  const sub = TABS.find((t) => t.id === sp.s)?.id ?? 'now';
+  /* THE DEFAULT IS THE FIRST TAB, read off TABS rather than typed. It was the literal 'now', so
+     reordering the array would have moved the chips and left the landing tab where it was, which is
+     the kind of half-change that ships looking correct. One declaration, two behaviours. */
+  const sub = TABS.find((t) => t.id === sp.s)?.id ?? (TABS[0] as (typeof TABS)[number]).id;
 
   /* One query per thing the OPEN tab actually draws. The body charts are four reads and the week is
      a session scan; running both on every tap would put work in front of a page he opens between
@@ -126,10 +137,19 @@ export default async function HealthPage({
      charts, which was two identical round trips to Neon, and `fat_kg` and `lean_kg` were already in
      every row it fetched and had never been drawn. Counting round trips rather than work is the
      lesson /reading/shelf paid for: this site's entire external-API bill is Neon. */
-  const [bodySummary, comp, watchComp] =
+  const [bodySummary, comp, watchComp, yearBody] =
     sub === 'weight'
-      ? await Promise.all([getBodyCompSummary(), getBodyCompSeries(120), getWatchComposition(120)])
-      : [null, null, null];
+      ? await Promise.all([
+          getBodyCompSummary(),
+          getBodyCompSeries(120),
+          getWatchComposition(120),
+          /* THE YEAR, ON THE TAB HE OPENS. He asked for it by name on 2026-08-28: "the main number
+             that I want to see is the difference between the highest weight that I've had this year
+             and the lowest." It is computed by the same function /health/deep uses, not by a second
+             copy here, so the two pages cannot print different answers. */
+          getYearBody(),
+        ])
+      : [null, null, null, null];
   const seriesOf = (key: 'kg' | 'bf_pct' | 'fat_kg' | 'lean_kg') =>
     (comp ?? []).filter((r) => r[key] != null).map((r) => ({ date: r.date, value: r[key] as number }));
   const weightSeries = seriesOf('kg');
@@ -137,48 +157,33 @@ export default async function HealthPage({
   const fatSeries = seriesOf('fat_kg');
   const leanSeries = seriesOf('lean_kg');
 
-  /* WHERE THE WEIGHT WENT. Taken between the first and last readings in the window that carry BOTH
-     fat and lean, so the two deltas always describe the same interval the weight delta does.
+  /* WHERE THE WEIGHT WENT, and BOTH RULES IT OBEYS NOW LIVE IN src/lib/health/split.ts, because
+     /health/deep computes the same thing and a second copy is how a fix reaches one surface and not
+     the other. The two incidents behind them, in full, are in that file's header. In short:
 
-     THE PERCENTAGE WAS BUILT TO BREAK ON GOOD NEWS, and it broke today. It was
-     `Math.round((dFat / dKg) * 100)` rendered through `Math.abs()`, and it exceeds 100 or goes
-     negative the moment LEAN MASS MOVES THE OTHER WAY FROM WEIGHT, which is exactly the outcome
-     cutting while lifting is meant to produce. Measured by the 2026-08-28 audit (09-health P1-1):
-     replaying the page's own 120-day window across all 167 readings, 23 windows print an impossible
-     share, including 233% and one where FAT ROSE while the sentence claimed a percentage of loss.
-     The 120-day window happens to print 98% today. The 34-day trend the same tab already displays
-     yields 119% right now: lean +0.8 while weight fell 4.3.
+     THE PERCENTAGE WAS BUILT TO BREAK ON GOOD NEWS. It was `Math.round((dFat / dKg) * 100)` rendered
+     through `Math.abs()`, and it passes 100 or goes negative the moment LEAN MASS MOVES THE OTHER
+     WAY FROM WEIGHT, which is exactly the outcome cutting while lifting is meant to produce. 23 of
+     the 148 windows this page has drawn print an impossible share, including 233%, and the 34-day
+     trend this same tab displays yields 119% right now. So a share is printed only when it IS one.
 
-     `Math.abs()` was the worst part. It hid the sign, so a recomposition (weight up, fat down) would
-     have printed a confident positive percentage for a change that went the other way, which is the
-     false "you have this" direction law 5 names as the worse one.
-
-     SO THE PERCENTAGE IS ONLY PRINTED WHEN IT IS ONE. A share requires the fat change to have the
-     same sign as the weight change and to be no larger than it. Otherwise the numbers are stated
-     plainly, which in the ordinary case is better news than the percentage was ever able to express:
-     "you lost 4.3 kg and gained 0.8 kg of lean" says more than "119% of the change was fat", and it
-     is true. */
-  const split = (() => {
-    const both = (comp ?? []).filter((r) => r.fat_kg != null && r.lean_kg != null && r.kg != null);
-    const a = both[0];
-    const b = both[both.length - 1];
-    if (!a || !b || a.date === b.date) return null;
-    const dFat = (b.fat_kg as number) - (a.fat_kg as number);
-    const dLean = (b.lean_kg as number) - (a.lean_kg as number);
-    const dKg = (b.kg as number) - (a.kg as number);
-    /* Only stated while the weight is actually moving: a share of a delta near zero is a very large
-       percentage of nothing. And only when it IS a share, per the note above. */
-    const moving = Math.abs(dKg) > 1;
-    const sameDirection = dFat !== 0 && Math.sign(dFat) === Math.sign(dKg);
-    const withinTotal = Math.abs(dFat) <= Math.abs(dKg);
-    const fatShare = moving && sameDirection && withinTotal
-      ? Math.round((dFat / dKg) * 100)
-      : null;
-    /* True when lean went the OPPOSITE way from weight, which is the case the percentage could not
-       express and the one worth saying out loud. */
-    const leanHeldOrGained = moving && dKg < 0 && dLean >= 0;
-    return { from: a.date, to: b.date, dFat, dLean, dKg, fatShare, leanHeldOrGained };
-  })();
+     AND THE TWO ENDPOINTS MUST COME OFF THE SAME MACHINE. `both[0]` and `both.at(-1)` took whatever
+     was at the edges of the window, and the Scale and the Watch disagree about fat mass by up to
+     2.45 kg on the same day (09-health P2-3). `sameSourcePair` walks inward until they match, so the
+     interval can shorten, which is why the rendered sentence names the two dates it actually used
+     rather than the window it asked for. */
+  const pair = comp ? sameSourcePair(comp.filter((r) => r.kg != null)) : null;
+  const split = pair
+    ? (() => {
+        const [a, b] = pair;
+        if (a.date === b.date) return null;
+        const s = splitOf(
+          { kg: a.kg as number, fat_kg: a.fat_kg, lean_kg: a.lean_kg },
+          { kg: b.kg as number, fat_kg: b.fat_kg, lean_kg: b.lean_kg },
+        );
+        return s ? { ...s, from: a.date, to: b.date, source: a.source } : null;
+      })()
+    : null;
   /* ATTENDANCE IS TRAINING, NOT BODY COMPOSITION, so it is read on the Now tab. It sat next to the
      weight charts for as long as /health was only about weight, and the tab split is what made that
      visible: nothing about a 30-cell trained/rested strip answers "what is my body doing". */
@@ -289,6 +294,41 @@ export default async function HealthPage({
             </div>
           )}
 
+          {/* THE YEAR FIRST, ABOVE THE LAST WEIGH-IN. Both are true and they answer different
+              questions: the tile below says where he is, this says how far he has come, and he asked
+              for the second one. Above rather than below because a change of this size read after
+              three charts is a footnote. Everything in it is derived in src/lib/health/year.ts and
+              the working is one tap away rather than stacked here, which is the same split the
+              Attendance block already makes. */}
+          {yearBody && (
+            <div className="yearline">
+              <div className="yearline-n tnum">
+                {yearBody.deltaKg > 0 ? '+' : ''}{yearBody.deltaKg.toFixed(1)}
+                <span className="yearline-u">kg</span>
+              </div>
+              <div className="yearline-body">
+                <div className="yearline-rule">
+                  Highest to lowest weight recorded in {yearBody.year}
+                </div>
+                <p className="ex-cue" style={{ marginTop: 0 }}>
+                  <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> on{' '}
+                  {yearBody.peak.date} down to{' '}
+                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span> on{' '}
+                  {yearBody.low.date}, which is{' '}
+                  <span className="tnum">{yearBody.spanDays}</span> days at{' '}
+                  <span className="tnum">
+                    {yearBody.kgPerWeek > 0 ? '+' : ''}{yearBody.kgPerWeek.toFixed(2)} kg
+                  </span>{' '}
+                  a week. The first weigh-in of the year is {yearBody.recordStarts}, so this is the
+                  heaviest reading on record rather than the heaviest you were.
+                </p>
+                <Link href="/health/deep" className="deeplink">
+                  The whole year, every measurement &rarr;
+                </Link>
+              </div>
+            </div>
+          )}
+
           <div className="section">
             <div className="section-head"><h2>Weight &amp; body fat</h2></div>
             {bodySummary?.latest ? (
@@ -366,9 +406,16 @@ export default async function HealthPage({
                   {/* The case the percentage could not express, and it is the good one. Said in words
                       because "119% of the change was fat" is what the arithmetic produced here and it
                       is not a sentence about anything. */}
-                  {split.fatShare == null && split.leanHeldOrGained
+                  {split.fatShare == null && split.leanOpposed && split.dKg < 0
                     && `, so all of the loss was fat and the lean line ${split.dLean > 0 ? 'went up' : 'held'}`}
+                  {split.fatShare == null && split.leanOpposed && split.dKg > 0
+                    && `, so the gain was not fat and the fat line ${split.dFat < 0 ? 'went down' : 'held'}`}
                   .{' '}
+                  {/* THE ENDPOINTS' INSTRUMENT, NAMED. Both ends are the same machine by
+                      construction now, and the section two below draws the Scale/Watch distinction,
+                      so leaving the reader to assume which one this was is the small wrongness that
+                      teaches them the labels mean nothing. */}
+                  Both readings are {split.source.toLowerCase()} readings.{' '}
                   {/* THE OLD SENTENCE HERE WAS A TAUTOLOGY SOLD AS A CHECK. It read "fat mass plus
                       lean mass equals weight exactly, so this is arithmetic rather than a model", and
                       that identity holds because the columns are DEFINED that way: `fat_kg` is
@@ -378,8 +425,12 @@ export default async function HealthPage({
                       already says both lines are inferred from a bioimpedance reading. A reassurance
                       that cannot fail is worse than none: it invites trust the numbers have not
                       earned. */}
-                  Both figures come from the same scale reading as the weight, so they add up by
-                  construction rather than by agreement.
+                  {/* "the same reading", NOT "the same scale reading". The clause above now names
+                      the instrument, and on a watch pair the two sentences contradicted each other
+                      one line apart. Caught by reading the rendered page, which is the only thing
+                      that ever catches this class. */}
+                  Both figures come from that same reading, so they add up by construction rather
+                  than by agreement.
                 </p>
               )}
               <div className="pair">

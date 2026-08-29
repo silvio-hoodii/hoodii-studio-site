@@ -33,8 +33,13 @@ function median(values: number[]): number | null {
 /** Weight/body-fat series for the trend chart, one point per day, Watch preferred over Scale. */
 export async function getBodyCompSeries(days = 120): Promise<BodyCompPoint[]> {
   const cutoff = isoDaysAgo(days);
+  /* `source` is SELECTED, since 2026-08-28. This query has always PREFERRED Watch per date and
+     silently accepted a Scale row on a date with no Watch reading, which is right for the weight
+     line and wrong for anything that subtracts one reading from another: see BodyCompPoint's note
+     and `sameSourcePair` in ./split.ts. It was the one column the caller needed to tell the two
+     apart and the only one not returned. */
   const rows = await sql`
-    select distinct on (date) date, kg, bf_pct, fat_kg, lean_kg
+    select distinct on (date) date, source, kg, bf_pct, fat_kg, lean_kg
     from health_body_comp
     where kg is not null and date >= ${cutoff}
     order by date asc, (source = 'Watch') desc
@@ -63,7 +68,7 @@ export async function getWatchComposition(days = 120): Promise<WatchCompPoint[]>
  *  of the last 5 Watch readings so one dry morning cannot bend the reported rate. */
 export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   const latestRows = await sql`
-    select date, kg, bf_pct, fat_kg, lean_kg from health_body_comp
+    select date, source, kg, bf_pct, fat_kg, lean_kg from health_body_comp
     where kg is not null
     order by date desc, (source = 'Watch') desc limit 1
   `;
