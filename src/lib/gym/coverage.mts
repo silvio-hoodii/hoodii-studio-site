@@ -19,7 +19,13 @@
  *
  *   Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose
  *   Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle
- *   Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505. doi:10.1007/s40279-025-02344-w
+ *   Hypertrophy and Strength Gains. Sports Med. doi:10.1007/s40279-025-02344-w
+ *
+ *   THE DOI, NOT A PAGE RANGE, since 2026-08-29. This cited "56(2):481-505" and nobody had opened
+ *   the paper: he asked "where does the 10 come from, literally find me the citation" and the honest
+ *   answer was a Springer landing page and a search summary. The full text was fetched that day and
+ *   every number here checks out against it, but the copy available is the online-first version and
+ *   carries no volume or pages, so the page range remains UNVERIFIED and is not printed.
  *   67 studies, 2,058 participants. Tables 3 and 4.
  *
  * Its conclusion, verbatim, is why sets are counted in halves here: the dose-response relationships

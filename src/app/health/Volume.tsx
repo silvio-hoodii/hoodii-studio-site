@@ -296,9 +296,18 @@ export default function Volume({
       {/* NOT .quiet-inline, which carries white-space: nowrap. It is for a date riding beside a
           number, and on a paragraph it ran the citation off the right edge of the phone with the
           journal and year unreadable. Caught in a screenshot; nothing else would have shown it. */}
+      {/* THE DOI, NOT A PAGE RANGE, since 2026-08-29. This printed "2026;56(2):481-505" and nobody
+          in this repo had opened the paper. He asked for the citation for the number 10, opened what
+          he was given, and found an abstract: "You're giving me a source, I'm opening it, and there's
+          nothing there that talks about the 10." The full text was fetched that day and every figure
+          on this page checks out against it, but the available copy is the online-first version and
+          carries no volume or pages, so the page range is unverified and no longer printed. A
+          citation precise enough to look wrong is worse than one that stops where the evidence does. */}
       <p className="ex-cue vol-cite">
-        Pelland JC et al. The Resistance Training Dose Response. Sports Med. 2026;56(2):481-505,
-        Tables 3 and 4. 67 studies, 2,058 participants. Zhang 2025, Sports Med 55(4):953-975, for the
+        Pelland JC et al. The Resistance Training Dose Response. Sports Med, doi:10.1007/s40279-025-02344-w,
+        Tables 3 and 4. 67 studies, 2,058 participants. The 5 to 10 band is Table 3&rsquo;s
+        &ldquo;higher efficiency&rdquo; tier: past it, another detectable increment of growth costs
+        about 8.5 more sets a week instead of about 6. Zhang 2025, Sports Med 55(4):953-975, for the
         pairing rule. The counting is done by src/lib/gym/coverage.mts, the same code behind{' '}
         <code>node scripts/gym-coverage.mjs</code>, so this page and that gate cannot disagree.
       </p>

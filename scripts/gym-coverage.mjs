@@ -83,7 +83,7 @@ const padL = (s, n) => String(s).padStart(n);
 const rule = (c = '-') => console.log(c.repeat(78));
 
 console.log('\nWHAT THE WEEK ACTUALLY DELIVERS');
-console.log('Pelland 2026, Sports Med 56(2):481-505. Fractional sets: primary 1.0, synergist 0.5.');
+console.log('Pelland 2026, doi:10.1007/s40279-025-02344-w. Fractional sets: primary 1.0, synergist 0.5.');
 rule('=');
 
 console.log(`\nPER MUSCLE, for SIZE  (Table 3: minimum ${MIN_EFFECTIVE_DOSE}, efficient zone 5 to ${EFFICIENT_ZONE_TOP})\n`);
