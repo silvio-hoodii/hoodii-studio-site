@@ -1086,8 +1086,8 @@
         {
           "role": "accessory",
           "pairing": "fill",
-          "label": "Lunge",
-          "tag": "(dumbbells, floor right there)",
+          "label": "Lunge + Calves",
+          "tag": "(dumbbells, no kit)",
           "exercises": [
             {
               "id": "reverse-lunge",
@@ -1119,9 +1119,22 @@
               ],
               "progression": "weight",
               "rangeWidth": 6
+            },
+            {
+              "id": "db-calf-raise",
+              "name": "DB Calf Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing on the floor in the rest between lunge sets, a dumbbell in each hand hanging at your sides. Feet about hip width. Push all the way up onto your toes, as high as you can go, and hold for one second at the top. Then lower slowly, about three seconds down, until your heels touch the floor and you feel a stretch through the back of the calf. Success looks like: you can hold the top position still for a second without wobbling, and the slow way down is what you feel most. If you cannot hold the top, the dumbbells are too heavy. This is the flat-floor version, so the stretch at the bottom is smaller than on the machine; that is the trade for it costing you no walk.",
+              "progression": "weight",
+              "whyHere": "calves carry the second lowest loaded volume in the programme and this rest was empty"
             }
           ],
-          "why": "Single-leg work, for the knee-valgus reason: the loaded single-leg pattern is what frontal-plane control is trained with, and it is injury insurance for the running. It runs on its own at the moment, which is a gap rather than a decision."
+          "why": "Single-leg work, for the knee-valgus reason: the loaded single-leg pattern is what frontal-plane control is trained with, and it is injury insurance for the running. The calf raise rides in its rest because calves carry the second lowest loaded volume in the programme and this rest was empty, and because a dumbbell calf raise holds no fixture, so it costs no walk and blocks nobody."
         },
         {
           "role": "accessory",
@@ -1205,9 +1218,9 @@
         },
         {
           "role": "accessory",
-          "pairing": "sequence",
-          "label": "Hamstrings, then Calves",
-          "tag": "(machine, then the other machine)",
+          "pairing": "fill",
+          "label": "Hamstrings",
+          "tag": "(machine, dumbbells in hand)",
           "exercises": [
             {
               "id": "leg-curl",
@@ -1242,30 +1255,20 @@
               "progression": "weight"
             },
             {
-              "id": "standing-calf-raise",
-              "name": "Machine Calf Raise",
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
               "zone": "machines",
-              "station": "calf-raise",
+              "station": null,
               "log": true,
-              "cue": "On the standing calf machine. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running.",
-              "alts": [
-                {
-                  "id": "single-leg-calf-raise",
-                  "name": "Single-Leg Calf Raise",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "One leg at a time holding one dumbbell, full range. Harder, and closer to what running actually asks of the ankle. 3x12/leg.",
-                  "progression": "weight"
-                }
-              ],
+              "cue": "Standing beside the leg curl, in the rest between its sets. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle.",
               "progression": "weight",
-              "whyHere": "Calves are twice a week here and the evidence file does not ask for that"
+              "whyHere": "The reverse fly stands in its rest because a leg curl uses nothing above the waist"
             }
           ],
-          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. Calves are twice a week here and the evidence file does not ask for that: it says squat, hinge, press and pull go twice, and that arms, calves and delts do not need to. This is also where a calf raise actually belongs: it was briefly on Tuesday paired with a cable row, he asked why, and he was right. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) pairs calves with the hinge on a lower day, which is the same reasoning."
+          "why": "Two holes in the week, both filled on the day they belong to. The hamstring only ever worked at the HIP here, in the RDLs; nothing bent the knee against resistance, and the leg curl is the only machine in the building that does. The reverse fly stands in its rest because a leg curl uses nothing above the waist, so the two genuinely alternate and neither taxes the other, and a dumbbell holds no fixture so this block occupies one machine rather than two."
         }
       ]
     },
