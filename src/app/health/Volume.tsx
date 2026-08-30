@@ -30,12 +30,15 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
  * edge of the phone: the table scrolls sideways inside its own box, which is correct for the
  * per-day numbers and wrong for the one cell that says whether a number is a problem.
  *
- * Only the two ends of the scale are labelled. A muscle sitting inside the efficient zone gets no
- * note at all, because sixteen rows each carrying "in 5 to 10" is a column of noise that pushes the
- * two rows that matter off the screen. The legend under the table says what silence means. */
-function State({ below, past }: { below: boolean; past: boolean }) {
+ * ONLY THE BOTTOM END IS LABELLED NOW, since 2026-08-30. It used to badge "over 10" as well, in the
+ * same slot and the same weight as "under 4", which made two completely different statements look
+ * like two grades of one warning: under 4 is below the smallest dose that produced measurable
+ * growth, and past 10 is where the next set costs more than the last. His words: "you always
+ * reference the 10 ... that is too much". Eleven of sixteen rows carried it, so it was also the
+ * column of noise this comment was already warning about, rebuilt with a longer string. The legend
+ * under the table explains what an unlabelled row means, once, instead of eleven times. */
+function State({ below }: { below: boolean }) {
   if (below) return <div className="vol-state under">under {MIN_EFFECTIVE_DOSE}</div>;
-  if (past) return <div className="vol-state">over {EFFICIENT_ZONE_TOP}</div>;
   return null;
 }
 
@@ -99,9 +102,21 @@ export default function Volume({
                 <tr key={m.muscle}>
                   <td className="wide">
                     {m.label}
-                    <State below={m.belowMinimum} past={m.pastEfficient} />
+                    <State below={m.belowMinimum} />
                   </td>
-                  <td className="tnum live">{fmt(m.sets)}</td>
+                  {/* BOTH NUMBERS, since 2026-08-30, and only where they differ. His reading of this
+                      table: "I don't know if all the exercises should represent the same weight ...
+                      we're either misrepresenting or misadding the contribution of an exercise."
+                      He was right. A three-rep box jump was counted as one full quad set, the same
+                      as a set of back squats, and 35% of the quadriceps total came from work that
+                      cannot be progressed at all. The second number is the loaded half, which is
+                      what the dose-response curve is actually denominated in. */}
+                  <td className="tnum live">
+                    {fmt(m.sets)}
+                    {m.loadedSets !== m.sets && (
+                      <div className="vol-loaded">{fmt(m.loadedSets)} loaded</div>
+                    )}
+                  </td>
                   {m.byDay.map((v, i) => (
                     <td className="daycell" key={dayLabels[i] ?? i}>
                       {v ? (

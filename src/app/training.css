@@ -1213,6 +1213,17 @@
   white-space: nowrap;
 }
 .training .vol-state.under { color: var(--signal); }
+/* The loaded half of a muscle's total, under the total it is part of. Quieter than the number above
+   it because it is a qualifier, not a second headline: the row still adds up to the big number, and
+   this says how much of it is work that can be progressed. `nowrap` is deliberate, since "15 loaded"
+   breaking after "15" would read as two separate figures, which is the fault it exists to fix. */
+.training .vol-loaded {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  font-weight: 400;
+}
 /* The day headers wrap to two lines instead of forcing a 55px nowrap column each. 'Lower A' over
    two lines is still the tab label he knows; 'LA' would be a second vocabulary for the same four
    days. Overrides .plan-table th's nowrap, which is right for a distance and wrong for a name. */
