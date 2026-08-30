@@ -105,13 +105,38 @@
           "confidence": "logged",
           "evidence": "Lat pulldown to 200, straight-arm pulldown 65, tricep pushdown 87.5",
           "sharedInOneWindow": false,
-          "sharedNote": "HIS RULING, note #27 on 2026-08-28, in his own words: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" Two exercises on this column are not one station in any useful sense: the attachment and the seat have to change between them, so alternating means reconfiguring the machine every set. That is not a superset, it is two exercises with setup in between. Which cable exercises CAN share one window is an open question on this station.",
+          "sharedNote": "Note #27 read \"lat pull down and overhead triceps cable can't be done at the same time\" and was modelled as two exercises fighting over one column. On 2026-08-30 he said the lat pulldown is its OWN fixture, separate from the adjustable column, and that changing an attachment or a pulley height between sets is not a cost he minds. So the two were never on one station; they are two stations in arm’s reach, which is case (c) of the rule this file quotes. See adjacentTo.",
+          "adjacentTo": [
+            "cable-row",
+            "cable-adjustable"
+          ],
+          "adjacentConfidence": "stated",
+          "adjacentNote": [
+            "ADJACENT, ON HIS RULING OF 2026-08-30, and this is case (c) of the rule at the top of this file",
+            "finally executing. His words, answering the open question on cable-pulldown: \"the lat pulldown and",
+            "the high cable are diffreten stations right? ... i dont mind changin attachments or changing the",
+            "position of the polley is just lat pulldown is a different station, why is this hard?\"",
+            "",
+            "Two facts in that, and the second is the one nothing had modelled. The lat pulldown is its OWN",
+            "fixture, separate from the adjustable column, so note #27 was never about two exercises on one",
+            "machine. And holding two cable fixtures across one rest window is fine by him: they are within",
+            "arm’s reach and changing an attachment or a pulley height between sets is not a cost he minds.",
+            "",
+            "The 2026-05-23 rule this file quotes has THREE cases: same equipment, a no-fixture partner, or",
+            "\"adjacent equipment in arm’s reach\". validate.mjs implemented the first two and the word",
+            "\"adjacent\" appeared nowhere in it, so every pairing across two fixtures was refused however close",
+            "they stood. That is the mechanical reason he kept being told no partner existed.",
+            "",
+            "DECLARED ONLY WHERE HE HAS SAID SO. The machine bank is NOT adjacent: he called leg curl plus calf",
+            "raise impossible. The rack and its pull-up bar are NOT adjacent: he said that walk works \"only when",
+            "the gym is not busy\", which is a condition a card cannot check."
+          ],
           "open": [
             {
               "topic": "equipment",
-              "q": "WHICH CABLE EXERCISES CAN ACTUALLY SHARE ONE REST WINDOW ON THE HIGH PULLEY? Your note #27 settled that the lat pulldown and the cable overhead tricep extension cannot, and Tuesday's block is a sequence now rather than a pair. You suggested the straight-arm pulldown instead. Friday already pairs the straight-arm pulldown with that same tricep extension, so if those two DO work together the same swap fixes Tuesday. Three things to say at the machine, and they are all about what has to be unclipped: (a) can the straight-arm pulldown and the overhead tricep extension run off the same attachment, so nothing changes between sets? (b) does the tricep pushdown share an attachment with either of them, since it is paired with a curl on Tuesday? (c) is there more than one high pulley column, which would make this whole question moot. The gate now refuses ANY two exercises on one station unless the station is declared shareable, so answering these unlocks pairings rather than removing them. So: (a), (b), and (c)?",
-              "asked": "2026-08-28",
-              "due": "2026-09-11"
+              "q": "YOUR ANSWER UNLOCKED THE PAIRINGS AND LEFT ONE THING UNDECIDED. You said the lat pulldown is its own station, separate from the high cable, and that changing an attachment or the pulley height between sets is fine. Both are now in the file and the validator honours them: two cable fixtures in arm’s reach may hold one rest window, which is case (c) of your own 2026-05-23 rule and had never been implemented. WHAT THE FILE STILL GUESSES IS WHICH COLUMN EACH LIFT IS ON. Four cable exercises are all recorded against the lat pulldown machine: the lat pulldown itself, the straight-arm pulldown, the tricep pushdown and the cable overhead tricep extension. On your answer that is probably wrong for three of them, but where you actually stand is not something to infer from a sentence. So, next time you are in the cable section: of those four, which are done ON the lat pulldown seat and which on the adjustable column?",
+              "asked": "2026-08-30",
+              "due": "2026-09-13"
             }
           ]
         },
@@ -120,7 +145,12 @@
           "confidence": "archive",
           "evidence": "Seeded as a sub in the 2026-05-23 exercise set",
           "sharedInOneWindow": false,
-          "sharedNote": "Same reasoning as cable-pulldown. Not confirmed separately."
+          "sharedNote": "Same reasoning as cable-pulldown. Not confirmed separately.",
+          "adjacentTo": [
+            "cable-pulldown",
+            "cable-adjustable"
+          ],
+          "adjacentConfidence": "stated"
         },
         "cable-adjustable": {
           "name": "Adjustable-height cable column",
@@ -128,7 +158,12 @@
           "evidence": "2026-08-22, in his words: 'all the cables are adjustable so if that was the limitation, it doesn't really exist because all the cable columns are adjustable for bottom and for top.'",
           "note": "This was 'unknown' from 2026-08-15 to 2026-08-22 and it was load-bearing: it is why the Pallof press was cut, and cutting the Pallof press is why the week had no rotational or anti-rotation work at all. An unverified NO cost a whole movement pattern for a week. Worth remembering the next time something is marked unknown: the safe default protects against prescribing what is not there, and it does nothing about the training that quietly goes missing.",
           "sharedInOneWindow": false,
-          "sharedNote": "Same reasoning, and this one has a second reason: the height is the whole point of the column, so two exercises at different heights reconfigure it by definition."
+          "sharedNote": "Same reasoning, and this one has a second reason: the height is the whole point of the column, so two exercises at different heights reconfigure it by definition.",
+          "adjacentTo": [
+            "cable-pulldown",
+            "cable-row"
+          ],
+          "adjacentConfidence": "stated"
         }
       }
     },
@@ -306,7 +341,27 @@
       "range": {
         "maxLb": 90
       },
-      "ladderLb": [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90],
+      "ladderLb": [
+        10,
+        12.5,
+        15,
+        17.5,
+        20,
+        25,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        65,
+        70,
+        75,
+        80,
+        85,
+        90
+      ],
       "ladderConfidence": "stated",
       "ladderNote": [
         "THE RACK HAS TWO DIFFERENT STEPS AND THE MODEL COULD NOT EXPRESS THAT. Every weighted lift",

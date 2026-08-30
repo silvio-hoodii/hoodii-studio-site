@@ -138,13 +138,40 @@ export interface Contribution {
    *  said which. The page prints "half of 2" beside the halved ones now. */
   rawSets: number;
   primary: boolean;
+  /** False for a jump, a carry or a hold. See `loadedSets` on MuscleRow. */
+  loadable: boolean;
 }
 
 export interface MuscleRow {
   muscle: string;
   label: string;
   sets: number;
+  /* A BOX JUMP IS NOT A SET OF SQUATS, AND THIS TABLE COUNTED IT AS ONE. Added 2026-08-30, on his
+   * reading of the numbers: "I don't know if all the exercises should represent the same weight in
+   * that table ... we're either misrepresenting or misadding the contribution of an exercise."
+   *
+   * He is right, and the size of it is not small. 35% of the quadriceps number and 39% of the
+   * abdominals number came from exercises this same file's STRENGTH table labels "NO, cannot
+   * progress": box jumps, lateral bounds, dead bugs, hanging knee raises, planks and carries.
+   * Raising the box jump from 3 sets to 5 on 2026-08-29 added 2 quad and 2 glute "sets" that are
+   * three explosive reps at bodyweight.
+   *
+   * Pelland's meta-regression is fitted on RESISTANCE TRAINING sets. A three-rep jump trained for
+   * speed, a 30-second carry and an anti-rotation hold are real training and are in the programme
+   * for real reasons, but they are not the unit the dose-response curve is denominated in, so
+   * adding them to it inflates the number that every "is there room for more work" decision was
+   * being made against.
+   *
+   * BOTH ARE REPORTED AND NEITHER IS HIDDEN, because the split is a judgement and not something the
+   * paper hands over. `sets` is every fractional set as before, so nothing that read this number
+   * before silently changes meaning. `loadedSets` excludes the non-loadable work. `loadable` in
+   * movements.json means "weight can be added", which is a proxy for "the kind of set the curve was
+   * fitted on" and not the same thing: a carry is loaded and still is not a hypertrophy set. Where
+   * they disagree, the honest reading is the one that does not decide anything on its own. */
+  loadedSets: number;
   tier: Tier;
+  /** The tier of `loadedSets`, which is the one a dose decision should be read against. */
+  loadedTier: Tier;
   belowMinimum: boolean;
   pastEfficient: boolean;
   byDay: number[];
@@ -270,6 +297,8 @@ export function computeCoverage(
 
   const missing: string[] = [];
   const perMuscle = new Map<string, number>();
+  /** The same accumulation, excluding jumps, carries and holds. See loadedSets on MuscleRow. */
+  const perMuscleLoaded = new Map<string, number>();
   const perMuscleByDay = new Map<string, Map<string, number>>();
   /** muscle -> day -> the exercises that fed it that day, in session order. */
   const perMuscleDetail = new Map<string, Map<string, Contribution[]>>();
@@ -310,17 +339,19 @@ export function computeCoverage(
           let byDay = perMuscleDetail.get(m);
           if (!byDay) perMuscleDetail.set(m, (byDay = new Map()));
           const list = byDay.get(dayKey) ?? [];
-          list.push({ name: ex.name, sets: n, rawSets: sets, primary });
+          list.push({ name: ex.name, sets: n, rawSets: sets, primary, loadable: info.loadable });
           byDay.set(dayKey, list);
         };
         for (const m of info.primary) {
           bump(perMuscle, m, sets);
           bump(dayMap, m, sets);
+          if (info.loadable) bump(perMuscleLoaded, m, sets);
           note(m, sets, true);
         }
         for (const m of info.secondary) {
           bump(perMuscle, m, sets * 0.5);
           bump(dayMap, m, sets * 0.5);
+          if (info.loadable) bump(perMuscleLoaded, m, sets * 0.5);
           note(m, sets * 0.5, false);
         }
 
@@ -395,11 +426,14 @@ export function computeCoverage(
     .sort((a, b) => b[1] - a[1])
     .map(([muscle, sets]) => {
       const tier = tierFor(HYPERTROPHY_TIERS, sets);
+      const loadedSets = perMuscleLoaded.get(muscle) ?? 0;
       return {
         muscle,
         label: cat.muscles[muscle] ?? muscle,
         sets,
+        loadedSets,
         tier,
+        loadedTier: tierFor(HYPERTROPHY_TIERS, loadedSets),
         belowMinimum: sets < MIN_EFFECTIVE_DOSE,
         pastEfficient: sets > EFFICIENT_ZONE_TOP,
         byDay: dayOrder.map((d) => perMuscleByDay.get(d)?.get(muscle) ?? 0),

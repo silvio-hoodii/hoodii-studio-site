@@ -86,16 +86,41 @@ console.log('\nWHAT THE WEEK ACTUALLY DELIVERS');
 console.log('Pelland 2026, doi:10.1007/s40279-025-02344-w. Fractional sets: primary 1.0, synergist 0.5.');
 rule('=');
 
-console.log(`\nPER MUSCLE, for SIZE  (Table 3: minimum ${MIN_EFFECTIVE_DOSE}, efficient zone 5 to ${EFFICIENT_ZONE_TOP})\n`);
-console.log(pad('muscle', 22) + padL('sets/wk', 9) + '  ' + pad('tier', 15) + 'per day (Lower A / Upper A / Lower B / Upper B)');
+/* MORE IS MORE, AND THIS REPORT HAS BEEN READ AS IF IT WERE A BUDGET. Rewritten 2026-08-30.
+ *
+ * His words: "you always reference the 10: oh you're over the 10, you're at 20-something, that's
+ * too much ... it seems to me that we are forcing ourselves into fitting something that probably
+ * does not necessarily need to be that strict."
+ *
+ * HE IS RIGHT AND THE PAPER SAYS SO. Pelland's finding on volume, quoted in section 1 of
+ * HealthOS/knowledge/training-programme-evidence.md: the posterior probability that the slope
+ * exceeds zero is 100% for BOTH hypertrophy and strength, with diminishing returns. There is no
+ * ceiling in it. The tiers are an EFFICIENCY RANKING, not a cap: at 23 sets more sets still add
+ * growth, they just cost more per unit of it. Nothing gets worse at 11.
+ *
+ * Everything downstream treated the 10 as a wall. `gym-catalogue --fill` disqualified 25 to 43
+ * legal partners per block with "all of them adding sets to a muscle already past 10", which is how
+ * nine blocks came to be single lifts with an empty rest and how he came to be told, repeatedly,
+ * that there was no exercise available to pair. There was. There were 38 for the lunge alone.
+ *
+ * THE REAL CONSTRAINT IS HIS TIME, and this report cannot see it, so it stops pretending to. */
+console.log(`\nPER MUSCLE, for SIZE  (Table 3: minimum ${MIN_EFFECTIVE_DOSE}; 5 to ${EFFICIENT_ZONE_TOP} is the CHEAPEST band, not a cap)\n`);
+console.log(pad('muscle', 22) + padL('all', 6) + padL('loaded', 8) + '  ' + pad('tier (on loaded)', 17) + 'per day (Lower A / Upper A / Lower B / Upper B)');
 rule();
 for (const m of coverage.perMuscle) {
   const byDay = m.byDay.map((v) => (v ? String(v) : '.')).join(' / ');
-  const flag = m.belowMinimum ? ' <<' : m.pastEfficient ? ' >>' : '';
-  console.log(pad(m.label, 22) + padL(m.sets, 9) + '  ' + pad(m.tier.tier, 15) + byDay + flag);
+  const flag = m.belowMinimum ? ' <<' : '';
+  const gap = m.sets !== m.loadedSets ? '*' : ' ';
+  console.log(pad(m.label, 22) + padL(m.sets, 6) + padL(m.loadedSets, 7) + gap + '  ' + pad(m.loadedTier.tier, 17) + byDay + flag);
 }
-console.log(`\n  <<  below the minimum effective dose of ${MIN_EFFECTIVE_DOSE} fractional sets`);
-console.log('  >>  past the efficient zone: every further set buys less than the one before');
+console.log(`\n  <<  below the minimum effective dose of ${MIN_EFFECTIVE_DOSE} fractional sets. This is the only line here that is a problem.`);
+console.log('   *  "all" includes jumps, carries and holds; "loaded" does not. A three-rep box jump is');
+console.log('      not a set of squats, and until 2026-08-30 this table counted it as one: 35% of the');
+console.log('      quadriceps number and 39% of the abdominals number came from work the STRENGTH');
+console.log('      table below calls "cannot progress". The tier is read off the loaded column.');
+console.log('  NOTE  past 10 is not too much. Volume raises size and strength with posterior');
+console.log('      probability 100% in Pelland; the bands rank how EXPENSIVE the next increment is,');
+console.log('      not whether it works. What limits this programme is the time he has, not a number.');
 
 console.log('\n\nPER LIFT, for STRENGTH  (Table 4: minimum 1, and past 5 extra sets stop paying)\n');
 console.log(pad('lift', 30) + padL('sets/wk', 9) + padL('days', 6) + '  ' + pad('tier', 15) + 'loadable');

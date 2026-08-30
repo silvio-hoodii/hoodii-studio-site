@@ -160,15 +160,7 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "fixed",
-              "open": [
-                {
-                  "topic": "prescription",
-                  "q": "THIS IS THE HALF YOUR RULING DID NOT SETTLE, and it is note #20 again. You are at five sets of three now, up from three sets, because contact count is the one progression the evidence file actually supports (Deng 2024: progress by quality and contact count, not height or distance). What happens when five sets is easy is NOT sourced. A taller box is not it, because stepping down removes the landing so height mostly buys a deeper tuck rather than more force; more reps is not it either, and that is the thing you just ruled on. What coaching practice does next is drop from a low box so the landing is absorbed, which is a genuinely harder exercise and a real injury question at your bodyweight, and NO trial was found for that ladder. So: when five sets of three stops feeling hard, would you rather add a sixth and seventh set, or should this stop progressing and just stay where it is?",
-                  "asked": "2026-08-29",
-                  "due": "2026-09-19"
-                }
-              ]
+              "progression": "fixed"
             }
           ],
           "why": "Jumps first, while fresh. Deng 2024, 21 studies in untrained people: 0.61 for strength and 0.61 for aerobic fitness at 2 to 3 sessions a week. Box jump, because you step down out of it instead of absorbing a landing at your bodyweight. Five sets of three, not three of three, and the reps stay at three on purpose: his ruling on 2026-08-28 was \"I NEVER KNEW 3 REPS WAS A THING I JUST THOUGHT I SHOULD DO AS MANY AS I CAN\", and he had logged 10 a set for three sessions. Deng is dosed in sessions a week and the same evidence file progresses a jump by quality and contact count rather than height or distance, so contact count is the lever: 15 jumps instead of 9, each one still fast. Rest drops to 60s because three jumps cost almost nothing to recover from, which keeps five sets inside the time three sets used."
@@ -262,15 +254,7 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight",
-              "open": [
-                {
-                  "topic": "cue",
-                  "q": "This was a second BB Romanian Deadlift called light, at 2x8. It was never light: the app gave it the same weight as the heavy day because both days shared one exercise id, and on 2026-08-27 you did 185x6 twice against a 2x8. It is a DB Romanian Deadlift now, which has its own weight and its own history, the way the front squat does against the back squat. THE CUE STILL DESCRIBES THE BARBELL. Read it at the rack: what should it say?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "progression": "weight"
             }
           ],
           "why": "The second hinge of the week, and a different lift rather than a lighter copy of Thursday. Pelland 2025, 67 studies: at matched volume, frequency raises strength (posterior 100%) while size does not care about the split. Nothing in the evidence file ever said the second exposure should be light, and while both days shared one exercise id the app handed this one Thursday heavy weight. Dumbbells have their own ladder and hold no fixture, so this block also stops occupying a rack."
@@ -580,15 +564,7 @@
                 }
               ],
               "progression": "weight",
-              "rangeWidth": 4,
-              "open": [
-                {
-                  "topic": "cue",
-                  "q": "TWO THINGS, and the first is thirty seconds at the bar. (1) THE HANGING KNEE RAISE CUE BELOW IS A DRAFT AND NOBODY HAS READ IT ON THE BAR. You have logged six sets of these in August and no cue was ever written for them, so this one was drafted rather than taken off a published page, and it says so on the card. Read it hanging there and say what it should say. (2) The card lists the knee raise AFTER the three press sets, and your note #33 says you did them BETWEEN: \"Hanging knee raises between overhead db 3x10\". Alternating is what you did and it is exactly what this block's old question was asking for, but the press is at the bench and the bar is in the rack section, and validate.mjs refuses a paired block that spans two zones because doing both in one window means walking between them every set. You walked, and did not report it as a cost. So: was the walk from the bench to the pull-up bar fine, or did it only work because the gym was quiet? If it was fine this becomes a real superset, and the same permission may unlock others. So, two answers: what should the knee raise cue say, and was that walk fine or fine only because the gym was quiet?",
-                  "asked": "2026-08-28",
-                  "due": "2026-09-11"
-                }
-              ]
+              "rangeWidth": 4
             },
             {
               "id": "hanging-knee-raise",
@@ -682,20 +658,6 @@
               "station": "cable-pulldown",
               "log": true,
               "rangeWidth": 4,
-              "open": [
-                {
-                  "topic": "placement",
-                  "q": "YOU HAVE NOW SKIPPED THIS TWICE AND SAID WHY BOTH TIMES, so the question is no longer about the cue. Note #37, 2026-08-28: \"Didn't do ever head extension because as i said before taht pairing doesn't make sense\". Note #27 before it made this block a sequence rather than a pair, so the card no longer asks you to hold two things on one pulley, and you skipped it anyway. THE ARITHMETIC SAYS YOU ARE RIGHT AND IT IS NOT CLOSE. Run node scripts/gym-coverage.mjs: triceps sit at 22 fractional sets a week against an efficient zone that tops out at 10, this exercise is 6 of the 22, and you do 3 sets of pushdowns later in the same session. Dropping it takes triceps to about 16, still past the zone, and costs nothing measurable. THREE OPTIONS. (a) DROP IT. Cost: the lat pulldown becomes a solo lift with a 90-second empty rest, which is the exact thing your note #28 complained about, so you trade an exercise you refuse for a rest you dislike. (b) KEEP IT AND FIX THE CUE. Cost: the cue below still describes the DUMBBELL version, so it is wrong on the card either way, and this is only worth doing if you would actually do the exercise. (c) REPLACE IT with something that belongs in that rest. Cost: nothing at the high pulley can pair with a pulldown until the shared-column question on cable-pulldown is answered, so this option waits on that one. Which?",
-                  "asked": "2026-08-28",
-                  "due": "2026-09-11"
-                },
-                {
-                  "topic": "prescription",
-                  "q": "THREE CARDS WILL SAY \"FIRST TIME: LOG YOUR WORKING WEIGHT\" FOR THINGS YOU DID ON 2026-08-25, and it is a rename rather than a mistake. On 2026-08-27 two slots changed id so the partner would sit at the lead lift's own station: the overhead tricep extension went from the dumbbell to the cable (you had done 42.5x10, 50x10, 50x10), and the preacher curl became an incline dumbbell curl (you had done 90x6, 90x5). The rows are still in the log under the old names; nothing is lost. What is gone is the trend line, which needs three points under one name. THE ARITHMETIC HALF IS NOT ARGUABLE and it is why this is not just done for you: 50 lb of dumbbell held in two hands is not 50 lb of cable, and 90 lb on an EZ bar is not 90 lb in each hand. Whatever is decided, the WEIGHTS cannot simply be reused. So the real question is what the card should say. (a) LEAVE IT. The three cards say \"first time\" for two sessions, you type a working weight once, and the trend restarts. Cost: nothing, and it is already true. (b) SHOW THE OLD LINE UNDER IT, something like \"first time on the cable, and on Aug 25 you did 50x10 on the dumbbell version\". Cost: one more line of text on three cards, which is the thing note #12 was about. (c) MOVE THE OLD ROWS onto the new names in the log. Cost: the trend line would then draw a dumbbell weight and a cable weight as one series, so the chart would show a drop that never happened. Which?",
-                  "asked": "2026-08-29",
-                  "due": "2026-09-19"
-                }
-              ],
               "whyHere": "The triceps do nothing during a pulldown, so they are what follows it",
               "formerIds": [
                 "db-overhead-tricep-extension"
@@ -765,15 +727,8 @@
               "zone": "cable",
               "station": null,
               "log": true,
-              "open": [
-                {
-                  "topic": "prescription",
-                  "q": "SOME LIFTS CANNOT REACH THEIR OWN NEXT WEIGHT, and this is one of them: at 20 lb, the top of 12 to 14 reps banks an estimated 29.3 while the next dumbbell up demands 35.0, so maxing out the range earns a jump you will fail. THE FULL LIST IS DELIBERATELY NOT WRITTEN HERE. It was, and it went stale twice in one day: it said five until 2026-08-28, when the assisted pull-up came off it because that finding was WRONG rather than because the lift was fixed (it logs counterweight, so its next rung is 10 lb LESS assistance and the check had the sign inverted), and it said four for about six hours until you logged the cable Pallof and the cable reverse fly that evening and both entered the check. Run scripts/check-ladder.mjs for the live list: it reads your real working weights out of Neon and cannot go stale. Two ways out and they apply to all five. Widen the rep range so the top of it actually earns the jump, which here means 12 to 23 reps and a long set. Or accept that these three stall at their current weight and progress only on reps. Which one, and is a 23-rep set of lateral raises something you would actually do?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ],
-              "whyHere": "The side delt goes in its rest because a row does not use it, and because nothing else in the week does"
+              "whyHere": "The side delt goes in its rest because a row does not use it, and because nothing else in the week does",
+              "rangeWidth": 11
             }
           ]
         },
@@ -891,15 +846,7 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight",
-              "open": [
-                {
-                  "topic": "cue",
-                  "q": "YOUR NOTE #35: \"Cable pallof feels weird no idea on how form.should be\". The cue was already long and sourced and it still did not tell you, and one line is why: the success test was \"someone standing behind you could not tell which side the cable is on\", which is not a test you can run on your own. That is the same mistake as a doneness cue you have to have a feel for. It has been replaced with two checks you can do alone (hands drifting off the middle of your chest, and a foot that slides), and the distance from the machine is now stated instead of only appearing as a fix. TWO THINGS TO SAY AT THE MACHINE. (1) Read the new cue standing there and say whether those two checks are things you can actually notice mid-set. (2) \"Feels weird\" may be the exercise rather than the cue: a Pallof is meant to feel like almost nothing is happening, because the work is what does NOT move. If that is what you meant the cue should say it out loud, because nobody would guess it. So: are those two checks things you can actually notice mid-set, and is \"feels weird\" the exercise or the cue?",
-                  "asked": "2026-08-28",
-                  "due": "2026-09-11"
-                }
-              ]
+              "progression": "weight"
             },
             {
               "id": "cable-reverse-fly",
@@ -930,23 +877,10 @@
               "zone": "cable",
               "station": "cable-adjustable",
               "log": true,
-              "open": [
-                {
-                  "topic": "placement",
-                  "q": "Why does the reverse fly sit in the Cable Pallof rest? This block's why is entirely about anti-rotation and never mentions the fly, so there is no clause to show on the card. What is the real reason it is here?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                },
-                {
-                  "topic": "cue",
-                  "q": "This slot moved from db-reverse-fly to cable-reverse-fly on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it standing at the machine: what should it say?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ]
+              "whyHere": "The reverse fly is here because the rear delt is worked by nothing else on this day except the rows, where it assists rather than leads"
             }
           ],
-          "why": "The week trained the trunk to resist bending forward and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running.",
+          "why": "The week trained the trunk to resist bending forward and never once to resist TWISTING. The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025) trains the core in eight patterns and this was the missing one. It was cut on 2026-08-15 because equipment.json marked the adjustable cable column \"unknown\", and on 2026-08-22 he said every column in the building adjusts, which is the only reason this is back. Core work earns its place on the evidence already in the file: Comert & Gruber 2025, core strengthening d = -1.25 to -1.44 for knee valgus, which is the thing that matters once you start running. The reverse fly is here because the rear delt is worked by nothing else on this day except the rows, where it assists rather than leads, and because a Pallof press is an anti-rotation HOLD: it costs the shoulder nothing, so the two share a rest window without either taxing the other.",
           "$sequenceBecause": "SEQUENCE, NOT A PAIR, since 2026-08-28. His note #27 at the rack: \"You are still making pairings of two machines lat pull down and overhead triceps cable can't be done at the same time, could be straight arm pull down not sure why this same thing keeps happening after all the audits.\" He is right, and the reason it kept happening is that the one-station rule deduped two exercises on ONE station into a single entry, so it could never fire on them. Every audit checked the station and the stations matched. The gate compares equipment.json's `sharedInOneWindow` now, which defaults to FALSE, and it found two more blocks like this one that nobody had reported. Do the first exercise, then set the machine up for the second. That is what was actually happening anyway. It goes back to a pair the moment the open question on cable-pulldown is answered: answering it UNLOCKS pairings rather than removing them."
         }
       ]
@@ -970,9 +904,9 @@
             {
               "id": "lateral-bound",
               "name": "Lateral Bound",
-              "sets": 3,
-              "reps": "4/side",
-              "rest": "90s",
+              "sets": 5,
+              "reps": "3/side",
+              "rest": "60s",
               "zone": "benchDb",
               "station": null,
               "bodyweight": true,
@@ -1004,15 +938,7 @@
                   "progression": "reps"
                 }
               ],
-              "progression": "fixed",
-              "open": [
-                {
-                  "topic": "prescription",
-                  "q": "SAME QUESTION AS THE BOX JUMP, and your ruling on that one probably answers it. The card says 3 sets of 4 per side. The one time it is logged, 2026-08-18, you did 4, then 6, then 6, which is the same \"as many as I can\" the box jump turned out to be. The reps here are now fixed the way the box jump's are, so the app will stop asking for more of them. What is left is how many SETS. (a) MATCH THE BOX JUMP: 5 sets of 3 per side, 30 contacts. Cost: it is the most jumping in the week and it sits in front of a Romanian deadlift, so if Thursday already feels long this is where the length comes from. (b) 4 SETS OF 3 PER SIDE, 24 contacts, the same as the card gives you today but in shorter, faster sets. Cost: nothing, and it is the smaller change. (c) LEAVE IT at 3 x 4 per side. Cost: the last rep of a 4 is already the slow one, which is the thing you now know is worth avoiding. Which?",
-                  "asked": "2026-08-29",
-                  "due": "2026-09-19"
-                }
-              ]
+              "progression": "fixed"
             },
             {
               "id": "db-lateral-raise",
@@ -1043,7 +969,8 @@
               "zone": "benchDb",
               "station": null,
               "log": true,
-              "whyHere": "The lateral raise rides in the rest because it is upper body, so the bound stays fresh."
+              "whyHere": "The lateral raise rides in the rest because it is upper body, so the bound stays fresh.",
+              "rangeWidth": 11
             }
           ],
           "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest because it is upper body, so the bound stays fresh."
@@ -1118,7 +1045,7 @@
             {
               "id": "front-squat",
               "name": "Front Squat",
-              "sets": 2,
+              "sets": 3,
               "reps": "8",
               "rest": "2 min",
               "zone": "rack",
@@ -1151,18 +1078,10 @@
                   "progression": "weight"
                 }
               ],
-              "progression": "weight",
-              "open": [
-                {
-                  "topic": "prescription",
-                  "q": "YOUR WORDS: \"Front Squat at 2 sets seems like a waste, why would I do 2 sets of anything.\" The reason exists and had never been put on the card, which is now fixed: two exposures of a pattern beat one at the SAME weekly volume (Pelland 2025), so the second visit is a second visit and not extra work, and quadriceps already sit at 23 fractional sets a week against an efficient zone topping out at 10. BUT THE REASON DOES NOT MAKE IT WORTH DOING and that part is yours: two sets of a rack lift still costs walking to the rack, loading a bar and a warm-up ramp, and the setup is the same for two sets as for four. THREE OPTIONS. (a) KEEP IT AT TWO. Cost: you keep paying the setup for two working sets, which is exactly what annoyed you. (b) RAISE IT TO FOUR. Cost: quads go 23 to 25, and Thursday gets longer by about six minutes at 2 min rests. Past the efficient zone means each extra set buys less, not that it hurts. (c) DROP THE BLOCK. Cost: the squat pattern goes back to once a week, which is the one thing the frequency evidence is actually about, and Thursday loses 2 quad sets. It also frees the rack and about eight minutes. The same question applies to the DB Romanian Deadlift on Monday, which is also two sets, so answer once and both move. Which?",
-                  "asked": "2026-08-29",
-                  "due": "2026-09-12"
-                }
-              ]
+              "progression": "weight"
             }
           ],
-          "why": "The week's second squat, and a different lift rather than a lighter copy of Monday: the front squat carries its own weight and its own history. Same frequency argument as the second hinge on Lower A: Pelland 2025 raises strength by training a pattern twice at the SAME weekly volume, so the second exposure is a second visit, not extra work. That is why it is two sets and not four. Quadriceps already sit at 23 fractional sets a week against an efficient zone that tops out at 10, so four here would buy almost nothing and cost the time. If two sets of a rack lift is not worth the walk and the warm-up ramp, the honest fix is to drop the block, not to pad it."
+          "why": "The week's second squat, and a different lift rather than a lighter copy of Monday: the front squat carries its own weight and its own history. Same frequency argument as the second hinge on Lower A: Pelland 2025 raises strength by training a pattern twice at the SAME weekly volume, so the second exposure is a second visit, not extra work. THREE SETS ON HIS RULING of 2026-08-30, \"raise it to three maybe\", against options of two, four or dropping the block. Not four, because the setup cost is what he objected to and three pays it off without making Thursday longer than the day before it. Quadriceps sit at 15 LOADED fractional sets a week. Past the cheapest band each further set buys less than the one before, which is a price and not a limit: Pelland finds more volume raises size and strength with posterior probability 100%. If two sets of a rack lift is not worth the walk and the warm-up ramp, the honest fix is to drop the block, not to pad it."
         },
         {
           "role": "accessory",
@@ -1199,15 +1118,7 @@
                 }
               ],
               "progression": "weight",
-              "rangeWidth": 6,
-              "open": [
-                {
-                  "topic": "placement",
-                  "q": "YOUR RULING, AND IT WAS RECORDED AND NOT ACTED ON: \"IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE.\" This block is the only accessory in the week that breaks it. The box jump primer is also alone, deliberately, because anything in a jump's rest makes the next jump slower, which is the whole point of the exercise; say if you want that changed too. THE REASON THIS WAS NOT JUST FIXED IS ARITHMETIC, and it is worth seeing. Run node scripts/gym-catalogue.mjs --fill: nine blocks in the week are a single lift with an empty rest, filling them all costs 28 sets, and the muscles still under the efficient zone have 6 sets of headroom BETWEEN THEM (chest 3, calves 1, side delts 1, erectors 0.5, front delts 0.5). Every exercise already in the week that could ride in this rest is currently the second half of some other pair, so moving it here just moves the hole. FOUR OPTIONS. (a) LEAVE IT ALONE and accept that one accessory runs solo. Cost: a 90 second rest you spend standing there, which is the thing you dislike. (b) MOVE THE COPENHAGEN PLANK here from the block above it. Cost: zero new sets, it is the only move that stays on Thursday, and the single-leg RDL is then the solo one instead. (c) ADD something new, most cheaply a pushup, which is the only movement with real headroom left (chest 7 to 10). Cost: 3 new sets and a chest exercise on a leg day. (d) DROP THE LUNGE BLOCK. Cost: quads 23 to 20 and glutes 29.5 to 26.5, both still past the zone, and Thursday gets about seven minutes shorter. Which?",
-                  "asked": "2026-08-29",
-                  "due": "2026-09-12"
-                }
-              ]
+              "rangeWidth": 6
             }
           ],
           "why": "Single-leg work, for the knee-valgus reason: the loaded single-leg pattern is what frontal-plane control is trained with, and it is injury insurance for the running. It runs on its own at the moment, which is a gap rather than a decision."
@@ -1626,14 +1537,6 @@
               "station": "cable-pulldown",
               "log": true,
               "rangeWidth": 4,
-              "open": [
-                {
-                  "topic": "cue",
-                  "q": "This slot moved from db-overhead-tricep-extension to cable-overhead-tricep-extension on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it standing at the machine: what should it say?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ],
               "whyHere": "Triceps go in its rest: a straight-arm pull is all lat and no elbow, so they are idle",
               "formerIds": [
                 "db-overhead-tricep-extension"
@@ -1687,14 +1590,6 @@
               ],
               "progression": "weight",
               "rangeWidth": 3,
-              "open": [
-                {
-                  "topic": "cue",
-                  "q": "This slot moved from ez-preacher-curl to incline-db-curl on 2026-08-27 so the partner sits at the lead lift's own station. THE CUE BELOW STILL DESCRIBES THE OLD IMPLEMENT. Read it on the incline bench: what should it say?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10"
-                }
-              ],
               "formerIds": [
                 "ez-preacher-curl"
               ]

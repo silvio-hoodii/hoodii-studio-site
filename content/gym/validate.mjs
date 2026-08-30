@@ -990,8 +990,37 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       // raw entries instead flagged single-leg RDL alternating with a Copenhagen plank on the same
       // bench, which is the one arrangement that is obviously fine.
       const stations = [...new Set([a.station, b.station].filter((s) => s != null))];
-      if (stations.length > 1) {
-        fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one: the partner must need no fixture (floor, handheld band, bodyweight, dumbbells).`);
+
+      /* CASE (c), "ADJACENT EQUIPMENT IN ARM'S REACH", WAS NEVER IMPLEMENTED. Added 2026-08-30.
+       *
+       * equipment.json's own header quotes his rule of 2026-05-23 in full: superset partners must be
+       * "(a) same equipment, (b) bodyweight/floor partner of the main lift, or (c) adjacent equipment
+       * in arm's reach". This validator implemented (a) and (b). The word "adjacent" appeared nowhere
+       * in it, so every pairing across two fixtures was refused however close together they stood,
+       * and the file that documents the omission is the one that documents the rule.
+       *
+       * THAT IS THE MECHANICAL REASON HE KEPT BEING TOLD NO PARTNER EXISTED. Nine blocks are a single
+       * lift with an empty rest, and `--fill` finds 25 to 43 legal candidates for each of them; the
+       * ones in the cable and machine zones were being thrown out by this clause, not by a shortage
+       * of exercises. His words, 2026-08-30: "why in the world moving an exercise means the other
+       * lift stay solo, is there no more exercises in the world? ... that just seems to me to be a
+       * lazy answer."
+       *
+       * ADJACENCY IS DECLARED, NOT ASSUMED, and only where he has said so. Today that is the three
+       * cable columns and nothing else: the machine bank is not adjacent because he called leg curl
+       * plus calf raise impossible, and the rack's pull-up bar is not because he said that walk works
+       * "only when the gym is not busy", which is a condition no card can check. Same safe-defaults
+       * rule as the rest of the file: an undeclared pair refuses. */
+      const adjacent = (x, y) => {
+        const sx = stationOf(a.zone, x);
+        const sy = stationOf(b.zone, y);
+        return Boolean(sx?.adjacentTo?.includes(y)) && Boolean(sy?.adjacentTo?.includes(x));
+      };
+      if (stations.length > 1 && !adjacent(a.station, b.station)) {
+        fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one, unless the two fixtures are declared adjacent in equipment.json, which is case (c) of the rule that file quotes. Either give the partner no fixture, or declare the two adjacent WITH his words for it.`);
+      }
+      if (stations.length > 1 && adjacent(a.station, b.station) && a.zone !== b.zone) {
+        fail(where, `${block.pairing} block claims adjacent stations "${a.station}" and "${b.station}" but they are in different zones ("${a.zone}" and "${b.zone}"). Adjacency is arm's reach, which is a fact about one place.`);
       }
 
       /* THE DEDUPE ABOVE IS WHY THIS KEPT PASSING, and he found it at the rack on 2026-08-28.

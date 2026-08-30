@@ -52,6 +52,14 @@ const pad = (s, n) => String(s).padEnd(n);
 const rule = (c = '-') => console.log(c.repeat(78));
 /** Fractional sets are halves. One decimal, and no trailing ".0" to read as false precision. */
 const r1 = (n) => String(Math.round(n * 10) / 10);
+/** "90s" / "2 min" to seconds. Same parse as src/lib/gym/program-shared.ts, written out rather than
+ *  imported because this script is offline by design and reaching into src/ drags the module graph
+ *  in. Both read the same field of the same file, so neither holds a fact the other could deny. */
+const restSeconds = (rest) => {
+  const m = String(rest || '').match(/([\d.]+)\s*(min|s)/i);
+  if (!m) return 60;
+  return m[2].toLowerCase() === 'min' ? Math.round(parseFloat(m[1]) * 60) : parseFloat(m[1]);
+};
 
 /* ---- flatten the catalogue ---- */
 
@@ -329,19 +337,28 @@ if (mode === 'fill') {
     return { slot, lead, leadAt, leadPrimary };
   };
 
-  /* THE BUDGET. Headroom is counted per muscle and only where it is positive: a muscle already past
-     10 has none, and a negative does not offset another muscle's spare set. Separate denominators,
-     the same reason `price` reports per muscle rather than summing. */
-  const headroomByMuscle = coverage.perMuscle
-    .map((m) => ({ m: m.muscle, left: 10 - m.sets }))
-    .filter((x) => x.left > 0)
-    .sort((a, x) => x.left - a.left);
-  const totalHeadroom = headroomByMuscle.reduce((n, x) => n + x.left, 0);
+  /* THE HEADROOM BUDGET IS DELETED, AND IT WAS THE WHOLE PROBLEM. Removed 2026-08-30.
+   *
+   * This printed "the muscles under the efficient zone top have 6 sets of headroom BETWEEN THEM" and
+   * then disqualified every remaining option with "all of them adding sets to a muscle already past
+   * 10". Between 25 and 43 legal partners per block were being thrown away by that line, which is
+   * why nine blocks are single lifts and why he was told, more than once, that nothing could pair
+   * with them. His words: "that just seems to me to be a lazy answer ... is there no more exercises
+   * in the world?"
+   *
+   * THERE IS NO SUCH BUDGET. Pelland finds volume raises hypertrophy and strength with posterior
+   * probability 100% and diminishing returns; the bands rank cost per increment, not permission.
+   * A ceiling was invented, and then used to argue against the work he was asking for.
+   *
+   * WHAT IS REAL IS TIME, so that is what is priced now. A partner in a rest window costs nothing:
+   * the rest is being spent either way, which is this tool's entire premise and was already written
+   * at the top of it. A partner that does NOT fit in the rest costs minutes. */
   const fillCost = soloBlocks.reduce((n, b) => n + Number(b.exercises[0].sets || 0), 0);
-  console.log(`  BUDGET. Filling all ${soloBlocks.length} empty rests costs ${fillCost} sets, one per set of each lead.`);
-  console.log(`  Muscles still under the efficient zone top have ${r1(totalHeadroom)} sets of headroom BETWEEN THEM:`);
-  console.log(`    ${headroomByMuscle.map((x) => `${cat.muscles[x.m] ?? x.m} ${r1(x.left)}`).join(', ') || 'none, every muscle is past 10'}`);
-  console.log('  So most of these cannot be taken together. Each price below is "if you take only this one".');
+  const restMin = soloBlocks.reduce((n, b) => n + (restSeconds(b.exercises[0].rest) * Number(b.exercises[0].sets || 0)) / 60, 0);
+  console.log(`  ${soloBlocks.length} blocks have an empty rest. Filling every one adds ${fillCost} sets and about`);
+  console.log(`  ${Math.round(restMin)} minutes of standing around is spent on them instead, at the rests already prescribed.`);
+  console.log('  There is NO volume ceiling to spend against: past 10 sets a week a muscle still grows,');
+  console.log('  each set just buys less than the one before. What this costs is time and fatigue, not a quota.');
   rule('-');
 
   for (const b of soloBlocks) {
@@ -389,7 +406,7 @@ if (mode === 'fill') {
             return { m, now, then: now + Number(slot.sets || 0) };
           }),
           /* How much room its worst-served muscle has left before the efficient zone runs out.
-             Negative means it is already past 10, which is where 11 of 16 muscles sit. */
+             Used only to ORDER the list, never to disqualify. Negative means past the cheapest band, which is where most muscles sit and is not a fault. */
           headroom: Math.min(...v.primary.map((m) => 10 - (setsFor.get(m) ?? 0))),
         };
       })
@@ -410,7 +427,7 @@ if (mode === 'fill') {
       const price = o.where
         ? `move from ${o.where.day} ${o.where.label}, rest ${o.where.rest} to ${slot.rest}` +
           (o.where.leavesSolo ? ', leaves that block solo' : '')
-        : o.price.map((p) => `${cat.muscles[p.m] ?? p.m} ${p.now} to ${p.then}${p.then > 10 ? ' PAST 10' : ''}`).join(', ');
+        : o.price.map((p) => `${cat.muscles[p.m] ?? p.m} ${p.now} to ${p.then}`).join(', ');
       /* "also fits N others" is the memory this tool did not have. Without it the same DB Calf
          Raise reads as nine separate cheap wins, and its price is only true for the first one. */
       const n = (offeredIn.get(o.v.id) ?? 1) - 1;
@@ -418,7 +435,7 @@ if (mode === 'fill') {
       console.log(`      ${o.where ? '*' : ' '} ${pad(o.v.name, 28)} ${o.v.loadable ? '        ' : 'no load '}${price}${also}`);
     }
     if (options.length > SHOW) {
-      console.log(`        ... and ${options.length - SHOW} more that ride free here, all of them adding sets to a muscle already past 10.`);
+      console.log(`        ... and ${options.length - SHOW} more that also ride free here. They are not worse, they are further down the sort: run FILL_SHOW=99 to see them all.`);
     }
   }
 

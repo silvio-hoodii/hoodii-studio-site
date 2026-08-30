@@ -235,13 +235,36 @@ from a figure a source gave.** The gym produces the same shape of defect.
 |---|---|
 | Arithmetic, unit consistency, gates, validators | What is actually in the gym, and where |
 | Evidence lookup and verbatim quotation from a source | How much time he really has that day |
-| Rendering, refactors, migrations | What a cue must say to be followable |
+| Rendering, refactors, migrations | Whether a cue he read at the machine actually worked |
+| **Drafting a cue from a source**, including rewriting one for a new implement | |
 | An option set with the cost of each attached | Whether a reason is legible where it appears |
 | Anything a test can prove | How much text is too much |
 
 *Mechanism:* `validate.mjs` refuses an exercise with no `cue`, `station` or `zone`, and refuses a
 `whyHere` that is not a verbatim span of an accepted `why`. Agent prose in a judgment field does not
 compile.
+
+**THE CUE ROW MOVED ON 2026-08-30, and it moved because he pushed back on it.** It read "what a cue
+must say to be followable" in HIS column, and the consequence was that six of eighteen parked
+questions were variants of *"THE CUE STILL DESCRIBES THE OLD IMPLEMENT. Read it and say what it
+should say."* His answer: *"why are you asking me this? you are the one that should find out"*, and
+on the next three, *"same answer"*.
+
+He is right, and the rule was transplanted from a place it does not fit. The kitchen's
+`AGENTS DO NOT WRITE COOKING STEPS` exists because agent-written steps burnt a dish: all four
+failures came from a sentence an agent wrote, none from a figure a source gave. **A gym cue that
+names the wrong implement is not that.** It is research an agent can do from a published source and
+did not do, and handing it back to him is asking him to do the agent's job in his own gym time.
+
+The line is now between DRAFTING and REPORTING:
+
+- An agent drafts a cue from a source, and labels it a draft until he has used it.
+- Only he can report that a cue did not work at the machine, which is a fact about his body in that
+  moment and cannot be looked up. The Pallof's *"feels weird no idea on how form should be"* and the
+  success test that needed a second person are both that, and both stay his.
+
+An `open` question with `topic: "cue"` is therefore almost always a smell. Draft it, ship it, and ask
+him what broke.
 
 **2. Judgment calls get batched into ONE pass, with costs, before anything is written.** Not buried
 in prose: a real question with real options and the consequence of each. The farmer carry proved it

@@ -69,7 +69,53 @@ const findBlock = (program, needs) => {
   return b;
 };
 const spanBlock = (p) => findBlock(p, 'whyHere');
-const openBlock = (p) => findBlock(p, 'open');
+
+/* TWO ANCHORS WHERE THERE WAS ONE, and the suite told me so by dying rather than by passing.
+ *
+ * `openBlock` found a paired block whose PARTNER carries an `open` question, and every case that
+ * needed any open row at all borrowed it. On 2026-08-30 fifteen questions were deleted at once (six
+ * of them cue questions he refused to answer, correctly: "why are you asking me this? you are the
+ * one that should find out") and no partner carried one any more. The finder threw with its own
+ * instruction not to weaken the case, which is the second time that guard has earned its place.
+ *
+ * The right fix is not one anchor, it is two, because the cases were testing two different things:
+ *
+ *   anyOpenExercise  the SHAPE of an `open` row: topic, question mark, dates. Nothing about that is
+ *                    specific to a partner, and pinning it to one was always incidental.
+ *   partnerWithOpen  the PARTNER SEMANTICS: whether a question about the cue can stand in for a
+ *                    written reason. That genuinely needs a partner carrying a question, so when the
+ *                    programme has none the case BUILDS one rather than hunting for one. A gate is
+ *                    being tested here, not the current contents of the file. */
+const anyOpenExercise = (p) => {
+  const ex = Object.values(p.days || {})
+    .flatMap((d) => d.blocks || [])
+    .flatMap((b) => b.exercises || [])
+    .find((e) => Array.isArray(e.open) && e.open.length);
+  if (!ex) throw new Error('no exercise anywhere carries an open question, so the open-row shape gates cannot be exercised. Do not weaken the case; park a question or repoint this.');
+  return ex;
+};
+
+/** A paired block whose partner carries an open question, creating one if the file has none. */
+const partnerWithOpen = (p, topic = 'placement') => {
+  const blk = Object.values(p.days || {})
+    .flatMap((d) => d.blocks || [])
+    .find((b) => (b.exercises || []).length >= 2);
+  if (!blk) throw new Error('no paired block at all; repoint this case');
+  const partner = partnerOf(blk);
+  partner.open = [{
+    topic,
+    q: 'A question long enough to clear the thirty-character floor, parked by the test suite itself?',
+    asked: '2026-08-01',
+    due: '2026-09-30',
+  }];
+  return blk;
+};
+
+/** Scratch shared between a case's `mutate` and its `also.mutate`, which run on two different files
+ *  and cannot otherwise agree on which exercise the case picked. Set in `mutate`, read in `also`.
+ *  One case uses it; it exists because the alternative is naming an exercise, and every hardcoded
+ *  name in this file has gone stale at least once. */
+const TEST_STATE = {};
 
 /** `file` names which content file the case mutates, and defaults to program.json. Added when the
  *  validator learned a rule about movements.json: a suite that can only mutate one file can only
@@ -143,7 +189,7 @@ const CASES = [
      * the state it was refusing. */
     name: 'a whyHere plus a question about something OTHER than placement is allowed',
     mutate: (p) => {
-      const blk = openBlock(p);
+      const blk = partnerWithOpen(p);
       const partner = partnerOf(blk);
       partner.whyHere = blk.why.slice(0, 60);
       partner.open.forEach((q) => { q.topic = 'cue'; });
@@ -153,7 +199,7 @@ const CASES = [
   {
     name: 'a partner whose only question is about its cue still needs a whyHere',
     mutate: (p) => {
-      const blk = openBlock(p);
+      const blk = partnerWithOpen(p);
       const partner = partnerOf(blk);
       delete partner.whyHere;
       partner.open.forEach((q) => { q.topic = 'cue'; });
@@ -166,7 +212,7 @@ const CASES = [
      * heading promising questions, each with a due date. */
     name: 'an open question that does not end in a question mark is refused',
     mutate: (p) => {
-      const q = partnerOf(openBlock(p)).open[0];
+      const q = anyOpenExercise(p).open[0];
       q.q = q.q.replace(/\?\s*$/, '.');
       if (/\?\s*$/.test(q.q)) throw new Error('anchor question did not end in a question mark; the gate under test is already unmet');
     },
@@ -175,14 +221,14 @@ const CASES = [
   {
     name: 'an open question with an unknown topic is refused',
     mutate: (p) => {
-      partnerOf(openBlock(p)).open[0].topic = 'general';
+      anyOpenExercise(p).open[0].topic = 'general';
     },
     expect: '"topic" must be one of',
   },
   {
     name: 'an open question with no topic at all is refused',
     mutate: (p) => {
-      delete partnerOf(openBlock(p)).open[0].topic;
+      delete anyOpenExercise(p).open[0].topic;
     },
     expect: '"topic" must be one of',
   },
@@ -193,10 +239,11 @@ const CASES = [
     name: 'a station question that is a statement is refused',
     file: 'equipment.json',
     mutate: (e) => {
-      const station = Object.values(e.zones)
-        .flatMap((z) => Object.values(z.stations || {}))
-        .find((s) => Array.isArray(s?.open) && s.open.length);
-      if (!station) throw new Error('no station carries an open question; repoint this case');
+      /* BUILT, not found. The only live station question was answered on 2026-08-30, and a
+         case that hunts for one then fails is testing the contents of the file rather than the gate. */
+      const station = Object.values(e.zones).flatMap((z) => Object.values(z.stations || {}))[0];
+      if (!station) throw new Error('no stations at all; repoint this case');
+      station.open = [{ topic: 'equipment', q: 'A question long enough to clear the thirty-character floor, parked by the suite?', asked: '2026-08-01', due: '2026-09-30' }];
       station.open[0].q = station.open[0].q.replace(/\?\s*$/, '.');
     },
     expect: 'does not end in a question mark',
@@ -276,10 +323,11 @@ const CASES = [
     name: 'a station question with a bad due date is refused',
     file: 'equipment.json',
     mutate: (e) => {
-      const station = Object.values(e.zones)
-        .flatMap((z) => Object.values(z.stations || {}))
-        .find((s) => Array.isArray(s?.open) && s.open.length);
-      if (!station) throw new Error('no station carries an open question; repoint this case');
+      /* BUILT, not found. The only live station question was answered on 2026-08-30, and a
+         case that hunts for one then fails is testing the contents of the file rather than the gate. */
+      const station = Object.values(e.zones).flatMap((z) => Object.values(z.stations || {}))[0];
+      if (!station) throw new Error('no stations at all; repoint this case');
+      station.open = [{ topic: 'equipment', q: 'A question long enough to clear the thirty-character floor, parked by the suite?', asked: '2026-08-01', due: '2026-09-30' }];
       station.open[0].due = 'next week';
     },
     expect: '"due" must be YYYY-MM-DD',
@@ -287,21 +335,21 @@ const CASES = [
   {
     name: 'an open question due before it was asked is refused',
     mutate: (p) => {
-      partnerOf(openBlock(p)).open[0].due = '2026-08-01';
+      anyOpenExercise(p).open[0].due = '2026-08-01';
     },
     expect: 'is not after "asked"',
   },
   {
     name: 'an open question with no context is refused',
     mutate: (p) => {
-      partnerOf(openBlock(p)).open[0].q = 'why is this here';
+      anyOpenExercise(p).open[0].q = 'why is this here';
     },
     expect: 'at least 30 characters',
   },
   {
     name: 'an emptied open array is refused rather than ignored',
     mutate: (p) => {
-      partnerOf(openBlock(p)).open = [];
+      anyOpenExercise(p).open = [];
     },
     expect: 'non-empty array',
   },
@@ -539,6 +587,83 @@ const CASES = [
     expect: null,
   },
   {
+    /* CASE (c) OF HIS OWN RULE, which validate.mjs did not implement until 2026-08-30. Two fixtures
+     * in arm's reach may hold one rest window. Built from the real cable block, whose two stations
+     * are declared adjacent on his ruling. */
+    name: 'a pair across two ADJACENT stations is allowed',
+    /* THE CATALOGUE MOVES WITH THE SLOT, and the first draft of this case did not do that: it put the
+       partner on another cable column in program.json alone and was refused by the PLACEMENT gate,
+       which correctly says a slot may not disagree with movements.json about where a lift is done.
+       That is a different rule doing its job, and fighting it would have tested the wrong thing.
+       The file's own note about the shareable-station case records the identical trap. */
+    mutate: (p) => {
+      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'cable' && b.exercises[0].station);
+      if (!block) throw new Error('no two-exercise cable block; repoint this case');
+      block.pairing = 'fill';
+      block.label = 'Vertical Pull';
+      block.tag = '(cable)';
+      block.exercises[1].zone = 'cable';
+      block.exercises[1].station = block.exercises[0].station === 'cable-adjustable' ? 'cable-row' : 'cable-adjustable';
+      TEST_STATE.partnerId = block.exercises[1].id;
+      TEST_STATE.partnerStation = block.exercises[1].station;
+      /* EVERY slot holding that id moves, not just this one. The same exercise appears on two days,
+         and moving the catalogue entry under one of them left the other disagreeing with it, which
+         the placement gate then reported. A fixture is in one place, so the mutation has to say so
+         everywhere or it is not a coherent state to test against. */
+      for (const d of Object.values(p.days)) {
+        for (const b of d.blocks || []) {
+          for (const ex of b.exercises || []) {
+            if (ex.id === TEST_STATE.partnerId) { ex.zone = 'cable'; ex.station = TEST_STATE.partnerStation; }
+          }
+        }
+      }
+    },
+    also: {
+      file: 'movements.json',
+      mutate: (cat) => {
+        for (const m of Object.values(cat.movements)) {
+          for (const v of m.variants) {
+            if (v.id === TEST_STATE.partnerId || (v.aliases ?? []).includes(TEST_STATE.partnerId)) {
+              v.zone = 'cable';
+              v.station = TEST_STATE.partnerStation;
+            }
+          }
+        }
+      },
+    },
+    expect: null,
+  },
+  {
+    name: 'a pair across two stations that are NOT adjacent is still refused',
+    mutate: (p) => {
+      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'machines' && b.exercises[0].station);
+      if (!block) throw new Error('no two-exercise machine block; repoint this case');
+      block.pairing = 'fill';
+      block.label = 'Hamstrings and Calves';
+      block.tag = '(machine)';
+      block.exercises[1].zone = 'machines';
+      block.exercises[1].station = 'calf-raise';
+      block.exercises[0].station = 'leg-curl';
+    },
+    expect: 'occupies 2 stations',
+  },
+  {
+    /* Adjacency is a fact about ONE place. Two fixtures in different zones cannot be in arm's reach,
+     * and a file that said so would be describing a gym nobody has been in. */
+    name: 'stations declared adjacent across two zones is refused',
+    mutate: (p) => {
+      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
+        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'cable' && b.exercises[0].station);
+      if (!block) throw new Error('no two-exercise cable block; repoint this case');
+      block.pairing = 'fill';
+      block.exercises[1].zone = 'machines';
+      block.exercises[1].station = 'cable-row';
+    },
+    expect: 'lives in zone',
+  },
+  {
     name: 'a label that counts is refused',
     mutate: (p) => {
       /* The block is FOUND rather than named, for the reason the donor block above is: seven labels
@@ -575,7 +700,11 @@ for (const c of CASES) {
     // whichever file it edits: an anchor that has gone stale is news either way.
     const program = JSON.parse(readFileSync(join(dir, 'program.json'), 'utf8'));
     spanBlock(program);
-    openBlock(program);
+    /* `anyOpenExercise`, not the old `openBlock`. The pre-flight asserts the fixtures still exist,
+       and what the shape cases need is an open question ANYWHERE, not one on a partner: requiring a
+       partner here made every case in the suite fail the day the last partner question was answered,
+       which is a fixture problem masquerading as a regression. */
+    anyOpenExercise(program);
 
     const file = join(dir, c.file ?? 'program.json');
     const doc = c.file ? JSON.parse(readFileSync(file, 'utf8')) : program;
