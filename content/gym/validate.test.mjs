@@ -219,6 +219,24 @@ const CASES = [
     expect: 'does not end in a question mark',
   },
   {
+    /* His words, 2026-08-30, from the gym: "these questions are wañls of text, are them simple and
+     * to the point". The four live rows were 1362, 919, 569 and 538 characters. */
+    name: 'an open question that is a wall of text is refused',
+    mutate: (p) => {
+      const q = anyOpenExercise(p).open[0];
+      q.q = `${'Context he did not ask for. '.repeat(20)}Which?`;
+    },
+    expect: 'the ceiling is 400',
+  },
+  {
+    name: 'a short question is still allowed, which is the point of the ceiling',
+    mutate: (p) => {
+      const q = anyOpenExercise(p).open[0];
+      q.q = 'Do you want the hanging knee raise in this rest, or should the gap stay empty?';
+    },
+    expect: null,
+  },
+  {
     name: 'an open question with an unknown topic is refused',
     mutate: (p) => {
       anyOpenExercise(p).open[0].topic = 'general';

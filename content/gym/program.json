@@ -104,7 +104,26 @@
     "     shoulder taps at 3x30. An earlier version of this line said \"all five\", which counted only",
     "     the cases that complied. Nothing goes in a session that cannot be progressively overloaded;",
     "     that is what put the bands in warmups.json on 2026-08-21 and it is not being undone, though",
-    "     four band exercises remain as swap ALTERNATIVES here and were never reconciled against it."
+    "     four band exercises remain as swap ALTERNATIVES here and were never reconciled against it.",
+    "",
+    "OPEN, AND IT IS THE BIGGEST THING IN THIS FILE. 2026-08-30, from the gym: \"this whole project",
+    "started with me wanting to work on my lower body strength and now it seems it has become",
+    "secondary ... i think the way you are designing the program and prioritizing muscles is messed up\".",
+    "",
+    "THE RECORDED GOAL DOES NOT MENTION LOWER BODY. Section 20.2 of the evidence file quotes it:",
+    "\"lose weight and try to either increase strength, increase muscle or don’t lose as much",
+    "muscle... increasing strength and loose fat\", plus the ruling that strength beats size. Every",
+    "requirement, target and measurement in section 20 derives downward from that sentence. If the",
+    "goal is actually LOWER BODY strength, the derivation is sound and its input is wrong, which is",
+    "worse than a bad programme: it is a correct method producing the wrong answer confidently.",
+    "",
+    "AND THE NUMBERS AGREE WITH HIM. Counting only the LEAD lift of every block whose role is",
+    "\"main\", and only lifts that can be loaded: lower body 13 weekly sets across 4 lifts, upper body",
+    "26 across 8. Exactly two to one against the thing he says the project was for. Nobody had ever",
+    "computed that, because every check in this repo measures muscles against a dose and none of",
+    "them measures the programme against a PRIORITY, since no priority was ever recorded.",
+    "",
+    "Do not rewrite the split on this comment. The goal is his to state and the question is with him."
   ],
   "days": {
     "monday": {
@@ -771,7 +790,7 @@
               "open": [
                 {
                   "topic": "placement",
-                  "q": "Your note #29: \"Much rather do the assisted dip than the tricep.pushdown but not sure about the order\". It is not a one-line swap and the gates said so when it was tried: the assisted dip is in the MACHINE bank and the pushdown is on the cable, so three things break at once. (1) The block would span two zones, so the hammer curl cannot stay in its rest window. (2) Tuesday's walk order doubles back: the day currently goes dumbbells, dumbbells, cable, cable, machines, cable, and moving this to machines makes it worse, so the whole day would need reordering. (3) A catalogue bug surfaced by the attempt: assisted-dip lists itself as its own alt. So the real question is bigger than the swap. (a) KEEP THE PUSHDOWN. Cost: nothing, and you do a movement you like less. (b) SWAP AND REORDER TUESDAY so the machine bank is visited once, in order. Cost: the day's shape changes and the hammer curl needs a new home, which is the same question as the Overhead block above. (c) PUT THE DIP SOMEWHERE ELSE, most obviously Friday, which already visits the machine bank three times. Cost: Tuesday loses a triceps exposure and Friday gains one, and triceps are already at 22 fractional sets against an efficient zone topping out at 10. On order: you asked, and it depends on which of these you pick, so it is not answered here rather than guessed at. Which of the three?",
+                  "q": "You said you would rather do assisted dips than pushdowns. Swapping them moves this block to the machine bank, which changes Tuesday's walking order and needs the hammer curl to move too. Want me to do that, or put the dip on Friday instead, which already visits the machines?",
                   "asked": "2026-08-28",
                   "due": "2026-09-11"
                 }
@@ -1021,13 +1040,13 @@
               "open": [
                 {
                   "topic": "equipment",
-                  "q": "You asked for hanging knee raises in this lift's rest, holding the top of the rack you are already standing at. The data will not allow it yet: the rack and the pull-up bar on top of it are two separate stations in equipment.json, and a paired block may hold only one fixture. So, standing there: while you are in the rack with a loaded bar, could another member use that pull-up bar? If no, the bar is part of the rack and the file should say so, and this pairing ships. If yes, they are genuinely two fixtures and the knee raise cannot ride in this rest. Which is it?",
+                  "q": "Standing in the rack with a loaded bar: could another member still use the pull-up bar above you? If they cannot, hanging knee raises can ride in your RDL rest. Can they?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 },
                 {
                   "topic": "volume",
-                  "q": "And how much trunk work do you actually want. Abdominals are already at 16 fractional sets a week, past the top of the efficient zone at 10, which you can now see on /health under Volume. Three sets of knee raises here takes them to 19. Option 1, add them anyway: past the efficient zone means each extra set buys less, not that it hurts. Option 2, add nothing and move work that is already in the week into these rest gaps instead, for example the single-leg RDL from the front squat day, which costs zero new sets. Option 1 or option 2?",
+                  "q": "Do you want hanging knee raises in the RDL rest? It is 3 more ab sets on top of 11.5 loaded, or I can move work already in the week into that gap and add nothing. Which?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10"
                 }

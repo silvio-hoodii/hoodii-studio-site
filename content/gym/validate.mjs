@@ -296,6 +296,22 @@ function checkOpenRow(where, at, q) {
   if (!OPEN_TOPICS.has(q.topic)) {
     fail(where, `${at}: "topic" must be one of ${[...OPEN_TOPICS].join(', ')}, got ${JSON.stringify(q.topic ?? null)}. The topic is what lets the partner gate tell "nobody has written down why this is here" from "the reason is written and he is asking about the cue".`);
   }
+  /* AND A CEILING, added 2026-08-30 because he asked for one: "these questions are wañls of text,
+   * are them simple and to the point". The four live rows were 1362, 919, 569 and 538 characters.
+   *
+   * The floor above exists so a question carries enough context to answer without reconstructing it,
+   * and that was read as licence to put the entire argument in the question. It is not: the reasoning
+   * belongs in the block's `why`, which is on the same card, already sourced, already behind a tap.
+   * A question is what he is being ASKED, the options, and one clause of cost each.
+   *
+   * 400 is not a magic number. It is roughly four lines in the terminal and in the email, which is
+   * what "simple and to the point" looked like when the four were rewritten: they landed at 169 to
+   * 276. If a question genuinely cannot fit, that is a sign the decision behind it has not been
+   * reduced far enough to put to anybody. */
+  const MAX_Q = 400;
+  if (typeof q.q === 'string' && q.q.length > MAX_Q) {
+    fail(where, `${at}: "q" is ${q.q.length} characters and the ceiling is ${MAX_Q}. His words: "these questions are wañls of text, are them simple and to the point". Put the reasoning in the block's "why" and leave the question, the options, and one clause of cost each.\n    starts: ${JSON.stringify(q.q.slice(0, 90))}`);
+  }
   if (typeof q.q === 'string' && !/\?\s*$/.test(q.q)) {
     fail(where, `${at}: "q" does not end in a question mark, so it is a statement parked in a question slot. gym-notes.mjs prints it to him under "OPEN QUESTION(S) FOR SILVIO" with a due date, and he cannot answer a fact. Either ask him something, or move the sentence to the "why" or the cue where an explanation belongs.\n    ends: ...${JSON.stringify(q.q.slice(-70))}`);
   }
