@@ -806,6 +806,98 @@
       };
     },
 
+    /* THE PER-EXERCISE CAPTURE SENDS THE EXERCISE, AND THE EXERCISE IS THE WHOLE POINT. Added
+     * 2026-08-31 with gym_note.exercise_id and gym_note.kind.
+     *
+     * The column exists because eleven of his 37 notes record work gym_set cannot express, and the
+     * join back to which exercise he meant was a guess every time (#6 "Why is there db standing calf
+     * here" needed the day, the block and a guess). If this control posts without `exerciseId` the
+     * column stays null forever and the whole change is decoration, which nothing else here can see:
+     * the note lands, the panel closes, the confirmation appears, and the row is as useless as before.
+     *
+     * ALSO ASSERTS THAT THE CARD'S OWN ID IS THE ONE SENT. `saveExerciseNote` takes the slot id to
+     * close the panel and the EFFECTIVE id to send, which differ after a swap, and getting that pair
+     * backwards is where four of the five defects found on 2026-08-14 lived. `data-eff` on the card is
+     * what the app believes it is doing; this compares the payload against it. */
+    async exerciseNotePostsTheExerciseAndKind() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched, refusing to write' };
+      state.mode = 'ok';
+      const toggle = $('.exnote-toggle');
+      if (!toggle) return { pass: false, detail: 'no per-exercise capture control on the page' };
+      const cardEl = toggle.closest('.ex');
+      const expectId = cardEl?.getAttribute('data-eff');
+      toggle.click();
+      await sleep(200);
+      const panel = $('.exnote-open');
+      if (!panel) return { pass: false, detail: 'the panel did not open' };
+      const kindBtn = $$('.exnote-kind', panel).find((b) => /skipped/i.test(text(b)));
+      if (!kindBtn) return { pass: false, detail: 'no Skipped kind button' };
+      kindBtn.click();
+      await sleep(80);
+      const box = $('.exnote-box', panel);
+      const body = 'probe note: skipped it, someone was on the machine';
+      type(box, body);
+      await sleep(120);
+      const send = $$('.exnote-actions button', panel).find((b) => /^send$/i.test(text(b)));
+      if (!send) return { pass: false, detail: 'no send button' };
+      const grab = since();
+      send.click();
+      await sleep(600);
+      const posted = grab().filter((c) => c.url.includes('/gym/api/note'));
+      const sent = posted[0]?.body ?? null;
+      /* The panel must close on a landed write, so a second thought about the same exercise starts
+         from an empty box rather than from the last one. */
+      const closed = !$('.exnote-open');
+      return {
+        pass: posted.length === 1
+          && sent?.body === body
+          && sent?.kind === 'skipped'
+          && !!sent?.exerciseId
+          && sent.exerciseId === expectId
+          && closed,
+        detail: {
+          posts: posted.length,
+          sentExerciseId: sent?.exerciseId ?? null,
+          cardDataEff: expectId,
+          sentKind: sent?.kind ?? null,
+          bodyMatched: sent?.body === body,
+          panelClosed: closed,
+        },
+      };
+    },
+
+    /* A REFUSED per-exercise note keeps its text AND its panel, for the reason the end-of-session box
+     * has its own refusal test: the input is the only copy of a sentence he said once. If the panel
+     * closed on a refusal the text would be gone from the screen and from the world at the same time,
+     * and the retry queue would be holding the only remaining copy. */
+    async aRefusedExerciseNoteKeepsItsPanel() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      const toggle = $('.exnote-toggle');
+      if (!toggle) return { pass: false, detail: 'no per-exercise capture control on the page' };
+      toggle.click();
+      await sleep(200);
+      const panel = $('.exnote-open');
+      if (!panel) return { pass: false, detail: 'the panel did not open' };
+      const body = 'probe note: this one must survive a refusal';
+      type($('.exnote-box', panel), body);
+      await sleep(120);
+      state.mode = 'locked';
+      $$('.exnote-actions button', panel).find((b) => /^send$/i.test(text(b))).click();
+      await sleep(600);
+      const stillOpen = !!$('.exnote-open');
+      const survived = stillOpen && $('.exnote-box').value === body;
+      const banner = !!$('.save-blocked');
+      state.mode = 'ok';
+      /* Leave the surface as it was found, so ordering between tests cannot matter. */
+      const cancel = $$('.exnote-actions button').find((b) => /cancel/i.test(text(b)));
+      if (cancel) cancel.click();
+      await sleep(120);
+      return {
+        pass: survived && banner,
+        detail: { panelStillOpen: stillOpen, textSurvived: survived, bannerRaised: banner },
+      };
+    },
+
     async finishPostsExactlyOnce() {
       const all = finishes();
       return {
