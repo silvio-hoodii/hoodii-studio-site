@@ -88,8 +88,7 @@
     "lower": {
       "label": "Lower body, the priority",
       "basis": "C2, 2026-08-30. Pelland's intermediate-to-lower efficiency bands, 11 to 29.",
-      "maxSpreadWithinRegion": 4.0,
-      "spreadNote": "Glutes and quads are prime movers in every squat and hinge and will always run high; calves and adductors are trained by one or two exercises each. Four times is the honest allowance for that, and the live programme's 6:1 glutes-to-calves is not."
+      "noSpreadCap": "REMOVED 2026-08-31, hours after it was written, because it was distorting the programme rather than protecting it. A 4x cap across a region holding both prime movers and single-exercise muscles forced calf sets from 3 to 5 purely to make glutes at 36 look proportionate, which added 5 minutes to the longest day and put it exactly on the 80-minute limit for no training reason. Glutes are primary in both priority patterns and calves are trained by one movement: they are not comparable quantities and a ratio between them means nothing. The BANDS already do this job here, glutes 12-42 and calves 6-18. The upper-body cap stays, because up there every muscle is at maintenance and they ARE comparable, and it is the rule that caught chest sitting below every delt head."
     },
     "upper": {
       "label": "Upper body, at maintenance",

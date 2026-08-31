@@ -100,7 +100,16 @@ for (const [region, meta] of Object.entries(targets.regions)) {
   const mn = nz.length ? Math.min(...nz) : 0;
   const mx = vals.length ? Math.max(...vals.map((v) => v.n)) : 0;
   const spread = mn > 0 ? mx / mn : Infinity;
+  /* A REGION MAY DECLARE NO CAP. The lower body does: see the note in targets.json. A ratio between
+     a prime mover and a single-exercise muscle is not a meaningful quantity, and capping it forced
+     junk calf volume to justify glute volume. */
   const cap = meta.maxSpreadWithinRegion;
+  if (cap == null) {
+    byRegion[region] = { spread, cap: null, mn, mx };
+    console.log(`  spread ${mn > 0 ? spread.toFixed(1) + 'x' : 'n/a'}, no cap declared for this region`);
+    console.log('');
+    continue;
+  }
   byRegion[region] = { spread, cap, mn, mx };
   const bad = spread > cap;
   console.log(`  spread ${mn > 0 ? spread.toFixed(1) + 'x' : 'infinite (a muscle at zero)'} against a cap of ${cap}x  ${bad ? '<<< TOO WIDE' : 'ok'}`);
