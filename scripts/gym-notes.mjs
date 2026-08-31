@@ -132,8 +132,38 @@ const rows = all
   ? await sql`select * from gym_note order by created_at desc limit 50`
   : await sql`select * from gym_note where handled = false order by created_at desc limit 50`;
 
+/* WHAT THE SET TABLE DOES NOT HOLD, added 2026-08-31 with gym_note.kind and gym_note.exercise_id.
+ *
+ * Over ALL rows, never just the unhandled ones, because a `did` or `skipped` row stays true after an
+ * agent has read it: `handled` records that somebody answered him, not that the work has been
+ * counted. This is the half of the capture fix that faces the reader, and a column nothing reads is
+ * decoration.
+ *
+ * CALLED ON BOTH PATHS, INCLUDING THE EARLY EXIT, and the first version of this was not. All 37
+ * existing notes are marked handled, so the default run takes the `No unhandled notes` branch and
+ * calls process.exit two lines later; a section written after that line rendered in zero of the runs
+ * that matter, and it took printing the output to notice. Same shape as the probe-taps finding where
+ * a readiness gate a blank page could satisfy passed twelve unpainted URLs: a reader that cannot see
+ * the thing it was built to see reports nothing and confirms nothing. */
+async function printStructured() {
+  const structured = await sql`
+    select kind, exercise_id, date, body from gym_note
+    where kind in ('did', 'skipped') order by date desc, id desc limit 40
+  `;
+  if (!structured.length) return;
+  console.log('\n' + '-'.repeat(70));
+  console.log(`\n${structured.length} note(s) record work gym_set cannot express.`);
+  console.log('A completion or volume figure computed without these is measuring the plan against itself.\n');
+  for (const r of structured) {
+    console.log(`  ${r.date}  ${String(r.kind).toUpperCase().padEnd(7)} ${r.exercise_id ?? '(no exercise)'}`);
+    console.log(`      ${String(r.body).replace(/\s+/g, ' ').slice(0, 140)}`);
+  }
+  console.log('');
+}
+
 if (!rows.length) {
   console.log(all ? 'No notes yet.' : 'No unhandled notes.');
+  await printStructured();
   process.exit(OVERDUE ? 1 : 0);
 }
 
@@ -148,10 +178,21 @@ for (const r of rows) {
   const when = Number.isNaN(at.getTime())
     ? String(r.created_at)
     : `${at.toISOString().slice(0, 10)} ${at.toISOString().slice(11, 16)} UTC`;
+  /* KIND AND EXERCISE, added 2026-08-31 with the columns. Both are null for a note written in the
+     end-of-session box, which is most of the history, and NULL PRINTS NOTHING rather than a
+     placeholder: "kind: -" on 37 rows would be 37 lines saying an agent does not know something.
+     Where they are set they are the whole point of the row, so they lead. */
+  const tags = [
+    r.kind ? r.kind.toUpperCase() : null,
+    r.exercise_id ? `on ${r.exercise_id}` : null,
+  ].filter(Boolean).join('  ');
   console.log(`  #${r.id}  ${r.date}  ${r.day_title || r.day || ''}  (written ${when})${r.handled ? '  [handled]' : ''}`);
+  if (tags) console.log(`      ${tags}`);
   for (const line of String(r.body).split('\n')) console.log(`      ${line}`);
   console.log('');
 }
+await printStructured();
+
 if (!all) console.log('Act on these, then: node scripts/gym-notes.mjs --handled <id>');
 
 /* An overdue open question exits non-zero, so an agent that runs this before touching /gym (which

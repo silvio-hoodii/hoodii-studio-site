@@ -10,6 +10,7 @@ import {
   DAY_ORDER, exType, findExercise, repSuffix,
   parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
+import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kinds';
 
 interface Props {
   program: Program;
@@ -196,6 +197,37 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   /* Every note is its own queue key. A set upserts on (date, exercise, index) so re-typing corrects
    * it; two notes on one evening are two separate things he said and neither replaces the other. */
   const noteSeq = useRef(0);
+
+  /* ---- the per-exercise capture, added 2026-08-31 ------------------------------------------------
+   *
+   * WHAT IT IS FOR. Eleven of his 37 notes record work, or the deliberate absence of work, that
+   * gym_set cannot express: "I ended up doing knee raises with rdl" (#10), "Db tri overhead is cable
+   * overhead tri today" (#16), "Did farmer carry x2 x 120 s" (#36), "Didn't do ever head extension
+   * because at i said before taht pairing doesn't make sense" (#37). All of it arrived as prose in
+   * the box at the bottom of the page, so nothing that counts a set can see any of it, and an
+   * exercise with no row is "he chose not to" and "nobody wrote it down" wearing the same face.
+   *
+   * THE SHAPE IS THE KITCHEN'S, transplanted rather than invented: one collapsed button per step,
+   * three kinds, a textarea, and the step index rides along automatically. See the StepNote
+   * component in src/app/kitchen/[id]/CookClient.tsx, which has carried this on cook_log since it
+   * shipped. The reason it can exist here at all, against gym_note's own founding comment ("nine
+   * empty boxes on screen while he is trying to lift"), is that the collapsed state is one button
+   * and there is no box until it is pressed.
+   *
+   * ONE OPEN AT A TIME, so the page cannot grow by ten textareas. A string, not a Set.
+   *
+   * `exNoteSent` IS PER EXERCISE AND NOT A BOOLEAN, because two exercises can each take a note in
+   * one session and the confirmation belongs on the card it was written from. This is the same
+   * mistake `notesSaved` avoids by counting rather than flagging.
+   *
+   * KIND IS PRESELECTED TO NULL AND SAVE IS NOT BLOCKED ON IT. The kitchen requires a kind; this
+   * does not, because the ruling in src/app/gym/api/note/route.ts is that the moment the app asks
+   * him to categorise, it stops being the thing he asked for. A note with no kind is still a note
+   * with an exercise attached to it, which is the harder half of the join. */
+  const [exNoteOpen, setExNoteOpen] = useState<string | null>(null);
+  const [exNoteKind, setExNoteKind] = useState<NoteKind | null>(null);
+  const [exNoteBody, setExNoteBody] = useState('');
+  const [exNoteSent, setExNoteSent] = useState<Record<string, number>>({});
   const finishWantedRef = useRef(false);
   /* Which ending he chose, so a finish that lands LATER through the banner's unlock is still the
    * ending he picked rather than a plain finish. Same reasoning as finishWantedRef above. */
@@ -500,6 +532,43 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       setNote('');
       setNotesSaved((n) => n + 1);
     }
+  }
+
+  /** A note written FROM an exercise card, carrying that exercise's id and, if he tapped one, a kind.
+   *
+   *  Same `write` as everything else on this page, so it inherits the offline queue and the 401
+   *  handling: a note about a machine that was taken, written in a basement with no signal, is
+   *  retried rather than lost.
+   *
+   *  `openId` is the SLOT id and `exerciseId` is what actually filled it, which differ after a swap.
+   *  Both are needed and they are not interchangeable: the panel has to close on the card he opened,
+   *  and the note has to name the lift he actually did. Getting this backwards is how four of the
+   *  five defects found on 2026-08-14 happened, all of them in swap handling.
+   *
+   *  The body is NOT cleared on failure, for the same reason the end-of-session box is not: the
+   *  input is the only copy. */
+  async function saveExerciseNote(openId: string, exerciseId: string) {
+    const body = exNoteBody.trim();
+    if (!body) return;
+    const ok = await write(`note:${date}:${noteSeq.current++}`, '/gym/api/note', {
+      date, day: activeDay, dayTitle: day.title, body,
+      exerciseId, kind: exNoteKind,
+    });
+    if (ok) {
+      setExNoteBody('');
+      setExNoteKind(null);
+      setExNoteOpen(null);
+      setExNoteSent((prev) => ({ ...prev, [openId]: (prev[openId] ?? 0) + 1 }));
+    }
+  }
+
+  /** Opening a different card discards nothing typed, because only one panel is ever open and the
+   *  body is cleared on open rather than on close. Closing it deliberately is the only way to lose
+   *  text, and that is the affordance labelled Cancel. */
+  function toggleExNote(slotId: string) {
+    setExNoteOpen((cur) => (cur === slotId ? null : slotId));
+    setExNoteKind(null);
+    setExNoteBody('');
   }
 
   function toggleDone(slotId: string, eff: Exercise, idx: number) {
@@ -918,6 +987,67 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                     )}
                   </div>
                 )}
+
+                {/* ---- what actually happened here, added 2026-08-31 ----
+                  *
+                  * The collapsed state is ONE button and says nothing until pressed, which is the
+                  * only reason this can sit on all ten cards. gym_note's founding comment refused a
+                  * per-exercise note because it pictured "nine empty boxes on screen while he is
+                  * trying to lift"; that was right about the box and wrong about the column.
+                  *
+                  * `exnote-*`, not `ex-note-*` or anything already on this page. `.ex` means an
+                  * exercise and nothing else may answer to it (scripts/probe-gym.js selects it to
+                  * find the day's cards, and a notes block wearing that class on 2026-08-27 let all
+                  * 22 tests pass while the harness counted 28 cards where there are 10). A shared
+                  * look is a CSS decision; a shared class name is an API.
+                  *
+                  * `eff.id` GOES TO THE SERVER, `ex.id` OPENS AND CLOSES THE PANEL. After a swap
+                  * those differ, and the note has to name the lift he actually did while the panel
+                  * has to belong to the card he tapped.
+                  *
+                  * The confirmation stays on the card rather than replacing the button, so a second
+                  * thing about the same exercise can still be written. */}
+                <div className="exnote">
+                  {exNoteOpen === ex.id ? (
+                    <div className="exnote-open">
+                      <div className="exnote-kinds">
+                        {NOTE_KINDS.map((k) => (
+                          <button
+                            key={k}
+                            className={`exnote-kind${exNoteKind === k ? ' on' : ''}`}
+                            onClick={() => setExNoteKind((cur) => (cur === k ? null : k))}
+                          >{NOTE_KIND_LABELS[k]}</button>
+                        ))}
+                      </div>
+                      <textarea
+                        className="exnote-box"
+                        rows={3}
+                        value={exNoteBody}
+                        onChange={(e) => setExNoteBody(e.target.value)}
+                        placeholder={`Did cable instead, the ${eff.name.toLowerCase()} was taken`}
+                        autoCapitalize="sentences"
+                        spellCheck
+                      />
+                      <div className="exnote-actions">
+                        <button className="exnote-cancel" onClick={() => toggleExNote(ex.id)}>Cancel</button>
+                        <button
+                          className="btn"
+                          disabled={!exNoteBody.trim()}
+                          onClick={() => void saveExerciseNote(ex.id, eff.id)}
+                        >Send</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button className="exnote-toggle" onClick={() => toggleExNote(ex.id)}>
+                      Something happened here
+                    </button>
+                  )}
+                  {exNoteSent[ex.id] && (
+                    <div className="exnote-sent quiet">
+                      {exNoteSent[ex.id]} note{exNoteSent[ex.id] === 1 ? '' : 's'} saved on this exercise
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}

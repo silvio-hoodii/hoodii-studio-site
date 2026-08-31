@@ -125,9 +125,17 @@ export default async function GymHome() {
             {notes.map((n) => (
               <div className="note-row" key={n.id}>
                 <div className="note-body">{n.body}</div>
+                {/* THE EXERCISE, WHERE THERE IS ONE, added 2026-08-31 with gym_note.exercise_id.
+                    Reads back what the card sent, so he can see the attachment landed rather than
+                    taking the app's word for it. Null on every note written in the box at the end of
+                    the page, which is all 37 rows today, and null RENDERS NOTHING: a line saying the
+                    app does not know something, on 37 rows, is the wall of text he has objected to
+                    three times. The kind is not printed: he chose it, he does not need it read back
+                    at him, and the id is the half that answers "which one was this about". */}
                 <div className="note-meta">
                   {shortDate(n.date)}
                   {n.day_title ? ` · ${n.day_title}` : ''}
+                  {n.exercise_id ? ` · ${n.exercise_id}` : ''}
                   {n.handled ? ' · acted on' : ''}
                 </div>
               </div>

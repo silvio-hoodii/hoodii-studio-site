@@ -1,6 +1,7 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
 import { equivalentIds } from './equivalent-ids';
+import { asNoteKind, type NoteKind } from './note-kinds';
 
 // Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables, see
 // content/gym/schema.sql. GYM_DATABASE_URL is the self-documenting name for this module, but the
@@ -346,16 +347,30 @@ export async function getLastTrainingRow(): Promise<{ date: string; day: string 
  *
  *  `handled` is the half that makes this worth building. The kitchen learned on 2026-08-02 that a
  *  captured question nobody answers is WORSE than no capture at all, because it teaches him the box
- *  does nothing. Unhandled notes are what an agent reads at the start of a session. */
+ *  does nothing. Unhandled notes are what an agent reads at the start of a session.
+ *
+ *  `exerciseId` AND `kind` ARE BOTH OPTIONAL AND BOTH DEFAULT TO NULL, added 2026-08-31. Null means
+ *  he did not say, never a guess. The end-of-session box sends neither and is unchanged; the
+ *  per-exercise control on the card sends both, and the exercise costs no tap because the card
+ *  already knows which one it is. Full reasoning in content/gym/schema.sql and
+ *  src/lib/gym/note-kinds.ts.
+ *
+ *  `asNoteKind` rather than a cast: an unrecognised kind from a stale tab writes null and the note
+ *  still lands. A note refused because this build did not know a word is a note gone from the
+ *  world, which is the same call the "text is not cleared unless the write landed" rule makes on the
+ *  client. */
 export async function addNote(opts: {
   date: string;
   day?: string | null;
   dayTitle?: string | null;
   body: string;
+  exerciseId?: string | null;
+  kind?: unknown;
 }) {
   await sql`
-    insert into gym_note (date, day, day_title, body)
-    values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, ${opts.body})
+    insert into gym_note (date, day, day_title, body, exercise_id, kind)
+    values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, ${opts.body},
+            ${opts.exerciseId ?? null}, ${asNoteKind(opts.kind)})
   `;
 }
 
@@ -367,6 +382,10 @@ export interface NoteRow {
   body: string;
   handled: boolean;
   created_at: string;
+  /** The exercise the note was written from, or null for one written at the end of the session. */
+  exercise_id: string | null;
+  /** See src/lib/gym/note-kinds.ts. Null means he did not say, never a guessed category. */
+  kind: NoteKind | null;
 }
 
 /** Newest first. `onlyUnhandled` is the agent's view: what has he told me that I have not acted on. */

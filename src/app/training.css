@@ -1303,3 +1303,87 @@
 .training .weekgrid .feed { white-space: nowrap; }
 .training .weekgrid .feed.half { color: var(--muted-foreground); }
 .training .weekgrid .over { font-family: var(--font-mono); font-size: 10.5px; color: var(--muted-foreground); }
+
+/* ---- what happened at this exercise, /gym, added 2026-08-31 ----------------------------------
+ *
+ * The collapsed control is ONE underlined text link, borrowing .swap-toggle's exact metrics so the
+ * two controls at the foot of a card read as the same weight rather than competing. It is not
+ * .swap-toggle: a shared look is a CSS decision and a shared class name is an API, which this file
+ * has relearned three times (`.tab` vs `.surf-tab`, `swap-revert` vs `swap-toggle`, then `.ex` on a
+ * notes block letting 22 tests pass against 28 cards where there are 10).
+ *
+ * 44px on every control here, unprompted, because scripts/probe-taps.mjs measures it and its first
+ * full run found six `Why this is here` summaries at 32px on this very page: the one control that
+ * answers the question he asks most. A control added without the floor is a finding waiting to be
+ * printed.
+ *
+ * The textarea is 16px for the reason .note-box records: below 16 iOS zooms the page on focus, and
+ * that would fire the moment he taps the keyboard microphone to start talking. */
+.training .exnote { margin-top: 2px; }
+.training .exnote-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.training .exnote-open {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+/* Wraps, because three labels at 14.5px do not fit 366px of content width on a 390px screen and the
+   page body must never scroll sideways. */
+.training .exnote-kinds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.training .exnote-kind {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+/* `--signal` is earned here: a selected kind is a value that is true right now, in this session,
+   about the note in the box beside it. */
+.training .exnote-kind.on {
+  color: var(--foreground);
+  border-color: var(--signal);
+  box-shadow: inset 0 0 0 1px var(--signal);
+}
+.training .exnote-box {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+  resize: vertical;
+}
+.training .exnote-box:focus { outline: none; border-color: var(--foreground); }
+.training .exnote-actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.training .exnote-actions .btn { min-height: 44px; }
+.training .exnote-actions .btn:disabled { opacity: 0.45; cursor: default; }
+.training .exnote-cancel {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.training .exnote-sent { font-family: var(--font-mono); font-size: 12px; margin-top: 4px; }
