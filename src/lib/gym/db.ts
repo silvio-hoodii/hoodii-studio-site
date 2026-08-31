@@ -212,11 +212,42 @@ export async function appendOffPlanSet(s: {
   return (rows[0] as { set_idx: number }).set_idx;
 }
 
+/* A SET WITH REPS TYPED INTO IT HAPPENED, WHETHER OR NOT HE TAPPED THE CIRCLE. Added 2026-08-30.
+ *
+ * `done` is set by a SEPARATE tap on the circle at the end of the row, which also starts the rest
+ * timer. Typing a weight and a rep count autosaves the row with whatever `done` currently is, so a
+ * set he performed and typed but did not tick is written `done = false`. Every history read then
+ * required `done = true`, so that work was invisible to the suggestion engine, the trend line, the
+ * stall detector and "your last session".
+ *
+ * THIS IS NOT AN EDGE CASE. 66 of 646 rows in his log carry real reps with `done = false`, on
+ * twelve separate dates, and 30 August alone has seven. His own words that sent me looking: "chekc
+ * how i actually marked the events". On the lateral bound that day he did five sets of three and
+ * ticked sets 2, 4 and 5; nobody performs set 2 and skips 1 and 3, so this is the gesture not
+ * landing rather than a decision. A further 42 rows are `done = false` with NO reps, and those are
+ * correctly false: they are empty boxes.
+ *
+ * WHY WIDEN THE READ INSTEAD OF FIXING THE WRITE OR BACKFILLING. Auto-ticking on keystroke would
+ * fire the rest timer while he is still typing, and rewriting 66 rows of his training log to make a
+ * query simpler is editing the record to fit the reader. The record is right. The question the
+ * reads were asking was too narrow: they asked "did he tick it" when they meant "did he do it".
+ *
+ * One definition, in one place, used by all four reads, because the last time this table had two
+ * definitions of "this exercise's history" the calf raise card offered 5 lb for a machine he works
+ * at 210. `done` keeps its own meaning for the progress counter and the timer on the page.
+ *
+ * `sql.unsafe` because the neon HTTP tag treats every `${}` as a BOUND PARAMETER, so a plain string
+ * spliced in would arrive as the literal text `'(done = true or ...)'` compared against nothing. The
+ * name is alarming and the content is a compile-time constant with no input in it; the alternative
+ * is writing this condition out four times, which is how one table came to have two definitions of
+ * "this exercise's history" in the first place. */
+const PERFORMED = sql.unsafe('(done = true or (reps is not null and reps > 0))');
+
 export async function getLastSession(exerciseId: string, beforeDate: string): Promise<SessionSets | null> {
   const ids = await equivalentIds(exerciseId);
   const rows = await sql`
     select date from gym_set
-    where exercise_id = any(${ids}) and date < ${beforeDate} and done = true
+    where exercise_id = any(${ids}) and date < ${beforeDate} and ${PERFORMED}
       and reps is not null and reps > 0 and coalesce(estimated, false) = false
     order by date desc limit 1
   `;
@@ -231,7 +262,7 @@ export async function getLastSession(exerciseId: string, beforeDate: string): Pr
 async function setsForExDate(ids: string[], date: string): Promise<SetRow[]> {
   const rows = await sql`
     select weight, reps from gym_set
-    where exercise_id = any(${ids}) and date = ${date} and done = true and reps is not null and reps > 0
+    where exercise_id = any(${ids}) and date = ${date} and ${PERFORMED} and reps is not null and reps > 0
     order by set_idx asc
   `;
   return rows as unknown as SetRow[];
@@ -242,7 +273,7 @@ export async function getRecentSessions(exerciseId: string, beforeDate: string, 
   const ids = await equivalentIds(exerciseId);
   const rows = await sql`
     select distinct date from gym_set
-    where exercise_id = any(${ids}) and date < ${beforeDate} and done = true and reps is not null and reps > 0
+    where exercise_id = any(${ids}) and date < ${beforeDate} and ${PERFORMED} and reps is not null and reps > 0
     order by date desc limit ${n}
   `;
   const dates = rows as unknown as { date: string }[];
@@ -295,7 +326,7 @@ export async function getSessionDay(date: string): Promise<string | null> {
 export async function getLastTrainingRow(): Promise<{ date: string; day: string | null; status: string | null } | null> {
   const rows = await sql`
     select date, day, status from gym_session
-    where date = (select max(date) from gym_set where done = true and reps is not null and reps > 0)
+    where date = (select max(date) from gym_set where ${PERFORMED} and reps is not null and reps > 0)
   `;
   return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
 }
