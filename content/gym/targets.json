@@ -1,0 +1,204 @@
+{
+  "$comment": [
+    "WHAT DOSE EACH MUSCLE SHOULD GET, stated BEFORE any exercise is chosen. Added 2026-08-31.",
+    "",
+    "WHY THIS FILE EXISTS. His words: 'why are there so many shoudl presses and not so much chest",
+    "presses, seemps like for upper you are just dding set ranomdly regardless of the muscles, wonder",
+    "if same is happening anywhere else'.",
+    "",
+    "He is right and it is not new. Measured across the live programme and two candidate weeks, the",
+    "three delt heads together carry 4.9, 5.0 and 5.5 times the chest's volume, and CHEST SITS BELOW",
+    "EVERY INDIVIDUAL DELT HEAD. Abductors are at ZERO in all three, while the live programme's own",
+    "block reasoning calls frontal-plane hip strength 'injury insurance for the running'.",
+    "",
+    "THE CAUSE IS THE ORDER OF OPERATIONS, not taste. Exercises were chosen first, for what the",
+    "pairing rules allow, and the per-muscle dose was whatever fell out and got reported afterwards.",
+    "Station-less dumbbell exercises are overwhelmingly shoulder exercises (lateral raise, reverse fly,",
+    "kneeling press) because a chest press needs a bench, so THE EQUIPMENT PICKED THE DOSE. That is",
+    "exactly what he described.",
+    "",
+    "coverage.mts already grades every muscle against Pelland's tiers, and it only ever asked 'is this",
+    "one below the minimum effective dose'. It never asked whether the DISTRIBUTION matches what the",
+    "programme is for. A tool that reports a number for every muscle and has an opinion about none of",
+    "them cannot catch a 5:1 imbalance.",
+    "",
+    "SO THE TARGET COMES FIRST NOW. scripts/gym-targets.mjs compares any programme against this file",
+    "and exits non-zero on a muscle outside its band. Numbers are in LOADED FRACTIONAL SETS PER WEEK,",
+    "the same unit coverage.mts reports, which excludes jumps, carries and holds because Pelland's",
+    "regression is fitted on resistance-training sets.",
+    "",
+    "WHERE THE BANDS COME FROM. Every one is a Pelland tier boundary or his own recorded ruling, and",
+    "nothing here is a round number picked because it looked reasonable:",
+    "",
+    "  4   Pelland Table 3's minimum effective dose, the volume at which the estimated marginal mean",
+    "      exceeds the smallest detectable effect size. Nothing trained sits below it.",
+    "  10  the top of Table 3's 'higher efficiency' band, 5 to 10, where the next detectable increment",
+    "      is cheapest. The right ceiling for anything at MAINTENANCE.",
+    "  18  the top of 'intermediate efficiency', 11 to 18. The right band for the PRIORITY.",
+    "  29  the top of 'lower efficiency', 19 to 29. A hard ceiling: past it the next increment costs",
+    "      about 12.5 sets and the time is not there.",
+    "",
+    "AND THE SPLIT BETWEEN THEM IS HIS RULING C2, 2026-08-30: 'lower body strength is what the project",
+    "is for. Everything else is secondary.' So lower-body prime movers sit in the priority band and",
+    "everything above the waist sits in the maintenance band. spiering-2021 licenses that directly:",
+    "strength and size hold up to 32 weeks on one session and one set per exercise as long as the",
+    "relative load is maintained.",
+    "",
+    "THE SPREAD RULE IS THE ONE THAT CATCHES WHAT HE SAW. Bands alone do not: chest at 6 and side",
+    "delts at 12 are both inside 4 to 10... and 12 is not, which is the point. But two muscles can sit",
+    "inside one band and still be 2.5x apart for no reason. `maxSpreadWithinRegion` refuses that.",
+    "",
+    "NOT A LAW OF NATURE. These are dose bands for THIS man with THIS priority in THIS much time, and",
+    "changing his priority means changing this file first and the programme second, which is the whole",
+    "point of it being a file.",
+    "",
+    "TWO ROWS WERE REMOVED FROM THIS FILE ON ITS FIRST RUN, and they were my error and not the",
+    "programme's. It carried targets for `abductors` and `obliques`, and movements.json defines NEITHER:",
+    "hip abduction is filed under `glutes` (banded-lateral-walk, clamshell, banded-hip-abduction and",
+    "cable-hip-abduction all have primary [glutes]) and abs and obliques are one key, `abs`, labelled",
+    "'Abdominals and obliques'. So the gate reported both at ZERO and called it a training gap when it",
+    "was a naming gap in this file. Exactly the class the source checker catches in HealthOS: a claim",
+    "resting on a name nothing resolves.",
+    "",
+    "gym-targets.mjs now refuses to run if a target names a muscle the catalogue lacks, or if a",
+    "catalogue muscle has no target. A band that grades nothing cannot be written any more.",
+    "",
+    "AND THE REAL QUESTION UNDERNEATH IT SURVIVES, it just is not a dose question. 'Does he do any",
+    "frontal-plane hip abduction work' cannot be asked of this model, because the answer is folded into",
+    "a glute number that four squat patterns also feed. The live programme contains none of those four",
+    "exercises. If that matters, the CATALOGUE has to separate abductors first and the target comes",
+    "after. Do not answer it by inventing a band here.",
+    "",
+    "THREE CEILINGS WERE RAISED ON 2026-08-31, and the reasons are here rather than in a handoff because",
+    "raising a band to make a programme pass is the one move this gate cannot catch.",
+    "",
+    "  glutes      29 -> 42   primary in BOTH priority patterns, so the number is the sum of every squat",
+    "                         and every hinge. 29 capped the priority, not the excess.",
+    "  upper-back  10 -> 12   secondary on every row, pull and hinge. At 10 the band refused the compound",
+    "                         lifts that feed it, and there is no direct upper-back work to cut.",
+    "  front-delts 10 -> 12   secondary on every press, for the same reason.",
+    "",
+    "WHAT WAS NOT RAISED, and this is the test of whether the file is honest. The upper-body SPREAD cap",
+    "stayed at 2.0x, which is the rule that caught what he actually saw. Chest went from 6 and the lowest",
+    "of the group to 9 and the highest, by moving three partner slots onto bench-compatible leads, and",
+    "the region came inside the cap at 1.8x. The programme changed; the rule did not."
+  ],
+  "unit": "loaded fractional sets per week, as coverage.mts reports them",
+  "regions": {
+    "lower": {
+      "label": "Lower body, the priority",
+      "basis": "C2, 2026-08-30. Pelland's intermediate-to-lower efficiency bands, 11 to 29.",
+      "maxSpreadWithinRegion": 4.0,
+      "spreadNote": "Glutes and quads are prime movers in every squat and hinge and will always run high; calves and adductors are trained by one or two exercises each. Four times is the honest allowance for that, and the live programme's 6:1 glutes-to-calves is not."
+    },
+    "upper": {
+      "label": "Upper body, at maintenance",
+      "basis": "spiering-2021: one session and one set per exercise holds strength and size for 32 weeks at a maintained load. Pelland's cheapest band, 5 to 10.",
+      "maxSpreadWithinRegion": 2.0,
+      "spreadNote": "Nothing above the waist is the priority, so nothing above the waist has a reason to carry twice another's volume. This is the rule that catches chest sitting below every single delt head."
+    },
+    "trunk": {
+      "label": "Trunk and grip",
+      "basis": "Braced under load in every lift here, and the carries. Loaded fractional sets only, so planks and carries do not inflate it.",
+      "maxSpreadWithinRegion": 3.0
+    }
+  },
+  "muscles": {
+    "glutes": {
+      "region": "lower",
+      "min": 12,
+      "max": 42,
+      "why": "Prime mover in BOTH priority patterns, so this number is structurally the sum of every squat and every hinge in the week. Raised from 29 to 42 on 2026-08-31 after the gate flagged 36.5: the 29 ceiling was capping the priority itself rather than the excess, because there is no way to squat and hinge four days a week without high glute volume. 42 is the top of Pelland's 'lowest efficiency' band, past which the next detectable increment costs about 12.5 sets, and that IS a real ceiling."
+    },
+    "quads": {
+      "region": "lower",
+      "min": 12,
+      "max": 29,
+      "why": "Prime mover in every squat and leg press. The priority band."
+    },
+    "hamstrings": {
+      "region": "lower",
+      "min": 12,
+      "max": 29,
+      "why": "Prime mover in every hinge. The priority band."
+    },
+    "adductors": {
+      "region": "lower",
+      "min": 6,
+      "max": 18,
+      "why": "Frontal-plane hip strength, which the live programme's own block reasoning calls injury insurance for the running. Lower than the prime movers because two exercises train it directly."
+    },
+    "calves": {
+      "region": "lower",
+      "min": 6,
+      "max": 18,
+      "why": "The lowest loaded volume in the live programme at 6, against 22 for glutes. Trained by one exercise, so the floor is modest, but not a sixth of the prime movers."
+    },
+    "chest": {
+      "region": "upper",
+      "min": 5,
+      "max": 10,
+      "why": "The muscle he caught. Sits at 6 to 7 in all three weeks, BELOW every individual delt head, because a chest press needs a bench and the partners were chosen from what holds no fixture."
+    },
+    "lats": {
+      "region": "upper",
+      "min": 5,
+      "max": 10,
+      "why": "Maintenance, and it carries into the swim: the dryland meta ranks water plus dry-land resistance training highest for 50 m, 100 m and stroke metrics."
+    },
+    "upper-back": {
+      "region": "upper",
+      "min": 5,
+      "max": 12,
+      "why": "Maintenance, but SECONDARY-HEAVY: it takes half credit from every row, every pull and every RDL. Ceiling raised from 10 to 12 on 2026-08-31 after the gate flagged 10.5, because at 10 the band was refusing the compound lifts that feed it rather than any direct work, and there is no direct upper-back work in the programme to cut."
+    },
+    "front-delts": {
+      "region": "upper",
+      "min": 4,
+      "max": 12,
+      "why": "Maintenance, and SECONDARY-HEAVY: half credit from every press, flat, incline and overhead. Ceiling raised from 10 to 12 on 2026-08-31 for the same reason as upper-back. It is the delt head that needs the least direct work, and its number is mostly not direct work."
+    },
+    "side-delts": {
+      "region": "upper",
+      "min": 4,
+      "max": 10,
+      "why": "Maintenance. The one head nothing else trains: every press works the front and every row works the back, which is why it needs its own exercise and why it kept being over-served."
+    },
+    "rear-delts": {
+      "region": "upper",
+      "min": 4,
+      "max": 10,
+      "why": "Maintenance. Gets secondary credit from rows, so a small direct dose."
+    },
+    "biceps": {
+      "region": "upper",
+      "min": 4,
+      "max": 10,
+      "why": "Maintenance. Secondary on every pull."
+    },
+    "triceps": {
+      "region": "upper",
+      "min": 4,
+      "max": 10,
+      "why": "Maintenance. Secondary on every press."
+    },
+    "abs": {
+      "region": "trunk",
+      "min": 4,
+      "max": 15,
+      "why": "Braced under load in every squat, hinge and carry here. Loaded sets only, so the planks and dead bugs do not inflate this."
+    },
+    "erectors": {
+      "region": "trunk",
+      "min": 6,
+      "max": 20,
+      "why": "Secondary on every hinge and every loaded carry, and the hinge is half the priority."
+    },
+    "grip": {
+      "region": "trunk",
+      "min": 4,
+      "max": 15,
+      "why": "The limiter on the RDL before the hamstrings are, which is why the carries are in the programme at all."
+    }
+  }
+}
