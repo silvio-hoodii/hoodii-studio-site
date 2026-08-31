@@ -918,7 +918,7 @@
           "role": "primer",
           "pairing": "fill",
           "label": "Power Primer",
-          "tag": "(dumbbells in hand)",
+          "tag": "(floor, no kit)",
           "exercises": [
             {
               "id": "lateral-bound",
@@ -958,41 +958,9 @@
                 }
               ],
               "progression": "fixed"
-            },
-            {
-              "id": "db-lateral-raise",
-              "name": "DB Lateral Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "alts": [
-                {
-                  "id": "db-lateral-raise-seated",
-                  "name": "Seated DB Lateral Raise",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
-                  "progression": "weight"
-                },
-                {
-                  "id": "kb-lateral-raise",
-                  "name": "Kettlebell Lateral Raise",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
-                  "progression": "weight"
-                }
-              ],
-              "progression": "weight",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "whyHere": "The lateral raise rides in the rest because it is upper body, so the bound stays fresh.",
-              "rangeWidth": 11
             }
           ],
-          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. The lateral raise rides in the rest because it is upper body, so the bound stays fresh."
+          "why": "Same reasoning and dose as Monday jumps, done sideways. First and fresh, progressed by quality and contact count rather than distance. It runs alone, the same as Monday: a bound needs floor space and something to land on, and a partner takes both."
         },
         {
           "role": "main",
@@ -1398,7 +1366,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Vertical Pull",
-          "tag": "(machine)",
+          "tag": "(machine, dumbbells in hand)",
           "why": "The second vertical pull. Lat Pulldown on Tuesday was the only one in the week, against the same twice-a-week rule the rest of the programme follows. The counterweight is the load and it goes DOWN as you get stronger, which is a progression with a finish line: an unassisted pull-up. Side delts go in the rest because a pull-up does not use them.",
           "exercises": [
             {
@@ -1425,6 +1393,38 @@
                 }
               ],
               "assistance": true
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging at your sides, palms facing your thighs, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if you were pouring from two jugs. Lower slowly, about twice as long coming down as going up. Success looks like: your shoulders do not rise toward your ears, and you can stop the weight dead at the top instead of it swinging. If either fails, go lighter. This is the SIDE of the shoulder, and it is the one thing nothing else in the week trains: every press works the front, every row works the back. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "alts": [
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave.",
+                  "progression": "weight"
+                },
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "Kettlebell Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone.",
+                  "progression": "weight"
+                }
+              ],
+              "progression": "weight",
+              "zone": "machines",
+              "station": null,
+              "log": true,
+              "whyHere": "Side delts go in the rest because a pull-up does not use them.",
+              "rangeWidth": 11
             }
           ]
         },
