@@ -248,17 +248,42 @@ export default function Volume({
         <summary className="exgroup-label">
           Weekly sets per lift <span className="tag">({perLift.length} lifts)</span>
         </summary>
+        {/* THIS PARAGRAPH SAID THE WRONG THING TWICE, and it is the units error as it reached his
+            phone. It read: "For getting stronger at a lift, 1 set a week is the floor and past 5 the
+            extra sets stop paying reliably", printed directly above a column holding 4 for the back
+            squat. Two faults in one sentence.
+
+            ONE. "Past 5" is Table 4's unit, which is FRACTIONAL sets, and the column was `direct`
+            sets, the count of that exact exercise. Under Pelland's strength rule a set of any
+            exercise that meaningfully trains the muscles involved counts half toward the assessed
+            lift: 5 squats + 5 squats + 5 leg presses is direct 10 and fractional 12.5, the paper's
+            own example. So "4, and past 5 they stop paying" read as room to add, while the squat
+            pattern actually delivers 19.5.
+
+            TWO. "Stop paying reliably" is the ceiling error. Pelland 4.3: "additional sets beyond
+            this point may produce additional strength gains, albeit less than the SDES, prior to the
+            functional plateau." Less than this study could detect is not nothing.
+
+            Both columns are shown now, and the saturation line below says out loud when the tier has
+            stopped telling him anything. */}
         <p className="ex-cue">
           A different count, and it may not be added to the one above: that table is per muscle, this
-          one is per lift. For getting stronger at a lift, 1 set a week is the floor and past 5 the
-          extra sets stop paying reliably.
+          one is per lift. <strong>Only it</strong> is sets of that exact exercise.{' '}
+          <strong>All-in</strong> also counts half a set for every other set in your week that trains
+          the same muscles, which is the unit the research actually uses. For getting stronger at a
+          lift, 1 all-in set a week is the floor and 5 is where the gains stop being big enough for a
+          study to measure. They do not stop.
         </p>
         <div className="table-scroll">
           <table className="plan-table vol-table">
             <thead>
               <tr>
                 <th className="wide">Lift</th>
-                <th className="tnum">Wk</th>
+                {/* `Only it` and not `Lift`, which is what this said for one draft: the name column
+                    is already headed Lift, so the table printed the same word twice and neither
+                    header said which was which. Caught by reading the rendered text, not the JSX. */}
+                <th className="tnum">Only it</th>
+                <th className="tnum">All-in</th>
                 <th className="tnum">Days</th>
                 <th className="nowrap">Load</th>
               </tr>
@@ -267,8 +292,11 @@ export default function Volume({
               {perLift.map((v) => (
                 <tr key={v.id}>
                   <td className="wide">{v.name}</td>
-                  <td className="tnum live">{fmt(v.sets)}</td>
-                  <td className="tnum">{v.days.length}</td>
+                  <td className="tnum">{fmt(v.sets)}</td>
+                  {/* `live` moves to the all-in column: --signal is for the value a decision is
+                      actually read off, and until today it sat on the one in the wrong unit. */}
+                  <td className="tnum live">{fmt(v.fractionalSets)}</td>
+                  <td className="tnum">{fmt(v.fractionalFrequency)}</td>
                   <td className="nowrap">
                     {v.loadable ? 'yes' : <span className="vol-state under">no weight</span>}
                   </td>
@@ -277,6 +305,24 @@ export default function Volume({
             </tbody>
           </table>
         </div>
+        {/* DAYS BECAME FRACTIONAL FREQUENCY, and it is the number with the lever in it. The column
+            held `days.length`, a whole count. The paper measures frequency the same fractional way it
+            measures volume, and frequency is the one variable that is strong for strength and
+            negligible for size: 3.27% per session [95% CrI 2.74, 3.84] against 0.32% [95% CrI -0.14,
+            0.82]. Volume for strength is 0.21% per set. All three verified in
+            HealthOS/knowledge/sources/pelland-2025-dose-response-fulltext.txt this session. */}
+        <p className="ex-cue">
+          <strong>Days</strong> counts a day that trains the lift itself as 1 and a day that only
+          trains the same muscles as half.
+          {totals.strengthTierSaturated ? (
+            <>
+              {' '}Every one of these {perLift.length} lifts is in the same efficiency band, so that
+              band cannot tell you which lift to change. The number that still can is Days: one more
+              session a week is worth about fifteen times what one more set is worth, for strength,
+              and costs almost nothing for size.
+            </>
+          ) : null}
+        </p>
       </details>
 
       {/* A PARTNER THAT SHARES A MUSCLE WITH THE LIFT IT SITS BEHIND COSTS THAT LIFT REPS. Zhang

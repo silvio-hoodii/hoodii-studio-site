@@ -122,11 +122,51 @@ console.log('  NOTE  past 10 is not too much. Volume raises size and strength wi
 console.log('      probability 100% in Pelland; the bands rank how EXPENSIVE the next increment is,');
 console.log('      not whether it works. What limits this programme is the time he has, not a number.');
 
-console.log('\n\nPER LIFT, for STRENGTH  (Table 4: minimum 1, and past 5 extra sets stop paying)\n');
-console.log(pad('lift', 30) + padL('sets/wk', 9) + padL('days', 6) + '  ' + pad('tier', 15) + 'loadable');
+/* THREE COLUMNS OF SETS, NOT ONE, since 2026-08-31. This table printed the `direct` count under a
+ * heading quoting a tier denominated in `fractional`, which is the units error the measurement audit
+ * found: a leg press set counts half toward back squat strength under Pelland's own strength rule
+ * and this table counted it as zero. `direct` stays because it is the number he can see himself doing
+ * in the week; the tier is read off `fractional`, which is Table 4's unit. */
+console.log('\n\nPER LIFT, for STRENGTH  (Table 4, and its unit is FRACTIONAL sets, not sets of the lift)\n');
+console.log(
+  pad('lift', 30) + padL('direct', 7) + padL('frac', 7) + padL('~loose', 8) +
+  padL('freq', 6) + '  ' + pad('tier (on frac)', 15) + 'loadable',
+);
 rule();
 for (const v of coverage.perLift) {
-  console.log(pad(v.name, 30) + padL(v.sets, 9) + padL(v.days.length, 6) + '  ' + pad(v.tier.tier, 15) + (v.loadable ? 'yes' : 'NO, cannot progress'));
+  console.log(
+    pad(v.name, 30) + padL(v.sets, 7) + padL(v.fractionalSets, 7) + padL(v.fractionalSetsLoose, 8) +
+    padL(v.fractionalFrequency, 6) + '  ' + pad(v.tier.tier, 15) + (v.loadable ? 'yes' : 'NO, cannot progress'),
+  );
+}
+console.log('');
+console.log('  direct  sets of this exact lift. Pelland\'s `direct\', and what this column held until');
+console.log('          2026-08-31 while being graded against a table denominated in `fractional\'.');
+console.log('  frac    direct + half of every OTHER set in the week sharing a PRIMARY muscle with it.');
+console.log('          The paper: 5 squat + 5 squat + 5 leg press = direct 10, fractional 12.5.');
+console.log('  ~loose  the same with the indirect test widened to synergists. A judgement, so both');
+console.log('          are shown; where they disagree neither decides anything on its own.');
+console.log('  freq    fractional weekly frequency: days with this lift + half a day per day carrying');
+console.log('          only indirect work.');
+
+/* THE SATURATION LINE. A tier giving every row the same label is not measuring anything, and the
+ * previous attempt at this fix shipped exactly that as the answer. */
+if (coverage.totals.strengthTierSaturated) {
+  console.log('');
+  console.log('  !! THE TIER COLUMN IS SATURATED and is therefore not a finding. All');
+  console.log(`     ${coverage.perLift.length} lifts fall in ONE of Table 4\'s five tiers, because that table spans 1 to`);
+  console.log('     5+ and every compound lift in a four-day week clears 5 fractional sets.');
+  console.log('     PAST THE TOP TIER IS A PRICE, NOT A WALL. Pelland 4.3, verbatim: "additional');
+  console.log('     sets beyond this point may produce additional strength gains, albeit less than');
+  console.log('     the SDES, prior to the functional plateau."');
+  console.log('     THE LEVER IS THE `freq` COLUMN, NOT THE SET COUNTS. Fractional frequency on');
+  console.log('     strength is 3.27% per session [95% CrI 2.74, 3.84], interval excluding null.');
+  console.log('     Fractional volume on strength is 0.21% per set [95% CrI 0.16, 0.26]. And');
+  console.log('     frequency costs almost nothing in size: 0.32% [95% CrI -0.14, 0.82], interval');
+  console.log('     containing null, "inconsistent and compatible with negligible effects".');
+} else {
+  console.log('');
+  console.log(`  The tier column separates these lifts into ${coverage.totals.strengthTiersSeen} of Table 4's five tiers.`);
 }
 
 console.log('\n\nPAIRINGS THAT COST THE LIFT IN FRONT OF THEM');
@@ -247,5 +287,9 @@ if (diff.fixed.length) {
   process.exit(1);
 }
 console.log('MATCHES THE BASELINE. Past-efficient is reported, not gated: it is diminishing returns,');
-console.log('not harm, and 11 muscles have sat there since the week was derived from the goal.');
+/* DERIVED, NOT TYPED. This line said "11 muscles have sat there" and the summary line directly
+   above it printed 12, computed. It was 11 when the sentence was written. A number typed in prose
+   beside the same number derived is the drift this repo has now found in a hub row (33 against 55
+   source lists), in a notes count, and here. */
+console.log(`not harm, and ${coverage.totals.pastEfficient} muscles have sat there since the week was derived from the goal.`);
 process.exit(0);

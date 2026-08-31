@@ -88,37 +88,111 @@ export interface MovementCatalogue {
   movements: Record<string, CatalogueMovement>;
 }
 
-/* ---- Pelland 2026 Table 3, hypertrophy, fractional weekly sets PER MUSCLE ---- */
+/* ---- Pelland 2026 Tables 3 and 4, the efficiency tiers -----------------------------------------
+ *
+ * A TIER IS DEFINED BY ITS FLOOR ALONE, AND `max` IS GONE. Changed 2026-08-31, and this is the
+ * second bug found in this file in two days.
+ *
+ * WHAT WAS WRONG. Every tier carried both a `min` and a `max`, hand-typed from the paper's printed
+ * bands ("5-10", "11-18"), and `tierFor` was `find((t) => n >= t.min && n <= t.max)` with
+ * `?? tiers[tiers.length - 1]` as the fallback. The paper prints INTEGER bands. This file counts
+ * sets in HALVES, and says so in its own header. So 10.5, 18.5, 29.5 and 42.5 matched no tier at
+ * all, fell through to the fallback, and were reported as the LAST tier in the list, which for
+ * hypertrophy is `unclear: insufficient data, or potentially less hypertrophy` and for strength is
+ * `lower eff.` The worst label in the table, printed for a value sitting mid-band.
+ *
+ * IT WAS LIVE. Grip and forearms carries 18.5 fractional sets this week and `MuscleRow.tier` reads
+ * `unclear` for it right now. The reason nobody saw it is that scripts/gym-coverage.mjs prints
+ * `loadedTier`, and grip's loaded figure is 17, an integer. A half-set only has to appear in the
+ * column that IS displayed for this to reach his phone.
+ *
+ * THE FIX IS NOT TO WIDEN THE TWO NUMBERS. Making `max: 10` into `max: 10.99` fixes 10.5 and leaves
+ * the class alive: two hand-typed numbers per row that have to agree with the next row's, seven rows,
+ * and nothing checks the agreement. The tiers are a partition of the number line, so the honest
+ * representation is one boundary per tier and the band derived from the ordering. A gap cannot be
+ * expressed now, which is the difference between eliminating an error class and checking for it.
+ *
+ * A VALUE BETWEEN TWO BANDS TAKES THE LOWER BAND, and that is a rounding decision, not a finding:
+ * 10.5 reads as `HIGHER EFF.` (the paper's 5-10) rather than `intermediate` (11-18), because 10.5 is
+ * not yet 11. It is stated here rather than hidden in an inequality.
+ *
+ * The range as printed comes from `tierBand` below, derived from these floors, so the label a page
+ * shows cannot disagree with the tier the lookup returned. */
 export interface Tier {
+  /** Inclusive floor. A tier runs from here up to the next tier's floor, exclusive. */
   min: number;
-  max: number;
   tier: string;
   note: string;
 }
+
+/* THE PRINTED RANGE IS DERIVED FROM THE FLOORS, never typed beside them.
+ *
+ * The first draft of this change carried a `band: string` on every tier holding the paper's own
+ * wording ("5-10", "43+"). That is the same defect as `max`, one step to the left: a second copy of
+ * a boundary, hand-maintained, next to the copy that computes. It also had no reader, which is the
+ * `rir` shape this repo has now dropped twice. Derived here, the label cannot disagree with the
+ * lookup, and it reproduces Table 3 and Table 4 exactly.
+ *
+ * `hi - 1` and not the next floor: the bands the paper prints are integer-inclusive, so the tier
+ * whose floor is 11 and whose successor's floor is 19 prints "11-18", as Table 3 does. */
+export function tierBand(tiers: Tier[], t: Tier): string {
+  const i = tiers.indexOf(t);
+  const next = tiers[i + 1];
+  if (!next) return `${t.min}+`;
+  const hi = next.min - 1;
+  return hi <= t.min ? String(t.min) : `${t.min}-${hi}`;
+}
+
+/* ---- Table 3, hypertrophy, fractional weekly sets PER MUSCLE ---- */
 export const HYPERTROPHY_TIERS: Tier[] = [
-  { min: 0, max: 3.99, tier: 'BELOW MINIMUM', note: 'under the minimum effective dose of 4' },
-  { min: 4, max: 4.99, tier: 'minimum', note: 'sufficient to elicit detectable hypertrophy' },
-  { min: 5, max: 10, tier: 'HIGHER EFF.', note: '~6 more sets needed for the next detectable increment' },
-  { min: 11, max: 18, tier: 'intermediate', note: '~8.5 more sets needed for the next increment' },
-  { min: 19, max: 29, tier: 'lower eff.', note: '~10.75 more sets needed for the next increment' },
-  { min: 30, max: 42, tier: 'lowest eff.', note: '~12.5 more sets needed for the next increment' },
-  { min: 43, max: 1e9, tier: 'unclear', note: 'insufficient data, or potentially less hypertrophy' },
+  { min: 0, tier: 'BELOW MINIMUM', note: 'under the minimum effective dose of 4' },
+  { min: 4, tier: 'minimum', note: 'sufficient to elicit detectable hypertrophy' },
+  { min: 5, tier: 'HIGHER EFF.', note: '~6 more sets needed for the next detectable increment' },
+  { min: 11, tier: 'intermediate', note: '~8.5 more sets needed for the next increment' },
+  { min: 19, tier: 'lower eff.', note: '~10.75 more sets needed for the next increment' },
+  { min: 30, tier: 'lowest eff.', note: '~12.5 more sets needed for the next increment' },
+  { min: 43, tier: 'unclear', note: 'insufficient data, or potentially less hypertrophy' },
 ];
 
-/* ---- Pelland 2026 Table 4, strength, fractional weekly sets PER ASSESSED EXERCISE ---- */
+/* ---- Table 4, strength, fractional weekly sets PER ASSESSED EXERCISE ----
+ *
+ * THE TOP TIER IS OPEN-ENDED AND PAST IT IS A PRICE, NOT A WALL. Its note used to read "additional
+ * sets do not consistently enhance strength > SDES", which is Table 4's own description cell and is
+ * true, and which every reader of this file took as a ceiling. The paper says what happens past it,
+ * verbatim, in section 4.3 of pelland-2025-dose-response-fulltext.txt (right column of lines 830-840
+ * joining the left column of 841-845, the PDF extraction interleaves the two columns):
+ *
+ *   "Indeed, the estimated effect of one `fractional' weekly set exceeded the SDES; therefore, one
+ *    set was identified as the minimum effective dose. Additional increments in the SDES were
+ *    observed up to approximately 4 `fractional' weekly sets, but not beyond this point. However,
+ *    the SDES of 3.96% may be greater than what some deem practically relevant; additional sets
+ *    beyond this point may produce additional strength gains, albeit less than the SDES, prior to
+ *    the functional plateau."
+ *
+ * So the top tier means "further sets still buy strength, just less than this study could detect".
+ * The note says that now. A fabricated ceiling in this same file was used on 2026-08-29 to refuse 25
+ * to 43 legal partner exercises per block, and that is what re-committing it costs. */
 export const STRENGTH_TIERS: Tier[] = [
-  { min: 0, max: 0.99, tier: 'BELOW MINIMUM', note: 'under the minimum effective dose of 1' },
-  { min: 1, max: 1.99, tier: 'minimum', note: 'sufficient to elicit detectable strength gain' },
-  { min: 2, max: 2.99, tier: 'HIGHER EFF.', note: '~0.75 more sets for the next detectable gain' },
-  { min: 3, max: 4, tier: 'intermediate', note: '~2.25 more sets for the next detectable gain' },
-  { min: 5, max: 1e9, tier: 'lower eff.', note: 'additional sets do not consistently enhance strength > SDES' },
+  { min: 0, tier: 'BELOW MINIMUM', note: 'under the minimum effective dose of 1' },
+  { min: 1, tier: 'minimum', note: 'sufficient to elicit detectable strength gain' },
+  { min: 2, tier: 'HIGHER EFF.', note: '~0.75 more sets for the next detectable gain' },
+  { min: 3, tier: 'intermediate', note: '~2.25 more sets for the next detectable gain' },
+  { min: 5, tier: 'lower eff.', note: 'more sets may still add strength, by less than this study could detect' },
 ];
 
 export const MIN_EFFECTIVE_DOSE = 4;
 export const EFFICIENT_ZONE_TOP = 10;
 
+/** The last tier whose floor `n` has reached. Every real number lands in exactly one tier, by
+ *  construction: the first floor is 0, the list is ordered, and there is no upper bound to fall off.
+ *  Negative input cannot occur (sets are non-negative) and would return the first tier. */
 export function tierFor(tiers: Tier[], n: number): Tier {
-  return tiers.find((t) => n >= t.min && n <= t.max) ?? tiers[tiers.length - 1]!;
+  let found = tiers[0]!;
+  for (const t of tiers) {
+    if (n >= t.min) found = t;
+    else break;
+  }
+  return found;
 }
 
 /** The rotation, not the calendar week. The keys are weekday names and mean nothing of the sort:
@@ -183,13 +257,73 @@ export interface MuscleRow {
      `byDay` and with `dayOrder`, so a cell can print its own arithmetic. */
   byDayDetail: Contribution[][];
 }
+/* ONE LIFT, AND THE UNIT IT IS GRADED IN. Rebuilt 2026-08-31.
+ *
+ * THE BUG. This row held `sets` (every set of this exact exercise, summed) and `tier`
+ * (`tierFor(STRENGTH_TIERS, sets)`). Those two are in DIFFERENT UNITS. The sum is Pelland's
+ * `direct` count; Table 4 is denominated in `fractional`, and the paper is explicit that direct is
+ * the worst of the three, from pelland-2025-dose-response-fulltext.txt lines 516-519:
+ *
+ *   "Regarding weekly volume for muscle strength, there was very strong evidence that `fractional'
+ *    outperforms `total' (2xLog(BF)=18.21) and `direct' (2xLog(BF)=45.96). Given the evidence was
+ *    strongest for the `fractional' model, the following sections focus on the results for this
+ *    quantification method."
+ *
+ * AND THE STRENGTH RULE IS NOT THE HYPERTROPHY RULE. Lines 175-186:
+ *
+ *   "For strength, direct sets were those that trained the exact exercise used for the strength
+ *    assessment. Indirect sets were any that were likely to meaningfully train the muscle(s)
+ *    involved in the strength assessment. This includes the primary force generator and synergists
+ *    for the strength assessment. For example, a study measuring back squat 1RM strength consisting
+ *    of 5 sets of back squats in one session, 5 sets of back squats in a second session, and 5 sets
+ *    of leg presses in a third session would result in a weekly volume quantified as `total',
+ *    `fractional', and `direct' of 15, 12.5, and 10, respectively."
+ *
+ * A leg press set counts HALF toward back squat strength. This file counted it as zero.
+ *
+ * WHAT THAT DID ON HIS PHONE. /health printed "BB Back Squat 4" under prose reading "past 5 the
+ * extra sets stop paying", which reads as room to add. Recomputed here: the squat pattern is at 19.5
+ * fractional sets, four times past the point where the paper stops finding detectable increments.
+ * The instrument was recommending the one intervention that cannot work.
+ *
+ * BOTH UNITS ARE REPORTED AND `sets` KEEPS ITS MEANING, so nothing that read it silently changes.
+ * `tier` moves to the fractional count, which is the one correction that had to happen, and
+ * `directTier` preserves what the old field said for anything that wants to show the change. */
 export interface LiftRow {
   id: string;
   name: string;
+  /** Sets of THIS EXACT exercise, summed over the week. Pelland's `direct`. */
   sets: number;
+  /** `sets` + 0.5 x the sets of every OTHER exercise in the week whose PRIMARY muscles intersect
+   *  this lift's primary muscles. Pelland's `fractional`, read strictly. */
+  fractionalSets: number;
+  /** The same, with the indirect test widened: any other exercise that touches one of this lift's
+   *  primary OR synergist muscles, in either of its own roles.
+   *
+   *  TWO STRICTNESSES, REPORTED SIDE BY SIDE, exactly as `redundantPairs` already does and for the
+   *  same reason. "Likely to meaningfully train the muscle(s) involved" is a judgement, and tuning
+   *  the catalogue until one number matches an expectation is confirmation bias with extra steps.
+   *  Where the two disagree, the honest reading is the one that decides nothing on its own. */
+  fractionalSetsLoose: number;
   days: string[];
+  /** Days carrying this exact lift + 0.5 per day carrying only an indirect one. Pelland's
+   *  `fractional` frequency, from the worked example above: 3 sessions, one of them leg press, is a
+   *  fractional frequency of 2.5.
+   *
+   *  THIS IS THE NUMBER WITH THE LEVER IN IT, and it is here because the volume tier has stopped
+   *  discriminating (see `strengthTierSaturated`). Verified in the full text, lines 544-546: the
+   *  marginal slope of fractional FREQUENCY on strength is 3.27% per session [95% CrI 2.74, 3.84],
+   *  credible interval excluding null. Lines 540-546 for hypertrophy: 0.32% [95% CrI -0.14, 0.82],
+   *  interval containing null, "inconsistent and compatible with negligible effects". Against
+   *  VOLUME's 0.21% per set for strength [95% CrI 0.16, 0.26]. One more session is worth more than
+   *  a dozen more sets, and it costs almost nothing for size. */
+  fractionalFrequency: number;
   loadable: boolean;
+  /** Read off `fractionalSets`. Table 4's unit. */
   tier: Tier;
+  /** Read off `sets`. What `tier` used to hold, kept so the correction is showable rather than
+   *  silent, and so nothing has to trust this comment about which unit changed. */
+  directTier: Tier;
 }
 export interface RedundantPair {
   day: string;
@@ -255,7 +389,18 @@ export interface Coverage {
   unsourced: UnsourcedRow[];
   /** Exercise ids the catalogue does not describe. Nothing above is true while this is non-empty. */
   missing: string[];
-  totals: { below: number; pastEfficient: number; strictPairs: number; unsourcedNames: number };
+  totals: {
+    below: number;
+    pastEfficient: number;
+    strictPairs: number;
+    unsourcedNames: number;
+    /* A TIER THAT GIVES EVERY ROW THE SAME LABEL IS NOT MEASURING ANYTHING, and it must say so
+       rather than printing the label 35 times. Added 2026-08-31 with the fractional-set fix.
+       See the note on `strengthTierSaturated` for what it costs to ignore this. */
+    strengthTierSaturated: boolean;
+    /** How many distinct strength tiers the week's lifts fall into. 1 means saturated. */
+    strengthTiersSeen: number;
+  };
 }
 
 interface FlatVariant extends CatalogueVariant {
@@ -306,8 +451,14 @@ export function computeCoverage(
   const redundantPairs: RedundantPair[] = [];
   const unloadableInMain: UnloadableRow[] = [];
   const unsourced: UnsourcedRow[] = [];
+  /* `id` IS ON THIS AND `WeekBlock` DOES NOT PRINT IT. Added 2026-08-31: the fractional-set pass
+     below needs to ask of every slot in the week "is this the same lift, and if not does it touch
+     the same muscles", and the identity half of that question cannot be answered by a display name.
+     The alternative was matching on `slot.name`, which is the drift that the equivalent-ids bug was:
+     one exercise, two names, and a query that read only one of them offered him 5 lb for a machine
+     he loads to 210. */
   const rawSlots: {
-    day: string; block: string; role: string; rest: string; soloBlock: boolean;
+    day: string; block: string; role: string; rest: string; soloBlock: boolean; id: string;
     slot: { name: string; sets: number; reps: string; feeds: { muscle: string; primary: boolean }[] };
   }[] = [];
 
@@ -406,6 +557,7 @@ export function computeCoverage(
           role: block.role,
           rest: String(block.exercises[0]?.rest ?? ''),
           soloBlock: block.exercises.length === 1,
+          id: ex.id,
           slot: {
             name: ex.name,
             sets,
@@ -441,16 +593,75 @@ export function computeCoverage(
       };
     });
 
+  /* THE FRACTIONAL COUNT NEEDS EVERY OTHER SLOT IN THE WEEK, so it cannot be accumulated inside the
+     walk above the way the per-muscle totals are: a lift's indirect volume depends on slots that
+     have not been reached yet. It is a second pass over `perExercise` and `rawSlots`, both of which
+     were built by the single walk, so it still cannot disagree with the numbers above it.
+
+     O(lifts x slots) is 35 x 38 on the real programme. */
   const liftRows: LiftRow[] = [...perExercise.entries()]
     .sort((a, b) => b[1].sets - a[1].sets)
-    .map(([id, v]) => ({
-      id,
-      name: v.name,
-      sets: v.sets,
-      days: [...v.days],
-      loadable: v.loadable,
-      tier: tierFor(STRENGTH_TIERS, v.sets),
-    }));
+    .map(([id, v]) => {
+      const me = byId.get(id);
+      const mePrimary = new Set(me?.primary ?? []);
+      const meAll = new Set([...(me?.primary ?? []), ...(me?.secondary ?? [])]);
+
+      let fractionalSets = 0;
+      let fractionalSetsLoose = 0;
+      const indirectDaysStrict = new Set<string>();
+
+      /* `rawSlots` holds one entry per exercise per day with its sets and the muscles it feeds,
+         which is exactly what the indirect test needs and is already computed by the walk above. */
+      for (const r of rawSlots) {
+        if (r.id === id) {
+          fractionalSets += r.slot.sets;
+          fractionalSetsLoose += r.slot.sets;
+          continue;
+        }
+        const otherPrimary = r.slot.feeds.filter((f) => f.primary).map((f) => f.muscle);
+        const otherAll = r.slot.feeds.map((f) => f.muscle);
+        if (otherPrimary.some((m) => mePrimary.has(m))) {
+          fractionalSets += r.slot.sets * 0.5;
+          if (r.day) indirectDaysStrict.add(r.day);
+        }
+        if (otherAll.some((m) => meAll.has(m))) fractionalSetsLoose += r.slot.sets * 0.5;
+      }
+
+      /* A day carrying the lift itself is a DIRECT session and must not also be counted as half an
+         indirect one. The paper's example is 3 sessions to a fractional frequency of 2.5, not 3.5. */
+      for (const d of v.days) indirectDaysStrict.delete(d);
+
+      return {
+        id,
+        name: v.name,
+        sets: v.sets,
+        fractionalSets,
+        fractionalSetsLoose,
+        days: [...v.days],
+        fractionalFrequency: v.days.size + 0.5 * indirectDaysStrict.size,
+        loadable: v.loadable,
+        tier: tierFor(STRENGTH_TIERS, fractionalSets),
+        directTier: tierFor(STRENGTH_TIERS, v.sets),
+      };
+    });
+
+  /* HOW MANY DISTINCT STRENGTH TIERS THE WEEK ACTUALLY FALLS INTO, and the reason this is computed
+   * and reported rather than left for a reader to notice.
+   *
+   * Table 4 spans 1 to 5+, five tiers, and its top one is open-ended. Under the paper's own indirect
+   * rule for strength (any set meaningfully training the muscles involved counts half) every
+   * compound lift in a real four-day programme lands past 5. Measured on this programme on
+   * 2026-08-31: 27 of 35 lifts are at or past 5 fractional sets on the strict reading and 35 of 35
+   * on the loose one, so the tier label is identical for every row.
+   *
+   * THE PREVIOUS ATTEMPT AT THIS FIX SHIPPED THAT AS THE ANSWER. A column of 35 identical labels
+   * looks like a measurement and carries no information, and printing it is worse than printing
+   * nothing, because it invites a decision. So when the tier stops discriminating, the instrument
+   * says the tier stopped discriminating and points at the number that has not: fractional
+   * FREQUENCY, whose slope for strength is 3.27% per session against volume's 0.21% per set.
+   *
+   * `liftRows.length > 1` because one lift trivially occupies one tier and that is not saturation. */
+  const strengthTiersSeen = new Set(liftRows.map((l) => l.tier.tier));
 
   /* THE WEEKLY TOTAL IS JOINED ON HERE, after every day has been counted. Doing it inside the walk
      would print each muscle's running subtotal at the moment that row was reached, which looks like
@@ -487,6 +698,8 @@ export function computeCoverage(
       pastEfficient: muscleRows.filter((m) => m.pastEfficient).length,
       strictPairs: redundantPairs.filter((p) => p.strict).length,
       unsourcedNames: new Set(unsourced.map((u) => u.name)).size,
+      strengthTiersSeen: strengthTiersSeen.size,
+      strengthTierSaturated: liftRows.length > 1 && strengthTiersSeen.size === 1,
     },
   };
 }

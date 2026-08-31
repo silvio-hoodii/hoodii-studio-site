@@ -110,6 +110,27 @@ const GATES = [
    *
    * Still NOT here: scripts/check-ladder.mjs. It reads his real working weights out of Neon, so it
    * cannot run offline and it can go red with no file edited. The 07:15 sync task runs that one. */
+  /* THE COVERAGE INSTRUMENT'S OWN SUITE. Added 2026-08-31, the day two bugs were found in it.
+   *
+   * `gym-coverage` below is a gate on the PROGRAMME (has a muscle dropped under its dose, has an
+   * unsourced lift appeared). It cannot see a defect in the arithmetic doing the grading, and both
+   * of the defects were exactly that:
+   *
+   *   the UNITS ERROR   `perLift.tier` graded a sum of Pelland's `direct` sets against Table 4,
+   *                     which is denominated in `fractional`. Both numbers are plausible set counts,
+   *                     so the baseline diff, the typecheck and the build all saw nothing.
+   *   the TIER GAP      tiers carried a hand-typed `min` AND `max` from the paper's integer bands
+   *                     while this file counts sets in halves, so 10.5, 18.5, 29.5, 42.5 and 4.5
+   *                     matched no tier and were reported as the LAST tier in the list. Grip and
+   *                     forearms sat at 18.5 reading "unclear: insufficient data, or potentially
+   *                     less hypertrophy" in production.
+   *
+   * The load-bearing case reproduces Pelland's own worked example (5 squat + 5 squat + 5 leg press
+   * = direct 10, fractional 12.5, frequency 2 and 2.5) from a two-lift catalogue built in the file,
+   * so the instrument is checked against the paper rather than against itself. Watched refusing in
+   * both directions before being trusted: restoring the max-based lookup fails 10 cases, restoring
+   * the units bug fails 2. */
+  ['coverage-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/coverage.test.ts']],
   ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
   ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];
