@@ -1627,6 +1627,31 @@
         }
       ],
       "attributionBasis": "ANATOMY. Hip abduction. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
+    },
+    "spinal-extension": {
+      "name": "Spinal extension (lower back as prime mover)",
+      "primary": [
+        "erectors"
+      ],
+      "secondary": [
+        "glutes",
+        "hamstrings"
+      ],
+      "confidence": "anatomy",
+      "note": "ADDED 2026-09-01 ON HIS RULING, and it exists because the catalogue could not otherwise represent a true thing. Until that day the 45-degree back extension claimed the erectors as a PRIME MOVER while being performed with a rigid spine, where they hold the trunk without changing length. That is the same role they have in the squat, the row and the RDL, and this catalogue calls them secondary in all three, so the claim was corrected and the erectors were left with ZERO direct options in the whole gym. Asked by email as gym-lower-back-1; his answer: \"if i need to try a new version of the back extension fine\". This is that version. It is a SEPARATE VARIANT AND A SEPARATE HISTORY from `back-extension`, not a re-cue of it, because the two are done on one machine with opposite instructions and at loads that do not carry over: `back-extension` runs 40 to 50 lb, this one starts at bodyweight. An alias would merge two ladders that have nothing to do with each other.",
+      "variants": [
+        {
+          "id": "lumbar-extension",
+          "name": "Lumbar Extension",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "back-extension",
+          "loadable": true,
+          "note": "Same frame as back-extension, opposite instruction: the spine moves and the hip holds. Prescribed with no load until he reports back on it."
+        }
+      ],
+      "jointAction": "Spinal extension, from a flexed lumbar and thoracic spine back to neutral, with the hips supported and near-static.",
+      "attributionBasis": "ANATOMY. Spinal extension, from a flexed lumbar and thoracic spine back to neutral, with the hips supported and near-static. The erector spinae are the prime movers of spinal extension; the glutes and hamstrings assist by anchoring the pelvis. No study is cited and none should be: see the legend at the top of this file. The claim here is what the joint does, and it is the same kind of claim the rest of this file makes."
     }
   }
 }

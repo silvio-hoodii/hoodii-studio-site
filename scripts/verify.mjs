@@ -154,36 +154,31 @@ const GATES = [
    * per-muscle band file could have drifted with every check passing. Wired 2026-08-31. This is the
    * meta-law in .agents/ENGINEERING.md in its purest form: a rule that does not execute is
    * decoration, and a paragraph of prose ABOUT a gate is not the gate. */
-  /* GYM-TARGETS IS STILL OUT OF THIS LIST AS OF THE 2026-09-01 REBUILD, and it is out on ONE muscle
-   * rather than five. The reason changed completely, so read this rather than the earlier version.
+  /* GYM-TARGETS WENT OUT OF THIS LIST AND CAME BACK ON THE SAME DAY, 2026-09-01, which is the
+   * contract it was taken out under rather than a reversal.
    *
    * It was rewritten that morning to grade DIRECT sets against one quoted floor (Iversen 2021: "at
    * least four sets per week" per muscle) instead of fractional sets against sixteen hand-tuned
-   * bands. It failed on five muscles that had all passed the old gate. Four of those are fixed by
-   * the rebuilt programme, and every muscle in the week now sits at 6 or more direct sets except
-   * one:
+   * bands, and the week then live failed it on five muscles. It was held out while the programme was
+   * rebuilt, because a gate expected to fail cannot signal a regression and a permanently red
+   * pre-push hook is a hook somebody deletes.
    *
-   *   adductors    3 -> 6      upper-back   3 -> 6      triceps   3 -> 6      front-delts  3 -> 6
-   *   erectors     0 -> 0      STILL RED, and the programme is not what is wrong
+   *   adductors  3 -> 6    upper-back  3 -> 6    triceps  3 -> 6    front-delts  3 -> 6
+   *   erectors   0 -> 6    and this one took a correction and a question, not a rebuild
    *
-   * THE ERECTOR FAILURE IS A TRUE STATEMENT ABOUT HIS GYM. Nothing in the catalogue performs spinal
-   * extension as its joint action. The one exercise that claimed to, the 45-degree back extension,
-   * listed erectors as a prime mover on an override that carried a `jointActionNote` saying nobody
-   * had confirmed it. Checked: with the spine held flat the joint action is HIP extension and the
-   * erectors work isometrically, which is the same role they have in the squat, the row and the RDL,
-   * where this catalogue calls them secondary. The rebuild was one commit from resting on that
-   * claim. See the erectors entry in content/gym/targets.json for the whole reasoning.
+   * THE ERECTOR FIX IS THE ONE WORTH READING. The rebuild's first version gave them six sets of
+   * 45-degree back extension, on an override that named them a prime mover and that carried a
+   * `jointActionNote` saying nobody had confirmed it. Checked: with the spine held flat the joint
+   * action is HIP extension and the erectors work isometrically, the same role they have in the
+   * squat, the row and the RDL, where this catalogue calls them secondary. So the claim was
+   * corrected, this gate stayed red on one muscle, and the fix went to him as a question rather than
+   * into a number. He answered in six minutes, the `spinal-extension` group exists, and all sixteen
+   * muscles clear the floor.
    *
-   * SO THE HONEST STATE IS A GATE THAT FAILS ON ONE MUSCLE, and the fix is a question that has been
-   * put to him on the exercise in program.json rather than an edit to a number. IT GOES BACK IN THE
-   * MOMENT HE ANSWERS: either the spinal-extension version becomes its own variant and the floor is
-   * met, or it does not and the target comes out with his ruling written beside it.
-   *
-   * DO NOT "FIX" IT BY LOOSENING THE FLOOR, by deleting the target, or by putting the erector credit
-   * back on the back extension. The floor is quoted from a saved paper, a deleted target is a fact
-   * made invisible, and the third is the exact claim that was just found to be false.
-   *
-   * Run it by hand: node --experimental-strip-types scripts/gym-targets.mjs */
+   * DO NOT "FIX" A FUTURE FAILURE BY LOOSENING THE FLOOR, by deleting a target, or by putting an
+   * isometric muscle back on a prime-mover list. The floor is quoted from a saved paper, a deleted
+   * target is a fact made invisible, and the third is the exact claim that was found false here. */
+  ['gym-targets', process.execPath, ['--experimental-strip-types', 'scripts/gym-targets.mjs']],
 
   /* GYM-ORDER, wired 2026-08-31, the day a programme first satisfied it. It asserts every movement
    * pattern gets a slot in the first two blocks of some day, on Nunes 2021: strength gains are
