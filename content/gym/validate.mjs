@@ -492,6 +492,26 @@ for (const [dayKey, day] of Object.entries(program.days)) {
 
 for (const [dayKey, day] of Object.entries(program.days)) {
   if (!day.name || !day.title) fail(dayKey, 'missing name/title');
+
+  /* THE DAY CHIP IS THE TEXT BEFORE THE FIRST COLON, and nothing said so until 2026-08-31.
+   * `splitName` in src/lib/gym/program-shared.ts is `d.title.split(/:\s/)[0] || d.name`, so a title
+   * with no colon renders WHOLE into the chip row. The whole-week rebuild wrote four titles like
+   * "Squat heavy, hinge second" with no colon, and the four chips went from "Lower A" to a
+   * full-width sentence each, turning a two-line chip row into four stacked rows above the sets
+   * count. Nothing failed: typecheck, lint, build, 46 validator cases, 28 probe checks and 36 tap
+   * surfaces all passed, because the fallback is legal and the row does not overflow. The
+   * screenshot caught it, which is the gate this repo keeps rediscovering.
+   *
+   * A SILENT FALLBACK IS THE DEFECT, so the requirement is stated here instead: the head has to be
+   * short enough to be a chip. 14 characters fits four chips in two rows at 390px, measured. */
+  const CHIP_MAX = 14;
+  const head = String(day.title).split(/:\s/)[0]?.trim() ?? '';
+  if (head.length > CHIP_MAX) {
+    fail(dayKey, `the day chip renders "${head}" (${head.length} chars). splitName() takes the text `
+      + `before the first ": " in the title and falls back to the WHOLE title when there is no colon, `
+      + `so this becomes a full-width chip. Give the title a short head, e.g. "${day.name}: ${String(day.title).toLowerCase()}". `
+      + `Keep the head to ${CHIP_MAX} characters or fewer: that is what fits four chips in two rows at 390px.`);
+  }
   if (!warmups[day.warmup]) fail(dayKey, `warmup "${day.warmup}" not found in warmups.json`);
   for (const cdKey of day.cooldown || []) {
     if (!cooldowns[cdKey]) fail(dayKey, `cooldown key "${cdKey}" not found in cooldowns.json`);

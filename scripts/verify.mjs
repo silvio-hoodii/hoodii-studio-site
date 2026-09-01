@@ -147,6 +147,29 @@ const GATES = [
    * than content/gym/strength-baseline.json accepted. A bad-but-stable number is a judgement someone
    * made; a number moving the wrong way is a new decision and needs a person. */
   ['gym-strength', process.execPath, ['--experimental-strip-types', 'scripts/gym-strength.mjs']],
+
+  /* GYM-TARGETS WAS DESCRIBED IN THE COMMENT ABOVE FOR FOUR DAYS AND NEVER PUT IN THIS LIST. The
+   * paragraph explaining what it grades, and why it is not sufficient on its own, was written when
+   * gym-strength was added; the gate itself was left out of GATES, so nothing ran it and the whole
+   * per-muscle band file could have drifted with every check passing. Wired 2026-08-31. This is the
+   * meta-law in .agents/ENGINEERING.md in its purest form: a rule that does not execute is
+   * decoration, and a paragraph of prose ABOUT a gate is not the gate. */
+  ['gym-targets', process.execPath, ['--experimental-strip-types', 'scripts/gym-targets.mjs']],
+
+  /* GYM-ORDER, wired 2026-08-31, the day a programme first satisfied it. It asserts every movement
+   * pattern gets a slot in the first two blocks of some day, on Nunes 2021: strength gains are
+   * largest in whatever is performed first (ES 0.32, p = 0.034) while order does nothing for size
+   * (ES 0.03, p = 0.862). It was written the same day and deliberately held out of this list,
+   * because the programme then live FAILED it on single-leg and on chest and a gate expected to fail
+   * cannot signal a regression. Same contract as the two dated baselines. */
+  ['gym-order', process.execPath, ['scripts/gym-order.mjs']],
+
+  /* THE ARITHMETIC BEHIND BOTH OF THOSE, watched refusing in both directions. 31 cases, including
+   * Pelland's own worked example. Restoring the max-based tier lookup fails 10 of them and restoring
+   * the direct-vs-fractional units bug fails 2. Neither bug was visible to any other gate here,
+   * because both numbers are plausible set counts and the wrong one is simply smaller. */
+  ['gym-coverage-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/coverage.test.ts']],
+
   ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
   ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];

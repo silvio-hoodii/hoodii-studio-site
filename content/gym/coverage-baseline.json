@@ -25,33 +25,29 @@
     "present unless `--accept-regression` is also passed, so silencing a new below-minimum muscle",
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
-  "accepted": "2026-08-30",
+  "accepted": "2026-08-31",
   "acceptedBecause": "the state the week was in when it was derived from the goal, minus nothing",
   "belowMinimum": [],
   "strictPairs": [],
   "unsourced": [
-    "cable-pallof",
-    "db-calf-raise",
-    "leg-curl",
-    "reverse-lunge",
-    "standing-calf-raise"
+    "db-calf-raise"
   ],
   "perMuscle": {
-    "glutes": 32,
-    "quads": 26,
-    "abs": 19.5,
-    "grip": 18.5,
-    "upper-back": 17.5,
-    "hamstrings": 17,
-    "lats": 16,
-    "triceps": 15.5,
-    "rear-delts": 15.5,
-    "adductors": 13.5,
-    "biceps": 12.5,
-    "calves": 11,
-    "erectors": 10,
-    "front-delts": 9.5,
-    "side-delts": 9,
-    "chest": 7
+    "glutes": 27.5,
+    "quads": 20,
+    "grip": 18,
+    "abs": 16.5,
+    "hamstrings": 15,
+    "upper-back": 12,
+    "calves": 11.5,
+    "erectors": 10.5,
+    "biceps": 9,
+    "chest": 9,
+    "triceps": 9,
+    "rear-delts": 9,
+    "side-delts": 7.5,
+    "front-delts": 7.5,
+    "adductors": 6,
+    "lats": 6
   }
 }

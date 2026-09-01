@@ -3,10 +3,11 @@
     "ACCEPTED STRENGTH STATE, per lift, in Pelland Table 4 fractional sets.",
     "Same contract as coverage-baseline.json: a gate expected to fail cannot signal a regression, so",
     "this records what was accepted and gym-strength.mjs fails only on movement away from it.",
-    "Accepted from content/gym/program.json."
+    "Accepted from C:/tmp/LIVE3.json.",
+    "THE fromProgram FIELD NAMED A TEMP PATH (C:/tmp/LIVE3.json) when first written, which is not a thing a later reader can open. It is the git commit now. A baseline whose provenance cannot be resolved is a number with no story."
   ],
   "acceptedAt": "2026-09-01",
-  "fromProgram": "content/gym/program.json",
+  "fromProgram": "content/gym/program.json at git eadb279, the programme live before the 2026-08-31 rebuild",
   "detectableTop": 4,
   "perLift": {
     "bb-back-squat": 19.5,
@@ -17,9 +18,7 @@
     "db-rdl": 17,
     "db-lateral-lunge": 16,
     "front-squat": 14.5,
-    "leg-curl": 7.5,
-    "standing-calf-raise": 4.5,
-    "db-calf-raise": 4.5
+    "leg-curl": 7.5
   },
-  "sumPastDetectable": 113
+  "sumPastDetectable": 112
 }

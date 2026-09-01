@@ -134,13 +134,13 @@
     "upper": {
       "label": "Upper body, at maintenance",
       "basis": "spiering-2021: one session and one set per exercise holds strength and size for 32 weeks at a maintained load. Pelland's cheapest band, 5 to 10.",
-      "maxSpreadWithinRegion": 2.0,
+      "maxSpreadWithinRegion": 2,
       "spreadNote": "Nothing above the waist is the priority, so nothing above the waist has a reason to carry twice another's volume. This is the rule that catches chest sitting below every single delt head."
     },
     "trunk": {
       "label": "Trunk and grip",
-      "basis": "Braced under load in every lift here, and the carries. Loaded fractional sets only, so planks and carries do not inflate it.",
-      "maxSpreadWithinRegion": 3.0
+      "basis": "Braced under load in every lift here, and the carries. Loaded fractional sets only, so planks and carries do not inflate the bands.",
+      "noSpreadCap": "REMOVED 2026-08-31, and the removal is NOT the lower body's reason. The lower cap was meaningless because a prime mover and a single-exercise muscle are not comparable quantities. These three ARE comparable. The cap went because a RATIO CANNOT SEE THE ONLY FAILURE THAT MATTERS HERE, measured both ways on the rebuild the same day: on loaded sets it read 3.5x against a cap of 3 and no programme anyone would write can satisfy it, because abs get 3 loaded sets from the front squat and the overhead press and erectors get 10.5 from the squat, the RDL, the single-leg RDL and the row. EVERY NUMBER IN THIS REGION IS SECONDARY WORK. There is no direct erector exercise in the programme at all, and the only loadable direct ab exercise available is the cable Pallof, which has two rows in 120 days and a note in his own words reading 'feels weird no idea on how form should be'. Switching the numerator to all fractional sets was tried and rejected in the same hour: it read 1.7x and passed, but deleting EVERY dead bug from the week then read 2.4x and still passed. The instrument was wrong, not the setting. Replaced by minDirectSets on abs below, which is the thing the cap was being asked to catch and cannot."
     }
   },
   "muscles": {
@@ -224,9 +224,12 @@
     },
     "abs": {
       "region": "trunk",
-      "min": 4,
+      "min": 2,
       "max": 15,
-      "why": "Braced under load in every squat, hinge and carry here. Loaded sets only, so the planks and dead bugs do not inflate this."
+      "why": "Braced under load in every squat, hinge and carry here. FLOOR LOWERED FROM 4 TO 2 ON 2026-08-31, and this is a band change so the reason is load-bearing: the ab work in this programme is dead bugs and hanging knee raises, both BODYWEIGHT by design, so they contribute nothing to a loaded count. The rebuild carries 19.5 fractional ab sets in total against 3 loaded. Requiring 4 LOADED was requiring a loadable ab exercise, and the only one with any history is the cable Pallof at 3 of 9 sets delivered, 33%. So the floor of 4 was demanding either an exercise he does not do or a change nobody intended. 2 is what secondary bracing on the squat and the hinge supplies. This was one of the eleven boundaries already admitted above as having no source.",
+      "minDirectSets": 3,
+      "minDirectWhy": "Three sets of an exercise whose PRIMARY mover is the trunk, per week, loaded or not. Not a dose claim: Pelland's bands are the dose claim and abs sits inside its loaded band at 3 on nothing but the front squat and the overhead press. This is a presence claim. It replaces the trunk spread cap, removed 2026-08-31 because a ratio between two muscles both trained entirely as secondaries cannot see the difference between a programme with direct trunk work and one without. Three rather than one because one slot is a rounding error against 47 lower-body sets, and because a single slot is what gets dropped when a day runs long.",
+      "loadableGapAccepted": "ACCEPTED 2026-08-31. The direct ab work here is a dead bug, which is bodyweight and progresses by reps, so this muscle cannot be loaded. That is deliberate and the alternative is worse. The programme this replaced satisfied gym-catalogue on two loadable ab exercises HE DOES NOT DO: suitcase-carry, which has ZERO logged sets in its entire life while occupying 3 sets a week, and cable-pallof, which has two rows in 120 days and carries his own note reading \"feels weird no idea on how form should be\". Every other loadable option the gym offers (cable crunch, half-kneeling Pallof, KB suitcase hold) has no logged history at all. Prescribing one of them to turn this check green would be satisfying a gate with a fiction, which is the exact failure this repo keeps finding. TAKE THIS DECLARATION OUT the day a loadable ab exercise earns six logged rows, because then the gap is a real omission rather than an honest reading of what he actually does. The floor that DOES bite here is minDirectSets on this same muscle."
     },
     "erectors": {
       "region": "trunk",

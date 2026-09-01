@@ -72,6 +72,18 @@ if (unknown.length || ungraded.length) {
 
 const cov = computeCoverage(program, cat);
 const got = new Map(cov.perMuscle.map((m) => [m.muscle, m.loadedSets]));
+
+/* DIRECT SETS, meaning sets of an exercise for which this muscle is a PRIMARY mover, loaded or not.
+ * A muscle can sit inside its loaded band on nothing but other lifts' secondary work: the trunk does,
+ * and both its numbers are entirely secondary. `minDirectSets` in targets.json is the check for that,
+ * and it exists because a ratio between two muscles cannot see it. Measured on the rebuild
+ * 2026-08-31: removing every dead bug leaves abs at 3 loaded sets, inside its band, and moves the
+ * trunk spread from 1.7x to 2.4x, inside its cap. The programme would then contain no direct trunk
+ * work at all and every number in this region would still read fine. */
+const direct = new Map(cov.perMuscle.map((m) => [
+  m.muscle,
+  (m.byDayDetail ?? []).flat().filter((e) => e.primary).reduce((a, e) => a + (e.rawSets ?? e.sets ?? 0), 0),
+]));
 const label = (m) => cat.muscles[m] ?? m;
 
 const findings = [];
@@ -83,7 +95,7 @@ console.log(`Target bands from content/gym/targets.json. Unit: ${targets.unit}.\
 for (const [region, meta] of Object.entries(targets.regions)) {
   const muscles = Object.entries(targets.muscles).filter(([, t]) => t.region === region);
   console.log(`${meta.label.toUpperCase()}`);
-  console.log('  muscle'.padEnd(28) + 'band'.padStart(9) + 'actual'.padStart(9) + '   verdict');
+  console.log('  muscle'.padEnd(28) + 'band'.padStart(9) + 'actual'.padStart(9) + 'direct'.padStart(8) + '   verdict');
   const vals = [];
   for (const [m, t] of muscles) {
     /* A muscle the catalogue never attributes is 0, not absent. That distinction is the abductor
@@ -91,14 +103,21 @@ for (const [region, meta] of Object.entries(targets.regions)) {
        that trains them, and a report keyed on what the programme HAS would never have printed it. */
     const n = got.get(m) ?? 0;
     vals.push({ m, n });
+    const d = direct.get(m) ?? 0;
     let verdict = 'ok';
     if (n < t.min) { verdict = `UNDER by ${(t.min - n).toFixed(1)}`; findings.push({ region, m, n, t, kind: 'under' }); }
     else if (n > t.max) { verdict = `OVER by ${(n - t.max).toFixed(1)}`; findings.push({ region, m, n, t, kind: 'over' }); }
-    console.log('  ' + label(m).padEnd(26) + `${t.min}-${t.max}`.padStart(9) + String(n).padStart(9) + `   ${verdict}`);
+    if (t.minDirectSets != null && d < t.minDirectSets) {
+      verdict = `${verdict === 'ok' ? '' : verdict + ', '}NO DIRECT WORK: ${d} of ${t.minDirectSets}`;
+      findings.push({ region, m, n, t, d, kind: 'direct' });
+    }
+    console.log('  ' + label(m).padEnd(26) + `${t.min}-${t.max}`.padStart(9) + String(n).padStart(9)
+      + String(t.minDirectSets != null ? d : '').padStart(8) + `   ${verdict}`);
   }
-  const nz = vals.filter((v) => v.n > 0).map((v) => v.n);
+  const svals = vals;
+  const nz = svals.filter((v) => v.n > 0).map((v) => v.n);
   const mn = nz.length ? Math.min(...nz) : 0;
-  const mx = vals.length ? Math.max(...vals.map((v) => v.n)) : 0;
+  const mx = svals.length ? Math.max(...svals.map((v) => v.n)) : 0;
   const spread = mn > 0 ? mx / mn : Infinity;
   /* A REGION MAY DECLARE NO CAP. The lower body does: see the note in targets.json. A ratio between
      a prime mover and a single-exercise muscle is not a meaningful quantity, and capping it forced
@@ -114,8 +133,8 @@ for (const [region, meta] of Object.entries(targets.regions)) {
   const bad = spread > cap;
   console.log(`  spread ${mn > 0 ? spread.toFixed(1) + 'x' : 'infinite (a muscle at zero)'} against a cap of ${cap}x  ${bad ? '<<< TOO WIDE' : 'ok'}`);
   if (bad) {
-    const lo = vals.filter((v) => v.n > 0).sort((a, b) => a.n - b.n)[0];
-    const hi = vals.sort((a, b) => b.n - a.n)[0];
+    const lo = svals.filter((v) => v.n > 0).sort((a, b) => a.n - b.n)[0];
+    const hi = svals.sort((a, b) => b.n - a.n)[0];
     findings.push({ region, kind: 'spread', spread, cap, lo, hi, note: meta.spreadNote });
   }
   console.log('');
@@ -130,6 +149,14 @@ if (!findings.length) {
 console.log('-'.repeat(70));
 console.log(`${findings.length} finding(s):\n`);
 for (const f of findings) {
+  if (f.kind === 'direct') {
+    console.log(`  ${label(f.m).toUpperCase()} HAS ${f.d} DIRECT SET(S), floor ${f.t.minDirectSets}.`);
+    console.log(`     It reads ${f.n} loaded sets, inside its band of ${f.t.min}-${f.t.max}, and every one of those`);
+    console.log('     is another lift\'s secondary work. A band and a spread ratio both pass on that.');
+    if (f.t.minDirectWhy) console.log(`     ${f.t.minDirectWhy}`);
+    console.log('');
+    continue;
+  }
   if (f.kind === 'spread') {
     console.log(`  ${f.region.toUpperCase()} SPREAD ${f.spread.toFixed(1)}x, cap ${f.cap}x.`);
     console.log(`     ${label(f.hi.m)} at ${f.hi.n} against ${label(f.lo.m)} at ${f.lo.n}.`);

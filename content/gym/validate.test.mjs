@@ -95,6 +95,124 @@ const anyOpenExercise = (p) => {
   return ex;
 };
 
+/** A concurrent block whose two exercises sit on ONE station the equipment file declares shareable,
+ *  read out of the real files rather than fabricated. Both halves of the shareable-station rule use
+ *  it: one asserts this shape validates, the next withdraws the permission and requires a refusal.
+ *  Reads the CATALOGUE station, not the slot's, because the placement gate already forces those to
+ *  agree and the catalogue is the thing a mutation cannot quietly contradict. */
+const sharedStationBlock = (p) => {
+  const cat = JSON.parse(readFileSync(join(HERE, 'movements.json'), 'utf8'));
+  const equip = JSON.parse(readFileSync(join(HERE, 'equipment.json'), 'utf8'));
+  const place = new Map();
+  for (const m of Object.values(cat.movements)) {
+    for (const v of m.variants) {
+      place.set(v.id, { zone: v.zone, station: v.station });
+      for (const a of v.aliases ?? []) place.set(a, { zone: v.zone, station: v.station });
+    }
+  }
+  const shareable = (zone, station) => Boolean(equip.zones?.[zone]?.stations?.[station]?.sharedInOneWindow);
+  return Object.values(p.days || {})
+    .flatMap((d) => d.blocks || [])
+    .find((b) => {
+      if (!['fill', 'alternate'].includes(b.pairing) || (b.exercises || []).length !== 2) return false;
+      const [a, c] = b.exercises.map((e) => place.get(e.id));
+      if (!a || !c || !a.station) return false;
+      return a.zone === c.zone && a.station === c.station && shareable(a.zone, a.station);
+    });
+};
+
+/** Replace a two-exercise block's exercises with slots built from the CATALOGUE, and rewrite the
+ *  block's `why` and the partner's `whyHere` so they stay consistent with the new names.
+ *
+ *  THIS EXISTS BECAUSE THE ALTERNATIVE CASCADED. The adjacency cases used to move a partner onto
+ *  another station in program.json AND move its variant in movements.json, then walk the whole week
+ *  moving every other slot holding that id so nothing disagreed with the catalogue. On 2026-08-31 the
+ *  rebuilt week put that partner in two blocks whose leads are in different zones, so the cascade
+ *  dragged one of them across the gym and the ZONE rule refused it: the case reported a failure of
+ *  the adjacency rule that was actually the walking-route rule doing its job. Replacing a block's
+ *  contents touches one block, needs no second file, and cannot reach any other day. */
+const rebuildBlockAs = (p, leadId, partnerId) => {
+  const cat = CATALOGUE();
+  const block = Object.values(p.days || {}).flatMap((d) => d.blocks || [])
+    .find((b) => (b.exercises || []).length === 2);
+  if (!block) throw new Error('no two-exercise block at all; repoint this case');
+  const slot = (id, sets, reps, rest) => {
+    const v = cat[id];
+    if (!v) throw new Error(`${id} is not in movements.json; repoint this case`);
+    return {
+      id, name: v.name, sets, reps, rest, log: true,
+      zone: v.zone, station: v.station,
+      /* A LOGGED SLOT MUST DECLARE HOW IT PROGRESSES. Another gate says so, and correctly: the number
+         he types has to be able to mean something next week. The helper's first run omitted it. */
+      progression: v.progression ?? 'weight',
+      cue: v.cue ?? 'Placeholder cue parked by the regression suite, long enough to read as a sentence.',
+    };
+  };
+  const lead = slot(leadId, 3, '8', '2 min');
+  const partner = slot(partnerId, 3, '10', '45s');
+  const clause = `${partner.name} goes in the rest because the ${lead.name} does not use it.`;
+  partner.whyHere = clause;
+  block.pairing = 'fill';
+  block.exercises = [lead, partner];
+  block.why = `Built by the regression suite to place two named fixtures in one rest window. ${clause}`;
+  /* THE TAG MOVES WITH THE EXERCISES. A separate gate refuses a tag naming kit no exercise in the
+     block uses, and the first run of this helper landed on Monday's squat block, whose tag reads
+     "(rack, dumbbells in hand)": it reported that correct refusal as a failure of the adjacency
+     rule. A helper that replaces a block's contents has to replace everything that describes them. */
+  block.label = 'Suite Pair';
+  block.tag = `(${lead.zone})`;
+  return block;
+};
+
+/** A two-exercise block turned into a `sequence`, built rather than hunted for.
+ *
+ *  THE WEEK HAS NO SEQUENCE BLOCK as of the 2026-08-31 rebuild: every block is a `fill` pair, which
+ *  is the honest shape when the partner rides in the lead's rest. Both sequence cases used to hunt
+ *  for one and died with "repoint this case" when it went. What they test is the LABEL rules on a
+ *  sequence, and a sequence is one field. */
+const asSequence = (p) => {
+  const b = Object.values(p.days || {}).flatMap((d) => d.blocks || [])
+    .find((x) => (x.exercises || []).length === 2);
+  if (!b) throw new Error('no two-exercise block to turn into a sequence; repoint this case');
+  b.pairing = 'sequence';
+  /* A sequence's partner is done in turn, not in the rest, so the pair `why` would be a false
+     statement about the new shape. Both cases assert on the LABEL, so the reason is neutralised. */
+  const partner = partnerOf(b);
+  const clause = `${partner.name} is done after the ${b.exercises[0].name}.`;
+  partner.whyHere = clause;
+  b.why = `Built by the regression suite as a sequence. ${clause}`;
+  return b;
+};
+
+/** An exercise that appears on exactly ONE day, that day's key, and a day it is NOT on. This is
+ *  what a block `why` on `hostDay` needs in order to make a cross-reference that is true, and the
+ *  same three facts make one that is false. Derived, because naming an exercise goes stale: both
+ *  cross-reference cases named the Copenhagen Plank until the 2026-08-31 rebuild removed it.
+ *
+ *  `hostDay` is EXCLUDED from being the home day, which the first version did not do. If the chosen
+ *  exercise lived on the very day the clause is written on, the false case named some other day and
+ *  the gate said nothing, because the exercise was right there in the week where the sentence sat. */
+const crossDayReference = (p, hostDay) => {
+  const days = new Map();
+  for (const [k, d] of Object.entries(p.days || {})) {
+    for (const b of d.blocks || []) {
+      for (const e of b.exercises || []) {
+        if (!days.has(e.name)) days.set(e.name, new Set());
+        days.get(e.name).add(k);
+      }
+    }
+  }
+  for (const [name, on] of days) {
+    if (on.size !== 1) continue;
+    const homeDay = [...on][0];
+    if (homeDay === hostDay) continue;
+    const absentDay = Object.keys(p.days).find((k) => k !== homeDay && k !== hostDay);
+    if (!absentDay) continue;
+    return { name, homeDay, absentDay };
+  }
+  throw new Error(`no exercise sits on exactly one day other than ${hostDay}, so neither cross-reference case can be built; repoint them`);
+};
+
 /** A paired block whose partner carries an open question, creating one if the file has none. */
 const partnerWithOpen = (p, topic = 'placement') => {
   const blk = Object.values(p.days || {})
@@ -270,12 +388,21 @@ const CASES = [
     /* An alias written in the wrong field. `formerIds` says "this id is dead and its rows are
      * stranded"; if the id is still live the two are either one movement, which is an alias in
      * movements.json and merges the histories, or two movements, which are two histories. */
+    /* BOTH formerIds CASES BUILD THEIR OWN FIXTURE, and did not until 2026-08-31. They used to hunt
+       the live programme for a slot that already carried `formerIds` and throw "repoint this case"
+       when none did. Three slots carried it; the whole-week rebuild the same day carries none, and
+       correctly so, because the one id whose history was being forwarded (the DB overhead tricep
+       extension, 6 rows) is now prescribed under its own id and nothing is stranded. Both cases then
+       broke, and neither rule had changed. That is the fixture problem this file's own runner comment
+       already names, and the fix is the same one: a regression case must not depend on what the
+       production programme happens to contain today. */
     name: 'a formerId that is still a live id is refused',
     mutate: (p) => {
       const all = Object.values(p.days).flatMap((d) => d.blocks || []).flatMap((b) => b.exercises || []);
-      const target = all.find((e) => Array.isArray(e.formerIds));
-      if (!target) throw new Error('no slot carries formerIds; repoint this case');
-      target.formerIds = [all.find((e) => e.id !== target.id).id];
+      const target = all[0];
+      const other = all.find((e) => e.id !== target.id);
+      if (!other) throw new Error('the programme has only one exercise; repoint this case');
+      target.formerIds = [other.id];
     },
     expect: 'STILL a live id',
   },
@@ -283,8 +410,7 @@ const CASES = [
     name: 'a formerId naming the slot itself is refused',
     mutate: (p) => {
       const target = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .flatMap((b) => b.exercises || []).find((e) => Array.isArray(e.formerIds));
-      if (!target) throw new Error('no slot carries formerIds; repoint this case');
+        .flatMap((b) => b.exercises || [])[0];
       target.formerIds = [target.id];
     },
     expect: "the slot's own id",
@@ -292,9 +418,9 @@ const CASES = [
   {
     name: 'an emptied formerIds is refused rather than ignored',
     mutate: (p) => {
+      /* Builds its own fixture, for the reason written on the first formerIds case above. */
       const target = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .flatMap((b) => b.exercises || []).find((e) => Array.isArray(e.formerIds));
-      if (!target) throw new Error('no slot carries formerIds; repoint this case');
+        .flatMap((b) => b.exercises || [])[0];
       target.formerIds = [];
     },
     expect: 'non-empty array',
@@ -451,35 +577,52 @@ const CASES = [
   },
   {
     name: 'the same shape on a SHAREABLE station is allowed, and this is what stops it refusing everything',
-    /* THE PERMITTED DIRECTION, and it took a second file to reach. The first attempt forced two
-       exercises onto the bench in program.json alone and failed for an unrelated reason: the
-       PLACEMENT gate refuses a slot claiming a fixture the catalogue says the movement does not
-       hold, which is a different rule doing its job correctly. Fighting that would have tested the
-       wrong thing.
-       
-       So the mutation is the honest one: take the real cable block, which the rule refuses today,
-       and DECLARE that station shareable. Nothing else changes. If it still fails, the rule is
-       refusing on something other than the permission and would refuse the bench too. */
+    /* THE PERMITTED DIRECTION, REWRITTEN 2026-08-31, and the rewrite is the point.
+
+       It used to take the real cable block and DECLARE the cable stack shareable, because the first
+       attempt at forcing two exercises onto the bench had tripped the PLACEMENT gate: that gate
+       refuses a slot claiming a fixture the catalogue says the movement does not hold, which is a
+       different rule doing its job. So the case fabricated a permission that is false in his gym,
+       and it broke the day the programme's cable block got a station-less partner, reporting the
+       placement gate's correct refusal as a failure of the sharing rule.
+
+       The shape needs no fabrication. `bulgarian-split-squat` and `db-bench-press` BOTH declare
+       zone benchDb and station bench in movements.json, and equipment.json already declares
+       benchDb/bench sharedInOneWindow. Two exercises on one shareable fixture, from the real
+       catalogue, with no mutation required. This case asserts the shape is PRESENT and validates;
+       the case after it withdraws the permission and requires the refusal. Together that is the
+       rule watched in both directions on data that is true. */
     mutate: (p) => {
-      const block = Object.values(p.days)
-        .flatMap((d) => d.blocks || [])
-        .find((b) => b.exercises?.length === 2
-          && b.exercises[0].zone === 'cable'
-          && b.exercises[0].station);
-      if (!block) throw new Error('no two-exercise cable block to mutate; repoint this case');
-      block.pairing = 'fill';
-      block.exercises[1].zone = block.exercises[0].zone;
-      block.exercises[1].station = block.exercises[0].station;
+      const block = sharedStationBlock(p);
+      if (!block) {
+        throw new Error('no fill block puts two exercises on one shareable catalogue station; '
+          + 'this case and the one after it both need that shape. If the programme genuinely no '
+          + 'longer has it, build it from bulgarian-split-squat plus db-bench-press, which both '
+          + 'hold benchDb/bench.');
+      }
+    },
+    expect: null,
+  },
+  {
+    /* THE PERMISSION IS LOAD-BEARING, so withdrawing it must flip the same block to a refusal. This
+       is the other half of the case above, and it is what proves the rule reads
+       `sharedInOneWindow` rather than special-casing the bench by name. Nothing in program.json
+       changes; only the permission does. */
+    name: 'withdrawing sharedInOneWindow turns that same allowed block into a refusal',
+    mutate: (p) => {
+      if (!sharedStationBlock(p)) throw new Error('the shareable-station block is gone; see the case above');
     },
     also: {
       file: 'equipment.json',
       mutate: (e) => {
-        for (const s of Object.values(e.zones.cable.stations)) {
-          if (s && typeof s === 'object') s.sharedInOneWindow = true;
+        for (const z of Object.values(e.zones)) {
+          for (const s of Object.values(z.stations || {})) {
+            if (s && typeof s === 'object') delete s.sharedInOneWindow;
+          }
         }
       },
     },
-    expect: null,
+    expect: 'not declared shareable',
   },
   {
     name: 'a cue naming an implement the card is not is refused',
@@ -505,11 +648,17 @@ const CASES = [
          chest", which is the lat bar; the assisted pull-up says "chin over the bar". A rule matching
          bare nouns flagged all three, and a checker whose new findings are all false is one nobody
          runs. The patterns match HOLDING constructions, not mentions. */
+      /* REPOINTED 2026-08-31, off `zone === 'machines'`. The whole-week rebuild that day contains no
+         machine slot at all, so this case died with "repoint this case" while the rule it covers had
+         not changed. The machine bank was never the point: the rule is about a cue that MENTIONS
+         another implement without telling him to hold one, and any slot that is not itself a
+         dumbbell exercise exercises it. A barbell slot is used, so "does not have to balance
+         dumbbells" is a genuine contrast rather than a description of the card. */
       const ex = Object.values(p.days)
         .flatMap((d) => d.blocks || [])
         .flatMap((b) => b.exercises || [])
-        .find((e) => typeof e.cue === 'string' && e.zone === 'machines' && e.station);
-      if (!ex) throw new Error('no machine slot with a cue to mutate; repoint this case');
+        .find((e) => typeof e.cue === 'string' && CATALOGUE()[e.id]?.implement === 'barbell');
+      if (!ex) throw new Error('no barbell slot with a cue to mutate; repoint this case');
       ex.cue = 'Machine on purpose, so a tired chest does not have to balance dumbbells. '
         + 'Bring the bar to your upper chest and keep your chin over the bar. ' + ex.cue;
     },
@@ -522,9 +671,7 @@ const CASES = [
      * missing from it. It was missing because the block is not a pair. */
     name: 'a sequence labelled with a plus is refused',
     mutate: (p) => {
-      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((x) => x.pairing === 'sequence' && (x.exercises || []).length >= 2);
-      if (!b) throw new Error('no sequence block; repoint this case');
+      const b = asSequence(p);
       b.label = 'Hamstrings + Calves';
       b.tag = '(machine, then the other machine)';
     },
@@ -533,9 +680,7 @@ const CASES = [
   {
     name: 'a sequence that never says "then" is refused',
     mutate: (p) => {
-      const b = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((x) => x.pairing === 'sequence' && (x.exercises || []).length >= 2);
-      if (!b) throw new Error('no sequence block; repoint this case');
+      const b = asSequence(p);
       b.label = 'Hamstrings and Calves';
       b.tag = '(machine)';
     },
@@ -565,19 +710,25 @@ const CASES = [
     expect: 'not in this block',
   },
   {
+    /* BOTH CROSS-REFERENCE CASES DERIVE THE EXERCISE AND THE DAY, and neither did until 2026-08-31.
+       They named the Copenhagen Plank and Thursday, and the whole-week rebuild that day removed the
+       Copenhagen entirely: the permitting case then failed because the sentence pointed at a day
+       where the exercise genuinely was not, which is the gate working correctly on a stale fixture.
+       Every hardcoded exercise name in this file has gone stale at least once. */
     name: 'a real cross-reference to another day still passes',
     mutate: (p) => {
-      // Copenhagen Plank is on Thursday, so a Monday block may name it AS BEING on Thursday.
+      const elsewhere = crossDayReference(p, 'monday');
       const b = p.days.monday.blocks.find((x) => x.why);
-      b.why = `${b.why} The Copenhagen Plank is on Thursday, not here.`;
+      b.why = `${b.why} The ${elsewhere.name} is on ${elsewhere.homeDay}, not here.`;
     },
     expect: null,
   },
   {
     name: 'a cross-reference to a day that does NOT have the exercise is refused',
     mutate: (p) => {
+      const elsewhere = crossDayReference(p, 'monday');
       const b = p.days.monday.blocks.find((x) => x.why);
-      b.why = `${b.why} The Copenhagen Plank is on Friday, not here.`;
+      b.why = `${b.why} The ${elsewhere.name} is on ${elsewhere.absentDay}, not here.`;
     },
     expect: 'it is not there either',
   },
@@ -609,62 +760,20 @@ const CASES = [
      * in arm's reach may hold one rest window. Built from the real cable block, whose two stations
      * are declared adjacent on his ruling. */
     name: 'a pair across two ADJACENT stations is allowed',
-    /* THE CATALOGUE MOVES WITH THE SLOT, and the first draft of this case did not do that: it put the
-       partner on another cable column in program.json alone and was refused by the PLACEMENT gate,
-       which correctly says a slot may not disagree with movements.json about where a lift is done.
-       That is a different rule doing its job, and fighting it would have tested the wrong thing.
-       The file's own note about the shareable-station case records the identical trap. */
-    mutate: (p) => {
-      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'cable' && b.exercises[0].station);
-      if (!block) throw new Error('no two-exercise cable block; repoint this case');
-      block.pairing = 'fill';
-      block.label = 'Vertical Pull';
-      block.tag = '(cable)';
-      block.exercises[1].zone = 'cable';
-      block.exercises[1].station = block.exercises[0].station === 'cable-adjustable' ? 'cable-row' : 'cable-adjustable';
-      TEST_STATE.partnerId = block.exercises[1].id;
-      TEST_STATE.partnerStation = block.exercises[1].station;
-      /* EVERY slot holding that id moves, not just this one. The same exercise appears on two days,
-         and moving the catalogue entry under one of them left the other disagreeing with it, which
-         the placement gate then reported. A fixture is in one place, so the mutation has to say so
-         everywhere or it is not a coherent state to test against. */
-      for (const d of Object.values(p.days)) {
-        for (const b of d.blocks || []) {
-          for (const ex of b.exercises || []) {
-            if (ex.id === TEST_STATE.partnerId) { ex.zone = 'cable'; ex.station = TEST_STATE.partnerStation; }
-          }
-        }
-      }
-    },
-    also: {
-      file: 'movements.json',
-      mutate: (cat) => {
-        for (const m of Object.values(cat.movements)) {
-          for (const v of m.variants) {
-            if (v.id === TEST_STATE.partnerId || (v.aliases ?? []).includes(TEST_STATE.partnerId)) {
-              v.zone = 'cable';
-              v.station = TEST_STATE.partnerStation;
-            }
-          }
-        }
-      },
-    },
+    /* CASE (c) OF HIS OWN RULE, which validate.mjs did not implement until 2026-08-30: two fixtures
+       in arm's reach may hold one rest window. equipment.json declares cable-pulldown, cable-row and
+       cable-adjustable mutually adjacent, on his ruling, and the catalogue already puts real
+       exercises at two of them, so no file but program.json needs to move. See rebuildBlockAs. */
+    mutate: (p) => { rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly'); },
     expect: null,
   },
   {
     name: 'a pair across two stations that are NOT adjacent is still refused',
-    mutate: (p) => {
-      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'machines' && b.exercises[0].station);
-      if (!block) throw new Error('no two-exercise machine block; repoint this case');
-      block.pairing = 'fill';
-      block.label = 'Hamstrings and Calves';
-      block.tag = '(machine)';
-      block.exercises[1].zone = 'machines';
-      block.exercises[1].station = 'calf-raise';
-      block.exercises[0].station = 'leg-curl';
-    },
+    /* THE REFUSING DIRECTION, and the pair matters: without it the rule above could be permitting
+       every two-station block rather than only the adjacent ones. No station in the machines zone
+       declares adjacentTo, which is the honest state of that gym: the bank is a row of machines you
+       walk between. */
+    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise'); },
     expect: 'occupies 2 stations',
   },
   {
@@ -680,6 +789,29 @@ const CASES = [
       block.exercises[1].station = 'cable-row';
     },
     expect: 'lives in zone',
+  },
+  {
+    /* THE DAY CHIP, and it took a screenshot to find. `splitName` renders the text before the first
+       ": " in a day's title and falls back to the WHOLE title when there is no colon, so four
+       colon-free titles turned the chip row into four stacked full-width rows on 2026-08-31. Every
+       other gate passed: the fallback is legal and the row does not overflow. */
+    name: 'a day title with no short head is refused, because the chip renders the whole thing',
+    mutate: (p) => {
+      const day = Object.values(p.days)[0];
+      if (!day) throw new Error('no days at all; repoint this case');
+      day.title = 'A day title long enough to fill the chip row with no colon in it anywhere';
+    },
+    expect: 'the day chip renders',
+  },
+  {
+    /* The permitting direction: a short head is what the chip wants, and the rule must not refuse
+       one. Without this the length check could be refusing every title. */
+    name: 'a day title with a short head before a colon still passes',
+    mutate: (p) => {
+      const day = Object.values(p.days)[0];
+      day.title = `${day.name}: rebuilt by the regression suite to carry a short head`;
+    },
+    expect: null,
   },
   {
     name: 'a label that counts is refused',
@@ -726,7 +858,21 @@ for (const c of CASES) {
 
     const file = join(dir, c.file ?? 'program.json');
     const doc = c.file ? JSON.parse(readFileSync(file, 'utf8')) : program;
-    c.mutate(doc);
+
+    /* A CASE THAT CANNOT FIND ITS FIXTURE IS A FAILURE, NOT AN ABORT. Added 2026-08-31. A `mutate`
+       that throws "repoint this case" used to kill the whole process, so one whole-week rebuild that
+       removed a `sequence` block, every machine slot and every `formerIds` slot took SIX runs to
+       diagnose: each run reported one fixture problem and hid the rest behind it, and the run also
+       hid the twenty-odd cases that were passing. That is the same shape of defect as verify.mjs
+       stopping at its first red gate, except here the cases are independent and there is no reason
+       to stop. It still fails the suite, loudly, with the case named. */
+    try {
+      c.mutate(doc);
+    } catch (err) {
+      failed++;
+      console.log(`FAIL  ${c.name}\n      FIXTURE: ${err.message}`);
+      continue;
+    }
     writeFileSync(file, JSON.stringify(doc, null, 2));
 
     /* A SECOND FILE, for the rules that live across two of them. Added 2026-08-28 with the

@@ -61,7 +61,18 @@ const cov = computeCoverage(program, cat);
  * Not by name, and not by which day it sits on: day labels have been wrong in this programme before
  * (a "lower" day carrying a third of the week's upper-body work), and a name-based list goes stale
  * the moment an exercise is swapped. */
-const LOWER = new Set(['glutes', 'quads', 'hamstrings', 'adductors', 'calves']);
+/* THE PRIORITY PATTERNS, NARROWED 2026-08-31 on its first real use. This was every loadable lift
+ * with a lower-body primary muscle, which swept in calf raises and adductor work. Table 4 is
+ * denominated per ASSESSED EXERCISE, and nobody assesses lower-body strength with a calf raise: the
+ * dose gate wants calves at 6 to 18 fractional sets while this gate was penalising a move from 3 to
+ * 6, a contradiction produced entirely by my own scoping rather than by anything in either paper.
+ *
+ * So: the squat, the hinge and the single-leg pattern. Calves and adductors are lower-body and are
+ * not what "lower body strength" means, and the per-muscle dose gate already covers them. */
+const PRIORITY_PATTERN = (k) =>
+  (k.primary.includes('quads') || k.primary.includes('hamstrings')
+    || (k.primary.includes('glutes') && !/calf|abduction|lateral-walk|clamshell/.test(k.id)))
+  && !/calf/.test(k.id);
 const byId = new Map();
 for (const [, m] of Object.entries(cat.movements)) {
   for (const v of m.variants) {
@@ -78,7 +89,7 @@ const MIN_DOSE = 1;
 const rows = cov.perLift
   .filter((l) => {
     const k = byId.get(l.id);
-    return k && k.primary.some((m) => LOWER.has(m)) && l.loadable;
+    return k && PRIORITY_PATTERN(k) && l.loadable;
   })
   .map((l) => ({
     id: l.id, name: l.name,

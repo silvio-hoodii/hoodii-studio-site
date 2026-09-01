@@ -483,18 +483,51 @@ for (const s of idle) {
 console.log('\n3. MUSCLES WITH NO LOADABLE DIRECT EXERCISE IN THE PROGRAMME\n');
 console.log('   A muscle trained only by bodyweight work can never be progressed, whatever its set count.');
 console.log('');
+/* A MUSCLE MAY DECLARE THIS GAP ACCEPTED, in content/gym/targets.json, and the declaration must
+ * carry its reason. Added 2026-08-31, and the reason it is needed is that THE PROGRAMME THIS
+ * REPLACED PASSED THIS CHECK WITH TWO EXERCISES HE DOES NOT DO. Its loadable ab work was a suitcase
+ * carry with ZERO logged sets in its entire life and a cable Pallof with two, one of which carries
+ * his own note "feels weird no idea on how form should be". The gate cannot see a log, so it read a
+ * prescription as a capability, and re-adding either to turn this line green would be satisfying a
+ * gate with a fiction. That is the failure mode this whole repo keeps finding.
+ *
+ * Same contract as coverage-baseline.json and strength-baseline.json: a gate expected to fail cannot
+ * signal a regression, so the accepted state is written down where the next reader will see it and
+ * only movement away from it fails. An accepted gap is PRINTED on every run with its reason. */
+const accepted = (() => {
+  try {
+    const t = JSON.parse(readFileSync('content/gym/targets.json', 'utf8'));
+    const out = new Map();
+    for (const [m, spec] of Object.entries(t.muscles ?? {})) {
+      if (spec.loadableGapAccepted) out.set(m, spec.loadableGapAccepted);
+    }
+    return out;
+  } catch { return new Map(); }
+})();
+
 let gaps = 0;
+const acceptedGaps = [];
 for (const [mus, label] of Object.entries(cat.muscles)) {
   const inProg = variants.filter((v) => isPrescribed(v) && v.primary.includes(mus));
   const loadableInProg = inProg.filter((v) => v.loadable);
   if (inProg.length && !loadableInProg.length) {
-    gaps++;
     const available = variants.filter((v) => v.loadable && v.primary.includes(mus));
-    console.log(`   ${pad(label, 24)} prescribed: ${inProg.map((v) => v.name).join(', ')}  ALL BODYWEIGHT`);
-    console.log(`   ${pad('', 24)} gym offers: ${available.length ? available.map((v) => v.name).join(', ') : 'nothing'}`);
+    const why = accepted.get(mus);
+    if (why) {
+      acceptedGaps.push({ label, why, inProg });
+    } else {
+      gaps++;
+      console.log(`   ${pad(label, 24)} prescribed: ${inProg.map((v) => v.name).join(', ')}  ALL BODYWEIGHT`);
+      console.log(`   ${pad('', 24)} gym offers: ${available.length ? available.map((v) => v.name).join(', ') : 'nothing'}`);
+    }
   }
 }
-if (!gaps) console.log('   none.');
+if (!gaps) console.log('   none unaccepted.');
+for (const a of acceptedGaps) {
+  console.log('');
+  console.log(`   ACCEPTED GAP  ${a.label}: ${a.inProg.map((v) => v.name).join(', ')}, all bodyweight.`);
+  for (const line of String(a.why).match(/.{1,92}(\s|$)/g) ?? []) console.log(`      ${line.trim()}`);
+}
 
 /* 4. per movement, which zones can serve it */
 console.log('\n4. WHERE EACH JOB CAN BE DONE, so a slot can move to the station he is already at\n');
