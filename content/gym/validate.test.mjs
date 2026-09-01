@@ -150,7 +150,11 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
   };
   const lead = slot(leadId, 3, '8', '2 min');
   const partner = slot(partnerId, 3, '10', '45s');
-  const clause = `${partner.name} goes in the rest because the ${lead.name} does not use it.`;
+  /* A NEUTRAL CLAUSE. This said "because the <lead> does not use it" until 2026-09-01, and the
+     false-absence gate added that day caught it immediately: the helper picked lat-pulldown plus
+     cable-reverse-fly, which share the rear delts, so the fixture itself asserted something the
+     catalogue contradicts. A helper that builds a block has no business claiming anatomy. */
+  const clause = `${partner.name} goes in the rest, put there by the regression suite.`;
   partner.whyHere = clause;
   block.pairing = 'fill';
   block.exercises = [lead, partner];
@@ -810,6 +814,46 @@ const CASES = [
     mutate: (p) => {
       const day = Object.values(p.days)[0];
       day.title = `${day.name}: rebuilt by the regression suite to carry a short head`;
+    },
+    expect: null,
+  },
+  {
+    /* THE FALSE-ABSENCE CLAIM. An adversarial pass on 2026-09-01 read every partner clause against
+       movements.json for the first time and found THREE that the catalogue contradicts, including
+       "the Front Squat does not use the trunk" beside a catalogue note reading "more trunk than the
+       back squat". The verbatim-span gate proves the clause is IN the block why; it cannot tell
+       whether the sentence is true. */
+    name: 'a partner clause claiming the lead does not use what the partner trains is refused',
+    mutate: (p) => {
+      /* BUILDS THE OVERLAP RATHER THAN HUNTING FOR IT, because the three live instances were fixed in
+         the same commit that added this gate, so the programme now has NONE and a hunting version
+         would have died on its own success. lat-pulldown's catalogue secondary includes rear-delts
+         and cable-reverse-fly trains rear-delts as a primary, which is the shape exactly. */
+      const target = rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly');
+      const partner = target.exercises[1];
+      const clause = `${partner.name} goes in the rest because the ${target.exercises[0].name} does not use it.`;
+      partner.whyHere = clause;
+      target.why = `Built by the regression suite. ${clause}`;
+    },
+    expect: 'does not use',
+  },
+  {
+    /* THE PERMITTED DIRECTION. A pair with no muscle overlap may say exactly the same thing, and 12
+       of the 15 live clauses do. Without this the rule could be refusing every partner clause. */
+    name: 'the same clause on a pair with no shared muscle is allowed',
+    mutate: (p) => {
+      /* Also built rather than hunted, and the pair is chosen so the claim is TRUE: a lat pulldown
+         carries lats, biceps, upper-back, rear-delts and grip, and a Pallof press trains the abs,
+         which is none of those. Both sit in the cable zone at stations equipment.json declares
+         adjacent, so the walking-route and one-station rules are satisfied and cannot mask the result.
+         The first attempt paired it with a dumbbell calf raise and the zone rule refused it, which
+         would have read as this rule rejecting a correct clause. If this case ever fails, the rule is
+         refusing clauses that are true. */
+      const target = rebuildBlockAs(p, 'lat-pulldown', 'cable-pallof');
+      const partner = target.exercises[1];
+      const clause = `${partner.name} goes in the rest because the ${target.exercises[0].name} does not use it.`;
+      partner.whyHere = clause;
+      target.why = `Built by the regression suite. ${clause}`;
     },
     expect: null,
   },

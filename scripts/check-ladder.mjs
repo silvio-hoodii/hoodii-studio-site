@@ -5,6 +5,28 @@
  *   node scripts/check-ladder.mjs          report and exit non-zero on any gap
  *   node scripts/check-ladder.mjs --quiet  only print gaps
  *
+ * THIS GATE IS AN INTERNAL CONSISTENCY CHECK ON A MODEL, NOT A CLAIM ABOUT HIS BODY, and that
+ * distinction was written in on 2026-09-01 because HE RAISED IT HIMSELF, by email:
+ *
+ *   "I know it's mathematically possible saying, if you are doing 8 reps of 180, that means that you
+ *    can do 3 reps of I don't know 200. Numerically I guess it makes sense because of one repetition
+ *    max or whatever, but for me I don't think... that might be a little risk that I'm hesitant to."
+ *
+ * He is right to hesitate, and the reason is on this disk. All 114 files in
+ * HealthOS/knowledge/sources/ were grepped for Epley, Brzycki, "predicted 1RM" and "rep max equation"
+ * on 2026-09-01. **ZERO HITS IN ANY PAPER.** The only files naming Epley are this project's own
+ * working notes, which apply the formula and never validate it. So the error band on the arithmetic
+ * below is UNMEASURED here.
+ *
+ * That does not make the gate worthless: a rung that cannot be reached from the one below is a real
+ * defect in the app's own instructions whatever the model's accuracy, which is what it was built to
+ * catch and did catch eight times. But NOTHING IN THIS PROJECT MAY TELL HIM "you can lift X" ON THIS
+ * FILE'S AUTHORITY, and a rep range must never be widened purely to satisfy it when his own logged
+ * rep counts say otherwise. On 2026-09-01 the heavy squat went to 5 to 7 and the heavy RDL to 6 to 8
+ * for exactly that reason: those are the rep counts he actually performs most (squat 5x9 sets, 6x9,
+ * 7x8; RDL 6x16, 8x9), and they satisfy this gate as a consequence rather than as a target.
+ * See HealthOS/knowledge/sources/LOAD-VS-REPS-AND-OVERLOAD-2026-09-01.md.
+ *
  * WHY THIS EXISTS. Double progression tells him to hold a weight until he hits the TOP of the rep
  * range on every working set, then add one increment and drop back to the BOTTOM. That is only a
  * ladder if each rung is reachable from the one below. Using Epley (e1RM = w * (1 + reps / 30)):

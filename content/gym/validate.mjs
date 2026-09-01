@@ -714,6 +714,47 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         if (shared.length) {
           fail(where, `partner "${partner.name}" works ${shared.join(', ')}, which is also what "${lead.name}" works. Zhang 2025: a superset of two exercises hitting the same muscle significantly REDUCES the volume load of the lead lift. Either pick a partner that uses a different muscle, or run the lead on its own, which is now allowed.`);
         }
+
+        /* "DOES NOT USE" IS A CLAIM ABOUT THIS CATALOGUE, AND THREE OF THEM WERE FALSE.
+         *
+         * The partner clause reads "<partner> goes in the rest because the <lead> does not use
+         * <something>". On 2026-09-01 an adversarial review checked those sentences against
+         * movements.json for the first time and found three the catalogue directly contradicts:
+         *
+         *   "the Front Squat does not use the trunk"      front-squat secondary: glutes, abs, erectors
+         *   "the Overhead Press does not use the arms"    push-vertical secondary: triceps, side-delts, abs
+         *   "the Lat Pulldown does not use them"          pull-vertical secondary: ..., rear-delts, ...
+         *
+         * The front squat is the worst of the three, because that same catalogue entry's own note
+         * reads "more trunk than the back squat". The overhead press one contradicts the programme's
+         * own arithmetic: its `$comment` says the presses deliver 6 fractional triceps sets before any
+         * extension exists, and that 6 IS the overhead press's triceps secondary credit.
+         *
+         * WHY NOTHING CAUGHT IT FOR A DAY. The verbatim-span gate proves the clause appears in the
+         * block's `why`. It cannot tell whether the sentence is TRUE. The noun was hand-written into a
+         * builder argument, so an assertion about anatomy sat next to the data file that answers it.
+         * Fifth law exactly: a reviewer asked to check the pairings confirmed them, and one asked to
+         * find where they LIE found three.
+         *
+         * THE TEST NEEDS NO ENGLISH. Whatever noun the sentence uses, the claim is "the lead does not
+         * train what the partner trains", so the lead's primary AND secondary must not contain any of
+         * the partner's PRIMARY muscles. Deliberately stricter than the Zhang rule above, which
+         * compares primary against primary only: this sentence claims more than Zhang requires. A pair
+         * that is genuinely clean is untouched, and 12 of the 15 clauses passed on the first run. */
+        if (/does not use/i.test(String(partner.whyHere ?? ''))) {
+          const leadTrains = new Set([...(leadInfo.primary ?? []), ...(leadInfo.secondary ?? [])]);
+          const overlap = (pInfo.primary ?? []).filter((m) => leadTrains.has(m));
+          if (overlap.length) {
+            fail(where, `"${partner.name}" says the ${lead.name} "does not use" what it trains, and `
+              + `movements.json disagrees: ${lead.id} carries ${overlap.join(', ')} `
+              + `(primary ${(leadInfo.primary ?? []).join(', ') || 'none'}; secondary `
+              + `${(leadInfo.secondary ?? []).join(', ') || 'none'}), and ${partner.id} trains `
+              + `${overlap.join(', ')} as a PRIMARY mover. The sentence is false. A lead that loads the `
+              + 'muscle as a helper while the partner trains it directly is a perfectly good pairing and '
+              + 'a different sentence, so say that instead. Change the block "why" in the same edit, '
+              + 'because whyHere has to stay a verbatim span of it.');
+          }
+        }
       }
     }
 

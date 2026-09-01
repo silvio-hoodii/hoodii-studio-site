@@ -447,7 +447,7 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "note": "NOT LOADABLE, so it can never progress. On all four days by accretion, never by a decision."
+          "note": "NOT LOADABLE, so it can never progress by weight, only by reps. It sat on all four days by accretion and was CUT from the programme on 2026-08-27 in commit d707ae7; this note still said 'On all four days' until 2026-09-01, which is a sentence describing a state that had not existed for five days. It is offerable as a swap again as of 2026-09-01, on 16 logged sets and a cue recovered from the commit before the cut."
         },
         {
           "id": "smith-hip-thrust",
