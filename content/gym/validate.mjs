@@ -1077,6 +1077,53 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         fail(where, `${block.pairing} block spans two zones ("${a.zone}" and "${b.zone}"). Doing both in one window means walking back and forth between them every set.`);
       }
 
+      /* ------ CAN THE PARTNER ACTUALLY FIT IN THE LEAD'S REST. Added 2026-08-31.
+       *
+       * `fill` means, in the programme's own words, "do the partner IN the lift rest gaps, it adds no
+       * time". That is a claim with arithmetic behind it and nothing was checking the arithmetic.
+       *
+       * The 2026-08-31 candidate had two blocks where it was false by a factor of two: a calf raise
+       * at 3x12 with 45s rest offers 135 seconds of gap, and a suitcase carry at 3x30s per side needs
+       * 180 seconds of WORK alone, before any rest of its own. The labels were backwards, with the
+       * 45-second-rest calf raise called the lead and the three-minute carry called the free partner.
+       * At the machine that is not a superset, it is two exercises and a day that runs long.
+       *
+       * WORK ONLY, AND DELIBERATELY GENEROUS. Three seconds a rep, per-side doubled, timed sets at
+       * their stated seconds, and zero credit taken for walking, picking up dumbbells, or the
+       * partner's own inter-set rest. So a block that fails this is failing on the most favourable
+       * reading available, which is the only kind of refusal worth having: a checker whose first real
+       * finding is arguable is a checker nobody runs.
+       *
+       * A FAILING BLOCK IS NOT NECESSARILY WRONG, it is mislabelled. The fix is usually to swap lead
+       * and partner so the long item owns the clock, or to declare the block a `sequence`, which is
+       * exempt because a sequence never claimed to be free. */
+      if (block.pairing === 'fill' && block.exercises.length === 2) {
+        const restSeconds = (r) => {
+          const m = /(\d+(?:\.\d+)?)\s*min/.exec(String(r));
+          if (m) return Number(m[1]) * 60;
+          const t = /(\d+)\s*s/.exec(String(r));
+          if (t) return Number(t[1]);
+          return 90;
+        };
+        const workSeconds = (ex) => {
+          const reps = String(ex.reps ?? '');
+          const n = parseInt(reps, 10);
+          if (!Number.isFinite(n)) return (ex.sets || 0) * 30;
+          const perSide = /\/(side|leg|arm)/.test(reps);
+          const timed = /^\d+\s*s/.test(reps) || /s\/(side|leg|arm)/.test(reps) || ex.timed;
+          const one = timed ? n : n * 3;
+          return (ex.sets || 0) * one * (perSide ? 2 : 1);
+        };
+        const gap = (a.sets || 0) * restSeconds(a.rest);
+        const need = workSeconds(b);
+        if (need > gap) {
+          fail(where, `${b.name} cannot fit in ${a.name}'s rest. The lead offers ${gap}s of gap across `
+            + `${a.sets} sets at ${a.rest}; the partner needs ${need}s of WORK alone, before any rest of its own. `
+            + `A "fill" block claims the partner adds no time and this one adds at least ${need - gap}s. `
+            + `Swap the lead and the partner so the long item owns the clock, or make this a sequence.`);
+        }
+      }
+
       for (const ex of [a, b]) {
         if (!ex.needsFloor) continue;
         const zone = ZONES[ex.zone];
