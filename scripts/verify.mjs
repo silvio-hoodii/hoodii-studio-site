@@ -131,6 +131,22 @@ const GATES = [
    * both directions before being trusted: restoring the max-based lookup fails 10 cases, restoring
    * the units bug fails 2. */
   ['coverage-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/coverage.test.ts']],
+  /* THE STRENGTH GATE. Added 2026-08-31, after three adversarial reviews found that nothing in this
+   * repo graded the one thing the programme is for.
+   *
+   * gym-targets grades per-muscle fractional sets against Pelland's Table 3, which is HYPERTROPHY.
+   * C2 says the project is for lower-body STRENGTH, which is Table 4, denominated per assessed
+   * exercise on a scale of 1 to 5+ rather than 4 to 42. Graded only by the hypertrophy gate, a
+   * candidate printed GREEN while moving the back squat from 19.5 to 28.5 fractional strength sets
+   * against a point of detectable increments of about 4: a 46% regression on the priority, certified.
+   *
+   * It fails on two things only, and being past the top tier is not one of them. Pelland 4.3 says
+   * sets past that point still buy strength, just less than the study could detect, and a fabricated
+   * ceiling in this repo already cost 25 to 43 refused partner exercises per block once. So: a
+   * priority lift below the minimum effective dose of 1, or a lift moving FURTHER from the optimum
+   * than content/gym/strength-baseline.json accepted. A bad-but-stable number is a judgement someone
+   * made; a number moving the wrong way is a new decision and needs a person. */
+  ['gym-strength', process.execPath, ['--experimental-strip-types', 'scripts/gym-strength.mjs']],
   ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
   ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];

@@ -1308,7 +1308,8 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true
+          "loadable": true,
+          "doseUnit": "carry"
         },
         {
           "id": "suitcase-carry",
@@ -1327,7 +1328,8 @@
           "note": "Single-side, so it adds anti-lateral-flexion that the two-sided farmer carry does not.",
           "aliases": [
             "suitcase-carry-upper"
-          ]
+          ],
+          "doseUnit": "carry"
         },
         {
           "id": "kb-farmer-carry",
@@ -1335,7 +1337,8 @@
           "implement": "kettlebell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true
+          "loadable": true,
+          "doseUnit": "carry"
         },
         {
           "id": "kb-suitcase-hold",
@@ -1351,7 +1354,8 @@
           ],
           "secondary": [
             "upper-back"
-          ]
+          ],
+          "doseUnit": "carry"
         },
         {
           "id": "db-hold",
@@ -1361,7 +1365,8 @@
           "station": null,
           "loadable": true,
           "timed": true,
-          "note": "Heavy dumbbells held at the sides, standing still rather than walking, for when the floor is too crowded to carry. PROMOTED FROM AN ALIAS OF farmer-carry ON 2026-08-28. It was offered as an alt on the farmer carry slot while resolving to that same variant, which is a choice between an exercise and itself: picking it would have written a second exercise_id for one movement and split the history, the way the calf raise did. It also progresses on TIME where the carry progresses on distance, so one shared history could not have described both. Never picked, so nothing needed migrating."
+          "note": "Heavy dumbbells held at the sides, standing still rather than walking, for when the floor is too crowded to carry. PROMOTED FROM AN ALIAS OF farmer-carry ON 2026-08-28. It was offered as an alt on the farmer carry slot while resolving to that same variant, which is a choice between an exercise and itself: picking it would have written a second exercise_id for one movement and split the history, the way the calf raise did. It also progresses on TIME where the carry progresses on distance, so one shared history could not have described both. Never picked, so nothing needed migrating.",
+          "doseUnit": "carry"
         }
       ]
     },

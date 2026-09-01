@@ -1,0 +1,25 @@
+{
+  "$comment": [
+    "ACCEPTED STRENGTH STATE, per lift, in Pelland Table 4 fractional sets.",
+    "Same contract as coverage-baseline.json: a gate expected to fail cannot signal a regression, so",
+    "this records what was accepted and gym-strength.mjs fails only on movement away from it.",
+    "Accepted from content/gym/program.json."
+  ],
+  "acceptedAt": "2026-09-01",
+  "fromProgram": "content/gym/program.json",
+  "detectableTop": 4,
+  "perLift": {
+    "bb-back-squat": 19.5,
+    "bulgarian-split-squat": 19,
+    "reverse-lunge": 19,
+    "romanian-deadlift": 18,
+    "single-leg-rdl": 17.5,
+    "db-rdl": 17,
+    "db-lateral-lunge": 16,
+    "front-squat": 14.5,
+    "leg-curl": 7.5,
+    "standing-calf-raise": 4.5,
+    "db-calf-raise": 4.5
+  },
+  "sumPastDetectable": 113
+}

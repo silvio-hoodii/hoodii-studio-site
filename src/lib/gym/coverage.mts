@@ -69,6 +69,24 @@ export interface CatalogueVariant {
   zone: string;
   station: string | null;
   loadable: boolean;
+  /* IS THIS THE KIND OF SET PELLAND'S CURVE WAS FITTED ON. Added 2026-08-31.
+   *
+   * `loadable` was doing two jobs and getting one of them wrong. It means "weight can be added",
+   * which the strength table needs, and it was ALSO the test for `loadedSets`, which is meant to be
+   * "a resistance-training set". A farmer carry is loadable and is not one. This file's own comment
+   * admitted the gap and then relied on the proxy anyway: "a carry is loaded and still is not a
+   * hypertrophy set."
+   *
+   * WHAT IT COST. Six carry sets a week flowed into the graded number while both
+   * content/gym/targets.json and scripts/gym-targets.mjs stated in prose that carries were excluded.
+   * Abdominals graded 9 against a floor of 4, and 6 of the 9 was the carry: the real figure is 3,
+   * BELOW its own floor. And the upper-back ceiling was raised from 10 to 12 to accommodate 10.5,
+   * of which 3 was carry credit; at 7.5 no raise was needed. A band was loosened to fit an
+   * arithmetic error.
+   *
+   * Absent means `resistance`, so the 105 exercises that are ordinary sets need no annotation and
+   * the five that are not are annotated where they live. */
+  doseUnit?: 'resistance' | 'carry';
   aliases?: string[];
   primary?: string[];
   secondary?: string[];
@@ -493,16 +511,19 @@ export function computeCoverage(
           list.push({ name: ex.name, sets: n, rawSets: sets, primary, loadable: info.loadable });
           byDay.set(dayKey, list);
         };
+        /* A SET COUNTS TOWARD THE DOSE ONLY IF IT IS THE UNIT THE CURVE WAS FITTED ON. `loadable`
+           alone let carries in; see `doseUnit` on CatalogueVariant for what that cost. */
+        const isDose = info.loadable && info.doseUnit !== 'carry';
         for (const m of info.primary) {
           bump(perMuscle, m, sets);
           bump(dayMap, m, sets);
-          if (info.loadable) bump(perMuscleLoaded, m, sets);
+          if (isDose) bump(perMuscleLoaded, m, sets);
           note(m, sets, true);
         }
         for (const m of info.secondary) {
           bump(perMuscle, m, sets * 0.5);
           bump(dayMap, m, sets * 0.5);
-          if (info.loadable) bump(perMuscleLoaded, m, sets * 0.5);
+          if (isDose) bump(perMuscleLoaded, m, sets * 0.5);
           note(m, sets * 0.5, false);
         }
 
