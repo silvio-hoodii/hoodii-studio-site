@@ -66,6 +66,29 @@ export default function Volume({
       </p>
 
 
+      {/* WHERE THESE NUMBERS COME FROM, said on the page rather than in a comment.
+        *
+        * Added 2026-09-01, when he asked whether any of this was grounded and the answer was no. Every
+        * figure below is computed from the muscle lists in movements.json. Until that day 62 of 110
+        * exercise variants were tagged `convention`, 6 `contested` and 11 `unsourced`, seven groups
+        * claimed `evidence` on the strength of EMG studies that cannot support the inference, and the
+        * code checked for the literal string "unsourced" and nothing else. So 68 variants counted as
+        * measured. The page showed one decimal place and no caveat at all.
+        *
+        * The attributions are now all `anatomy`, each naming the joint action it comes from. That is
+        * honest but it is not a trial finding, and a page that shows 13.5 without saying so is how
+        * this went wrong. The pattern is the one /swim and the cue cards already use: render the
+        * confidence, do not hide it. */}
+      <p className="note">
+        These numbers are computed from which muscles each exercise uses. That mapping is{' '}
+        <strong>anatomy</strong>, not a trial finding: it names the joint action a lift performs and
+        the prime movers of that action. Nobody has measured that your chest grows from a bench press.
+        {' '}Assisting muscles count half a set, which the paper behind that weighting calls an
+        assumption rather than a measurement, so a muscle can show a healthy number here on nothing
+        but other lifts&apos; help. The gate that judges the programme counts only sets where the
+        muscle is a prime mover.
+      </p>
+
       <div className="exgroup">
         <div className="exgroup-label">
           Weekly sets per muscle <span className="tag">({perMuscle.length} muscles)</span>

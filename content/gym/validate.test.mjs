@@ -825,11 +825,17 @@ const CASES = [
        whether the sentence is true. */
     name: 'a partner clause claiming the lead does not use what the partner trains is refused',
     mutate: (p) => {
-      /* BUILDS THE OVERLAP RATHER THAN HUNTING FOR IT, because the three live instances were fixed in
-         the same commit that added this gate, so the programme now has NONE and a hunting version
-         would have died on its own success. lat-pulldown's catalogue secondary includes rear-delts
-         and cable-reverse-fly trains rear-delts as a primary, which is the shape exactly. */
-      const target = rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly');
+      /* BUILDS THE OVERLAP RATHER THAN HUNTING FOR IT, because the live instances were fixed in the
+         same commit that added this gate, so the programme has NONE and a hunting version would die
+         on its own success.
+         REPOINTED 2026-09-01, from lat-pulldown plus cable-reverse-fly. That pair worked because the
+         pulldown carried rear-delts as a secondary muscle, and the attribution rewrite that day
+         REMOVED that credit: a pulldown adducts the shoulder in the frontal plane while the posterior
+         deltoid extends and horizontally abducts it, and the 2026-08-30 audit had already recorded
+         that no source measures posterior deltoid in a pulldown. So the fixture stopped overlapping.
+         The bench press and a triceps extension is the stable choice: elbow extension is what the
+         triceps do, and a press extends the elbow. That will not be corrected away. */
+      const target = rebuildBlockAs(p, 'db-bench-press', 'db-overhead-tricep-extension');
       const partner = target.exercises[1];
       const clause = `${partner.name} goes in the rest because the ${target.exercises[0].name} does not use it.`;
       partner.whyHere = clause;

@@ -600,17 +600,33 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     });
   }
 
+  /* A JUMP SET IS NOT A LIFTING SET, AND THIS COUNTED THEM TOGETHER UNTIL 2026-09-01.
+   *
+   * His ruling, in his words: "i dont think primers should count towards whatever the sum es because
+   * 5 set of 3 jumps does not wgiht the same or more than 3 sets of sauts or bench press".
+   *
+   * He is right, and it was distorting the headline the page opens with. Monday read "23 sets" and
+   * five of those were box jumps: three reps, no load, a few seconds of work. Reported as one number
+   * it made the day look a fifth bigger than the lifting in it, and it made the whole week look like
+   * 98 sets when 93 of them were lifting.
+   *
+   * So `total` is LIFTING sets and primers are counted separately. `role: "primer"` is the flag, which
+   * is already on the block and already exempt from the fresh-slot rule in gym-order.mjs for the same
+   * underlying reason: a jump is a different kind of thing, done first, for a different purpose. */
   const totals = useMemo(() => {
-    let total = 0, done = 0;
+    let total = 0, done = 0, primer = 0, primerDone = 0;
     for (const b of blocks) {
+      const isPrimer = b.role === 'primer';
       for (const ex of b.exercises) {
         if (!ex.log) continue;
         const eff = effOf(ex);
-        total += eff.sets;
-        for (let i = 0; i < eff.sets; i++) if (getSet(eff.id, i).done) done++;
+        let d = 0;
+        for (let i = 0; i < eff.sets; i++) if (getSet(eff.id, i).done) d++;
+        if (isPrimer) { primer += eff.sets; primerDone += d; }
+        else { total += eff.sets; done += d; }
       }
     }
-    return { total, done };
+    return { total, done, primer, primerDone };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blocks, sets, swaps]);
 
@@ -729,7 +745,10 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * it, above the fold, on a phone, in a gym. */}
 
       <div className="progress-row">
-        <span>{totals.done}/{totals.total} sets</span>
+        <span>
+          {totals.done}/{totals.total} sets
+          {totals.primer > 0 && <> {'·'} {totals.primerDone}/{totals.primer} jumps</>}
+        </span>
         {/* NO STREAK HERE, AND THAT IS A DECISION. Removed 2026-08-27, hours after being dated.
           * Do not restore it.
           *

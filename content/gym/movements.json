@@ -27,12 +27,33 @@
     "squat, overhead extension against pushdown). Everything else is inherited, so a muscle attribution",
     "is written once and cannot drift between four days.",
     "",
-    "THREE KINDS OF CLAIM, tagged, because conflating them is how this project got 91 false claims in",
-    "one audit:",
-    "  anatomy     which muscles a movement uses. Textbook, not a trial finding. Never cite a study.",
-    "  evidence    this variant beats another for a stated purpose, with a fetched source.",
-    "  convention  standard practice, no trial. Most variant choices are honestly this.",
-    "  unsourced   no basis at all, and it says so.",
+    "WHAT KIND OF CLAIM EACH FIELD MAKES, and this legend was rewritten on 2026-09-01 because the tier that",
+    "fits a muscle list was DEFINED HERE AND NEVER ONCE USED. 62 of 110 variants said `convention`, 6",
+    "`contested`, 11 `unsourced`, 7 groups said `evidence`, and `anatomy` said nothing at all.",
+    "",
+    "  anatomy     WHICH MUSCLES A MOVEMENT USES. Every muscle list in this file is this tier and no other.",
+    "              The basis is the JOINT ACTION, named on every group in `jointAction`, and the prime",
+    "              movers of that action. Textbook, checkable by anyone, and NEVER a study.",
+    "  evidence    a trial finding about DOSE, ORDER, FREQUENCY or WHETHER TO PRESCRIBE something. Real",
+    "              citations live here. It is not available for a muscle list.",
+    "  unsourced   no basis at all, and it says so. Nothing should stay in this state.",
+    "",
+    "WHY `evidence` IS BANNED FOR ATTRIBUTION. Seven groups claimed it, and every one rested on EMG or on a",
+    "paper about something else. EMG cannot support the inference: Plotkin 2023, cited in this very file,",
+    "found \"gluteus muscle sEMG amplitudes during the hip thrust exercise were greater across all measured",
+    "gluteal sites. However, these sEMG amplitude differences did not reliably translate to greater",
+    "hypertrophy, no matter what analytical approach we took.\" Vigotsky 2022 says the same in its title.",
+    "There are 22 emg-* files on this disk and they were being used for exactly the inference their own",
+    "authors rule out.",
+    "",
+    "AND THE `source` FIELD IS GONE FROM ATTRIBUTION. All 25 groups had one. It made a muscle list look",
+    "cited, which is how \"The RDL biases hamstrings\" survived three days after this repo recorded, in",
+    "VERIFICATION-2026-08-30.md, that Lee 2018 shows no such thing. A study that is genuinely about",
+    "something else is kept under `studyRelevantToSomethingElse`, which says what it is for.",
+    "",
+    "WHERE THE ANATOMY IS DISPUTED the group carries an `open` question rather than a silent pick. Six do.",
+    "Two of them are about a MUSCLE KEY covering two muscles: `calves` folds gastrocnemius and soleus, and",
+    "`glutes` folds gluteus maximus and medius, so an abduction set and a squat set add into one number.",
     "",
     "WHETHER A VARIANT IS CURRENTLY PRESCRIBED IS NOT STORED HERE, AND MAY NOT BE. There was an",
     "`inProgramme` boolean on all 103 variants until 2026-08-27. It was already wrong on nine of them",
@@ -76,12 +97,10 @@
       ],
       "secondary": [
         "adductors",
-        "erectors",
-        "hamstrings"
+        "erectors"
       ],
-      "confidence": "evidence",
-      "note": "Also the reason no hip thrust is needed: Plotkin 2023 found squat and hip thrust produce similar gluteal hypertrophy, and the squat adds quads and adductors.",
-      "source": "Plotkin DL et al. Front Physiol. 2023;14:1279170. Evidence file section 13.",
+      "confidence": "anatomy",
+      "note": "Quadriceps extend the knee, gluteus maximus extends the hip. Adductors assist hip extension from a wide stance and the erectors resist trunk flexion isometrically. HAMSTRINGS WERE REMOVED FROM SECONDARY on 2026-09-01: they extend the hip and flex the knee at once here, so their net contribution is genuinely unsettled, which is why seven emg-squat-hamstring papers sit on this disk arguing about it. A muscle whose role is disputed does not get half a set of silent credit.",
       "variants": [
         {
           "id": "bb-back-squat",
@@ -106,7 +125,8 @@
             "abs",
             "erectors"
           ],
-          "note": "More quad-dominant and more trunk than the back squat, which is why it is a genuinely different lift with its own weight and its own history rather than a lighter copy."
+          "note": "More quad-dominant and more trunk than the back squat, which is why it is a genuinely different lift with its own weight and its own history rather than a lighter copy.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "smith-squat",
@@ -139,8 +159,14 @@
           "secondary": [
             "adductors"
           ],
-          "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely."
+          "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         }
+      ],
+      "jointAction": "Knee extension and hip extension, simultaneously, under an axial load.",
+      "attributionBasis": "ANATOMY. Knee extension and hip extension, simultaneously, under an axial load. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Plotkin 2023, same scope: it compares this movement against the hip thrust for glute growth."
       ]
     },
     "squat-unilateral": {
@@ -151,11 +177,10 @@
       ],
       "secondary": [
         "adductors",
-        "hamstrings"
+        "erectors"
       ],
-      "confidence": "convention",
-      "note": "Single-leg loading without a rack, so every variant holds no fixture and can pair with anything.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "Same joint actions as the bilateral squat. ERECTORS ADDED 2026-09-01: standing on one leg adds a frontal-plane trunk demand the bilateral version does not have.",
       "variants": [
         {
           "id": "bulgarian-split-squat",
@@ -172,7 +197,6 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "confidence": "unsourced",
           "note": "NO REASON RECORDED for having this AND the split squat. They train the same thing."
         },
         {
@@ -230,7 +254,8 @@
           "secondary": [
             "glutes"
           ],
-          "note": "Frontal plane and single leg at once."
+          "note": "Frontal plane and single leg at once.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "single-leg-leg-press",
@@ -240,7 +265,9 @@
           "station": "leg-press",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Knee extension and hip extension on one leg, with the trunk resisting lateral tilt.",
+      "attributionBasis": "ANATOMY. Knee extension and hip extension on one leg, with the trunk resisting lateral tilt. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "hinge-bilateral": {
       "name": "Bilateral hip hinge",
@@ -252,9 +279,8 @@
         "erectors",
         "grip"
       ],
-      "confidence": "evidence",
-      "note": "The loadable posterior chain. The RDL biases hamstrings; a conventional deadlift produces greater glute and quadriceps activation.",
-      "source": "Lee S et al. J Exerc Sci Fit. 2018;16(3):87-93. EMG, directional only.",
+      "confidence": "anatomy",
+      "note": "Hamstrings and gluteus maximus extend the hip; the erectors resist trunk flexion isometrically and the grip holds the bar. THE PREVIOUS NOTE HERE WAS FALSE AND KNOWN TO BE FALSE. It read \"The RDL biases hamstrings; a conventional deadlift produces greater glute and quadriceps activation\", tagged as evidence and sourced to Lee 2018. HealthOS/knowledge/sources/VERIFICATION-2026-08-30.md recorded on 2026-08-30 that Lee measured biceps femoris and found NO significant difference, with the conventional lift numerically higher (57.45% against 56.66%), and that the paper concludes the opposite of what was claimed. It sat here for three days after being caught.",
       "variants": [
         {
           "id": "romanian-deadlift",
@@ -281,7 +307,8 @@
             "grip",
             "upper-back"
           ],
-          "note": "HE HAS ALREADY DONE ONE: 2026-08-05 ramped 180x6, 200x6, 225x4 and it was logged under romanian-deadlift by mistake. That is the only conventional-deadlift data that exists. Not currently prescribed, and mentioning it is not a reason to prescribe it: see evidence file 20.8 item 7."
+          "note": "HE HAS ALREADY DONE ONE: 2026-08-05 ramped 180x6, 200x6, 225x4 and it was logged under romanian-deadlift by mistake. That is the only conventional-deadlift data that exists. Not currently prescribed, and mentioning it is not a reason to prescribe it: see evidence file 20.8 item 7.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "db-rdl",
@@ -327,7 +354,8 @@
           "aliases": [
             "glute-back-extension-alt",
             "glute-back-extension"
-          ]
+          ],
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "kb-swing",
@@ -338,7 +366,17 @@
           "loadable": true,
           "note": "Ballistic hinge. Trains the hinge fast rather than heavy, so it does not substitute for the RDL."
         }
-      ]
+      ],
+      "jointAction": "Hip extension with the knee held near-static, the trunk resisting flexion, the hands holding the load.",
+      "open": [
+        {
+          "q": "This group holds both the RDL and the conventional deadlift under one muscle list, and they are not the same movement: the conventional lift starts from the floor and adds real knee extension, so quads belong in its primary list and not in the RDL's. Should they be split into two groups?",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Hip extension with the knee held near-static, the trunk resisting flexion, the hands holding the load. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "hinge-unilateral": {
       "name": "Single-leg hip hinge",
@@ -347,10 +385,10 @@
         "glutes"
       ],
       "secondary": [
-        "erectors"
+        "erectors",
+        "grip"
       ],
-      "confidence": "convention",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
       "variants": [
         {
           "id": "single-leg-rdl",
@@ -378,7 +416,10 @@
           "station": null,
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Hip extension on one leg, knee near-static, trunk resisting both flexion and rotation.",
+      "note": "GRIP ADDED 2026-09-01: every variant here holds a dumbbell or kettlebell, which is the same grip demand the bilateral hinge was already credited for.",
+      "attributionBasis": "ANATOMY. Hip extension on one leg, knee near-static, trunk resisting both flexion and rotation. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "knee-flexion": {
       "name": "Knee flexion (hamstring isolation)",
@@ -386,9 +427,8 @@
         "hamstrings"
       ],
       "secondary": [],
-      "confidence": "unsourced",
-      "note": "SOURCE VOID. Its only citation was the Motion Blueprint guide, dropped 2026-08-27.",
-      "source": "none, evidence file section 18",
+      "confidence": "anatomy",
+      "note": "The hamstrings are the only knee flexors of consequence. This is the definition of the movement rather than a claim about it.",
       "variants": [
         {
           "id": "leg-curl",
@@ -406,7 +446,9 @@
           "station": null,
           "loadable": false
         }
-      ]
+      ],
+      "jointAction": "Knee flexion, hip static.",
+      "attributionBasis": "ANATOMY. Knee flexion, hip static. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "knee-extension": {
       "name": "Knee extension (quad isolation)",
@@ -414,9 +456,8 @@
         "quads"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "note": "IN THE GYM, NEVER PRESCRIBED, NEVER LOGGED. Listed so the gap is visible rather than invisible. Holds a fixture.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "The quadriceps are the only knee extensors. Definitional.",
       "variants": [
         {
           "id": "leg-extension",
@@ -426,7 +467,9 @@
           "station": "leg-extension",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Knee extension, hip static.",
+      "attributionBasis": "ANATOMY. Knee extension, hip static. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "hip-extension-isolation": {
       "name": "Hip extension isolation",
@@ -436,9 +479,8 @@
       "secondary": [
         "hamstrings"
       ],
-      "confidence": "convention",
-      "note": "Plotkin 2023 argues AGAINST needing this at all while he squats twice a week.",
-      "source": "Plotkin DL et al. Front Physiol. 2023;14:1279170.",
+      "confidence": "anatomy",
+      "note": "Flexing the knee shortens the hamstrings, which reduces their contribution to hip extension and leaves the gluteus maximus as the prime mover. That is the anatomical reason this movement exists.",
       "variants": [
         {
           "id": "single-leg-glute-bridge",
@@ -466,6 +508,11 @@
           "station": null,
           "loadable": false
         }
+      ],
+      "jointAction": "Hip extension with the knee flexed and the spine held still.",
+      "attributionBasis": "ANATOMY. Hip extension with the knee flexed and the spine held still. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Plotkin 2023 (Front Physiol 14:1279170) compared hip thrust against back squat for GLUTE GROWTH and found them similar, which is evidence about whether to prescribe this, not about which muscles it uses. The same paper is why EMG cannot be used for attribution anywhere in this file."
       ]
     },
     "adduction": {
@@ -477,9 +524,8 @@
         "quads",
         "glutes"
       ],
-      "confidence": "evidence",
-      "note": "Loaded frontal-plane work rather than a band, because Comert and Gruber 2025 found hip strengthening alone had minimal effect on knee alignment.",
-      "source": "Comert and Gruber 2025. Evidence file section 5.",
+      "confidence": "anatomy",
+      "note": "THE EVIDENCE TAG WAS WRONG. It cited Comert and Gruber 2025, which measures knee and foot ALIGNMENT ANGLES and reports no significant effect of hip strengthening in people without knee valgus. It is not a muscle-attribution source and nobody has assessed him for valgus. The adductors are the hip adductors by definition; that part needs no citation.",
       "variants": [
         {
           "id": "db-lateral-lunge",
@@ -494,7 +540,8 @@
           ],
           "secondary": [
             "glutes"
-          ]
+          ],
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "copenhagen-plank",
@@ -506,7 +553,8 @@
           "secondary": [
             "abs"
           ],
-          "note": "Progressed by lever length, not weight, so the app's ladder does not apply to it."
+          "note": "Progressed by lever length, not weight, so the app's ladder does not apply to it.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "side-plank-leg-lift",
@@ -525,7 +573,9 @@
           "station": null,
           "loadable": false
         }
-      ]
+      ],
+      "jointAction": "Hip adduction. In the lunge variants, also knee extension and hip extension on the loaded leg.",
+      "attributionBasis": "ANATOMY. Hip adduction. In the lunge variants, also knee extension and hip extension on the loaded leg. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "calf": {
       "name": "Calf raise",
@@ -533,9 +583,8 @@
         "calves"
       ],
       "secondary": [],
-      "confidence": "unsourced",
-      "note": "SOURCE VOID for its placement. The Motion Blueprint guide was the only basis for where it sits.",
-      "source": "none, evidence file section 18",
+      "confidence": "anatomy",
+      "note": "ONE KEY, TWO MUSCLES, AND THE PROGRAMME TRAINS ONE OF THEM. The gastrocnemius crosses the knee and the soleus does not, so knee angle decides which one works. Kinoshita and Maeo 2023, saved on this disk: over 12 weeks a STANDING raise grew the lateral gastrocnemius 12.4% against 1.7% seated, and the soleus 2.1% against 2.9%, \"similar between legs... p = 0.410\". Every calf variant prescribed here is straight-knee. So a row reading \"calves 9\" means gastrocnemius 9 and soleus approximately nothing. HealthOS/knowledge/sources/MEASUREMENT-AUDIT-2026-08-30.md marked this FAILS on 2026-08-30.",
       "variants": [
         {
           "id": "standing-calf-raise",
@@ -574,6 +623,19 @@
           "station": null,
           "loadable": false
         }
+      ],
+      "jointAction": "Ankle plantarflexion.",
+      "open": [
+        {
+          "q": "Do you care about the soleus? It needs a bent-knee (seated) calf raise, which is a different exercise from the standing one you do. If you do not, this row should be renamed gastrocnemius and the soleus dropped from the catalogue rather than silently counted.",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Ankle plantarflexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Kinoshita and Maeo 2023 compared STANDING against SEATED calf raises over 12 weeks and is evidence about knee angle and which calf muscle grows, not about attribution."
       ]
     },
     "push-horizontal": {
@@ -585,8 +647,7 @@
         "triceps",
         "front-delts"
       ],
-      "confidence": "convention",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
       "variants": [
         {
           "id": "db-bench-press",
@@ -640,12 +701,12 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "confidence": "unsourced",
           "secondary": [
             "front-delts",
             "abs"
           ],
-          "note": "Added 2026-08-27 as an upper primer and refuted the same day. Not a plyometric, and post-activation enhancement is measured on jumps and sprints, never on a following strength set. It pre-fatigues the press behind it."
+          "note": "Added 2026-08-27 as an upper primer and refuted the same day. Not a plyometric, and post-activation enhancement is measured on jumps and sprints, never on a following strength set. It pre-fatigues the press behind it.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "assisted-dip",
@@ -664,7 +725,10 @@
           "loadable": false
         }
       ],
-      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not."
+      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not.",
+      "jointAction": "Shoulder horizontal adduction and elbow extension.",
+      "note": "Pectoralis major performs horizontal shoulder adduction, the triceps extend the elbow and the anterior deltoid assists shoulder flexion. Uncontested anatomy.",
+      "attributionBasis": "ANATOMY. Shoulder horizontal adduction and elbow extension. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "chest-isolation": {
       "name": "Chest fly",
@@ -672,9 +736,8 @@
         "chest"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "note": "IN THE GYM, NEVER PRESCRIBED. The pec deck also runs backwards as a rear-delt machine, which is a second unused option.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "The elbow does not move, so the triceps credit the pressing variants get does not apply here. That is the whole difference between a fly and a press.",
       "variants": [
         {
           "id": "pec-deck",
@@ -692,7 +755,9 @@
           "station": "cable-adjustable",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Shoulder horizontal adduction, elbow held static.",
+      "attributionBasis": "ANATOMY. Shoulder horizontal adduction, elbow held static. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "push-vertical": {
       "name": "Vertical press",
@@ -701,12 +766,10 @@
       ],
       "secondary": [
         "triceps",
-        "side-delts",
-        "abs"
+        "side-delts"
       ],
-      "confidence": "contested",
-      "note": "Its sole citation, Nunes 2021, could not be verified. This is also the ONLY main lift whose estimated 1RM has fallen, and the cause is a load step it cannot reach.",
-      "source": "Nunes 2021, UNVERIFIED. Evidence file section 18.",
+      "confidence": "anatomy",
+      "note": "ABS REMOVED FROM SECONDARY 2026-09-01. The trunk demand belongs to the STANDING press, and this group contains a seated machine press that removes it while carrying identical credit. MEASUREMENT-AUDIT-2026-08-30.md marked that UNVERIFIED: no source compares a seated machine press to a standing one. A per-variant field is the right home for it, not a group-level list.",
       "variants": [
         {
           "id": "db-overhead-press",
@@ -773,10 +836,21 @@
           "secondary": [
             "side-delts",
             "abs"
-          ]
+          ],
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         }
       ],
-      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not."
+      "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not.",
+      "jointAction": "Shoulder abduction or flexion overhead, plus elbow extension. Standing variants add trunk anti-extension.",
+      "open": [
+        {
+          "q": "Is the front delt really the prime mover of an overhead press, or is the side delt? Pressing overhead is shoulder abduction in the scapular plane, where the middle deltoid is a prime mover alongside the anterior. This group was already tagged contested before today and nobody resolved it. It decides whether side delts need their own exercise at all.",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Shoulder abduction or flexion overhead, plus elbow extension. Standing variants add trunk anti-extension. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "pull-horizontal": {
       "name": "Horizontal pull (row)",
@@ -790,9 +864,8 @@
         "erectors",
         "grip"
       ],
-      "confidence": "convention",
-      "note": "A bent-over row is also the largest trunk brace in the week, which is why pairing it with dead bugs is redundant rather than complementary.",
-      "source": "CONVENTION for selection; the pairing point is Zhang 2025, evidence file section 12.",
+      "confidence": "anatomy",
+      "note": "The mid-back retracts the scapula, the lats extend the shoulder, the posterior deltoid horizontally abducts it, the biceps flex the elbow and the grip holds the bar. All four secondary actions really happen here, which is why this movement has the highest fractional yield in the catalogue.",
       "variants": [
         {
           "id": "bb-row",
@@ -813,7 +886,8 @@
             "biceps",
             "rear-delts"
           ],
-          "note": "Moves in 2.5 lb steps, the finest increment anywhere in this gym."
+          "note": "Moves in 2.5 lb steps, the finest increment anywhere in this gym.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "chest-supported-row",
@@ -826,7 +900,8 @@
             "biceps",
             "rear-delts"
           ],
-          "note": "No erector or trunk cost, because the chest is supported. That makes it the row that pairs freely."
+          "note": "No erector or trunk cost, because the chest is supported. That makes it the row that pairs freely.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "db-single-arm-row",
@@ -844,6 +919,19 @@
           "station": "trx",
           "loadable": false
         }
+      ],
+      "jointAction": "Scapular retraction, shoulder extension and horizontal abduction, elbow flexion. Bent-over variants add trunk anti-flexion.",
+      "open": [
+        {
+          "q": "Elbow flexion is a real joint action in every row, so is the biceps a prime mover here rather than a synergist? This is the same judgement that produced the triceps error on 2026-08-29, which cost 6.5 fractional sets before anyone noticed.",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Scapular retraction, shoulder extension and horizontal abduction, elbow flexion. Bent-over variants add trunk anti-flexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Zhang 2025 (supersets meta-analysis) is evidence about PAIRING this movement, not about which muscles it uses."
       ]
     },
     "pull-vertical": {
@@ -854,11 +942,9 @@
       "secondary": [
         "biceps",
         "upper-back",
-        "rear-delts",
         "grip"
       ],
-      "confidence": "convention",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
       "variants": [
         {
           "id": "lat-pulldown",
@@ -897,7 +983,18 @@
           "loadable": false,
           "note": "Second bar in the gym. Listed so no station is unreachable, not because a second pull-up bar changes anything."
         }
-      ]
+      ],
+      "jointAction": "Shoulder adduction and extension in the frontal plane, scapular depression, elbow flexion.",
+      "note": "REAR DELTS REMOVED FROM SECONDARY 2026-09-01, on anatomy and on the audit. The posterior deltoid extends and horizontally abducts the shoulder; a pulldown adducts it in the frontal plane, which is a different action. MEASUREMENT-AUDIT-2026-08-30.md also found no source measuring posterior deltoid in a pulldown and recorded the credit as UNVERIFIED while it handed rear delts 1.5 sets a week.",
+      "open": [
+        {
+          "q": "Same question as the row: is the biceps a prime mover in a pulldown or a synergist? Answering one should answer both.",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Shoulder adduction and extension in the frontal plane, scapular depression, elbow flexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "lat-isolation": {
       "name": "Shoulder extension (lat isolation)",
@@ -905,9 +1002,8 @@
         "lats"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "note": "Adds lat volume without adding biceps volume, because the elbow does not bend.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "The straight elbow is the point: it removes the elbow flexion that gives the biceps a job in every other pull.",
       "variants": [
         {
           "id": "straight-arm-pulldown",
@@ -934,7 +1030,9 @@
           "station": "bench",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Shoulder extension with the elbow held straight.",
+      "attributionBasis": "ANATOMY. Shoulder extension with the elbow held straight. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "rear-delt": {
       "name": "Horizontal shoulder abduction (rear delts)",
@@ -944,9 +1042,8 @@
       "secondary": [
         "upper-back"
       ],
-      "confidence": "convention",
-      "note": "No source anywhere justifies its current four exposures a week.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "The posterior deltoid horizontally abducts the shoulder; the scapular retractors assist. This is the only movement in the catalogue where the rear delt is the prime mover, which is why removing its unverified credit from the pulldown matters.",
       "variants": [
         {
           "id": "db-reverse-fly",
@@ -1002,7 +1099,9 @@
           "station": "bench",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Shoulder horizontal abduction and external rotation.",
+      "attributionBasis": "ANATOMY. Shoulder horizontal abduction and external rotation. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "side-delt": {
       "name": "Shoulder abduction (side delts)",
@@ -1010,9 +1109,8 @@
         "side-delts"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "note": "The only direct work the side delts get. No source justifies four exposures a week.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "The middle deltoid is the prime abductor of the shoulder. Uncontested anatomy. Note separately that NOT ONE of the 125 saved sources measures or trains the lateral deltoid, so how much it needs is unknown, and that is a dose question rather than an attribution one.",
       "variants": [
         {
           "id": "db-lateral-raise",
@@ -1050,7 +1148,9 @@
           "loadable": true,
           "note": "Kettlebells instead of dumbbells. Worth its own history precisely because this lift is the one stuck on a 25 percent load step from 20 to 25 lb: a different implement is a different ladder, and merging the two would hide which one stalled.\n\nPROMOTED FROM AN ALIAS OF db-lateral-raise ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now."
         }
-      ]
+      ],
+      "jointAction": "Shoulder abduction in the frontal plane.",
+      "attributionBasis": "ANATOMY. Shoulder abduction in the frontal plane. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "elbow-flexion": {
       "name": "Elbow flexion (biceps)",
@@ -1060,9 +1160,8 @@
       "secondary": [
         "grip"
       ],
-      "confidence": "evidence",
-      "note": "Kassiano 2022: variation helps when variants load the muscle DIFFERENTLY and may hinder when they are redundant. Swapping implement at the same shoulder position is the redundant kind. Changing where the SHOULDER sits is the systematic kind, which is why the incline and preacher entries carry a note and the rest do not.",
-      "source": "Kassiano W et al. J Strength Cond Res. 2022. Evidence file section 14.",
+      "confidence": "anatomy",
+      "note": "THE EVIDENCE TAG CITED AN EMG STUDY and is downgraded to anatomy. The elbow flexors are the prime movers of elbow flexion, which needs no trial. The catalogue has no key for brachialis or brachioradialis, so `biceps` here means the elbow flexors as a group.",
       "variants": [
         {
           "id": "db-hammer-curl",
@@ -1121,7 +1220,9 @@
           "station": null,
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Elbow flexion, with forearm rotation varying by grip.",
+      "attributionBasis": "ANATOMY. Elbow flexion, with forearm rotation varying by grip. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "elbow-extension": {
       "name": "Elbow extension (triceps)",
@@ -1129,9 +1230,8 @@
         "triceps"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "note": "Same logic as the curls: shortened against lengthened is systematic variation, one handle against another is redundant.",
-      "source": "Kassiano W et al. J Strength Cond Res. 2022.",
+      "confidence": "anatomy",
+      "note": "The triceps are the only elbow extensors. Definitional.",
       "variants": [
         {
           "id": "tricep-pushdown",
@@ -1180,7 +1280,9 @@
           "station": "bench",
           "loadable": true
         }
-      ]
+      ],
+      "jointAction": "Elbow extension, shoulder position varying by variant.",
+      "attributionBasis": "ANATOMY. Elbow extension, shoulder position varying by variant. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "anti-rotation": {
       "name": "Anti-rotation trunk",
@@ -1188,9 +1290,8 @@
         "abs"
       ],
       "secondary": [],
-      "confidence": "unsourced",
-      "note": "SOURCE VOID. The 'eight core patterns' claim behind the Pallof press came from the Motion Blueprint guide.",
-      "source": "none, evidence file section 18",
+      "confidence": "anatomy",
+      "note": "The obliques resist rotation. The catalogue folds abs and obliques into one key, so `abs` here covers both.",
       "variants": [
         {
           "id": "cable-pallof",
@@ -1220,7 +1321,8 @@
           "loadable": false,
           "secondary": [
             "front-delts"
-          ]
+          ],
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "side-plank",
@@ -1239,7 +1341,9 @@
           "loadable": true,
           "note": "Half-kneeling rather than standing. Same station and same cable, and it is a harder anti-rotation position that takes less weight to load, so sharing one weight history with the standing version would read as a regression every time he knelt down.\n\nPROMOTED FROM AN ALIAS OF cable-pallof ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now."
         }
-      ]
+      ],
+      "jointAction": "Resisting trunk rotation isometrically.",
+      "attributionBasis": "ANATOMY. Resisting trunk rotation isometrically. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "anti-extension": {
       "name": "Anti-extension trunk",
@@ -1247,8 +1351,7 @@
         "abs"
       ],
       "secondary": [],
-      "confidence": "convention",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
       "variants": [
         {
           "id": "dead-bug",
@@ -1269,7 +1372,8 @@
           "secondary": [
             "grip"
           ],
-          "note": "Logged 6 sets in August. Progressed by leg position rather than weight."
+          "note": "Logged 6 sets in August. Progressed by leg position rather than weight.",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "cable-crunch",
@@ -1288,6 +1392,12 @@
           "station": null,
           "loadable": false
         }
+      ],
+      "jointAction": "Resisting lumbar extension isometrically.",
+      "note": "The rectus abdominis resists the lumbar spine extending. Comfort 2011, on this disk, found a plank produced significantly greater rectus abdominis activation than the back squat, front squat or military press, which is a dose finding rather than an attribution one and is why direct trunk work is not redundant with bracing.",
+      "attributionBasis": "ANATOMY. Resisting lumbar extension isometrically. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Comfort 2011 found a plank produced greater rectus abdominis activation than squats or a military press, which is evidence about whether direct trunk work is redundant, not about attribution."
       ]
     },
     "carry": {
@@ -1299,9 +1409,8 @@
         "abs",
         "upper-back"
       ],
-      "confidence": "convention",
-      "note": "The only bare-handed grip work in the week, which is the stated reason straps are permitted on the RDL.",
-      "source": "CONVENTION.",
+      "confidence": "anatomy",
+      "note": "Anatomically straightforward: holding a heavy weight is a grip task and carrying it on one side is an anti-lateral-flexion task. But NOT ONE of the 125 saved sources mentions a loaded carry at all, so whether it earns a slot is entirely unevidenced. The attribution is anatomy; the prescription is a guess.",
       "variants": [
         {
           "id": "farmer-carry",
@@ -1330,7 +1439,8 @@
           "aliases": [
             "suitcase-carry-upper"
           ],
-          "doseUnit": "carry"
+          "doseUnit": "carry",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "kb-farmer-carry",
@@ -1356,7 +1466,8 @@
           "secondary": [
             "upper-back"
           ],
-          "doseUnit": "carry"
+          "doseUnit": "carry",
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "db-hold",
@@ -1369,7 +1480,9 @@
           "note": "Heavy dumbbells held at the sides, standing still rather than walking, for when the floor is too crowded to carry. PROMOTED FROM AN ALIAS OF farmer-carry ON 2026-08-28. It was offered as an alt on the farmer carry slot while resolving to that same variant, which is a choice between an exercise and itself: picking it would have written a second exercise_id for one movement and split the history, the way the calf raise did. It also progresses on TIME where the carry progresses on distance, so one shared history could not have described both. Never picked, so nothing needed migrating.",
           "doseUnit": "carry"
         }
-      ]
+      ],
+      "jointAction": "Isometric grip, trunk resisting lateral flexion, and walking under load.",
+      "attributionBasis": "ANATOMY. Isometric grip, trunk resisting lateral flexion, and walking under load. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     },
     "plyo-vertical": {
       "name": "Vertical plyometric",
@@ -1380,9 +1493,8 @@
       "secondary": [
         "calves"
       ],
-      "confidence": "evidence",
-      "note": "In the programme because plyometric training is worth doing at 2 to 3 sessions a week, NOT because it primes the lift after it. Post-activation enhancement is measured on jumps and sprints, never on a following strength set.",
-      "source": "Deng N et al. Sci Rep. 2024;14:11272. 21 studies, 1,263 untrained participants, strength ES 0.61. Evidence file section 4 and 15.",
+      "confidence": "anatomy",
+      "note": "THE EVIDENCE TAG CITED DENG 2024, which is about the outcomes of plyometric training and says nothing about which muscles a jump uses. Downgraded to anatomy. Worth knowing that these four jump variants are the ONLY exercises in the catalogue that give calves any secondary credit, so removing jumps removes the only free calf work in a week.",
       "variants": [
         {
           "id": "box-jump",
@@ -1405,7 +1517,8 @@
           ],
           "secondary": [
             "quads"
-          ]
+          ],
+          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
         },
         {
           "id": "broad-jump",
@@ -1416,6 +1529,11 @@
           "loadable": false,
           "note": "REMOVED as a default. He has swapped away from it every time and has said it does not fit a crowded commercial gym."
         }
+      ],
+      "jointAction": "Explosive hip and knee extension with ankle plantarflexion.",
+      "attributionBasis": "ANATOMY. Explosive hip and knee extension with ankle plantarflexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Deng 2024 (Sci Rep 14:11272, 21 studies) is evidence about whether plyometric training is worth doing, not about which muscles a jump uses."
       ]
     },
     "plyo-lateral": {
@@ -1428,8 +1546,7 @@
         "adductors",
         "calves"
       ],
-      "confidence": "evidence",
-      "source": "Deng N et al. Sci Rep. 2024;14:11272. Evidence file section 4.",
+      "confidence": "anatomy",
       "variants": [
         {
           "id": "lateral-bound",
@@ -1447,6 +1564,12 @@
           "station": null,
           "loadable": false
         }
+      ],
+      "jointAction": "Explosive hip and knee extension in the frontal plane, with ankle plantarflexion.",
+      "note": "Same downgrade as the vertical jump, same reason.",
+      "attributionBasis": "ANATOMY. Explosive hip and knee extension in the frontal plane, with ankle plantarflexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
+      "studyRelevantToSomethingElse": [
+        "Deng 2024, same scope as the vertical jump."
       ]
     },
     "hip-abduction": {
@@ -1455,9 +1578,8 @@
         "glutes"
       ],
       "secondary": [],
-      "confidence": "evidence",
-      "note": "Glute MEDIUS rather than maximus, so it is not covered by the squat the way hip extension is. It was in the programme until 2026-08-16 as a banded lateral walk and was removed for the right reason: Comert and Gruber 2025 found hip strengthening ALONE had minimal effect on knee alignment. The loaded frontal-plane work replaced it. Listed here so the removal stays visible and so the cable option is on record.",
-      "source": "Comert and Gruber 2025. Evidence file section 5.",
+      "confidence": "anatomy",
+      "note": "ONE KEY, TWO MUSCLES AGAIN. The gluteus MEDIUS abducts the hip; the gluteus MAXIMUS extends it. The catalogue has a single `glutes` key, so an abduction set and a squat set credit the same row while training different muscles. That is the same defect as the calf row. The previous `evidence` tag cited Comert and Gruber, which is about knee alignment.",
       "variants": [
         {
           "id": "banded-lateral-walk",
@@ -1494,7 +1616,17 @@
           "loadable": true,
           "note": "The only LOADABLE abduction option in the gym. The band versions cannot progress."
         }
-      ]
+      ],
+      "jointAction": "Hip abduction.",
+      "open": [
+        {
+          "q": "The catalogue counts gluteus maximus and gluteus medius as one muscle, so hip abduction and hip extension add into the same number. Should they be split? It changes whether the 32 glute sets you were shown meant anything.",
+          "asked": "2026-09-01",
+          "due": "2026-09-30",
+          "topic": "volume"
+        }
+      ],
+      "attributionBasis": "ANATOMY. Hip abduction. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file."
     }
   }
 }

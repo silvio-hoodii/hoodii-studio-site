@@ -35,6 +35,22 @@ async function prescribedSetsFor(day: string | null | undefined): Promise<number
     const program = await loadProgram();
     const d = program.days[day as keyof typeof program.days];
     if (!d) return null;
+    /* THIS COUNTS PRIMER SETS AND THE PAGE DOES NOT, deliberately, and the two must not be
+     * reconciled by changing this function.
+     *
+     * On 2026-09-01 he ruled that jumps should not count toward the set total he reads: "5 set of 3
+     * jumps does not wgiht the same or more than 3 sets of sauts or bench press". He is right, and
+     * `totals` in GymClient.tsx now shows lifting and jumps separately.
+     *
+     * This column is a different thing. It is stamped once per session and NEVER recomputed, which
+     * makes it the only stable completion denominator across 646 existing rows. Excluding primers
+     * here would shrink the denominator for new sessions only, so every completion percentage on
+     * /health would step upward on a change in definition rather than in behaviour, and nothing
+     * would record that it had. A raw count of every prescribed logged set is the honest meaning of
+     * the column name, so that is what it keeps.
+     *
+     * If a primer-excluding figure is ever wanted downstream, derive it from program.json at read
+     * time. Do not redefine a stamped column. */
     let total = 0;
     for (const block of d.blocks) {
       for (const ex of block.exercises) {
