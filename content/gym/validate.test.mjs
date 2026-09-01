@@ -195,8 +195,33 @@ const asSequence = (p) => {
  *
  *  `hostDay` is EXCLUDED from being the home day, which the first version did not do. If the chosen
  *  exercise lived on the very day the clause is written on, the false case named some other day and
- *  the gate said nothing, because the exercise was right there in the week where the sentence sat. */
+ *  the gate said nothing, because the exercise was right there in the week where the sentence sat.
+ *
+ *  AND `absentDay` MUST BE ABSENT THE WAY THE VALIDATOR MEANS IT, which is the third time this
+ *  helper has been wrong about the same clause. The gate's `namesOn(day)` reads the slot names AND
+ *  every ALT name on that day, because a `why` naming an exercise he can reach with one tap on that
+ *  card is a true sentence. This helper only ever looked at slots. On 2026-09-01 it picked the Lat
+ *  Pulldown, whose home is Tuesday, and offered Thursday as the absent day while Thursday's row
+ *  carries the Lat Pulldown as an alt: the validator correctly permitted the clause and the case
+ *  that asserts a REFUSAL failed. The fixture was stale, not the gate. So the absent day is now
+ *  checked against the same name set the gate builds, by the same substring rule. */
 const crossDayReference = (p, hostDay) => {
+  const stripImplement = (n) => n
+    .replace(/^(db|bb|ez bar|ez|cable|machine|smith|kb|barbell|dumbbell|single-leg|seated|standing|incline|assisted)\s+/i, '')
+    .trim();
+  /** Every name a `why` on this day may legally mention: slots and their alts, stripped and not. */
+  const namesOn = (dayKey) => {
+    const s = new Set();
+    for (const b of p.days?.[dayKey]?.blocks ?? []) {
+      for (const e of b.exercises ?? []) {
+        for (const nm of [e.name, ...(e.alts ?? []).map((a) => a.name)].filter(Boolean)) {
+          s.add(String(nm).toLowerCase());
+          s.add(stripImplement(String(nm).toLowerCase()));
+        }
+      }
+    }
+    return s;
+  };
   const days = new Map();
   for (const [k, d] of Object.entries(p.days || {})) {
     for (const b of d.blocks || []) {
@@ -210,11 +235,13 @@ const crossDayReference = (p, hostDay) => {
     if (on.size !== 1) continue;
     const homeDay = [...on][0];
     if (homeDay === hostDay) continue;
-    const absentDay = Object.keys(p.days).find((k) => k !== homeDay && k !== hostDay);
+    const low = name.toLowerCase();
+    const absentDay = Object.keys(p.days).find((k) => k !== homeDay && k !== hostDay
+      && ![...namesOn(k)].some((pn) => pn.includes(low) || low.includes(pn)));
     if (!absentDay) continue;
     return { name, homeDay, absentDay };
   }
-  throw new Error(`no exercise sits on exactly one day other than ${hostDay}, so neither cross-reference case can be built; repoint them`);
+  throw new Error(`no exercise sits on exactly one day other than ${hostDay} while being absent, alts included, from a third day, so neither cross-reference case can be built; repoint them`);
 };
 
 /** A paired block whose partner carries an open question, creating one if the file has none. */

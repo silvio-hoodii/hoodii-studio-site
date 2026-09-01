@@ -344,18 +344,18 @@
           "station": "back-extension",
           "loadable": true,
           "primary": [
-            "glutes",
-            "erectors"
+            "glutes"
           ],
           "secondary": [
-            "hamstrings"
+            "hamstrings",
+            "erectors"
           ],
-          "note": "Logged 13 sets at up to 50 lb, last used 2026-08-08. Loadable by hugging a plate.",
+          "note": "Logged 13 sets at up to 50 lb, last used 2026-08-08, under the name \"Glute-Biased Back Extension\". Loadable by hugging a plate or a dumbbell.",
           "aliases": [
             "glute-back-extension-alt",
             "glute-back-extension"
           ],
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "jointActionNote": "CONFIRMED AND CORRECTED 2026-09-01, and the correction is the point. This variant listed erectors as a PRIME MOVER, which made it the only exercise in the whole catalogue that could give the spinal erectors a direct set, and the rebuild that day was about to be built on it. It does not survive the catalogue's own rule. On a 45-degree bench with the spine held rigid, the movement performed is HIP EXTENSION: the glutes extend the hip, the hamstrings assist, and the erectors hold the trunk against a flexion moment WITHOUT CHANGING LENGTH. That is the identical role they play in the squat, the row and the Romanian deadlift, and this catalogue calls them SECONDARY in all three. His own logged name for it is \"Glute-Biased Back Extension\", which is the name used specifically to mean the rigid-spine version. So the erector credit moves to secondary and this exercise no longer claims to train the lower back. THE CONSEQUENCE IS THAT NOTHING IN THIS GYM DOES: see the erectors entry in targets.json. The version that would (letting the lumbar spine round and re-extend under control, which is what the machine was built for and what Steele 2015 on isolated lumbar extension is about) is a real technique and a change to how he already performs it, so it is a question for him and not a thing to write into a muscle list. It is asked on the exercise in program.json."
         },
         {
           "id": "kb-swing",

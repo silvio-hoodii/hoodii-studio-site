@@ -154,29 +154,36 @@ const GATES = [
    * per-muscle band file could have drifted with every check passing. Wired 2026-08-31. This is the
    * meta-law in .agents/ENGINEERING.md in its purest form: a rule that does not execute is
    * decoration, and a paragraph of prose ABOUT a gate is not the gate. */
-  /* GYM-TARGETS IS OUT OF THIS LIST AS OF 2026-09-01, and it is out because it is HONESTLY RED.
+  /* GYM-TARGETS IS STILL OUT OF THIS LIST AS OF THE 2026-09-01 REBUILD, and it is out on ONE muscle
+   * rather than five. The reason changed completely, so read this rather than the earlier version.
    *
-   * It was rewritten that day to grade DIRECT sets against one quoted floor (Iversen 2021: "at least
-   * four sets per week" per muscle) instead of fractional sets against sixteen hand-tuned bands. On
-   * the live programme it now fails on five muscles, and every one of them passed under the old gate:
+   * It was rewritten that morning to grade DIRECT sets against one quoted floor (Iversen 2021: "at
+   * least four sets per week" per muscle) instead of fractional sets against sixteen hand-tuned
+   * bands. It failed on five muscles that had all passed the old gate. Four of those are fixed by
+   * the rebuilt programme, and every muscle in the week now sits at 6 or more direct sets except
+   * one:
    *
-   *   erectors     0 direct sets, 13.5 fractional
-   *   adductors    3 direct, 10.5 fractional
-   *   upper-back   3 direct, 10.5 fractional
-   *   triceps      3 direct, 9 fractional
-   *   front-delts  3 direct, 7.5 fractional
+   *   adductors    3 -> 6      upper-back   3 -> 6      triceps   3 -> 6      front-delts  3 -> 6
+   *   erectors     0 -> 0      STILL RED, and the programme is not what is wrong
    *
-   * That is not a gate bug. It is the programme, seen without the 0.5 assistance credit that was
-   * making a muscle with no direct work at all read as 13.5. The programme has to be rebuilt against
-   * this, which is the next session's job and is scoped in the handoff.
+   * THE ERECTOR FAILURE IS A TRUE STATEMENT ABOUT HIS GYM. Nothing in the catalogue performs spinal
+   * extension as its joint action. The one exercise that claimed to, the 45-degree back extension,
+   * listed erectors as a prime mover on an override that carried a `jointActionNote` saying nobody
+   * had confirmed it. Checked: with the spine held flat the joint action is HIP extension and the
+   * erectors work isometrically, which is the same role they have in the squat, the row and the RDL,
+   * where this catalogue calls them secondary. The rebuild was one commit from resting on that
+   * claim. See the erectors entry in content/gym/targets.json for the whole reasoning.
    *
-   * IT GOES BACK IN THE MOMENT A PROGRAMME SATISFIES IT, same contract gym-order.mjs had for four
-   * days: a gate expected to fail cannot signal a regression, and a permanently red pre-push hook is
-   * a hook somebody deletes. Run it by hand: node --experimental-strip-types scripts/gym-targets.mjs
+   * SO THE HONEST STATE IS A GATE THAT FAILS ON ONE MUSCLE, and the fix is a question that has been
+   * put to him on the exercise in program.json rather than an edit to a number. IT GOES BACK IN THE
+   * MOMENT HE ANSWERS: either the spinal-extension version becomes its own variant and the floor is
+   * met, or it does not and the target comes out with his ruling written beside it.
    *
-   * DO NOT "FIX" THIS BY LOOSENING THE FLOOR. The number is quoted from a saved paper and the whole
-   * point of the 2026-09-01 rewrite was that the previous bands had been tuned to whatever the
-   * programme happened to contain. */
+   * DO NOT "FIX" IT BY LOOSENING THE FLOOR, by deleting the target, or by putting the erector credit
+   * back on the back extension. The floor is quoted from a saved paper, a deleted target is a fact
+   * made invisible, and the third is the exact claim that was just found to be false.
+   *
+   * Run it by hand: node --experimental-strip-types scripts/gym-targets.mjs */
 
   /* GYM-ORDER, wired 2026-08-31, the day a programme first satisfied it. It asserts every movement
    * pattern gets a slot in the first two blocks of some day, on Nunes 2021: strength gains are
