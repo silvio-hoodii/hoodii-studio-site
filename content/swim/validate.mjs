@@ -61,7 +61,54 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
   for (const s of plan.structure?.ladder || []) {
     if (!s.weeks || !s.piece || !s.rest) fail('plan.json', `a ladder rung needs weeks, piece and rest, got ${JSON.stringify(s)}`);
   }
-  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, ${plan.baseline.length} baseline facts, calibration block present`);
+  /* THE SEVEN CUES ON THE HOW TAB WERE GATED BY NOTHING UNTIL 2026-09-02, and they are the ones he
+   * follows in the water. `checkGroundedCues` at the bottom of this file is called on coaching.json
+   * and teaching.json only. plan.json's cues carry no `quote` field at all, use a DIFFERENT
+   * confidence vocabulary (evidence / contested / convention against sourced / inference /
+   * convention), and put their citation in a prose `grounding` field with a `url` beside it. So the
+   * most load-bearing prose on this surface was also the least checked, while the handoff describing
+   * this surface said every cue must carry a verbatim quote from a named source.
+   *
+   * This does NOT retrofit the coaching vocabulary onto them, which would relabel seven cues to
+   * satisfy a checker rather than to say anything truer. It gates the shape they actually use, which
+   * is what "gated" was supposed to mean. A quote is not proof of correct quotation and nothing here
+   * can check that; what this stops is a cue with no test, no stated confidence, or an evidence
+   * claim with no link to open. */
+  const PLAN_CONF = new Set(['evidence', 'contested', 'convention']);
+  for (const c of plan.cues || []) {
+    const where = `plan.json/${c.name || '?'}`;
+    if (!PLAN_CONF.has(c.confidence)) {
+      fail(where, `confidence must be ${[...PLAN_CONF].join(' | ')}, got ${JSON.stringify(c.confidence ?? null)}. An unlabelled cue is an agent's opinion wearing a coach's voice, and .conf styling exists for exactly these three.`);
+    }
+    if (!c.cue || String(c.cue).trim().length < 20) fail(where, 'no cue, or one too short to follow');
+    if (!c.test || String(c.test).trim().length < 20) {
+      fail(where, 'no test. Every cue must come with something he can actually check, not a sensation he is supposed to have.');
+    }
+    if (!c.grounding || String(c.grounding).trim().length < 20) {
+      fail(where, 'no grounding. Say where this came from, or say CONVENTION in as many words. The renderer prints this behind the tap that says whether a study exists.');
+    }
+    if ((c.confidence === 'evidence' || c.confidence === 'contested') && !/^https?:\/\//.test(String(c.url || ''))) {
+      fail(where, `confidence is "${c.confidence}" but there is no url to open. An evidence claim he cannot check is a convention claim wearing a better badge.`);
+    }
+  }
+
+  /* AN OPEN QUESTION'S SHAPE, gated here since 2026-09-02 because it was not. content/gym's
+   * validator has gated this for weeks; swim's did not, and plan.json's one `open` row carried no
+   * `topic`, which scripts/gym-notes.mjs prints. Worse, that script read only the two gym files, so
+   * a question parked on 2026-08-28 with a due date of 2026-09-11 was invisible to every mechanism
+   * this repo owns and to all five tabs of the page. `topic` is required because reading nineteen of
+   * these in one block he said "most of the questions are either badly phrased or badly explained",
+   * and part of that was that they all looked alike. */
+  const OPEN_TOPICS = new Set(['cue', 'placement', 'prescription', 'equipment', 'volume', 'unit', 'time']);
+  for (const q of plan.open || []) {
+    const where = 'plan.json/open';
+    if (!q.q || String(q.q).trim().length < 40) fail(where, 'an open question needs a question of at least 40 characters, with the options and the cost of each');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(q.asked || ''))) fail(where, `asked must be a YYYY-MM-DD date, got ${JSON.stringify(q.asked ?? null)}`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(q.due || ''))) fail(where, `due must be a YYYY-MM-DD date, got ${JSON.stringify(q.due ?? null)}. gym-notes.mjs exits non-zero past it, which is the only thing that makes a parked question bite.`);
+    if (!OPEN_TOPICS.has(q.topic)) fail(where, `topic must be one of ${[...OPEN_TOPICS].join(' | ')}, got ${JSON.stringify(q.topic ?? null)}. gym-notes.mjs prints it, because the topic changes what an answer IS.`);
+  }
+
+  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, ${plan.baseline.length} baseline facts, calibration block present, ${(plan.cues || []).length} cues gated, ${(plan.open || []).length} open question(s) with a shape`);
 }
 
 // ---------------------------------------------------------------------------------------------

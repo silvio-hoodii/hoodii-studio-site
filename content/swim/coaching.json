@@ -19,23 +19,20 @@
     "with no quote, on a quote whose source id does not exist, and on an `inference` with no `from`.",
     "An agent cannot add a cue here out of its own head and have it ship."
   ],
-
   "meta": {
     "builtOn": "2026-08-22",
     "stroke": "freestyle",
     "who": "Him, in the water, alone, with nobody watching."
   },
-
   "theQuestion": {
     "title": "Why going slower has not made it easier",
     "body": [
-      "This is the thing he keeps hitting, and it is not a discipline problem. On land, slower is easier. In water it often is not, and the reason is drag.",
-      "US Masters Swimming frames the body as a seesaw and the whole job as reducing drag: 'Your goal is to move through the water like a torpedo' and 'Everything needs to be as straight as possible from head to toe, minimizing any drag.' Drag is what you are fighting, and it does not go away when you slow down. Spending longer in the water per length means spending longer fighting it.",
-      "So 'swim slower' is not the lever. The lever US Masters actually names is stroke count: 'Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.' Fewer strokes at the same speed is the thing that makes 400 m possible. Slower strokes at the same count is not.",
-      "That is also the honest answer to the heart rate. Every one of the checks below is about doing less work per length, not about trying harder to relax."
+      "This is the thing you keep hitting, and it was answered here with a mechanism until 2026-09-02. Two things were measured from your own lengths instead.",
+      "SLOWING DOWN HAS NOT REDUCED YOUR STOPPING. Every swim of 400 m or more this year, split by how fast you actually swam: faster than 1:55 per 100 m, you stood at the wall for 44% of the session. At 1:55 to 2:10, 37%. Slower than 2:10, 39%. The ranges overlap completely, so there is nothing here for a theory to explain.",
+      "AND THE WATCH'S HEART RATE IS NOT THE INSTRUMENT. Across 55 swims this year the median is 141 bpm fast, 141 in the middle, 142 slow. Nothing on this page asks you to hold it down.",
+      "WHAT IS LEFT IS STROKE COUNT, and it is the one lever US Masters name in as many words: 'Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.' Every check below is about moving the same 25 m with fewer pulls. Whether that is what limits your long swims is an open question, not a claim."
     ]
   },
-
   "checks": [
     {
       "id": "count",
@@ -92,11 +89,12 @@
       "id": "hips",
       "n": 6,
       "name": "Press the chest down to bring the legs up",
-      "say": "Sinking legs are the biggest single source of drag, and the fix is at the other end of the body, not in the legs.",
-      "test": "If you kick harder and nothing changes, it is not the kick. Try pressing your chest and head down instead and see whether the legs come up on their own.",
+      "say": "If your legs sit low, the first thing to try is at the other end of the body, not in the legs. US Masters give this as one of TWO strategies and say plainly that it works for some swimmers and not others, so treat it as something to test rather than the answer.",
+      "test": "If you kick harder and nothing changes, it is not the kick. Try pressing your chest and head down instead and see whether the legs come up on their own. If that does nothing either, the other strategy is check 7, tension through the back and hips.",
       "quote": "Press your head and chest, the lighter end of the seesaw, down into the water.",
       "source": "usms-position",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "\"Sinking legs are the biggest single source of drag\" was removed 2026-09-02. It carried a `sourced` badge and the quote beside it says only to press the head and chest down. US Masters present that as the FIRST OF TWO strategies and add, in the next paragraph, \"Some swimmers can use this strategy and it works perfectly and they achieve great alignment. Others aren't so lucky.\" The second strategy is check 7. teaching.json carries the same overreach in its `why` (\"It is the single biggest drag problem in adult freestyle\") and is left for a teaching-tab pass. The quote itself is also lightly recast: the page reads \"The first strategy is to press your head and chest...\", and dropping \"The first strategy is to\" is what turned one option into the answer."
     },
     {
       "id": "tension",
@@ -112,11 +110,12 @@
       "id": "kick-small",
       "n": 8,
       "name": "Small fast kick, from the hip",
-      "say": "A big kick costs a lot of oxygen and buys very little. This matters more than usual for you because the heart rate is the thing you are trying to hold down.",
+      "say": "A big kick costs a lot and buys very little past a certain size. Fast and small, not big.",
       "test": "Watch the water behind you at the wall, or just listen. Big white splashing means the feet are coming out of the air and the kick is too big.",
-      "quote": "Your kick is most effective when you perform it at a high rate of speed, rather than with a large amplitude.",
+      "quote": "Kicking is expensive. It takes a lot of energy to produce speed with your legs, and a big kick takes a lot more energy than a smaller kick.",
       "source": "usms-kick",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "Two changes 2026-09-02. The clause \"This matters more than usual for you because the heart rate is the thing you are trying to hold down\" is gone: his swim heart rate is flat at 141 bpm across a 27 second per 100 m spread, so it is not a target. And the quote was swapped for one that actually supports the sentence. The old pairing put \"A big kick costs a lot of oxygen\" next to a quote about kick amplitude and effectiveness, which does not mention cost. The kick page says the cost part in as many words two screens further down, so the claim was fine and the citation was the wrong sentence. That is the failure this gate cannot catch: a quote is not proof it supports the line above it."
     },
     {
       "id": "kick-origin",
@@ -133,10 +132,11 @@
       "n": 10,
       "name": "Bend the elbow before you pull",
       "say": "The catch is not the pull. It is getting the arm into a shape that can push water backward, and it happens before any force.",
-      "test": "Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm, and the elbow was not bending in time.",
+      "test": "Swim a length with your hands squeezed into tight fists, then a length with open hands, and compare the two length times on the watch. Barely any difference means the forearm is already doing the work and the elbow is bending in time. A big drop with the fists closed means you were pushing with the hand alone.",
       "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.",
       "source": "usms-pull",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "TEST INVERTED UNTIL 2026-09-02. It read: \"Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm.\" That is backwards. Closing the fist removes the hand's surface area, so barely slowing means you were NOT relying on the hand, which is the good outcome. teaching.json's version of the same drill, on the Coach them tab of the same page, states it correctly: \"If they slow down only slightly, the forearm is doing work and the catch is decent.\" One surface, two tabs, opposite conclusions from one test, and the wrong one was on the tab about him. Also \"loose fists\" against the source's own instruction, \"Squeeze your hand tight into a fist and keep it tight throughout your entire stroke cycle\": a loose fist leaves the palm working and the test measures nothing."
     },
     {
       "id": "finish",
@@ -159,7 +159,6 @@
       "confidence": "sourced"
     }
   ],
-
   "sources": [
     {
       "id": "usms-position",
@@ -181,5 +180,6 @@
       "label": "US Masters Swimming, Freestyle: Kick",
       "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick"
     }
-  ]
+  ],
+  "$theQuestionChanged": "REWRITTEN 2026-09-02, adversarial pass. Three things were wrong with the version this replaced, and the first two are the reason the whole tab existed.\n\n1. THE PHYSICS WAS WRONG. It read: \"Drag is what you are fighting, and it does not go away when you slow down. Spending longer in the water per length means spending longer fighting it.\" Drag force scales with roughly the square of speed, so work per length FALLS as you slow down. That sentence treats work as force times time, which is impulse. It was the load-bearing sentence of the tab.\n\n2. IT CONTRADICTED THE PLAN TAB, and gave the opposite instruction. It concluded \"So 'swim slower' is not the lever\", while /swim?s=how opens with a card headed \"The one change: go slower\". Two tabs of one surface, four days apart, opposite prescriptions. And standards.json's profileNote gives a third: \"The cheapest improvement available to you is turnover, not fitness\", which is the opposite of the fewer-strokes lever this tab names. Three levers, two of them opposites. Only the physics sentence and its conclusion were removed here, because which lever is right is not an agent's call; it is in the open question on plan.json.\n\n3. THE HEART-RATE CLOSING LINE was \"That is also the honest answer to the heart rate\", built on his own words \"I think the main thing is that I need to keep my heart rate down\". It cannot be answered with the watch he owns: 141 / 141 / 142 bpm across a 27 second per 100 m spread of moving pace, Pearson r = -0.03 over 55 swims. Same removal was made to plan.json cue 1, which had built a post-swim success test on it and on a per-interval bike heart rate that is recorded nowhere.\n\nThe two paragraphs that replaced them are arithmetic over health_swim_length and health_watch_session, not a mechanism, which is the only kind of answer this file should have been giving to a question about his own swimming."
 }

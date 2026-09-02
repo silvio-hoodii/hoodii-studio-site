@@ -143,6 +143,26 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
             {(closest.next!.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} seconds per 100 m.
           </p>
         )}
+        {/* WHAT THE TWO SIDES OF THAT COMPARISON ACTUALLY ARE, said out loud since 2026-09-02.
+            The left column is Samsung's own personal-record log, which times a stretch of a
+            training swim and counts the walls he stood at. The 1500 m row is 2026-05-22, and that
+            swim went 600 + 100 + 100 + 100 + 600 with four standing rests of 19 to 43 seconds. The
+            right column is a masters standard, which is a race: continuous, from a dive, no stops
+            permitted. Neither number is wrong and the comparison is not like for like, and the
+            sentence above it ("4% faster") is the single most actionable line on this tab. A page
+            that prints a gap has to say what the gap is between. */}
+        <details className="src wk">
+          <summary>What these two columns are, and why they are not the same kind of time</summary>
+          <div className="src-body">
+            Your times come from the watch&rsquo;s own personal-record log: it times a stretch inside
+            a training swim, and it counts the seconds you spent standing at the wall. The 1500 m
+            row is 2026-05-22, and that swim was 600 m, then 100, 100, 100, then 600 m again, with
+            four stops of 19 to 43 seconds in between. The levels on the right are RACE standards:
+            one continuous swim, no stopping. So the gap is real as a gap between two clocks, and it
+            is not a prediction of what you would swim in a race. Swim a timed continuous one and
+            that row becomes comparable.
+          </div>
+        </details>
       </div>
 
       {/* THE WHOLE LADDER, BEHIND A TAP. Ten rungs is 1,200px of a phone screen, and the only two
@@ -430,7 +450,14 @@ export default async function SwimPage({
               two-pace split, on the page that is about swimming. */}
           <div className="exgroup">
             <div className="exgroup-label">
-              What the history says <span className="tag">({now.history.totalSessions} sessions)</span>
+              {/* THE COUNT AND THE CHART ARE ON DIFFERENT CLOCKS and the label said neither.
+                  `totalSessions` is every swim the mirror holds; the bar chart below is the last 90
+                  days. "What the history says (475 sessions)" over a three-month chart invites the
+                  reading that the chart is the 475. The bests below it ARE all-time, which is why
+                  the count stays: it is the right number for three of the four things in this
+                  block and the wrong one for the chart, so both spans now say which. */}
+              What the history says{' '}
+              <span className="tag">(all {now.history.totalSessions} swims; the chart is the last 90 days)</span>
             </div>
             {now.history.bestMovingPacePer100mMs != null && (
               <p className="lede" style={{ marginTop: 0 }}>
@@ -486,9 +513,15 @@ export default async function SwimPage({
                 <div>
                   <div className="stat-k">Swimming pace / 100m</div>
                   <div className="stat-v">{msToPace(now.history.bestMovingPacePer100mMs)}</div>
+                  {/* THE REST SHARE IS PRINTED, since 2026-09-02. It was computed on 2026-08-28,
+                      returned in `bestMovingPaceFrom`, and never rendered, so the caption said
+                      "rest removed, over 1300 m" and left the reader to assume the number was a
+                      pace he had held. It is the average speed of his repeats in a session that
+                      was half standing at the wall, and the only way to stop that reading is to
+                      say so on the tile. */}
                   <div className="stat-d">
                     {now.history.bestMovingPaceFrom
-                      ? `rest removed, over ${now.history.bestMovingPaceFrom.distanceM} m on ${now.history.bestMovingPaceFrom.date}`
+                      ? `rest removed, over ${now.history.bestMovingPaceFrom.distanceM} m of freestyle on ${now.history.bestMovingPaceFrom.date}, a session that was ${now.history.bestMovingPaceFrom.restShare}% rest`
                       : 'rest removed'}
                   </div>
                 </div>

@@ -20,6 +20,11 @@
     "no swimming at all. Someone who cannot float and cannot breathe out underwater does not have a",
     "stroke problem.",
     "",
+    "THAT COUNT OF NINE IS CORRECT AND WAS OVERWRITTEN ONCE. On 2026-08-22 the sources note below",
+    "was changed to say FOUR, with the quote truncated after the fourth bullet, and this paragraph",
+    "was left alone. Re-read over CDP on 2026-09-02: the page lists nine. The file disagreed with",
+    "itself for eleven days and the half that rendered on his phone was the wrong half.",
+    "",
     "THE FREESTYLE HALF is US Masters Swimming's own coaching guides: body position, breathing, pull",
     "and kick. A governing body's coaching resource, not a blog, and the phrasing that is quoted is",
     "quoted rather than paraphrased.",
@@ -73,12 +78,12 @@
           "name": "Float on the front, then on the back",
           "cue": "Face in, arms out, let the legs come up on their own. Do nothing. Then roll over and do the same on the back.",
           "test": "Do they stay up without moving? If the legs sink the moment they stop kicking, they are not floating yet and there is no point talking about a stroke.",
-          "why": "Floating on the front and on the back is Stage 1 of the Swim England framework, alongside submerging the face and blowing bubbles. It comes before travel, not after.",
+          "why": "Floatation and Balance is one of the nine core aquatic skills the Swim England framework names, and it sits ahead of Travel and Coordination in that list. The framework teaches the skills, not the strokes, which is why this stage has no stroke in it.",
           "confidence": "sourced",
-          "grounding": "Floatation and Balance is the FIRST of the four core aquatic skills the Swim England framework names, ahead of any stroke. Marked \"convention\" earlier on 2026-08-22 because swimming.org returns HTTP 403 to a plain fetcher; it loads normally in a real browser over CDP, which is where this sentence came from. A 403 to one tool is not a source that cannot be checked.",
+          "grounding": "Floatation and Balance is the third of the NINE core aquatic skills the Swim England framework names, and every stroke comes after all nine. Marked \"convention\" earlier on 2026-08-22 because swimming.org returns HTTP 403 to a plain fetcher; it loads normally in a real browser over CDP. A 403 to one tool is not a source that cannot be checked. RE-READ 2026-09-02, and the 2026-08-22 pass had the count backwards: it \"corrected\" nine to four, and the page lists nine. See the source note below.",
           "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
           "source": "swim-england",
-          "quote": "It takes a games-led approach to learning to swim, and gives the core aquatic skills needed to become competent swimmers. These are: Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing."
+          "quote": "It takes a games-led approach to learning to swim, and gives the core aquatic skills needed to become competent swimmers. These are: Entry, Exits, Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing, Travel and Coordination, Water Safety, Health and Fitness."
         }
       ]
     },
@@ -93,7 +98,7 @@
           "name": "Press the chest down and the hips come up",
           "cue": "Lean on the chest, as if pressing it gently into the water. The lungs are a float in the top half of the body, so leaning on them lifts the other end.",
           "test": "Watch from the side at the wall. Are the hips near the surface or a foot under it? If the feet are deep and the head is high, they are swimming uphill and everything else they do is fighting that.",
-          "why": "USMS: press your head and chest down into the water to leverage lung buoyancy and elevate your hips. It is the single biggest drag problem in adult freestyle.",
+          "why": "USMS: press your head and chest down into the water to leverage lung buoyancy and elevate your hips. They give it as the FIRST OF TWO strategies and say some swimmers get great alignment from it and others do not, so if it does nothing, the other one is tension through the lower back and hips.",
           "confidence": "sourced",
           "grounding": "US Masters Swimming, Freestyle: Body Position. 'Move through the water like a torpedo.'",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position",
@@ -223,7 +228,8 @@
       "id": "swim-england",
       "label": "Swim England Learn to Swim Framework",
       "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
-      "note": "Names FOUR core aquatic skills, taught through games rather than strokes: Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing. That ordering is why stage 1 here has no swimming in it. Corrected 2026-08-22: this note previously said nine skills and listed nine (entry, exit, floatation, rotation, streamlining, breathing, travel and coordination, water safety, fitness). The page says four. Nobody had opened it, because the fetcher used at the time got a 403 and the number was written from memory instead."
+      "note": "Names NINE core aquatic skills, taught through games rather than strokes: Entry, Exits, Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing, Travel and Coordination, Water Safety, Health and Fitness. That ordering is why stage 1 here has no swimming in it. Re-read over CDP 2026-09-02, after this note spent eleven days saying FOUR.",
+      "$noteChanged": "THE 2026-08-22 \"CORRECTION\" MADE A RIGHT FACT WRONG. From that date this note read \"Names FOUR core aquatic skills\", listed four, and quoted the source sentence with the list cut off after the fourth bullet, on the stated reasoning that the earlier nine had been \"written from memory\" because a fetcher got a 403. The earlier nine was correct. The page lists nine and always did; the four-item read was a truncation presented as a correction, and it shipped with a provenance note boasting that the source had finally been opened.\n\nThe file then disagreed with itself for eleven days: $comment at the top said nine and listed nine, this note said four, and the half that rendered on his phone was the wrong half. The rule the 2026-08-22 note drew is still the right one and it applies to itself: do not trust a note about a source, INCLUDING a note that says it read the source. Read the source."
     },
     {
       "id": "usms-position",

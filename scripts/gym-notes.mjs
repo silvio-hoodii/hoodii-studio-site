@@ -65,14 +65,29 @@ function findOpen(node, path, out) {
   return out;
 }
 
+/* EVERY CONTENT FILE THAT MAY PARK A QUESTION, and `content/swim/plan.json` is on this list since
+ * 2026-09-02 because it was NOT and that cost the exact failure this script's header describes.
+ *
+ * plan.json has carried one `open` row since 2026-08-28, due 2026-09-11: whether the continuity
+ * ladder still fits him now that its premise is dead. Nothing surfaced it. /swim renders no `open`
+ * field on any of its five tabs, content/swim/validate.mjs did not gate the shape, and this script
+ * read two files, both under content/gym. So a question was parked for him with a deadline, in a
+ * file, where no mechanism would ever raise it: the farmer carry again, which is the incident in
+ * this script's own header. A question is only parked if something reads the place you parked it. */
+const QUESTION_FILES = [
+  ['gym', 'program.json'],
+  ['gym', 'equipment.json'],
+  ['swim', 'plan.json'],
+];
+
 function reportOpenQuestions() {
   const found = [];
-  for (const f of ['program.json', 'equipment.json']) {
+  for (const [dir, f] of QUESTION_FILES) {
     try {
-      const json = JSON.parse(readFileSync(join(HERE, '..', 'content', 'gym', f), 'utf8'));
-      findOpen(json, f.replace('.json', ''), found);
+      const json = JSON.parse(readFileSync(join(HERE, '..', 'content', dir, f), 'utf8'));
+      findOpen(json, `${dir}/${f.replace('.json', '')}`, found);
     } catch (err) {
-      console.error(`could not read content/gym/${f}: ${err.message}`);
+      console.error(`could not read content/${dir}/${f}: ${err.message}`);
     }
   }
   if (!found.length) return 0;

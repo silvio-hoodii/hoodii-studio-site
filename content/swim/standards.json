@@ -256,10 +256,13 @@
     "masters ladder. The second is the harder mirror and the more useful one, because it comes with a",
     "target attached.",
     "",
-    "That target is the 1500. You are 4.5% off the B standard there and 18.6% off it at 100 m, which",
-    "is the same tilt every other measure shows: you get relatively better the longer it goes. Your",
-    "stroke says why. About 9 cycles per 25 m at roughly 18 cycles a minute is long, slow and",
-    "glide-heavy, an engine ahead of a technique. The cheapest improvement available to you is",
-    "turnover, not fitness."
-  ]
+    "That target is the 1500. You are 4.5% off the B standard there and 18.6% off it at 100 m, and the",
+    "tilt is the same on every distance: 6.1% at 400 m, 10.8% at 200 m. You get relatively better the",
+    "longer it goes. About 9 cycles per 25 m at roughly 18 cycles a minute is a long, slow stroke.",
+    "",
+    "WHAT TO DO WITH THAT IS NOT SETTLED, and this page used to end by telling you: \"the cheapest",
+    "improvement available to you is turnover, not fitness\". It is parked instead. See the open",
+    "question on the Plan tab."
+  ],
+  "$profileNoteChanged": "THE PRESCRIPTION WAS REMOVED 2026-09-02 AND IT WAS THE THIRD DIFFERENT LEVER ON ONE SURFACE.\n\nIt read \"About 9 cycles per 25 m at roughly 18 cycles a minute is long, slow and glide-heavy, an engine ahead of a technique. The cheapest improvement available to you is turnover, not fitness.\" Three problems.\n\n1. IT CONTRADICTS TWO OTHER TABS. /swim?s=how opens with \"The one change: go slower\", three seconds per length slower. /swim?s=me names stroke count, fewer pulls per length. This said raise turnover, more pulls per minute. Higher turnover and fewer strokes are opposite instructions, and all three shipped inside a week.\n\n2. THE GLIDE-HEAVY READ IS DISCREDITED BY THIS SURFACE'S OWN FILE. plan.json's cues archive, drop 4, says the 2.78 m per cycle figure ignores the push-off, which eats several metres of a 25 m length before the first hand entry, and that the elite comparison range it was measured against carried no citation anywhere. So a recommendation was built on a number the same surface says is probably an artifact.\n\n3. THE FOUR GAP FIGURES ARE NOW ALL PRINTED rather than two, because two points cannot show a tilt. Recomputed 2026-09-02 against health_swim_pb: 1500 m 4.49%, 400 m 6.12%, 200 m 10.78%, 100 m 18.55%. Monotonic, which is what makes the sentence about it true.\n\nWhich lever is right is a judgment about what he wants from the swimming, and there is an open question on plan.json holding exactly that decision."
 }

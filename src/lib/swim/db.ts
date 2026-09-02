@@ -130,6 +130,40 @@ export interface SwimHistory {
  * the 108 sessions with no per-length detail and no session detail keep the raw date rather than
  * being dropped. Fixing this at the source, in the importer, is the real repair; this makes the two
  * halves of one page agree in the meantime. */
+/* THE REST-EXCLUDED PACE IS COMPUTED FROM THE LENGTHS NOW, NOT FROM THE STORED COLUMN.
+ *
+ * Rewritten 2026-09-02, and this is the THIRD pass at the same tile. The column was split in two on
+ * 2026-08-26 and the minimum was floored at "swimming is at least half the session" on 2026-08-28,
+ * each time with a comment saying the artifact was gone. Measured on 2026-09-02 the tile read
+ * **1:39 per 100 m over 1300 m on 2025-05-14**, three blocks under a 100 m freestyle personal best
+ * of 1:38.71. The session behind it: 52 lengths of MIXED STROKE (breaststroke, backstroke and
+ * freestyle together), containing a 9.4 second length, which is below the 12,000 ms floor
+ * `src/lib/swim/deep.ts` calls a sensor miscount because it beats a world-record 25 m split, and a
+ * 67.9 second length against a median of 24.1. It cleared the floor at 51% swimming.
+ *
+ * The floor was the wrong instrument twice because the contamination is not at the session level.
+ * `moving_pace_per_100m_ms` is a stored aggregate over EVERY length in the session whatever stroke
+ * it was and whatever the sensor said, so no session-level threshold can reach inside it.
+ * /swim/deep already filters both, in `LENGTH_MIN_MS`, `LENGTH_MAX_MS` and a freestyle predicate,
+ * and /swim was reading a column that filters neither. Same numbers, two pages, two answers.
+ *
+ * So this recomputes it: freestyle only, lengths inside the same 12 to 60 second band, at least 8
+ * of them, and the session still has to be at least half swimming. The stored column is left alone
+ * because the importer writes it and other things read it; nothing on /swim minimises over it any
+ * more. The rest share is RETURNED AND RENDERED, which it was not: it was computed on 2026-08-28,
+ * put in `bestMovingPaceFrom`, and never printed, so a caption reading "rest removed, over 1300 m"
+ * still let the reader believe the number was a pace he had held. */
+const SWIM_CLEAN_FREESTYLE = `(
+        select ln.session_uuid,
+               sum(ln.duration_ms) as swim_ms,
+               sum(ln.pool_length) as metres,
+               count(*) as n
+          from health_swim_length ln
+         where ln.stroke_type = 'Freestyle'
+           and ln.duration_ms between 12000 and 60000
+         group by 1
+      )`;
+
 const SWIM_LOCAL_DATE = `coalesce(
         ((l.st::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
         ((d.start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
@@ -161,47 +195,51 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
        provenance row selected under a DIFFERENT floor than the minimum would name the wrong swim,
        and a number attributed to the wrong session is worse than the number this replaces. */
     sql`
-      select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m, s.duration_ms,
-             s.moving_pace_per_100m_ms
+      select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, fs.metres as distance_m, s.duration_ms,
+             (fs.swim_ms / (fs.metres / 100.0)) as moving_pace_per_100m_ms
       from health_swim_session s
+      join ${sql.unsafe(SWIM_CLEAN_FREESTYLE)} fs on fs.session_uuid = s.uuid
       left join (
         select session_uuid, min(session_start_time) as st from health_swim_length group by 1
       ) l on l.session_uuid = s.uuid
       left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
-      where s.moving_pace_per_100m_ms > 0
-        and s.duration_ms > 0
-        and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) >= s.duration_ms * 0.5
-      order by s.moving_pace_per_100m_ms asc
+      where s.duration_ms > 0
+        and fs.n >= 8
+        and fs.swim_ms >= s.duration_ms * 0.5
+      order by 4 asc
       limit 1
     `,
     sql`
       select
         max(s.distance_m) filter (where s.distance_m > 0) as longest,
         min(s.pace_per_100m_ms) filter (where s.pace_per_100m_ms > 0) as best_wall_pace,
-        /* THE FLOOR IS THE FIX. moving_pace times distance over 100 is the milliseconds actually
-           spent swimming, so its ratio against duration_ms is the share of the session that was
-           swimming. At least half, or the figure describes a rest interval rather than a pace. See
-           the note on bestMovingPacePer100mMs above for the 82-percent-rest session this excludes.
+        /* THE FLOOR IS ONE OF TWO GUARDS AND IT WAS NEVER THE MAIN ONE. The share of the session
+           that was swimming has to be at least half, or the figure describes a rest interval
+           rather than a pace. But the pace itself now comes from fs, the freestyle band-filtered
+           lengths, because the stored column mixes strokes and includes sensor miscounts and no
+           session-level floor can reach inside an aggregate. See SWIM_CLEAN_FREESTYLE above for the
+           mixed-stroke session with a 9.4 second length that this tile printed as 1:39 per 100 m.
            NO BACKTICKS IN HERE: this is inside a tagged template and a backtick ends it. That cost a
-           typecheck today, and it is the fifth instance of the same class in one session. */
-        min(s.moving_pace_per_100m_ms) filter (
-          where s.moving_pace_per_100m_ms > 0
+           typecheck once, and it is the fifth instance of the same class in one session. */
+        min(fs.swim_ms / (fs.metres / 100.0)) filter (
+          where fs.n >= 8
             and s.duration_ms > 0
-            and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) >= s.duration_ms * 0.5
+            and fs.swim_ms >= s.duration_ms * 0.5
         ) as best_moving_pace,
-        count(*) filter (where s.moving_pace_per_100m_ms > 0) as moving_sessions,
+        count(*) filter (where fs.n >= 8) as moving_sessions,
         /* How many were excluded BY THE FLOOR rather than by having no detail, because those are two
            different facts and a page that conflates them is back where it started. */
         count(*) filter (
-          where s.moving_pace_per_100m_ms > 0
+          where fs.n >= 8
             and s.duration_ms > 0
-            and (s.moving_pace_per_100m_ms * s.distance_m / 100.0) < s.duration_ms * 0.5
+            and fs.swim_ms < s.duration_ms * 0.5
         ) as mostly_rest_sessions,
         count(*) as total,
         /* THE LINE THE READER SEES, so it is the one that had to stop disagreeing with the card at
            the top of the page. Derived, per SWIM_LOCAL_DATE above. */
         max(${sql.unsafe(SWIM_LOCAL_DATE)})::text as last_on
       from health_swim_session s
+      left join ${sql.unsafe(SWIM_CLEAN_FREESTYLE)} fs on fs.session_uuid = s.uuid
       left join (
         select session_uuid, min(session_start_time) as st from health_swim_length group by 1
       ) l on l.session_uuid = s.uuid
@@ -261,9 +299,25 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
  *  and it did.
  *
  *  A PIECE ENDS AT A RECORDED REST. `rest_after_ms` is what the watch stores between lengths, so a
- *  run of consecutive lengths with no rest between them is one unbroken swim. Sessions with no rest
- *  data at all are excluded rather than counted as one enormous piece, which is the flattering
- *  reading and the one this file has been burned by before.
+ *  run of consecutive lengths with no rest between them is one unbroken swim.
+ *
+ *  THE GUARD THAT WAS MEANT TO EXCLUDE THE PRE-2025 ERA DID NOTHING, and that was measured on
+ *  2026-09-02. It read `where rest_after_ms is not null`, and its own docstring said "sessions with
+ *  no rest data at all are excluded rather than counted as one enormous piece, which is the
+ *  flattering reading and the one this file has been burned by before". The column is **0, never
+ *  NULL**: 19,327 of 19,327 rows are non-null, including all 10,037 rows from 2018 to 2024 that
+ *  `src/lib/swim/deep.ts` correctly describes as carrying no rest. So every row passed. The only
+ *  reason it never printed a 2,000 m "unbroken" piece is that `limit 10` and `limit 40` both land
+ *  inside 2026, where he swims often enough that the window never reaches back.
+ *
+ *  THE REPLACEMENT IS THE DISCRIMINATOR, NOT AN ERA TEST. A session's rest data is usable if it
+ *  either records a rest, or the session clock proves there was none to record: session duration
+ *  minus the sum of the lengths. That proxy tracks the recorded rest at r = 0.95 across the 185
+ *  sessions carrying both, slope 1.06, and **not one of those 185 comes in under 30 seconds**. So a
+ *  gap under 30 s means no rest, in any year, and it is the only test that can see the five 2,000 m
+ *  swims of March and April 2023 where the two clocks agree to within 23 seconds. Those are his
+ *  longest continuous swims on record, 3.3 times the 600 m this plan calls his longest piece, and
+ *  the old guard is the reason nothing on /swim could see them.
  */
 export interface LongestPiece {
   date: string;
@@ -293,10 +347,16 @@ export async function getLongestPieces(limit = 10): Promise<LongestPiece[]> {
       ) l on l.session_uuid = ln.session_uuid
       left join health_session_detail d on d.uuid = ln.session_uuid and d.kind = 'swimming'
      where ln.session_uuid in (
-       select session_uuid from health_swim_length
-        where rest_after_ms is not null
-        group by session_uuid
-        order by min(session_start_time) desc
+       /* USABLE REST DATA, per the note above: the session records a rest, or the session clock
+          proves there was none. The old test, rest_after_ms is not null, passed every row in the
+          table, including eight years that carry no rest at all. */
+       select ln2.session_uuid
+         from health_swim_length ln2
+         left join health_swim_session s2 on s2.uuid = ln2.session_uuid
+        group by ln2.session_uuid
+       having sum(coalesce(ln2.rest_after_ms, 0)) > 0
+           or max(s2.duration_ms) - sum(ln2.duration_ms) <= 30000
+        order by min(ln2.session_start_time) desc
         limit ${limit}
      )
      order by ln.session_start_time desc, ln.length_index asc
