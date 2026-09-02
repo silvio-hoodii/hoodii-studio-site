@@ -83,10 +83,10 @@
           "test": "Do they stay up without moving? If the legs sink the moment they stop kicking, they are not floating yet and there is no point talking about a stroke.",
           "why": "Floatation and Balance is one of the nine core aquatic skills the Swim England framework names, and it sits ahead of Travel and Coordination in that list. The framework teaches the skills, not the strokes, which is why this stage has no stroke in it.",
           "confidence": "sourced",
-          "grounding": "Floatation and Balance is the third of the NINE core aquatic skills the Swim England framework names, and every stroke comes after all nine. Marked \"convention\" earlier on 2026-08-22 because swimming.org returns HTTP 403 to a plain fetcher; it loads normally in a real browser over CDP. A 403 to one tool is not a source that cannot be checked. RE-READ 2026-09-02, and the 2026-08-22 pass had the count backwards: it \"corrected\" nine to four, and the page lists nine. See the source note below.",
+          "grounding": "Floatation and Balance is the third of the NINE core aquatic skills the Swim England framework names, and every stroke comes after all nine. Marked \"convention\" earlier on 2026-08-22 because swimming.org returns HTTP 403 to a plain fetcher; it loads normally in a real browser over CDP. A 403 to one tool is not a source that cannot be checked. RE-READ 2026-09-02, and the 2026-08-22 pass had the count backwards: it \"corrected\" nine to four, and the page lists nine. See the source note below. QUOTE NARROWED 2026-09-02 to the sentence, because the nine skills are a BULLETED LIST on the page and joining them with commas is punctuation nobody wrote. The nine, as the page lists them: Entry, Exits, Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing, Travel and Coordination, Water Safety, Health and Fitness. That is a reading of a list, stated as one, rather than a quotation.",
           "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
           "source": "swim-england",
-          "quote": "It takes a games-led approach to learning to swim, and gives the core aquatic skills needed to become competent swimmers. These are: Entry, Exits, Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing, Travel and Coordination, Water Safety, Health and Fitness."
+          "quote": "It takes a games-led approach to learning to swim, and gives the core aquatic skills needed to become competent swimmers."
         }
       ]
     },
@@ -106,7 +106,7 @@
           "grounding": "US Masters Swimming, Freestyle: Body Position. 'Move through the water like a torpedo.'",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position",
           "source": "usms-position",
-          "quote": "Press your head and chest, the lighter end of the seesaw, down into the water.",
+          "quote": "The first strategy is to press your head and chest, the lighter end of the seesaw, down into the water.",
           "sharedWith": [
             "coaching:hips"
           ]

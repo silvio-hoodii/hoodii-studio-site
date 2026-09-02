@@ -16,12 +16,30 @@
  * Run: node content/swim/validate.mjs
  * Zero dependencies on purpose.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const readJson = (f) => JSON.parse(readFileSync(join(HERE, f), 'utf8'));
+
+/* ONE normalisation, shared with capture-source.mjs, and it must stay identical to the copy there.
+   Whitespace collapsed, curly quotes and dashes folded, nothing else: anything cleverer lets a
+   quote drift a word and still pass, which is the failure this whole gate exists to stop. */
+/* Right single and double quotes, left single and double quotes, em and en dash, no-break space.
+   BY CHARACTER CODE, not as literals in a regex: scripts/lint-prose.mjs refuses those characters
+   anywhere in this repo, and a line whose whole job is to strip them is the one place that rule
+   collides with itself. Codes carry no literal and need no escape, so nothing here can be eaten by
+   a shell, a paste or a linter. */
+const FOLD = { 8217: "'", 8216: "'", 8220: '"', 8221: '"', 8212: '-', 8211: '-', 160: ' ' };
+const WHITESPACE = new RegExp(String.fromCharCode(92) + 's+', 'g');
+const normalise = (s) =>
+  String(s)
+    .split('')
+    .map((ch) => FOLD[ch.charCodeAt(0)] ?? ch)
+    .join('')
+    .replace(WHITESPACE, ' ')
+    .trim();
 
 const plan = readJson('plan.json');
 const swimStandards = readJson('standards.json');
@@ -375,6 +393,95 @@ function checkSharedQuotes(files) {
   }
   out.push(`ok    [shared quotes] ${shared} sentence(s) cited on more than one tab, every side declaring the other`);
 }
+
+/* EVERY QUOTE MUST BE ON THE PAGE IT NAMES. Added 2026-09-02, and it is the answer to the one
+ * question he asked outright:
+ *
+ *   "Cues are invented sometimes because of the agent. I don't know how we can make sure that
+ *    doesn't happen ... I should be able to say, this comes from here, this comes from there."
+ *
+ * Until today `validate.mjs` required a quote to EXIST and a source id to RESOLVE. Nothing compared
+ * the quote to the page. That is the state the kitchen was in until 2026-08-17, when its verbatim
+ * check was found to be comparing a step's `text` against its `sourceText`, both typed by the same
+ * agent: it verified that an agent agreed with itself.
+ *
+ * `content/swim/capture-source.mjs` captures each page verbatim into sources/<id>.txt over CDP,
+ * hashed and dated. This asserts every quote appears in the capture for the source it names, under
+ * ONE normalisation shared by both files: whitespace collapsed, curly quotes and dashes folded.
+ * Nothing else is normalised, because anything cleverer lets a quote drift and still pass.
+ *
+ * TWO THINGS IT CANNOT DO, and saying so is the point rather than a caveat:
+ *
+ *   TRUNCATION IS STILL A SUBSTRING. The 2026-08-22 Swim England quote was cut after the fourth of
+ *   nine listed skills with a full stop added, and the file was then edited to claim the framework
+ *   names four. This gate would have passed it. So it PRINTS THE 120 CHARACTERS FOLLOWING each
+ *   quote in the source, which puts the continuation in front of whoever runs it. That is reporting,
+ *   not a gate, and it is labelled that way in the output.
+ *
+ *   IT CANNOT CHECK THAT THE SENTENCE BESIDE A QUOTE IS SUPPORTED BY IT. That is the failure that
+ *   put "Sinking legs are the biggest single source of drag" above a quote saying only to press the
+ *   chest down. No checker can read for that. The structural answer is in the content: the source's
+ *   words carry the instruction, and agent prose is labelled as not being from the source. */
+function checkQuotesAgainstSources() {
+  const dir = join(HERE, 'sources');
+  const indexPath = join(dir, 'index.json');
+  if (!existsSync(indexPath)) {
+    fail('sources/', 'no sources/index.json. Every quote on this surface is unverifiable until the pages are captured: node content/swim/capture-source.mjs <id> <url>');
+    return;
+  }
+  const index = JSON.parse(readFileSync(indexPath, 'utf8'));
+  const text = new Map();
+  for (const [id, meta] of Object.entries(index)) {
+    const f = join(dir, meta.file);
+    if (!existsSync(f)) { fail('sources/', `index names ${meta.file} for "${id}" and it is not there`); continue; }
+    text.set(id, normalise(readFileSync(f, 'utf8')));
+  }
+
+  const items = [];
+  for (const c of swimCoaching.checks || []) items.push(['coaching.json', c.id || c.name, c.source || c.from, c.quote || c.fromQuote]);
+  for (const st of swimTeaching.stages || []) for (const c of st.cues || []) items.push(['teaching.json', c.name, c.source, c.quote]);
+
+  let checked = 0;
+  const followed = [];
+  for (const [file, name, sourceId, quote] of items) {
+    if (!quote) continue;
+    const where = `${file}/${name}`;
+    if (!sourceId) { fail(where, 'carries a quote and names no source, so nothing can check it'); continue; }
+    const hay = text.get(sourceId);
+    if (!hay) {
+      fail(where, `quotes source "${sourceId}", which has no capture. Run: node content/swim/capture-source.mjs ${sourceId} <url>`);
+      continue;
+    }
+    const needle = normalise(quote);
+    const at = hay.indexOf(needle);
+    checked++;
+    if (at === -1) {
+      /* The longest prefix that DOES appear, so the message says where it stopped matching rather
+         than just that it failed. A quote that drifts one word is the common case and this points
+         straight at the word. */
+      let keep = 0;
+      for (let n = 20; n <= needle.length; n += 10) if (hay.includes(needle.slice(0, n))) keep = n;
+      fail(where, `this quote is NOT on the captured page for "${sourceId}". ${keep ? `The first ${keep} characters match and it diverges after: ...${needle.slice(Math.max(0, keep - 40), keep + 40)}...` : 'Not one 20-character run of it appears.'} Either it was typed rather than copied, or the page changed: node content/swim/capture-source.mjs --check`);
+      continue;
+    }
+    const after = hay.slice(at + needle.length, at + needle.length + 120).trim();
+    if (after) followed.push([`${file}/${name}`, after]);
+  }
+
+  if (!FAIL && checked) {
+    out.push(`ok    [sources] ${checked} quote(s) found verbatim on the pages they name, across ${text.size} captured source(s)`);
+    /* NOT A GATE, AND IT SAYS SO. A truncated quote passes the check above; this is what makes one
+       visible. Read it whenever a quote is added or changed. */
+    out.push('note  [sources] WHAT THE PAGE SAYS NEXT, after each quote. A quote that stops mid-list is');
+    out.push('      still a substring and this gate cannot refuse it. Read these when you add a quote:');
+    for (const [label, after] of followed) {
+      out.push(`        ${label}`);
+      out.push(`          ...${after}`);
+    }
+  }
+}
+
+checkQuotesAgainstSources();
 
 checkSharedQuotes([
   ['coaching', swimCoaching.checks || []],

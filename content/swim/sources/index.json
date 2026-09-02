@@ -1,0 +1,37 @@
+{
+  "usms-position": {
+    "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position",
+    "file": "usms-position.txt",
+    "fetchedOn": "2026-09-02",
+    "sha256": "8304c279ca6a32ce",
+    "characters": 40213
+  },
+  "usms-breathing": {
+    "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing",
+    "file": "usms-breathing.txt",
+    "fetchedOn": "2026-09-02",
+    "sha256": "603f01f712256ab3",
+    "characters": 30051
+  },
+  "usms-pull": {
+    "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull",
+    "file": "usms-pull.txt",
+    "fetchedOn": "2026-09-02",
+    "sha256": "4e93cdf9aeab00df",
+    "characters": 39171
+  },
+  "usms-kick": {
+    "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick",
+    "file": "usms-kick.txt",
+    "fetchedOn": "2026-09-02",
+    "sha256": "9898ba12cce6ae10",
+    "characters": 38489
+  },
+  "swim-england": {
+    "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
+    "file": "swim-england.txt",
+    "fetchedOn": "2026-09-02",
+    "sha256": "0f09fc77c48d211b",
+    "characters": 9274
+  }
+}
