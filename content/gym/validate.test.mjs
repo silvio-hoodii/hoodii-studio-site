@@ -172,8 +172,15 @@ const sharedStationBlock = (p) => {
  *  contents touches one block, needs no second file, and cannot reach any other day. */
 const rebuildBlockAs = (p, leadId, partnerId) => {
   const cat = CATALOGUE();
-  const block = Object.values(p.days || {}).flatMap((d) => d.blocks || [])
-    .find((b) => (b.exercises || []).length === 2);
+  /* The OWNING DAY is tracked now, not just the block, because the warmup belongs to the day and
+     has to stay consistent with what this helper puts at the front of it. See the warmup note at
+     the bottom of this function. */
+  let owner = null;
+  let block = null;
+  for (const d of Object.values(p.days || {})) {
+    const hit = (d.blocks || []).find((b) => (b.exercises || []).length === 2);
+    if (hit) { owner = d; block = hit; break; }
+  }
   if (!block) throw new Error('no two-exercise block at all; repoint this case');
   const slot = (id, sets, reps, rest) => {
     const v = cat[id];
@@ -209,6 +216,28 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
      announce, so the honest value is none. */
   block.label = 'Suite Pair';
   delete block.tag;
+  /* AND SO DOES THE WARMUP, added 2026-09-02 with the gate that made it matter. A day's warmup has
+     to prepare whatever it OPENS with, and this helper can put a new lift at the front of the day.
+     It landed a split squat at the head of a session warmed up for the upper body and the new gate
+     refused it correctly, which the case above then reported as a failure of the shareable-station
+     rule. Third time this helper has had to learn the same lesson: replacing a block's contents
+     means replacing everything that describes them. */
+  const firstWorking = (owner?.blocks || []).find((b) => b.role !== 'primer' && (b.exercises || []).length);
+  if (owner && firstWorking === block) {
+    /* CATALOGUE() returns the bare VARIANT, and most variants carry no muscle list of their own:
+       they inherit the group's. Reading `cat[leadId].primary` got undefined for the split squat and
+       the warmup was set to "upper" for a leg exercise, which is the same bug in the fixture that
+       the gate had just caught in the programme. Resolve the group fallback the way every other
+       reader of this catalogue does. */
+    const raw = JSON.parse(readFileSync(join(HERE, 'movements.json'), 'utf8'));
+    let leadPrimary = [];
+    for (const m of Object.values(raw.movements)) {
+      const v = m.variants.find((x) => x.id === leadId || (x.aliases ?? []).includes(leadId));
+      if (v) { leadPrimary = v.primary ?? m.primary ?? []; break; }
+    }
+    const LOWER = ['quads', 'hamstrings', 'glutes', 'adductors', 'calves'];
+    owner.warmup = leadPrimary.some((m) => LOWER.includes(m)) ? 'lower' : 'upper';
+  }
   return block;
 };
 

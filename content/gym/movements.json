@@ -650,15 +650,6 @@
       "confidence": "anatomy",
       "variants": [
         {
-          "id": "db-bench-press",
-          "name": "DB Bench Press",
-          "implement": "dumbbell",
-          "zone": "benchDb",
-          "station": "bench",
-          "loadable": true,
-          "note": "At 75 lb dumbbells he presses 150 lb, against a 185 lb BARBELL bench he logged on 2026-05-25 before it was dropped with no reason recorded. This is the lift that has moved least."
-        },
-        {
           "id": "bb-bench-press",
           "name": "BB Bench Press",
           "implement": "barbell",
@@ -684,7 +675,11 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": "bench",
-          "loadable": true
+          "loadable": true,
+          "aliases": [
+            "db-bench-press"
+          ],
+          "note": "HIS ONLY HORIZONTAL PRESS, and it is an incline. He said so twice: note #31 on 2026-08-28 (\"Im also doing lowest incline bench instead of flat\") and note #45 on 2026-09-01 (\"Db I do low incline no flat\"). The first was marked handled without the card changing. `db-bench-press` is an ALIAS rather than a separate variant because his 29 logged sets under that id were performed on this incline: they are not flat-bench work being borrowed, they are this work stored under the wrong name, so the ladder is one ladder. FLAT IS NOT IN THE CATALOGUE ANY MORE. If he wants it back it is a variant again, not an alias, and the two histories separate from that day forward."
         },
         {
           "id": "smith-bench-press",

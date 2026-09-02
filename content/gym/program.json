@@ -180,7 +180,7 @@
     "monday": {
       "name": "Session A",
       "title": "Session A: press fresh, squat heavy",
-      "warmup": "lower",
+      "warmup": "upper",
       "cooldown": [
         "pigeon",
         "couch"
@@ -263,7 +263,7 @@
               ]
             }
           ],
-          "why": "Jumps first, while you are completely fresh, because what they train is how fast you leave the floor and a tired jump is a slow jump. Five sets of three is fifteen jumps and it is not volume: it does not count toward the set total on this card, on your own ruling that five sets of three jumps do not weigh the same as three sets of a real lift."
+          "why": "Jumps first, while you are completely fresh, because what they train is how fast you leave the floor and a tired jump is a slow jump. Five sets of three is fifteen jumps, which is the same dose as the three sets of three a side on the other primer day: eighteen contacts. It is not volume and it does not count toward the set total on this card, on your own ruling that five sets of three jumps do not weigh the same as three sets of a real lift."
         },
         {
           "role": "main",
@@ -318,7 +318,7 @@
               "log": true,
               "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
               "progression": "weight",
-              "rangeWidth": 5,
+              "rangeWidth": 6,
               "whyHere": "The sideways lunge goes in the press rest because it is done with the legs and the press is done sitting down with the arms.",
               "alts": [
                 {
@@ -1029,15 +1029,15 @@
           "tag": "(bench, walk in hand)",
           "exercises": [
             {
-              "id": "db-bench-press",
-              "name": "DB Bench Press",
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
               "sets": 3,
               "reps": "8",
               "rest": "2 min",
               "zone": "benchDb",
               "station": "bench",
               "log": true,
-              "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
+              "cue": "SET THE BENCH ONE OR TWO NOTCHES UP FROM FLAT, about 30 degrees, not half way up. This is what you have been doing since at least 28 August and the card was still saying flat, so your logged weights come with you and nothing resets. THE DIFFERENCE, since you asked in the note box: neither one is better. Flat works the middle and lower chest, an incline works the top of the chest and more front shoulder, and they are two halves of the same muscle. The steeper you go the more the shoulder takes over, which is why one or two notches and no more. Success looks like: you feel it across your collarbone rather than under your nipple line. If the shoulders are doing all of it, drop the bench a notch. Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "progression": "weight",
               "rangeWidth": 3,
               "alts": [
@@ -1054,13 +1054,6 @@
                   "zone": "machines",
                   "station": "assisted-dip",
                   "cue": "Lean your chest forward to bias the chest. Enough counterweight for 8 clean reps. You had 5 strict dips in May, so this is trackable."
-                },
-                {
-                  "id": "db-incline-press",
-                  "name": "DB Incline Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench one or two notches up from flat, dumbbells. About 30 degrees, which is one or two notches, not half way up. More work for the top of the chest and the front of the shoulder, less for the middle and lower chest. Your note #31 asked what the difference is: neither is better, they are different halves of the same muscle, and the steeper you go the more the shoulder takes over. Success looks like: you feel it across your collarbone rather than under your nipple line. If your shoulders are doing all of it, lower the bench a notch. If you are doing this instead of flat, SWAP TO IT on the card so your log says what you actually pressed."
                 },
                 {
                   "id": "pec-deck",
@@ -1084,7 +1077,7 @@
               "bodyweight": false,
               "timed": true,
               "progression": "time",
-              "whyHere": "the carry goes in the press rest: it trains the grip, which a bench press does not",
+              "whyHere": "the carry goes in the press rest: it trains the grip, which pressing does not",
               "alts": [
                 {
                   "id": "db-hold",
@@ -1119,7 +1112,7 @@
               ]
             }
           ],
-          "why": "The chest and the lats are the two muscles here that get no helper credit from anything at all, which is why both are expensive to cover and why both used to sit at the bottom of the week. Nothing else asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which a bench press does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
+          "why": "The chest and the lats are the two muscles here that get no helper credit from anything at all, which is why both are expensive to cover and why both used to sit at the bottom of the week. Nothing else asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which pressing does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
         }
       ]
     },
@@ -1243,15 +1236,15 @@
           "tag": "(bench, dumbbells in hand)",
           "exercises": [
             {
-              "id": "db-bench-press",
-              "name": "DB Bench Press",
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
               "sets": 3,
               "reps": "8",
               "rest": "2 min",
               "zone": "benchDb",
               "station": "bench",
               "log": true,
-              "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
+              "cue": "SET THE BENCH ONE OR TWO NOTCHES UP FROM FLAT, about 30 degrees, not half way up. This is what you have been doing since at least 28 August and the card was still saying flat, so your logged weights come with you and nothing resets. THE DIFFERENCE, since you asked in the note box: neither one is better. Flat works the middle and lower chest, an incline works the top of the chest and more front shoulder, and they are two halves of the same muscle. The steeper you go the more the shoulder takes over, which is why one or two notches and no more. Success looks like: you feel it across your collarbone rather than under your nipple line. If the shoulders are doing all of it, drop the bench a notch. Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "progression": "weight",
               "rangeWidth": 3,
               "alts": [
@@ -1268,13 +1261,6 @@
                   "zone": "machines",
                   "station": "assisted-dip",
                   "cue": "Lean your chest forward to bias the chest. Enough counterweight for 8 clean reps. You had 5 strict dips in May, so this is trackable."
-                },
-                {
-                  "id": "db-incline-press",
-                  "name": "DB Incline Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench one or two notches up from flat, dumbbells. About 30 degrees, which is one or two notches, not half way up. More work for the top of the chest and the front of the shoulder, less for the middle and lower chest. Your note #31 asked what the difference is: neither is better, they are different halves of the same muscle, and the steeper you go the more the shoulder takes over. Success looks like: you feel it across your collarbone rather than under your nipple line. If your shoulders are doing all of it, lower the bench a notch. If you are doing this instead of flat, SWAP TO IT on the card so your log says what you actually pressed."
                 },
                 {
                   "id": "pec-deck",
@@ -1502,7 +1488,7 @@
     "friday": {
       "name": "Session D",
       "title": "Session D: squat and hinge, press after",
-      "warmup": "upper",
+      "warmup": "lower",
       "cooldown": [
         "pigeon",
         "couch"
@@ -1525,7 +1511,7 @@
               "log": true,
               "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump on Monday: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
               "bodyweight": true,
-              "progression": "reps",
+              "progression": "fixed",
               "alts": [
                 {
                   "id": "box-jump",
@@ -1585,7 +1571,7 @@
               ]
             }
           ],
-          "why": "Three bounds a side and that is the whole set. Same reason as the jumps on the squat session: what you are training is how hard you can push off in one go, and a tired bound is a slow bound. It does not count toward the set total on this card."
+          "why": "Three bounds a side and that is the whole set. THE SAME DOSE AS THE JUMPS, and the units hid it: five sets of three jumps is fifteen contacts, three sets of three a side is eighteen. What you are training is how hard you can push off in one go, and a tired bound is a slow bound. Neither counts toward the set total on this card, and neither one asks you to add reps."
         },
         {
           "role": "main",
@@ -1798,7 +1784,7 @@
               "log": true,
               "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
               "progression": "weight",
-              "rangeWidth": 5,
+              "rangeWidth": 6,
               "whyHere": "The sideways lunge goes in the rest because it is the only loaded sideways movement on the card and it shares nothing with a hinge.",
               "alts": [
                 {
@@ -1940,15 +1926,15 @@
           "tag": "(bench, walk in hand)",
           "exercises": [
             {
-              "id": "db-bench-press",
-              "name": "DB Bench Press",
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
               "sets": 3,
               "reps": "6",
               "rest": "2 min",
               "zone": "benchDb",
               "station": "bench",
               "log": true,
-              "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
+              "cue": "SET THE BENCH ONE OR TWO NOTCHES UP FROM FLAT, about 30 degrees, not half way up. This is what you have been doing since at least 28 August and the card was still saying flat, so your logged weights come with you and nothing resets. THE DIFFERENCE, since you asked in the note box: neither one is better. Flat works the middle and lower chest, an incline works the top of the chest and more front shoulder, and they are two halves of the same muscle. The steeper you go the more the shoulder takes over, which is why one or two notches and no more. Success looks like: you feel it across your collarbone rather than under your nipple line. If the shoulders are doing all of it, drop the bench a notch. Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "progression": "weight",
               "rangeWidth": 3,
               "alts": [
@@ -1965,13 +1951,6 @@
                   "zone": "machines",
                   "station": "assisted-dip",
                   "cue": "Lean your chest forward to bias the chest. Enough counterweight for 8 clean reps. You had 5 strict dips in May, so this is trackable."
-                },
-                {
-                  "id": "db-incline-press",
-                  "name": "DB Incline Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench one or two notches up from flat, dumbbells. About 30 degrees, which is one or two notches, not half way up. More work for the top of the chest and the front of the shoulder, less for the middle and lower chest. Your note #31 asked what the difference is: neither is better, they are different halves of the same muscle, and the steeper you go the more the shoulder takes over. Success looks like: you feel it across your collarbone rather than under your nipple line. If your shoulders are doing all of it, lower the bench a notch. If you are doing this instead of flat, SWAP TO IT on the card so your log says what you actually pressed."
                 },
                 {
                   "id": "pec-deck",
@@ -1995,7 +1974,7 @@
               "bodyweight": false,
               "timed": true,
               "progression": "time",
-              "whyHere": "the carry goes in the press rest: it trains the grip, which a bench press does not",
+              "whyHere": "the carry goes in the press rest: it trains the grip, which pressing does not",
               "alts": [
                 {
                   "id": "db-hold",
@@ -2030,7 +2009,7 @@
               ]
             }
           ],
-          "why": "The heavy chest slot, six to nine reps. Nothing else in the week asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which a bench press does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
+          "why": "The heavy chest slot, six to nine reps. Nothing else in the week asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which pressing does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
         }
       ]
     }

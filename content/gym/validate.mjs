@@ -521,6 +521,36 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       + `Keep the head to ${CHIP_MAX} characters or fewer: that is what fits four chips in two rows at 390px.`);
   }
   if (!warmups[day.warmup]) fail(dayKey, `warmup "${day.warmup}" not found in warmups.json`);
+
+  /* ------ THE WARMUP MUST MATCH WHAT THE SESSION STARTS WITH. Added 2026-09-02, on his note.
+   *
+   * His words, note #43: "the warmp did change, still seems like upper". He was reading Session D,
+   * which opens with a barbell back squat and was handing him band pull-aparts, wall slides, band
+   * external rotations and arm circles. Session A had the mirror of it: an overhead press first and
+   * the clamshell/frog-pump/deep-squat/ankle-rocker set.
+   *
+   * WHY IT DRIFTED, and it is a consequence of a change nobody followed through. While the split was
+   * upper/lower, `warmup: "lower"` on a lower day was true by construction. Every session is FULL
+   * BODY now, so the label describes nothing on its own and both wrong answers survived four gates,
+   * two probes and a screenshot: nothing in this repo related the warmup to the exercises.
+   *
+   * The rule that is left is the one that matters at the rack: warm up what he does FIRST, because
+   * that is the lift that has to be ready. The primer is skipped, for the same reason gym-order
+   * skips it: a box jump is not what the day is about. This is a judgement, and it is written here
+   * rather than in prose so a future full-body reshuffle cannot quietly break it again. */
+  const WARMUP_REGION = { lower: 'lower', upper: 'upper' };
+  const firstWorking = (day.blocks || []).find((b) => b.role !== 'primer' && (b.exercises || []).length);
+  const leadId = firstWorking?.exercises?.[0]?.id;
+  const leadInfo = leadId && MOVEMENTS ? MOVEMENTS[leadId] : null;
+  if (leadInfo && WARMUP_REGION[day.warmup]) {
+    const LOWER = ['quads', 'hamstrings', 'glutes', 'adductors', 'calves'];
+    const region = (leadInfo.primary ?? []).some((m) => LOWER.includes(m)) ? 'lower' : 'upper';
+    if (region !== WARMUP_REGION[day.warmup]) {
+      fail(dayKey, `this session opens with "${firstWorking.exercises[0].name}", which is a ${region}-body lift, and its warmup is "${day.warmup}". `
+        + `Every session is full body now, so the warmup label says nothing on its own: the rule is that it prepares whatever is done FIRST. `
+        + `Set warmup to "${region}", or move an ${WARMUP_REGION[day.warmup]}-body lift to the front of the session.`);
+    }
+  }
   for (const cdKey of day.cooldown || []) {
     if (!cooldowns[cdKey]) fail(dayKey, `cooldown key "${cdKey}" not found in cooldowns.json`);
   }
