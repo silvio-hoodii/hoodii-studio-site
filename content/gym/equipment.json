@@ -314,6 +314,12 @@
           "name": "Stairmaster",
           "confidence": "stated",
           "sharedInOneWindow": false
+        },
+        "rower": {
+          "name": "Rowing machine",
+          "confidence": "stated",
+          "note": "Confirmed by him on 2026-09-02, answering the one thing the week design could not resolve: 'yes there is a rower machine at the gym'. NOTHING PRESCRIBES IT YET. It has zero logged sets and zero watch sessions in its whole life, and the cardio slot it is a candidate for is still an open ruling. What this record does is make it representable: until today the equipment file said the cardio floor held a treadmill, a bike, an elliptical and a stairmaster, so a rower could not be offered even as an option.",
+          "sharedInOneWindow": false
         }
       }
     },
