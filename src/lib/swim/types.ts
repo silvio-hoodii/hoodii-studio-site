@@ -113,6 +113,10 @@ export interface SwimCoaching {
     source?: string;
     from?: string;
     fromQuote?: string;
+    /** The entry on the OTHER coaching tab that quotes the same sentence, as "<file>:<id or name>".
+     *  content/swim/validate.mjs requires both sides to name each other. See checkSharedQuotes there
+     *  for the three defects that came out of two tabs quoting one sentence without knowing it. */
+    sharedWith?: string[];
   }[];
   sources: { id: string; label: string; url: string; note?: string }[];
 }

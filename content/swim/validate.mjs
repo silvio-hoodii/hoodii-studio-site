@@ -311,6 +311,76 @@ function checkGroundedCues(fileLabel, doc, entries) {
   }
 }
 
+/* TWO TABS QUOTING ONE SENTENCE MUST KNOW ABOUT EACH OTHER. Added 2026-09-02.
+ *
+ * His words, having opened both coaching tabs: "what about all the coaching sections they seem to be
+ * just the same thing twice". Measured: SIX of the nine cues on Coach them carry the EXACT SAME
+ * verbatim quote as a check on Coach me, and seven of eleven topics appear on more than one tab, four
+ * of them on all three.
+ *
+ * THE SPLIT ITSELF IS SOUND and this gate does not touch it. The tests really are different in kind:
+ * all nine Coach them tests are things he watches from the deck, and the Coach me ones are things he
+ * does to himself. One source sentence honestly supports two different actions.
+ *
+ * WHAT IS NOT SOUND IS THAT NEITHER SIDE KNEW ABOUT THE OTHER, and it produced three real defects in
+ * one day:
+ *   - The closed-fist test was INVERTED on Coach me ("if you barely slow down you were pushing with
+ *     your hand") and correct on Coach them, from the same quote.
+ *   - "Sinking legs are the biggest single source of drag" outran the same quote on BOTH tabs, and
+ *     survived only because one pass happened to read both files.
+ *   - Two kick tests work on the deck and are unperformable in the water. They were written from the
+ *     deck versions: he cannot see his own knees, which is the exact reason plan.json DELETED its own
+ *     kick cue.
+ *
+ * So the executable question is not "do these contradict", which nothing can check. It is: DOES EACH
+ * SIDE DECLARE THE OTHER? A `sharedWith` that must resolve makes the pairing visible at edit time and
+ * in the diff, which is the thing that was missing. An agent changing one now has the other named in
+ * the file it is editing.
+ *
+ * Law 5's move, from .agents/ENGINEERING.md: when an adversary finds the same class twice, stop fixing
+ * instances and ask what question it was really asking. Sometimes that question is executable. */
+function checkSharedQuotes(files) {
+  const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const byQuote = new Map();
+  const entries = new Map();
+  for (const [label, list] of files) {
+    for (const c of list) {
+      const key = `${label}:${c.id || c.name}`;
+      entries.set(key, c);
+      const q = c.quote || c.fromQuote;
+      if (!q) continue;
+      const k = `${c.source || c.from || '?'}||${norm(q)}`;
+      if (!byQuote.has(k)) byQuote.set(k, []);
+      byQuote.get(k).push({ key, c, label });
+    }
+  }
+  let shared = 0;
+  for (const group of byQuote.values()) {
+    const tabs = new Set(group.map((g) => g.label));
+    if (tabs.size < 2) continue;
+    shared++;
+    for (const { key, c } of group) {
+      const others = group.filter((g) => g.key !== key).map((g) => g.key);
+      const declared = Array.isArray(c.sharedWith) ? c.sharedWith : [];
+      for (const o of others) {
+        if (!declared.includes(o)) {
+          fail(key, `quotes the same sentence as "${o}" and does not declare it. Add ${JSON.stringify(o)} to sharedWith. One source sentence on two tabs is allowed and often right; two tabs that do not know about each other is how the closed-fist test ended up inverted on one of them.`);
+        }
+      }
+      for (const d of declared) {
+        if (!entries.has(d)) fail(key, `sharedWith names "${d}", which does not exist. Keys are <file>:<id or name>.`);
+        else if (!others.includes(d)) fail(key, `sharedWith names "${d}", which does not quote the same sentence. A stale pairing is worse than none: it says the two were checked together when they were not.`);
+      }
+    }
+  }
+  out.push(`ok    [shared quotes] ${shared} sentence(s) cited on more than one tab, every side declaring the other`);
+}
+
+checkSharedQuotes([
+  ['coaching', swimCoaching.checks || []],
+  ['teaching', (swimTeaching.stages || []).flatMap((st) => st.cues || [])],
+]);
+
 checkGroundedCues('coaching.json', swimCoaching, swimCoaching.checks || []);
 checkGroundedCues('teaching.json', swimTeaching, (swimTeaching.stages || []).flatMap((st) => st.cues || []));
 if ((swimCoaching.checks || []).length) {

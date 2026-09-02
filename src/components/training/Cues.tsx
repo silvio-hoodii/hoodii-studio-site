@@ -14,6 +14,12 @@ import type { Cue } from '@/lib/gym/types';
  * Moved out of the conditioning page on 2026-08-26 when swim became its own route. Both surfaces
  * render cues from content files that share this shape, and the teaching handbook on /swim passes
  * its own `heading` and `intro` for the reason spelled out below. */
+/** "coaching:kick-origin" to "the Coach me tab". The key is a data pointer; this is the sentence. */
+export function sharedLabel(key: string): string {
+  const file = key.split(':')[0];
+  return file === 'coaching' ? 'the Coach me tab' : file === 'teaching' ? 'the Coach them tab' : file ?? key;
+}
+
 export default function Cues({
   cues,
   note,
@@ -63,6 +69,17 @@ export default function Cues({
                   <p className="ex-cue">&ldquo;{c.quote}&rdquo;</p>
                 </div>
               )}
+              {/* THE PAIRING, SHOWN. Six sentences are quoted on both coaching tabs of /swim, which
+                  is what made him ask whether the two are "just the same thing twice". They are not:
+                  one source sentence, two different actions, one you do and one you watch. That is a
+                  design decision and it was invisible, so it read as a copy. Saying it costs a line
+                  inside an already-collapsed body. */}
+              {c.sharedWith?.length ? (
+                <div className="ex-meta quiet">
+                  Also on <b>{sharedLabel(c.sharedWith[0]!)}</b>, from this same sentence. Same
+                  physics, different job: one is what you do, the other is what you watch for.
+                </div>
+              ) : null}
               {c.grounding && (
                 <details className="src">
                   <summary>{c.confidence === 'convention' ? 'No study behind this' : 'Where this comes from'}</summary>

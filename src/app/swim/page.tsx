@@ -11,7 +11,7 @@ import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
-import Cues from '@/components/training/Cues';
+import Cues, { sharedLabel } from '@/components/training/Cues';
 import { shortDate } from '@/lib/format';
 import type { SwimCoaching, SwimTeaching } from '@/lib/swim/types';
 
@@ -272,6 +272,12 @@ function SwimCoachMe({ c }: { c: SwimCoaching }) {
                 <div className="ex-cue">{k.say}</div>
                 {k.say2 && <div className="ex-cue">{k.say2}</div>}
                 <div className="ex-meta cue-test"><b>How you check it.</b> {k.test}</div>
+                {k.sharedWith?.length ? (
+                  <div className="ex-meta quiet">
+                    Also on <b>{sharedLabel(k.sharedWith[0]!)}</b>, from this same sentence. Same
+                    physics, different job: one is what you do, the other is what you watch for.
+                  </div>
+                ) : null}
                 {quote && (
                   <div className="stale cue-quote">
                     <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>

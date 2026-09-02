@@ -42,7 +42,10 @@
       "test": "Count one arm only, the same arm, from push-off to the wall. Your logged median is 9 cycles per 25 m. Anything above your own normal on a given length means that length was less efficient, whatever it felt like.",
       "quote": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.",
       "source": "usms-pull",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "sharedWith": [
+        "teaching:Count strokes per length and keep the count honest"
+      ]
     },
     {
       "id": "count-drift",
@@ -63,27 +66,35 @@
       "test": "If you arrive at the breath and have to blow out first before you can suck in, the exhale was not finished. Done right there is nothing to blow out and the breath is only an inhale.",
       "quote": "You should exhale while your mouth is underwater and inhale when it's out of the water.",
       "source": "usms-breathing",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "sharedWith": [
+        "teaching:Breathe OUT under the water"
+      ]
     },
     {
       "id": "exhale-final",
       "n": 4,
       "name": "The last blow-out",
       "say": "After the breath, exhale slowly the whole time your face is down, then clear the lungs hard right before the next one.",
-      "test": "Continuous bubbles the entire time your face is in the water, ending in a burst. No quiet gap.",
+      "test": "Hum, and listen for the gap. A continuous hum is a continuous exhale, because humming and holding your breath cannot happen at the same time. A silent stretch before the breath means you were holding air. Then check the breath itself: is your first action out of the water a suck, or do you have to blow out first?",
       "quote": "After inhaling and returning your head to the water, patiently and slowly exhale.",
       "source": "usms-breathing",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "TEST REPLACED 2026-09-02. It read \"Continuous bubbles the entire time your face is in the water, ending in a burst. No quiet gap.\" HE CANNOT SEE HIS OWN BUBBLES. plan.json cue 4, on the How tab of the same page, says exactly that and solved it: \"You cannot see your own bubbles, so make it audible instead: hum.\" One surface, one problem, solved on one tab and not on the other. The hum test is lifted from that cue rather than invented here."
     },
     {
       "id": "breath-frequency",
       "n": 5,
       "name": "Pick a breathing pattern and keep it",
-      "say": "For anything over about 75 seconds, which is every length you care about, breathe every 2nd or 3rd stroke, the same all the way.",
+      "say": "For any effort longer than about 75 seconds, which is every continuity piece and every repeat of 100 m or more, breathe every 2nd or 3rd stroke, the same all the way.",
       "test": "The pattern is the test. If you find yourself grabbing a breath early, that length was too hard, and the fix is the stroke count, not more air.",
       "quote": "breathing every other or every third stroke will ensure that you get the air you need",
       "source": "usms-breathing",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "UNIT COLLISION FIXED 2026-09-02. It read \"For anything over about 75 seconds, which is every length you care about\". The source's 75 seconds is a RACE OR EFFORT duration: \"Once you're swimming longer than 75 seconds, breathing every other or every third stroke will ensure that you get the air you need.\" A LENGTH is 25 m and takes him about 29 seconds, and plan.json cue 7 defines it that way off the Garmin manual: \"Length: One trip down the pool.\" So no length he swims is over 75 seconds, and the gloss said the opposite on a tab whose first check is about counting lengths.",
+      "sharedWith": [
+        "teaching:Breathe on a rhythm you chose before you started"
+      ]
     },
     {
       "id": "hips",
@@ -94,38 +105,46 @@
       "quote": "Press your head and chest, the lighter end of the seesaw, down into the water.",
       "source": "usms-position",
       "confidence": "sourced",
-      "$whyChanged": "\"Sinking legs are the biggest single source of drag\" was removed 2026-09-02. It carried a `sourced` badge and the quote beside it says only to press the head and chest down. US Masters present that as the FIRST OF TWO strategies and add, in the next paragraph, \"Some swimmers can use this strategy and it works perfectly and they achieve great alignment. Others aren't so lucky.\" The second strategy is check 7. teaching.json carries the same overreach in its `why` (\"It is the single biggest drag problem in adult freestyle\") and is left for a teaching-tab pass. The quote itself is also lightly recast: the page reads \"The first strategy is to press your head and chest...\", and dropping \"The first strategy is to\" is what turned one option into the answer."
+      "$whyChanged": "\"Sinking legs are the biggest single source of drag\" was removed 2026-09-02. It carried a `sourced` badge and the quote beside it says only to press the head and chest down. US Masters present that as the FIRST OF TWO strategies and add, in the next paragraph, \"Some swimmers can use this strategy and it works perfectly and they achieve great alignment. Others aren't so lucky.\" The second strategy is check 7. teaching.json carries the same overreach in its `why` (\"It is the single biggest drag problem in adult freestyle\") and is left for a teaching-tab pass. The quote itself is also lightly recast: the page reads \"The first strategy is to press your head and chest...\", and dropping \"The first strategy is to\" is what turned one option into the answer.",
+      "sharedWith": [
+        "teaching:Press the chest down and the hips come up"
+      ]
     },
     {
       "id": "tension",
       "n": 7,
       "name": "Hold the back and hips firm",
-      "say": "The legs stay up because the back of the body is under tension, not because the kick is holding them there.",
+      "say": "The legs stay up because the back of the body is under tension, and that is the second of the two strategies. Check 6 is the first one.",
       "test": "Push off the wall and glide with no kick at all. Count how long before the legs drop. That number going up over weeks is the body line improving.",
       "quote": "Your lower back and hips are key for creating tension in the back of your body. This tension holds your legs up at the surface of the water, preventing them from sinking.",
       "source": "usms-position",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "\"not because the kick is holding them there\" was removed 2026-09-02. usms-kick says the opposite in as many words: the kick \"works to maintain your body position in the water by keeping your hips up. By keeping your hips up, you'll face less drag as you move through the water.\" So this check contradicted a page cited two checks further down, on the same tab. The two strategies framing is the source's own and now runs across checks 6 and 7 rather than being asserted in one of them."
     },
     {
       "id": "kick-small",
       "n": 8,
       "name": "Small fast kick, from the hip",
       "say": "A big kick costs a lot and buys very little past a certain size. Fast and small, not big.",
-      "test": "Watch the water behind you at the wall, or just listen. Big white splashing means the feet are coming out of the air and the kick is too big.",
+      "test": "Feel the soles of your feet. If you feel air on them, the feet are leaving the water and the kick is too big; a kick you can hold for 20 minutes stays under the surface the whole time. If your pool allows a phone on the deck, stand it at the end of the lane and film one length. That is the only instrument that answers this one for a swimmer on his own.",
       "quote": "Kicking is expensive. It takes a lot of energy to produce speed with your legs, and a big kick takes a lot more energy than a smaller kick.",
       "source": "usms-kick",
       "confidence": "sourced",
-      "$whyChanged": "Two changes 2026-09-02. The clause \"This matters more than usual for you because the heart rate is the thing you are trying to hold down\" is gone: his swim heart rate is flat at 141 bpm across a 27 second per 100 m spread, so it is not a target. And the quote was swapped for one that actually supports the sentence. The old pairing put \"A big kick costs a lot of oxygen\" next to a quote about kick amplitude and effectiveness, which does not mention cost. The kick page says the cost part in as many words two screens further down, so the claim was fine and the citation was the wrong sentence. That is the failure this gate cannot catch: a quote is not proof it supports the line above it."
+      "$whyChanged": "TEST REPLACED 2026-09-02, and the old one was unperformable twice over. It read \"Watch the water behind you at the wall, or just listen. Big white splashing means the feet are coming out of the air and the kick is too big.\" He cannot watch the water behind him with his face in the water, and \"just listen\" is the banned audible-cue class: HOODII/CLAUDE.md records \"wait until it sizzles rather than hisses\" failing at the stove on 2026-08-02, and plan.json's own dropped kick cue was deleted partly because \"the audible criterion was a third party's report from three lanes away\". The replacement is a touch he genuinely has. The source's error is feet leaving the water: \"a foot that's not in the water cannot create propulsion\"."
     },
     {
       "id": "kick-origin",
       "n": 9,
       "name": "The kick starts at the hip",
       "say": "Not at the knee. A knee-driven kick is the one that burns the legs and slows you down.",
-      "test": "If your knees are bending first and your feet are cycling like a bicycle, it is coming from the knee.",
+      "test": "There is no test for this one that you can run with your face in the water, and this page is not going to pretend otherwise. If your pool allows a phone on the deck, stand it at the end of the lane and film one length. That is the only instrument that answers this one for a swimmer on his own. Watch whether the knee bends first and the foot cycles like a bicycle, or whether the whole leg moves and the knee follows.",
       "quote": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third.",
       "source": "usms-kick",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "TEST REPLACED 2026-09-02. It read \"If your knees are bending first and your feet are cycling like a bicycle, it is coming from the knee.\" HE CANNOT SEE HIS OWN KNEES OR FEET. That is verbatim the reason plan.json deleted its kick cue: \"The test was unperformable: he cannot see his own heels, knees or feet while looking at the bottom tiles.\" The same surface deleted a cue for this on the How tab and kept it on the Coach me tab, because the Coach me version was written from the Coach them version, where the test works: on the deck you ARE looking at somebody's knees.\n\nNO REPLACEMENT SENSATION WAS INVENTED. plan.json's precedent is the honest one: \"I have no grounded, testable kick cue to replace it with, so the plan ships with nothing about the kick. That is the honest outcome.\" The cue is kept because the instruction is sound and sourced; the test says what instrument the check actually needs.",
+      "sharedWith": [
+        "teaching:The kick starts at the hip, not the knee"
+      ]
     },
     {
       "id": "catch",
@@ -136,27 +155,33 @@
       "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.",
       "source": "usms-pull",
       "confidence": "sourced",
-      "$whyChanged": "TEST INVERTED UNTIL 2026-09-02. It read: \"Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm.\" That is backwards. Closing the fist removes the hand's surface area, so barely slowing means you were NOT relying on the hand, which is the good outcome. teaching.json's version of the same drill, on the Coach them tab of the same page, states it correctly: \"If they slow down only slightly, the forearm is doing work and the catch is decent.\" One surface, two tabs, opposite conclusions from one test, and the wrong one was on the tab about him. Also \"loose fists\" against the source's own instruction, \"Squeeze your hand tight into a fist and keep it tight throughout your entire stroke cycle\": a loose fist leaves the palm working and the test measures nothing."
+      "$whyChanged": "TEST INVERTED UNTIL 2026-09-02. It read: \"Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm.\" That is backwards. Closing the fist removes the hand's surface area, so barely slowing means you were NOT relying on the hand, which is the good outcome. teaching.json's version of the same drill, on the Coach them tab of the same page, states it correctly: \"If they slow down only slightly, the forearm is doing work and the catch is decent.\" One surface, two tabs, opposite conclusions from one test, and the wrong one was on the tab about him. Also \"loose fists\" against the source's own instruction, \"Squeeze your hand tight into a fist and keep it tight throughout your entire stroke cycle\": a loose fist leaves the palm working and the test measures nothing.",
+      "sharedWith": [
+        "teaching:Bend the elbow and point the palm backwards"
+      ]
     },
     {
       "id": "finish",
       "n": 11,
       "name": "Finish the pull past the hip",
-      "say": "A short pull is a wasted pull, and it shows up straight away in the stroke count.",
+      "say": "A short pull gives away the last and strongest part of the stroke.",
       "test": "Your hand should brush past your thigh on the way out. If it leaves the water at your waist, you gave away the last and strongest part of the stroke.",
       "quote": "your hands should finish your pull just past your hips. Your arm should not be completely straight at this point.",
       "source": "usms-pull",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "say2": "It should also show up in the count: if each pull moves less water you need more pulls for the same 25 m. That link is reasoning from the stroke-count quote in check 1, not something US Masters say about the finish.",
+      "$whyChanged": "\"and it shows up straight away in the stroke count\" was asserted next to a `sourced` badge on 2026-09-02 and is now marked as the inference it is. The quote covers where the hand finishes and says nothing about stroke count."
     },
     {
       "id": "rotation",
       "n": 12,
       "name": "Rotate the whole spine at once",
       "say": "Rotation is what lets the arm reach and pull properly. Rotating the shoulders while the hips stay flat is not rotation, it is a twist, and it costs you.",
-      "test": "Shoulders and hips should arrive at the same time. If your hips stay flat while your shoulder turns, you are twisting rather than rotating.",
+      "test": "Not something you can feel reliably, and not something you can see. If your pool allows a phone on the deck, stand it at the end of the lane and film one length. That is the only instrument that answers this one for a swimmer on his own. From the end of the lane, do the shoulder and the hip turn together, or does the shoulder turn while the hips stay flat? What you CAN check alone is the consequence: if your stroke count climbs on the side you breathe to, the rotation is not symmetric.",
       "quote": "Rotation only works if you keep your spine relatively straight. Your whole spine needs to rotate in the same way at the same time for your rotation to fulfill its function.",
       "source": "usms-position",
-      "confidence": "sourced"
+      "confidence": "sourced",
+      "$whyChanged": "TEST REPLACED 2026-09-02. It read \"Shoulders and hips should arrive at the same time. If your hips stay flat while your shoulder turns, you are twisting rather than rotating.\" That is an observation of his own trunk from outside his own body. Same shape as the Pallof cue the 2026-08-28 session called out, whose success test was \"someone standing behind you could not tell which side the cable is on\": correct, and not a test he can run alone. The stroke-count half is the one consequence the watch does record."
     }
   ],
   "sources": [

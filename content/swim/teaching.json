@@ -72,7 +72,10 @@
           "grounding": "US Masters Swimming, Freestyle: Breathing. Drills named there include Bobs and Blowout Bobs, which are exactly this.",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing",
           "source": "usms-breathing",
-          "quote": "You should exhale while your mouth is underwater and inhale when it's out of the water."
+          "quote": "You should exhale while your mouth is underwater and inhale when it's out of the water.",
+          "sharedWith": [
+            "coaching:exhale"
+          ]
         },
         {
           "name": "Float on the front, then on the back",
@@ -103,7 +106,10 @@
           "grounding": "US Masters Swimming, Freestyle: Body Position. 'Move through the water like a torpedo.'",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position",
           "source": "usms-position",
-          "quote": "Press your head and chest, the lighter end of the seesaw, down into the water."
+          "quote": "Press your head and chest, the lighter end of the seesaw, down into the water.",
+          "sharedWith": [
+            "coaching:hips"
+          ]
         },
         {
           "name": "The head does not lift to breathe, it turns",
@@ -145,7 +151,10 @@
           "grounding": "US Masters Swimming, Freestyle: Pull. 'Drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.'",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull",
           "source": "usms-pull",
-          "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side."
+          "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.",
+          "sharedWith": [
+            "coaching:catch"
+          ]
         },
         {
           "name": "The kick starts at the hip, not the knee",
@@ -156,7 +165,10 @@
           "grounding": "US Masters Swimming, Freestyle: Kick. 'Your down-kick begins at your hip, your knee moves second, and your ankle moves third.'",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick",
           "source": "usms-kick",
-          "quote": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third."
+          "quote": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third.",
+          "sharedWith": [
+            "coaching:kick-origin"
+          ]
         }
       ]
     },
@@ -176,7 +188,10 @@
           "grounding": "US Masters Swimming, Freestyle: Breathing. Every 2 to 4 strokes for efforts of 30 to 75 seconds, every 2 to 3 for longer.",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/breathing",
           "source": "usms-breathing",
-          "quote": "breathing every other or every third stroke will ensure that you get the air you need"
+          "quote": "breathing every other or every third stroke will ensure that you get the air you need",
+          "sharedWith": [
+            "coaching:breath-frequency"
+          ]
         },
         {
           "name": "Count strokes per length and keep the count honest",
@@ -187,7 +202,10 @@
           "grounding": "Was marked convention until 2026-08-22. There IS a source for it, found while grounding the coach-me file: US Masters Swimming say it in as many words.",
           "url": "https://www.usms.org/fitness-and-training/guides/freestyle/pull",
           "source": "usms-pull",
-          "quote": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming."
+          "quote": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.",
+          "sharedWith": [
+            "coaching:count"
+          ]
         }
       ]
     }

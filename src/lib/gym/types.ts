@@ -265,6 +265,10 @@ export interface Cue {
    *  the same job as no quote at all. Nine were added to content/swim/teaching.json before
    *  anybody noticed this component had nowhere to put them. */
   quote?: string | null;
+  /** SWIM ONLY, so far. The entry on the other coaching tab quoting the same sentence, as
+   *  "<file>:<id or name>". content/swim/validate.mjs makes both sides declare each other; this is
+   *  the half he can see, so a cue that appears twice reads as a decision rather than a copy. */
+  sharedWith?: string[] | null;
   source?: string | null;
 }
 
