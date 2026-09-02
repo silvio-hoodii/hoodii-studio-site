@@ -99,7 +99,18 @@ const anyOpenExercise = (p) => {
  *  read out of the real files rather than fabricated. Both halves of the shareable-station rule use
  *  it: one asserts this shape validates, the next withdraws the permission and requires a refusal.
  *  Reads the CATALOGUE station, not the slot's, because the placement gate already forces those to
- *  agree and the catalogue is the thing a mutation cannot quietly contradict. */
+ *  agree and the catalogue is the thing a mutation cannot quietly contradict.
+ *
+ *  IT BUILDS THE SHAPE WHEN THE WEEK NO LONGER HAS ONE, added 2026-09-01, and that is the same move
+ *  `partnerWithOpen` above already makes. The programme had exactly one shareable-station pair, the
+ *  split squat with the dumbbell bench press on one bench. He then read the live card and said the
+ *  blocks led by accessories were "not actual lifts"; the fix pairs each of the week's 17 station
+ *  lifts with one accessory, which is what made every block compound-led, and that pairing was the
+ *  casualty. Both cases died with "repoint this case" on a programme that is not wrong.
+ *
+ *  WHAT IS UNDER TEST IS THE GATE, NOT THE CURRENT CONTENTS OF THE FILE. A rule that can only be
+ *  exercised while some unrelated block happens to survive is a rule that goes untested the first
+ *  time a programme changes shape, which is exactly what happened here. */
 const sharedStationBlock = (p) => {
   const cat = JSON.parse(readFileSync(join(HERE, 'movements.json'), 'utf8'));
   const equip = JSON.parse(readFileSync(join(HERE, 'equipment.json'), 'utf8'));
@@ -111,7 +122,7 @@ const sharedStationBlock = (p) => {
     }
   }
   const shareable = (zone, station) => Boolean(equip.zones?.[zone]?.stations?.[station]?.sharedInOneWindow);
-  return Object.values(p.days || {})
+  const found = Object.values(p.days || {})
     .flatMap((d) => d.blocks || [])
     .find((b) => {
       if (!['fill', 'alternate'].includes(b.pairing) || (b.exercises || []).length !== 2) return false;
@@ -119,6 +130,34 @@ const sharedStationBlock = (p) => {
       if (!a || !c || !a.station) return false;
       return a.zone === c.zone && a.station === c.station && shareable(a.zone, a.station);
     });
+  if (found) return found;
+
+  /* Nothing in the week has the shape, so build it. The pair is DERIVED rather than named: any two
+     catalogue variants on one shareable station will do, and hardcoding two ids is how every other
+     fixture in this file went stale. It still throws if the gym has no shareable station at all,
+     because then the rule genuinely cannot be exercised and somebody has to know. */
+  const primaries = new Map();
+  for (const m of Object.values(cat.movements)) {
+    for (const v of m.variants) primaries.set(v.id, v.primary ?? m.primary ?? []);
+  }
+  const onShareable = [];
+  for (const [id, where] of place) {
+    if (where.station && shareable(where.zone, where.station)) onShareable.push({ id, ...where });
+  }
+  /* THE DERIVED PAIR MUST ALSO SATISFY ZHANG, and the first run of this did not: it picked the split
+     squat and the DB step-up, which are both quads and glutes, so the fixture tripped the
+     shared-muscle gate and reported that correct refusal as a failure of the shareable-station rule.
+     A fixture that has to be legal in every other respect has to be built that way on purpose. */
+  let pair = null; let other = null;
+  for (const a of onShareable) {
+    const hit = onShareable.find((b) => b.id !== a.id && b.zone === a.zone && b.station === a.station
+      && !(primaries.get(b.id) ?? []).some((mu) => (primaries.get(a.id) ?? []).includes(mu)));
+    if (hit) { pair = a; other = hit; break; }
+  }
+  if (!pair || !other) {
+    throw new Error('no two catalogue variants share one shareable station without sharing a muscle, so the shareable-station rule cannot be exercised at all. Do not weaken the case: check equipment.json still declares a shareable station.');
+  }
+  return rebuildBlockAs(p, pair.id, other.id);
 };
 
 /** Replace a two-exercise block's exercises with slots built from the CATALOGUE, and rewrite the
@@ -162,9 +201,14 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
   /* THE TAG MOVES WITH THE EXERCISES. A separate gate refuses a tag naming kit no exercise in the
      block uses, and the first run of this helper landed on Monday's squat block, whose tag reads
      "(rack, dumbbells in hand)": it reported that correct refusal as a failure of the adjacency
-     rule. A helper that replaces a block's contents has to replace everything that describes them. */
+     rule. A helper that replaces a block's contents has to replace everything that describes them.
+     THE TAG IS NOW DELETED RATHER THAN REBUILT, fixed 2026-09-01. It was `(${lead.zone})`, which
+     happened to be legal for the zones this helper had been used on and is not a general truth:
+     `benchDb` is not a word TAG_EQUIPMENT or TAG_PROSE knows, so the moment a case derived a bench
+     pair the fixture failed on its own tag. A tag is optional and a synthetic block has no kit to
+     announce, so the honest value is none. */
   block.label = 'Suite Pair';
-  block.tag = `(${lead.zone})`;
+  delete block.tag;
   return block;
 };
 

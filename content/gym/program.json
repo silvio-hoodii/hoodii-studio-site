@@ -1,82 +1,102 @@
 {
   "$comment": [
-    "REBUILT 2026-09-01, the second rebuild that day and the one that answers the gate rather than the",
-    "programme. That morning `scripts/gym-targets.mjs` was rewritten to grade DIRECT sets against one",
-    "quoted floor instead of fractional sets against sixteen hand-tuned bands, and the week then live",
-    "failed it on FIVE muscles. This is the week built against it.",
+    "REBUILT 2026-09-01, three times in one day, and the third pass is the one he read on his phone and",
+    "pushed back on. Read the weekday section first if you only read one.",
     "",
     "EVERY NUMBER IN THIS COMMENT WAS COMPUTED, and the command is named beside it. A number in a",
     "comment that nothing recomputes is a rumour.",
     "",
-    "WHAT THE WEEK IS",
+    "WHAT THE WEEK IS. Four sessions, full body, flat, on his ruling: \"lets do full body flat\".",
     "",
-    "  Monday     back squat heavy, row, overhead press, lower back            5 blocks, 29 sets",
-    "  Tuesday    pulldown fresh, RDL heavy, front squat, split squat, calves  5 blocks, 30 sets",
-    "  Thursday   split squat and bench fresh, squat, row, lower back          4 blocks, 24 sets",
-    "  Friday     overhead press fresh, bench heavy, hinge, trunk and grip      5 blocks, 27 sets",
+    "  Session A   overhead press fresh, back squat heavy, row, lower back     5 blocks, 29 sets",
+    "  Session B   pulldown fresh, RDL heavy, front squat, split squat, bench  5 blocks, 30 sets",
+    "  Session C   split squat and bench fresh, row, lower back                4 blocks, 24 sets",
+    "  Session D   back squat, RDL, overhead press, bench heavy                5 blocks, 27 sets",
     "",
-    "FOUR DAYS, FULL BODY, FLAT, on his ruling: \"lets do full body flat\". Flat is a statement about the",
-    "TARGET, not about the delivery. `content/gym/targets.json` carries one floor of 4 direct sets and",
-    "one target of 10 for all sixteen muscles, both quoted from Iversen 2021, and nothing is tuned per",
-    "muscle any more.",
+    "THEY ARE NOT CALLED MONDAY ANY MORE, AND HIS OWN LOG IS WHY. He said \"still using weekdays as",
+    "names\" and I should have checked before ever writing them: 26 of his last 36 logged sessions were",
+    "performed on a DIFFERENT weekday than the card they came from, and his training is spread almost",
+    "evenly across all seven days. The weekday names were fiction the whole time.",
     "",
-    "WHAT THE REBUILD FIXED, and what it did not.",
-    "`node --experimental-strip-types scripts/gym-targets.mjs`. DIRECT sets: sets of an exercise where",
-    "the muscle is a prime mover of a joint action the exercise performs. Assistance is reported and",
-    "never gated.",
+    "THE KEYS ARE STILL WEEKDAYS AND THAT IS A KNOWN, DELIBERATE INCONSISTENCY. `gym_set.day` holds",
+    "monday/tuesday/thursday/friday on hundreds of rows, `src/lib/gym/week.ts` maps the integrated week",
+    "and the never-more-than-three-in-a-row rule onto real weekdays, and conditioning.json assigns its",
+    "slots the same way. Renaming the keys is a migration across four surfaces and a history. Nothing he",
+    "READS says a weekday now, and the session he trains is whichever card he opens.",
+    "",
+    "EVERY BLOCK IS LED BY A REAL LIFT, which is the second thing he pushed back on: \"one leading with",
+    "calves and the other woth justa deadbugs and carries seems like not actual lifts\", and \"leading",
+    "with lumbar extension?\". Four blocks had an accessory as their lead. The week holds exactly 17",
+    "station-holding lifts and exactly 17 accessories, so pairing them ONE TO ONE makes every block",
+    "compound-led and costs nothing at all: 102 working sets and 59 sets that own the clock, both",
+    "unchanged. The old shape wasted two leads by pairing the split squat with the bench press, which",
+    "forced two accessories into blocks of their own.",
+    "",
+    "DEAD BUGS ARE GONE AND HANGING KNEE RAISES TOOK BOTH ABDOMINAL SLOTS, on his ruling: \"if im doing",
+    "bb rows I rather do hanging knee raises than deadbugs might be a little more work for back but I",
+    "wont lay down\". Both sit behind a barbell row, which is what he asked for, and it answers an open",
+    "question that had been sitting on the RDL since 2026-08-27. equipment.json now declares the rack",
+    "and the pull-up bar on top of it ADJACENT, quoting him, and keeps the earlier refusal visible",
+    "rather than deleting it: the bar had been refused because he once said that walk works \"only when",
+    "the gym is not busy\", and what he said then was about a walk, while this bar is on top of the",
+    "uprights of the rack he is already standing in. If the bar is taken, the swap list carries the dead",
+    "bug and the hollow hold, so a wrong \"you can\" costs a swap and not a session.",
+    "",
+    "AND THE ABDOMINAL ATTRIBUTION WAS CHECKED BEFORE IT WAS LEANED ON, which is the lesson from four",
+    "hours earlier. `hanging-knee-raise` sat in the `anti-extension` group, whose jointAction is",
+    "\"Resisting lumbar extension isometrically\". That is what a dead bug does. A knee raise MOVES the",
+    "spine, and the variant carried an unconfirmed jointActionNote of its own. It is in a new",
+    "`trunk-flexion` group now, with cable-crunch, and the cue was rewritten to ask for the pelvic curl",
+    "at the top, because the abdominal credit depends on it: stop when the thighs are level and it is",
+    "hip work with the abdominals only holding on.",
+    "",
+    "WHAT THE REBUILD FIXED. `node --experimental-strip-types scripts/gym-targets.mjs`. DIRECT sets:",
+    "sets of an exercise where the muscle is a prime mover of a joint action the exercise performs.",
     "",
     "                              was    now",
+    "  Spinal erectors              0      6     <- see below, it took a correction and a question",
     "  Adductors                    3      6",
     "  Rhomboids and mid traps      3      6",
     "  Front deltoids               3      6",
     "  Triceps                      3      6",
-    "  Spinal erectors              0      6     <- and read the next section",
     "  Lats                         6      9",
     "  Calves                       9      6     <- paid for the four above",
     "  Abdominals and obliques      9      6     <- paid for the four above",
     "",
-    "ALL FIVE MUSCLES BELOW THE FLOOR NOW CLEAR IT, and the lowest number anywhere in the week is 6,",
-    "which is 50% clear of the floor of 4. Two muscles that were comfortably above came down to 6 to pay",
-    "for it, and that trade is the flat ruling doing its job: a week with nine sets of calf work and none",
-    "at all for four other muscles is not flat, it is the shape the old programme happened to have.",
+    "ALL SIXTEEN MUSCLES CLEAR THE FLOOR and the lowest number anywhere is 6, which is 50% clear of the",
+    "floor of 4. Two muscles that were comfortably above came down to pay for it, and that trade is the",
+    "flat ruling doing its job: a week with nine sets of calf work and none at all for four other",
+    "muscles is not flat, it is the shape the old programme happened to have.",
     "",
-    "THE ERECTORS ARE THE STORY OF THIS FILE, AND THE PROGRAMME WAS NEVER WHAT WAS WRONG. This was going",
-    "to be the headline fix. The rebuild put two blocks of 45-degree back extension in the week because",
-    "the catalogue listed the erectors as a PRIME MOVER of it, which would have been the only direct",
-    "erector work this gym can produce. That attribution carried a jointActionNote saying nobody had",
-    "confirmed it, and it does not survive being checked: with the spine held flat the joint action",
-    "performed is HIP extension, and the erectors hold the trunk against a flexion moment without",
-    "changing length. That is the same role they play in the squat, the row and the Romanian deadlift,",
-    "where this same catalogue calls them SECONDARY. His own logged name for the exercise is",
-    "\"Glute-Biased Back Extension\", which is the name for exactly that version.",
+    "THE ERECTORS ARE THE STORY, AND THE PROGRAMME WAS NEVER WHAT WAS WRONG. The first version of this",
+    "rebuild gave them six sets of 45-degree back extension, because the catalogue listed them as a",
+    "PRIME MOVER of it. That would have been the only direct erector work this gym can produce. The",
+    "attribution carried a jointActionNote saying nobody had confirmed it, and it does not survive: with",
+    "the spine held flat the joint action performed is HIP extension, and the erectors hold the trunk",
+    "against a flexion moment without changing length. That is the same role they play in the squat, the",
+    "row and the Romanian deadlift, where this same catalogue calls them SECONDARY. His own logged name",
+    "for the exercise is \"Glute-Biased Back Extension\", the name for exactly that version.",
     "",
-    "So the claim was corrected in movements.json rather than leaned on, this gate went RED on one",
-    "muscle, and the fix was put to him as a question instead of written into a number: gym-lower-back-1,",
-    "sent 22:53. He answered at 22:59: \"if i need to try a new version of the back extension fine\".",
+    "So the claim was corrected rather than leaned on, the gate went RED on one muscle, and the fix was",
+    "put to him as a question instead of written into a number. He answered in six minutes: \"if i need",
+    "to try a new version of the back extension fine\". That is why `spinal-extension` exists.",
+    "`lumbar-extension` is the same frame with the opposite instruction, the hips still and the spine",
+    "moving, prescribed twice a week with NO LOAD, and its cue is a DRAFT until he reports back.",
     "",
-    "THAT ANSWER IS WHY `spinal-extension` EXISTS IN THE CATALOGUE. `lumbar-extension` is the same frame",
-    "with the opposite instruction: the hips stay put and the spine moves, which is the only way anything",
-    "in this gym trains the erectors as a prime mover. Two slots, no load at all, ten to fifteen reps, and",
-    "its cue is a DRAFT until he has used it and reported back. It cost the leg curl, which had been in",
-    "the week for four hours and had zero logged sets in its life, and it moved the 45-degree back",
-    "extension out of the prescribed week.",
+    "THE 45-DEGREE BACK EXTENSION IS NOT DELETED. It is the first swap option on both lumbar-extension",
+    "slots, on the SAME MACHINE, and its 13 logged sets and its 40-to-50 lb ladder are untouched. The",
+    "two histories are deliberately NOT merged: one frame, opposite instructions, loads that do not",
+    "carry over. THE FIRST DRAFT OF THIS FILE PRESCRIBED IT BODYWEIGHT with a cue opening \"START WITH NO",
+    "WEIGHT\", which would have thrown that ladder away, while the catalogue note two lines above the",
+    "muscle list already read \"Logged 13 sets at up to 50 lb\".",
     "",
-    "THE BACK EXTENSION IS NOT DELETED. It is the first swap option on both lumbar-extension slots, on",
-    "the SAME MACHINE, so it is one tap away, and its 13 logged sets and its 40-to-50 lb ladder are",
-    "untouched. Its history is deliberately NOT merged with the new movement: one frame, opposite",
-    "instructions, loads that do not carry over. An alias would join two ladders that have nothing to do",
-    "with each other. THE FIRST DRAFT OF THIS FILE PRESCRIBED THE BACK EXTENSION BODYWEIGHT and its cue",
-    "opened \"START WITH NO WEIGHT\", which would have thrown that ladder away; the catalogue note two",
-    "lines above the muscle list already read \"Logged 13 sets at up to 50 lb\".",
-    "",
-    "ONE BLOCK A DAY IS MARKED OPTIONAL AND EACH SAYS WHAT DROPPING IT COSTS. A block with",
-    "`role: \"accessory\"` renders the word \"optional\" on the card, and it is the surviving half of the",
-    "drop-order sentence he had cut on 2026-08-27: it answers notes #7 and #11, where he ran out of time.",
-    "An earlier version of this rebuild marked EVERY block main, which deleted the tag from the whole",
-    "week; scripts/probe-gym.js caught that on the screen, because wholeDayIsShown asserts the tag is",
-    "present. It is always the LAST block of the day, because that is the one he actually stops at.",
-    "Nothing here is free to skip: eleven of the sixteen muscles sit at exactly two slots, so each of the",
-    "four now states the price in direct sets rather than implying there is none.",
+    "ONE BLOCK A SESSION IS MARKED OPTIONAL AND EACH SAYS WHAT DROPPING IT COSTS. That tag is the",
+    "surviving half of the drop-order sentence he cut on 2026-08-27, and it answers notes #7 and #11,",
+    "where he ran out of time. An earlier version of this rebuild marked EVERY block main, which deleted",
+    "the tag from the whole week; scripts/probe-gym.js caught that on the screen. It is always the last",
+    "block, because that is the one he actually stops at, and it is always compound-led now. Nothing",
+    "here is free to skip: eleven of the sixteen muscles sit at exactly two slots, so each of the four",
+    "states the price in direct sets rather than implying there is none.",
     "",
     "WHAT IT COSTS ON THE CLOCK, in the units he can check against his own watch.",
     "",
@@ -90,43 +110,38 @@
     "would become about 78. THAT IS AN EXTRAPOLATION FROM THE OLD PROGRAMME, not a measurement of this",
     "one, and his watch is what settles it.",
     "",
-    "AND THERE IS NO FAT LEFT TO CUT, which is worth knowing before anyone goes looking for some. Eleven",
-    "of the sixteen muscles sit at exactly two slots, so removing any block drops one of them below the",
-    "floor. The ONLY cut that costs nothing on the muscle axis is the box jump, from five sets to three,",
-    "which he has already ruled is not volume. After that the lever is rest lengths, not blocks.",
+    "AND THERE IS NO FAT LEFT TO CUT. Eleven of the sixteen muscles sit at exactly two slots, so removing",
+    "any block drops one of them below the floor. The ONLY cut that costs nothing on the muscle axis is",
+    "the box jump, from five sets to three, which he has already ruled is not volume. After that the",
+    "lever is rest lengths, not blocks.",
     "",
     "ORDER IS A STRENGTH VARIABLE AND NOT A SIZE VARIABLE. Nunes 2021 (PMID 32077380,",
     "sources/pubmed-32077380.txt), eleven good-to-excellent studies: starting with the multi-joint",
     "exercise favours strength in that exercise (ES 0.32, p = 0.034) and order has no effect on",
     "hypertrophy (ES 0.03, p = 0.862). `scripts/gym-order.mjs` asserts every pattern gets a slot in the",
-    "first two blocks of some day. All six pass: squat Monday b2, hinge Tuesday b2, vertical pull",
-    "Tuesday b1, single leg and chest Thursday b1, overhead press Friday b2.",
+    "first two blocks of some session. All six pass.",
     "",
-    "CHEST LEADS A BLOCK, on Friday, six to nine reps. That was his complaint on 2026-08-31 (\"chest",
-    "being at the end of the sesion mostly, not sure if thats right\"), and the fresh-slot gate only",
-    "ever asked for it to be EARLY, which a partner in block 1 satisfies. Three chest slots: partner on",
-    "Tuesday, partner and fresh on Thursday, lead and heavy on Friday. Chest and lats are the two",
-    "muscles in this catalogue that get no helper credit from anything at all, which is why both are",
-    "expensive to cover and why both used to sit at the bottom of the week.",
+    "CHEST GETS THE FRESH SLOT IN SESSION C and leads its own block in B and D. That was his complaint",
+    "on 2026-08-31, \"chest being at the end of the sesion mostly\", and the fresh-slot gate only ever",
+    "asked for it to be EARLY, which a partner in block 1 satisfies. Chest and lats are the two muscles",
+    "in this catalogue that get no helper credit from anything at all, which is why both are expensive",
+    "to cover and why both used to sit at the bottom of the week.",
     "",
-    "PAIRING CAME LAST AND ONLY WHERE IT IS REAL, on his ruling: \"i want the best program possible",
-    "first an then figure out how to superset it\". The exercises and their doses were chosen first,",
-    "against the floor; the seventeen working blocks were formed from them afterwards.",
-    "Agonist-antagonist pairing is the evidenced kind (Zhang 2025: more reps, SMD 0.68, no strength or",
-    "size cost, about 37% time saved), same-muscle pairing costs volume load (SMD -1.08), and",
-    "`validate.mjs` refuses the second kind outright. Every block here is a lead plus a partner that",
-    "shares none of its prime movers.",
+    "PAIRING CAME LAST AND ONLY WHERE IT IS REAL, on his ruling: \"i want the best program possible first",
+    "an then figure out how to superset it\". The exercises and their doses were chosen against the floor",
+    "first, and the blocks were formed from them afterwards. Agonist-antagonist pairing is the evidenced",
+    "kind (Zhang 2025: more reps, SMD 0.68, no strength or size cost, about 37% time saved), same-muscle",
+    "pairing costs volume load (SMD -1.08), and `validate.mjs` refuses the second kind outright.",
     "",
-    "PRIMERS ARE NOT VOLUME, on his ruling: \"5 set of 3 jumps does not wgiht the same or more than 3",
-    "sets of sauts or bench press\". The box jump on Monday and the lateral bound on Friday are counted",
-    "separately on the card. They ARE counted by gym-targets and gym-strength, which read the whole",
-    "file, and that is a known inconsistency rather than a hidden one: it flatters quads and glutes by",
-    "eight sets and touches nothing else, and both are already three times past their target.",
+    "PRIMERS ARE NOT VOLUME, on his ruling: \"5 set of 3 jumps does not wgiht the same or more than 3 sets",
+    "of sauts or bench press\". They are counted separately on the card. They ARE counted by gym-targets",
+    "and gym-strength, which read the whole file, and that is a known inconsistency rather than a hidden",
+    "one: it flatters quads and glutes by eight sets and touches nothing else.",
     "",
-    "THE HEAVY REP RANGES ARE HIS OWN LOGGED ONES, unchanged from the week this replaces. Back squat 5",
-    "to 7, RDL 6 to 8. His words on 2026-09-01: \"I feel like we should stay where we are... I'm more",
-    "worried on keeping my form and maybe improving on that than going heavier\", and he knows the cost:",
-    "\"I also know that does gonna kind of hinder my progression.\"",
+    "THE HEAVY REP RANGES ARE HIS OWN LOGGED ONES. Back squat 5 to 7, RDL 6 to 8. His words:",
+    "\"I feel like we should stay where we are... Im more worried on keeping my form and maybe improving",
+    "on that than going heavier\", and he knows the cost: \"I also know that does gonna kind of hinder my",
+    "progression.\"",
     "",
     "WHAT THE EVIDENCE SETTLES, so nobody re-derives it:",
     "",
@@ -135,54 +150,27 @@
     "  Bilateral over unilateral: equal hypertrophy (ES -0.21, p = 0.57) and better time efficiency.",
     "  Frequency does not need chasing once volume is equated (Schoenfeld 2019; Grgic 2018 found no",
     "  significant strength effect in middle-aged and older adults, p = 0.093).",
-    "  Direct trunk work is not redundant with bracing for the rectus abdominis (Comfort 2011).",
-    "",
-    "WHAT NO SOURCE ON THIS DISK CAN TELL YOU, so do not pretend otherwise: whether a squat or a leg",
-    "press trains quads harder; whether arm isolation adds anything over compounds (Iversen leans no",
-    "for his training age and calls it \"equivocal\"); anything at all about loaded carries (zero matches",
-    "in 125 sources); anything about the lateral deltoid (not one source measures or trains it).",
     "",
     "MUSCLE ATTRIBUTION IS ANATOMY AND NEVER A TRIAL FINDING. See the legend at the top of",
     "movements.json and sources/NOTICE-PER-MUSCLE-FIGURES-BEFORE-2026-09-01.md. gym-targets refuses to",
-    "grade at all unless every group in the catalogue is tagged `anatomy` and states its `jointAction`.",
-    "Do not quote a per-muscle figure from any document dated 2026-08-30 or earlier without recomputing",
-    "it.",
+    "grade at all unless every group is tagged `anatomy` and states its `jointAction`. Do not quote a",
+    "per-muscle figure from any document dated 2026-08-30 or earlier without recomputing it.",
     "",
-    "THE GATES, and what each one refuses. Run `node scripts/verify.mjs` before pushing.",
+    "THE GATES. Run `node scripts/verify.mjs` before pushing.",
     "",
     "  content/gym/validate.mjs        shape, stations, walking route, verbatim whyHere, block fit",
     "  scripts/gym-order.mjs           every pattern gets a fresh slot (Nunes)",
-    "  scripts/gym-targets.mjs         every muscle gets 4 direct sets (Iversen). Back IN verify.mjs",
-    "                                  as of his ruling, on the contract it was pulled out under",
+    "  scripts/gym-targets.mjs         every muscle gets 4 direct sets (Iversen)",
     "  scripts/gym-strength.mjs        Table 4 per priority lift, against a dated baseline",
     "  scripts/gym-coverage.mjs        below-minimum, strict pairings, unsourced, against a baseline",
     "  scripts/check-ladder.mjs        does maxing the rep range earn the next weight (needs Neon)",
-    "  scripts/gym-delivered.mjs       what this will actually deliver (needs Neon)",
+    "  scripts/probe-gym.js            the only test that presses a button. It caught two of the three",
+    "                                  self-inflicted bugs today, both invisible to every gate above",
     "",
-    "BOTH DATED BASELINES MOVED WITH THIS REBUILD AND BOTH DIFFS CARRY THE REASONING. Read the",
-    "$comment in strength-baseline.json before treating its jump as a regression: a large part of it is",
-    "a lift joining the priority list rather than any lift moving, and it records a scoping question",
-    "about that gate which was deliberately NOT fixed in the commit that would have benefited from it.",
-    "coverage-baseline.json was re-stamped so its per-muscle diff measures drift from the week that is",
-    "actually live; its three gated lists were empty before and are empty now.",
-    "",
-    "THREE OPEN QUESTIONS ARE LIVE ON THIS FILE, all carried forward from the week it replaces, all",
-    "asked 2026-08-27, and their facts UPDATED to this week rather than copied: the assisted dip against",
-    "the overhead extension, whether the rack pull-up bar is usable while he is under the bar, and",
-    "whether he wants hanging knee raises in the RDL rest. The fourth, about the back extension, was",
-    "asked and answered on 2026-09-01 and is gone.",
-    "",
-    "AND TWO EMAIL QUESTIONS WERE CLOSED WITHOUT HIM THE SAME DAY, which is worth recording because the",
-    "failure was mine. The mail announcing this programme ended with \"still waiting on you from before\",",
-    "naming three questions he did not owe: gym-rebuild-1 asked whether to go heavy on the main lifts",
-    "(he ruled it in chat), whether lifts he has never done were allowed (this week is built from his",
-    "history), and which of five machines he uses (the back extension is answered by 13 logged sets, and",
-    "the other four are not prescribed). gym-answers-shipped asked about the soleus, which needs a",
-    "bent-knee calf raise that equipment.json shows his gym does not have, and about the hip thrust,",
-    "which this file had already ruled out on Plotkin 2023. His words: \"this exactly the kind of",
-    "contamination im talking about\". The line came from a fold that had only two states, waiting and",
-    "answered, so \"he has not replied\" was being read as \"the question is still live\". HealthOS",
-    "comms/ask.mjs now has a third, `settled`, with a required reason and its own regression suite.",
+    "TWO OPEN QUESTIONS ARE LIVE ON THIS FILE, both from 2026-08-27 with their facts updated to this",
+    "week: the assisted dip against the overhead extension, and whether another member could use the",
+    "pull-up bar while he is under a loaded bar. The third, about hanging knee raises in the rest, he",
+    "answered on 2026-09-01 and it is gone. So is the fourth, about the back extension.",
     "",
     "CONDITIONING IS NOT IN THIS FILE. It lives in conditioning.json. The swim follows the lift on the",
     "same evening, which is the constraint that makes session length a prescription rather than a",
@@ -190,8 +178,8 @@
   ],
   "days": {
     "monday": {
-      "name": "Monday",
-      "title": "Monday: squat heavy, pull and press after",
+      "name": "Session A",
+      "title": "Session A: press fresh, squat heavy",
       "warmup": "lower",
       "cooldown": [
         "pigeon",
@@ -276,6 +264,86 @@
             }
           ],
           "why": "Jumps first, while you are completely fresh, because what they train is how fast you leave the floor and a tired jump is a slow jump. Five sets of three is fifteen jumps and it is not volume: it does not count toward the set total on this card, on your own ruling that five sets of three jumps do not weigh the same as three sets of a real lift."
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Overhead Press",
+          "tag": "(bench, dumbbells in hand)",
+          "exercises": [
+            {
+              "id": "db-overhead-press",
+              "name": "Seated DB Overhead Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": "bench",
+              "log": true,
+              "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "alts": [
+                {
+                  "id": "machine-shoulder-press",
+                  "name": "Machine Shoulder Press",
+                  "zone": "machines",
+                  "station": "shoulder-press",
+                  "cue": "Set the seat so the handles start at about shoulder height, not above your ears. Press up until your arms are straight without shrugging, and come back down slowly until the handles are level with your shoulders again. Stop the set when your lower back starts arching off the pad."
+                },
+                {
+                  "id": "half-kneeling-sa-press",
+                  "name": "Half-Kneeling Single-Arm Press",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. It is two exercises at once: a press, and your trunk refusing to bend sideways under a load held on one side. Lighter than the two-dumbbell version by a lot, and that is the point."
+                },
+                {
+                  "id": "db-seated-ohp",
+                  "name": "Seated DB Overhead Press",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Bench upright, back supported. Takes the lower back out of it entirely."
+                }
+              ]
+            },
+            {
+              "id": "db-lateral-lunge",
+              "name": "DB Lateral Lunge",
+              "sets": 3,
+              "reps": "8/side",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "whyHere": "The sideways lunge goes in the press rest because it is done with the legs and the press is done sitting down with the arms.",
+              "alts": [
+                {
+                  "id": "front-squat",
+                  "name": "Front Squat",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
+                  "sets": 3,
+                  "reps": "8",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "cossack-squat",
+                  "name": "Cossack Squat",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "The deeper version. Same sideways sit, but let the straight leg's toes come up and go as low as you can. Bodyweight first, hold a dumbbell at the chest when it is easy. 3x6/side.",
+                  "sets": 3,
+                  "reps": "6/side"
+                }
+              ]
+            }
+          ],
+          "why": "Pressing overhead is the only movement in the week where the front of the shoulder is the prime mover, so without it that muscle gets nothing but helper work off the horizontal pressing. It leads here so it gets one session where it is done fresh. The sideways lunge goes in the press rest because it is done with the legs and the press is done sitting down with the arms."
         },
         {
           "role": "main",
@@ -377,13 +445,13 @@
               ]
             }
           ],
-          "why": "The heaviest thing you lift all week, first, while you are freshest. Nunes 2021, eleven studies: strength gains are largest in whatever is performed at the beginning of a session, and order does nothing at all for size. Five to seven reps, because those are the rep counts you actually perform on this lift. The lateral raise goes in the squat rest because the shoulder takes no part in a squat, so it costs no extra time."
+          "why": "The heaviest thing you lift all week. Nunes 2021, eleven studies: strength gains are largest in whatever is performed at the beginning of a session, and order does nothing at all for size. Five to seven reps, because those are the rep counts you actually perform on this lift. The lateral raise goes in the squat rest because the shoulder takes no part in a squat, so it costs no extra time."
         },
         {
           "role": "main",
           "pairing": "fill",
           "label": "Horizontal Pull",
-          "tag": "(rack, floor right there)",
+          "tag": "(rack, bar above you)",
           "exercises": [
             {
               "id": "bb-row",
@@ -447,145 +515,32 @@
               ]
             },
             {
-              "id": "dead-bug",
-              "name": "Dead Bug",
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
               "sets": 3,
-              "reps": "10/side",
+              "reps": "10",
               "rest": "45s",
               "zone": "rack",
-              "station": null,
+              "station": "rack-pullup-bar",
               "log": true,
-              "cue": "On the floor beside the bench, between press sets. Your example, and it is the pairing that always worked. On your back, arms straight up at the ceiling, knees bent up over your hips. Press your lower back FLAT into the floor and keep it there: that is the entire exercise. Slowly lower one arm behind your head and the opposite leg toward the floor, breathe out as they go. Stop the moment your lower back lifts off the floor, even if the leg is nowhere near down. Come back and swap sides.",
+              "cue": "Hang from the pull-up bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top KEEP GOING for a couple of inches by curling your hips under you, as if you were trying to show someone the soles of your shoes. That last bit is the part your abdominals actually do: stopping when your thighs are level is hip work and they only hold on. Then lower under control until your legs are straight and you have come to a STOP before the next rep, so every one starts from still rather than from a swing. Success looks like: no swinging, and you feel it across the front of your stomach at the top rather than in the front of your hips the whole way. If you cannot stop the swing, do fewer reps. Ten a set, and when fifteen is easy, straighten the legs instead of adding weight. THIS CUE IS A DRAFT: nobody has read it standing at the bar. Use the note box and say what it should say.",
               "bodyweight": true,
-              "needsFloor": true,
               "progression": "reps",
-              "whyHere": "Dead bugs go on the floor beside the rack in the row rest, which is the one place other than the bench area where lying down works.",
+              "whyHere": "Hanging knee raises go in the row rest on your own ruling: the bar is on top of the rack you are already standing in, and you said you would rather hang than lie on the floor.",
               "alts": [
-                {
-                  "id": "plank-shoulder-taps",
-                  "name": "Plank w/ Shoulder Taps",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On the floor. High plank on your hands, feet wide apart for balance. Tap one hand to the opposite shoulder, put it back, tap with the other. Success looks like: your hips do not rock side to side as the hand leaves the floor. If they rock, put your feet wider. 3x10 each side.",
-                  "sets": 3,
-                  "reps": "10/side"
-                },
-                {
-                  "id": "hanging-knee-raise",
-                  "name": "Hanging Knee Raise",
-                  "zone": "rack",
-                  "station": "rack-pullup-bar",
-                  "cue": "Hang from the pull-up bar on top of the rack with your arms straight and your feet clear of the floor. Bring both knees up towards your chest until your thighs pass level, then lower them under control until your legs are straight again. Success looks like: you come to a stop at the bottom before the next rep, so every one starts from still rather than from a swing. If you are swinging, do fewer. THIS CUE IS A DRAFT: it was written for you rather than taken off a published page, and nobody has read it standing at the bar. Say what it should say."
-                },
                 {
                   "id": "hollow-hold",
                   "name": "Hollow Hold",
-                  "zone": "benchDb",
+                  "zone": "rack",
                   "station": null,
                   "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
                   "sets": 3,
-                  "reps": "20s"
-                },
-                {
-                  "id": "band-pallof",
-                  "name": "Band Pallof Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band anchored at chest height on a rack post, stand sideways, both hands on the band at your chest. Press straight out and resist the twist, hold 2 seconds. Only if every cable column is taken: there is no way to record which band you used, so the number cannot move."
-                },
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held up. Drop to the knees if the hips sag. 3x30s per side.",
-                  "sets": 3,
-                  "reps": "30s/side"
+                  "reps": "30s"
                 }
               ]
             }
           ],
-          "why": "Rowing is the only movement in the week that trains the muscles between your shoulder blades as the prime mover rather than as helpers, so it gets two slots, and this is the heavier one. Dead bugs go on the floor beside the rack in the row rest, which is the one place other than the bench area where lying down works."
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
-          "label": "Overhead Press",
-          "tag": "(bench, dumbbells in hand)",
-          "exercises": [
-            {
-              "id": "db-overhead-press",
-              "name": "Seated DB Overhead Press",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": "bench",
-              "log": true,
-              "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "alts": [
-                {
-                  "id": "machine-shoulder-press",
-                  "name": "Machine Shoulder Press",
-                  "zone": "machines",
-                  "station": "shoulder-press",
-                  "cue": "Set the seat so the handles start at about shoulder height, not above your ears. Press up until your arms are straight without shrugging, and come back down slowly until the handles are level with your shoulders again. Stop the set when your lower back starts arching off the pad."
-                },
-                {
-                  "id": "half-kneeling-sa-press",
-                  "name": "Half-Kneeling Single-Arm Press",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. It is two exercises at once: a press, and your trunk refusing to bend sideways under a load held on one side. Lighter than the two-dumbbell version by a lot, and that is the point."
-                },
-                {
-                  "id": "db-seated-ohp",
-                  "name": "Seated DB Overhead Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench upright, back supported. Takes the lower back out of it entirely."
-                }
-              ]
-            },
-            {
-              "id": "db-lateral-lunge",
-              "name": "DB Lateral Lunge",
-              "sets": 3,
-              "reps": "8/side",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
-              "progression": "weight",
-              "rangeWidth": 5,
-              "whyHere": "The sideways lunge goes in the press rest because it is done with the legs and the press is done sitting down with the arms.",
-              "alts": [
-                {
-                  "id": "front-squat",
-                  "name": "Front Squat",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
-                  "sets": 3,
-                  "reps": "8",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "cossack-squat",
-                  "name": "Cossack Squat",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "The deeper version. Same sideways sit, but let the straight leg's toes come up and go as low as you can. Bodyweight first, hold a dumbbell at the chest when it is easy. 3x6/side.",
-                  "sets": 3,
-                  "reps": "6/side"
-                }
-              ]
-            }
-          ],
-          "why": "Pressing overhead is the only movement in the week where the front of the shoulder is the prime mover, so without it that muscle gets nothing but helper work off the horizontal pressing. Eight to twelve reps. The sideways lunge goes in the press rest because it is done with the legs and the press is done sitting down with the arms."
+          "why": "Rowing is the only movement in the week that trains the muscles between your shoulder blades as the prime mover rather than as helpers, so it gets two sessions, and this is the heavier one. Hanging knee raises go in the row rest on your own ruling: the bar is on top of the rack you are already standing in, and you said you would rather hang than lie on the floor."
         },
         {
           "role": "accessory",
@@ -682,13 +637,13 @@
               ]
             }
           ],
-          "why": "THIS IS THE NEW ONE, and it is the only exercise in the gym where your lower back is the muscle that moves rather than the muscle that holds on. It replaces the back extension you have been doing since June, which turned out to be hip work: with a flat back your bum moves you and your lower back just holds, the same as in a squat. That old version is the first swap option on this card and your weights on it are untouched. No load on this one until you tell me it is easy. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the triceps fall from six sets to three. The tricep extension goes in the rest because the arms take no part in a back extension."
+          "why": "The only exercise in the gym where your lower back is the muscle that moves rather than the muscle that holds on. It replaces the back extension you had been doing, which turned out to be hip work: with a flat back your bum moves you and your lower back just holds, the same as in a squat. That old version is the first swap option here and your weights on it are untouched. No load on this one until you tell me it is easy. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the triceps fall from six sets to three. The tricep extension goes in the rest because the arms take no part in a back extension."
         }
       ]
     },
     "tuesday": {
-      "name": "Tuesday",
-      "title": "Tuesday: pull fresh, hinge heavy",
+      "name": "Session B",
+      "title": "Session B: pull fresh, hinge heavy",
       "warmup": "upper",
       "cooldown": [
         "pigeon",
@@ -769,7 +724,7 @@
               ]
             }
           ],
-          "why": "Pulling down from overhead and rowing toward you are different jobs at the shoulder: one brings the arm down to your side, the other pulls the elbow back behind you. This one leads the day so it is done fresh at least once a week. The reverse fly goes in the pulldown rest because it works the back of the shoulder, which the pulldown does not train as a prime mover."
+          "why": "Pulling down from overhead and rowing toward you are different jobs at the shoulder: one brings the arm down to your side, the other pulls the elbow back behind you. This one leads so it is done fresh at least once a week. The reverse fly goes in the pulldown rest because it works the back of the shoulder, which the pulldown does not train as a prime mover."
         },
         {
           "role": "main",
@@ -870,7 +825,7 @@
               ]
             }
           ],
-          "why": "The heavy hinge, second in the day so it still gets a fresh slot. Six to eight reps, which are the rep counts you actually perform on it. This is one of only three exposures the hamstrings get all week, so it is not a lift to skip. The lateral raise goes in the rest because the shoulder takes no part in a hinge."
+          "why": "The heavy hinge, second in the session so it still gets a fresh slot. Six to eight reps, which are the rep counts you actually perform on it. This is one of only three hamstring exposures in the week, so it is not a lift to skip. The lateral raise goes in the rest because the shoulder takes no part in a hinge."
         },
         {
           "role": "main",
@@ -974,7 +929,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Single Leg",
-          "tag": "(bench, same bench)",
+          "tag": "(bench, dumbbells in hand)",
           "exercises": [
             {
               "id": "bulgarian-split-squat",
@@ -1042,18 +997,49 @@
               ]
             },
             {
+              "id": "db-calf-raise",
+              "name": "DB Calf Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing on the floor in the rest between lunge sets, a dumbbell in each hand hanging at your sides. Feet about hip width. Push all the way up onto your toes, as high as you can go, and hold for one second at the top. Then lower slowly, about three seconds down, until your heels touch the floor and you feel a stretch through the back of the calf. Success looks like: you can hold the top position still for a second without wobbling, and the slow way down is what you feel most. If you cannot hold the top, the dumbbells are too heavy. This is the flat-floor version, so the stretch at the bottom is smaller than on the machine; that is the trade for it costing you no walk.",
+              "progression": "weight",
+              "rangeWidth": 6,
+              "whyHere": "it goes in the rest here because the calf takes no part in a split squat and you can do it standing right where you are",
+              "alts": [
+                {
+                  "id": "standing-calf-raise",
+                  "name": "Machine Calf Raise",
+                  "zone": "machines",
+                  "station": "calf-raise",
+                  "cue": "On the standing calf machine. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running."
+                }
+              ]
+            }
+          ],
+          "why": "One leg at a time, eight to fourteen reps a leg. Nothing else in the week trains the calf as a prime mover, and it goes in the rest here because the calf takes no part in a split squat and you can do it standing right where you are."
+        },
+        {
+          "role": "accessory",
+          "pairing": "fill",
+          "label": "Horizontal Press",
+          "tag": "(bench, walk in hand)",
+          "exercises": [
+            {
               "id": "db-bench-press",
               "name": "DB Bench Press",
               "sets": 3,
               "reps": "8",
-              "rest": "45s",
+              "rest": "2 min",
               "zone": "benchDb",
               "station": "bench",
               "log": true,
               "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "progression": "weight",
               "rangeWidth": 3,
-              "whyHere": "The press uses the same bench you already have a foot on, so the block occupies one piece of kit and nothing else, and pressing takes nothing from a leg that is doing the squatting.",
               "alts": [
                 {
                   "id": "machine-chest-press",
@@ -1084,37 +1070,6 @@
                   "cue": "Elbows slightly bent and fixed, bring the arms together in front of you and squeeze for one second. Stretch, not a press."
                 }
               ]
-            }
-          ],
-          "why": "One leg at a time, eight to fourteen reps a leg. The press uses the same bench you already have a foot on, so the block occupies one piece of kit and nothing else, and pressing takes nothing from a leg that is doing the squatting."
-        },
-        {
-          "role": "accessory",
-          "pairing": "fill",
-          "label": "Calves and Grip",
-          "tag": "(dumbbells, walk in hand)",
-          "exercises": [
-            {
-              "id": "db-calf-raise",
-              "name": "DB Calf Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "60s",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "cue": "Standing on the floor in the rest between lunge sets, a dumbbell in each hand hanging at your sides. Feet about hip width. Push all the way up onto your toes, as high as you can go, and hold for one second at the top. Then lower slowly, about three seconds down, until your heels touch the floor and you feel a stretch through the back of the calf. Success looks like: you can hold the top position still for a second without wobbling, and the slow way down is what you feel most. If you cannot hold the top, the dumbbells are too heavy. This is the flat-floor version, so the stretch at the bottom is smaller than on the machine; that is the trade for it costing you no walk.",
-              "progression": "weight",
-              "rangeWidth": 6,
-              "alts": [
-                {
-                  "id": "standing-calf-raise",
-                  "name": "Machine Calf Raise",
-                  "zone": "machines",
-                  "station": "calf-raise",
-                  "cue": "On the standing calf machine. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running."
-                }
-              ]
             },
             {
               "id": "farmer-carry",
@@ -1129,7 +1084,7 @@
               "bodyweight": false,
               "timed": true,
               "progression": "time",
-              "whyHere": "The carry goes in the calf rest because you are already standing there holding the dumbbells.",
+              "whyHere": "the carry goes in the press rest: it trains the grip, which a bench press does not",
               "alts": [
                 {
                   "id": "db-hold",
@@ -1164,13 +1119,13 @@
               ]
             }
           ],
-          "why": "Two things that get no help from anything else in the week. Nothing else here trains the calf as a prime mover, and nothing else asks the hands to hold on for forty seconds. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is on the card: it takes both calves and grip from six sets a week to three, under the floor of four, and grip only has one other slot, which is also a droppable one. The carry goes in the calf rest because you are already standing there holding the dumbbells."
+          "why": "The chest and the lats are the two muscles here that get no helper credit from anything at all, which is why both are expensive to cover and why both used to sit at the bottom of the week. Nothing else asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which a bench press does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
         }
       ]
     },
     "thursday": {
-      "name": "Thursday",
-      "title": "Thursday: single leg and chest fresh, squat after",
+      "name": "Session C",
+      "title": "Session C: single leg and chest fresh",
       "warmup": "lower",
       "cooldown": [
         "pigeon",
@@ -1181,7 +1136,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Single Leg",
-          "tag": "(bench, same bench)",
+          "tag": "(bench, dumbbells in hand)",
           "exercises": [
             {
               "id": "bulgarian-split-squat",
@@ -1249,18 +1204,56 @@
               ]
             },
             {
+              "id": "db-reverse-fly",
+              "name": "DB Reverse Fly",
+              "sets": 3,
+              "reps": "12",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "progression": "weight",
+              "rangeWidth": 7,
+              "whyHere": "The reverse fly goes in the rest because the back of the shoulder takes no part in a split squat.",
+              "alts": [
+                {
+                  "id": "cable-reverse-fly",
+                  "name": "Cable Reverse Fly",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "Standing, in the rest between sets of the lift above. At the adjustable cable column, standing tall, a handle in each hand and a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12."
+                },
+                {
+                  "id": "chest-supported-reverse-fly",
+                  "name": "Chest-Supported Reverse Fly",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache."
+                }
+              ]
+            }
+          ],
+          "why": "One leg at a time, first in the session, which is the fresh slot this pattern never used to get. Six to twelve reps a leg, so it is heavier per leg than its other exposure. The reverse fly goes in the rest because the back of the shoulder takes no part in a split squat."
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Horizontal Press",
+          "tag": "(bench, dumbbells in hand)",
+          "exercises": [
+            {
               "id": "db-bench-press",
               "name": "DB Bench Press",
               "sets": 3,
               "reps": "8",
-              "rest": "45s",
+              "rest": "2 min",
               "zone": "benchDb",
               "station": "bench",
               "log": true,
               "cue": "Feet flat on the floor. Pull your shoulder blades back and down into the bench and keep them there, like you are pinching a pencil between them. Breathe in, lower the dumbbells until you feel a good stretch across the chest, PAUSE for one second so there is no bounce, then press up and breathe out. The dumbbells travel slightly toward each other at the top but do not clang. ADDED 2026-08-22, after he reported feeling this mostly in the triceps and the front of the shoulder: that is usually where the dumbbells are travelling, not how hard you are pushing. Two things to try. Before the first rep, pull your shoulder blades DOWN and TOGETHER into the bench and keep them pinned there the whole set, so your chest is the highest point and the shoulders cannot roll forward. Then press over your LOWER chest, not your collarbone: at the bottom the dumbbells should be beside your nipples with your elbows about halfway between tucked-in and straight-out, and at the top they finish above the same spot rather than drifting toward your face. Success looks like: at the bottom you feel a stretch across the chest, not a pinch at the front of the shoulder. This is standard coaching practice, not a trial finding.",
               "progression": "weight",
               "rangeWidth": 3,
-              "whyHere": "The press uses the same bench you already have a foot on, and this is the fresh slot for the chest, which you pointed out was a partner in every appearance and never anywhere near the front of a session.",
               "alts": [
                 {
                   "id": "machine-chest-press",
@@ -1291,117 +1284,38 @@
                   "cue": "Elbows slightly bent and fixed, bring the arms together in front of you and squeeze for one second. Stretch, not a press."
                 }
               ]
-            }
-          ],
-          "why": "One leg at a time, first in the day, which is the fresh slot this pattern never used to get. Six to twelve reps a leg, so it is heavier per leg than its other exposure. The press uses the same bench you already have a foot on, and this is the fresh slot for the chest, which you pointed out was a partner in every appearance and never anywhere near the front of a session."
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
-          "label": "Squat",
-          "tag": "(rack, dumbbells in hand)",
-          "exercises": [
-            {
-              "id": "bb-back-squat",
-              "name": "BB Back Squat",
-              "sets": 3,
-              "reps": "8",
-              "rest": "2 min",
-              "zone": "rack",
-              "station": "rack",
-              "log": true,
-              "cue": "The lift we are progressing. Stance slightly wider than your hips with the toes turned out a little. Breathe IN and hold it, tighten your stomach like you are about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe, they do not fall inward. Stand up and breathe out at the top. Take a fresh breath and re-tighten before EVERY rep, not just the first.",
-              "progression": "weight",
-              "rangeWidth": 2,
-              "alts": [
-                {
-                  "id": "bulgarian-split-squat",
-                  "name": "Bulgarian Split Squat",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Dumbbells hanging at your sides. Put the top of your back foot on the bench, laces down. Your front foot should be far enough forward that at the bottom your front shin is straight up and down, not leaning forward over your toes. Lower until your back knee is close to the floor. Drive up through the FRONT heel. The back leg is a kickstand, it does not push.",
-                  "sets": 3,
-                  "reps": "8/leg",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "front-squat",
-                  "name": "Front Squat",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
-                  "sets": 3,
-                  "reps": "8",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "reverse-lunge",
-                  "name": "Reverse Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up. Stepping backward rather than forward keeps the load off the front knee."
-                },
-                {
-                  "id": "walking-lunge",
-                  "name": "Walking Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
-                },
-                {
-                  "id": "heavy-goblet-squat",
-                  "name": "Heavy Goblet Squat",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
-                },
-                {
-                  "id": "leg-press",
-                  "name": "Leg Press",
-                  "zone": "machines",
-                  "station": "leg-press",
-                  "cue": "Feet shoulder width on the platform. Lower until your knees are near your chest without your lower back rounding off the pad, then press. Use this on a day your back is tired."
-                }
-              ]
             },
             {
-              "id": "db-reverse-fly",
-              "name": "DB Reverse Fly",
+              "id": "db-calf-raise",
+              "name": "DB Calf Raise",
               "sets": 3,
               "reps": "12",
               "rest": "45s",
-              "zone": "rack",
+              "zone": "benchDb",
               "station": null,
               "log": true,
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, roughly halfway to parallel with the floor, back flat, eyes down. Let the dumbbells hang straight below your chest with a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "cue": "Standing on the floor in the rest between lunge sets, a dumbbell in each hand hanging at your sides. Feet about hip width. Push all the way up onto your toes, as high as you can go, and hold for one second at the top. Then lower slowly, about three seconds down, until your heels touch the floor and you feel a stretch through the back of the calf. Success looks like: you can hold the top position still for a second without wobbling, and the slow way down is what you feel most. If you cannot hold the top, the dumbbells are too heavy. This is the flat-floor version, so the stretch at the bottom is smaller than on the machine; that is the trade for it costing you no walk.",
               "progression": "weight",
-              "rangeWidth": 7,
-              "whyHere": "The reverse fly goes in the rest because the back of the shoulder takes no part in a squat.",
+              "rangeWidth": 6,
+              "whyHere": "The calf raise goes in the press rest because the calf takes no part in a press and you can do it standing right there.",
               "alts": [
                 {
-                  "id": "cable-reverse-fly",
-                  "name": "Cable Reverse Fly",
-                  "zone": "cable",
-                  "station": "cable-adjustable",
-                  "cue": "Standing, in the rest between sets of the lift above. At the adjustable cable column, standing tall, a handle in each hand and a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12."
-                },
-                {
-                  "id": "chest-supported-reverse-fly",
-                  "name": "Chest-Supported Reverse Fly",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache."
+                  "id": "standing-calf-raise",
+                  "name": "Machine Calf Raise",
+                  "zone": "machines",
+                  "station": "calf-raise",
+                  "cue": "On the standing calf machine. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running."
                 }
               ]
             }
           ],
-          "why": "The lighter squat of the two, eight to ten reps against five to seven on Monday. Same movement, same bar, different weight. The reverse fly goes in the rest because the back of the shoulder takes no part in a squat."
+          "why": "The fresh slot for the chest, which you pointed out was a partner in every appearance and never anywhere near the front of a session. The calf raise goes in the press rest because the calf takes no part in a press and you can do it standing right there."
         },
         {
           "role": "main",
           "pairing": "fill",
           "label": "Horizontal Pull",
-          "tag": "(rack, dumbbells in hand)",
+          "tag": "(rack, bar above you)",
           "exercises": [
             {
               "id": "bb-row",
@@ -1465,42 +1379,32 @@
               ]
             },
             {
-              "id": "db-lateral-lunge",
-              "name": "DB Lateral Lunge",
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
               "sets": 3,
-              "reps": "8/side",
+              "reps": "10",
               "rest": "45s",
               "zone": "rack",
-              "station": null,
+              "station": "rack-pullup-bar",
               "log": true,
-              "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
-              "progression": "weight",
-              "rangeWidth": 5,
-              "whyHere": "The sideways lunge goes in the row rest because a row is done standing still with the arms and a lunge is done with the legs, so neither takes anything from the other.",
+              "cue": "Hang from the pull-up bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top KEEP GOING for a couple of inches by curling your hips under you, as if you were trying to show someone the soles of your shoes. That last bit is the part your abdominals actually do: stopping when your thighs are level is hip work and they only hold on. Then lower under control until your legs are straight and you have come to a STOP before the next rep, so every one starts from still rather than from a swing. Success looks like: no swinging, and you feel it across the front of your stomach at the top rather than in the front of your hips the whole way. If you cannot stop the swing, do fewer reps. Ten a set, and when fifteen is easy, straighten the legs instead of adding weight. THIS CUE IS A DRAFT: nobody has read it standing at the bar. Use the note box and say what it should say.",
+              "bodyweight": true,
+              "progression": "reps",
+              "whyHere": "Hanging knee raises again, on the bar above the rack you are standing in, because you said you would rather hang than lie on the floor.",
               "alts": [
                 {
-                  "id": "front-squat",
-                  "name": "Front Squat",
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
                   "zone": "rack",
-                  "station": "rack",
-                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
-                  "sets": 3,
-                  "reps": "8",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "cossack-squat",
-                  "name": "Cossack Squat",
-                  "zone": "benchDb",
                   "station": null,
-                  "cue": "The deeper version. Same sideways sit, but let the straight leg's toes come up and go as low as you can. Bodyweight first, hold a dumbbell at the chest when it is easy. 3x6/side.",
+                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
                   "sets": 3,
-                  "reps": "6/side"
+                  "reps": "30s"
                 }
               ]
             }
           ],
-          "why": "The lighter of the two rows, ten to twelve reps rather than eight, so the same movement is trained at more than one weight. The sideways lunge goes in the row rest because a row is done standing still with the arms and a lunge is done with the legs, so neither takes anything from the other."
+          "why": "The lighter of the two rows, ten to twelve reps rather than eight, so the same movement is trained at more than one weight. Hanging knee raises again, on the bar above the rack you are standing in, because you said you would rather hang than lie on the floor."
         },
         {
           "role": "accessory",
@@ -1556,7 +1460,7 @@
               "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
               "progression": "weight",
               "rangeWidth": 5,
-              "whyHere": "The curl goes in the rest because the biceps take no part in a back extension.",
+              "whyHere": "the biceps fall from six sets to three",
               "alts": [
                 {
                   "id": "bicep-curl",
@@ -1591,13 +1495,13 @@
               ]
             }
           ],
-          "why": "The second of the two lower-back slots, and two a week is what takes this muscle from nothing to a real dose. It is the only thing in the week that trains it: everything else, the squat, the row, the hinge, asks your lower back to hold still and never to move. No load until you tell me it is easy, and the old flat-back version is one tap away on the swap list. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the biceps fall from six sets to three. The curl goes in the rest because the biceps take no part in a back extension."
+          "why": "The second of the two lower-back slots, and two a week is what takes this muscle from nothing to a real dose. It is the only thing in the week that trains it: everything else, the squat, the row, the hinge, asks your lower back to hold still and never to move. No load until you tell me it is easy, and the old flat-back version is one tap away on the swap list. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the biceps fall from six sets to three."
         }
       ]
     },
     "friday": {
-      "name": "Friday",
-      "title": "Friday: press fresh, hinge and trunk after",
+      "name": "Session D",
+      "title": "Session D: squat and hinge, press after",
       "warmup": "upper",
       "cooldown": [
         "pigeon",
@@ -1681,7 +1585,245 @@
               ]
             }
           ],
-          "why": "Three bounds a side and that is the whole set. Same reason as the jumps on Monday: what you are training is how hard you can push off in one go, and a tired bound is a slow bound. It does not count toward the set total on this card."
+          "why": "Three bounds a side and that is the whole set. Same reason as the jumps on the squat session: what you are training is how hard you can push off in one go, and a tired bound is a slow bound. It does not count toward the set total on this card."
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Squat",
+          "tag": "(rack, dumbbells in hand)",
+          "exercises": [
+            {
+              "id": "bb-back-squat",
+              "name": "BB Back Squat",
+              "sets": 3,
+              "reps": "8",
+              "rest": "2 min",
+              "zone": "rack",
+              "station": "rack",
+              "log": true,
+              "cue": "The lift we are progressing. Stance slightly wider than your hips with the toes turned out a little. Breathe IN and hold it, tighten your stomach like you are about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe, they do not fall inward. Stand up and breathe out at the top. Take a fresh breath and re-tighten before EVERY rep, not just the first.",
+              "progression": "weight",
+              "rangeWidth": 2,
+              "alts": [
+                {
+                  "id": "bulgarian-split-squat",
+                  "name": "Bulgarian Split Squat",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Dumbbells hanging at your sides. Put the top of your back foot on the bench, laces down. Your front foot should be far enough forward that at the bottom your front shin is straight up and down, not leaning forward over your toes. Lower until your back knee is close to the floor. Drive up through the FRONT heel. The back leg is a kickstand, it does not push.",
+                  "sets": 3,
+                  "reps": "8/leg",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "front-squat",
+                  "name": "Front Squat",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
+                  "sets": 3,
+                  "reps": "8",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "reverse-lunge",
+                  "name": "Reverse Lunge",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up. Stepping backward rather than forward keeps the load off the front knee."
+                },
+                {
+                  "id": "walking-lunge",
+                  "name": "Walking Lunge",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
+                },
+                {
+                  "id": "heavy-goblet-squat",
+                  "name": "Heavy Goblet Squat",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
+                },
+                {
+                  "id": "leg-press",
+                  "name": "Leg Press",
+                  "zone": "machines",
+                  "station": "leg-press",
+                  "cue": "Feet shoulder width on the platform. Lower until your knees are near your chest without your lower back rounding off the pad, then press. Use this on a day your back is tired."
+                }
+              ]
+            },
+            {
+              "id": "db-hammer-curl",
+              "name": "DB Hammer Curl",
+              "sets": 3,
+              "reps": "10",
+              "rest": "45s",
+              "zone": "rack",
+              "station": null,
+              "log": true,
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "whyHere": "The curl goes in the rest because the biceps take no part in a squat.",
+              "alts": [
+                {
+                  "id": "bicep-curl",
+                  "name": "DB Biceps Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly."
+                },
+                {
+                  "id": "cable-curl",
+                  "name": "Cable Curl",
+                  "zone": "cable",
+                  "station": "cable-row",
+                  "cue": "Low cable with a straight or EZ attachment. The cable keeps tension on the muscle at every point, including the top where dumbbells go light. 3x12.",
+                  "sets": 3,
+                  "reps": "12"
+                },
+                {
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                },
+                {
+                  "id": "kb-hammer-curl",
+                  "name": "Kettlebell Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder."
+                }
+              ]
+            }
+          ],
+          "why": "The lighter squat of the two, eight to ten reps against five to seven on the heavy one. Same movement, same bar, different weight. The curl goes in the rest because the biceps take no part in a squat."
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Hinge",
+          "tag": "(rack, dumbbells in hand)",
+          "exercises": [
+            {
+              "id": "romanian-deadlift",
+              "name": "BB Romanian Deadlift",
+              "sets": 3,
+              "reps": "8",
+              "rest": "2 min",
+              "zone": "rack",
+              "station": "rack",
+              "log": true,
+              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
+              "progression": "weight",
+              "rangeWidth": 2,
+              "open": [
+                {
+                  "q": "Standing in the rack with a loaded bar: could another member still use the pull-up bar above you? If they cannot, hanging knee raises can ride in your RDL rest. Can they?",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10",
+                  "topic": "equipment"
+                },
+                {
+                  "q": "Do you want hanging knee raises in the RDL rest? It is 3 more ab sets on top of the 6 direct ones already in the week, or I can move work already in the week into that gap and add nothing. Which?",
+                  "asked": "2026-08-27",
+                  "due": "2026-09-10",
+                  "topic": "volume"
+                }
+              ],
+              "alts": [
+                {
+                  "id": "single-leg-rdl",
+                  "name": "Single-Leg RDL",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Has sat at 40 lb since May, so this time the weight moves, not just the reps. One dumbbell in the hand OPPOSITE the standing leg. Stand on one leg with the knee slightly bent and frozen. Push the hip backward and let the free leg extend straight behind you like a see-saw, keeping your hips square to the floor: the back hip must not open toward the ceiling. Go until you feel the hamstring stretch, then stand and squeeze. Slow. Touch the bench with your free toe if you lose balance.",
+                  "sets": 3,
+                  "reps": "8/leg",
+                  "rest": "90s"
+                },
+                {
+                  "id": "back-extension",
+                  "name": "45-Degree Back Extension",
+                  "zone": "machines",
+                  "station": "back-extension",
+                  "cue": "On the 45 degree pad. Hinge down and squeeze your bum to come up. Hug a plate for load."
+                },
+                {
+                  "id": "db-rdl",
+                  "name": "DB Romanian Deadlift",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Two heavy dumbbells in front of your thighs. Same hip push backward, same freeze in the knees."
+                },
+                {
+                  "id": "kb-swing",
+                  "name": "KB Swing",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same hip snap, done fast. Hike the bell back between your legs, then SNAP the hips forward so the bell floats to chest height. Arms do nothing. Start at 35 lb. 2x12.",
+                  "sets": 2,
+                  "reps": "12"
+                },
+                {
+                  "id": "smith-rdl",
+                  "name": "Smith RDL",
+                  "zone": "smith",
+                  "station": "smith",
+                  "cue": "Bar on rails so it cannot drift away from your legs. Useful for grooving the hinge when you are tired."
+                },
+                {
+                  "id": "b-stance-rdl",
+                  "name": "B-Stance RDL",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Back toe lightly touching the floor for balance, but almost all the weight on the front leg. Much easier to balance, so you can load it heavier."
+                }
+              ]
+            },
+            {
+              "id": "db-lateral-lunge",
+              "name": "DB Lateral Lunge",
+              "sets": 3,
+              "reps": "8/side",
+              "rest": "45s",
+              "zone": "rack",
+              "station": null,
+              "log": true,
+              "cue": "This is the sideways movement you asked for, and it is loaded on purpose: unweighted band walks were shown to do little. Hold one dumbbell at your chest. Step wide to the LEFT and sit back into that left hip, keeping the right leg straight with the foot flat. Both feet stay pointing forward the whole time. Push off the left foot to come back. You should feel a stretch on the inside of the straight leg and work in the bent leg's hip. Start with a light dumbbell and a small step, then widen the step before you add weight.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "whyHere": "The sideways lunge goes in the rest because it is the only loaded sideways movement on the card and it shares nothing with a hinge.",
+              "alts": [
+                {
+                  "id": "front-squat",
+                  "name": "Front Squat",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Your second squat of the week, deliberately light. This is the technique fix: because the bar sits on the FRONT of your shoulders, your body is forced upright and depth gets easier, which is exactly what a back squat struggles with. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Let your fingertips just hook under the bar, the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. If the elbows drop, the bar rolls forward: rack it and go lighter.",
+                  "sets": 3,
+                  "reps": "8",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "cossack-squat",
+                  "name": "Cossack Squat",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "The deeper version. Same sideways sit, but let the straight leg's toes come up and go as low as you can. Bodyweight first, hold a dumbbell at the chest when it is easy. 3x6/side.",
+                  "sets": 3,
+                  "reps": "6/side"
+                }
+              ]
+            }
+          ],
+          "why": "The lighter hinge, eight to ten reps against six to eight on the heavy one, and one of only three hamstring exposures in the week. The sideways lunge goes in the rest because it is the only loaded sideways movement on the card and it shares nothing with a hinge."
         },
         {
           "role": "main",
@@ -1789,13 +1931,13 @@
               ]
             }
           ],
-          "why": "The press gets the fresh slot on this day, ten to fourteen reps against eight to twelve earlier in the week, so the same movement is trained light as well as heavy. The single-leg hinge goes in the press rest because it is done standing on one leg with the hips and the press is done sitting down with the arms."
+          "why": "Ten to fourteen reps against eight to twelve on the other press session, so the same movement is trained light as well as heavy. The single-leg hinge goes in the press rest because it is done standing on one leg with the hips and the press is done sitting down with the arms."
         },
         {
-          "role": "main",
+          "role": "accessory",
           "pairing": "fill",
           "label": "Horizontal Press",
-          "tag": "(bench, dumbbells in hand)",
+          "tag": "(bench, walk in hand)",
           "exercises": [
             {
               "id": "db-bench-press",
@@ -1841,239 +1983,19 @@
               ]
             },
             {
-              "id": "db-calf-raise",
-              "name": "DB Calf Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "cue": "Standing on the floor in the rest between lunge sets, a dumbbell in each hand hanging at your sides. Feet about hip width. Push all the way up onto your toes, as high as you can go, and hold for one second at the top. Then lower slowly, about three seconds down, until your heels touch the floor and you feel a stretch through the back of the calf. Success looks like: you can hold the top position still for a second without wobbling, and the slow way down is what you feel most. If you cannot hold the top, the dumbbells are too heavy. This is the flat-floor version, so the stretch at the bottom is smaller than on the machine; that is the trade for it costing you no walk.",
-              "progression": "weight",
-              "rangeWidth": 6,
-              "whyHere": "The calf raise goes in the press rest because the calf takes no part in a press and you can do it standing right there.",
-              "alts": [
-                {
-                  "id": "standing-calf-raise",
-                  "name": "Machine Calf Raise",
-                  "zone": "machines",
-                  "station": "calf-raise",
-                  "cue": "On the standing calf machine. Let the heels sink until you feel a stretch, pause one second at the bottom, then push all the way up onto your toes and squeeze for one second. Slow both directions. This is ankle insurance for the running."
-                }
-              ]
-            }
-          ],
-          "why": "The heavy chest slot, six to nine reps, and the only one of the three where the chest leads a block instead of riding in another lift rest. The chest and the lats are the two muscles here that get no helper credit from anything at all, which is why both are expensive to cover and why both used to sit at the bottom of the week. The calf raise goes in the press rest because the calf takes no part in a press and you can do it standing right there."
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
-          "label": "Hinge",
-          "tag": "(rack, dumbbells in hand)",
-          "exercises": [
-            {
-              "id": "romanian-deadlift",
-              "name": "BB Romanian Deadlift",
-              "sets": 3,
-              "reps": "8",
-              "rest": "2 min",
-              "zone": "rack",
-              "station": "rack",
-              "log": true,
-              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
-              "progression": "weight",
-              "rangeWidth": 2,
-              "open": [
-                {
-                  "q": "Standing in the rack with a loaded bar: could another member still use the pull-up bar above you? If they cannot, hanging knee raises can ride in your RDL rest. Can they?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10",
-                  "topic": "equipment"
-                },
-                {
-                  "q": "Do you want hanging knee raises in the RDL rest? It is 3 more ab sets on top of the 6 direct ones already in the week, or I can move work already in the week into that gap and add nothing. Which?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10",
-                  "topic": "volume"
-                }
-              ],
-              "alts": [
-                {
-                  "id": "single-leg-rdl",
-                  "name": "Single-Leg RDL",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Has sat at 40 lb since May, so this time the weight moves, not just the reps. One dumbbell in the hand OPPOSITE the standing leg. Stand on one leg with the knee slightly bent and frozen. Push the hip backward and let the free leg extend straight behind you like a see-saw, keeping your hips square to the floor: the back hip must not open toward the ceiling. Go until you feel the hamstring stretch, then stand and squeeze. Slow. Touch the bench with your free toe if you lose balance.",
-                  "sets": 3,
-                  "reps": "8/leg",
-                  "rest": "90s"
-                },
-                {
-                  "id": "back-extension",
-                  "name": "45-Degree Back Extension",
-                  "zone": "machines",
-                  "station": "back-extension",
-                  "cue": "On the 45 degree pad. Hinge down and squeeze your bum to come up. Hug a plate for load."
-                },
-                {
-                  "id": "db-rdl",
-                  "name": "DB Romanian Deadlift",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Two heavy dumbbells in front of your thighs. Same hip push backward, same freeze in the knees."
-                },
-                {
-                  "id": "kb-swing",
-                  "name": "KB Swing",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same hip snap, done fast. Hike the bell back between your legs, then SNAP the hips forward so the bell floats to chest height. Arms do nothing. Start at 35 lb. 2x12.",
-                  "sets": 2,
-                  "reps": "12"
-                },
-                {
-                  "id": "smith-rdl",
-                  "name": "Smith RDL",
-                  "zone": "smith",
-                  "station": "smith",
-                  "cue": "Bar on rails so it cannot drift away from your legs. Useful for grooving the hinge when you are tired."
-                },
-                {
-                  "id": "b-stance-rdl",
-                  "name": "B-Stance RDL",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Back toe lightly touching the floor for balance, but almost all the weight on the front leg. Much easier to balance, so you can load it heavier."
-                }
-              ]
-            },
-            {
-              "id": "db-hammer-curl",
-              "name": "DB Hammer Curl",
-              "sets": 3,
-              "reps": "10",
-              "rest": "45s",
-              "zone": "rack",
-              "station": null,
-              "log": true,
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "progression": "weight",
-              "rangeWidth": 5,
-              "whyHere": "The curl goes in the rest because the biceps only hold the bar here, they do not move it.",
-              "alts": [
-                {
-                  "id": "bicep-curl",
-                  "name": "DB Biceps Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly."
-                },
-                {
-                  "id": "cable-curl",
-                  "name": "Cable Curl",
-                  "zone": "cable",
-                  "station": "cable-row",
-                  "cue": "Low cable with a straight or EZ attachment. The cable keeps tension on the muscle at every point, including the top where dumbbells go light. 3x12.",
-                  "sets": 3,
-                  "reps": "12"
-                },
-                {
-                  "id": "incline-db-curl",
-                  "name": "Incline DB Curl",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
-                },
-                {
-                  "id": "kb-hammer-curl",
-                  "name": "Kettlebell Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder."
-                }
-              ]
-            }
-          ],
-          "why": "The lighter hinge, eight to ten reps against six to eight on Tuesday. Same movement, different weight, and it is one of only three hamstring exposures in the week. The curl goes in the rest because the biceps only hold the bar here, they do not move it."
-        },
-        {
-          "role": "accessory",
-          "pairing": "fill",
-          "label": "Trunk and Grip",
-          "tag": "(rack, floor right there, walk in hand)",
-          "exercises": [
-            {
-              "id": "dead-bug",
-              "name": "Dead Bug",
-              "sets": 3,
-              "reps": "10/side",
-              "rest": "60s",
-              "zone": "rack",
-              "station": null,
-              "log": true,
-              "cue": "On the floor beside the bench, between press sets. Your example, and it is the pairing that always worked. On your back, arms straight up at the ceiling, knees bent up over your hips. Press your lower back FLAT into the floor and keep it there: that is the entire exercise. Slowly lower one arm behind your head and the opposite leg toward the floor, breathe out as they go. Stop the moment your lower back lifts off the floor, even if the leg is nowhere near down. Come back and swap sides.",
-              "bodyweight": true,
-              "needsFloor": true,
-              "progression": "reps",
-              "alts": [
-                {
-                  "id": "plank-shoulder-taps",
-                  "name": "Plank w/ Shoulder Taps",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On the floor. High plank on your hands, feet wide apart for balance. Tap one hand to the opposite shoulder, put it back, tap with the other. Success looks like: your hips do not rock side to side as the hand leaves the floor. If they rock, put your feet wider. 3x10 each side.",
-                  "sets": 3,
-                  "reps": "10/side"
-                },
-                {
-                  "id": "hanging-knee-raise",
-                  "name": "Hanging Knee Raise",
-                  "zone": "rack",
-                  "station": "rack-pullup-bar",
-                  "cue": "Hang from the pull-up bar on top of the rack with your arms straight and your feet clear of the floor. Bring both knees up towards your chest until your thighs pass level, then lower them under control until your legs are straight again. Success looks like: you come to a stop at the bottom before the next rep, so every one starts from still rather than from a swing. If you are swinging, do fewer. THIS CUE IS A DRAFT: it was written for you rather than taken off a published page, and nobody has read it standing at the bar. Say what it should say."
-                },
-                {
-                  "id": "hollow-hold",
-                  "name": "Hollow Hold",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
-                  "sets": 3,
-                  "reps": "20s"
-                },
-                {
-                  "id": "band-pallof",
-                  "name": "Band Pallof Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band anchored at chest height on a rack post, stand sideways, both hands on the band at your chest. Press straight out and resist the twist, hold 2 seconds. Only if every cable column is taken: there is no way to record which band you used, so the number cannot move."
-                },
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held up. Drop to the knees if the hips sag. 3x30s per side.",
-                  "sets": 3,
-                  "reps": "30s/side"
-                }
-              ]
-            },
-            {
               "id": "farmer-carry",
               "name": "Farmer Carry",
               "sets": 3,
               "reps": "40s",
               "rest": "45s",
-              "zone": "rack",
+              "zone": "benchDb",
               "station": null,
               "log": true,
               "cue": "Done after the curls rather than alternating with them, because it needs room to walk and the preacher seat does not travel. A heavy dumbbell in each hand, stand as tall as you can, shoulders back, stomach tight, and walk for the seconds shown. Grip, posture and everything down your sides at once. Put them down before your form falls apart, not after. COUNT SECONDS, and type the seconds. Start the watch before you pick the dumbbells up, because you cannot press anything with both hands full. Get to the top of the range on time first, then go heavier.",
               "bodyweight": false,
               "timed": true,
               "progression": "time",
-              "whyHere": "The carry goes in the rest because what it trains is the grip, and the hands take no part in a dead bug.",
+              "whyHere": "the carry goes in the press rest: it trains the grip, which a bench press does not",
               "alts": [
                 {
                   "id": "db-hold",
@@ -2108,7 +2030,7 @@
               ]
             }
           ],
-          "why": "The trunk work is the only thing in the week that trains the front of the abdomen directly, and it progresses by reps rather than weight because there is nothing here to load it with. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is both halves: abs and grip each fall from six sets a week to three, under the floor of four. The carry goes in the rest because what it trains is the grip, and the hands take no part in a dead bug."
+          "why": "The heavy chest slot, six to nine reps. Nothing else in the week asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which a bench press does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
         }
       ]
     }

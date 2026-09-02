@@ -1363,28 +1363,6 @@
           "note": "NOT LOADABLE. 9 sets a week, more than any main lift, and it sits in the rest gap of a bent-over row, which is already the largest trunk brace in the week."
         },
         {
-          "id": "hanging-knee-raise",
-          "name": "Hanging Knee Raise",
-          "implement": "bodyweight",
-          "zone": "rack",
-          "station": "rack-pullup-bar",
-          "loadable": false,
-          "secondary": [
-            "grip"
-          ],
-          "note": "Logged 6 sets in August. Progressed by leg position rather than weight.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
-        },
-        {
-          "id": "cable-crunch",
-          "name": "Cable Crunch",
-          "implement": "cable",
-          "zone": "cable",
-          "station": "cable-pulldown",
-          "loadable": true,
-          "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress."
-        },
-        {
           "id": "hollow-hold",
           "name": "Hollow Hold",
           "implement": "bodyweight",
@@ -1652,6 +1630,40 @@
       ],
       "jointAction": "Spinal extension, from a flexed lumbar and thoracic spine back to neutral, with the hips supported and near-static.",
       "attributionBasis": "ANATOMY. Spinal extension, from a flexed lumbar and thoracic spine back to neutral, with the hips supported and near-static. The erector spinae are the prime movers of spinal extension; the glutes and hamstrings assist by anchoring the pelvis. No study is cited and none should be: see the legend at the top of this file. The claim here is what the joint does, and it is the same kind of claim the rest of this file makes."
+    },
+    "trunk-flexion": {
+      "name": "Trunk flexion",
+      "primary": [
+        "abs"
+      ],
+      "secondary": [],
+      "confidence": "anatomy",
+      "note": "SPLIT OUT OF `anti-extension` ON 2026-09-01, and the split is the point. That group's jointAction is \"Resisting lumbar extension isometrically\", which is what a dead bug and a plank do: the spine holds still. These two MOVE the spine. Filing a movement under a group whose joint action it does not perform is the exact error that put the erectors on the 45-degree back extension, found the same day, and `hanging-knee-raise` carried an unconfirmed jointActionNote of its own. It is now prescribed twice a week and the abdominal floor rests on it, so it was resolved before being leaned on rather than after.",
+      "variants": [
+        {
+          "id": "hanging-knee-raise",
+          "name": "Hanging Knee Raise",
+          "implement": "bodyweight",
+          "zone": "rack",
+          "station": "rack-pullup-bar",
+          "loadable": false,
+          "secondary": [
+            "grip"
+          ],
+          "note": "Logged 6 sets in August. Progressed by leg position rather than weight."
+        },
+        {
+          "id": "cable-crunch",
+          "name": "Cable Crunch",
+          "implement": "cable",
+          "zone": "cable",
+          "station": "cable-pulldown",
+          "loadable": true,
+          "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress."
+        }
+      ],
+      "jointAction": "Lumbar flexion, curling the pelvis toward the ribs. The hanging variants flex the hip at the same time, and the hip flexors rather than the abdominals are the prime movers of that half.",
+      "attributionBasis": "ANATOMY. Lumbar flexion, curling the pelvis toward the ribs. The rectus abdominis is the prime mover of lumbar flexion. The hip flexors do the rest of a hanging knee raise and are not in this catalogue's muscle list at all, which is why the CUE has to ask for the pelvic curl: without it the exercise is hip flexion and the abdominals only hold on. No study is cited and none should be: see the legend at the top of this file."
     }
   }
 }

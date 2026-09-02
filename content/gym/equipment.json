@@ -51,13 +51,21 @@
           "count": "unknown",
           "confidence": "logged",
           "evidence": "Back squat to 185, BB bench to 185, BB row to 185, RDL to 225, BB OHP 115, front squat 115",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "adjacentTo": [
+            "rack-pullup-bar"
+          ],
+          "adjacentBecause": "See rack-pullup-bar. Adjacency is symmetric and validate.mjs requires BOTH sides to declare it, which is deliberate: a one-sided declaration is a claim only half the file agrees with."
         },
         "rack-pullup-bar": {
           "name": "Pull-up bar on top of the rack uprights",
           "confidence": "stated",
           "evidence": "'All these sections also have sort of spaces with these bars on top that you can use as a pull-up bar'",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "adjacentTo": [
+            "rack"
+          ],
+          "adjacentBecause": "HIS WORDS, 2026-09-01: 'if im doing bb rows I rather do hanging knee raises than deadbugs might be a little more work for back but I won't lay down'. He is asking for the two in one window, which is the declaration this file requires and which nothing else can supply. THIS SUPERSEDES AN EARLIER REFUSAL AND THE EARLIER REASON IS KEPT SO THE CHANGE IS VISIBLE: the rack and its bar were NOT adjacent because he had said that walk works 'only when the gym is not busy', a condition no card can check. What he said then was about a WALK. This bar is on top of the uprights of the rack he is already standing in, which is why the station's own name says so, and the newer statement is specific, is about this exact pairing, and is a request rather than an observation. IF THE BAR IS TAKEN the swap list on the exercise carries alternatives, so a wrong 'you can' here costs him a swap and not a session."
         },
         "trx": {
           "name": "TRX straps",

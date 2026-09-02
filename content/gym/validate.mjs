@@ -156,6 +156,11 @@ const TAG_EQUIPMENT = {
   bench: (ex) => ex.station === 'bench',
   preacher: (ex) => ex.station === 'preacher',
   box: (ex) => ex.station === 'box',
+  /* Added 2026-09-01 with the hanging knee raise. "bar" is a real claim about kit he has to reach,
+   * so it gets a test rather than a place on the prose list: the block must actually hang something
+   * from a pull-up bar. Naming it matters because the bar is above the rack he is already in, and
+   * the tag is what tells him he does not have to walk anywhere. */
+  bar: (ex) => /pullup-bar$/.test(ex.station || ''),
 };
 /** Words a tag may use that claim nothing about equipment. */
 const TAG_PROSE = new Set([
@@ -165,6 +170,9 @@ const TAG_PROSE = new Set([
   // Added 2026-08-29 with the sequence relabelling. "the other machine" claims nothing about what
   // equipment is present; the word `machine` beside it is what carries the claim and is tested.
   'other',
+  // Added 2026-09-01. "bar above you" needs these two: `bar` carries the equipment claim and is
+  // tested above, and neither of these says anything about what is present.
+  'above', 'you',
 ]);
 
 // ---------------------------------------------------------------------------------------------
