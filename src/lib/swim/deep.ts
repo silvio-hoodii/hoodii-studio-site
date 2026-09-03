@@ -43,12 +43,16 @@ import { sql } from './db';
  *  The fastest length in the table is 9.03 s, which beats a world-record 25 m split, and /swim
  *  already refuses to derive a 25 m personal best for exactly this reason. 12 s is the floor that
  *  reason implies: a short-course 50 m world record is a shade over 20 s, so a 25 in under 12 is
- *  not something that happened in a Calgary lane. */
-const LENGTH_MIN_MS = 12_000;
+ *  not something that happened in a Calgary lane.
+ *
+ *  EXPORTED since 2026-09-03 so src/lib/swim/records.ts can share it rather than declare its own.
+ *  A second copy of "what counts as a length" is how two surfaces come to disagree about the same
+ *  swim while both read correctly on their own, which is the defect class this repo keeps finding. */
+export const LENGTH_MIN_MS = 12_000;
 
 /** And a 25 m length slower than two minutes is a watch left running at the wall. 51 rows exceed
  *  it, the worst by 22 minutes. Left in, one of them moves a session's average by a factor of ten. */
-const LENGTH_MAX_MS = 120_000;
+export const LENGTH_MAX_MS = 120_000;
 
 /** Fewer freestyle lengths than this and a session average is a number about four lengths. */
 const MIN_LENGTHS_FOR_SWOLF = 8;

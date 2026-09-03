@@ -35,7 +35,7 @@
  * DECLARED EXCEPTIONS, and each one is a decision rather than a tolerance. See ALLOW below.
  */
 import { spawn } from 'node:child_process';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 
@@ -112,8 +112,15 @@ const DEFAULT_PATHS = [
   '/health', '/health?s=weight', '/health?s=now', '/health?s=plan', '/health?s=volume',
   '/health/deep',
   '/gym',
-  '/swim', '/swim?s=plan', '/swim?s=how', '/swim?s=coachme', '/swim?s=coachthem',
-  '/swim/deep',
+  /* `coachme` AND `coachthem` WERE BOTH WRONG UNTIL 2026-09-03 and neither is a sub-tab id. The
+     real ones are `me` and `teach` (SUB_TABS in src/app/swim/page.tsx). An unrecognised `?s=` value
+     falls back to the Now tab rather than erroring, so this list measured Now three times and
+     reported coverage of two coaching tabs it had never loaded. Same shape as `/work`, which was in
+     this list for weeks and is not a route: a path that silently resolves to something else passes
+     every geometric check, because the thing it measured really is a clean page.
+     `assertSubTabsExist` below is the gate now. */
+  '/swim', '/swim?s=plan', '/swim?s=how', '/swim?s=me', '/swim?s=teach',
+  '/swim/deep', '/swim/records',
   '/run', '/run?s=plan', '/run?s=how',
   '/bike', '/bike?s=plan', '/bike?s=how',
   '/kitchen', '/kitchen/find', '/kitchen/shop', '/kitchen/want',
@@ -144,6 +151,53 @@ if (mangled.length) {
   console.error('MSYS_NO_PATHCONV=1, or quote each path. Refusing rather than measuring the wrong URL:');
   console.error('a mangled path fetches something that is not the page and reports ok.');
   process.exit(2);
+}
+
+/* A `?s=` VALUE THAT IS NOT A SUB-TAB IS THE SAME FALSE PASS, and it cost more than the mangled
+ * path did because it lasted longer. Found 2026-09-03: this list carried `/swim?s=coachme` and
+ * `/swim?s=coachthem`, and the real ids are `me` and `teach`. Every route here reads its sub-tab
+ * from `?s=` and falls back to the first tab when the value is unrecognised, so both paths fetched
+ * the Now tab. The run measured Now three times and printed two ok lines about coaching tabs it had
+ * never loaded. Nothing was broken and nothing could have caught it: the page it measured is real
+ * and clean, which is exactly why a fallback is dangerous in a checker's path list.
+ *
+ * THE IDS ARE READ FROM THE PAGES rather than restated here, because a second copy of the tab list
+ * is the thing that drifted in the first place. Regex over the source and not an import: this script
+ * runs on plain node with no build step, which is why it has no dependencies. If a page's array is
+ * renamed the parse returns nothing and this refuses, which is the right direction to fail. */
+const SUBTAB_SOURCES = [
+  ['/health', 'src/app/health/page.tsx', 'TABS'],
+  ['/swim', 'src/app/swim/page.tsx', 'SUB_TABS'],
+  ['/run', 'src/app/run/page.tsx', 'SUB_TABS'],
+  ['/bike', 'src/app/bike/page.tsx', 'SUB_TABS'],
+];
+{
+  const problems = [];
+  const known = new Map();
+  for (const [route, file, arrayName] of SUBTAB_SOURCES) {
+    if (!existsSync(file)) { problems.push(`${route}: ${file} is not there any more`); continue; }
+    const src = readFileSync(file, 'utf8');
+    const m = new RegExp(`const ${arrayName}\\s*=\\s*\\[([\\s\\S]*?)^\\]`, 'm').exec(src);
+    if (!m) { problems.push(`${route}: could not find \`const ${arrayName} = [...]\` in ${file}`); continue; }
+    const ids = [...m[1].matchAll(/id:\s*'([a-z0-9-]+)'/g)].map((x) => x[1]);
+    if (!ids.length) { problems.push(`${route}: ${arrayName} in ${file} parsed to zero ids`); continue; }
+    known.set(route, new Set(ids));
+  }
+  for (const p of PATHS) {
+    const q = /^([^?]+)\?s=([^&]+)$/.exec(p);
+    if (!q) continue;
+    const ids = known.get(q[1]);
+    if (!ids) { problems.push(`${p}: no sub-tab list is known for ${q[1]}`); continue; }
+    if (!ids.has(q[2])) {
+      problems.push(`${p}: "${q[2]}" is not a sub-tab of ${q[1]}. Real ids: ${[...ids].join(', ')}. `
+        + 'It would silently render the default tab and pass.');
+    }
+  }
+  if (problems.length) {
+    console.error('Sub-tab paths that would measure the wrong page:');
+    for (const x of problems) console.error(`  ${x}`);
+    process.exit(2);
+  }
 }
 
 const CHROME = findChrome();

@@ -449,6 +449,17 @@ export default async function SwimPage({
             efficiency over time, how each personal best got there, and what the data cannot say.
           </p>
 
+          {/* RECORDS, added 2026-09-03. His ask: "I just want to have a reference for the 1,000,
+              which the watch doesn't have as a default. It goes from 400 to 1,500."
+              A SECOND LINK RATHER THAN A SIXTH CHIP, for the reason above this block: the five
+              chips already measure 337px of 390px. It sits under the deep link because the two
+              answer different questions off the same lengths, and this is the shorter one: deep is
+              how the bests got there, records is what the time for a distance IS. */}
+          <p className="ex-cue">
+            <Link href="/swim/records">Records, every distance this year</Link>. The four the watch
+            keeps, plus the 1,000 it does not, and how close you have come to it unbroken.
+          </p>
+
           {/* THE HISTORY, which lived on /health until today.
               It was a section about swimming on a page about body composition, and the two numbers
               that matter most here (best pace on the wall clock, best pace with the rest removed)
