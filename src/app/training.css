@@ -1213,10 +1213,13 @@
   white-space: nowrap;
 }
 .training .vol-state.under { color: var(--signal); }
-/* The loaded half of a muscle's total, under the total it is part of. Quieter than the number above
-   it because it is a qualifier, not a second headline: the row still adds up to the big number, and
-   this says how much of it is work that can be progressed. `nowrap` is deliberate, since "15 loaded"
-   breaking after "15" would read as two separate figures, which is the fault it exists to fix. */
+/* THE TWO NUMBERS SWAPPED PLACES ON 2026-09-02 and this comment described the old arrangement, which
+   is a comment that had become a lie about the line under it. The headline is now the LOADED count,
+   because it is the only one the dose-response curve is denominated in and the only one any gate on
+   this site reads. This line carries the total including jumps, carries and holds, which is the
+   larger and less meaningful figure. Quieter than the number above it because it is a qualifier, not
+   a second headline. `nowrap` is deliberate: breaking the phrase after the digits would read as two
+   separate figures, which is the fault it exists to fix. */
 .training .vol-loaded {
   font-family: var(--font-mono);
   font-size: 11px;

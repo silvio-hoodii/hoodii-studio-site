@@ -37,10 +37,28 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
  * reference the 10 ... that is too much". Eleven of sixteen rows carried it, so it was also the
  * column of noise this comment was already warning about, rebuilt with a longer string. The legend
  * under the table explains what an unlabelled row means, once, instead of eleven times. */
-function State({ below }: { below: boolean }) {
-  if (below) return <div className="vol-state under">under {MIN_EFFECTIVE_DOSE}</div>;
-  return null;
+/* THE VERDICT ON EVERY ROW, not just on the failing one. Rewritten 2026-09-02, on his reading of
+ * this table: "It doesn't make sense to me that one muscle gets 36 and another muscle gets 9 ...
+ * why is chest all the way down? Why is lat all the way down?"
+ *
+ * He was reading the ORDER as adequacy, and the table sorted by raw set count, so chest at 9 sat
+ * near the bottom looking neglected while the tool's own verdict on it was "higher efficiency", the
+ * cheapest effective band there is. The one muscle actually failing, abdominals at 1.5 loaded, sat
+ * mid-table with nothing pointing at it. A table that ranks by volume and is read as a league table
+ * of neglect is not a display problem, it is the wrong number in the first column.
+ *
+ * So the badge is now on every row and it says what the number MEANS, and the rows are ordered by
+ * that meaning rather than by size. */
+function State({ below, past, loaded }: { below: boolean; past: boolean; loaded: number }) {
+  if (below) return <div className="vol-state under">under {MIN_EFFECTIVE_DOSE}, too little</div>;
+  if (loaded < MIN_EFFECTIVE_DOSE + 1) return <div className="vol-state">at the minimum</div>;
+  if (past) return <div className="vol-state">past the cheap band</div>;
+  return <div className="vol-state ok">in the cheap band</div>;
 }
+
+/* Worst first, then dearest, then the ones that are simply fine. Within a group, biggest first. */
+const VERDICT_ORDER = (m: { belowMinimum: boolean; pastEfficient: boolean; loadedSets: number }) =>
+  (m.belowMinimum ? 0 : m.loadedSets < MIN_EFFECTIVE_DOSE + 1 ? 1 : m.pastEfficient ? 2 : 3);
 
 export default function Volume({
   coverage,
@@ -121,11 +139,13 @@ export default function Volume({
                 IT IS WIDE AND IT SCROLLS, on his instruction: "I don't care if it doesn't fit or
                 anything. I want to see one table." */}
             <tbody>
-              {perMuscle.map((m) => (
+              {[...perMuscle]
+                .sort((a, b) => VERDICT_ORDER(a) - VERDICT_ORDER(b) || b.loadedSets - a.loadedSets)
+                .map((m) => (
                 <tr key={m.muscle}>
                   <td className="wide">
                     {m.label}
-                    <State below={m.belowMinimum} />
+                    <State below={m.belowMinimum} past={m.pastEfficient} loaded={m.loadedSets} />
                   </td>
                   {/* BOTH NUMBERS, since 2026-08-30, and only where they differ. His reading of this
                       table: "I don't know if all the exercises should represent the same weight ...
@@ -134,10 +154,16 @@ export default function Volume({
                       as a set of back squats, and 35% of the quadriceps total came from work that
                       cannot be progressed at all. The second number is the loaded half, which is
                       what the dose-response curve is actually denominated in. */}
+                  {/* THE LOADED NUMBER LEADS since 2026-09-02. It was the small grey one underneath,
+                      and it is the only one the dose-response curve is denominated in: every tier
+                      on this page, and every gate that judges the programme, reads off it. Leading
+                      with the total put a 24.5 in front of him that includes five sets of three-rep
+                      box jumps. The total is still here, because nothing that counted it before
+                      should silently lose it. */}
                   <td className="tnum live">
-                    {fmt(m.sets)}
+                    {fmt(m.loadedSets)}
                     {m.loadedSets !== m.sets && (
-                      <div className="vol-loaded">{fmt(m.loadedSets)} loaded</div>
+                      <div className="vol-loaded">{fmt(m.sets)} with jumps and carries</div>
                     )}
                   </td>
                   {m.byDay.map((v, i) => (

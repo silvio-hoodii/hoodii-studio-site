@@ -667,13 +667,30 @@ const CASES = [
          why he asked "why does this same thing keep happening after all the audits". Built from a
          real block rather than typed: take any concurrent pair whose lead holds a cable station and
          put the partner on the same one. */
+      /* REPOINTED 2026-09-02, exactly as the line below it told the next person to do. This looked
+         for a concurrent block led from the CABLE zone, and on 2026-09-02 the last one became a
+         sequence: the lat pulldown and the new cable crunch hang off the same pulley and the
+         attachment changes between them, which is what a sequence is. The case then threw instead
+         of testing anything, and verify.mjs went red on a rule that was still working.
+         The rule was never about cables. It is about a station two exercises cannot hold at once,
+         so the fixture is now any concurrent pair whose lead holds a station that equipment.json
+         does not declare shareable. That is what the rule says, and it cannot be emptied by one
+         block changing its pairing. */
+      const equipment = JSON.parse(readFileSync(join(HERE, 'equipment.json'), 'utf8'));
+      const shareable = new Set();
+      for (const zone of Object.values(equipment.zones ?? {})) {
+        for (const [id, st] of Object.entries(zone.stations ?? {})) {
+          if (st && typeof st === 'object' && st.sharedInOneWindow === true) shareable.add(id);
+        }
+      }
+      if (!shareable.size) throw new Error('read no shareable stations; the equipment shape moved under this case');
       const block = Object.values(p.days)
         .flatMap((d) => d.blocks || [])
         .find((b) => ['fill', 'alternate'].includes(b.pairing)
           && b.exercises.length === 2
           && b.exercises[0].station
-          && b.exercises[0].zone === 'cable');
-      if (!block) throw new Error('no concurrent cable block to mutate; repoint this case');
+          && !shareable.has(b.exercises[0].station));
+      if (!block) throw new Error('no concurrent block on a non-shareable station to mutate; repoint this case');
       block.exercises[1].zone = block.exercises[0].zone;
       block.exercises[1].station = block.exercises[0].station;
     },
