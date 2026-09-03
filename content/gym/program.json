@@ -635,15 +635,6 @@
               "progression": "weight",
               "rangeWidth": 4,
               "whyHere": "The tricep extension goes in the rest because the arms take no part in a back extension.",
-              "open": [
-                {
-                  "q": "You said you'd rather do assisted dips than tricep pushdowns. Two catches. Your triceps get 4 sets a week and that is the least that still builds them, so the dip has to be added on top, not swapped in. And the dip has its own machine, so this part of the session becomes two stops instead of one. Still want it?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-11",
-                  "topic": "equipment",
-                  "$qChanged": "THE COST OF SAYING YES WAS ADDED TO THIS QUESTION ON 2026-09-03, and the question is otherwise his and untouched.\n\nAs asked on 2026-08-27 it named one cost, that the dip is at its own machine and would turn a one-stop block into two. It did not say what removing the overhead extension does to the week. Verified against scripts/gym-targets.mjs on 2026-09-03: triceps get 4 direct sets a week across 2 slots, and 4 is the floor the gate refuses to go under, quoted from Iversen 2021. So this is not a swap he can make freely; it is a swap that breaks a build gate unless the dip carries the sets the extension was carrying.\n\nPUT AS A COST AND NOT AS A REFUSAL, deliberately. He may well want the dip anyway, and \"you cannot\" is not an agent's call to make about his own gym. What was wrong was asking him to choose without telling him the price, which is the failure the farmer-carry question was written up to prevent: put as three options with the cost of each, he answered in one word and it shipped the same hour."
-                }
-              ],
               "alts": [
                 {
                   "id": "tricep-pushdown",
@@ -677,6 +668,27 @@
             }
           ],
           "why": "The only exercise in the gym where your lower back is the muscle that moves rather than the muscle that holds on. It replaces the back extension you had been doing, which turned out to be hip work: with a flat back your bum moves you and your lower back just holds, the same as in a squat. That old version is the first swap option here and your weights on it are untouched. No load on this one until you tell me it is easy. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the triceps fall from six sets to three. The tricep extension goes in the rest because the arms take no part in a back extension."
+        },
+        {
+          "role": "accessory",
+          "pairing": "fill",
+          "label": "Horizontal Push",
+          "exercises": [
+            {
+              "id": "assisted-dip",
+              "name": "Assisted Dip",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "machines",
+              "station": "assisted-dip",
+              "log": true,
+              "cue": "THE MACHINE HELPS YOU, so MORE weight on the stack makes this EASIER, not harder. That is backwards from every other machine on this card, which is why this asks you for more reps rather than more weight. HOW TO DO IT. Set the stack so that eight is just about all you can manage. Kneel or stand on the pad, take a handle in each hand, arms straight, and pull your shoulders DOWN away from your ears before you start. Lower yourself until your upper arms are level with the floor, then press back up until your arms are straight. Keep your elbows pointing backwards rather than flaring out sideways, and let your chest lean forward about the width of a hand. Success looks like: you feel it across the chest and the back of the upper arm, and you can come to a full stop at the bottom instead of dropping into it. If your shoulders creep up toward your ears, add assistance. THIS CUE IS A DRAFT: nobody has read it standing at the machine. Use the note box and say what it should say.",
+              "bodyweight": true,
+              "progression": "reps"
+            }
+          ],
+          "why": "Assisted dips on your ruling of 2026-09-03: you said you would rather do these than the cable exercise that was giving your arms their work. THEY COME IN ALONGSIDE THAT ONE RATHER THAN REPLACING IT, because your triceps sit on four sets a week and four is the floor, so taking the other out to make room would have dropped them under it. That is the second stop you accepted. Worth knowing what you are buying: a dip trains the chest first and the arms second, so three sets here add one and a half tricep sets rather than three, and the chest work is the larger part of it. PROGRESSION IS REPS AND NOT WEIGHT ON PURPOSE. On this machine the stack carries you, so \"add weight\" would make the exercise easier every week."
         }
       ]
     },
@@ -1790,21 +1802,6 @@
               "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
               "progression": "weight",
               "rangeWidth": 2,
-              "open": [
-                {
-                  "q": "When you are standing in the rack with the bar loaded for Romanian deadlifts, can someone else still reach the pull-up bar above you? If they cannot, you are already blocking it, so you may as well use it between your own sets. Can they reach it?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10",
-                  "topic": "equipment"
-                },
-                {
-                  "q": "Do you want hanging knee raises in the rests between your Romanian deadlift sets? Either add them, which takes your ab work from 7 sets a week to 10, or move ab sets you already do into that gap so the week does not get longer. Your abs are covered either way, so this is preference. Which?",
-                  "asked": "2026-08-27",
-                  "due": "2026-09-10",
-                  "topic": "volume",
-                  "$qChanged": "ONE NUMBER IN THIS QUESTION WAS CORRECTED ON 2026-09-03. The question is his and is otherwise untouched; the number in it was mine and had gone stale.\n\nIt said hanging knee raises would be \"3 more ab sets on top of the 6 direct ones already in the week\". Abdominals were at 6 direct when this was asked on 2026-08-27 and they are at 7 now, because the 2026-09-02 rebalance added a loadable Cable Crunch to fix abdominals sitting at 1.5 loaded sets, below the minimum dose.\n\nAND THE PREMISE UNDERNEATH IT MOVED FURTHER THAN THE NUMBER DID. When this was asked, abdominals were the one muscle in the week failing its floor, so \"more ab sets\" carried an implied urgency. They are not any more: verified against scripts/gym-targets.mjs on 2026-09-03, abdominals clear the floor of 4 at 7 direct sets and sit under the target of 10 by 3, which is the same band as twelve other muscles. The option is still live and it is now a preference rather than a repair. Say that when it is put to him.\n\nLeft as an open question rather than answered, because the choice between adding 3 sets and moving 3 sets that are already in the week is his: it is a trade between total time in the gym and where the work sits, and neither the arithmetic nor the evidence decides it."
-                }
-              ],
               "alts": [
                 {
                   "id": "single-leg-rdl",
@@ -1892,6 +1889,38 @@
             }
           ],
           "why": "The lighter hinge, eight to ten reps against six to eight on the heavy one, and one of only three hamstring exposures in the week. The sideways lunge goes in the rest because it is the only loaded sideways movement on the card and it shares nothing with a hinge."
+        },
+        {
+          "role": "accessory",
+          "pairing": "fill",
+          "label": "Abs",
+          "exercises": [
+            {
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
+              "sets": 3,
+              "reps": "10",
+              "rest": "45s",
+              "zone": "rack",
+              "station": "rack-pullup-bar",
+              "log": true,
+              "cue": "Hang from the pull-up bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top KEEP GOING for a couple of inches by curling your hips under you, as if you were trying to show someone the soles of your shoes. That last bit is the part your abdominals actually do: stopping when your thighs are level is hip work and they only hold on. Then lower under control until your legs are straight and you have come to a STOP before the next rep, so every one starts from still rather than from a swing. Success looks like: no swinging, and you feel it across the front of your stomach at the top rather than in the front of your hips the whole way. If you cannot stop the swing, do fewer reps. Ten a set, and when fifteen is easy, straighten the legs instead of adding weight. THIS CUE IS A DRAFT: nobody has read it standing at the bar. Use the note box and say what it should say.",
+              "bodyweight": true,
+              "progression": "reps",
+              "alts": [
+                {
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "zone": "rack",
+                  "station": null,
+                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
+                  "sets": 3,
+                  "reps": "30s"
+                }
+              ]
+            }
+          ],
+          "why": "Hanging knee raises on your ruling of 2026-09-03, and they get their OWN stop rather than riding in a rest earlier on this day. THE QUESTION AS IT WAS PUT TO YOU WAS WRONG. It said they would ride free in a rest you already stand through, and that rest is not free: it holds the side lunge, which is the only exercise in your week that trains the inner thigh. Moving it out would have taken that muscle from four sets a week to two, under the floor the app refuses to cross. So this is a third stop on Friday and about three minutes. Your abdominal work goes from seven sets a week to ten. The bar is on top of the rack you are already standing in, and you have ruled that nobody else can reach it while you are there."
         },
         {
           "role": "main",

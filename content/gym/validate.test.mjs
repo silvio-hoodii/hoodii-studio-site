@@ -87,12 +87,23 @@ const spanBlock = (p) => findBlock(p, 'whyHere');
  *                    programme has none the case BUILDS one rather than hunting for one. A gate is
  *                    being tested here, not the current contents of the file. */
 const anyOpenExercise = (p) => {
-  const ex = Object.values(p.days || {})
+  const all = Object.values(p.days || {})
     .flatMap((d) => d.blocks || [])
-    .flatMap((b) => b.exercises || [])
-    .find((e) => Array.isArray(e.open) && e.open.length);
-  if (!ex) throw new Error('no exercise anywhere carries an open question, so the open-row shape gates cannot be exercised. Do not weaken the case; park a question or repoint this.');
-  return ex;
+    .flatMap((b) => b.exercises || []);
+  const ex = all.find((e) => Array.isArray(e.open) && e.open.length);
+  if (ex) return ex;
+  /* IT BUILDS THE SHAPE WHEN THE WEEK NO LONGER HAS ONE, added 2026-09-03, and that is the same
+   * move `partnerWithOpen` and the shareable-station helper above already make. This threw instead
+   * until today, and the day it fired was the day the last three exercise-level questions in
+   * program.json were ANSWERED: he ruled on the pull-up bar, the knee raises and the dip, the rows
+   * came out because a question with an answer is not open any more, and six shape cases died with
+   * "park a question or repoint this" on a programme that is not wrong. **Answering his questions
+   * must never be what turns the suite red.** The gate is what is under test, not the current
+   * contents of the file, and a fixture the suite builds cannot be emptied by a ruling. */
+  const host = all.find((e) => e && e.id);
+  if (!host) throw new Error('the programme has no exercises at all, which is not a case this suite can repair');
+  host.open = [{ q: 'A parked question, built by the suite because the week no longer carries one. Does it still validate?', asked: '2026-01-01', due: '2026-12-31', topic: 'equipment' }];
+  return host;
 };
 
 /** A concurrent block whose two exercises sit on ONE station the equipment file declares shareable,
@@ -610,7 +621,17 @@ const CASES = [
   {
     name: 'an open question due before it was asked is refused',
     mutate: (p) => {
-      anyOpenExercise(p).open[0].due = '2026-08-01';
+      /* THE DATE IS DERIVED FROM THE ROW, not typed. This case said `due = '2026-08-01'` until
+       * 2026-09-03, which only put `due` before `asked` while every live question happened to have
+       * been asked in late August. The day the suite started building its own fixture, `asked`
+       * became a date before that literal and the case passed a programme it was meant to refuse:
+       * it reported ok on the wrong thing rather than failing loudly. Same class as the block
+       * labels and indices this file already stopped hardcoding, and the same class as the four
+       * date columns in the swim data: a literal that is only correct relative to something it
+       * does not read. One day before whatever the row says is unconditional. */
+      const q = anyOpenExercise(p).open[0];
+      const before = new Date(Date.parse(q.asked) - 86400000).toISOString().slice(0, 10);
+      q.due = before;
     },
     expect: 'is not after "asked"',
   },
