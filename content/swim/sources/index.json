@@ -33,5 +33,33 @@
     "fetchedOn": "2026-09-02",
     "sha256": "0f09fc77c48d211b",
     "characters": 9274
+  },
+  "se-adult-framework": {
+    "url": "https://www.swimming.org/learntoswim/swim-england-adult-swimming-framework/",
+    "file": "se-adult-framework.txt",
+    "fetchedOn": "2026-09-03",
+    "sha256": "dbafc5e00d7e5db1",
+    "characters": 3969
+  },
+  "se-strokes": {
+    "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
+    "file": "se-strokes.txt",
+    "fetchedOn": "2026-09-03",
+    "sha256": "b07937d8e66e9f60",
+    "characters": 5853
+  },
+  "se-frontcrawl": {
+    "url": "https://www.swimming.org/justswim/tips-for-getting-front-crawl-right/",
+    "file": "se-frontcrawl.txt",
+    "fetchedOn": "2026-09-03",
+    "sha256": "5d2a7980dd6f1104",
+    "characters": 3849
+  },
+  "se-breathing": {
+    "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
+    "file": "se-breathing.txt",
+    "fetchedOn": "2026-09-03",
+    "sha256": "f3d647158ea5c995",
+    "characters": 4071
   }
 }

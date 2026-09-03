@@ -357,21 +357,70 @@ function checkGroundedCues(fileLabel, doc, entries) {
  *
  * Law 5's move, from .agents/ENGINEERING.md: when an adversary finds the same class twice, stop fixing
  * instances and ask what question it was really asking. Sometimes that question is executable. */
+/* THE STALE-PAIRING HALF OF THIS GATE COULD NOT SEE A STALE PAIRING, and it was found on 2026-09-02
+ * by the edit that re-sourced Coach them. Both halves used to live inside
+ * `for (const group of byQuote.values()) { if (tabs.size < 2) continue; ... }`, so a `sharedWith`
+ * was only ever inspected when the two sides STILL quoted one sentence. Re-source one tab and every
+ * declaration on the other side stops sharing, drops out of every two-tab group, and is never
+ * looked at again. That edit left SIX declarations in coaching.json pointing at teaching cues,
+ * FIVE of them naming a cue that no longer existed at all, and this gate reported
+ * "0 sentence(s) cited on more than one tab" and passed.
+ *
+ * Its own message said "A stale pairing is worse than none: it says the two were checked together
+ * when they were not." That is precisely the case it could not reach: a pairing goes stale by one
+ * side changing, which is the same event that removes it from the gate's search.
+ *
+ * SAME SHAPE AS THE GYM VALIDATOR'S TEST FIXTURE, found in the other half of this session: a check
+ * whose subject is located by searching the data can be emptied by a data change while still
+ * reporting green. The fix is the same in kind. DECLARATIONS ARE NOW WALKED DIRECTLY, once per
+ * entry, whether or not the pair still shares anything. Undeclared sharing is still found by group,
+ * because that direction genuinely is a property of a group. */
 function checkSharedQuotes(files) {
   const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
   const byQuote = new Map();
   const entries = new Map();
+  /** The identity a pairing is ABOUT: same source, same sentence. Null when there is no quote to
+   *  share, which is itself a reason a declaration cannot be honoured. */
+  const quoteKey = (c) => {
+    const q = c.quote || c.fromQuote;
+    return q ? `${c.source || c.from || '?'}||${norm(q)}` : null;
+  };
   for (const [label, list] of files) {
     for (const c of list) {
       const key = `${label}:${c.id || c.name}`;
       entries.set(key, c);
-      const q = c.quote || c.fromQuote;
-      if (!q) continue;
-      const k = `${c.source || c.from || '?'}||${norm(q)}`;
+      const k = quoteKey(c);
+      if (!k) continue;
       if (!byQuote.has(k)) byQuote.set(k, []);
       byQuote.get(k).push({ key, c, label });
     }
   }
+
+  /* DIRECTION ONE: every declaration must still be true. Walked per entry, so nothing here depends
+     on the pair having survived. */
+  let declarations = 0;
+  for (const [key, c] of entries) {
+    const declared = Array.isArray(c.sharedWith) ? c.sharedWith : [];
+    if (!declared.length) continue;
+    const mine = quoteKey(c);
+    for (const d of declared) {
+      declarations++;
+      if (!entries.has(d)) {
+        fail(key, `sharedWith names "${d}", which does not exist. Keys are <file>:<id or name>. If the other tab was re-sourced, this declaration is the leftover and it should go with it.`);
+        continue;
+      }
+      if (!mine) {
+        fail(key, `declares sharedWith "${d}" and carries no quote of its own, so there is nothing for the two to share.`);
+        continue;
+      }
+      const theirs = quoteKey(entries.get(d));
+      if (mine !== theirs) {
+        fail(key, `sharedWith names "${d}", which does not quote the same sentence. A stale pairing is worse than none: it says the two were checked together when they were not. Delete the declaration, or restore the shared quote.`);
+      }
+    }
+  }
+
+  /* DIRECTION TWO: sharing that nobody declared. This one IS a property of the group. */
   let shared = 0;
   for (const group of byQuote.values()) {
     const tabs = new Set(group.map((g) => g.label));
@@ -385,13 +434,9 @@ function checkSharedQuotes(files) {
           fail(key, `quotes the same sentence as "${o}" and does not declare it. Add ${JSON.stringify(o)} to sharedWith. One source sentence on two tabs is allowed and often right; two tabs that do not know about each other is how the closed-fist test ended up inverted on one of them.`);
         }
       }
-      for (const d of declared) {
-        if (!entries.has(d)) fail(key, `sharedWith names "${d}", which does not exist. Keys are <file>:<id or name>.`);
-        else if (!others.includes(d)) fail(key, `sharedWith names "${d}", which does not quote the same sentence. A stale pairing is worse than none: it says the two were checked together when they were not.`);
-      }
     }
   }
-  out.push(`ok    [shared quotes] ${shared} sentence(s) cited on more than one tab, every side declaring the other`);
+  out.push(`ok    [shared quotes] ${shared} sentence(s) cited on more than one tab, and ${declarations} sharedWith declaration(s) checked directly rather than only where the pair survived`);
 }
 
 /* EVERY QUOTE MUST BE ON THE PAGE IT NAMES. Added 2026-09-02, and it is the answer to the one

@@ -1,5 +1,25 @@
 {
   "$comment": [
+    "THE SIX sharedWith DECLARATIONS ON THIS FILE WERE REMOVED 2026-09-02, and they were removed",
+    "because the other tab stopped quoting these sentences rather than because the pairing was wrong.",
+    "",
+    "His ruling: \"I don't know if these two things come from the same source. I think they should be",
+    "from different sources.\" Coach them is now sourced from Swim England learn-to-swim pages and this",
+    "file KEEPS the four US Masters Swimming freestyle guides, which is the half of the split he named.",
+    "So the six sentences that used to appear on both tabs appear on one, and the declarations that",
+    "said otherwise are gone. checks/count, exhale, breath-frequency, hips, kick-origin and catch each",
+    "lost a one-element sharedWith. Nothing else about them changed: the quotes, sources and tests are",
+    "untouched, and five of the six cues they used to be paired with no longer exist on the other tab.",
+    "",
+    "AND THE GATE COULD NOT SEE THAT THEY HAD GONE STALE, which is the finding worth keeping.",
+    "checkSharedQuotes in content/swim/validate.mjs checked declarations only inside a group of two or",
+    "more tabs quoting one sentence. Re-sourcing the other tab emptied every such group, so all six",
+    "declarations became invisible in the same edit that falsified them, and the validator reported",
+    "\"0 sentence(s) cited on more than one tab\" with 0 failures. Its own error message named this",
+    "exact case. Fixed the same day: declarations are walked per entry now, and the gate was watched",
+    "refusing all six before this file was cleaned.",
+    "",
+    "--- the record before 2026-09-02 ---",
     "COACHING HIM, not him coaching somebody else. teaching.json is the other one and every cue",
     "in it starts 'stand next to them and watch', which is right for that job and useless for this.",
     "",
@@ -42,10 +62,7 @@
       "test": "Count one arm only, the same arm, from push-off to the wall. Your logged median is 9 cycles per 25 m. Anything above your own normal on a given length means that length was less efficient, whatever it felt like.",
       "quote": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming.",
       "source": "usms-pull",
-      "confidence": "sourced",
-      "sharedWith": [
-        "teaching:Count strokes per length and keep the count honest"
-      ]
+      "confidence": "sourced"
     },
     {
       "id": "count-drift",
@@ -66,10 +83,7 @@
       "test": "If you arrive at the breath and have to blow out first before you can suck in, the exhale was not finished. Done right there is nothing to blow out and the breath is only an inhale.",
       "quote": "You should exhale while your mouth is underwater and inhale when it's out of the water.",
       "source": "usms-breathing",
-      "confidence": "sourced",
-      "sharedWith": [
-        "teaching:Breathe OUT under the water"
-      ]
+      "confidence": "sourced"
     },
     {
       "id": "exhale-final",
@@ -91,10 +105,7 @@
       "quote": "breathing every other or every third stroke will ensure that you get the air you need",
       "source": "usms-breathing",
       "confidence": "sourced",
-      "$whyChanged": "UNIT COLLISION FIXED 2026-09-02. It read \"For anything over about 75 seconds, which is every length you care about\". The source's 75 seconds is a RACE OR EFFORT duration: \"Once you're swimming longer than 75 seconds, breathing every other or every third stroke will ensure that you get the air you need.\" A LENGTH is 25 m and takes him about 29 seconds, and plan.json cue 7 defines it that way off the Garmin manual: \"Length: One trip down the pool.\" So no length he swims is over 75 seconds, and the gloss said the opposite on a tab whose first check is about counting lengths.",
-      "sharedWith": [
-        "teaching:Breathe on a rhythm you chose before you started"
-      ]
+      "$whyChanged": "UNIT COLLISION FIXED 2026-09-02. It read \"For anything over about 75 seconds, which is every length you care about\". The source's 75 seconds is a RACE OR EFFORT duration: \"Once you're swimming longer than 75 seconds, breathing every other or every third stroke will ensure that you get the air you need.\" A LENGTH is 25 m and takes him about 29 seconds, and plan.json cue 7 defines it that way off the Garmin manual: \"Length: One trip down the pool.\" So no length he swims is over 75 seconds, and the gloss said the opposite on a tab whose first check is about counting lengths."
     },
     {
       "id": "hips",
@@ -105,10 +116,7 @@
       "quote": "The first strategy is to press your head and chest, the lighter end of the seesaw, down into the water.",
       "source": "usms-position",
       "confidence": "sourced",
-      "$whyChanged": "\"Sinking legs are the biggest single source of drag\" was removed 2026-09-02. It carried a `sourced` badge and the quote beside it says only to press the head and chest down. US Masters present that as the FIRST OF TWO strategies and add, in the next paragraph, \"Some swimmers can use this strategy and it works perfectly and they achieve great alignment. Others aren't so lucky.\" The second strategy is check 7. teaching.json carries the same overreach in its `why` (\"It is the single biggest drag problem in adult freestyle\") and is left for a teaching-tab pass. THE QUOTE ITSELF WAS RECAST AND IS NOW VERBATIM. It read \"Press your head and chest...\" against a page that reads \"The first strategy is to press your head and chest...\". Dropping four words is what turned one of two options into the answer, and the earlier pass noticed it in prose and left the quote alone. checkQuotesAgainstSources refused it on its first run, which is the argument for the gate over the note.",
-      "sharedWith": [
-        "teaching:Press the chest down and the hips come up"
-      ]
+      "$whyChanged": "\"Sinking legs are the biggest single source of drag\" was removed 2026-09-02. It carried a `sourced` badge and the quote beside it says only to press the head and chest down. US Masters present that as the FIRST OF TWO strategies and add, in the next paragraph, \"Some swimmers can use this strategy and it works perfectly and they achieve great alignment. Others aren't so lucky.\" The second strategy is check 7. teaching.json carries the same overreach in its `why` (\"It is the single biggest drag problem in adult freestyle\") and is left for a teaching-tab pass. THE QUOTE ITSELF WAS RECAST AND IS NOW VERBATIM. It read \"Press your head and chest...\" against a page that reads \"The first strategy is to press your head and chest...\". Dropping four words is what turned one of two options into the answer, and the earlier pass noticed it in prose and left the quote alone. checkQuotesAgainstSources refused it on its first run, which is the argument for the gate over the note."
     },
     {
       "id": "tension",
@@ -141,10 +149,7 @@
       "quote": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third.",
       "source": "usms-kick",
       "confidence": "sourced",
-      "$whyChanged": "TEST REPLACED 2026-09-02. It read \"If your knees are bending first and your feet are cycling like a bicycle, it is coming from the knee.\" HE CANNOT SEE HIS OWN KNEES OR FEET. That is verbatim the reason plan.json deleted its kick cue: \"The test was unperformable: he cannot see his own heels, knees or feet while looking at the bottom tiles.\" The same surface deleted a cue for this on the How tab and kept it on the Coach me tab, because the Coach me version was written from the Coach them version, where the test works: on the deck you ARE looking at somebody's knees.\n\nNO REPLACEMENT SENSATION WAS INVENTED. plan.json's precedent is the honest one: \"I have no grounded, testable kick cue to replace it with, so the plan ships with nothing about the kick. That is the honest outcome.\" The cue is kept because the instruction is sound and sourced; the test says what instrument the check actually needs.",
-      "sharedWith": [
-        "teaching:The kick starts at the hip, not the knee"
-      ]
+      "$whyChanged": "TEST REPLACED 2026-09-02. It read \"If your knees are bending first and your feet are cycling like a bicycle, it is coming from the knee.\" HE CANNOT SEE HIS OWN KNEES OR FEET. That is verbatim the reason plan.json deleted its kick cue: \"The test was unperformable: he cannot see his own heels, knees or feet while looking at the bottom tiles.\" The same surface deleted a cue for this on the How tab and kept it on the Coach me tab, because the Coach me version was written from the Coach them version, where the test works: on the deck you ARE looking at somebody's knees.\n\nNO REPLACEMENT SENSATION WAS INVENTED. plan.json's precedent is the honest one: \"I have no grounded, testable kick cue to replace it with, so the plan ships with nothing about the kick. That is the honest outcome.\" The cue is kept because the instruction is sound and sourced; the test says what instrument the check actually needs."
     },
     {
       "id": "catch",
@@ -155,10 +160,7 @@
       "quote": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side.",
       "source": "usms-pull",
       "confidence": "sourced",
-      "$whyChanged": "TEST INVERTED UNTIL 2026-09-02. It read: \"Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm.\" That is backwards. Closing the fist removes the hand's surface area, so barely slowing means you were NOT relying on the hand, which is the good outcome. teaching.json's version of the same drill, on the Coach them tab of the same page, states it correctly: \"If they slow down only slightly, the forearm is doing work and the catch is decent.\" One surface, two tabs, opposite conclusions from one test, and the wrong one was on the tab about him. Also \"loose fists\" against the source's own instruction, \"Squeeze your hand tight into a fist and keep it tight throughout your entire stroke cycle\": a loose fist leaves the palm working and the test measures nothing.",
-      "sharedWith": [
-        "teaching:Bend the elbow and point the palm backwards"
-      ]
+      "$whyChanged": "TEST INVERTED UNTIL 2026-09-02. It read: \"Swim a length with your hands in loose fists. If you barely slow down, you were pushing with your hand instead of your forearm.\" That is backwards. Closing the fist removes the hand's surface area, so barely slowing means you were NOT relying on the hand, which is the good outcome. teaching.json's version of the same drill, on the Coach them tab of the same page, states it correctly: \"If they slow down only slightly, the forearm is doing work and the catch is decent.\" One surface, two tabs, opposite conclusions from one test, and the wrong one was on the tab about him. Also \"loose fists\" against the source's own instruction, \"Squeeze your hand tight into a fist and keep it tight throughout your entire stroke cycle\": a loose fist leaves the palm working and the test measures nothing."
     },
     {
       "id": "finish",
