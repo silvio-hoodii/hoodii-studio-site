@@ -142,7 +142,7 @@
           "open": [
             {
               "topic": "equipment",
-              "q": "Four cable lifts are all filed under the lat pulldown machine: the lat pulldown, straight-arm pulldown, tricep pushdown and overhead tricep extension. Which of those do you actually do on the pulldown seat, and which on the adjustable column?",
+              "q": "Four exercises are listed as happening at the lat pulldown machine: lat pulldown, straight-arm pulldown, tricep pushdown and overhead tricep extension. If that is wrong the app sends you to a machine someone else is on. Which of those do you do at the pulldown seat, and which at a cable column?",
               "asked": "2026-08-30",
               "due": "2026-09-13"
             }

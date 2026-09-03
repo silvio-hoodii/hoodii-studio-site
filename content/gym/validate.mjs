@@ -222,6 +222,48 @@ for (const day of Object.values(program.days ?? {})) {
  *  `checkOpenRow` below for why this exists and what it makes representable. */
 const OPEN_TOPICS = new Set(['placement', 'cue', 'prescription', 'equipment', 'volume']);
 
+/* WORDS THAT MEAN SOMETHING TO THIS REPO AND NOTHING TO HIM. Added 2026-09-03, on his words:
+ * "rephrase teb questions I have no odea what it all means".
+ *
+ * The 2026-08-30 ceiling fixed the LENGTH of these questions and all four were under it. He still
+ * could not read them, because the defect was never length: every one was written in the
+ * vocabulary of the model rather than of a person standing in a gym. "Triceps sit exactly on the
+ * floor of 4 direct sets a week" is four system terms in one clause. "Hanging knee raises can ride
+ * in your RDL rest" names a lift by an abbreviation he has never typed. "Four cable lifts are all
+ * FILED UNDER the lat pulldown machine" describes our data model, which is not a thing he has.
+ *
+ * SAME CLASS AS "BROWN THE BEEF", which is the incident behind the kitchen's rule that every
+ * technique word is defined in place. A term the writer knows and the reader does not is invisible
+ * to the writer by construction, so it cannot be caught by re-reading and it was not: these four
+ * were re-read, shortened, and shipped three times.
+ *
+ * WHY A LIST AND NOT AN INSTRUCTION. HOODII/CLAUDE.md's meta-law is that a rule which does not
+ * execute is decoration. "Write plainly" has been in AGENTS.md the whole time. The four questions
+ * were written anyway, so the prose version of this rule has already been tested and it failed.
+ *
+ * PRECISION OVER RECALL, deliberately. Every entry below is a term that appeared in a question he
+ * could not read, and each carries what to say instead so the failure is actionable rather than
+ * scolding. `floor` is matched only in its dose sense (`floor of 4`, `its floor`) so that "lie on
+ * the floor" survives: a checker whose first live finding is a false positive teaches people to
+ * dismiss it, which is the 2026-08-26 bare-path lesson. This list grows when a real question is
+ * found unreadable, never on a guess about what he might not know. */
+const OPEN_Q_JARGON = [
+  [/\bdirect sets?\b/i, 'say "sets"'],
+  [/\bset for set\b/i, 'say "the same number of sets"'],
+  /* `floor` ONLY IN ITS DOSE SENSE. The first draft of this row also listed `the floor of`, and the
+   * regression case below caught it flagging "does the mat reach the floor of the squat rack area",
+   * which is a perfectly good question about a physical floor. The dose sense always carries a
+   * number or a possessive, so those are the two forms matched and the room's floor survives. */
+  [/\b(?:floor of \d|its floor)\b/i, 'say "the least that still builds it"'],
+  [/\bminimum effective\b/i, 'say "the least that works"'],
+  [/\bRDLs?\b/, 'write "Romanian deadlift" out'],
+  [/\bfiled under\b/i, 'say "listed at"'],
+  [/\bstations?\b/i, 'say "machine", which is the word he uses'],
+  [/\brest window\b/i, 'say "the rest between sets"'],
+  [/\bslots?\b/i, 'name the exercise or the day instead'],
+  [/\b(?:this|the) block\b/i, 'say "this part of the session"'],
+];
+
 // The equipment map, flattened once. `station: null` is legal and means "occupies no fixture".
 // Anything else must name a station that equipment.json actually lists, so a typo cannot invent a
 // machine that is not in the building.
@@ -297,6 +339,7 @@ for (const [zoneKey, zone] of Object.entries(ZONES)) {
  * than here because a `const` does not hoist and that sweep runs at module top level; the function
  * below does hoist, which is why only the set had to move. */
 
+
 /** The shape rules shared by an `open` row wherever it lives: on an exercise in program.json or on
  *  a station in equipment.json. Equipment's rows were checked by NOTHING until today, which is how
  *  one sat there for two days with a premise its own file had already falsified. */
@@ -322,6 +365,13 @@ function checkOpenRow(where, at, q) {
   }
   if (typeof q.q === 'string' && !/\?\s*$/.test(q.q)) {
     fail(where, `${at}: "q" does not end in a question mark, so it is a statement parked in a question slot. gym-notes.mjs prints it to him under "OPEN QUESTION(S) FOR SILVIO" with a due date, and he cannot answer a fact. Either ask him something, or move the sentence to the "why" or the cue where an explanation belongs.\n    ends: ...${JSON.stringify(q.q.slice(-70))}`);
+  }
+  if (typeof q.q === 'string') {
+    for (const [re, instead] of OPEN_Q_JARGON) {
+      const hit = re.exec(q.q);
+      if (!hit) continue;
+      fail(where, `${at}: "q" uses ${JSON.stringify(hit[0])}, which is a word this repo understands and he does not. ${instead}. His words on 2026-09-03: "rephrase teb questions I have no odea what it all means". The 400-character ceiling did not catch this because the problem was never length; all four questions were under it and he still could not read them. The reasoning belongs in the block's "why"; the question is what he is being asked, in words he uses.\n    in: ${JSON.stringify(q.q.slice(Math.max(0, hit.index - 40), hit.index + hit[0].length + 40))}`);
+    }
   }
 }
 

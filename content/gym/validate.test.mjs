@@ -459,6 +459,33 @@ const CASES = [
     expect: null,
   },
   {
+    /* His words, 2026-09-03, on questions that were ALL under the 400 ceiling: "rephrase teb
+     * questions I have no odea what it all means". Length was never the defect. Every one was
+     * written in this repo's vocabulary rather than in his, which is invisible to the writer by
+     * construction and therefore cannot be caught by re-reading. It was not: these four were
+     * re-read, shortened and shipped three times. */
+    name: 'an open question written in this repo\'s vocabulary is refused',
+    mutate: (p) => {
+      const q = anyOpenExercise(p).open[0];
+      q.q = 'Triceps sit on the floor of 4 direct sets a week, so the dip has to come in set for set. Do you want it?';
+    },
+    expect: 'understands and he does not',
+  },
+  {
+    /* THE OTHER DIRECTION, and it is the half that matters more here. A banned-word list is the
+     * cheapest possible check to write and the easiest to make over-broad, and an over-broad one
+     * fires on good questions until somebody deletes it. The first draft of the `floor` row listed
+     * `the floor of` and flagged this sentence, which is a fine question about the floor of a room.
+     * Precision over recall: a checker whose first live finding is wrong teaches people to dismiss
+     * it, which is the 2026-08-26 bare-path lesson. */
+    name: 'a plain question using a banned word in its ordinary sense is allowed',
+    mutate: (p) => {
+      const q = anyOpenExercise(p).open[0];
+      q.q = 'Does the mat reach the floor of the squat rack area, or do your heels come off the floor at the bottom?';
+    },
+    expect: null,
+  },
+  {
     name: 'an open question with an unknown topic is refused',
     mutate: (p) => {
       anyOpenExercise(p).open[0].topic = 'general';
