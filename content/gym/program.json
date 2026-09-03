@@ -637,10 +637,11 @@
               "whyHere": "The tricep extension goes in the rest because the arms take no part in a back extension.",
               "open": [
                 {
-                  "q": "You said you would rather do assisted dips than pushdowns. This overhead extension is still the only direct triceps work in the week, and the dip sits at its own machine, so taking it would turn this block from one stop into two. Do you want the dip anyway?",
+                  "q": "You said you would rather do assisted dips than pushdowns. Two costs. Triceps sit exactly on the floor of 4 direct sets a week, so the dip must come in alongside this extension or replace it set for set. And the dip is at its own machine, which turns this block from one stop into two. Do you want the dip anyway?",
                   "asked": "2026-08-27",
                   "due": "2026-09-11",
-                  "topic": "equipment"
+                  "topic": "equipment",
+                  "$qChanged": "THE COST OF SAYING YES WAS ADDED TO THIS QUESTION ON 2026-09-03, and the question is otherwise his and untouched.\n\nAs asked on 2026-08-27 it named one cost, that the dip is at its own machine and would turn a one-stop block into two. It did not say what removing the overhead extension does to the week. Verified against scripts/gym-targets.mjs on 2026-09-03: triceps get 4 direct sets a week across 2 slots, and 4 is the floor the gate refuses to go under, quoted from Iversen 2021. So this is not a swap he can make freely; it is a swap that breaks a build gate unless the dip carries the sets the extension was carrying.\n\nPUT AS A COST AND NOT AS A REFUSAL, deliberately. He may well want the dip anyway, and \"you cannot\" is not an agent's call to make about his own gym. What was wrong was asking him to choose without telling him the price, which is the failure the farmer-carry question was written up to prevent: put as three options with the cost of each, he answered in one word and it shipped the same hour."
                 }
               ],
               "alts": [
@@ -1797,10 +1798,11 @@
                   "topic": "equipment"
                 },
                 {
-                  "q": "Do you want hanging knee raises in the RDL rest? It is 3 more ab sets on top of the 6 direct ones already in the week, or I can move work already in the week into that gap and add nothing. Which?",
+                  "q": "Do you want hanging knee raises in the RDL rest? It is 3 more ab sets on top of the 7 direct ones already in the week, or I can move work already in the week into that gap and add nothing. Which?",
                   "asked": "2026-08-27",
                   "due": "2026-09-10",
-                  "topic": "volume"
+                  "topic": "volume",
+                  "$qChanged": "ONE NUMBER IN THIS QUESTION WAS CORRECTED ON 2026-09-03. The question is his and is otherwise untouched; the number in it was mine and had gone stale.\n\nIt said hanging knee raises would be \"3 more ab sets on top of the 6 direct ones already in the week\". Abdominals were at 6 direct when this was asked on 2026-08-27 and they are at 7 now, because the 2026-09-02 rebalance added a loadable Cable Crunch to fix abdominals sitting at 1.5 loaded sets, below the minimum dose.\n\nAND THE PREMISE UNDERNEATH IT MOVED FURTHER THAN THE NUMBER DID. When this was asked, abdominals were the one muscle in the week failing its floor, so \"more ab sets\" carried an implied urgency. They are not any more: verified against scripts/gym-targets.mjs on 2026-09-03, abdominals clear the floor of 4 at 7 direct sets and sit under the target of 10 by 3, which is the same band as twelve other muscles. The option is still live and it is now a preference rather than a repair. Say that when it is put to him.\n\nLeft as an open question rather than answered, because the choice between adding 3 sets and moving 3 sets that are already in the week is his: it is a trade between total time in the gym and where the work sits, and neither the arithmetic nor the evidence decides it."
                 }
               ],
               "alts": [
@@ -2006,7 +2008,8 @@
                       "name": "Leg Curl Machine",
                       "zone": "machines",
                       "station": "leg-curl",
-                      "cue": "Lying or seated depending on which machine is free. Set the pad so it sits just ABOVE your heels, on the Achilles, not on your calf. Lie or sit with your knees lined up with the machine pivot, the bolt the arm turns on. Curl your heels toward your bum as far as the machine allows, pause for one second at the tightest point, then lower slowly, taking about twice as long down as up. Success looks like: your hips stay flat on the pad and do not lift as you curl. If they lift, go lighter. This is the only exercise in the week that bends the knee against resistance: every other hamstring movement here is a hinge, where the hamstring works at the hip instead. Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 4-day Day 1 Lower, \"D1. Isolation Hamstrings\"."
+                      "cue": "Lying or seated depending on which machine is free. Set the pad so it sits just ABOVE your heels, on the Achilles, not on your calf. Lie or sit with your knees lined up with the machine pivot, the bolt the arm turns on. Curl your heels toward your bum as far as the machine allows, pause for one second at the tightest point, then lower slowly, taking about twice as long down as up. Success looks like: your hips stay flat on the pad and do not lift as you curl. If they lift, go lighter. This is the only exercise in the week that bends the knee against resistance: every other hamstring movement here is a hinge, where the hamstring works at the hip instead.",
+                      "$cueChanged": "THE CITATION WAS REMOVED FROM THIS CUE ON 2026-09-03, and only the citation. Not one word of instruction changed.\n\nIt ended: 'Added 2026-08-22 from The Motion Blueprint (Jason & Lauren Pak, Theory of Motion, 2025), 4-day Day 1 Lower, \"D1. Isolation Hamstrings\".'\n\nHE ORDERED THAT GUIDE DROPPED, in his own words: \"the conclusion was that that program wasn't really that good so drop it, i dont care.\" Nine citations rested on it. HealthOS/knowledge/training-programme-evidence.md records the ruling and ends it with four words: \"Nothing may keep citing it.\" This cue kept citing it, on a card he reads at the machine, and knowledge/check-sources.mjs had been reporting RED on exactly this one line.\n\nTHE CUE IS NOW UNSOURCED AND THAT IS THE HONEST STATE, NOT AN OVERSIGHT. The evidence file says so in as many words: the leg curl, the calf raise placement, and the \"eight core patterns\" claim behind the Pallof press \"now have no source at all and must either be re-sourced or removed.\" No replacement citation was invented to fill the gap, because inventing one is worse than the gap.\n\nWHAT SURVIVES AND WHY. The instruction itself is machine setup and tempo, which does not rest on that guide: pad above the heels on the Achilles, knees on the pivot, one-second pause, twice as long down as up, hips flat as the success test. The sentence about this being the only knee-flexion movement in the week is derivable from the programme itself, by reading what every other hamstring slot does. If the leg curl's PLACEMENT is ever challenged, it needs a real source or it needs an open question, and it currently has neither."
                     }
                   ]
                 },
