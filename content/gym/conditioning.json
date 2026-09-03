@@ -1,5 +1,16 @@
 {
   "$comment": [
+    "THE SWIM IS A MORNING SESSION AND THE RUN IS AN EVENING ONE, swapped 2026-09-03 on his ruling.",
+    "Until then the morning slot held the run or the bike on all four lifting days and the swim sat",
+    "after the lift at about 9 pm. That contradicted the swim plan, which measures its 1,000 m goal",
+    "against the morning slot, and it contradicted itself: morning cardio was scheduled on days that",
+    "structurally follow a 9 pm swim.",
+    "",
+    "It was put to him as three shapes with the cost of each, not as a fix. The swap won because it",
+    "preserves every count and the rest rule while moving two things; the alternatives either starved",
+    "the run programme or dropped the swim below the 3 to 4 a week its own plan states. The costs he",
+    "took on are written in week.assignedDays.why and are about habit rather than arithmetic.",
+    "",
     "Run, bike and swim. Separate from program.json because it is not organised by gym day and does",
     "not have a set/rep/rest shape. Evidence for every number is in",
     "HealthOS/knowledge/training-programme-evidence.md.",
@@ -41,17 +52,17 @@
     "$comment": "Where each thing lives in a week. Pool times are his, given 2026-08-15.",
     "morning": {
       "name": "Morning, before work",
-      "what": "Run or bike, alternating. About 25 to 45 minutes.",
-      "why": "The only genuinely new time in the week. Nothing already happening moves to make room."
+      "what": "Swim. The continuity piece first, fresh, then whatever is left of the slot.",
+      "why": "The pool opens at 6:00 and you leave for work at 7:15, so this is 30 to 35 minutes in the water. That is the slot the 1,000 m goal is measured against: unbroken it is 20:40 to 22:00, and the slot itself runs out between 1,350 and 1,675 m."
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift, then swim, as now. Lift first.",
-      "why": "Unchanged. Held trends favour lifting before the aerobic piece, and this stack is already producing squat progress."
+      "what": "Lift first, then the run or the bike. Three runs and one bike across the four days.",
+      "why": "Lift first is unchanged, and the reason is unchanged: held trends favour lifting before the aerobic piece, and this stack is already producing squat progress. What changed is which aerobic piece sits here. The swim moved to the morning, so the run took the slot it left rather than a new day being added."
     },
     "poolTimes": {
-      "weekdayEarly": "Weekday early: ~6 am",
-      "weekdayLate": "Weekday late: ~9 pm, the one you normally use",
+      "weekdayEarly": "Weekday early: ~6 am, the one this plan is built on",
+      "weekdayLate": "Weekday late: ~9 pm, the one you have used for almost every swim so far",
       "saturday": "Saturday: ~noon or ~2 pm",
       "sunday": "Sunday: ~noon or ~2 pm"
     }
@@ -342,9 +353,12 @@
       "     watch and not the app, and prints the count against the rule. It reports what happened; it",
       "     does not congratulate him.",
       "",
-      "AND WHAT IT DOES NOT KNOW. On the day this was written, sleep and HRV had both been dark since",
-      "2026-08-15 while exercise data kept arriving daily: the watch is worn all day and taken off at",
-      "night. So this rule is arithmetic on load, not a recovery measurement, and the page says so",
+      "AND WHAT IT DOES NOT KNOW. Sleep and HRV are the only measurements that could turn this rule from",
+      "arithmetic on load into a recovery observation, and they are too sparse to do it: the 2026-08-26",
+      "export holds two nights of sleep between 2026-08-15 and the 26th. The rows themselves are there,",
+      "24,864 sleep stages and 1,451 HRV readings running to 2026-08-23, so the problem is coverage and",
+      "not a dead feed. The watch is worn all day and taken off at night. So this rule is arithmetic on",
+      "load, not a recovery measurement, and the page says so",
       "whenever health_recovery is stale. Wearing the watch to bed is the cheapest thing in this",
       "project and it is what would turn the rule into an observation."
     ],
@@ -373,7 +387,8 @@
         "that is a smaller number, so counting the app would report rest you did not take."
       ],
       "whenItFires": "On the fourth consecutive day. It does not block anything: it tells you how many days are behind you and that the next one should be off.",
-      "theHonestCaveat": "Three is your number, not a finding. No study sets it, and no measurement of your own recovery supports it, because sleep and HRV stopped on 2026-08-15. It is a sensible ceiling on density, chosen by the person doing the training, and it is the best available basis while the nights are dark."
+      "theHonestCaveat": "Three is your number, not a finding. No study sets it, and no measurement of your own recovery supports it: the watch recorded two nights of sleep between 2026-08-15 and the 26th, so there is no series to read. It is a sensible ceiling on density, chosen by the person doing the training, and it is the best available basis while the nights are mostly dark.",
+      "$caveatChanged": "CORRECTED 2026-09-03, and the correction is smaller than it looks: the conclusion was right and the reason had gone stale.\n\nIt read \"because sleep and HRV stopped on 2026-08-15\". THAT WAS TRUE WHEN WRITTEN on 2026-08-21, six dark nights into a gap. It is not true now, and it was being rendered as a present-tense fact. Counted on 2026-09-03 from the 2026-08-26 export: com.samsung.health.sleep_stage holds 24,864 rows running to 2026-08-23, and com.samsung.health.hrv holds 1,451 rows running to the same day. Neither stopped.\n\nWHAT IS ACTUALLY TRUE IS WORSE THAN A STOP AND BETTER THAN A STOP. The rows exist, but from 2026-08-15 to the export on the 26th there are TWO distinct sleep dates, the 15th and the 23rd, and three HRV dates, the 15th, 22nd and 23rd. So the series is too sparse to read a recovery trend from, which is exactly the conclusion the caveat draws. The rule stands. Only the sentence explaining it was wrong, and the wrong version was the flattering-to-nobody kind: it said the measurement was impossible when the measurement is merely absent, which is a thing he can change by wearing the watch.\n\nNO SLEEP DURATION IS QUOTED HERE, DELIBERATELY, AND NONE SHOULD BE ADDED UNTIL THE PARSE IS VALIDATED. The previous session parsed these tables four ways and every combination returned medians between 3.7 and 5.3 hours with bedtimes between 3 and 8 am, which contradicts his own account of his nights. When a parse disagrees with the person who slept, the parse is the suspect. Everything above is a ROW COUNT and a DATE RANGE, which are safe to state because they do not depend on interpreting stage codes or time offsets. The next step is one night he can confirm from memory, checked against what the tables say for that night, before any figure goes anywhere near a page."
     },
     "assignedDays": {
       "$comment": [
@@ -382,25 +397,39 @@
         "HOODII/CLAUDE.md forbids for body metrics for the same reason. validate.mjs reads the real",
         "day keys out of program.json and unions them with the lists below."
       ],
-      "morningCardio": [
+      "$keysRenamed": "RENAMED 2026-09-03 WITH THE SWAP: morningCardio became eveningCardio and swim became morningSwim.\n\nThe day lists are IDENTICAL to what they were, both before and after: monday, tuesday, thursday, friday. Only the time of day moved, and the time of day was baked into the key names, so leaving the keys alone would have left two keys asserting the opposite of the schedule while every array in the file stayed correct.\n\nTHESE KEYS RENDER. src/lib/gym/week.ts maps them through SLOT_LABEL and src/app/health/Week.tsx prints the result on the planned week, falling back to the raw key when there is no mapping. So an unrenamed key here would have printed \"morningCardio\" on his phone next to an evening run. Both labels were updated in the same commit, and content/gym/validate.mjs now compares the two lists in both directions so the next rename cannot render as camelCase.",
+      "morningSwim": [
         "monday",
         "tuesday",
         "thursday",
         "friday"
       ],
-      "swim": [
+      "eveningCardio": [
         "monday",
         "tuesday",
         "thursday",
         "friday"
       ],
       "why": [
-        "Cardio rides on days that are already training days, so it adds work without adding a day.",
-        "That is the whole trick, and it is why the morning slot exists: it is new TIME, not a new day.",
-        "Wednesday, Saturday and Sunday then come out completely free, which puts the planned week at a",
-        "maximum of two consecutive days, comfortably inside the rule of three.",
-        "The pool is open at noon and 2 pm on both weekend days, and a weekend swim is exactly the",
-        "thing that turns a clean week into a five-day block. That is the trade the rule is there to",
+        "HIS RULING, 2026-09-03, put as three shapes with their costs: the swim and the run trade slots.",
+        "",
+        "The swim had to move because the 1,000 m goal is measured against the morning slot, and the",
+        "morning slot was full of cardio. Swapping rather than reshuffling is what keeps every count",
+        "intact: swim 4, run 3, bike 1, lifting on the same four days, Wednesday and the weekend still",
+        "completely free, and a maximum of two consecutive training days, well inside the rule of three.",
+        "",
+        "Cardio still rides on days that are already training days, which was the whole trick before and",
+        "still is. It is new TIME, not a new day, and the rest rule counts days rather than sessions.",
+        "",
+        "THE COST HE ACCEPTED, recorded because it is the part no gate can check: this asks him at the",
+        "pool at 6:00 four times a week, and 23 of his last 39 swims started after 8 pm while exactly",
+        "one started before 8 am. It also gives up the 9 pm slot he has actually been using, and makes",
+        "each lifting day three sessions. Morning cardio already ran three times in one August week and",
+        "stopped. So the honest read is that this schedule is a decision and not yet a habit, and the",
+        "thing to watch is whether the morning swim survives a fortnight, not whether the plan is tidy.",
+        "",
+        "The pool is open at noon and 2 pm on both weekend days, and a weekend swim is still exactly the",
+        "thing that turns a clean week into a five-day block. That is the trade the rest rule is there to",
         "make visible, not to forbid."
       ]
     },

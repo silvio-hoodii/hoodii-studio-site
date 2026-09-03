@@ -53,7 +53,7 @@ export interface PlannedDay {
   /** The lifting day key from program.json, or null when the split has no day here. */
   liftKey: string | null;
   liftTitle: string | null;
-  /** Conditioning slots assigned to this weekday, e.g. ['morningCardio', 'swim']. */
+  /** Conditioning slots assigned to this weekday, e.g. ['morningSwim', 'eveningCardio']. */
   slots: string[];
   training: boolean;
 }
@@ -390,9 +390,20 @@ export const KIND_LABEL: Record<string, string> = {
   'other-auto': 'movement the watch noticed',
 };
 
+/* THESE TWO SWAPPED ON 2026-09-03, with the slots themselves. The swim moved to the morning because
+   its 1,000 m goal is measured against that slot, and the run took the evening slot the swim left.
+   The keys in conditioning.json's week.assignedDays were renamed in the same commit for the same
+   reason: they carry the time of day, so leaving them would have left `morningCardio` labelling an
+   evening run.
+
+   `Week.tsx` renders `SLOT_LABEL[s] ?? s`, so a key with no entry here prints as raw camelCase on
+   his phone. That fallback is why `content/gym/validate.mjs` now compares this list against
+   week.assignedDays in BOTH directions, the same construction the {PEAK_*} placeholder gate uses:
+   a key here with no slot is dead, and a slot with no key here is a camelCase word in the planned
+   week. Add to both, or neither. */
 export const SLOT_LABEL: Record<string, string> = {
-  morningCardio: 'morning run or bike',
-  swim: 'evening swim',
+  morningSwim: 'morning swim',
+  eveningCardio: 'evening run or bike',
 };
 
 export { dayOf };

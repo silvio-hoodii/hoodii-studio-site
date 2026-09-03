@@ -84,12 +84,26 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
 }
 
 /* THE CAVEAT THAT OUTRANKS THE RULE. Sleep and HRV are the only measurements that could turn this
- * arithmetic into an observation, and on the day the rule was built they had both been dark for six
- * nights while exercise data arrived daily: the watch is worn all day and taken off at night.
+ * arithmetic into an observation, and they are too sparse to do it: the watch is worn all day and
+ * taken off at night.
  *
  * This is not a footnote. A page that counts sessions and then implies a recovery verdict is
  * inventing a measurement, and the cheapest fix in the whole project is him wearing the watch to
- * bed. So it says that, with the number of days, above the plan. */
+ * bed. So it says that, with the number of days, above the plan.
+ *
+ * THE WORD "DARK" WAS WRONG AND WAS CORRECTED 2026-09-03. This comment used to say the two feeds
+ * "had both been dark for six nights", which was accurate on 2026-08-21 when the rule was built.
+ * The 2026-08-26 export holds 24,864 sleep-stage rows and 1,451 HRV rows running to 2026-08-23, so
+ * nothing is dark. What is true is that only two nights fall between 2026-08-15 and the 26th, which
+ * is too sparse to trend and reaches the same conclusion by a different route. The rendered version
+ * of this claim lived in conditioning.json's restRule.theHonestCaveat and was corrected there too;
+ * its `$caveatChanged` carries the counts.
+ *
+ * DO NOT PUT A SLEEP DURATION ON THIS PAGE YET. Those tables have been parsed four ways and every
+ * combination returned medians of 3.7 to 5.3 hours with bedtimes between 3 and 8 am, which
+ * contradicts his own account. When a parse disagrees with the person who slept, the parse is the
+ * suspect. Row counts and date ranges are safe to state; a duration is not, until one night he can
+ * confirm from memory has been checked against what the tables say for that night. */
 export function RecoveryNotice({ week }: { week: TrainingWeek }) {
   if (!week.recovery.dark) return null;
   const named = week.recovery.metrics.filter((m) => m.lastSeen);

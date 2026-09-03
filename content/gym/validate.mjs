@@ -1269,6 +1269,40 @@ if (!conditioning.week?.restRule) {
       training.add(d);
     }
   }
+
+  /* EVERY SLOT KEY MUST HAVE A LABEL, AND EVERY LABEL MUST HAVE A SLOT. Added 2026-09-03.
+   *
+   * `src/app/health/Week.tsx` renders `SLOT_LABEL[s] ?? s`, so a slot key with no entry in
+   * `src/lib/gym/week.ts` prints as raw camelCase in the planned week on his phone. That fallback
+   * had never been exercised because the two keys had not changed since the file was written. On
+   * 2026-09-03 both of them changed at once, `morningCardio` to `eveningCardio` and `swim` to
+   * `morningSwim`, when the swim and the run traded slots on his ruling. Renaming the data and
+   * forgetting the labels would have printed "morningSwim" and "eveningCardio" as words.
+   *
+   * SAME CONSTRUCTION AS THE {PEAK_*} GATE BELOW, and for the same reason: the list is named twice,
+   * so it has to fail loudly in both directions to earn the second copy. Reading week.ts for the
+   * names would couple this build gate to a module graph, which is what that gate's own comment
+   * says it is avoiding. The reverse direction is the one that matters more here: a label with no
+   * slot means a slot was deleted and its label left behind, which is the shape that leaves a
+   * retired thing looking scheduled. */
+  {
+    const SLOT_LABEL_KEYS = new Set(['morningSwim', 'eveningCardio']);
+    const slotKeys = new Set(
+      Object.keys(assigned).filter((k) => !k.startsWith('$') && k !== 'why'),
+    );
+    for (const slot of slotKeys) {
+      if (!SLOT_LABEL_KEYS.has(slot)) {
+        fail('conditioning.json', `week.assignedDays.${slot} has no entry in SLOT_LABEL, so the planned week would print "${slot}" as a word on his phone. `
+          + 'Add it to SLOT_LABEL in src/lib/gym/week.ts and to SLOT_LABEL_KEYS in this check.');
+      }
+    }
+    for (const label of SLOT_LABEL_KEYS) {
+      if (!slotKeys.has(label)) {
+        fail('conditioning.json', `SLOT_LABEL in src/lib/gym/week.ts still labels "${label}" and week.assignedDays no longer has that slot. `
+          + 'Either the slot was renamed and the label was not, or the slot is gone and its label should come out of week.ts and out of SLOT_LABEL_KEYS here.');
+      }
+    }
+  }
   /* Scanned over TWO weeks back to back, because a week wraps. A Friday-to-Monday block reads as
      two separate runs of two under a single Monday-to-Sunday pass, and would sail through a rule
      it actually breaks. Capped at 7 so "trains every day" reports 7 rather than 14. */
