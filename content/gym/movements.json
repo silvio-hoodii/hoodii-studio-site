@@ -3,6 +3,29 @@
     "THE MOVEMENT CATALOGUE. One entry per JOB the programme needs done, and every way of doing that",
     "job in HIS gym, with the station each way lives at.",
     "",
+    "FIVE `open` ROWS IN THIS FILE BECAME `$research` ON 2026-09-03, AND THAT IS A RULE, NOT A TIDY-UP.",
+    "They asked him whether the biceps is a prime mover or a synergist in a row and in a pulldown,",
+    "whether the front or the side delt leads an overhead press, whether the RDL and the conventional",
+    "deadlift belong in one muscle group, and whether gluteus maximus and medius should be counted",
+    "separately. NONE OF THOSE IS HIS TO ANSWER. Every one is answerable from anatomy, which is what",
+    "the `attributionBasis` field sitting beside each of them already says: 'ANATOMY ... the muscles",
+    "listed are the prime movers of those actions.' Handing them to him asks him to do the agent's",
+    "research in his own gym time, and he has already pushed back on exactly this, quoted in",
+    "AGENTS.md: 'why are you asking me this? you are the one that should find out', and on the next",
+    "three, 'same answer'.",
+    "",
+    "`$research` IS NOT A NEW CONVENTION. `$` already means agent-only everywhere here: stripped before",
+    "render by src/lib/gym/program.ts, skipped by scripts/gym-notes.mjs, skipped by the open-row gate",
+    "in validate.mjs. So the rows keep their text and their reasoning, stay next to the thing they are",
+    "about, and stop being presented to him as decisions he owes somebody.",
+    "",
+    "THE WORK IS STILL OWED, BY AN AGENT. Each row is a sourcing task under the rules at the top of",
+    "this file. Do not answer one by reasoning about it in a session and writing the conclusion down;",
+    "the triceps error of 2026-08-29 was exactly that and cost 6.5 fractional sets before he caught it",
+    "by reading the volume table. THE SEPARATE QUESTION OF WHETHER HE WANTS A DEEP-CALF EXERCISE IS",
+    "STILL HIS and is still an `open` row on the calf raise, because what he wants to train is a",
+    "preference and not a fact about anatomy. That is the line: the fact is ours, the want is his.",
+    "",
     "WHY IT REPLACES muscles.json, written four hours earlier the same day. That file listed the 34",
     "exercises the programme happened to contain and asked whether every muscle was covered. He spotted",
     "the circularity immediately: 'you are going about the list that we already have, but how do we know",
@@ -368,7 +391,7 @@
         }
       ],
       "jointAction": "Hip extension with the knee held near-static, the trunk resisting flexion, the hands holding the load.",
-      "open": [
+      "$research": [
         {
           "q": "This group holds both the RDL and the conventional deadlift under one muscle list, and they are not the same movement: the conventional lift starts from the floor and adds real knee extension, so quads belong in its primary list and not in the RDL's. Should they be split into two groups?",
           "asked": "2026-09-01",
@@ -627,7 +650,7 @@
       "jointAction": "Ankle plantarflexion.",
       "open": [
         {
-          "q": "Do you care about the soleus? It needs a bent-knee (seated) calf raise, which is a different exercise from the standing one you do. If you do not, this row should be renamed gastrocnemius and the soleus dropped from the catalogue rather than silently counted.",
+          "q": "Your calf has two muscles. The standing calf raise you already do trains the big outer one. The deeper one underneath only works when your knee is bent, so it needs a seated calf raise, which is a second exercise at a different machine. Do you want it in the week, or should the app stop counting a muscle you never train?",
           "asked": "2026-09-01",
           "due": "2026-09-30",
           "topic": "volume"
@@ -776,9 +799,10 @@
           "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks.\n\nIT WAS CALLED \"Standing DB Overhead Press\" UNTIL 2026-08-28 AND HE HAS NEVER DONE IT STANDING. His note #26 at the rack: \"Also whatever history is on standing db has always been seated, ive never done standing db\", and #25: \"Standing db overhead is not really practical either Standing barbell or seated db\". Twenty sets of history sit under this id going back to 2026-05-26, all of them seated, and the logged rows are stamped \"DB Overhead Press\" with no \"Standing\" in them: the word was added by the catalogue and never by him.\n\nSo the station is `bench` now, not null. That is not cosmetic. A null station means the exercise holds no fixture and can partner anything, which is how a seated press could have been paired with something that needs the bench. His name for it is the true one.\n\nWHETHER THE PROGRAMME SHOULD KEEP SEATED DUMBBELLS OR MOVE TO A STANDING BARBELL IS HIS CALL, and it is parked as an open question on this variant. Renaming records what he has been doing; it does not decide what he should do.",
           "open": [
             {
-              "q": "You said standing DB overhead is not practical, and offered two alternatives: standing barbell, or seated DB. The card now says Seated DB, which is what your twenty logged sets actually were, so nothing is mislabelled any more. The programme question is separate and it is yours. (a) KEEP SEATED DB. Cost: nothing changes, your 65 lb history carries straight through, and it stays stuck where the note above says it is stuck, because the next dumbbell up is a jump the rep range cannot bank. (b) STANDING BARBELL. Cost: it moves to the rack, so it stops being pairable with anything in the dumbbell area, and it starts from a separate history (`bb-ohp` holds 3 sets at 115 lb from 2026-08-04). The upside is the one that matters: a barbell goes up in 5 lb steps, which is the ladder problem this lift has had all year. Which one?",
+              "q": "Your seated dumbbell overhead press has been stuck at 65 lb all year, because the next dumbbell up is a jump your reps cannot earn. A barbell goes up in 5 lb steps and would unstick it. The cost: it moves to the rack, so it no longer pairs with anything in the dumbbell area, and it starts from its own history of 3 sets at 115 lb last August. Stay on the dumbbells, or switch to the barbell?",
               "asked": "2026-08-28",
-              "due": "2026-09-11"
+              "due": "2026-09-11",
+              "topic": "prescription"
             }
           ]
         },
@@ -837,7 +861,7 @@
       ],
       "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not.",
       "jointAction": "Shoulder abduction or flexion overhead, plus elbow extension. Standing variants add trunk anti-extension.",
-      "open": [
+      "$research": [
         {
           "q": "Is the front delt really the prime mover of an overhead press, or is the side delt? Pressing overhead is shoulder abduction in the scapular plane, where the middle deltoid is a prime mover alongside the anterior. This group was already tagged contested before today and nobody resolved it. It decides whether side delts need their own exercise at all.",
           "asked": "2026-09-01",
@@ -916,7 +940,7 @@
         }
       ],
       "jointAction": "Scapular retraction, shoulder extension and horizontal abduction, elbow flexion. Bent-over variants add trunk anti-flexion.",
-      "open": [
+      "$research": [
         {
           "q": "Elbow flexion is a real joint action in every row, so is the biceps a prime mover here rather than a synergist? This is the same judgement that produced the triceps error on 2026-08-29, which cost 6.5 fractional sets before anyone noticed.",
           "asked": "2026-09-01",
@@ -981,7 +1005,7 @@
       ],
       "jointAction": "Shoulder adduction and extension in the frontal plane, scapular depression, elbow flexion.",
       "note": "REAR DELTS REMOVED FROM SECONDARY 2026-09-01, on anatomy and on the audit. The posterior deltoid extends and horizontally abducts the shoulder; a pulldown adducts it in the frontal plane, which is a different action. MEASUREMENT-AUDIT-2026-08-30.md also found no source measuring posterior deltoid in a pulldown and recorded the credit as UNVERIFIED while it handed rear delts 1.5 sets a week.",
-      "open": [
+      "$research": [
         {
           "q": "Same question as the row: is the biceps a prime mover in a pulldown or a synergist? Answering one should answer both.",
           "asked": "2026-09-01",
@@ -1591,7 +1615,7 @@
         }
       ],
       "jointAction": "Hip abduction.",
-      "open": [
+      "$research": [
         {
           "q": "The catalogue counts gluteus maximus and gluteus medius as one muscle, so hip abduction and hip extension add into the same number. Should they be split? It changes whether the 32 glute sets you were shown meant anything.",
           "asked": "2026-09-01",

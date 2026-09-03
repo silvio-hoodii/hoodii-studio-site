@@ -309,6 +309,60 @@ for (const [zoneKey, zone] of Object.entries(ZONES)) {
   }
 }
 
+/* ------ EVERY `open` ROW IN EVERY CONTENT FILE, and not just the two somebody remembered.
+ *
+ * THE TWO CALL SITES ABOVE AND BELOW COVER equipment.json AND program.json. That is where questions
+ * were parked when the convention was written, and the scope was never revisited. On 2026-09-03,
+ * walking the directory instead of the list found EIGHT more `open` rows nobody had ever checked:
+ * seven in movements.json and one in conditioning.json. Of those eight, five were statements that
+ * happen to contain a question mark in the middle and end on a fact, one was 829 characters against
+ * a 400 ceiling, two carried no `topic` at all, and one used "RDL". Every defect this block exists
+ * to catch, sitting in files the block does not read.
+ *
+ * `scripts/gym-notes.mjs` had the SAME hand-maintained scope and the same day found the same eight,
+ * one of them parked since 2026-08-28 behind a due date nobody could see. Two independent
+ * mechanisms, one bug, because both were written against a list of files rather than against the
+ * thing they check. This is the 2026-09-03 morning finding almost verbatim: a gate that has never
+ * failed is telling you about its SCOPE, not about your code.
+ *
+ * So the subject is now DERIVED. A new content file, or a question parked in an existing one that
+ * nothing else looks at, is covered the moment it exists. The two sites above and below keep their
+ * file-specific messages about array shape and dates; the shape of the QUESTION is checked here,
+ * once, everywhere, and `seen` stops a row in program.json or equipment.json being reported twice.
+ * ------------------------------------------------------------------------------------------- */
+{
+  const seen = new Set();
+  const sweep = (node, file, path) => {
+    if (Array.isArray(node)) { node.forEach((v, i) => sweep(v, file, `${path}[${i}]`)); return; }
+    if (!node || typeof node !== 'object') return;
+    const label = node.id || node.name || node.label;
+    const here = typeof label === 'string' ? `${path} "${label}"` : path;
+    if (Array.isArray(node.open)) {
+      node.open.forEach((q, qi) => {
+        if (!q || typeof q !== 'object' || seen.has(q)) return;
+        seen.add(q);
+        checkOpenRow(file, `"open"[${qi}] on ${here}`, q);
+      });
+    }
+    for (const [k, v] of Object.entries(node)) {
+      /* `$` fields are agent-only and stripped before render, so a question quoted inside a
+         changelog is not a parked question and must not be gated as one. */
+      if (k === 'open' || k.startsWith('$')) continue;
+      sweep(v, file, here);
+    }
+  };
+  for (const [file, data] of [
+    ['program.json', program],
+    ['equipment.json', equipment],
+    ['conditioning.json', conditioning],
+    ['movements.json', readJson('movements.json')],
+    ['warmups.json', warmups],
+    ['cooldowns.json', cooldowns],
+  ]) {
+    sweep(data, file, file.replace('.json', ''));
+  }
+}
+
 /* ------ AN OPEN QUESTION HAS TO BE A QUESTION. Added 2026-08-29, on his ruling.
  *
  * His words, reading the nineteen the file held on 2026-08-28: "I feel like most of the questions
@@ -1426,7 +1480,18 @@ if (!conditioning.week?.restRule) {
     }
     if (Array.isArray(node)) { node.forEach((v, i) => walk(v, `${path}[${i}]`)); return; }
     if (node && typeof node === 'object') {
-      for (const [k, v] of Object.entries(node)) walk(v, `${path}.${k}`);
+      for (const [k, v] of Object.entries(node)) {
+        /* `$` KEYS ARE SKIPPED, AND THE SECOND DIRECTION BELOW IS WHY. `src/lib/gym/program.ts`
+           strips every `$`-prefixed field before anything renders, so a placeholder sitting in one
+           is dead text: it cannot print braces on his phone, and it cannot count as USE either.
+           Without this skip, moving a paragraph containing {PEAK_BPM} into a `$cuesArchive` would
+           leave the "nothing uses this any more" check green while the live cue that needed the
+           interpolated figure had quietly lost it. That is the same false pass this whole block was
+           written to prevent, one level up: a check satisfied by something that does not count.
+           Added 2026-09-03, the day the run and bike changelogs were archived. */
+        if (k.startsWith('$')) continue;
+        walk(v, `${path}.${k}`);
+      }
     }
   };
   walk(conditioning, 'conditioning');

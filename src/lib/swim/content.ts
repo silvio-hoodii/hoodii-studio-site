@@ -5,7 +5,7 @@ import type { SwimPlan, SwimCoaching, SwimTeaching } from './types';
 
 const CONTENT = join(process.cwd(), 'content', 'swim');
 
-/* `$comment` is stripped on the way in, at every level.
+/* EVERY `$`-PREFIXED KEY is stripped on the way in, at every level.
  *
  * These files carry their provenance in a `$comment` array: which trial, which incident, what was
  * tried and rejected. plan.json's is 30 lines, and every one of them would otherwise be serialised
@@ -15,13 +15,21 @@ const CONTENT = join(process.cwd(), 'content', 'swim');
  * the side of a pool.
  *
  * Recursive, and the same function content/gym's loader uses, for the same reason: a nested
- * `structure.$comment` would otherwise survive the top-level strip. */
+ * `structure.$comment` would otherwise survive the top-level strip.
+ *
+ * WIDENED FROM `$comment` TO EVERY `$` KEY ON 2026-09-03, and this file was the clearest case for
+ * it. `plan.json` carries a 10,663-byte `$cuesArchive`, which is the agent changelog that used to
+ * be rendered under the cues and was moved out of the note when he said it was a wall of text. It
+ * stopped being DISPLAYED that day and never stopped being SENT: it was still in the payload on
+ * every load, at the side of a pool, because the strip matched one key name and the convention had
+ * moved on. Moving text out of a rendered field is only half a fix if the field it lands in still
+ * ships. See the longer note in src/lib/gym/program.ts for the measurement. */
 function stripComments<T>(value: T): T {
   if (Array.isArray(value)) return value.map(stripComments) as unknown as T;
   if (value && typeof value === 'object') {
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-      if (k === '$comment') continue;
+      if (k.startsWith('$')) continue;
       out[k] = stripComments(v);
     }
     return out as T;

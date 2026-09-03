@@ -8,7 +8,7 @@ export * from './program-shared';
 
 const CONTENT = join(process.cwd(), 'content', 'gym');
 
-/* `$comment` is stripped on the way in, at every level.
+/* EVERY `$`-PREFIXED KEY is stripped on the way in, at every level.
  *
  * These files carry their provenance in a `$comment` array: which trial, which incident, what was
  * tried and rejected. program.json's is 60 lines and conditioning.json's is 50, and every one of
@@ -17,13 +17,26 @@ const CONTENT = join(process.cwd(), 'content', 'gym');
  * quote the old wording, so a grep of the live page still finds "75-85 min" inside a sentence
  * saying it was wrong) but it is developer text and it has no business on a mobile connection at
  * the gym. Recursive, because the nested `slots.$comment` in conditioning.json would otherwise
- * survive. */
+ * survive.
+ *
+ * IT MATCHED ONE KEY NAME UNTIL 2026-09-03, AND THE CONVENTION HAD ALREADY OUTGROWN IT. `$` means
+ * "agents only" everywhere in this repo, and six more such fields had appeared since this was
+ * written: `$qChanged`, `$cueChanged`, `$caveatChanged`, `$keysRenamed`, `$tricepsNote`, `$schema`.
+ * Measured across the four gym content files on the day this changed: 30,538 bytes stripped and
+ * **10,995 still shipping**, none of it read by any renderer. Verified before widening the rule,
+ * by grepping every `.$name` and `['$name']` access under src/: there are none.
+ *
+ * SO THE RULE NOW MATCHES THE CONVENTION RATHER THAN A LIST. Same shape as the placement gate a few
+ * hundred lines into validate.mjs: a habit that has to be re-applied by hand at each new field is
+ * decoration, and this one had silently stopped covering most of its own subject. Adding an archive
+ * field to a content file is now free at the phone, which is what makes moving an agent changelog
+ * out of a rendered note the obvious move rather than a trade. */
 function stripComments<T>(value: T): T {
   if (Array.isArray(value)) return value.map(stripComments) as unknown as T;
   if (value && typeof value === 'object') {
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-      if (k === '$comment') continue;
+      if (k.startsWith('$')) continue;
       out[k] = stripComments(v);
     }
     return out as T;

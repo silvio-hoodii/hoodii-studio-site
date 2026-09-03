@@ -15,7 +15,7 @@
  * feature quietly dies.
  */
 import { neon } from '@neondatabase/serverless';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -74,15 +74,38 @@ function findOpen(node, path, out) {
  * read two files, both under content/gym. So a question was parked for him with a deadline, in a
  * file, where no mechanism would ever raise it: the farmer carry again, which is the incident in
  * this script's own header. A question is only parked if something reads the place you parked it. */
-const QUESTION_FILES = [
-  ['gym', 'program.json'],
-  ['gym', 'equipment.json'],
-  ['swim', 'plan.json'],
-];
+/* THE LIST IS DERIVED, AND IT WAS A HAND-MAINTAINED ARRAY UNTIL 2026-09-03.
+ *
+ * The paragraph above says it in its own words: "A question is only parked if something reads the
+ * place you parked it." It was written when `content/swim/plan.json` was found holding a question
+ * with a deadline that nothing surfaced, and the fix applied that day was to add one more entry to
+ * a literal list of three. **That fix was the same shape as the bug.**
+ *
+ * Found 2026-09-03 by walking the content directories rather than the array: `conditioning.json`
+ * and `movements.json` BOTH carry `open` rows and neither was in the list. The conditioning one had
+ * been parked since 2026-08-28 with a due date of 2026-09-11, never once printed, which is five
+ * weeks of a question sitting behind a deadline nobody could see. Same incident as the farmer
+ * carry, third occurrence, and the script documenting the incident was the thing committing it.
+ *
+ * So the subject is now everything under content/gym and content/swim, and adding a content file
+ * cannot silently drop it out of scope. A directory read is not clever; it is the difference
+ * between a rule and a habit. */
+const QUESTION_DIRS = ['gym', 'swim'];
+
+function questionFiles() {
+  const out = [];
+  for (const dir of QUESTION_DIRS) {
+    const at = join(HERE, '..', 'content', dir);
+    for (const f of readdirSync(at)) {
+      if (f.endsWith('.json')) out.push([dir, f]);
+    }
+  }
+  return out;
+}
 
 function reportOpenQuestions() {
   const found = [];
-  for (const [dir, f] of QUESTION_FILES) {
+  for (const [dir, f] of questionFiles()) {
     try {
       const json = JSON.parse(readFileSync(join(HERE, '..', 'content', dir, f), 'utf8'));
       findOpen(json, `${dir}/${f.replace('.json', '')}`, found);
@@ -106,6 +129,19 @@ function reportOpenQuestions() {
      * either badly phrased or badly explained", and part of that was that they all looked alike. */
     console.log(`  ${late ? '!!' : '  '} [${where}]  ${String(q.topic || '?').toUpperCase()}  asked ${q.asked}, ${when}`);
     for (const line of String(q.q).match(/.{1,96}(\s|$)/g) || [q.q]) console.log(`       ${line.trim()}`);
+    /* AN UNFILLED PLACEHOLDER IS FLAGGED, NEVER QUIETLY PRINTED. The `{PEAK_BPM}` family is
+     * interpolated from the database by src/lib/gym/hr-anchor.ts, which is `server-only` TypeScript
+     * this script cannot import, and re-running its query here would be a second implementation of
+     * one derivation, which is the thing that drifts. So the honest move is the one that module
+     * already makes for the page: refuse to present the sentence as readable. Without this the
+     * question above printed the literal braces to whoever relays it to him, which is precisely the
+     * failure the validator's placeholder gate exists to prevent, one surface over. Added
+     * 2026-09-03, the day this script's scope widened and first surfaced the bike question. */
+    const unfilled = [...new Set(String(q.q).match(/\{[A-Z][A-Z0-9_]*\}/g) || [])];
+    if (unfilled.length) {
+      console.log(`       ^^ DO NOT RELAY AS-IS: ${unfilled.join(', ')} ${unfilled.length === 1 ? 'is' : 'are'} filled from the database at render time`);
+      console.log('          and this script cannot fill them. Read the value off /bike, or from getPeakHr, before asking him.');
+    }
     console.log('');
   }
   if (overdue.length) {
