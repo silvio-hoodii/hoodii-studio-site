@@ -245,7 +245,19 @@
   color: var(--muted-foreground);
   margin-bottom: 10px;
 }
-.training .exgroup-label .tag { text-transform: none; letter-spacing: normal; opacity: 0.7; }
+/* NO OPACITY HERE, and it is a contrast fix rather than a taste one.
+ *
+ * This is the `(Aug 25)`, `(all 10)`, `(475 swims...)` qualifier on every section heading across
+ * all five training routes. It was `opacity: 0.7` on a `--muted-foreground` label at 12px, and
+ * opacity multiplies at paint time: 0.7 of #72726f over #fdfdfc composites to #9c9b99, which is
+ * 2.72:1 against the background. Lighthouse flagged five instances on /swim alone and it was the
+ * only contrast failure it found on three pages.
+ *
+ * `--muted-foreground` on its own measures 4.74:1, over the 4.5:1 floor, and already reads as
+ * secondary next to the heading beside it: the label is 12px uppercase mono and the qualifier is
+ * lowercase, which is the distinction doing the actual work. The opacity was buying nothing that
+ * the case change was not already buying, at the cost of legibility. */
+.training .exgroup-label .tag { text-transform: none; letter-spacing: normal; }
 /* "optional" on every accessory block. Boxed rather than just dimmer, because the point is that it
    is a STATE of the block and not an aside: the main lifts are the session and these are not. Kept
    monochrome. --signal is reserved for a value that is true right now, and "optional" is neither. */

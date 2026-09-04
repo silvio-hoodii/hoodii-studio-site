@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import '../hub.css';
 import './work.css';
 import SiteHeader from '@/components/SiteHeader';
@@ -21,19 +21,29 @@ export const metadata: Metadata = {
   title: { default: 'Work', template: '%s · Silvio Neyra' },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function WorkLayout({ children }: { children: React.ReactNode }) {
+  /* THE HEADER SITS OUTSIDE `.idx`, and it did not until 2026-09-04.
+   *
+   * `.idx` in hub.css is the only page wrapper on the site that carries BOTH a max-width and
+   * padding (`clamp(32px, 8vw, 64px) 20px 64px`), so a header inside it started 85px down the page
+   * at 1440 and its rule spanned only the 680 column. That made it the one inconsistent header on
+   * the site, on the four pages a stranger is most likely to open.
+   *
+   * The other wrappers look the same and are not: curio's `.measure-data` and music's
+   * `.measure-wide` only set the `--measure` variable and pad nothing, so a header inside them
+   * still sits at the top of the viewport. `reading/layout.tsx` uses a fragment, as this now does.
+   *
+   * SiteHeader reads `--measure` for its own inner alignment and neither `.idx` nor `work.css`
+   * redefines it, so moving the header out of the wrapper does not move its content off the
+   * column. */
   return (
-    <div className="idx work">
+    <>
       <SiteHeader app="Work" />
-      {children}
-      <SiteFooter standalone />
-    </div>
+      <div className="idx work">
+        {children}
+        <SiteFooter standalone />
+      </div>
+    </>
   );
 }

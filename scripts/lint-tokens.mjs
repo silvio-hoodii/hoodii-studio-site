@@ -14,15 +14,31 @@
  * decision, not a default", "must consume the tokens, never hardcode a colour") and prose rules in
  * this workspace have been violated repeatedly while every mechanical gate has held.
  *
- * TWO LEGITIMATE EXCEPTIONS, both allowed by marker rather than by path, so the exception is visible
- * in a diff instead of living in this file where nobody rereads it. Same idiom as lint-prose's
- * `lint-prose-allow`:
+ * THE TWO EXCEPTIONS THIS FILE USED TO DOCUMENT ARE GONE, as of 2026-09-04, and how they went is
+ * the point. They were:
  *
  *   `src/app/opengraph-image.tsx`  an ImageResponse renders outside the document and cannot read a
- *                                  CSS variable. The four literals there mirror the tokens.
- *   the five layout `themeColor`   a viewport export is consumed by the browser chrome, not by CSS.
+ *                                  CSS variable. Four literals there "mirrored the tokens".
+ *   the eight layout `themeColor`  a viewport export is consumed by the browser chrome, not by CSS.
  *
- * Marker: `lint-tokens-allow` in a comment on the same line.
+ * ALL FOUR LITERALS IN THE FIRST ONE WERE WRONG, and had been for a month: they were leftovers of
+ * the cream palette deleted on 2026-08-09, so the share card rendered in the retired palette while
+ * its comment claimed otherwise. The eight `themeColor` copies were eight places holding one fact.
+ *
+ * A MARKER SAYS A LITERAL IS ALLOWED TO BE THERE. IT CANNOT SAY THE LITERAL IS CORRECT. That is the
+ * limit of this whole approach, and the fix was not a better marker: `scripts/gen-tokens.mjs` now
+ * derives the hex from the oklch token, `src/lib/tokens.generated.ts` holds the result, every
+ * consumer imports it, and `pnpm build` runs `gen-tokens --check` so a palette change that is not
+ * regenerated fails the build. Both exceptions were deleted rather than re-marked.
+ *
+ * The marker still works and is still the right escape hatch for a genuinely new case. There are
+ * currently zero uses of it in `src`, which is the state to keep.
+ *
+ * ONE PATH EXEMPTION, and it is not a marker. `src/lib/tokens.generated.ts` is 30 hex literals
+ * written by a machine from the token file, and marking each line would be noise that also says the
+ * wrong thing: the marker means "a person decided this literal is fine", and nobody typed these.
+ * It carries a STRONGER gate than the marker instead, `gen-tokens --check`, which asserts the
+ * literals equal the tokens rather than merely permitting them.
  *
  *   node scripts/lint-tokens.mjs             # wired into `pnpm build`
  *   node scripts/lint-tokens.mjs --selftest  # runs first on every invocation anyway
@@ -33,6 +49,9 @@ import { join, relative, sep } from 'node:path';
 const ROOT = process.cwd();
 const SRC = join(ROOT, 'src');
 const TOKEN_FILE = join('src', 'app', 'globals.css').split(sep).join('/');
+/* Machine-written from TOKEN_FILE and gated by `gen-tokens --check`, which is a stronger claim than
+ * this linter makes: it asserts the literals EQUAL the tokens. See the header. */
+const GENERATED_FILE = join('src', 'lib', 'tokens.generated.ts').split(sep).join('/');
 
 const rel = (p) => relative(ROOT, p).split(sep).join('/');
 
@@ -114,6 +133,146 @@ export function colourLiteralsInTsx(line) {
   return hits;
 }
 
+/* ---- two checks about tokens that EXIST, added 2026-09-04 --------------------------------------
+ *
+ * Everything above this point asks "is this a colour literal". Both defects found on the cook
+ * screen on 2026-09-04 passed that question cleanly, because neither was a literal:
+ *
+ *   A1  `color: 'var(--accent)'` on the "you do not have this" warning. `--accent` is a SURFACE
+ *       token, oklch(0.955 0.002 100), a near-white. The cream palette's accent was orange; the
+ *       2026-08-09 rename kept the name and lost the meaning. Measured on /kitchen/piccata: 1.1:1.
+ *       The one warning that stops him mid-dish was invisible.
+ *
+ *   A2  `color: 'var(--ink-faint)'`, three times. That token is declared NOWHERE. An undefined
+ *       custom property makes the declaration invalid at computed-value time and `color` inherits,
+ *       so it silently rendered as whatever the parent was.
+ *
+ * A TOKEN THAT EXISTS AND MEANS THE WRONG THING, AND A TOKEN THAT DOES NOT EXIST AT ALL, both pass
+ * a literal check. These are the two cheapest checks that would have caught them, and between them
+ * they are about five lines of actual logic.
+ */
+
+/** Every custom property NAME declared anywhere in the stylesheets, plus the ones declared outside
+ *  CSS entirely.
+ *
+ *  Collected from ALL css files rather than only globals.css, because a surface stylesheet
+ *  legitimately declares its own non-colour locals (`--pad` in training.css). The palette rule
+ *  above already stops a surface declaring a COLOUR. */
+export function declaredTokens(cssSources, extra = []) {
+  const names = new Set(extra);
+  for (const src of cssSources) {
+    for (const m of src.matchAll(/(--[a-z0-9-]+)\s*:/gi)) names.add(m[1]);
+  }
+  return names;
+}
+
+/* Declared by `next/font/google` in src/app/layout.tsx, not by a stylesheet, and consumed by
+ * `@theme inline`. A CSS-only sweep cannot see them. */
+const EXTERNAL_TOKENS = ['--font-plex-sans', '--font-plex-mono'];
+
+/** Names referenced by `var(--x)` on a line. Handles a fallback: `var(--x, 12px)`. */
+export function tokenRefs(line) {
+  return [...line.matchAll(/var\(\s*(--[a-z0-9-]+)/gi)].map((m) => m[1]);
+}
+
+/** Blank out every comment in a file, keeping line numbers and string contents intact.
+ *
+ *  WHY THIS IS A FILE-LEVEL SCANNER AND NOT A PER-LINE REGEX. `colourLiteralsInCss` already strips
+ *  comments per line, and its header records that its one false positive on its first live run was
+ *  a sentence in a comment. The TSX path never got the same treatment, and the two checks added on
+ *  2026-09-04 did not either, so the first run of the extended linter produced TWO findings and
+ *  BOTH WERE PROSE:
+ *
+ *    kitchen.css:228   a comment explaining that `var(--ink-faint)` is undefined
+ *    layout.tsx:67     a comment explaining that eight layouts each held `themeColor: '#ffffff'`
+ *
+ *  Which is to say: documenting a defect reintroduced it, in the checker written to find it. Every
+ *  file this rule protects explains its palette in prose, at length, and a gate that flags its own
+ *  documentation gets dismissed.
+ *
+ *  A per-line strip cannot do this, because this repo's comments are multi-line blocks whose
+ *  continuation lines are ordinary prose with no marker of their own beyond a leading `*`, and
+ *  matching a leading `*` would also blank a CSS universal selector. So the state has to be carried
+ *  across lines.
+ *
+ *  Quoted strings are preserved deliberately: `'//'` inside a URL and `'/*'` inside a string must
+ *  not open a comment, and a real literal AFTER a string on the same line must still be seen. */
+export function blankComments(source) {
+  const out = [];
+  let inBlock = false;
+  for (const line of source.split(/\r?\n/)) {
+    let result = '';
+    let i = 0;
+    let quote = null;
+    while (i < line.length) {
+      const two = line.slice(i, i + 2);
+      if (inBlock) {
+        if (two === '*/') {
+          inBlock = false;
+          result += '  ';
+          i += 2;
+        } else {
+          result += ' ';
+          i += 1;
+        }
+        continue;
+      }
+      if (quote) {
+        result += line[i];
+        if (line[i] === '\\') {
+          result += line[i + 1] ?? '';
+          i += 2;
+          continue;
+        }
+        if (line[i] === quote) quote = null;
+        i += 1;
+        continue;
+      }
+      if (line[i] === "'" || line[i] === '"' || line[i] === '`') {
+        quote = line[i];
+        result += line[i];
+        i += 1;
+        continue;
+      }
+      if (two === '/*') {
+        inBlock = true;
+        result += '  ';
+        i += 2;
+        continue;
+      }
+      /* `//` to end of line. Only reachable outside a string, so `https://` in a quoted URL is
+         safe; an unquoted one in CSS would already be a syntax error. */
+      if (two === '//') break;
+      result += line[i];
+      i += 1;
+    }
+    out.push(result);
+  }
+  return out;
+}
+
+/* THE FIVE SURFACE TOKENS. Each is a BACKGROUND in the shadcn model and each has its own
+ * `-foreground` partner for text that sits on it, so using the surface itself as a text colour is
+ * always the mistake A1 was: it is the colour of the paper, on the paper. `--background` is
+ * deliberately NOT in this list, because it is the correct text colour on an inverted control
+ * (white text on the near-black primary button) and flagging it would be a false positive on
+ * working code. */
+const SURFACE_TOKENS = ['--accent', '--secondary', '--muted', '--card', '--popover'];
+
+/** A surface token used as a text colour, on one line of CSS or TSX. Returns the offenders.
+ *
+ *  Matches `color:` and not `background`, `border-color` or `fill`, which is the whole point: these
+ *  tokens are correct as a background and wrong as text. `-foreground` variants are excluded by
+ *  requiring the token name to END at the closing paren or comma. */
+export function surfaceTokenAsText(line) {
+  const hits = [];
+  /* CSS `color: var(--muted)` and JSX `color: 'var(--muted)'`, but not `background-color`,
+     `caret-color`, `border-color`, `text-decoration-color` or `--card-foreground: ...`. */
+  const m = /(?:^|[^-\w])color\s*:\s*'?"?\s*var\(\s*(--[a-z0-9-]+)\s*[,)]/i.exec(line);
+  if (m && SURFACE_TOKENS.includes(m[1])) hits.push(m[1]);
+  return hits;
+}
+
 /* ---- both directions, before anything else runs ------------------------------------------------
  *
  * `lint-classnames.mjs` learned this the hard way and wrote it down: its first version did not work,
@@ -151,7 +310,62 @@ const SELFTEST = [
   ['tsx', "  id: 'redis',", false],
 ];
 
+/* The two 2026-09-04 checks, in both directions, on the exact lines that shipped. `--accent` as a
+ * text colour is A1 verbatim; `--ink-faint` is A2 verbatim. The must-NOT-catch half is the half
+ * that matters: a check whose first real finding is a false positive teaches people to dismiss it,
+ * which is written into the header of scripts/bare-path-check.mjs in the workspace above this one
+ * after exactly that happened. */
+const SURFACE_SELFTEST = [
+  ["{p.missing ? <b style={{ color: 'var(--accent)' }}> · you do not have this</b> : null}", true],
+  ['  color: var(--muted);', true],
+  ["style={{ color: 'var(--card)' }}", true],
+  // must NOT be caught: the -foreground partners are exactly what these lines should say
+  ["style={{ color: 'var(--muted-foreground)' }}", false],
+  ['  color: var(--accent-foreground);', false],
+  // must NOT be caught: a surface token IS correct as a surface
+  ['  background: var(--muted);', false],
+  ['  background-color: var(--accent);', false],
+  ['  border-color: var(--secondary);', false],
+  // must NOT be caught: declaring the token, not using it as text
+  ['  --card-foreground: var(--foreground);', false],
+  // must NOT be caught: --background as text is right on an inverted control
+  ['  color: var(--background);', false],
+];
+
+const REF_SELFTEST = [
+  // declared set for the purposes of this fixture
+  ["  color: var(--ink-faint);", ['--ink-faint']],
+  ["style={{ color: 'var(--muted-foreground)' }}", []],
+  ['  padding: clamp(28px, 7vw, 52px) var(--pad) 140px;', []],
+  ['  font-size: var(--nope, 12px);', ['--nope']],
+];
+const REF_DECLARED = declaredTokens(['--muted-foreground: x; --pad: 20px; --foreground: y;']);
+
+/* THE COMMENT SCANNER, on the two false positives it was written for plus the shapes that must
+ * survive it. Every other check now depends on this one, so a bug here silently blinds all three:
+ * blank too much and the linter passes everything. Hence the must-SURVIVE half. */
+const COMMENT_SELFTEST = [
+  // [source, must still contain, must no longer contain]
+  ["const A = '#fdfcfa'; // lint note about #ffffff", "'#fdfcfa'", '#ffffff'],
+  ['/* themeColor: \'#ffffff\' */\ncolor: var(--muted);', 'var(--muted)', '#ffffff'],
+  ['/* a block\n * mentioning var(--ink-faint)\n */\ncolor: var(--real);', 'var(--real)', 'ink-faint'],
+  // a string that LOOKS like a comment opener must not open one
+  ["const u = 'https://x.dev'; color: var(--muted);", 'var(--muted)', 'NOTHING_EXPECTED'],
+  ["const s = '/*'; const B = '#abcdef';", "'#abcdef'", 'NOTHING_EXPECTED'],
+];
+
 let selftestFailed = 0;
+for (const [source, mustKeep, mustDrop] of COMMENT_SELFTEST) {
+  const got = blankComments(source).join('\n');
+  if (!got.includes(mustKeep)) {
+    console.error(`SELFTEST FAIL  blankComments dropped ${mustKeep} from: ${JSON.stringify(source)}`);
+    selftestFailed++;
+  }
+  if (mustDrop !== 'NOTHING_EXPECTED' && got.includes(mustDrop)) {
+    console.error(`SELFTEST FAIL  blankComments kept ${mustDrop} from: ${JSON.stringify(source)}`);
+    selftestFailed++;
+  }
+}
 for (const [kind, line, shouldCatch] of SELFTEST) {
   const hits = kind === 'css' ? colourLiteralsInCss(line) : colourLiteralsInTsx(line);
   const caught = hits.length > 0;
@@ -160,12 +374,28 @@ for (const [kind, line, shouldCatch] of SELFTEST) {
     selftestFailed++;
   }
 }
+for (const [line, shouldCatch] of SURFACE_SELFTEST) {
+  const caught = surfaceTokenAsText(line).length > 0;
+  if (caught !== shouldCatch) {
+    console.error(`SELFTEST FAIL  surface-as-text  expected ${shouldCatch ? 'a catch' : 'no catch'}: ${line}`);
+    selftestFailed++;
+  }
+}
+for (const [line, expected] of REF_SELFTEST) {
+  const undeclared = tokenRefs(line).filter((n) => !REF_DECLARED.has(n));
+  if (undeclared.join(',') !== expected.join(',')) {
+    console.error(`SELFTEST FAIL  undeclared-token  expected [${expected}], got [${undeclared}]: ${line}`);
+    selftestFailed++;
+  }
+}
 if (selftestFailed) {
   console.error(`\n${selftestFailed} selftest case(s) failed. The check is not trustworthy; not running it.`);
   process.exit(1);
 }
 if (process.argv.includes('--selftest')) {
-  console.log(`selftest: ${SELFTEST.length} cases, 0 failed`);
+  console.log(
+    `selftest: ${SELFTEST.length + SURFACE_SELFTEST.length + REF_SELFTEST.length + COMMENT_SELFTEST.length} cases, 0 failed`,
+  );
   process.exit(0);
 }
 
@@ -178,6 +408,14 @@ const files = [];
   }
 })(SRC);
 
+/* Every token name declared anywhere, so a reference to one that is declared NOWHERE can be told
+ * apart from a reference to a surface stylesheet's own local. Read before the sweep because the
+ * sweep needs the whole picture: `--pad` is declared in training.css and used in kitchen.css. */
+const DECLARED = declaredTokens(
+  files.filter((f) => f.endsWith('.css')).map((f) => blankComments(readFileSync(f, 'utf8')).join('\n')),
+  EXTERNAL_TOKENS,
+);
+
 let fail = 0;
 let checked = 0;
 for (const full of files) {
@@ -185,27 +423,60 @@ for (const full of files) {
   /* globals.css IS the palette. Every literal in it is a token definition, which is the whole point
    * of having one file that holds them. */
   if (path === TOKEN_FILE) continue;
+  if (path === GENERATED_FILE) continue;
   const isCss = path.endsWith('.css');
   checked++;
 
-  readFileSync(full, 'utf8').split(/\r?\n/).forEach((line, i) => {
-    if (line.includes('lint-tokens-allow')) return;
+  const raw = readFileSync(full, 'utf8').split(/\r?\n/);
+  /* Comments are blanked BEFORE any check runs. See blankComments: the first live run of the two
+   * checks below reported two findings and both were sentences describing the defects. */
+  blankComments(raw.join('\n')).forEach((line, i) => {
+    if ((raw[i] ?? '').includes('lint-tokens-allow')) return;
+
     const hits = isCss ? colourLiteralsInCss(line) : colourLiteralsInTsx(line);
-    if (!hits.length) return;
-    console.error(`FAIL  ${path}:${i + 1}  colour literal: ${hits.join(', ')}`);
-    console.error(`        ${line.trim().slice(0, 100)}`);
-    fail++;
+    if (hits.length) {
+      console.error(`FAIL  ${path}:${i + 1}  colour literal: ${hits.join(', ')}`);
+      console.error(`        ${(raw[i] ?? '').trim().slice(0, 100)}`);
+      fail++;
+    }
+
+    /* A token that does not exist. Renders as inherited, silently. */
+    const undeclared = tokenRefs(line).filter((n) => !DECLARED.has(n));
+    if (undeclared.length) {
+      console.error(`FAIL  ${path}:${i + 1}  undefined token: ${undeclared.join(', ')}`);
+      console.error(`        ${(raw[i] ?? '').trim().slice(0, 100)}`);
+      console.error('        Declared nowhere, so `color` inherits and the rule does nothing.');
+      fail++;
+    }
+
+    /* A token that exists and means the wrong thing. Renders as paper on paper. */
+    const surface = surfaceTokenAsText(line);
+    if (surface.length) {
+      console.error(`FAIL  ${path}:${i + 1}  surface token as a text colour: ${surface.join(', ')}`);
+      console.error(`        ${(raw[i] ?? '').trim().slice(0, 100)}`);
+      console.error(`        Use ${surface[0]}-foreground. ${surface[0]} is the colour of the paper.`);
+      fail++;
+    }
   });
 }
 
 console.log('-'.repeat(70));
 if (fail) {
-  console.log(`${fail} colour literal(s) outside ${TOKEN_FILE}.`);
-  console.log('The palette is a decision, not a default: cream plus terra-cotta plus serif plus');
-  console.log('rounded cards was removed on 2026-08-09 after research named it as the current');
-  console.log('AI-generated tell. Use a token from globals.css, or add one there.');
-  console.log('If the literal is genuinely unavoidable (an ImageResponse cannot read a CSS');
-  console.log('variable), put lint-tokens-allow in a comment on the same line.');
+  /* Three kinds of finding since 2026-09-04, so the summary counts findings rather than calling
+     them all colour literals: the two token checks fire on lines that hold no literal at all. */
+  console.log(`${fail} token finding(s) in ${checked} file(s).`);
+  console.log('');
+  console.log('  colour literal            The palette is a decision, not a default: cream plus');
+  console.log('                            terra-cotta plus serif plus rounded cards was removed on');
+  console.log('                            2026-08-09 after research named it as the current');
+  console.log('                            AI-generated tell. Use a token from globals.css, or add');
+  console.log('                            one there. If it is genuinely unavoidable, put');
+  console.log('                            lint-tokens-allow in a comment on the same line.');
+  console.log('  undefined token           Declared in no stylesheet, so the declaration is invalid');
+  console.log('                            at computed-value time and the property inherits. The');
+  console.log('                            rule does nothing and looks like it does something.');
+  console.log('  surface token as text     A background token used as a text colour. Every one of');
+  console.log('                            them has a -foreground partner; that is the one you want.');
   process.exit(1);
 }
-console.log(`${checked} file(s) checked, no colour literal outside ${TOKEN_FILE}.`);
+console.log(`${checked} file(s) checked: no colour literal outside ${TOKEN_FILE}, no undefined token, no surface token used as text.`);

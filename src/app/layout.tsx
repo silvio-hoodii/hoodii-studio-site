@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
+import { LIGHT, DARK } from '@/lib/tokens.generated'
 
 /* Not Inter and not Geist, both of which are their own tell. Plex is a commissioned typeface with
  * actual engineering character, the mono has real personality in its italics and numerals, and the
@@ -60,10 +61,32 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 }
 
+/* THE ONLY VIEWPORT EXPORT ON THE SITE, as of 2026-09-04. There were nine.
+ *
+ * Eight app layouts (kitchen, gym, health, swim, run, bike, french, work) each carried a
+ * byte-identical copy of this object, `themeColor: '#ffffff'` included. Viewport metadata is merged
+ * SHALLOWLY across the segments of a route and the deepest definition of a key wins, so a single
+ * declaration here reaches every page and those eight were pure duplication: nine places to edit
+ * one fact, which is how the eight of them came to be a month out of date together. Deleted.
+ *
+ * `themeColor` is the strip of browser chrome above the page on a phone, so it is the one colour
+ * that has to move with the theme. It is a media PAIR rather than one value, which is what lets the
+ * chrome go dark with the page instead of leaving a white bar over a dark document.
+ *
+ * The two values are DERIVED, not typed. `src/lib/tokens.generated.ts` is written by
+ * `scripts/gen-tokens.mjs` from the oklch tokens in globals.css, and `pnpm build` runs its
+ * `--check`. The previous hand-converted mirrors of this palette, in `opengraph-image.tsx`, were
+ * all four wrong and had been for a month: a comment asking people to keep a copy in sync is not a
+ * mechanism, and this is the mechanism.
+ */
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: LIGHT['--background'] },
+    { media: '(prefers-color-scheme: dark)', color: DARK['--background'] },
+  ],
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import './french.css';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -8,12 +8,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function FrenchLayout({ children }: { children: React.ReactNode }) {
   return (

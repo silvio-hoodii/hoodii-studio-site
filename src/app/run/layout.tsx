@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import '../training.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -15,7 +15,12 @@ import TrainingNav from '@/components/training/TrainingNav';
  * renamed when a second route needed it; this is the third. */
 
 export const metadata: Metadata = {
-  title: 'Run',
+  /* THE OBJECT FORM, NOT A PLAIN STRING, and the difference is only visible on the CHILD routes.
+   * A bare `title: 'Run'` here satisfies the root template for this page and TERMINATES it for
+   * everything under this segment, so /run/log rendered with no site name on it while every
+   * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
+   * src/app/kitchen/layout.tsx. */
+  title: { default: 'Run', template: '%s · Silvio Neyra' },
   description: 'My running: the ten-week walk-to-run build, what the belt should read, and how to run it.',
   /* NOINDEX, matching /gym and /health, which carry the same kind of thing: his own training and
    * his own numbers. /swim is currently indexable and this route did NOT copy that, deliberately.
@@ -24,12 +29,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function RunLayout({ children }: { children: React.ReactNode }) {
   return (

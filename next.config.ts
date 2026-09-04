@@ -13,6 +13,22 @@ import type { NextConfig } from "next";
  * it is step 1 of the operator checklist for exactly that reason.
  */
 const nextConfig: NextConfig = {
+  /* `/favicon.ico` is a convention older than the `<link rel="icon">` tag and plenty of crawlers,
+   * link-preview bots and feed readers still request it blindly at the site root.
+   *
+   * `src/app/favicon.ico` was DELETED on 2026-09-04: it was the create-next-app triangle from
+   * before the redesign, so the browser tab of a personal site showed a framework's logo. The mark
+   * that replaced it is generated from the palette at build time by `src/app/icon.tsx`, which is
+   * what stops it going stale the way the share card's four hex literals did.
+   *
+   * That deletion left the bare path 404ing, and a Next 404 is an 11.5 KB HTML page. Every blind
+   * bot request would have cost that. A rewrite rather than a redirect so the bytes arrive on the
+   * first request instead of after a round trip, and rather than a committed .ico so there is still
+   * exactly one drawing on this site and no binary to regenerate by hand. Browsers sniff favicon
+   * bytes and do not care that a .ico URL returns image/png. */
+  async rewrites() {
+    return [{ source: '/favicon.ico', destination: '/icon/32' }];
+  },
   async redirects() {
     return [
       { source: '/en', destination: '/', permanent: true },

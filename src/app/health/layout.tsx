@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 /* THREE STYLESHEETS, IN THIS ORDER, AND THE ORDER IS THE POINT.
  *
  * This surface hosts the training week as of 2026-08-27, so it needs training.css: `.standing`,
@@ -16,17 +16,16 @@ import SiteFooter from '@/components/SiteFooter';
 import TrainingNav from '@/components/training/TrainingNav';
 
 export const metadata: Metadata = {
-  title: 'Health',
+  /* THE OBJECT FORM, NOT A PLAIN STRING, and the difference is only visible on the CHILD routes.
+   * A bare `title: 'Health'` here satisfies the root template for this page and TERMINATES it for
+   * everything under this segment, so /health/deep rendered with no site name on it while every
+   * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
+   * src/app/kitchen/layout.tsx. */
+  title: { default: 'Health', template: '%s · Silvio Neyra' },
   description: 'The index for training: how many days in a row, what the week looks like, and what my body did about it.',
   robots: { index: false, follow: false },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function HealthLayout({ children }: { children: React.ReactNode }) {
   return (

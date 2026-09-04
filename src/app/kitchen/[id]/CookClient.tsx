@@ -241,7 +241,7 @@ export default function CookClient({
           </p>
         )}
 
-        <div className="meta" style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 14, color: 'var(--ink-faint)' }}>
+        <div className="cookmeta">
           {recipe.time.note && <span>{recipe.time.note}</span>}
           {recipe.serves.proteinPerUnit ? (
             <span>{recipe.serves.proteinPerUnit} g protein per {recipe.serves.unit}</span>
@@ -333,13 +333,13 @@ export default function CookClient({
               <span className="qty">{amount(p.qty, p.unit)}</span>
               <span className="nm">
                 {p.display}
-                {p.prep ? <span style={{ color: 'var(--ink-faint)' }}>, {p.prep}</span> : null}
+                {p.prep ? <span className="note">, {p.prep}</span> : null}
                 {/* Why an unfamiliar thing is on the list, said here rather than only inside the
                     collapsed deviations block. See Ingredient.insteadOf. */}
                 {p.insteadOf ? (
-                  <span style={{ color: 'var(--ink-faint)' }}> · stands in for {p.insteadOf}</span>
+                  <span className="note"> · stands in for {p.insteadOf}</span>
                 ) : null}
-                {p.missing ? <b style={{ color: 'var(--accent)' }}> · you do not have this</b> : null}
+                {p.missing ? <b className="missing"> · you do not have this</b> : null}
               </span>
             </div>
           ))}

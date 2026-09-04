@@ -2,7 +2,25 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/* DARK MODE IS THE OS SETTING, NOT A CLASS, since 2026-09-04.
+ *
+ * The whole dark palette existed below for a month and nothing switched it on: `grep -rn "'dark'"
+ * src` found nothing that added the class and there was no `prefers-color-scheme` block, so every
+ * token in it was dead code. The kitchen at the stove at 9 pm and the gym at 6 am both got a white
+ * 390px slab in a dim room, on a site whose entire palette argument is restraint.
+ *
+ * A CLASS AND A TOGGLE WERE THE ALTERNATIVE AND WERE NOT TAKEN. A toggle has to survive the first
+ * paint, which means a blocking inline script reading localStorage before the document renders.
+ * This site ships almost no client JavaScript on purpose (SiteHeader is a server component so that
+ * a link and a label cost nothing), and an inline script is also the one thing that makes the
+ * Content-Security-Policy in D1 of the 2026-09-04 audit harder to enforce. The OS setting is
+ * already the visitor's stated preference, on every device, with no storage and no script.
+ *
+ * This variant is redefined to match. It was `&:is(.dark *)`, so a `dark:` Tailwind utility would
+ * have compiled against a class that no longer exists and silently never fired. There are zero
+ * `dark:` utilities in src today, which is what made deleting the class safe; this keeps the next
+ * one honest. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
 /* Tokens.
  *
@@ -52,6 +70,12 @@
 }
 
 :root {
+  /* Tells the browser this document has both, which is what makes the form controls, the
+     scrollbars, the caret and the spellcheck underlines follow the theme too. Without it a dark
+     page keeps light native widgets, and the `lb` / `reps` inputs on the gym card are the place
+     that shows worst. */
+  color-scheme: light dark;
+
   /* Paper, but not cream. A hair off pure white so rules and text sit calmly on it. */
   --background: oklch(0.993 0.0015 100);
   --foreground: oklch(0.19 0.004 100);
@@ -106,29 +130,37 @@
   --gap: clamp(28px, 6vw, 44px);
 }
 
-.dark {
-  --background: oklch(0.16 0.004 100);
-  --foreground: oklch(0.95 0.002 100);
-  --card: oklch(0.20 0.004 100);
-  --card-foreground: var(--foreground);
-  --popover: oklch(0.20 0.004 100);
-  --popover-foreground: var(--foreground);
-  --primary: oklch(0.95 0.002 100);
-  --primary-foreground: oklch(0.16 0.004 100);
-  --secondary: oklch(0.26 0.004 100);
-  --secondary-foreground: var(--foreground);
-  --muted: oklch(0.26 0.004 100);
-  --muted-foreground: oklch(0.66 0.004 100);
-  --accent: oklch(0.26 0.004 100);
-  --accent-foreground: var(--foreground);
-  --destructive: oklch(0.65 0.18 25);
-  --signal: oklch(0.72 0.15 158);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.6 0.004 100);
-  /* Restated rather than inherited: a custom property resolves its var()s against the element it
-     is declared on, so the :root copy would still be mixing the light foreground and background. */
-  --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background));
+/* Was `.dark`, a class nothing ever added. See the note on `@custom-variant dark` at the top.
+ *
+ * The values are unchanged: this block was written with the palette and was correct, it was just
+ * unreachable. `scripts/gen-tokens.mjs` reads the tokens out of this media query by name, so
+ * renaming or re-nesting it means updating DARK_SELECTOR there; `pnpm build` runs its `--check`
+ * and will fail rather than let the two disagree. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.16 0.004 100);
+    --foreground: oklch(0.95 0.002 100);
+    --card: oklch(0.20 0.004 100);
+    --card-foreground: var(--foreground);
+    --popover: oklch(0.20 0.004 100);
+    --popover-foreground: var(--foreground);
+    --primary: oklch(0.95 0.002 100);
+    --primary-foreground: oklch(0.16 0.004 100);
+    --secondary: oklch(0.26 0.004 100);
+    --secondary-foreground: var(--foreground);
+    --muted: oklch(0.26 0.004 100);
+    --muted-foreground: oklch(0.66 0.004 100);
+    --accent: oklch(0.26 0.004 100);
+    --accent-foreground: var(--foreground);
+    --destructive: oklch(0.65 0.18 25);
+    --signal: oklch(0.72 0.15 158);
+    --border: oklch(1 0 0 / 12%);
+    --input: oklch(1 0 0 / 16%);
+    --ring: oklch(0.6 0.004 100);
+    /* Restated rather than inherited: a custom property resolves its var()s against the element it
+       is declared on, so the :root copy would still be mixing the light foreground and background. */
+    --border-strong: color-mix(in srgb, var(--foreground) 32%, var(--background));
+  }
 }
 
 html,
@@ -501,6 +533,98 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
   border-left: 2px solid var(--border);
   padding-left: 13px;
   margin: 0;
+}
+
+/* ---- text for a screen reader and nobody else ----
+ *
+ * `.vh` and not Tailwind's `sr-only`, which was the first attempt: `scripts/lint-classnames.mjs`
+ * refuses a class name that collides with a Tailwind utility, on the grounds that such names
+ * silently change display, visibility, position or size. It is right to refuse it even though this
+ * particular collision was intentional, because the gate cannot tell an intentional one from the
+ * `.collapse` that hid three blocks on /gym for days. The site's CSS is hand-written; this belongs
+ * in it.
+ *
+ * The clip-rect-plus-1px idiom rather than `display: none` or `visibility: hidden`, both of which
+ * remove the text from the accessibility tree as well as from the screen, which would defeat the
+ * entire purpose. */
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- the frame while the data is coming ----
+ *
+ * Drives `src/components/SurfaceLoading.tsx`, mounted from a `loading.tsx` in each of the nine app
+ * segments. Here rather than per-surface for the same reason the site header is here: one component
+ * used by nine layouts, each of which scopes its own stylesheet under its own root class.
+ *
+ * The dimensions deliberately match what they stand in for. `.skel-title` is the h1's
+ * `clamp(24px, 5.5vw, 30px)` at its 1.18 line-height, and `.skel-label` is the `.site-label` mono
+ * row every section on this site opens with, so the frame does not resize when the real content
+ * lands. A skeleton whose height is a guess trades a white screen for a jumping one.
+ */
+.skel {
+  background: var(--muted);
+  border-radius: var(--radius-sm);
+  /* Opacity only. No sweeping gradient: this palette has no gradients anywhere, and a diagonal
+     shine is the single most recognisable "loading skeleton" cliche going. */
+  animation: skel-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skel-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+/* Until this component there was exactly one animation on the site (the hub's equaliser) and so
+   exactly one place that needed this guard. Now there are two. */
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}
+
+.skel-title {
+  height: calc(clamp(24px, 5.5vw, 30px) * 1.18);
+  width: min(62%, 260px);
+  margin: 10px 0 0;
+}
+
+.skel-rows {
+  margin-top: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.skel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Stands in for `.site-label`, which is 12px uppercase mono. Its cap height is what reads as the
+   label's weight on the page, not its line box, so 12px here rather than a line-height multiple. */
+.skel-label {
+  height: 12px;
+  width: 96px;
+}
+
+.skel-line {
+  height: 52px;
+  width: 100%;
 }
 
 /* ---- the one way home ----

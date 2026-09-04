@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import './kitchen.css';
 import TimerRail from './TimerRail';
 import SiteHeader from '@/components/SiteHeader';
@@ -16,14 +16,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  // Was #faf6f0, left behind by the cream palette that was removed on 2026-08-09. This is the
-  // strip of browser chrome above the page on a phone, so a stale value here is visible.
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function KitchenLayout({ children }: { children: React.ReactNode }) {
   return (

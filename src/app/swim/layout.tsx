@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import '../training.css';
 import '../charts.css';
 import SiteHeader from '@/components/SiteHeader';
@@ -24,18 +24,17 @@ import TrainingNav from '@/components/training/TrainingNav';
  * swim genuinely needs a rule /gym does not have, that is when the file comes back. */
 
 export const metadata: Metadata = {
-  title: 'Swim',
+  /* THE OBJECT FORM, NOT A PLAIN STRING, and the difference is only visible on the CHILD routes.
+   * A bare `title: 'Swim'` here satisfies the root template for this page and TERMINATES it for
+   * everything under this segment, so /swim/deep and /swim/records rendered with no site name on it while every
+   * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
+   * src/app/kitchen/layout.tsx. */
+  title: { default: 'Swim', template: '%s · Silvio Neyra' },
   description:
     'My swimming: where I am against the tier ladder, the continuity plan, and how to swim it.',
   alternates: { canonical: '/swim' },
 };
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#ffffff',   // lint-tokens-allow: a viewport export is read by the browser chrome, not by CSS
-};
 
 export default function SwimLayout({ children }: { children: React.ReactNode }) {
   return (

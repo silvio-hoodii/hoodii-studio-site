@@ -1,28 +1,49 @@
 import { ImageResponse } from 'next/og';
+import { LIGHT } from '@/lib/tokens.generated';
 
 /* The card that renders when this URL is pasted into LinkedIn, Slack, iMessage or a DM.
  *
  * Until now there was none, so a link to this site previewed as a bare URL with a grey box. That is
  * the one place where the site is seen by someone who has not chosen to visit it yet.
  *
- * COLOURS ARE HARDCODED HERE, which is against the rule everywhere else in this repo, and it is not
- * laziness: this runs in a satori renderer with no stylesheet, no CSS custom properties and no
- * cascade, so `var(--background)` resolves to nothing at all. The four values below are the token
- * values converted once, and they are commented with the token they came from so a palette change
- * has a findable second place to go.
+ * COLOURS CANNOT BE TOKENS HERE: this runs in a satori renderer with no stylesheet, no CSS custom
+ * properties and no cascade, so `var(--background)` resolves to nothing at all. They are DERIVED
+ * instead of copied, and that changed on 2026-09-04 for cause.
+ *
+ * THE FOUR HAND-CONVERTED LITERALS THAT USED TO BE HERE WERE ALL FOUR WRONG:
+ *
+ *     --background        was #fdfcfa    the token converts to #fdfdfc
+ *     --foreground        was #262420    the token converts to #141412
+ *     --muted-foreground  was #807d78    the token converts to #72726f
+ *     --signal            was #00784a    the token converts to #007142
+ *
+ * Every one wrong in the WARM direction, because every one was a leftover of the cream palette
+ * deleted on 2026-08-09. So this card, the single surface seen by people who have not chosen to
+ * visit, had been rendering in the retired palette for a month, while the comment directly above it
+ * asserted the values were "the token values converted once". They were converted once, from the
+ * wrong palette, and nothing re-checked them. `lint-tokens.mjs` allowed all four by marker and was
+ * right to: a marker says a literal is ALLOWED to be here. It cannot say the literal is CORRECT.
+ *
+ * `src/lib/tokens.generated.ts` is written from the oklch tokens in globals.css by
+ * `scripts/gen-tokens.mjs`, and `pnpm build` runs its `--check`. A palette change that is not
+ * regenerated now fails the build.
  *
  * The default font is deliberate too. IBM Plex would have to be fetched over the network at render
  * time, which turns a broken font CDN into a broken share card. A monochrome card with one large
  * name does not need the typeface to carry it.
+ *
+ * LIGHT and not DARK: a share card is composited onto whatever the messaging client's own surface
+ * is, and it has no media query to read. One fixed rendering, and the light palette is the one the
+ * site is designed in.
  */
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'Silvio Neyra';
 
-const BACKGROUND = '#fdfcfa'; // lint-tokens-allow: --background, oklch(0.993 0.0015 100)
-const FOREGROUND = '#262420'; // lint-tokens-allow: --foreground, oklch(0.19 0.004 100)
-const MUTED = '#807d78'; // lint-tokens-allow: --muted-foreground, oklch(0.55 0.004 100)
-const SIGNAL = '#00784a'; // lint-tokens-allow: --signal, oklch(0.48 0.12 158)
+const BACKGROUND = LIGHT['--background'];
+const FOREGROUND = LIGHT['--foreground'];
+const MUTED = LIGHT['--muted-foreground'];
+const SIGNAL = LIGHT['--signal'];
 
 export default function Image() {
   return new ImageResponse(

@@ -222,7 +222,51 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.kos .amounts .nm { color: var(--muted-foreground); }
+
+/* THREE LEVELS IN THE PREP LIST, and until 2026-09-04 they were two pretending to be three.
+ *
+ * The name was `--muted-foreground` and the prep note next to it asked for `var(--ink-faint)`, a
+ * token that IS NOT DEFINED ANYWHERE: three uses in CookClient.tsx, zero declarations in any
+ * stylesheet. An undefined custom property makes the declaration invalid at computed-value time,
+ * and `color` inherits, so the note fell back to the name's own colour and the two rendered
+ * identically. Seven to thirteen elements per dish page were designed to recede and did not.
+ *
+ * Fixing only the token would have changed nothing visible, because `--muted-foreground` is what
+ * the note was already inheriting. So the hierarchy is built out of the tokens that exist: the
+ * ingredient NAME is what he is scanning for on a cook screen and takes full ink, and the note
+ * that qualifies it recedes. No new palette token: this site has two text weights plus destructive
+ * and that is the restraint the palette argument is about. */
+.kos .amounts .nm { color: var(--foreground); }
+.kos .amounts .note { color: var(--muted-foreground); }
+
+/* "you do not have this", the one warning on a cook screen that stops him mid-dish.
+ *
+ * IT WAS `var(--accent)`, WHICH IS A SURFACE TOKEN: oklch(0.955 0.002 100), a near-white. The cream
+ * palette's accent was orange and the rename on 2026-08-09 kept the name and lost the meaning.
+ * Measured live on /kitchen/piccata: text lab(94.79) on background lab(99.20), a contrast ratio of
+ * about 1.1 to 1. Invisible. Three of the ten recipes carry the warning today.
+ *
+ * `--destructive` because a missing ingredient is the same class of fact as "this did not save":
+ * something is wrong and you need to act before continuing. `lint-tokens.mjs` could not catch the
+ * old value, because a token that exists and means the wrong thing is not a colour literal. */
+.kos .amounts .missing {
+  color: var(--destructive);
+  font-weight: 600;
+}
+
+/* The aside under a dish title on a cook screen: time note, protein per serving, step count.
+ * Was an inline style block whose colour was the same undefined `--ink-faint`, so unlike the prep
+ * notes it had no muted ancestor to inherit from and rendered at FULL INK, competing with the
+ * title above it. `.kos .dish .meta` is a different thing: it is the row on a dish CARD in a list,
+ * and this element is not inside a `.dish`. */
+.kos .cookmeta {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
 
 /* Semantic blocks. A left rule and a mono label, never a pastel fill. */
 .kos .box {
