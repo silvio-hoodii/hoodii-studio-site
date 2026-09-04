@@ -132,17 +132,32 @@ export function weekdayOf(date: string): WeekdayKey {
 
 /** The plan, from program.json plus conditioning.json's slot assignments. No copy of the split. */
 export function plannedWeek(program: Program, conditioning: Conditioning): TrainingWeek['plan'] {
-  const liftDays = program.days as Record<string, { title?: string } | undefined>;
+  const liftDays = program.days as Record<string, { title?: string; scheduledOn?: string } | undefined>;
   const assigned = conditioning.week?.assignedDays ?? {};
 
+  /* THE INDEX IS BUILT FROM `scheduledOn`, and this line used to be `liftDays[weekday]`.
+   *
+   * That single lookup was the whole conflation, 2026-09-03. It found a session by asking the
+   * programme for a day named "monday", which only worked because the session KEYS were weekday
+   * names, and the session keys being weekday names is exactly what made the app tell him "next up
+   * thursday" on a Tuesday. Sessions are a rolling rotation; the weekday is where one is currently
+   * SCHEDULED. Two facts, one field, and the plan view was the only thing that ever needed the
+   * second one. Moving a session to another day is now a `scheduledOn` edit rather than a rename of
+   * its identity, and a session with no weekday assigned simply does not appear in the plan. */
+  const byWeekday = new Map<string, string>();
+  for (const [key, d] of Object.entries(liftDays)) {
+    if (d?.scheduledOn) byWeekday.set(d.scheduledOn, key);
+  }
+
   const days: PlannedDay[] = WEEKDAYS.map((weekday) => {
-    const lift = liftDays[weekday];
+    const liftKey = byWeekday.get(weekday) ?? null;
+    const lift = liftKey ? liftDays[liftKey] : undefined;
     const slots = Object.entries(assigned)
       .filter(([k, v]) => !k.startsWith('$') && k !== 'why' && Array.isArray(v) && v.includes(weekday))
       .map(([k]) => k);
     return {
       weekday,
-      liftKey: lift ? weekday : null,
+      liftKey,
       liftTitle: lift?.title ?? null,
       slots,
       training: Boolean(lift) || slots.length > 0,

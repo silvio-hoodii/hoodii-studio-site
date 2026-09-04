@@ -622,6 +622,48 @@ function checkRoleOrder(dayKey, day) {
   }
 }
 
+/* ------ NO WEEKDAY NAME IN ANYTHING HE READS. Added 2026-09-03, on his words:
+ * "WHY THE FUCJ DO YOU KEEP CALLING SESSION WITH WEEKDAYS?"
+ *
+ * The cards have printed "Session A" to "Session D" for weeks while the data was keyed monday to
+ * friday, so every agent, every report and every breadcrumb spoke to him in a vocabulary his own
+ * app does not use. Carried as "the largest known debt" in three consecutive handoffs and worked
+ * around each time, because nothing refused it.
+ *
+ * RENAMING THE KEYS WAS ONLY HALF. Nine strings on the cards said things like "Tuesday is the day
+ * the bench gets pushed" and "the Farmer Carry on Friday", which are FALSE for a rolling rotation:
+ * cycle.ts picks the next session from what was logged, so Session B might land on any day. Prose
+ * survives a key rename untouched, which is how a rename leaves the lie in the only place he looks.
+ *
+ * `scheduledOn` is exempt and is the ONE field allowed to name a weekday, because that is its whole
+ * job. `$`-prefixed fields are agent-only and stripped before render, so a changelog may quote the
+ * old wording. Everything else is a field he reads.
+ * ------------------------------------------------------------------------------------------- */
+{
+  const WEEKDAY_WORD = /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i;
+  const walk = (node, path) => {
+    if (typeof node === 'string') {
+      const hit = WEEKDAY_WORD.exec(node);
+      if (hit) {
+        fail('program.json', `${path} names "${hit[0]}", and the split is a ROTATION, not a calendar. `
+          + `cycle.ts picks the next session from what was actually logged, so this session can land on any `
+          + `day of the week and a sentence promising otherwise is false on most of them. Say "Session A" to `
+          + `"Session D", which is what the card he is holding already prints. The only field allowed to name `
+          + `a weekday is "scheduledOn", whose job is exactly that.\n    in: ${JSON.stringify(node.slice(Math.max(0, hit.index - 40), hit.index + 50))}`);
+      }
+      return;
+    }
+    if (Array.isArray(node)) { node.forEach((v, i) => walk(v, `${path}[${i}]`)); return; }
+    if (node && typeof node === 'object') {
+      for (const [k, v] of Object.entries(node)) {
+        if (k.startsWith('$') || k === 'scheduledOn') continue;
+        walk(v, `${path}.${k}`);
+      }
+    }
+  };
+  walk(program.days, 'days');
+}
+
 for (const [dayKey, day] of Object.entries(program.days)) {
   checkZoneRoute(dayKey, day);
   checkRoleOrder(dayKey, day);
@@ -790,7 +832,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * Word boundaries, and an explicit refusal of the two body words that follow. A gate whose
        * escape hatch can be opened by an anatomical noun is a gate that checks less than it claims,
        * which is theme T6 of the 2026-08-28 audit and is now three for three on this file. */
-      const DAY_WORD = /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab])\b(?!\s*(?:back|body))/i;
+      const DAY_WORD = /\b(session [abcd]|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab])\b(?!\s*(?:back|body))/i;
 
       /* AND NAMING A DAY IS NO LONGER A BLANK CHEQUE. 10-gym P1-9 proposed this and it was never
        * built: a `why` that names a weekday must name something ACTUALLY ON THAT DAY. Thursday's
@@ -799,8 +841,12 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * at once, one true (Tuesday has dead bugs) and one false (so does this block), and the
        * exemption covered both. So a mention is forgiven only if the exercise is in THIS block or on
        * the day the sentence names. */
-      const DAY_OF = { monday: 'monday', tuesday: 'tuesday', thursday: 'thursday', friday: 'friday',
-        'lower a': 'monday', 'upper a': 'tuesday', 'lower b': 'thursday', 'upper b': 'friday' };
+      /* SESSION NAMES, not weekdays, since 2026-09-03. A cross-reference on a card now reads
+         "the box jump in Session A", because the split is a rotation and there is no Tuesday in it.
+         The weekday spellings stay in DAY_WORD above so the new gate can REFUSE them; they are
+         deliberately absent here so that naming one can never be forgiven as a valid reference. */
+      const DAY_OF = { 'session a': 'a', 'session b': 'b', 'session c': 'c', 'session d': 'd',
+        'lower a': 'a', 'upper a': 'b', 'lower b': 'c', 'upper b': 'd' };
       const namesOn = (dayKey) => {
         const s = new Set();
         for (const b of program.days?.[dayKey]?.blocks ?? []) {
@@ -1403,7 +1449,16 @@ if (!conditioning.week?.restRule) {
     fail('conditioning.json', `week.restRule.maxConsecutive must be an integer from 1 to 7, got ${JSON.stringify(maxConsecutive)}`);
   }
   const assigned = conditioning.week.assignedDays ?? {};
-  const training = new Set(Object.keys(program.days));   // the lifting split, from its own file
+  /* THE WEEKDAY A SESSION IS SCHEDULED ON, not its key. This was `Object.keys(program.days)` until
+     2026-09-03, which worked only while the session keys were weekday names, and that spelling is
+     precisely what made the app say "next up thursday" on a Tuesday. The keys are session ids now,
+     so unioning them with the conditioning weekday lists would have put "a", "b", "c" and "d" into a
+     set the consecutive-day arithmetic then walks in weekday order: it would have silently counted
+     four training days that are on no day of the week, and the rest rule would have gone quiet.
+     A rename that leaves a set-union pointing at the old spelling is how a gate stops gating. */
+  const training = new Set(
+    Object.values(program.days).map((d) => d.scheduledOn).filter(Boolean),
+  );
   for (const [slot, days] of Object.entries(assigned)) {
     if (slot.startsWith('$') || slot === 'why') continue;
     if (!Array.isArray(days)) {

@@ -209,7 +209,11 @@ export interface Day {
   blocks: Block[];
 }
 
-export type DayKey = 'monday' | 'tuesday' | 'thursday' | 'friday';
+/** SESSION IDS, not weekdays, since 2026-09-03. The split is a rolling rotation and the app picks
+ *  the next session from what was logged, so a key called "thursday" was routinely selected on a
+ *  Tuesday. Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a different fact that only
+ *  the plan view needs. See the note at the top of content/gym/program.json. */
+export type DayKey = 'a' | 'b' | 'c' | 'd';
 
 export interface Program {
   days: Record<DayKey, Day>;

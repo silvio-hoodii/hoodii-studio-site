@@ -112,7 +112,7 @@ const cat: MovementCatalogue = {
 };
 const day = (id: string) => ({ blocks: [{ label: 'Main', role: 'main', exercises: [{ id, name: id, sets: 5 }] }] });
 const program: CoverageProgram = {
-  days: { monday: day('back-squat'), tuesday: day('back-squat'), thursday: day('leg-press') },
+  days: { a: day('back-squat'), b: day('back-squat'), c: day('leg-press') },
 };
 const cov = computeCoverage(program, cat);
 const squat = cov.perLift.find((l) => l.id === 'back-squat')!;
@@ -130,7 +130,7 @@ console.log('\na lift sharing NO muscle with the week gets no indirect credit (p
 /* The mirror case, and the one that catches an indirect test that matches everything. A leg curl on
    its own day, hamstrings only, must sit at its direct count exactly. */
 const program2: CoverageProgram = {
-  days: { monday: day('back-squat'), thursday: day('leg-curl') },
+  days: { a: day('back-squat'), c: day('leg-curl') },
 };
 const cov2 = computeCoverage(program2, cat);
 const curl = cov2.perLift.find((l) => l.id === 'leg-curl')!;
@@ -149,7 +149,7 @@ console.log('\nsaturation is reported rather than printed as a finding');
    single-row table or the message fires on every trivial programme. */
 eq('two lifts in one tier is saturated', cov.totals.strengthTierSaturated, true);
 eq('tiers seen on the paper example', cov.totals.strengthTiersSeen, 1);
-const cov3 = computeCoverage({ days: { monday: day('back-squat') } }, cat);
+const cov3 = computeCoverage({ days: { a: day('back-squat') } }, cat);
 eq('a single lift is not saturation', cov3.totals.strengthTierSaturated, false);
 
 console.log('-'.repeat(70));

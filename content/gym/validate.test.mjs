@@ -323,7 +323,11 @@ const crossDayReference = (p, hostDay) => {
     const absentDay = Object.keys(p.days).find((k) => k !== homeDay && k !== hostDay
       && ![...namesOn(k)].some((pn) => pn.includes(low) || low.includes(pn)));
     if (!absentDay) continue;
-    return { name, homeDay, absentDay };
+    /* THE LABEL, NOT THE KEY, since 2026-09-03. `homeDay` is now "a".."d" and a cross-reference on
+       a card reads "Session A", which is what DAY_OF in validate.mjs maps and what the card prints.
+       Returning the raw key here would have built a sentence saying "is on a, not here", which the
+       gate cannot resolve, and the case would have failed for a reason unrelated to what it tests. */
+    return { name, homeDay, absentDay, homeLabel: `Session ${homeDay.toUpperCase()}`, absentLabel: `Session ${absentDay.toUpperCase()}` };
   }
   throw new Error(`no exercise sits on exactly one day other than ${hostDay} while being absent, alts included, from a third day, so neither cross-reference case can be built; repoint them`);
 };
@@ -886,18 +890,18 @@ const CASES = [
        Every hardcoded exercise name in this file has gone stale at least once. */
     name: 'a real cross-reference to another day still passes',
     mutate: (p) => {
-      const elsewhere = crossDayReference(p, 'monday');
-      const b = p.days.monday.blocks.find((x) => x.why);
-      b.why = `${b.why} The ${elsewhere.name} is on ${elsewhere.homeDay}, not here.`;
+      const elsewhere = crossDayReference(p, 'a');
+      const b = p.days.a.blocks.find((x) => x.why);
+      b.why = `${b.why} The ${elsewhere.name} is in ${elsewhere.homeLabel}, not here.`;
     },
     expect: null,
   },
   {
     name: 'a cross-reference to a day that does NOT have the exercise is refused',
     mutate: (p) => {
-      const elsewhere = crossDayReference(p, 'monday');
-      const b = p.days.monday.blocks.find((x) => x.why);
-      b.why = `${b.why} The ${elsewhere.name} is on ${elsewhere.absentDay}, not here.`;
+      const elsewhere = crossDayReference(p, 'a');
+      const b = p.days.a.blocks.find((x) => x.why);
+      b.why = `${b.why} The ${elsewhere.name} is in ${elsewhere.absentLabel}, not here.`;
     },
     expect: 'it is not there either',
   },

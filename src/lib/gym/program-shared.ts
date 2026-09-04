@@ -4,7 +4,7 @@
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
-export const DAY_ORDER: DayKey[] = ['monday', 'tuesday', 'thursday', 'friday'];
+export const DAY_ORDER: DayKey[] = ['a', 'b', 'c', 'd'];
 
 /* The keys above are weekday names, and the cycle is rolling: computeNextUp picks the next day from
  * what was actually logged, so the app selects "thursday" on a Tuesday. GymClient has derived a

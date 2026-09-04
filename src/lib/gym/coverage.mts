@@ -216,7 +216,7 @@ export function tierFor(tiers: Tier[], n: number): Tier {
 /** The rotation, not the calendar week. The keys are weekday names and mean nothing of the sort:
  *  src/lib/gym/cycle.ts picks the next day from what was actually logged. Kept in this order because
  *  every per-day column in every report reads left to right as Lower A, Upper A, Lower B, Upper B. */
-export const COVERAGE_DAY_ORDER = ['monday', 'tuesday', 'thursday', 'friday'];
+export const COVERAGE_DAY_ORDER = ['a', 'b', 'c', 'd'];
 
 /** One exercise's contribution to ONE muscle on ONE day. */
 export interface Contribution {

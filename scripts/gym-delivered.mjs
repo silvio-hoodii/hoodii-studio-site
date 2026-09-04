@@ -81,7 +81,7 @@ const hist = new Map(rows.map((r) => [r.exercise_id, r]));
 const dayRows = await sql`select day, count(distinct date)::int as n from gym_session where day is not null group by day`;
 const dayCount = new Map(dayRows.map((r) => [r.day, r.n]));
 
-const DAY_ORDER = ['monday', 'tuesday', 'thursday', 'friday'];
+const DAY_ORDER = ['a', 'b', 'c', 'd'];
 const MIN_ROWS = 6;   // below this there is not enough history to price anything
 
 const slots = [];

@@ -4,7 +4,7 @@
  * dose-response landmarks, and gates a push on it.
  *
  *   node scripts/gym-coverage.mjs                # the whole week, against the accepted baseline
- *   node scripts/gym-coverage.mjs --day monday
+ *   node scripts/gym-coverage.mjs --day a
  *   node scripts/gym-coverage.mjs --json
  *   node scripts/gym-coverage.mjs --accept       # re-record the baseline after an improvement
  *   node scripts/gym-coverage.mjs --accept --accept-regression   # and after a deliberate one

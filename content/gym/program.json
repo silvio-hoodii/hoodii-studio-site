@@ -1,5 +1,34 @@
 {
   "$comment": [
+    "DAY KEYS ARE SESSION IDS: a, b, c, d. They were WEEKDAY NAMES until 2026-09-03.",
+    "",
+    "His words, and he had every right to them: \"WHY THE FUCJ DO YOU KEEP CALLING SESSION WITH",
+    "WEEKDAYS?\" The cards have said \"Session A\" to \"Session D\" for weeks while the data said",
+    "monday to friday, so every agent report, every gym-notes breadcrumb and every handoff talked",
+    "to him in a vocabulary his own app does not use. It was carried as \"the largest known debt\"",
+    "in three consecutive handoffs and worked around each time.",
+    "",
+    "IT WAS NEVER JUST A NAME. The split is a ROLLING ROTATION: src/lib/gym/cycle.ts picks the next",
+    "session from what was actually logged, so the app would select the day keyed \"thursday\" on a",
+    "Tuesday. program-shared.ts said so in its own comment and nobody drew the conclusion. Two",
+    "different facts shared one field: WHICH SESSION this is, and WHEN IT IS SCHEDULED. The first is",
+    "identity and belongs in the key; the second is a calendar placement that only the plan view on",
+    "/health needs, and it is `scheduledOn` now.",
+    "",
+    "plannedWeek() in src/lib/gym/week.ts used to look a session up BY WEEKDAY NAME, one line that",
+    "was the whole conflation. It builds an index off `scheduledOn` instead, so moving a session to",
+    "another day is a data edit rather than a rename of its identity.",
+    "",
+    "The prose on the cards was renamed with the keys: nine strings said things like \"Tuesday is the",
+    "day the bench gets pushed\", which is false for a rotation he might do on any day. A gate in",
+    "validate.mjs refuses a weekday word in any rendered field now, so this cannot come back.",
+    "",
+    "gym_session.day and gym_note.day in Neon were migrated in the same change: 33 sessions and 40",
+    "notes. Two `wednesday` and two `saturday` session rows predate this split entirely and were",
+    "already orphaned; they are left alone rather than guessed at. The calendar date was never in",
+    "this column, it is in `date`, so nothing about when he trained was lost.",
+    "",
+    "--- the previous note follows ---",
     "REBUILT 2026-09-01, three times in one day, and the third pass is the one he read on his phone and",
     "pushed back on. Read the weekday section first if you only read one.",
     "",
@@ -215,7 +244,8 @@
     "Monday wrap, which is a main lift and which section 1 of the evidence file says earns twice a week."
   ],
   "days": {
-    "monday": {
+    "a": {
+      "scheduledOn": "monday",
       "name": "Session A",
       "title": "Session A: press fresh, squat heavy",
       "warmup": "upper",
@@ -257,7 +287,7 @@
                   "name": "Lateral Bound",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump on Monday: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
+                  "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump in Session A: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
                   "sets": 3,
                   "reps": "3/side",
                   "rest": "60s"
@@ -671,7 +701,8 @@
         }
       ]
     },
-    "tuesday": {
+    "b": {
+      "scheduledOn": "tuesday",
       "name": "Session B",
       "title": "Session B: pull fresh, hinge heavy",
       "warmup": "upper",
@@ -796,7 +827,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
+              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry in Session D and the Suitcase Carry in Session A are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
               "progression": "weight",
               "rangeWidth": 2,
               "alts": [
@@ -1131,7 +1162,7 @@
                   "name": "Machine Chest Press",
                   "zone": "machines",
                   "station": "chest-press",
-                  "cue": "Your second press of the week, moderate rather than heavy: Tuesday is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
+                  "cue": "Your second press of the week, moderate rather than heavy: Session B is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
                 }
               ]
             },
@@ -1187,7 +1218,8 @@
         }
       ]
     },
-    "thursday": {
+    "c": {
+      "scheduledOn": "thursday",
       "name": "Session C",
       "title": "Session C: single leg and chest fresh",
       "warmup": "lower",
@@ -1327,7 +1359,7 @@
                   "name": "Machine Chest Press",
                   "zone": "machines",
                   "station": "chest-press",
-                  "cue": "Your second press of the week, moderate rather than heavy: Tuesday is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
+                  "cue": "Your second press of the week, moderate rather than heavy: Session B is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
                 },
                 {
                   "id": "assisted-dip",
@@ -1559,7 +1591,8 @@
         }
       ]
     },
-    "friday": {
+    "d": {
+      "scheduledOn": "friday",
       "name": "Session D",
       "title": "Session D: squat and hinge, press after",
       "warmup": "lower",
@@ -1583,7 +1616,7 @@
               "zone": "benchDb",
               "station": null,
               "log": true,
-              "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump on Monday: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
+              "cue": "THREE OR FOUR BOUNDS A SIDE, AND THAT IS THE WHOLE SET. Not as many as you can. Same reason as the box jump in Session A: what you are training is how hard you can push off in one go, and a tired bound is a slow bound, which trains something else. More work means more SETS. HOW TO DO IT. Replaces the broad jump, which you swapped out every single time. This is the sideways explosive work you asked for. Stand on your LEFT leg. Push off it sideways and land on your RIGHT leg only, then FREEZE completely still for two seconds before going back. Land with the knee bent and pointing over your toes, never caving inward. Only jump as far as you can land and freeze. Success looks like: silent landing, no wobble, no second little hop to catch yourself. If you cannot freeze it, go shorter.",
               "bodyweight": true,
               "progression": "fixed",
               "alts": [
@@ -1805,7 +1838,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
+              "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry in Session D and the Suitcase Carry in Session A are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
               "progression": "weight",
               "rangeWidth": 2,
               "alts": [
@@ -1971,7 +2004,7 @@
                       "name": "BB Romanian Deadlift",
                       "zone": "rack",
                       "station": "rack",
-                      "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry on Friday and the Suitcase Carry on Monday are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
+                      "cue": "The heavy hinge, the one we progress. Breathe IN and tighten your stomach. Bar stays touching your legs the whole way, shins vertical. Bend the knees slightly and then FREEZE them, then push your hips backward toward the wall behind you. Go down until you feel a strong stretch down the back of your thighs, usually around knee height, and no further. Squeeze your bum and snap the hips forward to stand up, breathing out at the top. If your lower back rounds you have gone too far down. STRAPS, because you asked on 18 August: yes, use them, and they will not cost you anything here. Do the first warm-up set with bare hands so you keep noticing what your grip is doing, then strap up for all four working sets. The hamstrings are what this lift is for, and stopping a set because the bar is slipping out of your fingers trains neither. Your grip is not being neglected either: the Farmer Carry in Session D and the Suitcase Carry in Session A are both held bare-handed and that is where grip is meant to be worked. This is standard coaching practice rather than something a trial has tested, so it is a convention, not evidence.",
                       "sets": 3,
                       "reps": "6",
                       "rest": "3 min"
@@ -2026,7 +2059,7 @@
               ]
             }
           ],
-          "why": "Ten to fourteen reps against eight to twelve on the other press session, so the same movement is trained light as well as heavy. The single-leg hinge goes in the press rest because it is done standing on one leg with the hips and the press is done sitting down with the arms. Friday used to hold two hinges, the barbell RDL and the single-leg RDL, which is the same pattern twice in one session; the reverse fly goes in the press rest because it pulls the shoulders back while the press pushes them forward."
+          "why": "Ten to fourteen reps against eight to twelve on the other press session, so the same movement is trained light as well as heavy. The single-leg hinge goes in the press rest because it is done standing on one leg with the hips and the press is done sitting down with the arms. Session D used to hold two hinges, the barbell RDL and the single-leg RDL, which is the same pattern twice in one session; the reverse fly goes in the press rest because it pulls the shoulders back while the press pushes them forward."
         },
         {
           "role": "accessory",
@@ -2043,7 +2076,7 @@
               "zone": "machines",
               "station": "chest-press",
               "log": true,
-              "cue": "Your second press of the week, moderate rather than heavy: Tuesday is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad.",
+              "cue": "Your second press of the week, moderate rather than heavy: Session B is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad.",
               "progression": "weight",
               "rangeWidth": 3,
               "alts": [

@@ -81,7 +81,7 @@ const PATTERNS = {
   upperPull: { label: 'Upper pull (Iversen minimum)', match: (k) => k.primary.includes('lats') || k.primary.includes('upper-back') },
 };
 
-const DAY_ORDER = ['monday', 'tuesday', 'thursday', 'friday'];
+const DAY_ORDER = ['a', 'b', 'c', 'd'];
 const FRESH_BLOCKS = 2;
 
 const fresh = {};      // pattern -> [{day, block, exercise}]
