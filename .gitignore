@@ -46,3 +46,6 @@ next-env.d.ts
 # Working log for the overnight session. Private: it quotes source repos that are NOT public
 # (Brixel client names, corporate filings) and this repo is public on GitHub.
 OVERNIGHT-LOG.md
+
+# session scratch, never repo material
+.cache/
