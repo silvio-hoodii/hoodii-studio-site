@@ -200,11 +200,16 @@ export interface CooldownItem {
  *  budget model puts at 100 to 106, while the watch says his real sessions run 81 to 120. Three
  *  numbers for one quantity, and the typed one was the only one nothing could check. The page
  *  computes it from the sets and rest now, and shows what the total is made of. */
+export type WarmupKey = 'lower' | 'upper' | 'posture';
+
 export interface Day {
   name: string;
   title: string;
   desc?: string;
-  warmup: 'lower' | 'upper';
+  /** One region list, or a list of lists since 2026-09-04: every session carries its region
+   *  warm-up AND the posture list, on his ask. validate.mjs checks the FIRST entry against the
+   *  region of the first working lift and that every entry exists in warmups.json. */
+  warmup: WarmupKey | WarmupKey[];
   cooldown: string[];
   /** The weekdays this session is scheduled on. TWO of them since 2026-09-03: the week is two
    *  sessions alternated, so each is trained twice. Only the plan view on /health and the rest-rule
@@ -213,11 +218,11 @@ export interface Day {
   blocks: Block[];
 }
 
-/** SESSION IDS, not weekdays, since 2026-09-03. TWO since the same evening: the week is A, B, A, B,
- *  so "which session is next" is always "the one you did not do last". Which weekday a session is
- *  SCHEDULED on is `Day.scheduledOn`, a different fact that only the plan view needs. See the note
- *  at the top of content/gym/program.json. */
-export type DayKey = 'a' | 'b';
+/** SESSION IDS, not weekdays, since 2026-09-03. A and B alternate (the lifting rotation, each twice
+ *  a week); C is the Saturday athletic session, once a week, outside the rotation, since 2026-09-04.
+ *  Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a different fact that only the plan
+ *  view and the rest-rule gate need. See the note at the top of content/gym/program.json. */
+export type DayKey = 'a' | 'b' | 'c';
 
 /** WHAT THE LIFTING IS FOR, in his words. Required; validate.mjs fails the build without it. It was
  *  stated five times between May and September 2026 and written nowhere, and every rebuild in that

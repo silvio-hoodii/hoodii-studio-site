@@ -51,14 +51,14 @@
   "slots": {
     "$comment": "Where each thing lives in a week. Pool times are his, given 2026-08-15.",
     "morning": {
-      "name": "Morning, before work",
-      "what": "Swim. The continuity piece first, fresh, then whatever is left of the slot.",
-      "why": "The pool opens at 6:00 and you leave for work at 7:15, so this is 30 to 35 minutes in the water. That is the slot the 1,000 m goal is measured against: unbroken it is 20:40 to 22:00, and the slot itself runs out between 1,350 and 1,675 m."
+      "name": "Morning",
+      "what": "Nothing scheduled. The pool is open at 6:00 if an evening swim gets missed.",
+      "why": "The morning slot has been tried twice, in August and on 2026-09-03, and did not survive a week either time. His words: \"getting up that early will affect my sleep schedule\". Everything sits in the evening, where his record says he actually trains."
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift first, then the run or the bike. Three runs and one bike across the four days.",
-      "why": "Lift first is unchanged, and the reason is unchanged: held trends favour lifting before the aerobic piece, and this stack is already producing squat progress. What changed is which aerobic piece sits here. The swim moved to the morning, so the run took the slot it left rather than a new day being added."
+      "what": "Lift first. Then the swim after Session A and Session C, the walk-run after Session B, and both on Friday if there is time. The easy row follows Session C on Saturday.",
+      "why": "Lift first, unchanged: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym. The run sits after the shorter session and the swim after the longer one, so no evening carries all three."
     },
     "poolTimes": {
       "weekdayEarly": "Weekday early: ~6 am, the one this plan is built on",
@@ -70,7 +70,7 @@
   "run": {
     "title": "Run",
     "surface": "Treadmill",
-    "sessionsPerWeek": 3,
+    "sessionsPerWeek": 2,
     "startedFrom": "Effectively zero. 3 runs in all of 2025 (sessions the watch typed as RUNNING, which is the count that matters here; it also holds 61 treadmill sessions that year averaging 48 minutes, and those are the walking named in the next clause), the last on 2025-08-15. But 65 minutes of walking a day averaged over 60 days, so the engine is there and only the tissue tolerance is missing.",
     "why": [
       "Bertelsen 2018 randomised 56 novice runners at BMI 30 to 35, which is your band. The arm that",
@@ -233,12 +233,13 @@
       "citations": "EVERY CITATION IN THE FINAL SET WAS FETCHED BY ME IN THIS PASS, NOT INHERITED. URLs are in each grounding field. Nothing is quoted from memory.",
       "dropped": "WHAT I DROPPED, AND WHY.\n\n1. THE \"SOUND\" CUE. Dropped entirely. This is the biggest change and it inverts the draft's own ranking, which called it \"the strongest injury-reduction finding in the whole set\". I fetched Phan X, Grisbrook TL, Wernli K, Stearne SM, Davey P, Ng L. Running quietly reduces ground reaction force and vertical loading rate and alters foot strike technique. J Sports Sci. 2017;35(16):1636-1642, at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=27594087&rettype=abstract&retmode=text. Two findings kill the cue. First, verbatim: \"Simple linear regressions revealed no significant relationships between impact sound and peak vGRF in the normal and quiet conditions and vertical loading rate in the normal condition\", and the authors conclude \"quieter impact sound is not directly associated with a lower peak vGRF or vertical loading rate\". So the noise he would be listening to is not a valid proxy for the force. Second, verbatim: \"During the normal running condition, 15.4% of participants utilised a non-rearfoot strike technique compared to 76.9% in the quiet condition, which was corroborated by an increased ankle plantarflexion angle at initial contact.\" Roughly three runners in four converted to landing on the forefoot. That is precisely the conversion Anderson 2020 says cannot be recommended for an uninjured heel striker because it increases ankle plantarflexor loading, and at 104.9 kg the calf and Achilles are the tissue least able to absorb it. The instruction \"do not think about which part of your foot lands\" does not prevent the switch, it only removes the chance of noticing it. The cue was also unmeasurable in practice (pass judged against whatever a given treadmill's motor sounds like) and at his mass probably unpassable, with an open-ended remedy loop whose only remaining strategy is to land on the toes. The set kept the paper warning against the outcome and prescribed the cue that reliably produces it.\n\n2. THE FOOTSTRIKE VIDEO TEST. Dropped. It put an unsecured phone on the side rail of a running treadmill next to a moving belt, and by the cue's own logic no video result changed any action, so it was a physical risk taken to generate a log entry. Standard phone video at 30 frames per second also cannot reliably resolve a touchdown that lasts about a quarter of a second. The substance survives as a prohibition inside \"One change only\".\n\n3. THE ABSOLUTE \"NEVER STOP THE BELT\" AND \"RAIL GRAB = FAIL\" RULES. Dropped. Between them they removed both abort routes from a first-time treadmill user at 104.9 kg, and scoring a stop as a failure directly contradicts the plan's own rule that pain changing how he walks means stop. Replaced with: stopping for pain, dizziness or anything wrong is always a PASS with no penalty; a balance grab is always correct; only holding on to keep up with the belt counts against him. The safety clip is now a pre-start check, which the plan did not mention at all.\n\n4. THE THREE INDEPENDENT 0.5 km/h SPEED DROPS. Dropped as written. Three separate cues each dropped the belt with no floor and no interaction rule, so a bad session could take 7.0 to 5.5 km/h and turn the run blocks into walking. Replaced with one drop per session maximum, shared across all tests, and a 6.0 km/h floor below which the plan gets revisited rather than the belt. The floor and the cap are my numbers, labelled as such.\n\n5. THE 5.0 km/h WALK FLOOR. Dropped. It was invented, it is stricter than Bertelsen's actual instruction (\"walking at an easy/comfortable pace in the pauses\"), and a brisk forced walk only 2.0 km/h below his running speed eats the recovery the pause exists for. Replaced with a pace at which the passage comes out with no breaks at all.\n\n6. THE CADENCE BAND \"150s OR LOW 160s IS NORMAL AT HIS PACE\". Dropped as an unsourced extrapolation presented under a citation. Leacox 2025's slowest condition is 2.68 m/s; his 7.0 km/h is 1.94 m/s, 27 percent slower than anything measured. The draft convicted the 1 percent incline rule for exactly this error one cue later. The myth-bust does not need the band and survives without it.\n\n7. \"THE 10 PERCENT WEEKLY RULE IS MORE AGGRESSIVE THAN THE TRIAL.\" Dropped because it is FALSE, and writing it into the evidence file would have planted a false correction. I fetched Table 1 twice. The 3 km arm is not three identical sessions per week: weeks 1 and 2 are uniform (1.0 km and 1.1 km of running per session), but weeks 3 and 4 vary session to session, and week 4 ends with a session containing a single continuous 1000 m run, double week one's longest. Weekly running totals are 3.0, 3.3, about 3.6 and 4.0 km. The paper's own text says \"The running distance was increased by ~10% per week.\" My two fetches of the same table differed slightly on one week-3 session, so I am not asserting the week-3 total to two decimal places; what is confirmed twice is that week 4 exceeds week 3 and the trial escalated roughly 10 percent weekly. THE REAL CAUTION IS DIFFERENT AND STILL WORTH RECORDING: the trial ran four weeks. Applying a clean 10 percent every week for months is an extrapolation past anything it measured.\n\n8. TWO UNSOURCED WRIST HEART-RATE FIGURES. Dropped from the notes: \"mean absolute percentage error of 3.3 to 6.2 percent\" and \"13 to 23 percent error in some devices during trail running\". I searched and could not attach either to a paper I read. The underlying meta-analysis does exist (Validity of Wrist-Worn photoplethysmography devices to measure heart rate: a systematic review and meta-analysis, J Sports Sci 2020;38(17), 44 articles, 738 effect sizes, 15 brands), but I did not verify its per-activity numbers, so none appear here. The decision not to write a wrist heart-rate cue now rests on something better: the passage cue sets the stricter gauge as the winner, so any device error can only make him go easier.\n\n9. NO CUE WRITTEN FOR: breathing pattern, arm swing, trunk lean, \"run tall\", posture, or overstriding. Nothing citable. On overstriding specifically, Baker et al. Sci Rep. 2024;14:6347 states that recent systematic reviews show a lack of consensus on the relationship between braking force and injury, and every popular guide to detecting it that I found was a blog with no measurement behind it. Usefully, the same work found overstriding falls as stride frequency rises, which is another reason step rate is the lever.",
       "wherePlanWasWrong": "WHAT THE PLAN GETS WRONG OR LEAVES OPEN.\n\na) THE 7.0 km/h BELT SPEED HAS NO SOURCE. Bertelsen prescribed distance and a talk-based intensity instruction only, outdoors, on a self-chosen route at a self-chosen speed. In the same research group's companion paper, obese novices self-selected 1.7 km/h slower than normal-weight novices (95% CI -2.0 to -1.4 km/h). The belt speed cue exists so he finds his number instead of inheriting a guess.\n\nb) THIS IS A TREADMILL PLAN BUILT ON A NON-TREADMILL TRIAL. Now cited rather than hedged. Miller JR, Van Hooren B, Bishop C, Buckley JD, Willy RW, Fuller JT. Sports Med. 2019;49:763-782, doi 10.1007/s40279-019-01087-9, fetched at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=30847825&rettype=abstract&retmode=text, states verbatim: \"HR and RPE during motorised treadmill running were higher at faster submaximal speeds and lower at slower submaximal speeds than during overground running.\" At his slow speed the treadmill will read easier than the outdoor equivalent, which matters if the runs ever move outside.\n\nc) \"HEART RATE UNDER ABOUT 140\" HAS NO SOURCE and conflicts with the talk test sitting beside it. I searched and found no origin for the 140. The passage cue resolves the conflict in the safe direction (stricter gauge wins, both directions written out), which also protects the plan's architecture: hard aerobic work is supposed to live on the bike at 150 to 165 so the running stays short and easy. A run habitually cleared at 155 by the talk test alone would collapse the two sessions into one zone. The evidence file should either give the 140 an origin or mark it convention.\n\nd) NO CADENCE EVIDENCE EXISTS AT BMI 30 TO 35. I searched for it directly. Everything in the cadence literature is normal-BMI runners, and the Bertelsen trial that supplies his week one gave no technique instruction at all. The step-rate cue is the best-supported thing in the set and it is still an extrapolation to his body. It also raises total foot landings per kilometre by about 5 percent, a trade no source addresses, which is why the cue says so out loud.\n\ne) THE BEST INJURY EVIDENCE IN THIS FIELD IS NOT AVAILABLE TO HIM. Chan et al. AJSM 2018 randomised 320 novice runners and cut 12-month injury from 38 percent to 16 percent (hazard ratio 0.38, 95% CI 0.25-0.59), but the intervention was real-time VISUAL feedback of vertical impact peak on a force-instrumented treadmill, not sound and not cadence. No home substitute has been shown to reproduce it. I removed that trial from the set rather than borrow its result for a cue it did not test.\n\nf) SESSION LOAD. At 7.0 km/h a 500 m run block lasts about 4 minutes 17 seconds, so the cues have to be sequenced rather than stacked. As written: pre-start (clip, incline, log line), walk, block one (passage at the 250 m mark, then the 30-second step count), the 200 m walk (second incline glance), block two (passage at the 250 m mark). Nothing is asked of him twice at once."
-    }
+    },
+    "$scheduleNote": "TWO A WEEK since 2026-09-04, not three: Bertelsen's low-injury arm was 3 km over three sessions; two sessions is under it, on purpose, because the third would land on a day that is already lift plus swim. Add the third when he asks, at the end of Session C."
   },
   "bike": {
     "title": "Bike",
     "surface": "Stationary bike",
-    "sessionsPerWeek": 1,
+    "sessionsPerWeek": 0,
     "why": [
       "This answers 'I don't know what to do on them', and the bike earns its place for one specific",
       "reason. Wilson 2012 is the only meta-analysis that separates the endurance MODALITY: running,",
@@ -260,7 +261,7 @@
       "easyPiece": "Genuinely easy. Keep pedalling, get your breath fully back before the next one."
     },
     "rules": [
-      "Same morning slot as the run, alternating: run, bike, run, run, bike across a fortnight.",
+      "Not scheduled since 2026-09-04: the easy row after Session C took the non-impact aerobic slot. When it comes back, it alternates with the row, never both on one day.",
       "Never on the morning before a heavy lower day if you can avoid it.",
       "The first two sessions, deliberately undercook the hard pieces. You have not done intervals and the first honest 4 minutes is a shock."
     ],
@@ -337,7 +338,8 @@
       "assumptions": "ASSUMPTIONS THAT COULD BREAK THIS SET, ONE OF THEM NOW SETTLED\n\n- SETTLED 2026-08-27. The bike HAS numbered resistance levels, 1 to 20, stated by him when the bike write path needed a real bound to refuse a typo against. Recorded in content/gym/equipment.json and enforced in POST /bike/api/ride and in the bike_ride table's own constraint. Cues 4, 5 and 6 rest on a fact now rather than on an assumption, and the continuous-knob rewrite they were hedged against is not needed. The RPM readout is still assumed; cue 4 gives the fallback if it is missing.\n- I assume the seat post carries numbers or countable holes. If it has neither, cue 1's whole point, reproducing the setting, needs a different anchor.",
       "wherePlanWasWrong": "WHAT THE PLAN ITSELF STILL GETS WRONG\n\n1. \"10 min easy\" and \"3 min easy\" carry no numbers, which is exactly the feeling-based instruction the house style bans. Cue 3 supplies 105-123 and 88-123, and note they are two different bands, not one.\n2. Nothing tells him to record and restore the seat height on a machine strangers reset weekly. Cue 1 does.\n3. No stop condition anywhere on the bike, although the run half has one. Cue 7 does.\n4. 43 minutes is his structure, not the published one. EX-MET's session is 38 minutes because there is no recovery after interval 4. Harmless, but the 43 should not be presented as coming from the protocol.\n5. HRpeak in the protocol means a peak from a maximal test. Neither 175 nor {PEAK_BPM} is that. And 175 was not even his highest recorded reading, which is a separate and worse error corrected 2026-08-28: it was the most common ceiling in his swim data, six sessions tie there, and {PEAK_BPM} sits above it. Every heart-rate figure on this route is interpolated from the database now rather than typed, so this class cannot recur. Flagged in the cue he will actually read, not just here.\n\nOUT OF SCOPE: I did not check Wilson 2012, the interference-effect study behind putting the hard aerobic work on the bike instead of the treadmill. That rationale is his and unverified by me."
     },
-    "$anchorRuling": "HIS RULING, 2026-09-03: LEAVE THE HEART-RATE ZONES WHERE THEY ARE. Asked as three options with the cost of each. The warm-up stays at 105 to 123 and the recovery at 88 to 123, anchored on 175, and 175 is NOT his peak: the export's highest is 201, from swimming on 2026-05-22. He chose the knowingly-low bands over rebuilding on 201 (a wrist sensor in a pool, his least trustworthy reading, which would push the interval band to 171 to 191) and over 179, the highest outside swimming. DO NOT RE-ASK, and do not \"correct\" the bands toward 201: they are low on purpose and the page says so out loud. The stop rule stays derived from the database either way, so it can never again name a number he has already beaten."
+    "$anchorRuling": "HIS RULING, 2026-09-03: LEAVE THE HEART-RATE ZONES WHERE THEY ARE. Asked as three options with the cost of each. The warm-up stays at 105 to 123 and the recovery at 88 to 123, anchored on 175, and 175 is NOT his peak: the export's highest is 201, from swimming on 2026-05-22. He chose the knowingly-low bands over rebuilding on 201 (a wrist sensor in a pool, his least trustworthy reading, which would push the interval band to 171 to 191) and over 179, the highest outside swimming. DO NOT RE-ASK, and do not \"correct\" the bands toward 201: they are low on purpose and the page says so out loud. The stop rule stays derived from the database either way, so it can never again name a number he has already beaten.",
+    "$scheduleNote": "UNSCHEDULED since 2026-09-04. The easy row after Session C took the non-impact aerobic slot; the bike is kept as a page and comes back when he asks. Four run or bike sessions happened in the sixty days to 2026-08-25, all in the dead morning slot."
   },
   "week": {
     "$comment": [
@@ -415,40 +417,30 @@
         "HOODII/CLAUDE.md forbids for body metrics for the same reason. validate.mjs reads the real",
         "day keys out of program.json and unions them with the lists below."
       ],
-      "$keysRenamed": "RENAMED 2026-09-03 WITH THE SWAP: morningCardio became eveningCardio and swim became morningSwim.\n\nThe day lists are IDENTICAL to what they were, both before and after: monday, tuesday, thursday, friday. Only the time of day moved, and the time of day was baked into the key names, so leaving the keys alone would have left two keys asserting the opposite of the schedule while every array in the file stayed correct.\n\nTHESE KEYS RENDER. src/lib/gym/week.ts maps them through SLOT_LABEL and src/app/health/Week.tsx prints the result on the planned week, falling back to the raw key when there is no mapping. So an unrenamed key here would have printed \"morningCardio\" on his phone next to an evening run. Both labels were updated in the same commit, and content/gym/validate.mjs now compares the two lists in both directions so the next rename cannot render as camelCase.",
-      "morningSwim": [
-        "monday",
-        "tuesday",
-        "thursday",
-        "friday"
-      ],
-      "eveningCardio": [
-        "monday",
-        "tuesday",
-        "thursday",
-        "friday"
-      ],
+      "$keysRenamed": "RENAMED 2026-09-03 WITH THE SWAP: morningCardio became eveningCardio and swim became morningSwim.\n\nThe day lists are IDENTICAL to what they were, both before and after: monday, tuesday, thursday, friday. Only the time of day moved, and the time of day was baked into the key names, so leaving the keys alone would have left two keys asserting the opposite of the schedule while every array in the file stayed correct.\n\nTHESE KEYS RENDER. src/lib/gym/week.ts maps them through SLOT_LABEL and src/app/health/Week.tsx prints the result on the planned week, falling back to the raw key when there is no mapping. So an unrenamed key here would have printed \"morningCardio\" on his phone next to an evening run. Both labels were updated in the same commit, and content/gym/validate.mjs now compares the two lists in both directions so the next rename cannot render as camelCase.\n\nRENAMED AGAIN 2026-09-04 ON HIS RULING: the swim goes back to the evening, after the lift (\"just evening has the lift before the swim same with walk run\"). morningSwim -> eveningSwim on Mon, Thu, Fri and Sat; eveningCardio -> eveningRun on Tue and Fri, after Session B, before the swim where there is one; saturdayRow is the easy row after Session C. SLOT_LABEL in src/lib/gym/week.ts and SLOT_LABEL_KEYS in validate.mjs renamed with them.",
       "why": [
-        "HIS RULING, 2026-09-03, put as three shapes with their costs: the swim and the run trade slots.",
+        "HIS RULING, 2026-09-04, after the audit and the adversarial pass: swim in the EVENING after the lift, not the morning.",
+        "His history is two thirds evening swims (26 of the last 41) and one morning swim since June, and his 2026-09-02",
+        "words were \"getting up that early will affect my sleep schedule\". The 2026-09-03 morning ruling never started.",
         "",
-        "The swim had to move because the 1,000 m goal is measured against the morning slot, and the",
-        "morning slot was full of cardio. Swapping rather than reshuffling is what keeps every count",
-        "intact: swim 4, run 3, bike 1, lifting on the same four days, Wednesday and the weekend still",
-        "completely free, and a maximum of two consecutive training days, well inside the rule of three.",
+        "Week: Mon A + swim, Tue B + walk-run, Wed off, Thu A + swim, Fri B + walk-run + swim, Sat C + easy row + swim,",
+        "Sun off. Longest run is Thu-Fri-Sat, three days, exactly the rest rule. A Sunday swim makes it four.",
         "",
-        "Cardio still rides on days that are already training days, which was the whole trick before and",
-        "still is. It is new TIME, not a new day, and the rest rule counts days rather than sessions.",
-        "",
-        "THE COST HE ACCEPTED, recorded because it is the part no gate can check: this asks him at the",
-        "pool at 6:00 four times a week, and 23 of his last 39 swims started after 8 pm while exactly",
-        "one started before 8 am. It also gives up the 9 pm slot he has actually been using, and makes",
-        "each lifting day three sessions. Morning cardio already ran three times in one August week and",
-        "stopped. So the honest read is that this schedule is a decision and not yet a habit, and the",
-        "thing to watch is whether the morning swim survives a fortnight, not whether the plan is tidy.",
-        "",
-        "The pool is open at noon and 2 pm on both weekend days, and a weekend swim is still exactly the",
-        "thing that turns a clean week into a five-day block. That is the trade the rest rule is there to",
-        "make visible, not to forbid."
+        "THE COST HE ACCEPTED: the full version of A and B runs about 85 to 90 minutes, so a lift-then-swim evening is",
+        "near two and a half hours and Friday is the longest evening of the week. He chose it (\"1 FULL\")."
+      ],
+      "eveningSwim": [
+        "monday",
+        "thursday",
+        "friday",
+        "saturday"
+      ],
+      "eveningRun": [
+        "tuesday",
+        "friday"
+      ],
+      "saturdayRow": [
+        "saturday"
       ]
     },
     "howItFits": {
@@ -484,8 +476,8 @@
           "source": "Held 2026"
         },
         {
-          "claim": "And what the bike is actually for.",
-          "detail": "It is not filler. It is the aerobic volume that running would otherwise have to supply, at a price running charges and the bike does not. That is the whole reason it is in the week.",
+          "claim": "And what the rower is for.",
+          "detail": "Non-impact aerobic volume that running would otherwise have to supply, at a price running charges and a machine does not. Two easy fifteen-minute rows before any interval is written: nobody here has rowed, and the first honest hard piece on a new machine is a shock. The bike did this job until 2026-09-04 and comes back if he asks.",
           "source": "Wilson 2012"
         }
       ],

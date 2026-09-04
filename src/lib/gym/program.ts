@@ -51,7 +51,7 @@ async function readJson<T>(file: string): Promise<T> {
 export async function loadProgram(): Promise<Program> {
   return readJson<Program>('program.json');
 }
-export async function loadWarmups(): Promise<{ lower: WarmupItem[]; upper: WarmupItem[] }> {
+export async function loadWarmups(): Promise<{ lower: WarmupItem[]; upper: WarmupItem[]; posture?: WarmupItem[] }> {
   return readJson('warmups.json');
 }
 export async function loadCooldowns(): Promise<Record<string, CooldownItem>> {

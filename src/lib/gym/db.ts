@@ -339,6 +339,20 @@ export async function getSessionDay(date: string): Promise<string | null> {
   return row?.day ?? null;
 }
 
+/** The most recent logged session whose day is one of `keys`, since 2026-09-04. The rotation is A
+ *  and B; Session C (Saturday) is logged in the same table and must not count as a rotation step,
+ *  so cycle.ts asks for the last A-or-B row rather than the last row. */
+export async function getLastRotationRow(keys: string[]): Promise<{ date: string; day: string | null; status: string | null } | null> {
+  const rows = await sql`
+    select s.date, s.day, s.status from gym_session s
+    where s.day = any(${keys})
+      and exists (select 1 from gym_set g where g.date = s.date and ${PERFORMED} and g.reps is not null and g.reps > 0)
+    order by s.date desc
+    limit 1
+  `;
+  return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
+}
+
 /** Rolling schedule: the most recent date with real logged work, and its program day. */
 export async function getLastTrainingRow(): Promise<{ date: string; day: string | null; status: string | null } | null> {
   const rows = await sql`

@@ -1,0 +1,12 @@
+import { neon } from '@neondatabase/serverless';
+const sql = neon(process.env.GYM_DATABASE_URL);
+const br = await sql`select count(*) n, min(date) mn, max(date) mx from bike_ride`;
+console.log('BIKE_RIDE', JSON.stringify(br));
+const gs = await sql`select date, day, day_title, started_at, finished_at from gym_session order by date desc limit 6`;
+console.log('GYM_SESSION_RECENT', JSON.stringify(gs));
+const sun = await sql`select count(distinct date::date) d from health_watch_session where date::date >= '2026-01-01' and extract(dow from date::date)=0`;
+console.log('SUNDAYS_2026', JSON.stringify(sun));
+const satAfterFri = await sql`with d as (select distinct date::date d from health_watch_session where date::date>='2026-01-01') select count(*) n from d where extract(dow from d)=6 and exists(select 1 from d d2 where d2.d = d.d - 1) and exists(select 1 from d d3 where d3.d = d.d - 2)`;
+console.log('SATURDAYS_THAT_WERE_3RD_CONSEC_DAY', JSON.stringify(satAfterFri));
+const sets = await sql`select exercise_id, count(*) n, max(date) last from gym_set where exercise_id ilike '%jump%' or exercise_id ilike '%carry%' or exercise_id ilike '%lunge%' or exercise_id ilike '%cossack%' or exercise_id ilike '%curl%' or exercise_id ilike '%pushdown%' or exercise_id ilike '%dip%' or exercise_id ilike '%row%' group by 1 order by n desc`;
+console.log('LOGGED_SETS_RELEVANT', JSON.stringify(sets));

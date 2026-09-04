@@ -81,7 +81,7 @@ const PATTERNS = {
   upperPull: { label: 'Upper pull (Iversen minimum)', match: (k) => k.primary.includes('lats') || k.primary.includes('upper-back') },
 };
 
-const DAY_ORDER = ['a', 'b'];
+const DAY_ORDER = ['a', 'b', 'c'];
 const FRESH_BLOCKS = 2;
 /* THE PRIORITY PATTERNS, since 2026-09-03. With two sessions of four main lifts each, only four
  * slots in the week are "fresh" by this definition, and the goal in program.json puts the legs in

@@ -1107,8 +1107,9 @@ const CASES = [
     name: 'a structural change to the week during the freeze is refused',
     keepFreeze: true,
     mutate: (p) => {
-      const acc = Object.values(p.days).flatMap((d) => d.blocks || []).find((b) => b.role === 'accessory' && (b.exercises || []).length === 2);
-      if (!acc) throw new Error('no two-exercise accessory block; repoint this case');
+      /* A MAIN pair that does not open its session, since 2026-09-04: the first version took any two-exercise accessory block and found Session C's carry pair, whose reversal put a carry at the front of the day and tripped the warm-up region gate instead of the freeze. */
+      const acc = Object.values(p.days).flatMap((d) => (d.blocks || []).slice(1)).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
       acc.exercises.reverse();
       const [first, second] = acc.exercises;
       second.whyHere = first.whyHere; delete first.whyHere;
@@ -1122,8 +1123,9 @@ const CASES = [
     mutate: (p) => {
       /* Four sets would ALSO trip the three-sets rule, so the structural change here is a swap of
          two accessory exercises' order, which changes the hash and nothing else. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks || []).find((b) => b.role === 'accessory' && (b.exercises || []).length === 2);
-      if (!acc) throw new Error('no two-exercise accessory block; repoint this case');
+      /* A MAIN pair that does not open its session, since 2026-09-04: the first version took any two-exercise accessory block and found Session C's carry pair, whose reversal put a carry at the front of the day and tripped the warm-up region gate instead of the freeze. */
+      const acc = Object.values(p.days).flatMap((d) => (d.blocks || []).slice(1)).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
       acc.exercises.reverse();
       // whyHere belongs to the LAST exercise of a block; keep the pair legal after the swap.
       const [first, second] = acc.exercises;
@@ -1142,6 +1144,16 @@ const CASES = [
     name: 'a session scheduled once a week is refused',
     mutate: (p) => { p.days.a.scheduledOn = ['monday']; p.frozen.daysHash = structuralHash(p.days); },
     expect: 'exactly two distinct weekdays',
+  },
+  {
+    name: 'the athletic session scheduled twice a week is refused',
+    mutate: (p) => {
+      const c = Object.values(p.days).find((d) => !(d.blocks || []).some((b) => b.role === 'main'));
+      if (!c) throw new Error('no session without main lifts; repoint this case');
+      c.scheduledOn = ['saturday', 'sunday'];
+      p.frozen.daysHash = structuralHash(p.days);
+    },
+    expect: 'exactly one weekday',
   },
   {
     name: 'a rep window wider than eight is refused',

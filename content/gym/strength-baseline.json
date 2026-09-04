@@ -9,10 +9,11 @@
   "fromProgram": "content/gym/program.json",
   "detectableTop": 4,
   "perLift": {
-    "bb-back-squat": 15,
-    "bulgarian-split-squat": 15,
-    "romanian-deadlift": 15,
-    "front-squat": 15
+    "bb-back-squat": 19.5,
+    "bulgarian-split-squat": 19.5,
+    "romanian-deadlift": 19.5,
+    "front-squat": 19.5,
+    "cossack-squat": 18
   },
-  "sumPastDetectable": 44
+  "sumPastDetectable": 76
 }

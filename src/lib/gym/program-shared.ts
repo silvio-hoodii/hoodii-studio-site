@@ -4,9 +4,12 @@
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
-/** TWO SESSIONS since 2026-09-03, alternated: the next one is always the one not done last.
- *  Four sessions keyed a to d before that, weekday names before 2026-09-03 the same day. */
-export const DAY_ORDER: DayKey[] = ['a', 'b'];
+/** THE TABS, in order. A and B are the lifting rotation; C is the Saturday session since 2026-09-04.
+ *  Four sessions keyed a to d before 2026-09-03, weekday names before that same day. */
+export const DAY_ORDER: DayKey[] = ['a', 'b', 'c'];
+/** THE ROTATION: the next lifting session is always the one of these not done last. C is outside
+ *  it; cycle.ts offers C on its scheduled day and never counts it as a rotation step. */
+export const ROTATION: DayKey[] = ['a', 'b'];
 
 /* The cycle is rolling: computeNextUp picks the next session from what was actually logged and from
  * what the watch saw. GymClient has derived a readable name from the day's own title since

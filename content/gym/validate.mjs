@@ -671,7 +671,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
 
 for (const [dayKey, day] of Object.entries(program.days)) {
   const prep = [
-    ...(warmups[day.warmup] || []).map((w) => ({ where: 'the warmup', name: w.name })),
+    ...[].concat(day.warmup).flatMap((k) => warmups[k] || []).map((w) => ({ where: 'the warmup', name: w.name })),
     ...(day.cooldown || []).map((c) => cooldowns[c]).filter(Boolean).map((c) => ({ where: 'the cooldown', name: c.name })),
   ];
   for (const b of day.blocks || []) {
@@ -708,7 +708,12 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       + `so this becomes a full-width chip. Give the title a short head, e.g. "${day.name}: ${String(day.title).toLowerCase()}". `
       + `Keep the head to ${CHIP_MAX} characters or fewer: that is what fits four chips in two rows at 390px.`);
   }
-  if (!warmups[day.warmup]) fail(dayKey, `warmup "${day.warmup}" not found in warmups.json`);
+  /* A LIST since 2026-09-04: the region warm-up first, then the posture list, on his ask ("stuff for
+     posture ... either before or after"). The FIRST entry is the region and is checked against the
+     first lift below; every entry has to exist in warmups.json. A bare string is still accepted. */
+  const warmupKeys = [].concat(day.warmup);
+  for (const k of warmupKeys) if (!warmups[k]) fail(dayKey, `warmup "${k}" not found in warmups.json`);
+  const regionKey = warmupKeys[0];
 
   /* ------ THE WARMUP MUST MATCH WHAT THE SESSION STARTS WITH. Added 2026-09-02, on his note.
    *
@@ -727,16 +732,22 @@ for (const [dayKey, day] of Object.entries(program.days)) {
    * skips it: a box jump is not what the day is about. This is a judgement, and it is written here
    * rather than in prose so a future full-body reshuffle cannot quietly break it again. */
   const WARMUP_REGION = { lower: 'lower', upper: 'upper' };
-  const firstWorking = (day.blocks || []).find((b) => b.role !== 'primer' && (b.exercises || []).length);
+  /* A PRIMER COUNTS AS THE FIRST WORK when the session has no main lift (Session C opens with jumps,
+     2026-09-04); otherwise the first non-primer block is what the warm-up prepares. */
+  const firstWorking = (day.blocks || []).find((b) => b.role !== 'primer' && (b.exercises || []).length)
+    ?? (day.blocks || []).find((b) => (b.exercises || []).length);
   const leadId = firstWorking?.exercises?.[0]?.id;
   const leadInfo = leadId && MOVEMENTS ? MOVEMENTS[leadId] : null;
-  if (leadInfo && WARMUP_REGION[day.warmup]) {
+  if (leadInfo && !WARMUP_REGION[regionKey]) {
+    fail(dayKey, `the first warmup entry must be a region, "lower" or "upper", got "${regionKey}". The posture list goes second.`);
+  }
+  if (leadInfo && WARMUP_REGION[regionKey]) {
     const LOWER = ['quads', 'hamstrings', 'glutes', 'adductors', 'calves'];
     const region = (leadInfo.primary ?? []).some((m) => LOWER.includes(m)) ? 'lower' : 'upper';
-    if (region !== WARMUP_REGION[day.warmup]) {
-      fail(dayKey, `this session opens with "${firstWorking.exercises[0].name}", which is a ${region}-body lift, and its warmup is "${day.warmup}". `
+    if (region !== WARMUP_REGION[regionKey]) {
+      fail(dayKey, `this session opens with "${firstWorking.exercises[0].name}", which is a ${region}-body lift, and its warmup is "${regionKey}". `
         + `Every session is full body now, so the warmup label says nothing on its own: the rule is that it prepares whatever is done FIRST. `
-        + `Set warmup to "${region}", or move an ${WARMUP_REGION[day.warmup]}-body lift to the front of the session.`);
+        + `Set the first warmup to "${region}", or move an ${WARMUP_REGION[regionKey]}-body lift to the front of the session.`);
     }
   }
   for (const cdKey of day.cooldown || []) {
@@ -849,6 +860,8 @@ for (const [dayKey, day] of Object.entries(program.days)) {
          as a reference to a session that no longer exists, rather than forgiven. */
       const DAY_OF = { 'session a': 'a', 'session b': 'b', 'session c': 'c', 'session d': 'd',
         'lower a': 'a', 'upper a': 'b', 'lower b': 'c', 'upper b': 'd' };
+      /* 'session c' resolves to the real Saturday session since 2026-09-04; 'session d' resolves to
+         nothing that exists and is therefore refused, which is the point of keeping it in the map. */
       const namesOn = (dayKey) => {
         const s = new Set();
         for (const b of program.days?.[dayKey]?.blocks ?? []) {
@@ -1366,8 +1379,16 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         }
       }
 
-      if (a.zone !== b.zone) {
-        fail(where, `${block.pairing} block spans two zones ("${a.zone}" and "${b.zone}"). Doing both in one window means walking back and forth between them every set.`);
+      /* A PORTABLE PARTNER MAY COME FROM ANOTHER ZONE, since 2026-09-04. He did it himself on
+         2026-09-03 (note #53: "Did hammer curls x40x12 with lat pull down instead"): two dumbbells
+         carried to the cable stack. The Station type already says a dumbbell carried away from the
+         rack occupies nothing; this rule was written for fixtures, and a fixture cannot be carried.
+         The partner has to hold NO station and be a dumbbell, kettlebell, band or bodyweight move
+         in the catalogue. The lead still names the zone the block happens in. */
+      const PORTABLE = new Set(['dumbbell', 'kettlebell', 'bodyweight', 'band']);
+      const partnerPortable = b.station == null && PORTABLE.has(MOVEMENTS?.[b.id]?.implement);
+      if (a.zone !== b.zone && !partnerPortable) {
+        fail(where, `${block.pairing} block spans two zones ("${a.zone}" and "${b.zone}"). Doing both in one window means walking back and forth between them every set. A dumbbell, kettlebell, band or bodyweight partner with no station may be carried to the lead's zone; a fixture may not.`);
       }
 
       /* ------ CAN THE PARTNER ACTUALLY FIT IN THE LEAD'S REST. Added 2026-08-31.
@@ -1490,7 +1511,7 @@ if (!conditioning.week?.restRule) {
    * slot means a slot was deleted and its label left behind, which is the shape that leaves a
    * retired thing looking scheduled. */
   {
-    const SLOT_LABEL_KEYS = new Set(['morningSwim', 'eveningCardio']);
+    const SLOT_LABEL_KEYS = new Set(['eveningSwim', 'eveningRun', 'saturdayRow']);
     const slotKeys = new Set(
       Object.keys(assigned).filter((k) => !k.startsWith('$') && k !== 'why'),
     );
@@ -1843,8 +1864,16 @@ if (process.argv.includes('--print-hash')) {
   // 3. three sets, twice a week, per main lift
   for (const [dayKey, day] of Object.entries(program.days)) {
     const on = day.scheduledOn;
-    if (!Array.isArray(on) || on.length !== 2 || new Set(on).size !== 2 || !on.every((w) => WEEKDAY_SET.has(w))) {
-      fail(dayKey, `"scheduledOn" must be exactly two distinct weekdays, got ${JSON.stringify(on ?? null)}. The week is two sessions alternated, each trained twice; a session scheduled once is a different programme and needs his words in frozen.changes.`);
+    const hasMain = (day.blocks || []).some((b) => b.role === 'main');
+    const validDays = Array.isArray(on) && new Set(on).size === on.length && on.every((w) => WEEKDAY_SET.has(w));
+    /* A LIFTING session (any main block) is scheduled on exactly two weekdays: that is the twice-a-week
+       rule. A session with NO main lift is the Saturday athletic session since 2026-09-04, once a
+       week, outside the rotation. Anything else is a different programme and needs his words. */
+    if (hasMain && (!validDays || on.length !== 2)) {
+      fail(dayKey, `"scheduledOn" must be exactly two distinct weekdays for a session with main lifts, got ${JSON.stringify(on ?? null)}. Every main lift is trained twice a week; a lifting session scheduled once is a different programme and needs his words in frozen.changes.`);
+    }
+    if (!hasMain && (!validDays || on.length !== 1)) {
+      fail(dayKey, `"scheduledOn" must be exactly one weekday for a session with no main lifts (the athletic session), got ${JSON.stringify(on ?? null)}.`);
     }
     for (const b of day.blocks || []) {
       if (b.role !== 'main') continue;

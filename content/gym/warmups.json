@@ -43,5 +43,29 @@
       "search": "thoracic rotation warm up",
       "cue": "Big slow arm circles, then on all fours rotate one arm up to the ceiling, following your hand with your eyes."
     }
-  ]
+  ],
+  "posture": [
+    {
+      "name": "Band Pull-Apart x15",
+      "search": "band pull apart form",
+      "media": "band-pull-apart",
+      "cue": "Band at chest height, arms straight, pull it apart to your chest and squeeze the shoulder blades. Wakes up the upper back."
+    },
+    {
+      "name": "Wall Slides x10",
+      "search": "wall slide shoulder exercise",
+      "cue": "Back to the wall, arms in a goal-post, slide them up keeping wrists and elbows on the wall. Opens the shoulders for pressing and the swim catch."
+    },
+    {
+      "name": "Band External Rotation x15/side",
+      "search": "band external rotation shoulder cuff",
+      "cue": "Elbow pinned to your side and bent 90 degrees, band across your body, rotate the forearm out without letting the elbow drift off your ribs. Small movement. This is cuff work for a shoulder that swims four times a week: common practice, no trial behind it, and it is here rather than in the log because there is no honest way to progress it."
+    },
+    {
+      "name": "Arm Circles + Thoracic Rotation x8/side",
+      "search": "thoracic rotation warm up",
+      "cue": "Big slow arm circles, then on all fours rotate one arm up to the ceiling, following your hand with your eyes."
+    }
+  ],
+  "$posture": "ADDED 2026-09-04 on his ask: \"I would also want to do stuff for posture that maybe doesn't really fit within the workout itself or maybe it's either before or after.\" Five minutes before every session, rendered with the lower-body warm-up. The four items are the upper warm-up's posture items reused, not new claims; nothing on disk sources posture work, so this is convention, labelled. Day.warmup is an array now so a session can carry the region warm-up AND this."
 }

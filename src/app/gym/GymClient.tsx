@@ -14,7 +14,7 @@ import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kind
 
 interface Props {
   program: Program;
-  warmups: { lower: WarmupItem[]; upper: WarmupItem[] };
+  warmups: { lower: WarmupItem[]; upper: WarmupItem[]; posture?: WarmupItem[] };
   cooldowns: Record<string, CooldownItem>;
   extraSuggestions: string[];
   nextUp: NextUp;
@@ -140,6 +140,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
   const [activeDay, setActiveDay] = useState<DayKey>(nextUp.todayDay ?? nextUp.nextDay);
+  /* EXTRA SETS, since 2026-09-04, on his note #48: "Add set option to each?" A card prescribes a
+     count and he sometimes does one more; until now the only place for that fourth set was the
+     off-plan box, which files it as a different exercise. This adds a row to THIS exercise, logged
+     under the same id at the next set index, so the ladder and the history see it as what it was.
+     Per exercise, per page load: a set he logged survives a reload because the hydrate below renders
+     as many rows as the log holds. */
+  const [extraSets, setExtraSets] = useState<Record<string, number>>({});
   /* THE TIME BUDGET IS GONE, 2026-08-22, and he designed the replacement.
    *
    * It made him predict his own session before starting it, which he said he gets wrong in both
@@ -669,7 +676,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     return finishWantedRef.current ? flushAndFinish() : retryPending();
   }
 
-  const warmupList = warmups[day.warmup] || [];
+  /* A LIST OF LISTS since 2026-09-04: the region warm-up, then the posture items, on his ask. */
+  const warmupList = ([] as string[]).concat(day.warmup as string | string[])
+    .flatMap((k) => (warmups as Record<string, typeof warmups.lower>)[k] ?? []);
   const cooldownList = day.cooldown.map((k) => cooldowns[k]).filter(Boolean) as CooldownItem[];
 
   /* How to actually run a block, now read from `pairing` rather than the old conflated `type`.
@@ -974,7 +983,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
                 {ex.log && (
                   <div className="sets">
-                    {Array.from({ length: eff.sets }).map((_, i) => {
+                    {Array.from({ length: Math.max(eff.sets + (extraSets[eff.id] ?? 0), sets[eff.id]?.length ?? 0) }).map((_, i) => {
                       const entry = getSet(eff.id, i);
                       return (
                         <div className="set-row" key={i}>
@@ -1000,6 +1009,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                         </div>
                       );
                     })}
+                    <button
+                      type="button"
+                      className="swap-toggle add-set"
+                      onClick={() => setExtraSets((p) => ({ ...p, [eff.id]: (p[eff.id] ?? 0) + 1 }))}
+                    >
+                      + one more set
+                    </button>
                   </div>
                 )}
 
