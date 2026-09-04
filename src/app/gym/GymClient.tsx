@@ -776,6 +776,20 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         </p>
       )}
 
+      {/* THE WATCH COUNTS TOO, since 2026-09-03. Between May and August the watch recorded 72 lifting
+        * sessions and this app logged 37, and the rotation read only the app, so a week trained
+        * without logging sent him back to Session A. His words that night: "I don't even know if the
+        * session that I'm doing is the right one." The app genuinely could not tell. Now an unlogged
+        * session the watch saw advances the rotation, and this line says so, because a guess he
+        * cannot see is a guess he cannot correct. The tabs above are the correction. */}
+      {nextUp.assumedFromWatch > 0 && !nextUp.todayDay && (
+        <p className="lede" style={{ marginTop: 6 }}>
+          The watch saw {nextUp.assumedFromWatch === 1 ? 'a lifting session' : `${nextUp.assumedFromWatch} lifting sessions`} you
+          did not log ({nextUp.assumedDates.join(', ')}), so the rotation assumes you did{' '}
+          {nextUp.assumedFromWatch === 1 ? 'that one' : 'those'} and offers {splitName(day)}. If that is wrong, tap the other tab.
+        </p>
+      )}
+
       {/* Sticky, because the set he just typed is most of a screen below this line and a warning
         * that scrolls away is a warning he does not get. */}
       {saveErr && (

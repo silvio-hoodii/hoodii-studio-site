@@ -7,7 +7,7 @@
  *
  * WHY THIS EXISTS, and it is the largest single hole three adversarial reviews found on 2026-08-31.
  *
- * `content/gym/targets.json` grades per-muscle fractional sets against Pelland's **Table 3**, which
+ * The per-muscle gate (deleted 2026-09-03) graded fractional sets against Pelland's **Table 3**, which
  * is HYPERTROPHY, on a scale of 4 to 42. The project's stated purpose is C2: *"lower body strength is
  * what the project is for. Everything else is secondary."* Strength is **Table 4**, denominated per
  * assessed EXERCISE rather than per muscle, on a scale of 1 to 5+. Those are not interchangeable and

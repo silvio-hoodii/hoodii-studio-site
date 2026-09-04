@@ -58,6 +58,10 @@ export interface CoverageBlock {
 }
 export interface CoverageDay {
   blocks: CoverageBlock[];
+  /** The weekdays this session is scheduled on. Its LENGTH is how many times a week the session is
+   *  trained, and every weekly total in this file multiplies by it. Absent means once, which is
+   *  what every fixture in coverage.test.ts and Pelland's own worked example assume. */
+  scheduledOn?: string[];
 }
 export interface CoverageProgram {
   days: Record<string, CoverageDay>;
@@ -213,10 +217,11 @@ export function tierFor(tiers: Tier[], n: number): Tier {
   return found;
 }
 
-/** The rotation, not the calendar week. The keys are weekday names and mean nothing of the sort:
- *  src/lib/gym/cycle.ts picks the next day from what was actually logged. Kept in this order because
- *  every per-day column in every report reads left to right as Lower A, Upper A, Lower B, Upper B. */
-export const COVERAGE_DAY_ORDER = ['a', 'b', 'c', 'd'];
+/** The rotation, not the calendar week. Two sessions since 2026-09-03, each trained twice a week
+ *  (`scheduledOn` carries the two weekdays). Per-session columns read A then B; WEEKLY totals in this
+ *  file multiply each session's contribution by how many times a week it is scheduled, so a set in
+ *  Session A counts twice in the weekly number and once in the A column. */
+export const COVERAGE_DAY_ORDER = ['a', 'b'];
 
 /** One exercise's contribution to ONE muscle on ONE day. */
 export interface Contribution {
@@ -486,7 +491,7 @@ export function computeCoverage(
   const perMuscleByDay = new Map<string, Map<string, number>>();
   /** muscle -> day -> the exercises that fed it that day, in session order. */
   const perMuscleDetail = new Map<string, Map<string, Contribution[]>>();
-  const perExercise = new Map<string, { sets: number; days: Set<string>; name: string; loadable: boolean }>();
+  const perExercise = new Map<string, { sets: number; freq: number; days: Set<string>; name: string; loadable: boolean }>();
   const redundantPairs: RedundantPair[] = [];
   const unloadableInMain: UnloadableRow[] = [];
   const unsourced: UnsourcedRow[] = [];
@@ -498,14 +503,27 @@ export function computeCoverage(
      he loads to 210. */
   const rawSlots: {
     day: string; block: string; role: string; rest: string; soloBlock: boolean; id: string;
+    /** How many times a week this slot's session is trained. Weekly sums multiply by it. */
+    times: number;
     slot: { name: string; sets: number; reps: string; feeds: { muscle: string; primary: boolean }[] };
   }[] = [];
 
   const bump = (map: Map<string, number>, key: string, by: number) => map.set(key, (map.get(key) ?? 0) + by);
 
+  /* A SESSION TRAINED TWICE A WEEK COUNTS TWICE IN THE WEEK, since 2026-09-03. The week became two
+     sessions alternated (A, B, A, B), so one walk of `days` is HALF a week. Per-session columns
+     (`byDay`, `byDayDetail`, the week table) stay per performance, because that is what he reads
+     on a card; every WEEKLY number (`sets`, `loadedSets`, `directSets`, per-lift fractional sets and
+     frequency) multiplies by how many weekdays the session is scheduled on. A programme whose days
+     carry no `scheduledOn` is counted once each, which keeps the Pelland worked example in
+     coverage.test.ts exactly as the paper states it. */
+  const timesByDay = new Map<string, number>();
+
   for (const [dayKey, day] of Object.entries(program.days ?? {})) {
     if (!day?.blocks) continue;
     if (onlyDay && dayKey !== onlyDay) continue;
+    const times = Array.isArray(day.scheduledOn) && day.scheduledOn.length ? day.scheduledOn.length : 1;
+    timesByDay.set(dayKey, times);
     const dayMap = new Map<string, number>();
     perMuscleByDay.set(dayKey, dayMap);
 
@@ -536,20 +554,21 @@ export function computeCoverage(
            alone let carries in; see `doseUnit` on CatalogueVariant for what that cost. */
         const isDose = info.loadable && info.doseUnit !== 'carry';
         for (const m of info.primary) {
-          bump(perMuscle, m, sets);
+          bump(perMuscle, m, sets * times);
           bump(dayMap, m, sets);
-          if (isDose) bump(perMuscleLoaded, m, sets);
+          if (isDose) bump(perMuscleLoaded, m, sets * times);
           note(m, sets, true);
         }
         for (const m of info.secondary) {
-          bump(perMuscle, m, sets * 0.5);
+          bump(perMuscle, m, sets * 0.5 * times);
           bump(dayMap, m, sets * 0.5);
-          if (isDose) bump(perMuscleLoaded, m, sets * 0.5);
+          if (isDose) bump(perMuscleLoaded, m, sets * 0.5 * times);
           note(m, sets * 0.5, false);
         }
 
-        const seen = perExercise.get(ex.id) ?? { sets: 0, days: new Set<string>(), name: ex.name, loadable: info.loadable };
-        seen.sets += sets;
+        const seen = perExercise.get(ex.id) ?? { sets: 0, freq: 0, days: new Set<string>(), name: ex.name, loadable: info.loadable };
+        seen.sets += sets * times;
+        seen.freq += times;
         seen.days.add(dayKey);
         perExercise.set(ex.id, seen);
 
@@ -595,6 +614,7 @@ export function computeCoverage(
            the numbers above it. */
         rawSlots.push({
           day: dayKey,
+          times,
           block: block.label,
           role: block.role,
           rest: String(block.exercises[0]?.rest ?? ''),
@@ -624,7 +644,8 @@ export function computeCoverage(
       const detail = dayOrder.map((d) => perMuscleDetail.get(muscle)?.get(d) ?? []);
       /* The same expression scripts/gym-targets.mjs used inline until 2026-09-03, moved here so the
          gate and the page cannot disagree about what a muscle is getting. */
-      const directSets = detail.flat().filter((e) => e.primary).reduce((a, e) => a + (e.rawSets ?? e.sets ?? 0), 0);
+      const directSets = dayOrder.reduce((total, d, i) => total
+        + (detail[i] ?? []).filter((e) => e.primary).reduce((a, e) => a + (e.rawSets ?? e.sets ?? 0), 0) * (timesByDay.get(d) ?? 1), 0);
       return {
         muscle,
         label: cat.muscles[muscle] ?? muscle,
@@ -658,22 +679,23 @@ export function computeCoverage(
       let fractionalSets = 0;
       let fractionalSetsLoose = 0;
       const indirectDaysStrict = new Set<string>();
+      const timesOf = (d: string) => timesByDay.get(d) ?? 1;
 
       /* `rawSlots` holds one entry per exercise per day with its sets and the muscles it feeds,
          which is exactly what the indirect test needs and is already computed by the walk above. */
       for (const r of rawSlots) {
         if (r.id === id) {
-          fractionalSets += r.slot.sets;
-          fractionalSetsLoose += r.slot.sets;
+          fractionalSets += r.slot.sets * r.times;
+          fractionalSetsLoose += r.slot.sets * r.times;
           continue;
         }
         const otherPrimary = r.slot.feeds.filter((f) => f.primary).map((f) => f.muscle);
         const otherAll = r.slot.feeds.map((f) => f.muscle);
         if (otherPrimary.some((m) => mePrimary.has(m))) {
-          fractionalSets += r.slot.sets * 0.5;
+          fractionalSets += r.slot.sets * 0.5 * r.times;
           if (r.day) indirectDaysStrict.add(r.day);
         }
-        if (otherAll.some((m) => meAll.has(m))) fractionalSetsLoose += r.slot.sets * 0.5;
+        if (otherAll.some((m) => meAll.has(m))) fractionalSetsLoose += r.slot.sets * 0.5 * r.times;
       }
 
       /* A day carrying the lift itself is a DIRECT session and must not also be counted as half an
@@ -687,7 +709,7 @@ export function computeCoverage(
         fractionalSets,
         fractionalSetsLoose,
         days: [...v.days],
-        fractionalFrequency: v.days.size + 0.5 * indirectDaysStrict.size,
+        fractionalFrequency: v.freq + 0.5 * [...indirectDaysStrict].reduce((a, d) => a + timesOf(d), 0),
         loadable: v.loadable,
         tier: tierFor(STRENGTH_TIERS, fractionalSets),
         directTier: tierFor(STRENGTH_TIERS, v.sets),
@@ -748,8 +770,10 @@ export function computeCoverage(
          sentence read "7 are over the top of the band" while, by the measure the gate grades, the
          real answer is 3 and eleven muscles are sitting on the bare floor. A summary that
          contradicts the rows it summarises is worse than no summary. */
-      below: muscleRows.filter((m) => m.belowMinimumDirect).length,
-      pastEfficient: muscleRows.filter((m) => m.pastEfficientDirect).length,
+      /* FRACTIONAL again since 2026-09-03, matching the badges in Volume.tsx, which went back to the
+         unit both cited papers use when the direct-set gate was deleted. */
+      below: muscleRows.filter((m) => m.belowMinimum).length,
+      pastEfficient: muscleRows.filter((m) => m.pastEfficient).length,
       strictPairs: redundantPairs.filter((p) => p.strict).length,
       unsourcedNames: new Set(unsourced.map((u) => u.name)).size,
       strengthTiersSeen: strengthTiersSeen.size,

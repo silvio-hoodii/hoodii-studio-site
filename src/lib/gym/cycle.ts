@@ -1,11 +1,8 @@
 import 'server-only';
 import { getLastTrainingRow, getSessionDay } from './db';
+import { sql } from '../health/db';
 import { DAY_ORDER } from './program-shared';
 import type { DayKey } from './types';
-
-// A gap longer than this (days) is a layoff, not a normal weekend rest: restart the cycle at
-// Lower A instead of continuing from the stale last day. Ported from HealthOS server.mjs.
-const LAYOFF_RESET_DAYS = 7;
 
 function dateDiffDays(a: string, b: string): number {
   return Math.round((Date.parse(a + 'T00:00:00Z') - Date.parse(b + 'T00:00:00Z')) / 86400000);
@@ -39,26 +36,37 @@ export interface NextUp {
   /** The last session was ended as CUT SHORT, so `nextDay` is a repeat rather than the next in the
    *  rotation. The page says so, because silently re-offering the same day reads as a bug. */
   cutShort: boolean;
+  /** Lifting sessions the WATCH recorded after the last logged one, on dates the app has nothing
+   *  for. Each advances the rotation by one. The page prints the count and the dates, because a
+   *  guess he cannot see is a guess he cannot correct. */
+  assumedFromWatch: number;
+  assumedDates: string[];
 }
 
-/** Rolling "what's next": dropped weekday-locking, train any day, rest = days you didn't.
+/** Rolling "what's next": two sessions, alternated. Train any day, rest = days you didn't.
  *
- * READS THE APP'S OWN LOG ONLY, and for this question that is correct rather than a compromise.
- * "Which lifting day comes next" is a fact about the rotation, and only the app knows which day was
- * performed: the watch records that a strength session happened, never that it was Lower B. The
- * layoff reset below is the same, it turns on the gap since the last LOGGED day.
+ * READS THE APP'S LOG AND THE WATCH, since 2026-09-03. Until then it read the app only, on the
+ * argument that only the app knows WHICH session was performed. True, and it made the answer wrong
+ * more often than right: between 2026-05-25 and 2026-08-25 the watch recorded 72 lifting sessions
+ * and the app 37, so most weeks the rotation was computed over a minority of his training and
+ * reset to Session A after any seven-day gap in LOGGING. His words on 2026-09-03: "I don't even
+ * know if the session that I'm doing is the right one."
  *
- * What used to be wrong here was the streak, which asked a different question ("have I been
- * training") off this narrower evidence. That has moved to `getTrainingStreak` in ./week.ts, which
- * sees the watch too. See the note on the NextUp interface above. */
+ * With two sessions the inference is honest: a lifting session the watch saw and the app did not is
+ * one step of the rotation, whichever it was. The count and dates are returned so the card can say
+ * what was assumed, and the tabs let him override it in one tap.
+ *
+ * THE LAYOFF RESET IS GONE with the four-session week. It sent him to Session A after seven days
+ * without a LOGGED session, which is the bug above wearing a different name. Two sessions have no
+ * "start of the cycle" to reset to: after any gap the next session is simply the other one. */
 export async function computeNextUp(today: string): Promise<NextUp> {
   const lastRow = await getLastTrainingRow();
 
   let lastDay: DayKey | null = null;
   let lastDate: string | null = null;
   let daysSince: number | null = null;
-  let nextDay: DayKey = DAY_ORDER[0]!;
   let cutShort = false;
+  let base = 0; // index into DAY_ORDER of the session the rotation would offer from the app log alone
 
   if (lastRow?.date) {
     lastDay = lastRow.day as DayKey | null;
@@ -73,14 +81,28 @@ export async function computeNextUp(today: string): Promise<NextUp> {
      * of code moved him to Upper A and Lower A was simply gone. Answering that in prose would have
      * been telling him to remember something; the fix is that there is nothing to remember. */
     cutShort = lastRow.status === 'cutshort';
-    nextDay = idx === -1 || daysSince > LAYOFF_RESET_DAYS
-      ? DAY_ORDER[0]!
-      : cutShort
-        ? DAY_ORDER[idx]!
-        : DAY_ORDER[(idx + 1) % DAY_ORDER.length]!;
+    /* A key the rotation no longer knows (c and d from the four-session week, weekday names before
+       that) means the last logged session predates this week's shape. Start from A. */
+    base = idx === -1 ? 0 : cutShort ? idx : (idx + 1) % DAY_ORDER.length;
   }
 
+  /* Watch sessions after the last logged date, on dates the app has no session for. `date` on both
+     tables is the local Calgary date. Today is excluded: a session in progress right now is
+     `todayDay`'s business, and the watch export is manual so it never has today's data anyway. */
+  const watchRows = (await sql`
+    select distinct w.date::text as date
+    from health_watch_session w
+    where w.kind = 'strength'
+      and w.date > ${lastDate ?? '1970-01-01'}
+      and w.date < ${today}
+      and not exists (select 1 from gym_session g where g.date = w.date)
+    order by w.date
+  `) as unknown as { date: string }[];
+  const assumedDates = watchRows.map((r) => r.date);
+  const assumedFromWatch = assumedDates.length;
+
+  const nextDay: DayKey = DAY_ORDER[(base + assumedFromWatch) % DAY_ORDER.length]!;
   const todayDay = (await getSessionDay(today)) as DayKey | null;
 
-  return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort };
+  return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
 }

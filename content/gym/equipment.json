@@ -141,14 +141,7 @@
             "raise impossible. The rack and its pull-up bar are NOT adjacent: he said that walk works \"only when",
             "the gym is not busy\", which is a condition a card cannot check."
           ],
-          "open": [
-            {
-              "topic": "equipment",
-              "q": "Four exercises are listed as happening at the lat pulldown machine: lat pulldown, straight-arm pulldown, tricep pushdown and overhead tricep extension. If that is wrong the app sends you to a machine someone else is on. Which of those do you do at the pulldown seat, and which at a cable column?",
-              "asked": "2026-08-30",
-              "due": "2026-09-13"
-            }
-          ]
+          "$answered": "2026-09-03: moot. The week has one cable exercise, the lat pulldown, and it is at this seat. Re-ask only if a second cable exercise is prescribed."
         },
         "cable-row": {
           "name": "Seated cable row / low pulley",

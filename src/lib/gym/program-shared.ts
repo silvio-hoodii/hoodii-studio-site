@@ -4,14 +4,16 @@
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
-export const DAY_ORDER: DayKey[] = ['a', 'b', 'c', 'd'];
+/** TWO SESSIONS since 2026-09-03, alternated: the next one is always the one not done last.
+ *  Four sessions keyed a to d before that, weekday names before 2026-09-03 the same day. */
+export const DAY_ORDER: DayKey[] = ['a', 'b'];
 
-/* The keys above are weekday names, and the cycle is rolling: computeNextUp picks the next day from
- * what was actually logged, so the app selects "thursday" on a Tuesday. GymClient has derived a
- * readable split name from the day's own title since 2026-08-11 ("Lower B: Hinge" -> "Lower B")
- * rather than carrying a second field that could drift from what it labels. The hub row was still
- * printing the raw key, so the front door said "Next up monday" while the page it linked to said
- * "Lower B". Same function now, both places. */
+/* The cycle is rolling: computeNextUp picks the next session from what was actually logged and from
+ * what the watch saw. GymClient has derived a readable name from the day's own title since
+ * 2026-08-11 ("Session A: squat, bench, row" -> "Session A") rather than carrying a second field
+ * that could drift from what it labels. The hub row was still printing the raw key, so the front
+ * door said "Next up monday" while the page it linked to said "Lower B". Same function now, both
+ * places. */
 export function splitName(d: { title: string; name: string }): string {
   const head = d.title.split(/:\s/)[0]?.trim();
   return head || d.name;

@@ -81,8 +81,15 @@ const PATTERNS = {
   upperPull: { label: 'Upper pull (Iversen minimum)', match: (k) => k.primary.includes('lats') || k.primary.includes('upper-back') },
 };
 
-const DAY_ORDER = ['a', 'b', 'c', 'd'];
+const DAY_ORDER = ['a', 'b'];
 const FRESH_BLOCKS = 2;
+/* THE PRIORITY PATTERNS, since 2026-09-03. With two sessions of four main lifts each, only four
+ * slots in the week are "fresh" by this definition, and the goal in program.json puts the legs in
+ * them: squat and hinge open their sessions, and the two presses take the second slot. The single-leg
+ * lift and the upper pull are therefore never fresh, BY DESIGN, and that used to fail this gate. The
+ * gate now FAILS only when a pattern is missing from the week altogether or when a priority pattern
+ * lacks a fresh slot; everything else is reported so the trade is visible rather than hidden. */
+const PRIORITY = new Set(['squat', 'hinge']);
 
 const fresh = {};      // pattern -> [{day, block, exercise}]
 const anywhere = {};   // pattern -> count of appearances
@@ -118,17 +125,21 @@ console.log('(ES 0.32, p = 0.034), and order has no effect on hypertrophy (ES 0.
 console.log('pattern'.padEnd(38) + 'appearances'.padStart(12) + 'fresh slots'.padStart(13) + '   where');
 console.log('-'.repeat(96));
 const findings = [];
+const notes = [];
 for (const [key, p] of Object.entries(PATTERNS)) {
   const f = fresh[key];
   const where = f.length ? f.map((x) => `${x.day.slice(0, 3)} b${x.block}`).join(', ') : '';
   console.log(p.label.padEnd(38) + String(anywhere[key]).padStart(12) + String(f.length).padStart(13) + `   ${where}`);
   if (anywhere[key] === 0) {
     findings.push(`${p.label} does not appear in the week at all.`);
-  } else if (f.length === 0) {
+  } else if (f.length === 0 && PRIORITY.has(key)) {
     findings.push(`${p.label} appears ${anywhere[key]} time(s) and NEVER in the first ${FRESH_BLOCKS} blocks of any day. `
-      + 'Nunes found the strength gain is largest in whatever is done first, and nothing else in this repo can see session position.');
+      + 'Nunes found the strength gain is largest in whatever is done first, and this is a priority pattern under the goal in program.json.');
+  } else if (f.length === 0) {
+    notes.push(`${p.label} is never fresh. Accepted: the fresh slots go to the priority patterns.`);
   }
 }
+for (const n of notes) console.log(`  note: ${n}`);
 
 /* THE SECOND CHECK: what leads. Reported rather than failed, because C2 makes lower-body leads
  * correct and the question is only whether it is total. */
@@ -157,7 +168,7 @@ console.log('100% the upper body has no fresh slot anywhere, which is what the c
 console.log('');
 console.log('-'.repeat(96));
 if (!findings.length) {
-  console.log(`GREEN. Every pattern gets at least one fresh slot in the week.`);
+  console.log(`GREEN. Every pattern is in the week and every priority pattern gets a fresh slot.`);
   process.exit(0);
 }
 console.log(`${findings.length} finding(s):\n`);

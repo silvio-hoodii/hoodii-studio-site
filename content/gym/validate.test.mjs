@@ -15,6 +15,7 @@ import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { structuralHash } from './structural-hash.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -159,9 +160,16 @@ const sharedStationBlock = (p) => {
      squat and the DB step-up, which are both quads and glutes, so the fixture tripped the
      shared-muscle gate and reported that correct refusal as a failure of the shareable-station rule.
      A fixture that has to be legal in every other respect has to be built that way on purpose. */
+  /* NEITHER FIXTURE MAY ALREADY BE IN THE WEEK, since 2026-09-03. The two-session week prescribes
+     the Bulgarian split squat on the bench, and the first pair this helper found put it into a
+     second block of the same session: the duplicate-id gate then refused correctly and this case
+     reported that as a failure of the shareable-station rule. Same lesson as the warmup and the
+     tag: a fixture has to be legal in every respect but the one under test. */
+  const inWeek = new Set(Object.values(p.days || {}).flatMap((d) => d.blocks || []).flatMap((b) => b.exercises || []).map((e) => e.id));
   let pair = null; let other = null;
   for (const a of onShareable) {
-    const hit = onShareable.find((b) => b.id !== a.id && b.zone === a.zone && b.station === a.station
+    if (inWeek.has(a.id)) continue;
+    const hit = onShareable.find((b) => b.id !== a.id && !inWeek.has(b.id) && b.zone === a.zone && b.station === a.station
       && !(primaries.get(b.id) ?? []).some((mu) => (primaries.get(a.id) ?? []).includes(mu)));
     if (hit) { pair = a; other = hit; break; }
   }
@@ -320,7 +328,10 @@ const crossDayReference = (p, hostDay) => {
     const homeDay = [...on][0];
     if (homeDay === hostDay) continue;
     const low = name.toLowerCase();
-    const absentDay = Object.keys(p.days).find((k) => k !== homeDay && k !== hostDay
+    /* THE HOST DAY MAY BE THE ABSENT DAY, since 2026-09-03. With two sessions there is no third day
+       to point at, and a sentence in Session A claiming an exercise "is in Session A" when it is
+       only in B is exactly the false cross-reference the refusing case exists to catch. */
+    const absentDay = Object.keys(p.days).find((k) => k !== homeDay
       && ![...namesOn(k)].some((pn) => pn.includes(low) || low.includes(pn)));
     if (!absentDay) continue;
     /* THE LABEL, NOT THE KEY, since 2026-09-03. `homeDay` is now "a".."d" and a cross-reference on
@@ -832,8 +843,11 @@ const CASES = [
         .flatMap((b) => b.exercises || [])
         .find((e) => typeof e.cue === 'string' && CATALOGUE()[e.id]?.implement === 'barbell');
       if (!ex) throw new Error('no barbell slot with a cue to mutate; repoint this case');
+      /* REPLACED rather than prepended since 2026-09-03, when cues gained an 80-word ceiling:
+         prepending two sentences to a real cue tripped that gate and reported it as a failure of
+         the implement rule. The three contrast constructions are all still here. */
       ex.cue = 'Machine on purpose, so a tired chest does not have to balance dumbbells. '
-        + 'Bring the bar to your upper chest and keep your chin over the bar. ' + ex.cue;
+        + 'Bring the bar to your upper chest and keep your chin over the bar. Brace, then press.';
     },
     expect: null,
   },
@@ -954,9 +968,11 @@ const CASES = [
      * and a file that said so would be describing a gym nobody has been in. */
     name: 'stations declared adjacent across two zones is refused',
     mutate: (p) => {
-      const block = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((b) => b.exercises?.length === 2 && b.exercises[0].zone === 'cable' && b.exercises[0].station);
-      if (!block) throw new Error('no two-exercise cable block; repoint this case');
+      /* BUILT rather than found, since 2026-09-03: the two-session week has no two-exercise cable
+         block, and a fixture that depends on the current week's shape is the staleness every other
+         helper here has already had to shed. rebuildBlockAs puts two real cable variants in one
+         block; the mutation below then drags the partner into another zone. */
+      const block = rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly');
       block.pairing = 'fill';
       block.exercises[1].zone = 'machines';
       block.exercises[1].station = 'cable-row';
@@ -1079,6 +1095,84 @@ const CASES = [
     },
     expect: null,
   },
+
+  /* ---- THE WEEK'S OWN RULES, added 2026-09-03 with the two-session week. Each refusing case is
+     paired with the permitting one that matters, so a gate cannot pass by refusing everything. */
+  {
+    name: 'a programme with no goal is refused',
+    mutate: (p) => { delete p.goal; },
+    expect: 'no "goal"',
+  },
+  {
+    name: 'a structural change to the week during the freeze is refused',
+    keepFreeze: true,
+    mutate: (p) => {
+      const acc = Object.values(p.days).flatMap((d) => d.blocks || []).find((b) => b.role === 'accessory' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no two-exercise accessory block; repoint this case');
+      acc.exercises.reverse();
+      const [first, second] = acc.exercises;
+      second.whyHere = first.whyHere; delete first.whyHere;
+      p.frozen.until = '2999-01-01';
+    },
+    expect: 'WEEK IS FROZEN',
+  },
+  {
+    name: 'a structural change that quotes his words is allowed through the freeze',
+    keepFreeze: true,
+    mutate: (p) => {
+      /* Four sets would ALSO trip the three-sets rule, so the structural change here is a swap of
+         two accessory exercises' order, which changes the hash and nothing else. */
+      const acc = Object.values(p.days).flatMap((d) => d.blocks || []).find((b) => b.role === 'accessory' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no two-exercise accessory block; repoint this case');
+      acc.exercises.reverse();
+      // whyHere belongs to the LAST exercise of a block; keep the pair legal after the swap.
+      const [first, second] = acc.exercises;
+      second.whyHere = first.whyHere; delete first.whyHere;
+      p.frozen.until = '2999-01-01';
+      p.frozen.changes.push({ on: '2026-09-04', hisWords: 'swap the two shoulder exercises around please, the fly first', hash: structuralHash(p.days) });
+    },
+    expect: null,
+  },
+  {
+    name: 'a main lift with two sets is refused',
+    mutate: (p) => { p.days.b.blocks.find((b) => b.role === 'main').exercises[0].sets = 2; p.frozen.daysHash = structuralHash(p.days); },
+    expect: 'three sets',
+  },
+  {
+    name: 'a session scheduled once a week is refused',
+    mutate: (p) => { p.days.a.scheduledOn = ['monday']; p.frozen.daysHash = structuralHash(p.days); },
+    expect: 'exactly two distinct weekdays',
+  },
+  {
+    name: 'a rep window wider than eight is refused',
+    mutate: (p) => { p.days.a.blocks[0].exercises[0].rangeWidth = 9; },
+    expect: 'must be 1 to 8',
+  },
+  {
+    name: 'a rep window of eight is still allowed',
+    mutate: (p) => { p.days.a.blocks[0].exercises[0].rangeWidth = 8; },
+    expect: null,
+  },
+  {
+    name: 'a cue longer than eighty words is refused',
+    mutate: (p) => { const ex = p.days.a.blocks[0].exercises[0]; ex.cue = `${ex.cue} ${Array.from({ length: 40 }, () => 'more').join(' ')}`; },
+    expect: 'ceiling is 80 words',
+  },
+  {
+    name: 'a changelog longer than thirty lines is refused',
+    mutate: (p) => { p.$comment = Array.from({ length: 31 }, (_, i) => `line ${i}`); },
+    expect: '$comment is 31 lines',
+  },
+  {
+    name: 'a variant-level muscle override without confirmedBy is refused',
+    file: 'movements.json',
+    mutate: (cat) => {
+      const v = Object.values(cat.movements).flatMap((m) => m.variants || []).find((x) => x.primary === undefined && x.id === 'front-squat');
+      if (!v) throw new Error('front-squat no longer inherits its group; repoint this case');
+      v.primary = ['quads'];
+    },
+    expect: 'confirmedBy',
+  },
 ];
 
 let failed = 0;
@@ -1114,6 +1208,13 @@ for (const c of CASES) {
       console.log(`FAIL  ${c.name}\n      FIXTURE: ${err.message}`);
       continue;
     }
+    /* THE FREEZE IS RE-STAMPED FOR EVERY CASE THAT IS NOT ABOUT THE FREEZE, since 2026-09-03. The
+       structural-hash gate refuses any change to the week's shape before frozen.until, and half the
+       permitting cases here change the shape on purpose (rebuildBlockAs swaps two exercises into a
+       block). Without this line those cases would fail on the freeze rather than on the rule they
+       exercise, which is the cascade this suite already learned to avoid once with `.tab`. The two
+       freeze cases opt out with `keepFreeze`, so the gate itself is still watched in both directions. */
+    if (!c.file && !c.keepFreeze && doc.frozen) doc.frozen.daysHash = structuralHash(doc.days);
     writeFileSync(file, JSON.stringify(doc, null, 2));
 
     /* A SECOND FILE, for the rules that live across two of them. Added 2026-08-28 with the

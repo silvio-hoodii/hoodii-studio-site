@@ -1,5 +1,10 @@
 {
   "$comment": [
+    "VARIANT-LEVEL MUSCLE OVERRIDES NEED `confirmedBy`, since 2026-09-03. Fourteen variants carried a primary or",
+    "secondary list overriding their group, each with a note saying nobody had confirmed it. Nobody did in three",
+    "days, so they are deleted and the variants inherit their group. validate.mjs refuses a variant that overrides",
+    "primary or secondary without a confirmedBy string of at least 40 characters saying what was checked.",
+    "",
     "THE MOVEMENT CATALOGUE. One entry per JOB the programme needs done, and every way of doing that",
     "job in HIS gym, with the station each way lives at.",
     "",
@@ -140,16 +145,7 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "primary": [
-            "quads"
-          ],
-          "secondary": [
-            "glutes",
-            "abs",
-            "erectors"
-          ],
-          "note": "More quad-dominant and more trunk than the back squat, which is why it is a genuinely different lift with its own weight and its own history rather than a lighter copy.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "More quad-dominant and more trunk than the back squat, which is why it is a genuinely different lift with its own weight and its own history rather than a lighter copy."
         },
         {
           "id": "smith-squat",
@@ -175,15 +171,7 @@
           "zone": "machines",
           "station": "leg-press",
           "loadable": true,
-          "primary": [
-            "quads",
-            "glutes"
-          ],
-          "secondary": [
-            "adductors"
-          ],
-          "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely."
         }
       ],
       "jointAction": "Knee extension and hip extension, simultaneously, under an axial load.",
@@ -270,15 +258,7 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "primary": [
-            "adductors",
-            "quads"
-          ],
-          "secondary": [
-            "glutes"
-          ],
-          "note": "Frontal plane and single leg at once.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "Frontal plane and single leg at once."
         },
         {
           "id": "single-leg-leg-press",
@@ -320,18 +300,7 @@
           "zone": "rack",
           "station": "rack",
           "loadable": true,
-          "primary": [
-            "hamstrings",
-            "glutes",
-            "quads"
-          ],
-          "secondary": [
-            "erectors",
-            "grip",
-            "upper-back"
-          ],
-          "note": "HE HAS ALREADY DONE ONE: 2026-08-05 ramped 180x6, 200x6, 225x4 and it was logged under romanian-deadlift by mistake. That is the only conventional-deadlift data that exists. Not currently prescribed, and mentioning it is not a reason to prescribe it: see evidence file 20.8 item 7.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "HE HAS ALREADY DONE ONE: 2026-08-05 ramped 180x6, 200x6, 225x4 and it was logged under romanian-deadlift by mistake. That is the only conventional-deadlift data that exists. Not currently prescribed, and mentioning it is not a reason to prescribe it: see evidence file 20.8 item 7."
         },
         {
           "id": "db-rdl",
@@ -378,7 +347,8 @@
             "glute-back-extension-alt",
             "glute-back-extension"
           ],
-          "jointActionNote": "CONFIRMED AND CORRECTED 2026-09-01, and the correction is the point. This variant listed erectors as a PRIME MOVER, which made it the only exercise in the whole catalogue that could give the spinal erectors a direct set, and the rebuild that day was about to be built on it. It does not survive the catalogue's own rule. On a 45-degree bench with the spine held rigid, the movement performed is HIP EXTENSION: the glutes extend the hip, the hamstrings assist, and the erectors hold the trunk against a flexion moment WITHOUT CHANGING LENGTH. That is the identical role they play in the squat, the row and the Romanian deadlift, and this catalogue calls them SECONDARY in all three. His own logged name for it is \"Glute-Biased Back Extension\", which is the name used specifically to mean the rigid-spine version. So the erector credit moves to secondary and this exercise no longer claims to train the lower back. THE CONSEQUENCE IS THAT NOTHING IN THIS GYM DOES: see the erectors entry in targets.json. The version that would (letting the lumbar spine round and re-extend under control, which is what the machine was built for and what Steele 2015 on isolated lumbar extension is about) is a real technique and a change to how he already performs it, so it is a question for him and not a thing to write into a muscle list. It is asked on the exercise in program.json."
+          "jointActionNote": "CONFIRMED AND CORRECTED 2026-09-01, and the correction is the point. This variant listed erectors as a PRIME MOVER, which made it the only exercise in the whole catalogue that could give the spinal erectors a direct set, and the rebuild that day was about to be built on it. It does not survive the catalogue's own rule. On a 45-degree bench with the spine held rigid, the movement performed is HIP EXTENSION: the glutes extend the hip, the hamstrings assist, and the erectors hold the trunk against a flexion moment WITHOUT CHANGING LENGTH. That is the identical role they play in the squat, the row and the Romanian deadlift, and this catalogue calls them SECONDARY in all three. His own logged name for it is \"Glute-Biased Back Extension\", which is the name used specifically to mean the rigid-spine version. So the erector credit moves to secondary and this exercise no longer claims to train the lower back. THE CONSEQUENCE IS THAT NOTHING IN THIS GYM DOES: see the erectors entry in targets.json. The version that would (letting the lumbar spine round and re-extend under control, which is what the machine was built for and what Steele 2015 on isolated lumbar extension is about) is a real technique and a change to how he already performs it, so it is a question for him and not a thing to write into a muscle list. It is asked on the exercise in program.json.",
+          "confirmedBy": "Checked 2026-09-01 against the joint action performed: hip extension with the spine held rigid, so the erectors work isometrically and the glutes are the prime mover. The jointActionNote carries the reasoning."
         },
         {
           "id": "kb-swing",
@@ -556,15 +526,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "primary": [
-            "adductors",
-            "quads"
-          ],
-          "secondary": [
-            "glutes"
-          ],
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "loadable": true
         },
         {
           "id": "copenhagen-plank",
@@ -573,11 +535,7 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": false,
-          "secondary": [
-            "abs"
-          ],
-          "note": "Progressed by lever length, not weight, so the app's ladder does not apply to it.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "Progressed by lever length, not weight, so the app's ladder does not apply to it."
         },
         {
           "id": "side-plank-leg-lift",
@@ -648,18 +606,11 @@
         }
       ],
       "jointAction": "Ankle plantarflexion.",
-      "open": [
-        {
-          "q": "Your calf has two muscles. The standing calf raise you already do trains the big outer one. The deeper one underneath only works when your knee is bent, so it needs a seated calf raise, which is a second exercise at a different machine. Do you want it in the week, or should the app stop counting a muscle you never train?",
-          "asked": "2026-09-01",
-          "due": "2026-09-30",
-          "topic": "volume"
-        }
-      ],
       "attributionBasis": "ANATOMY. Ankle plantarflexion. The muscles listed are the prime movers of those actions, and the assisting or isometrically resisting muscles. No study is cited and none should be: see the legend at the top of this file.",
       "studyRelevantToSomethingElse": [
         "Kinoshita and Maeo 2023 compared STANDING against SEATED calf raises over 12 weeks and is evidence about knee angle and which calf muscle grows, not about attribution."
-      ]
+      ],
+      "$answered": "2026-09-03: the standing calf raise sits in Session B's optional block, the version he swapped to himself on 2026-08-28. Whether the deep calf gets a seated exercise is no longer a question the week asks; if he wants one, it goes in the optional block."
     },
     "push-horizontal": {
       "name": "Horizontal press",
@@ -719,12 +670,7 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false,
-          "secondary": [
-            "front-delts",
-            "abs"
-          ],
-          "note": "Added 2026-08-27 as an upper primer and refuted the same day. Not a plyometric, and post-activation enhancement is measured on jumps and sprints, never on a following strength set. It pre-fatigues the press behind it.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "Added 2026-08-27 as an upper primer and refuted the same day. Not a plyometric, and post-activation enhancement is measured on jumps and sprints, never on a following strength set. It pre-fatigues the press behind it."
         },
         {
           "id": "assisted-dip",
@@ -797,14 +743,7 @@
           "station": "bench",
           "loadable": true,
           "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks.\n\nIT WAS CALLED \"Standing DB Overhead Press\" UNTIL 2026-08-28 AND HE HAS NEVER DONE IT STANDING. His note #26 at the rack: \"Also whatever history is on standing db has always been seated, ive never done standing db\", and #25: \"Standing db overhead is not really practical either Standing barbell or seated db\". Twenty sets of history sit under this id going back to 2026-05-26, all of them seated, and the logged rows are stamped \"DB Overhead Press\" with no \"Standing\" in them: the word was added by the catalogue and never by him.\n\nSo the station is `bench` now, not null. That is not cosmetic. A null station means the exercise holds no fixture and can partner anything, which is how a seated press could have been paired with something that needs the bench. His name for it is the true one.\n\nWHETHER THE PROGRAMME SHOULD KEEP SEATED DUMBBELLS OR MOVE TO A STANDING BARBELL IS HIS CALL, and it is parked as an open question on this variant. Renaming records what he has been doing; it does not decide what he should do.",
-          "open": [
-            {
-              "q": "Your seated dumbbell overhead press has been stuck at 65 lb all year, because the next dumbbell up is a jump your reps cannot earn. A barbell goes up in 5 lb steps and would unstick it. The cost: it moves to the rack, so it no longer pairs with anything in the dumbbell area, and it starts from its own history of 3 sets at 115 lb last August. Stay on the dumbbells, or switch to the barbell?",
-              "asked": "2026-08-28",
-              "due": "2026-09-11",
-              "topic": "prescription"
-            }
-          ]
+          "$answered": "2026-09-03: the programme moved the overhead press to the standing barbell (bb-overhead-press), on the audit's recommendation and his go-ahead to execute it. The barbell moves in 5 lb steps, which is the whole reason this variant had been stuck at 60 to 65 lb since May. This variant stays in the catalogue as a swap."
         },
         {
           "id": "machine-shoulder-press",
@@ -851,12 +790,7 @@
           "implement": "dumbbell",
           "zone": "benchDb",
           "station": null,
-          "loadable": true,
-          "secondary": [
-            "side-delts",
-            "abs"
-          ],
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "loadable": true
         }
       ],
       "$tricepsNote": "TRICEPS ARE A SYNERGIST HERE, NOT AN AGONIST, and they were primary until 2026-08-29. He found it by reading the volume table: \"How come bench press, seated DB overhead press, machine chest press, and machine shoulder press are fully counting for triceps?\" THE PROOF IS INTERNAL. Every PULL in this file already counts its arm muscle as a synergist: pull-horizontal and pull-vertical both list biceps under secondary. Every PUSH counted its arm muscle in full. Same anatomical relationship, two different rules, and nothing but this table would ever have shown it. Pelland 2026 defines the fractional method by target: a direct set targets the muscle, an indirect set targets it as a secondary or synergist muscle and counts 0.5. The agonist of a bench press is the pectoralis major and of an overhead press the anterior deltoid; the triceps assist both. WHAT IT COST: triceps read 22 fractional sets a week against an efficient zone topping at 10, and that number was the whole basis of the advice to drop the overhead extension. The real figure is 15.5. The two-agonist entries elsewhere in this file are NOT the same case and stay: a squat extends the knee and the hip, so quadriceps and glutes are both agonists, and a row is both a shoulder extension and a scapular retraction. One movement, two prime movers is real; one movement, a prime mover plus the arm that assists it is not.",
@@ -901,12 +835,7 @@
           "zone": "cable",
           "station": "cable-row",
           "loadable": true,
-          "secondary": [
-            "biceps",
-            "rear-delts"
-          ],
-          "note": "Moves in 2.5 lb steps, the finest increment anywhere in this gym.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "Moves in 2.5 lb steps, the finest increment anywhere in this gym."
         },
         {
           "id": "chest-supported-row",
@@ -915,12 +844,7 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true,
-          "secondary": [
-            "biceps",
-            "rear-delts"
-          ],
-          "note": "No erector or trunk cost, because the chest is supported. That makes it the row that pairs freely.",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "note": "No erector or trunk cost, because the chest is supported. That makes it the row that pairs freely."
         },
         {
           "id": "db-single-arm-row",
@@ -1337,11 +1261,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "secondary": [
-            "front-delts"
-          ],
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "loadable": false
         },
         {
           "id": "side-plank",
@@ -1425,19 +1345,11 @@
           "zone": "benchDb",
           "station": null,
           "loadable": true,
-          "primary": [
-            "abs",
-            "grip"
-          ],
-          "secondary": [
-            "upper-back"
-          ],
           "note": "Single-side, so it adds anti-lateral-flexion that the two-sided farmer carry does not.",
           "aliases": [
             "suitcase-carry-upper"
           ],
-          "doseUnit": "carry",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "doseUnit": "carry"
         },
         {
           "id": "kb-farmer-carry",
@@ -1456,15 +1368,7 @@
           "station": null,
           "loadable": true,
           "note": "A kettlebell in one hand instead of a dumbbell. Same anti-lateral-flexion job, different handle and a different weight ladder, so it earns its own history rather than sharing one.\n\nPROMOTED FROM AN ALIAS OF suitcase-carry ON 2026-08-28. It was offered as an alt on a slot whose own exercise it resolved to, which is a choice between an exercise and itself: picking it wrote a second exercise_id for one movement and split the weight history. It had never been picked, so nothing needed migrating. validate.mjs refuses that shape now.",
-          "primary": [
-            "abs",
-            "grip"
-          ],
-          "secondary": [
-            "upper-back"
-          ],
-          "doseUnit": "carry",
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "doseUnit": "carry"
         },
         {
           "id": "db-hold",
@@ -1508,14 +1412,7 @@
           "implement": "bodyweight",
           "zone": "benchDb",
           "station": null,
-          "loadable": false,
-          "primary": [
-            "calves"
-          ],
-          "secondary": [
-            "quads"
-          ],
-          "jointActionNote": "OVERRIDES THE GROUP MUSCLE LIST. Added before 2026-09-01 without a stated reason; confirm the joint action really differs from the group or delete the override."
+          "loadable": false
         },
         {
           "id": "broad-jump",
@@ -1669,7 +1566,8 @@
           "secondary": [
             "grip"
           ],
-          "note": "Logged 6 sets in August. Progressed by leg position rather than weight."
+          "note": "Logged 6 sets in August. Progressed by leg position rather than weight.",
+          "confirmedBy": "Hanging from the bar loads the grip isometrically for the whole set; that is why grip is a helper here and not on the cable crunch. Checked 2026-09-03."
         },
         {
           "id": "cable-crunch",

@@ -151,7 +151,7 @@ async function gymRow(): Promise<Row> {
     };
   } catch {
     // A database hiccup must not take the front door down with it.
-    return { label: 'Gym', line: 'Upper/lower split, logged between sets', href: '/gym' };
+    return { label: 'Gym', line: 'Two sessions, alternated, logged between sets', href: '/gym' };
   }
 }
 

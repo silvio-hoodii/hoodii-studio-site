@@ -203,19 +203,45 @@ export interface CooldownItem {
 export interface Day {
   name: string;
   title: string;
-  desc: string;
+  desc?: string;
   warmup: 'lower' | 'upper';
   cooldown: string[];
+  /** The weekdays this session is scheduled on. TWO of them since 2026-09-03: the week is two
+   *  sessions alternated, so each is trained twice. Only the plan view on /health and the rest-rule
+   *  gate read this; the rotation itself is decided by cycle.ts from what was actually done. */
+  scheduledOn: string[];
   blocks: Block[];
 }
 
-/** SESSION IDS, not weekdays, since 2026-09-03. The split is a rolling rotation and the app picks
- *  the next session from what was logged, so a key called "thursday" was routinely selected on a
- *  Tuesday. Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a different fact that only
- *  the plan view needs. See the note at the top of content/gym/program.json. */
-export type DayKey = 'a' | 'b' | 'c' | 'd';
+/** SESSION IDS, not weekdays, since 2026-09-03. TWO since the same evening: the week is A, B, A, B,
+ *  so "which session is next" is always "the one you did not do last". Which weekday a session is
+ *  SCHEDULED on is `Day.scheduledOn`, a different fact that only the plan view needs. See the note
+ *  at the top of content/gym/program.json. */
+export type DayKey = 'a' | 'b';
+
+/** WHAT THE LIFTING IS FOR, in his words. Required; validate.mjs fails the build without it. It was
+ *  stated five times between May and September 2026 and written nowhere, and every rebuild in that
+ *  window was made against a criterion an agent chose instead. */
+export interface Goal {
+  his: string;
+  measuredBy: string;
+  inHisWords: { on: string; said: string }[];
+  decided: string;
+  assumptions?: string[];
+}
+
+/** THE FREEZE. The structural hash of `days` (session keys, weekdays, block roles, exercise ids,
+ *  sets, reps) may not change before `until` unless `changes` carries an entry quoting his words
+ *  and the new hash. Cue and why text are not part of the hash. See content/gym/structural-hash.mjs. */
+export interface Frozen {
+  until: string;
+  daysHash: string;
+  changes: { on: string; hisWords: string; hash: string }[];
+}
 
 export interface Program {
+  goal: Goal;
+  frozen: Frozen;
   days: Record<DayKey, Day>;
 }
 

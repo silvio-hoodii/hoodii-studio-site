@@ -178,7 +178,15 @@ const GATES = [
    * DO NOT "FIX" A FUTURE FAILURE BY LOOSENING THE FLOOR, by deleting a target, or by putting an
    * isometric muscle back on a prime-mover list. The floor is quoted from a saved paper, a deleted
    * target is a fact made invisible, and the third is the exact claim that was found false here. */
-  ['gym-targets', process.execPath, ['--experimental-strip-types', 'scripts/gym-targets.mjs']],
+  /* GYM-TARGETS IS GONE, 2026-09-03, and the two paragraphs above it are kept as the record of why it
+   * existed. The audit in HealthOS/knowledge/AUDIT-2026-09-03-THE-PROGRAMME-AND-WHY-IT-WILL-NOT-LAND.md
+   * found that grading sixteen muscles against a direct-set floor was a hypertrophy instrument applied
+   * to a strength goal, that it misread both papers it quoted (Iversen never counts direct-only sets;
+   * Pelland's tiers are fractional and the paper recommends fractional), and that it was the mechanism
+   * behind the fix-and-break loop: eleven muscles pinned at exactly the floor meant every swap dropped
+   * one of them under it. The week is graded per LIFT now, in content/gym/validate.mjs: every main
+   * lift three sets, every session scheduled twice, and the structure frozen until the review date.
+   * Per-muscle fractional sets are still REPORTED by gym-coverage below and on /health?s=volume. */
 
   /* GYM-ORDER, wired 2026-08-31, the day a programme first satisfied it. It asserts every movement
    * pattern gets a slot in the first two blocks of some day, on Nunes 2021: strength gains are

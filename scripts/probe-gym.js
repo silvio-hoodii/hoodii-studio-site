@@ -362,19 +362,30 @@
        program.json, because what is being asserted is what he can see. Navigates nothing, writes
        nothing. */
     async everyPartnerShowsAReason() {
-      const blocks = $$('.exgroup');
+      /* EVERY SESSION, NOT THE ONE THAT HAPPENS TO BE ON SCREEN, since 2026-09-03. The two-session
+         week has one session whose blocks are all solo lifts, and dayTabsSwitch runs before this and
+         leaves whichever tab it clicked active. On that session this test counted zero partners and
+         failed on `partners > 0`, which is a fact about test order and not about the page. So it
+         walks every tab and puts the original one back. */
+      const tabs = $$('.tab');
+      const original = tabs.find((t) => t.classList.contains('on'));
       const missing = [];
       let partners = 0;
-      for (const b of blocks) {
-        const cards = $$('.ex[data-slot]', b);
-        for (let i = 1; i < cards.length; i++) {
-          partners++;
-          const card = cards[i];
-          if (!$('.ex-why', card)) {
-            missing.push(text($('.ex-name', card)) || card.getAttribute('data-slot') || '?');
+      const countHere = () => {
+        for (const b of $$('.exgroup')) {
+          const cards = $$('.ex[data-slot]', b);
+          for (let i = 1; i < cards.length; i++) {
+            partners++;
+            const card = cards[i];
+            if (!$('.ex-why', card)) {
+              missing.push(text($('.ex-name', card)) || card.getAttribute('data-slot') || '?');
+            }
           }
         }
-      }
+      };
+      if (!tabs.length) countHere();
+      for (const t of tabs) { t.click(); await sleep(300); countHere(); }
+      if (original) { original.click(); await sleep(300); }
       return {
         pass: partners > 0 && missing.length === 0,
         detail: {

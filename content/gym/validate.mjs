@@ -845,6 +845,8 @@ for (const [dayKey, day] of Object.entries(program.days)) {
          "the box jump in Session A", because the split is a rotation and there is no Tuesday in it.
          The weekday spellings stay in DAY_WORD above so the new gate can REFUSE them; they are
          deliberately absent here so that naming one can never be forgiven as a valid reference. */
+      /* TWO SESSIONS since 2026-09-03. The older names stay so that a why naming one is REFUSED
+         as a reference to a session that no longer exists, rather than forgiven. */
       const DAY_OF = { 'session a': 'a', 'session b': 'b', 'session c': 'c', 'session d': 'd',
         'lower a': 'a', 'upper a': 'b', 'lower b': 'c', 'upper b': 'd' };
       const namesOn = (dayKey) => {
@@ -1456,8 +1458,9 @@ if (!conditioning.week?.restRule) {
      set the consecutive-day arithmetic then walks in weekday order: it would have silently counted
      four training days that are on no day of the week, and the rest rule would have gone quiet.
      A rename that leaves a set-union pointing at the old spelling is how a gate stops gating. */
+  /* AN ARRAY since 2026-09-03: each of the two sessions is scheduled on two weekdays. */
   const training = new Set(
-    Object.values(program.days).map((d) => d.scheduledOn).filter(Boolean),
+    Object.values(program.days).flatMap((d) => (Array.isArray(d.scheduledOn) ? d.scheduledOn : [d.scheduledOn])).filter(Boolean),
   );
   for (const [slot, days] of Object.entries(assigned)) {
     if (slot.startsWith('$') || slot === 'why') continue;
@@ -1778,8 +1781,116 @@ if (MOVEMENTS) {
   }
 }
 
+/* ---------------------------------------------------------------------------------------------
+ * THE WEEK'S OWN RULES, added 2026-09-03 with the two-session week. Everything above checks that
+ * the file is internally consistent and that a card cannot lie about the gym. Nothing above said
+ * what the week is FOR or what it may not quietly become, and that absence is where 53 commits in
+ * 24 days and 22 reversals came from: every rebuild passed every gate because no gate encoded the
+ * goal. The audit that found this is HealthOS/knowledge/AUDIT-2026-09-03-THE-PROGRAMME-AND-WHY-IT-
+ * WILL-NOT-LAND.md. Six rules, each one line to state:
+ *
+ *   1. `goal` exists, in his words, with how it is measured.
+ *   2. `frozen` exists and the structural hash of `days` matches it, or `changes` quotes his words.
+ *   3. Every `main` block's lead lift has exactly three sets, and every session is scheduled on
+ *      exactly two weekdays. That is the whole dose rule: three sets, twice a week, per lift.
+ *      (Pelland 2026 Table 4; the per-muscle floor that replaced it is retired.)
+ *   4. `rangeWidth` is at most 8. A 12 to 23 rep lateral raise had stopped being a lateral raise.
+ *   5. A cue is at most 80 words. His note #12: "just leave the cue and thats it".
+ *   6. `$comment` is at most 30 lines. The changelog lives in HealthOS/knowledge/PROGRAMME-DECISIONS.md.
+ *
+ * And one on the catalogue: a variant-level primary/secondary override needs `confirmedBy`.
+ * ------------------------------------------------------------------------------------------- */
+import { structuralHash } from './structural-hash.mjs';
+
+if (process.argv.includes('--print-hash')) {
+  console.log(structuralHash(program.days));
+  process.exit(0);
+}
+
+{
+  const words = (s) => String(s ?? '').trim().split(/\s+/).filter(Boolean).length;
+  const WEEKDAY_SET = new Set(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
+
+  // 1. the goal
+  const g = program.goal;
+  if (!g || typeof g !== 'object') {
+    fail('program.json', 'no "goal". The week has to say what it is for, in his words, or every number in it is arbitrary. See HealthOS/knowledge/AUDIT-2026-09-03-THE-PROGRAMME-AND-WHY-IT-WILL-NOT-LAND.md section 4.');
+  } else {
+    if (words(g.his) < 12) fail('program.json', `"goal.his" must be his goal in at least 12 words, got ${JSON.stringify(g.his ?? null)}`);
+    if (words(g.measuredBy) < 8) fail('program.json', `"goal.measuredBy" must say how the goal is read, at least 8 words, got ${JSON.stringify(g.measuredBy ?? null)}`);
+    if (!Array.isArray(g.inHisWords) || !g.inHisWords.length) fail('program.json', '"goal.inHisWords" must quote at least one thing he actually said, with a date.');
+  }
+
+  // 2. the freeze
+  const fz = program.frozen;
+  const hash = structuralHash(program.days);
+  if (!fz || typeof fz !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(String(fz.until)) || typeof fz.daysHash !== 'string') {
+    fail('program.json', '"frozen" must carry { until: YYYY-MM-DD, daysHash, changes: [] }. The week is frozen between rebuilds on purpose; see the $why on that field.');
+  } else {
+    const today = new Date().toISOString().slice(0, 10);
+    const okChange = (Array.isArray(fz.changes) ? fz.changes : []).find((c) => c && c.hash === hash && words(c.hisWords) >= 8 && /^\d{4}-\d{2}-\d{2}$/.test(String(c.on)));
+    if (fz.daysHash !== hash && today < fz.until && !okChange) {
+      fail('program.json', `the WEEK IS FROZEN until ${fz.until} and its structure changed: frozen.daysHash is ${fz.daysHash}, the file now hashes to ${hash}. `
+        + 'Fifty-three commits in twenty-four days did not land a week; this gate exists so the next one is his decision. To change the week before the date, add '
+        + `{ "on": "${today}", "hisWords": "<his sentence, at least eight words>", "hash": "${hash}" } to frozen.changes, and quote the same words in the commit. `
+        + 'Cue and why text are not part of the hash and may change freely.');
+    }
+    if (fz.daysHash !== hash && (today >= fz.until || okChange)) {
+      out.push(`ok    [program.json] structure changed (${fz.daysHash} -> ${hash}); ${okChange ? 'his words are on record in frozen.changes' : 'the freeze has expired'}. Update frozen.daysHash and frozen.until when the new week is accepted.`);
+    }
+  }
+
+  // 3. three sets, twice a week, per main lift
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    const on = day.scheduledOn;
+    if (!Array.isArray(on) || on.length !== 2 || new Set(on).size !== 2 || !on.every((w) => WEEKDAY_SET.has(w))) {
+      fail(dayKey, `"scheduledOn" must be exactly two distinct weekdays, got ${JSON.stringify(on ?? null)}. The week is two sessions alternated, each trained twice; a session scheduled once is a different programme and needs his words in frozen.changes.`);
+    }
+    for (const b of day.blocks || []) {
+      if (b.role !== 'main') continue;
+      const lead = b.exercises?.[0];
+      if (lead && lead.sets !== 3) {
+        fail(`${dayKey}/${b.label}`, `main lift "${lead.id}" has ${lead.sets} sets; every main lift is three sets, twice a week. More is past the point where Pelland 2026 found detectable strength increments per lift, fewer is under the powerlifter floor of 3. Change it with his words in frozen.changes, or move the exercise to an accessory block.`);
+      }
+    }
+  }
+
+  // 4, 5. windows and cues
+  for (const [dayKey, day] of Object.entries(program.days)) {
+    for (const b of day.blocks || []) {
+      for (const ex of b.exercises || []) {
+        for (const item of [ex, ...(ex.alts ?? [])]) {
+          if (item.rangeWidth !== undefined && (!Number.isInteger(item.rangeWidth) || item.rangeWidth < 1 || item.rangeWidth > 8)) {
+            fail(`${dayKey}/${b.label}`, `"rangeWidth" on "${item.id}" is ${JSON.stringify(item.rangeWidth)}; it must be 1 to 8. A 12 to 23 rep window was live on the lateral raise, past Iversen's 15 RM ceiling, because the dumbbell jump at 20 lb is 25%. Coaches handle that jump with two top-range sets before moving up, or a cable, not with eleven more reps.`);
+          }
+        }
+        if (words(ex.cue) > 80) {
+          fail(`${dayKey}/${b.label}`, `the cue on "${ex.id}" is ${words(ex.cue)} words; the ceiling is 80 words. His note #12: "Walls of text again why do I need all this, just leave the cue and thats it". A technique point that does not fit is a second exercise or a question, not a longer cue.`);
+        }
+      }
+    }
+  }
+
+  // 6. the changelog
+  if (Array.isArray(program.$comment) && program.$comment.length > 30) {
+    fail('program.json', `$comment is ${program.$comment.length} lines; the ceiling is 30. This array reached 242 lines by only ever growing and every agent re-read it before touching the week. Decisions go in HealthOS/knowledge/PROGRAMME-DECISIONS.md; this file carries what the week IS.`);
+  }
+
+  // the catalogue: no unconfirmed muscle override
+  if (MOVEMENTS) {
+    const raw = readJson('movements.json');
+    for (const [job, mv] of Object.entries(raw.movements ?? {})) {
+      for (const v of mv.variants ?? []) {
+        if ((v.primary !== undefined || v.secondary !== undefined) && words(v.confirmedBy) < 8) {
+          fail(`movements.json/${job}/${v.id}`, `this variant overrides its group's muscle list (primary ${JSON.stringify(v.primary ?? null)}, secondary ${JSON.stringify(v.secondary ?? null)}) and carries no "confirmedBy". Fourteen such overrides sat for three days with a note saying nobody had checked them and were deleted on 2026-09-03. Say what was checked, in at least eight words, or delete the override and let the variant inherit its group.`);
+        }
+      }
+    }
+  }
+}
+
 console.log(out.join('\n'));
 console.log('-'.repeat(70));
 
-console.log(`${Object.keys(program.days).length} days checked, the planned week checked against its rest rule, ${FAIL} failures`);
+console.log(`${Object.keys(program.days).length} sessions checked, the planned week checked against its rest rule, ${FAIL} failures`);
 process.exit(FAIL ? 1 : 0);

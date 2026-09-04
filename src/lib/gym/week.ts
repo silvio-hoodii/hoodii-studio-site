@@ -132,7 +132,7 @@ export function weekdayOf(date: string): WeekdayKey {
 
 /** The plan, from program.json plus conditioning.json's slot assignments. No copy of the split. */
 export function plannedWeek(program: Program, conditioning: Conditioning): TrainingWeek['plan'] {
-  const liftDays = program.days as Record<string, { title?: string; scheduledOn?: string } | undefined>;
+  const liftDays = program.days as Record<string, { title?: string; scheduledOn?: string[] | string } | undefined>;
   const assigned = conditioning.week?.assignedDays ?? {};
 
   /* THE INDEX IS BUILT FROM `scheduledOn`, and this line used to be `liftDays[weekday]`.
@@ -146,7 +146,10 @@ export function plannedWeek(program: Program, conditioning: Conditioning): Train
    * its identity, and a session with no weekday assigned simply does not appear in the plan. */
   const byWeekday = new Map<string, string>();
   for (const [key, d] of Object.entries(liftDays)) {
-    if (d?.scheduledOn) byWeekday.set(d.scheduledOn, key);
+    /* AN ARRAY since 2026-09-03: two sessions, each scheduled on two weekdays. A string is still
+       accepted so an older program.json parses; validate.mjs requires the array. */
+    const on = Array.isArray(d?.scheduledOn) ? d.scheduledOn : d?.scheduledOn ? [d.scheduledOn] : [];
+    for (const weekday of on) byWeekday.set(weekday, key);
   }
 
   const days: PlannedDay[] = WEEKDAYS.map((weekday) => {

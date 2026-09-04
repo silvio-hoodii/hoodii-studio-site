@@ -494,14 +494,12 @@ console.log('');
  * Same contract as coverage-baseline.json and strength-baseline.json: a gate expected to fail cannot
  * signal a regression, so the accepted state is written down where the next reader will see it and
  * only movement away from it fails. An accepted gap is PRINTED on every run with its reason. */
+/* READ FROM program.json's `acceptedGaps` since 2026-09-03, when targets.json was deleted with the
+ * per-muscle gate. The acceptance is a fact about the WEEK, so it lives with the week. */
 const accepted = (() => {
   try {
-    const t = JSON.parse(readFileSync('content/gym/targets.json', 'utf8'));
-    const out = new Map();
-    for (const [m, spec] of Object.entries(t.muscles ?? {})) {
-      if (spec.loadableGapAccepted) out.set(m, spec.loadableGapAccepted);
-    }
-    return out;
+    const p = JSON.parse(readFileSync('content/gym/program.json', 'utf8'));
+    return new Map(Object.entries(p.acceptedGaps ?? {}));
   } catch { return new Map(); }
 })();
 

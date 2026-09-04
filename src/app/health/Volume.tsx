@@ -65,16 +65,23 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
  * three muscles getting the least direct work in the week. That is a false "you have this", which
  * ENGINEERING.md's fifth law names as the asymmetry to hunt first. Found 2026-09-03 by comparing
  * the rendered page against gym-targets.mjs rather than by reading either one on its own. */
-function State({ below, past, direct }: { below: boolean; past: boolean; direct: number }) {
+/* AND BACK TO FRACTIONAL ON 2026-09-03, with the gate itself deleted. The audit in
+ * HealthOS/knowledge/AUDIT-2026-09-03-THE-PROGRAMME-AND-WHY-IT-WILL-NOT-LAND.md re-read both papers:
+ * Iversen never counts direct-only sets, Pelland's tiers are denominated in FRACTIONAL sets and the
+ * paper recommends that method, and the "suffers from the assumption" sentence the direct-set gate
+ * quoted was the paper qualifying its own best method, not rejecting it. So the badge reads the
+ * fractional weekly count, which is the unit every source on disk uses, and this table is a REPORT:
+ * nothing fails a build on it any more. The week is graded per lift, in content/gym/validate.mjs. */
+function State({ below, past, sets }: { below: boolean; past: boolean; sets: number }) {
   if (below) return <div className="vol-state under">under {MIN_EFFECTIVE_DOSE}, too little</div>;
-  if (direct < MIN_EFFECTIVE_DOSE + 1) return <div className="vol-state">at the minimum</div>;
+  if (sets < MIN_EFFECTIVE_DOSE + 1) return <div className="vol-state">at the minimum</div>;
   if (past) return <div className="vol-state">past the cheap band</div>;
   return <div className="vol-state ok">in the cheap band</div>;
 }
 
 /* Worst first, then dearest, then the ones that are simply fine. Within a group, biggest first. */
-const VERDICT_ORDER = (m: { belowMinimumDirect: boolean; pastEfficientDirect: boolean; directSets: number }) =>
-  (m.belowMinimumDirect ? 0 : m.directSets < MIN_EFFECTIVE_DOSE + 1 ? 1 : m.pastEfficientDirect ? 2 : 3);
+const VERDICT_ORDER = (m: { belowMinimum: boolean; pastEfficient: boolean; sets: number }) =>
+  (m.belowMinimum ? 0 : m.sets < MIN_EFFECTIVE_DOSE + 1 ? 1 : m.pastEfficient ? 2 : 3);
 
 export default function Volume({
   coverage,
@@ -156,12 +163,12 @@ export default function Volume({
                 anything. I want to see one table." */}
             <tbody>
               {[...perMuscle]
-                .sort((a, b) => VERDICT_ORDER(a) - VERDICT_ORDER(b) || b.directSets - a.directSets)
+                .sort((a, b) => VERDICT_ORDER(a) - VERDICT_ORDER(b) || b.sets - a.sets)
                 .map((m) => (
                 <tr key={m.muscle}>
                   <td className="wide">
                     {m.label}
-                    <State below={m.belowMinimumDirect} past={m.pastEfficientDirect} direct={m.directSets} />
+                    <State below={m.belowMinimum} past={m.pastEfficient} sets={m.sets} />
                   </td>
                   {/* BOTH NUMBERS, since 2026-08-30, and only where they differ. His reading of this
                       table: "I don't know if all the exercises should represent the same weight ...
@@ -223,8 +230,9 @@ export default function Volume({
           <span className="tnum">{EFFICIENT_ZONE_TOP}</span> the extra sets still work, they just buy
           less than the ones before them. Right now <span className="tnum">{totals.below}</span>{' '}
           muscle{totals.below === 1 ? ' is' : 's are'} under the minimum and{' '}
-          <span className="tnum">{totals.pastEfficient}</span> are over the top of the band. The four
-          day columns scroll sideways inside the table.
+          <span className="tnum">{totals.pastEfficient}</span> are over the top of the band. Each
+          session column shows one performance; the weekly number counts the session twice, because
+          each is trained twice a week. The columns scroll sideways inside the table.
         </p>
       </div>
 
