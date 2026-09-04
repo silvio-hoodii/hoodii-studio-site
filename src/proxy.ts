@@ -31,14 +31,19 @@ import { AUTH_COOKIE, cookieAuthorises } from '@/lib/auth';
  */
 
 const GATED_PAGES: string[] = [];
-const LOGIN_PATHS = ['/gym/login', '/health/login', '/french/login'];
 
-function loginPathFor(pathname: string): string {
-  if (pathname.startsWith('/gym')) return '/gym/login';
-  if (pathname.startsWith('/health')) return '/health/login';
-  if (pathname.startsWith('/french')) return '/french/login';
-  return '/kitchen/login';
-}
+/* ONE LOGIN PATH, since 2026-09-04. This was a three-entry list plus a `loginPathFor()` that mapped
+ * a route prefix to one of four login pages, and the four pages are gone: one cookie and one
+ * password never needed four forms, and the per-app prefix checks inside them were A3 of the
+ * 2026-09-04 audit (a correct password from /reading/shelf landed in the kitchen). See
+ * `src/app/login/page.tsx` and `src/lib/return-to.ts`.
+ *
+ * Kept as a constant rather than inlined because it is still load-bearing for the redirect below:
+ * without the exemption, re-gating a page whose prefix also covers the login path would send the
+ * proxy in a loop. `/login` is not in `config.matcher`, so today the proxy never runs on it and no
+ * loop is reachable, but a matcher entry is one line and this guard is the thing that makes adding
+ * one safe. */
+const LOGIN_PATH = '/login';
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -94,11 +99,19 @@ export function proxy(req: NextRequest) {
   if (
     GATED_PAGES.some((p) => pathname.startsWith(p)) &&
     !authed &&
-    !LOGIN_PATHS.some((p) => pathname.startsWith(p))
+    !pathname.startsWith(LOGIN_PATH)
   ) {
+    /* The destination is captured BEFORE the clone is rewritten, because the clone still carries
+       the original query string and `searchParams.set` would append `to` beside it: a gated
+       `/health?s=volume` would become `/login?s=volume&to=...`. The search is cleared first so the
+       login URL carries exactly one parameter. */
+    const destination = pathname + (req.nextUrl.search || '');
     const url = req.nextUrl.clone();
-    url.pathname = loginPathFor(pathname);
-    url.searchParams.set('to', pathname);
+    url.pathname = LOGIN_PATH;
+    url.search = '';
+    /* The path AND its query, so a gated `/health?s=volume` returns to the tab he was on rather
+       than to the app's default tab. `pathname` alone was what the four pages received. */
+    url.searchParams.set('to', destination);
     return NextResponse.redirect(url);
   }
 

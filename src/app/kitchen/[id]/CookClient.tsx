@@ -625,7 +625,7 @@ function SaveFailed({ err, onRetry }: { err: string; onRetry: () => void | Promi
       </div>
       {wrong && <p className="changes" style={{ marginTop: 10 }}>Not that one. Nothing was lost, try again.</p>}
       <p className="quiet" style={{ marginTop: 10 }}>
-        Or do it on <Link href="/kitchen/login" target="_blank">the login page</Link> and come back.
+        Or do it on <Link href="/login?to=/kitchen" target="_blank">the login page</Link> and come back.
       </p>
     </div>
   );

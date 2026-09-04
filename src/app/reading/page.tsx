@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { getAcquisitionMap, getLiveness, getQueue } from '@/lib/reading/queue-db';
 import {
   dedupePriceItems, formatPriceLine, pickedViaLabel, priceChannelLabel, priceChannelOrder, trackLabel,
@@ -47,8 +48,8 @@ export default async function ReadingQueue() {
     <div className="reading">
       <p className="surf-nav">
         <span className="rtab on">Next up</span>
-        <Link className="rtab" href="/reading/shelf">Browse</Link>
-        <Link className="rtab" href="/reading/want">Want</Link>
+        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
+        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 

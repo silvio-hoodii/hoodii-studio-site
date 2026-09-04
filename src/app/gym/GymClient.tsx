@@ -807,7 +807,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           noun="set"
           queued={pendingSets}
           onRetry={retryAll}
-          loginHref="/gym/login"
+          loginHref="/login?to=/gym"
           sticky
         />
       )}

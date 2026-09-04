@@ -5,10 +5,12 @@ import type { MetadataRoute } from 'next';
  * HTTP 200, which is a duplicate of the whole site with no signal saying which one is real.
  *
  * NOTHING is disallowed, and that is the point. Every page that should stay out of the index says
- * so in its own head: the four app layouts, the four login pages and /callback all serve
- * `noindex, nofollow`. A Disallow would stop the crawler READING those pages, which means it never
- * sees the noindex, which is how a URL ends up listed with no title and no description and no way
- * to get rid of it.
+ * so in its own head: the app layouts, /login and /callback all serve `noindex, nofollow`. A
+ * Disallow would stop the crawler READING those pages, which means it never sees the noindex,
+ * which is how a URL ends up listed with no title and no description and no way to get rid of it.
+ *
+ * ("the four login pages" until 2026-09-04. They are one route now, /login, and it carries the
+ * same noindex the four did. See src/app/login/page.tsx.)
  *
  * The first version of this file disallowed the five login-ish paths while its own comment argued
  * against doing exactly that for the app routes. An adversarial pass caught the contradiction on

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { useState } from 'react';
 
 /* The only client JS on this page, and it earns its place: a want is a WRITE, and the write is
@@ -32,7 +32,7 @@ export default function WantButton({
   }
 
   if (state === 'locked') {
-    return <Link className="wantbtn locked" href="/kitchen/login?to=/reading/shelf">sign in to save</Link>;
+    return <WalledLink className="wantbtn locked" href="/login?to=/reading/shelf">sign in to save</WalledLink>;
   }
   return (
     <button

@@ -59,15 +59,35 @@ export default function ListClient({ open, got, pricedTotal, pricedCount, unpric
 
   const retry = failed;
 
+  /* THE OPENING LINE, BUILT FROM CLAUSES THAT EXIST. A4 of the 2026-09-04 audit.
+   *
+   * It used to be three conditionals with the punctuation typed between them:
+   *
+   *     <b>{open.length} to buy.</b>{' '}
+   *     {pricedCount > 0 && <>...for the {pricedCount} with a price...</>}
+   *     {unpricedCount > 0 && <>, {unpricedCount} with no price yet</>}.
+   *
+   * With nothing priced, the middle clause rendered empty and the sentence read
+   * "15 to buy. , 15 with no price yet." A comma after a full stop, on the first line of the page.
+   * It is the shape every hand-punctuated conditional sentence eventually takes, because the
+   * separator belongs to the JOIN and not to either clause.
+   *
+   * So the clauses go in an array and the array knows how to punctuate itself. There is exactly one
+   * full stop and it is added once, at the end. */
+  const clauses: string[] = [];
+  if (pricedCount > 0) {
+    clauses.push(`${money(pricedTotal)} for the ${pricedCount} with a price read this fortnight`);
+  }
+  if (unpricedCount > 0) clauses.push(`${unpricedCount} with no price yet`);
+
   return (
     <>
       <p className="lede" style={{ marginBottom: 10 }}>
         {open.length === 0
           ? 'Nothing on the list. It fills itself from what you mark low or out and from what a dish is short of.'
           : <>
-              <b>{open.length} to buy.</b>{' '}
-              {pricedCount > 0 && <>{money(pricedTotal)} for the {pricedCount} with a price read this fortnight</>}
-              {unpricedCount > 0 && <>, {unpricedCount} with no price yet</>}.
+              <b>{open.length} to buy.</b>
+              {clauses.length > 0 && <> {clauses.join(', ')}.</>}
             </>}
       </p>
 
@@ -222,7 +242,7 @@ function Failed({ err, onRetry }: { err: string; onRetry: () => void | Promise<v
       </div>
       {wrong && <p className="changes" style={{ marginTop: 10 }}>Not that one. Nothing was lost, try again.</p>}
       <p className="quiet" style={{ marginTop: 10 }}>
-        Or do it on <Link href="/kitchen/login" target="_blank">the login page</Link> and come back.
+        Or do it on <Link href="/login?to=/kitchen/shop" target="_blank">the login page</Link> and come back.
       </p>
     </div>
   );

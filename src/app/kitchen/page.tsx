@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import KitchenNav from './KitchenNav';
 import { deriveStock, expiringSoon, amountText } from '@/lib/kitchen/stock';
 import { allRecipes, offer, isOfferable, rank, type Cookable } from '@/lib/kitchen/recipes';
@@ -310,7 +311,7 @@ export default async function KitchenHome() {
         Out of {d.total}, scored against the fridge. Nothing missing and nothing frozen.{' '}
         {d.thaw.length > 0 && <>{d.thaw.length} more after a thaw. </>}
         {d.missingOne.length > 0 && <>{d.missingOne.length} one ingredient short. </>}
-        <Link href="/kitchen/find">See all, or filter by an ingredient</Link>.
+        <WalledLink href="/kitchen/find">See all, or filter by an ingredient</WalledLink>.
       </p>
 
       {/* A SEARCH BOX ON THE PAGE HE OPENS. Added 2026-08-22.
@@ -453,7 +454,7 @@ export default async function KitchenHome() {
           {d.ready.length > 10 && (
             <p className="lede" style={{ marginTop: 8 }}>
               and {d.ready.length - 10} more.{' '}
-              <Link href="/kitchen/find">All of them</Link>.
+              <WalledLink href="/kitchen/find">All of them</WalledLink>.
             </p>
           )}
         </>
@@ -480,7 +481,7 @@ export default async function KitchenHome() {
           </ul>
           <p className="lede" style={{ marginTop: 8 }}>
             and {d.missingOne.length - 14} more.{' '}
-            <Link href="/kitchen/find">All of them</Link>.
+            <WalledLink href="/kitchen/find">All of them</WalledLink>.
           </p>
         </>
       )}
@@ -502,7 +503,7 @@ export default async function KitchenHome() {
           {d.thaw.length > 8 && (
             <p className="lede" style={{ marginTop: 8 }}>
               and {d.thaw.length - 8} more.{' '}
-              <Link href="/kitchen/find">All of them</Link>.
+              <WalledLink href="/kitchen/find">All of them</WalledLink>.
             </p>
           )}
         </>
@@ -609,9 +610,9 @@ export default async function KitchenHome() {
               const amt = amountText(i);
               return (
                 <li key={i.id}>
-                  <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}&max=1`}>
+                  <WalledLink href={`/kitchen/find?uses=${encodeURIComponent(i.id)}&max=1`}>
                     {short(i.n)}{amt ? `, ${amt}` : ''}
-                  </Link>
+                  </WalledLink>
                   <span>{dueInText(i.daysLeft)}</span>
                 </li>
               );

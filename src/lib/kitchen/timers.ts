@@ -162,8 +162,22 @@ export function alarm() {
   } catch { /* not on desktop */ }
   try {
     if (!ctx || ctx.state !== 'running') return;
-    // Three rising blips. Generated rather than loaded: an audio file would be a network request,
-    // and the strict CSP on this site blocks anything off-host anyway.
+    /* Three rising blips, GENERATED rather than loaded, because an audio file would be a network
+     * request at the moment the timer fires: at the stove, on a phone, that is the one instant a
+     * fetch must not be on the critical path. An oscillator cannot fail to arrive.
+     *
+     * THIS COMMENT USED TO END "and the strict CSP on this site blocks anything off-host anyway",
+     * WHICH WAS FALSE. A9 of the 2026-09-04 audit: there was no Content-Security-Policy on
+     * hoodii.studio, none in next.config.ts, none in vercel.json and none in src/proxy.ts. Verified
+     * by `curl -I`, which returned Strict-Transport-Security and nothing else. Either it shipped
+     * and was removed, or it never existed.
+     *
+     * A comment asserting a security control that is not there is worse than no comment, because
+     * the next person to reach for an off-host asset reads it and believes they are covered. Four
+     * real headers landed in next.config.ts on 2026-09-04 (nosniff, Referrer-Policy,
+     * Permissions-Policy, X-Frame-Options) and a CSP is still NOT among them: the header comment
+     * there says why and what the path to one is. So the reason above is the local one, which was
+     * always the true reason, and it stands on its own. */
     [0, 0.28, 0.56].forEach((offset, k) => {
       const osc = ctx!.createOscillator();
       const gain = ctx!.createGain();

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { getWants } from '@/lib/reading/want-db';
 
 export const metadata = {
@@ -21,15 +21,15 @@ export default async function WantList() {
   return (
     <div className="reading">
       <p className="surf-nav">
-        <Link className="rtab" href="/reading">Next up</Link>
-        <Link className="rtab" href="/reading/shelf">Browse</Link>
+        <WalledLink className="rtab" href="/reading">Next up</WalledLink>
+        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
         <span className="rtab on">Want</span>
-        <Link className="rtab" href="/reading/finished">Finished</Link>
+        <WalledLink className="rtab" href="/reading/finished">Finished</WalledLink>
       </p>
 
       <h1>Want list</h1>
       <p className="blurb">
-        Saved from <Link href="/reading/shelf">Shelf check</Link> for the next shop or library trip.
+        Saved from <WalledLink href="/reading/shelf">Shelf check</WalledLink> for the next shop or library trip.
         Nothing here is in the queue, and saving one never pushes a book out of the ten.
       </p>
 
@@ -54,7 +54,7 @@ export default async function WantList() {
               </div>
             ))}
             <p className="src">
-              Remove one from its row on <Link href="/reading/shelf">Shelf check</Link>, where the
+              Remove one from its row on <WalledLink href="/reading/shelf">Shelf check</WalledLink>, where the
               button knows whether a book is already saved.
             </p>
           </>

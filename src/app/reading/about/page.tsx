@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { getSourceLists } from '@/lib/reading/catalog-db';
 import type { SourceList } from '@/lib/reading/catalog-db';
 import { trackLabel } from '@/lib/reading/catalog-types';
@@ -28,8 +29,8 @@ export default async function ReadingAbout() {
     <div className="reading">
       <p className="surf-nav">
         <Link className="rtab" href="/reading">Next up</Link>
-        <Link className="rtab" href="/reading/shelf">Browse</Link>
-        <Link className="rtab" href="/reading/want">Want</Link>
+        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
+        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
         <Link className="rtab" href="/reading/finished">Finished</Link>
       </p>
 

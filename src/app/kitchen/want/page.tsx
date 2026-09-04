@@ -151,7 +151,7 @@ export default async function Want({
         ) : (
           <p className="lede" style={{ marginTop: 10 }}>
             Reading a link you point at is the one thing here that needs the device unlocked, because
-            it fetches that page from this server. <Link href="/kitchen/login?to=/kitchen/want">Unlock</Link>{' '}
+            it fetches that page from this server. <Link href="/login?to=/kitchen/want">Unlock</Link>{' '}
             to use it. Searching by name is open to anyone.
           </p>
         )}
@@ -166,7 +166,7 @@ export default async function Want({
           <div>{byUrl.error}</div>
           {byUrl.locked && (
             <div style={{ marginTop: 6 }}>
-              <Link href={`/kitchen/login?to=${encodeURIComponent(`/kitchen/want?url=${url}`)}`}>
+              <Link href={`/login?to=${encodeURIComponent(`/kitchen/want?url=${url}`)}`}>
                 Unlock and read it
               </Link>
             </div>

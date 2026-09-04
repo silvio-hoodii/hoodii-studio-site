@@ -47,8 +47,9 @@
 .health .divider { margin: 0; }
 
 /* The button is declared once in globals.css. This surface wrote out the primary variant and no
-   base rule at all, so the one button it owns, on /health/login, was styled and nothing else
-   would have been. */
+   base rule at all, so the one button it owned, on the old /health/login, was styled and nothing
+   else would have been. That page is gone as of 2026-09-04 (four login pages became /login), so
+   this surface now owns no button at all and the rule below is the only thing left of that note. */
 .health .changes { font-size: 13px; color: var(--destructive); }
 
 /* ---- section ---- */

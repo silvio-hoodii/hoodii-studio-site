@@ -46,8 +46,21 @@ export default function HideDish({ dish, name, hidden }: { dish: string; name: s
         className="rowaction"
         disabled={busy}
         onClick={() => void send(hidden ? 'show' : 'hide')}
-        /* The label says what happens, not what the button is. "Hide" alone reads as a state. */
-        aria-label={hidden ? `Show ${name} again` : `Stop showing ${name}`}
+        /* THE VISIBLE WORDS COME FIRST IN THE LABEL, and that is the whole fix. E7 of the
+         * 2026-09-04 audit: Lighthouse flagged `label-content-name-mismatch` on 53 rows of
+         * /kitchen. The label read "Stop showing Poached hake..." while the button showed
+         * "not this", so the accessible name did not contain the visible text.
+         *
+         * That breaks voice control specifically. Someone saying "click not this" is matched
+         * against the accessible NAME, and the name did not have those words in it, so the one
+         * control on every dish row was unreachable by voice while reading perfectly to a screen
+         * reader. WCAG 2.5.3 is the criterion and its requirement is literal: the visible label
+         * must be contained in the accessible name, at the start where possible.
+         *
+         * The original intent stands and is kept: the label still says what HAPPENS rather than
+         * naming a state, because "hide" alone reads as a state. It just says the visible words
+         * before it. */
+        aria-label={hidden ? `Show it again: show ${name} again` : `Not this: stop showing ${name}`}
       >
         {busy ? '...' : hidden ? 'show it again' : 'not this'}
       </button>
@@ -101,7 +114,7 @@ function Failed({ err, onRetry }: { err: string; onRetry: () => Promise<void> })
       </div>
       {wrong && <p className="changes" style={{ marginTop: 10 }}>Not that one. Nothing was lost, try again.</p>}
       <p className="quiet" style={{ marginTop: 10 }}>
-        Or do it on <Link href="/kitchen/login" target="_blank">the login page</Link> and come back.
+        Or do it on <Link href="/login?to=/kitchen" target="_blank">the login page</Link> and come back.
       </p>
     </div>
   );

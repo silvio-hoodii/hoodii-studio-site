@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { allPacks, kindLabel } from '@/lib/reading/packs';
 
 export const metadata = {
@@ -19,8 +20,8 @@ export default async function ReadingFinished() {
     <div className="reading">
       <p className="surf-nav">
         <Link className="rtab" href="/reading">Next up</Link>
-        <Link className="rtab" href="/reading/shelf">Browse</Link>
-        <Link className="rtab" href="/reading/want">Want</Link>
+        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
+        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
         <span className="rtab on">Finished</span>
       </p>
 

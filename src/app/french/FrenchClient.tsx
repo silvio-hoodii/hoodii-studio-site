@@ -293,7 +293,7 @@ export default function FrenchClient({
       noun={pendingNoun}
       queued={pending.length}
       onRetry={retryPending}
-      loginHref="/french/login"
+      loginHref="/login?to=/french"
     />
   ) : null;
 

@@ -29,6 +29,54 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [{ source: '/favicon.ico', destination: '/icon/32' }];
   },
+
+  /* SECURITY HEADERS. D1 of the 2026-09-04 audit: `curl -I https://hoodii.studio` returned
+   * `Strict-Transport-Security` and nothing else. Verified again on 2026-09-04 before writing this:
+   * one header. HSTS itself comes from Vercel, not from this file.
+   *
+   * These four are the cheap, no-behaviour-change ones. They are here rather than in `vercel.json`
+   * so they are reviewable in the repo alongside the routes they protect, and so a preview
+   * deployment gets them too.
+   *
+   * NO CONTENT-SECURITY-POLICY YET, DELIBERATELY, and this is also the answer to A9. A comment in
+   * `src/lib/kitchen/timers.ts` asserted that "the strict CSP on this site blocks anything off-host
+   * anyway", and there was no CSP: not here, not in vercel.json, not in src/proxy.ts. A comment
+   * that claims a security control which does not exist is worse than no comment, because the next
+   * person to add an off-host script reads it and believes they are covered. That comment now says
+   * what is actually true; see it for the current statement.
+   *
+   * A real CSP here is not a one-liner, which is why it is not in this commit rather than being
+   * half-done: the hub inlines a `ld+json` script, recipe photos come from TheMealDB, cover images
+   * from Open Library, and the fonts are self-hosted by next/font but the ImageResponse routes are
+   * not in the document at all. Getting it wrong silently breaks images on the surface he cooks
+   * from. The path is `Content-Security-Policy-Report-Only` first, read the reports, then enforce.
+   */
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          /* Stops a browser second-guessing a declared Content-Type. The concrete risk on this site
+             is the JSON API routes and the generated PNGs: a sniffed type is how a response meant
+             as data gets treated as script. */
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          /* Send the full URL within this origin, and only the origin to anyone else. The reason it
+             matters here rather than generically: this site's filter pages carry state in the query
+             string, and /reading/shelf and /kitchen/find hotlink out to external sources. Without
+             this, following one of those links hands the third party the full filtered URL. */
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          /* Nothing on this site uses a camera, a microphone or geolocation. Saying so means a
+             future dependency cannot quietly ask for one. */
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+          /* No page here is meant to be framed, and the login form is the reason to care: framing
+             it is the setup for a clickjacked password field. `frame-ancestors` in a CSP is the
+             modern spelling and supersedes this, so when the CSP above lands, this becomes
+             redundant rather than wrong. */
+          { key: 'X-Frame-Options', value: 'DENY' },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       { source: '/en', destination: '/', permanent: true },
@@ -83,6 +131,31 @@ const nextConfig: NextConfig = {
       /* Everything else that page was: the Overview tab, and a bare /gym/conditioning. Overview
        * became /health, which is the index now. */
       { source: '/gym/conditioning', destination: '/health', permanent: false },
+
+      /* THE FOUR LOGIN PAGES ARE ONE, 2026-09-04, and these keep every old URL working.
+       *
+       * /kitchen/login, /gym/login, /health/login and /french/login were four near-identical forms
+       * for one cookie and one password. Section F of that day's audit put them under "what is not
+       * worth it", and their per-app redirect guards were A3: signing in from /reading/shelf landed
+       * in the kitchen because the shelf path does not start with /kitchen.
+       *
+       * They are redirected rather than deleted outright because they are reachable from outside
+       * the repo. AGENTS.md tells anyone unlocking a device by hand to visit /kitchen/login, three
+       * in-page links pointed at it for a year, and a login page is exactly the kind of URL that
+       * ends up bookmarked on a phone.
+       *
+       * `:path*` is not used and must not be: these were leaf pages, and a wildcard would swallow
+       * a future /kitchen/login-something. The `to` query survives on its own, because Next carries
+       * unmatched query parameters through a redirect.
+       *
+       * 307 rather than 308, matching the two above and for the same reason: a permanent redirect
+       * is cached by the browser forever, and consolidating four forms into one is an architecture
+       * decision rather than a URL law. */
+      ...['kitchen', 'gym', 'health', 'french'].map((app) => ({
+        source: `/${app}/login`,
+        destination: '/login',
+        permanent: false,
+      })),
 
       /* The vercel.app copy of the whole site, sent home.
        *

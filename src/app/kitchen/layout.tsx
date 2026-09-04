@@ -20,8 +20,10 @@ export const metadata: Metadata = {
 export default function KitchenLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="kos">
-      {/* In the layout, so /kitchen/find, /kitchen/want, /kitchen/shop, every dish page and
-          /kitchen/login all get a way home without anyone having to remember. */}
+      {/* In the layout, so /kitchen/find, /kitchen/want, /kitchen/shop and every dish page get a
+          way home without anyone having to remember. /kitchen/login was in this list until
+          2026-09-04; the four login pages are now one route at /login, which carries its own exit
+          because at the root there is no app layout to mount this header. */}
       <SiteHeader app="Kitchen" />
       {/* Above the page rather than inside it, because a timer belongs to the kitchen and not to
           whichever recipe happened to start it. This is what makes a pasta timer visible while he

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { getShelfBundle } from '@/lib/reading/shelf-db';
 import WantButton from './WantButton';
 import {
@@ -88,10 +88,10 @@ export default async function ShelfCheck({
   return (
     <div className="reading">
       <p className="surf-nav">
-        <Link className="rtab" href="/reading">Next up</Link>
+        <WalledLink className="rtab" href="/reading">Next up</WalledLink>
         <span className="rtab on">Browse</span>
-        <Link className="rtab" href="/reading/want">Want</Link>
-        <Link className="rtab" href="/reading/finished">Finished</Link>
+        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
+        <WalledLink className="rtab" href="/reading/finished">Finished</WalledLink>
       </p>
 
       <h1>Browse</h1>
@@ -100,7 +100,7 @@ export default async function ShelfCheck({
         in your hand, or walk the alphabet by author. At home: sort by best, shortest or best
         rated and see what turns up.
         {wantKeys.size > 0 && (
-          <> <Link href="/reading/want">{wantKeys.size} saved to your want list</Link>.</>
+          <> <WalledLink href="/reading/want">{wantKeys.size} saved to your want list</WalledLink>.</>
         )}
       </p>
 
@@ -122,9 +122,9 @@ export default async function ShelfCheck({
 
       {/* The two controls, side by side, the way both reference catalogues do it. */}
       <div className="toolbar">
-        <Link className={`toolbtn ${nFilters ? 'on' : ''}`} href={shelfHref(filters, { open: !filters.open })}>
+        <WalledLink className={`toolbtn ${nFilters ? 'on' : ''}`} href={shelfHref(filters, { open: !filters.open })}>
           Filters{nFilters > 0 && <span className="badge">{nFilters}</span>}
-        </Link>
+        </WalledLink>
         <details className="sortbox">
           <summary>
             <span className="k">Sort</span>
@@ -132,10 +132,10 @@ export default async function ShelfCheck({
           </summary>
           <div className="sortmenu">
             {SORTS.map((s) => (
-              <Link key={s} className={`sortopt ${s === sort ? 'on' : ''}`} href={shelfHref(filters, { sort: s })}>
+              <WalledLink key={s} className={`sortopt ${s === sort ? 'on' : ''}`} href={shelfHref(filters, { sort: s })}>
                 <span className="so-name">{sortLabel[s]}</span>
                 <span className="so-note">{sortNote[s]}</span>
-              </Link>
+              </WalledLink>
             ))}
           </div>
         </details>
@@ -145,44 +145,44 @@ export default async function ShelfCheck({
         <div className="filterpanel">
           <p className="fp-label">Section</p>
           <div className="chiprow">
-            <Link className={`chip ${!filters.shelf ? 'on' : ''}`} href={shelfHref(filters, { shelf: undefined, letter: undefined })}>
+            <WalledLink className={`chip ${!filters.shelf ? 'on' : ''}`} href={shelfHref(filters, { shelf: undefined, letter: undefined })}>
               every section ({shelfCounts.all.toLocaleString()})
-            </Link>
+            </WalledLink>
             {SHELVES.map((s) => (
-              <Link key={s} className={`chip ${filters.shelf === s ? 'on' : ''}`}
+              <WalledLink key={s} className={`chip ${filters.shelf === s ? 'on' : ''}`}
                 href={shelfHref(filters, { shelf: filters.shelf === s ? undefined : s, letter: undefined })}>
                 {shelfLabel[s]} ({(shelfCounts.byShelf[s] ?? 0).toLocaleString()})
-              </Link>
+              </WalledLink>
             ))}
           </div>
 
           <p className="fp-label">How well vetted</p>
           <div className="chiprow">
-            <Link className={`chip ${!filters.tier ? 'on' : ''}`} href={shelfHref(filters, { tier: undefined })}>
+            <WalledLink className={`chip ${!filters.tier ? 'on' : ''}`} href={shelfHref(filters, { tier: undefined })}>
               worth pulling ({((tierCounts.grab ?? 0) + (tierCounts.good ?? 0)).toLocaleString()})
-            </Link>
+            </WalledLink>
             {TIERS.map((t) => (
-              <Link key={t} className={`chip chip-${t} ${filters.tier === t ? 'on' : ''}`}
+              <WalledLink key={t} className={`chip chip-${t} ${filters.tier === t ? 'on' : ''}`}
                 href={shelfHref(filters, { tier: filters.tier === t ? undefined : t })}>
                 {tierChip[t]} ({(tierCounts[t] ?? 0).toLocaleString()})
-              </Link>
+              </WalledLink>
             ))}
           </div>
 
           <p className="fp-label">Era</p>
           <div className="chiprow">
-            <Link className={`chip ${!filters.era ? 'on' : ''}`} href={shelfHref(filters, { era: undefined })}>any year</Link>
+            <WalledLink className={`chip ${!filters.era ? 'on' : ''}`} href={shelfHref(filters, { era: undefined })}>any year</WalledLink>
             {ERAS.map((e) => (
-              <Link key={e} className={`chip ${filters.era === e ? 'on' : ''}`}
+              <WalledLink key={e} className={`chip ${filters.era === e ? 'on' : ''}`}
                 href={shelfHref(filters, { era: filters.era === e ? undefined : e })}>
                 {eraLabel[e]} ({eraCounts[e].toLocaleString()})
-              </Link>
+              </WalledLink>
             ))}
           </div>
 
           {nFilters > 0 && (
             <p className="fp-clear">
-              <Link href={shelfHref({ sort, open: true }, {})}>Clear all filters</Link>
+              <WalledLink href={shelfHref({ sort, open: true }, {})}>Clear all filters</WalledLink>
             </p>
           )}
         </div>
@@ -197,11 +197,11 @@ export default async function ShelfCheck({
             const on = filters.letter === L;
             if (!n) return <span key={L} className="lt empty" aria-hidden="true">{L}</span>;
             return (
-              <Link key={L} className={`lt ${on ? 'on' : ''}`}
+              <WalledLink key={L} className={`lt ${on ? 'on' : ''}`}
                 href={shelfHref(filters, { letter: on ? undefined : L, q: undefined })}
                 aria-label={`${L}, ${n} book${n === 1 ? '' : 's'}`}>
                 {L}<span className="ltn">{n}</span>
-              </Link>
+              </WalledLink>
             );
           })}
         </div>
@@ -222,10 +222,10 @@ export default async function ShelfCheck({
 
       {total > 1 && (
         <p className="pickline">
-          <Link className="pickbtn" href={pickHref(filters, seed)}>
+          <WalledLink className="pickbtn" href={pickHref(filters, seed)}>
             {picked ? 'Pick another' : 'Surprise me'}
-          </Link>
-          {picked && <Link className="pickclear" href={shelfHref(filters, {})}>show all {total.toLocaleString()}</Link>}
+          </WalledLink>
+          {picked && <WalledLink className="pickclear" href={shelfHref(filters, {})}>show all {total.toLocaleString()}</WalledLink>}
         </p>
       )}
 
@@ -249,11 +249,11 @@ export default async function ShelfCheck({
       {totalPages > 1 && !picked && (
         <nav className="pager" aria-label="Pagination">
           {(filters.page ?? 1) > 1 && (
-            <Link className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) - 1 })}>Previous</Link>
+            <WalledLink className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) - 1 })}>Previous</WalledLink>
           )}
           <span className="pager-pos">Page {filters.page} of {totalPages}</span>
           {(filters.page ?? 1) < totalPages && (
-            <Link className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) + 1 })}>Next</Link>
+            <WalledLink className="chip" href={shelfHref(filters, { page: (filters.page ?? 1) + 1 })}>Next</WalledLink>
           )}
         </nav>
       )}
@@ -272,7 +272,7 @@ export default async function ShelfCheck({
         made every Edgar winner look like a long shot. A <strong>grab</strong> in mystery means
         best of the mysteries.
       </p>
-      <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
+      <p className="src"><WalledLink href="/reading/about">How this works and where the numbers come from</WalledLink></p>
     </div>
   );
 }

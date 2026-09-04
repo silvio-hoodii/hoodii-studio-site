@@ -64,16 +64,19 @@ const READ_ONLY_POSTS = new Set([
  * the build until somebody says which it is. That is the cheap half of the problem: the expensive half
  * is nobody noticing the file exists.
  *
- * The four login pages' `signIn` actions are here for completeness rather than as an exemption. They
- * set the cookie, which is how a device becomes authorised, so they cannot require being authorised;
+ * The login page's `signIn` action is here for completeness rather than as an exemption. It sets the
+ * cookie, which is how a device becomes authorised, so it cannot require being authorised;
  * `src/lib/login-server.ts` is the one place that happens and `scripts/lint-auth.mjs` gates it.
+ *
+ * THERE WAS ONE ENTRY PER APP HERE UNTIL 2026-09-04: /kitchen/login, /gym/login, /health/login and
+ * /french/login were four near-identical forms for one cookie and one password, and their per-app
+ * redirect guards were A3 of that day's audit. One route, one entry. Note that this inventory is
+ * what caught the consolidation: deleting the four files failed this gate until the map was
+ * updated, which is the inventory doing exactly its job.
  * ------------------------------------------------------------------------------------------- */
 const SERVER_ACTION_FILES = new Map([
   ['src/app/kitchen/want/actions.ts', 'READ ONLY: scores a pasted ingredient list, returns strings, writes nothing'],
-  ['src/app/kitchen/login/page.tsx', 'PUBLIC BY NECESSITY: signIn, the gate itself. See src/lib/login-server.ts'],
-  ['src/app/gym/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
-  ['src/app/health/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
-  ['src/app/french/login/page.tsx', 'PUBLIC BY NECESSITY: signIn'],
+  ['src/app/login/page.tsx', 'PUBLIC BY NECESSITY: signIn, the gate itself. See src/lib/login-server.ts'],
 ]);
 
 function auditServerActions() {
@@ -158,10 +161,105 @@ for (const s of stubbed) {
   }
 }
 
+/* ---- no plain <Link> to a firewall-challenged path. A7 of the 2026-09-04 audit ----------------
+ *
+ * Rule 3 of the off-repo Vercel firewall puts an edge challenge on /kitchen/find, /reading/shelf
+ * and /reading/want. Next prefetches a `<Link>` when it scrolls into view, so eighteen plain Links
+ * to those three paths meant every load of /kitchen fired four 429s, each one a counted request
+ * against the same 150-per-minute rule that protects the site, spent on a request the edge is
+ * configured to refuse.
+ *
+ * `src/components/WalledLink.tsx` sets `prefetch={false}` for a walled href and behaves like a
+ * normal Link otherwise. This is the part that makes it stick: the nineteenth link cannot forget,
+ * because the build refuses it. Without this, the component is just a suggestion, and AGENTS.md's
+ * own conclusion about this exact firewall rule is that "naming paths one at a time loses".
+ *
+ * It lives in THIS script rather than a new one because this file already owns the relationship
+ * between route shapes and off-repo configuration, and a fifth lint script is a fifth thing to
+ * remember to wire into the build.
+ */
+const WALLED_LIB = join(process.cwd(), 'src', 'lib', 'walled.ts');
+const walledSrc = readFileSync(WALLED_LIB, 'utf8');
+const walledMatch = walledSrc.match(/export const WALLED_PATHS = \[([^\]]*)\]/);
+if (!walledMatch) {
+  console.error('FAIL  could not find WALLED_PATHS in src/lib/walled.ts. Did it move or get renamed?');
+  process.exit(1);
+}
+const walled = [...walledMatch[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
+if (!walled.length) {
+  console.error('FAIL  WALLED_PATHS in src/lib/walled.ts is empty. If rule 3 was removed, delete the');
+  console.error('      component and this check together rather than leaving both pointing at nothing.');
+  process.exit(1);
+}
+
+let walledChecked = 0;
+(function walkSrc(dir) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) { walkSrc(full); continue; }
+    if (!/\.tsx$/.test(entry)) continue;
+    /* The component itself legitimately mentions every walled path in its own prose, and so does
+       the library. Skip both by path: they are the definition, not a call site. */
+    const rel = full.replace(process.cwd(), '').replace(/\\/g, '/');
+    if (rel.endsWith('/src/components/WalledLink.tsx')) continue;
+    walledChecked++;
+    const src = readFileSync(full, 'utf8');
+
+    /* ---- the rule that catches a href nobody wrote as a literal ----------------------------
+     *
+     * THE LITERAL CHECK BELOW IS NOT ENOUGH, and finding that out is worth the paragraph. It
+     * passed with 0 failures while /kitchen/find fired 58 prefetches at walled URLs and
+     * /reading/shelf fired 54, because those pages link to THEMSELVES through a helper:
+     *
+     *     href={shelfHref(filters, { letter: L })}   ->  /reading/shelf?letter=Z
+     *     href={href(filters, { uses: i.id })}       ->  /kitchen/find?uses=chickenthighs
+     *
+     * There is no walled path in the source of those lines at all, so no string check can see
+     * them. And they are the expensive ones: the shelf's 27-letter rail alone is 27 prefetches
+     * of the page that took 178,000 invocations in twelve hours on 2026-08-24, which is the
+     * incident firewall rule 3 exists because of.
+     *
+     * So the rule is structural rather than textual. A .tsx file inside a walled route's own
+     * directory links to that route constantly, by construction: filter chips, sort options, a
+     * letter rail, a "clear all" reset. Such a file may not import `next/link` at all. It uses
+     * WalledLink, which is a plain Link for any href that is not walled, so this costs nothing
+     * on the ordinary links in the same file and needs nobody to work out which is which.
+     *
+     * This is the difference between checking instances and removing the class: the literal
+     * check tells you about the link you wrote, and this one is true of the link you have not
+     * written yet. */
+    const inWalledDir = walled.some((p) => rel.startsWith(`/src/app${p}/`));
+    if (inWalledDir && src.includes("from 'next/link'")) {
+      const line = src.slice(0, src.indexOf("from 'next/link'")).split(/\r?\n/).length;
+      console.error(`FAIL  ${rel}:${line}  imports next/link inside a firewall-challenged route.`);
+      console.error('      A page in this directory links to itself with a built href, which no');
+      console.error('      string check can see, and every such Link prefetches a 429.');
+      console.error('      Use WalledLink from @/components/WalledLink for every link in this file.');
+      fail++;
+    }
+
+    /* An opening <Link tag, with its attributes, up to the closing angle bracket. Deliberately not
+       trying to parse JSX: the question is only whether a tag named Link carries a walled href and
+       lacks prefetch={false}, and both halves are visible in the opening tag. */
+    for (const m of src.matchAll(/<Link\b([^>]*)>/g)) {
+      const attrs = m[1];
+      const hit = walled.find((p) => attrs.includes(`"${p}`) || attrs.includes('`' + p));
+      if (!hit) continue;
+      if (/prefetch=\{false\}/.test(attrs)) continue;
+      const line = src.slice(0, m.index).split(/\r?\n/).length;
+      console.error(`FAIL  ${rel}:${line}  plain <Link> to ${hit}, which the edge challenges.`);
+      console.error('      Next prefetches this on viewport entry and the firewall answers 429.');
+      console.error('      Use WalledLink from @/components/WalledLink, or prefetch={false}.');
+      fail++;
+    }
+  }
+})(join(process.cwd(), 'src'));
+
 console.log('-'.repeat(70));
 console.log(
   `${routes.length} POST route(s) under ${API_ROOTS.map((r) => r.url).join(' + ')}, ${stubbed.size} stubbed, ` +
     `${READ_ONLY_POSTS.size} read-only by declaration, ${actions.found} server-action file(s) declared, ` +
+    `${walledChecked} tsx file(s) checked against ${walled.length} walled path(s), ` +
     `${fail} failures`,
 );
 process.exit(fail ? 1 : 0);

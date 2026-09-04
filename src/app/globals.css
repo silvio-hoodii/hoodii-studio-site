@@ -822,6 +822,79 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
   color: var(--muted-foreground);
 }
 
+/* ---- the login ----
+ *
+ * Here for the same reason `.notfound` below is: `/login` serves every app, so it cannot live under
+ * any app's segment, which means it renders in the root layout with no per-surface stylesheet
+ * loaded. There were four login pages until 2026-09-04, one inside each of four app layouts, and
+ * each borrowed its host surface's `.wrap`, `.eyebrow` and `.changes`. Those three classes are
+ * defined four, three and three times respectively across the surface stylesheets, so "reuse them"
+ * was never an option for a page that belongs to none of them.
+ *
+ * Deliberately not `.wrap`: this page is a form in the middle of nothing, not a document, and
+ * giving it the reading column's name would invite the next person to move it into a surface. */
+.login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: clamp(48px, 12vw, 96px) 20px 64px;
+  font-family: var(--font-sans);
+}
+
+.login .eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.login h1 {
+  margin: 12px 0 0;
+}
+
+.login p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+}
+
+.login form {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login input[type='password'],
+.login button {
+  width: 100%;
+}
+
+.login .wrong {
+  margin: 0;
+  font-size: 13px;
+  color: var(--destructive);
+}
+
+/* An exit, because at the root there is no app layout and therefore no SiteHeader. 44px because it
+   is a control someone aims at, and the tap probe measures it. */
+.login .back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.login .back:hover {
+  color: var(--foreground);
+}
+
 /* ---- 404 ----
  * Global rather than a surface stylesheet: a root not-found renders inside the root layout, so
  * none of the per-surface CSS is loaded when it appears. */

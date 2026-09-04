@@ -131,6 +131,17 @@ const DEFAULT_PATHS = [
      readiness gate passed it as a measured surface for as long as the list has existed. So four
      published pages went unmeasured while the run reported covering them. */
   '/work/brixel', '/work/kitchen', '/work/themoment', '/work/versatile',
+  /* THE GATE ITSELF WAS NEVER IN THIS LIST. Four login pages existed for a year, each with a
+     password field and a submit button, which is exactly the shape the 44px floor exists for, and
+     none of them was ever measured here. The 2026-09-04 audit measured them only because its own
+     scratch driver added them by hand, which is the same "the measured set is not the real set"
+     failure this list already records twice above (`/work`, and the two wrong swim sub-tabs).
+     They are one route as of 2026-09-04. `?to=` is carried because the eyebrow and the exit link
+     are both derived from it, so the bare path renders a page with one fewer control on it. */
+  '/login', '/login?to=/reading/shelf',
+  /* Not a route anyone navigates to on purpose, and it renders a code plus a copy control on a
+     phone, which is the only reason it is here rather than left out. */
+  '/callback',
 ];
 const PATHS = process.argv.length > 3 ? process.argv.slice(3) : DEFAULT_PATHS;
 
@@ -393,6 +404,47 @@ let measured = 0;
 const report = [];
 
 for (const path of PATHS) {
+  /* THE STATUS CODE, ASKED FOR DIRECTLY, BEFORE THE BROWSER IS INVOLVED. Added 2026-09-04.
+   *
+   * The readiness gate below used to carry this job and could not do it. It inferred "did this path
+   * resolve to a real page" from the SIZE of what rendered, `controls >= 3 && chars >= 200`, and
+   * those two numbers were chosen against the app surfaces, which are long. Measured on this build:
+   *
+   *     /work (the 404)   1 control    103 chars      must fail
+   *     /login            5 controls   123 chars      must pass
+   *     /callback         2 controls   181 chars      must pass
+   *
+   * There is no pair of thresholds that separates those three. Adding `/login` to the path list
+   * made the gate report "rendered nothing measurable" about a page that had rendered completely,
+   * which is a false FAILURE, and the same heuristic tuned any looser starts admitting the 404,
+   * which is the false PASS it was written to stop. Its own comment says the floor "could be
+   * raised past 844, but that is the instance and not the class" and then picks two more numbers.
+   *
+   * A 404 is not a small page. It is a 404, and it says so in one byte that no threshold can
+   * disagree with. So the two questions are separated: HTTP status answers "is this a route", and
+   * the DOM check below answers only "did it paint". Neither is now guessing at the other's job,
+   * and no number here is tuned to the length of any particular page.
+   *
+   * `redirect: 'manual'` on purpose: a path in this list that has become a redirect is a stale
+   * list, not a pass, and following it would measure a different page while reporting this one.
+   * That is what let `/work` sit here for weeks measuring the 404. */
+  let status = null;
+  let statusErr = null;
+  try {
+    const res = await fetch(BASE + path, { redirect: 'manual' });
+    status = res.status;
+  } catch (e) {
+    statusErr = String((e && e.message) || e);
+  }
+  if (status !== 200) {
+    console.log(`FAIL  ${path}  did not answer 200 (${statusErr ? `fetch failed: ${statusErr}` : `HTTP ${status}`})`);
+    if (status === 404) console.log('        Not a route. Fix DEFAULT_PATHS, not the CSS.');
+    else if (status === 429) console.log('        The Vercel firewall. Probe a local `pnpm start`, not the live domain.');
+    else if (status && status >= 300 && status < 400) console.log('        A redirect. This path moved: update DEFAULT_PATHS to where it went.');
+    fail++;
+    continue;
+  }
+
   const target = await openTab(BASE + path);
   const c = connect(target);
   await c.ready;
@@ -438,9 +490,18 @@ for (const path of PATHS) {
    *
    * The floor could be raised past 844, but that is the instance and not the class: the next viewport
    * height would defeat it again, and a real page shorter than the floor would start failing. So the
-   * evidence is now something an unpainted document cannot produce. Every page on this site renders a
-   * header, a nav and a footer, so a rendered one always carries anchors and a page of text. */
-  const arrived = (x) => (x?.controls ?? 0) >= 3 && (x?.chars ?? 0) >= 200;
+   * evidence is now something an unpainted document cannot produce.
+   *
+   * NARROWED ON 2026-09-04 to ask ONLY "did it paint", because the status check above now answers
+   * "is this a route". It was `controls >= 3 && chars >= 200`, and those numbers were doing both
+   * jobs: the 200-character floor existed to exclude the 404, and it therefore also excluded
+   * /login, a complete page with 5 controls and 123 characters on it.
+   *
+   * One control and forty characters is the floor now. An unpainted document produces zero and
+   * zero, which is the only thing this needs to separate: a 404 or a challenge never reaches here.
+   * The floor is deliberately far below every real page rather than just below the shortest one,
+   * so adding a terser page later does not re-tune it. */
+  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 40;
   let m = null;
   let prev = null;
   let stable = false;

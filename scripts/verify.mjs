@@ -97,6 +97,16 @@ const GATES = [
    * reasoning about it, and the first three written turned out to pass on the broken version. One of
    * the three that survived prints a NEGATIVE remainder unclamped. Watched refusing before trusted. */
   ['format-tests', process.execPath, ['--experimental-strip-types', 'src/lib/format.test.ts']],
+  /* THE LOGIN RETURN PATH. Added 2026-09-04 with the consolidation of four login pages into one.
+   *
+   * This one is here because the change it covers LOOSENED a redirect guard. The bug (A3) was that
+   * each login page checked its own app's prefix, so a correct password from /reading/shelf landed
+   * in the kitchen. The fix accepts any same-origin path, and "accept more paths" on the form
+   * guarding the site's only credential is precisely the change that introduces an open redirect if
+   * it is done carelessly. The must-reject half of that suite is the half that earns its place:
+   * `//host`, `/` plus backslash, and the whitespace-smuggled variants that get past a naive check
+   * and are then normalised by something downstream. */
+  ['return-to-tests', process.execPath, ['--experimental-strip-types', 'src/lib/return-to.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

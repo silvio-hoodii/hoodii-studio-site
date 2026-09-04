@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import KitchenNav from '../KitchenNav';
 import { findCandidates, type Candidate } from '@/lib/kitchen/corpus';
 // Shared with the home page. Two surfaces describing a dish from their own copy of this markup is

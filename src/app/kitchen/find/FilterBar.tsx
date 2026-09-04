@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import type { Filters } from '@/lib/kitchen/corpus';
 
 /* Filtering, as plain links and one GET form.
@@ -70,15 +70,15 @@ export function FilterBar({
         <summary>{active ? 'Filters' : 'Narrow it down'}</summary>
       <div className="chiprow" role="group" aria-label="How much is missing">
         <span className="chiplabel">Show</span>
-        <Link className={`chip ${filters.max === 0 ? 'on' : ''}`} href={href(filters, { max: filters.max === 0 ? undefined : 0 })}>
+        <WalledLink className={`chip ${filters.max === 0 ? 'on' : ''}`} href={href(filters, { max: filters.max === 0 ? undefined : 0 })}>
           nothing missing
-        </Link>
-        <Link className={`chip ${filters.max === 1 ? 'on' : ''}`} href={href(filters, { max: filters.max === 1 ? undefined : 1 })}>
+        </WalledLink>
+        <WalledLink className={`chip ${filters.max === 1 ? 'on' : ''}`} href={href(filters, { max: filters.max === 1 ? undefined : 1 })}>
           up to 1 missing
-        </Link>
-        <Link className={`chip ${filters.max === 2 ? 'on' : ''}`} href={href(filters, { max: filters.max === 2 ? undefined : 2 })}>
+        </WalledLink>
+        <WalledLink className={`chip ${filters.max === 2 ? 'on' : ''}`} href={href(filters, { max: filters.max === 2 ? undefined : 2 })}>
           up to 2 missing
-        </Link>
+        </WalledLink>
       </div>
 
       {/* WHAT KIND OF FOOD, first, because it is the question a person asks before any other.
@@ -90,7 +90,7 @@ export function FilterBar({
         <div className="chiprow" role="group" aria-label="What kind of food">
           <span className="chiplabel">Kind</span>
           {courseFacets.map((c) => (
-            <Link
+            <WalledLink
               key={c.id}
               className={`chip ${filters.course === c.id ? 'on' : ''}`}
               href={href(filters, {
@@ -99,7 +99,7 @@ export function FilterBar({
               })}
             >
               {c.label} <i>{c.count}</i>
-            </Link>
+            </WalledLink>
           ))}
         </div>
       )}
@@ -114,7 +114,7 @@ export function FilterBar({
               untouched, because that is him asking a different question on purpose. */}
           <span className="chiplabel">Ready with</span>
           {usesFacets.map((u) => (
-            <Link
+            <WalledLink
               key={u.id}
               className={`chip ${filters.uses === u.id ? 'on' : ''}`}
               href={href(filters, {
@@ -123,7 +123,7 @@ export function FilterBar({
               })}
             >
               {u.name} <i>{u.count}</i>
-            </Link>
+            </WalledLink>
           ))}
         </div>
       )}
@@ -132,13 +132,13 @@ export function FilterBar({
         <div className="chiprow" role="group" aria-label="Filter by cuisine">
           <span className="chiplabel">Cuisine</span>
           {cuisineFacets.map((c) => (
-            <Link
+            <WalledLink
               key={c.name}
               className={`chip ${filters.cuisine === c.name ? 'on' : ''}`}
               href={href(filters, { cuisine: filters.cuisine === c.name ? undefined : c.name })}
             >
               {c.name} <i>{c.count}</i>
-            </Link>
+            </WalledLink>
           ))}
         </div>
       )}
@@ -147,7 +147,7 @@ export function FilterBar({
 
       {active && (
         <p className="quiet" style={{ marginTop: 10 }}>
-          <b>{matched}</b> of {total} match. <Link href="/kitchen/find">Clear all filters</Link>
+          <b>{matched}</b> of {total} match. <WalledLink href="/kitchen/find">Clear all filters</WalledLink>
         </p>
       )}
     </div>

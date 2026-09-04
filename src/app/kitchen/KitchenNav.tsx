@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 
 /* One strip, on every kitchen surface except the cook screen.
  *
@@ -47,7 +47,7 @@ export default function KitchenNav({ here }: { here: 'home' | 'find' | 'want' | 
       {TABS.map((t) => (
         t.key === current
           ? <span key={t.key} className="kosnav-here" aria-current="page">{t.label}</span>
-          : <Link key={t.key} href={t.href}>{t.label}</Link>
+          : <WalledLink key={t.key} href={t.href}>{t.label}</WalledLink>
       ))}
     </nav>
   );

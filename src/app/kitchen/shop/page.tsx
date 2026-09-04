@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import KitchenNav from '../KitchenNav';
 import { shoppingView } from '@/lib/kitchen/shop';
 import { shoppingList } from '@/lib/kitchen/list';
@@ -109,7 +110,7 @@ export default async function Shop() {
         <ul className="plainlist">
           {d.idle.map((i) => (
             <li key={i.id}>
-              <Link href={`/kitchen/find?uses=${encodeURIComponent(i.id)}`}>{i.name}</Link>
+              <WalledLink href={`/kitchen/find?uses=${encodeURIComponent(i.id)}`}>{i.name}</WalledLink>
               <span>
                 {i.daysLeft !== null
                   ? dueInText(i.daysLeft)
