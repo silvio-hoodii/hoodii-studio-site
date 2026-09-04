@@ -261,11 +261,32 @@ export interface MuscleRow {
    * fitted on" and not the same thing: a carry is loaded and still is not a hypertrophy set. Where
    * they disagree, the honest reading is the one that does not decide anything on its own. */
   loadedSets: number;
+  /** DIRECT sets: only where this muscle is a PRIME MOVER of an action the lift performs. This is
+   *  the number the gate grades, and it had no home on this row until 2026-09-03.
+   *
+   *  `scripts/gym-targets.mjs` derived it inline from `byDayDetail`, which made it a second
+   *  implementation living outside the module that owns the arithmetic, and /health?s=volume could
+   *  not see it at all. So the page badged every row off `loadedSets` and `sets`, both fractional,
+   *  while the gate graded direct. THE TWO DISAGREED IN PUBLIC. Triceps, spinal erectors and grip
+   *  each sit on exactly 4 direct sets, the bare floor, and the page told him all three were "past
+   *  the cheap band" — do less of a thing he is doing the least of. Abdominals ran the other way,
+   *  labelled "at the minimum" on 10 direct sets, which is the target.
+   *
+   *  The unit changed on 2026-09-01 when targets.json was rewritten to grade direct, and this page
+   *  was never moved with it. A number that changes meaning has to be chased into every surface
+   *  that renders it, and the cheapest way to make that true is to compute it ONCE, here. */
+  directSets: number;
   tier: Tier;
   /** The tier of `loadedSets`, which is the one a dose decision should be read against. */
   loadedTier: Tier;
   belowMinimum: boolean;
   pastEfficient: boolean;
+  /** The same two verdicts against `directSets`, which is what the gate and targets.json mean.
+   *  Kept beside the fractional pair rather than replacing it: `belowMinimum` and `pastEfficient`
+   *  are what content/gym/coverage-baseline.json was accepted against, and silently changing what
+   *  a recorded baseline measured is how a snapshot stops being a record. */
+  belowMinimumDirect: boolean;
+  pastEfficientDirect: boolean;
   byDay: number[];
   /* WHICH EXERCISES MAKE UP EACH OF THOSE DAY NUMBERS, added 2026-08-28 on his third attempt at
      asking for it: "you're saying glute, lower A, 13.5. Now I have to go up and somehow figure out
@@ -600,17 +621,24 @@ export function computeCoverage(
     .map(([muscle, sets]) => {
       const tier = tierFor(HYPERTROPHY_TIERS, sets);
       const loadedSets = perMuscleLoaded.get(muscle) ?? 0;
+      const detail = dayOrder.map((d) => perMuscleDetail.get(muscle)?.get(d) ?? []);
+      /* The same expression scripts/gym-targets.mjs used inline until 2026-09-03, moved here so the
+         gate and the page cannot disagree about what a muscle is getting. */
+      const directSets = detail.flat().filter((e) => e.primary).reduce((a, e) => a + (e.rawSets ?? e.sets ?? 0), 0);
       return {
         muscle,
         label: cat.muscles[muscle] ?? muscle,
         sets,
         loadedSets,
+        directSets,
         tier,
         loadedTier: tierFor(HYPERTROPHY_TIERS, loadedSets),
         belowMinimum: sets < MIN_EFFECTIVE_DOSE,
         pastEfficient: sets > EFFICIENT_ZONE_TOP,
+        belowMinimumDirect: directSets < MIN_EFFECTIVE_DOSE,
+        pastEfficientDirect: directSets > EFFICIENT_ZONE_TOP,
         byDay: dayOrder.map((d) => perMuscleByDay.get(d)?.get(muscle) ?? 0),
-        byDayDetail: dayOrder.map((d) => perMuscleDetail.get(muscle)?.get(d) ?? []),
+        byDayDetail: detail,
       };
     });
 
@@ -715,8 +743,13 @@ export function computeCoverage(
     unsourced,
     missing,
     totals: {
-      below: muscleRows.filter((m) => m.belowMinimum).length,
-      pastEfficient: muscleRows.filter((m) => m.pastEfficient).length,
+      /* THESE TWO FEED THE SENTENCE UNDER THE TABLE ON /health?s=volume, so they have to count the
+         same thing the badges above them count, which is DIRECT. On the fractional count the
+         sentence read "7 are over the top of the band" while, by the measure the gate grades, the
+         real answer is 3 and eleven muscles are sitting on the bare floor. A summary that
+         contradicts the rows it summarises is worse than no summary. */
+      below: muscleRows.filter((m) => m.belowMinimumDirect).length,
+      pastEfficient: muscleRows.filter((m) => m.pastEfficientDirect).length,
       strictPairs: redundantPairs.filter((p) => p.strict).length,
       unsourcedNames: new Set(unsourced.map((u) => u.name)).size,
       strengthTiersSeen: strengthTiersSeen.size,

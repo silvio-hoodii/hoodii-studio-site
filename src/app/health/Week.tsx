@@ -131,8 +131,15 @@ export function RecoveryNotice({ week }: { week: TrainingWeek }) {
           .
         </>
       )}{' '}
-      The count above is arithmetic on sessions. It cannot tell you whether you are recovered, and
-      wearing the watch to bed is the only thing that would.
+      {/* THE SENTENCE HERE USED TO END "and wearing the watch to bed is the only thing that would".
+          Removed 2026-09-03 on his ruling: "sleeping will always be eincosjsten beacuse I dont wear
+          the watch to sleep". It read as a standing nudge toward a thing he has now settled, on the
+          page he opens most, and a suggestion left rendered is one he declines again every visit.
+          THIS WAS THE THIRD COPY. The other two were in conditioning.json, and fixing those without
+          grepping for the sentence left this one live on the surface he actually reads: a ruling is
+          not applied until every place that states the opposite has been found. */}
+      The count above is arithmetic on sessions. It is load, not recovery, and it cannot tell you
+      whether you are recovered.
     </div>
   );
 }

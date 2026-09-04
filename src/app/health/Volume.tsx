@@ -49,16 +49,32 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
  *
  * So the badge is now on every row and it says what the number MEANS, and the rows are ordered by
  * that meaning rather than by size. */
-function State({ below, past, loaded }: { below: boolean; past: boolean; loaded: number }) {
+/* THE BADGE READS `directSets`, AND IT READ THE FRACTIONAL COUNT UNTIL 2026-09-03.
+ *
+ * targets.json was rewritten on 2026-09-01 so the GATE grades DIRECT sets, for the reason its own
+ * header gives: a fractional count "let a muscle look trained on nothing but other lifts'
+ * assistance". This component was not moved with it, so for two days the page graded one number
+ * and the gate graded another, and they disagreed OUT LOUD on four of sixteen rows:
+ *
+ *   triceps          4 direct, 12 fractional   badged "past the cheap band"   gate: under target by 6
+ *   spinal erectors  4 direct, 13 fractional   badged "past the cheap band"   gate: under target by 6
+ *   grip             4 direct, 15 fractional   badged "past the cheap band"   gate: under target by 6
+ *   abdominals      10 direct, 4.5 loaded      badged "at the minimum"        gate: at target
+ *
+ * Three of those four are the DANGEROUS direction: "past the cheap band" reads as do less, on the
+ * three muscles getting the least direct work in the week. That is a false "you have this", which
+ * ENGINEERING.md's fifth law names as the asymmetry to hunt first. Found 2026-09-03 by comparing
+ * the rendered page against gym-targets.mjs rather than by reading either one on its own. */
+function State({ below, past, direct }: { below: boolean; past: boolean; direct: number }) {
   if (below) return <div className="vol-state under">under {MIN_EFFECTIVE_DOSE}, too little</div>;
-  if (loaded < MIN_EFFECTIVE_DOSE + 1) return <div className="vol-state">at the minimum</div>;
+  if (direct < MIN_EFFECTIVE_DOSE + 1) return <div className="vol-state">at the minimum</div>;
   if (past) return <div className="vol-state">past the cheap band</div>;
   return <div className="vol-state ok">in the cheap band</div>;
 }
 
 /* Worst first, then dearest, then the ones that are simply fine. Within a group, biggest first. */
-const VERDICT_ORDER = (m: { belowMinimum: boolean; pastEfficient: boolean; loadedSets: number }) =>
-  (m.belowMinimum ? 0 : m.loadedSets < MIN_EFFECTIVE_DOSE + 1 ? 1 : m.pastEfficient ? 2 : 3);
+const VERDICT_ORDER = (m: { belowMinimumDirect: boolean; pastEfficientDirect: boolean; directSets: number }) =>
+  (m.belowMinimumDirect ? 0 : m.directSets < MIN_EFFECTIVE_DOSE + 1 ? 1 : m.pastEfficientDirect ? 2 : 3);
 
 export default function Volume({
   coverage,
@@ -140,12 +156,12 @@ export default function Volume({
                 anything. I want to see one table." */}
             <tbody>
               {[...perMuscle]
-                .sort((a, b) => VERDICT_ORDER(a) - VERDICT_ORDER(b) || b.loadedSets - a.loadedSets)
+                .sort((a, b) => VERDICT_ORDER(a) - VERDICT_ORDER(b) || b.directSets - a.directSets)
                 .map((m) => (
                 <tr key={m.muscle}>
                   <td className="wide">
                     {m.label}
-                    <State below={m.belowMinimum} past={m.pastEfficient} loaded={m.loadedSets} />
+                    <State below={m.belowMinimumDirect} past={m.pastEfficientDirect} direct={m.directSets} />
                   </td>
                   {/* BOTH NUMBERS, since 2026-08-30, and only where they differ. His reading of this
                       table: "I don't know if all the exercises should represent the same weight ...

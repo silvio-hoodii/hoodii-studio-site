@@ -86,11 +86,15 @@ const cov = computeCoverage(program, cat);
 const frac = new Map(cov.perMuscle.map((m) => [m.muscle, m.sets]));
 const loaded = new Map(cov.perMuscle.map((m) => [m.muscle, m.loadedSets]));
 
-/* DIRECT: sets where this muscle is a prime mover. The number the gate is about. */
-const direct = new Map(cov.perMuscle.map((m) => [
-  m.muscle,
-  (m.byDayDetail ?? []).flat().filter((e) => e.primary).reduce((a, e) => a + (e.rawSets ?? e.sets ?? 0), 0),
-]));
+/* DIRECT: sets where this muscle is a prime mover. The number the gate is about.
+ *
+ * READ OFF THE ROW SINCE 2026-09-03 rather than re-derived here. The expression used to live in
+ * this file, which made it the only place in the system that knew the graded number, and
+ * /health?s=volume could not see it at all: that page badged every muscle off the FRACTIONAL count
+ * and told him triceps, erectors and grip were "past the cheap band" while this gate had all three
+ * under target by 6. A derivation that only one consumer can reach is how two surfaces of one
+ * system end up disagreeing in public. It is `directSets` on the row now. */
+const direct = new Map(cov.perMuscle.map((m) => [m.muscle, m.directSets]));
 /* SLOTS: how many separate appearances, which is a different question from how many sets. He asked
  * it directly on 2026-09-01: triceps appeared once a week while calves had three slots. */
 const slots = new Map(cov.perMuscle.map((m) => [
