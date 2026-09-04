@@ -1029,6 +1029,28 @@ const CASES = [
     expect: null,
   },
   {
+    /* His words, 2026-09-03: "Why is it starting the main lift with a shoulder press? Nothing makes
+     * sense." An accessory block had been slid between two main lifts that afternoon to satisfy the
+     * zone-route rule, and every gate stayed green while the day asked him to train his abs and then
+     * press overhead. The role order had been a convention for as long as the file existed. */
+    name: 'an accessory block sitting before a main lift is refused',
+    mutate: (p) => {
+      const day = Object.values(p.days).find((d) => (d.blocks || []).some((b) => b.role === 'accessory')
+        && (d.blocks || []).some((b) => b.role === 'main'));
+      if (!day) throw new Error('no day carries both a main and an accessory block');
+      const acc = day.blocks.findIndex((b) => b.role === 'accessory');
+      const firstMain = day.blocks.findIndex((b) => b.role === 'main');
+      const [blk] = day.blocks.splice(acc, 1);
+      day.blocks.splice(firstMain, 0, blk);
+    },
+    expect: 'Hard work comes first',
+  },
+  {
+    name: 'the real week, primer then mains then accessories, still passes',
+    mutate: () => {},
+    expect: null,
+  },
+  {
     name: 'a label that counts is refused',
     mutate: (p) => {
       /* The block is FOUND rather than named, for the reason the donor block above is: seven labels

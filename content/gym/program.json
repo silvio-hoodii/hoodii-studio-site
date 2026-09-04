@@ -386,7 +386,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Main Lift: Back Squat",
+          "label": "Back Squat",
           "tag": "(rack, dumbbells in hand)",
           "exercises": [
             {
@@ -668,27 +668,6 @@
             }
           ],
           "why": "The only exercise in the gym where your lower back is the muscle that moves rather than the muscle that holds on. It replaces the back extension you had been doing, which turned out to be hip work: with a flat back your bum moves you and your lower back just holds, the same as in a squat. That old version is the first swap option here and your weights on it are untouched. No load on this one until you tell me it is easy. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that your lower back gets nothing that week and the triceps fall from six sets to three. The tricep extension goes in the rest because the arms take no part in a back extension."
-        },
-        {
-          "role": "accessory",
-          "pairing": "fill",
-          "label": "Horizontal Push",
-          "exercises": [
-            {
-              "id": "assisted-dip",
-              "name": "Assisted Dip",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "machines",
-              "station": "assisted-dip",
-              "log": true,
-              "cue": "THE MACHINE HELPS YOU, so MORE weight on the stack makes this EASIER, not harder. That is backwards from every other machine on this card, which is why this asks you for more reps rather than more weight. HOW TO DO IT. Set the stack so that eight is just about all you can manage. Kneel or stand on the pad, take a handle in each hand, arms straight, and pull your shoulders DOWN away from your ears before you start. Lower yourself until your upper arms are level with the floor, then press back up until your arms are straight. Keep your elbows pointing backwards rather than flaring out sideways, and let your chest lean forward about the width of a hand. Success looks like: you feel it across the chest and the back of the upper arm, and you can come to a full stop at the bottom instead of dropping into it. If your shoulders creep up toward your ears, add assistance. THIS CUE IS A DRAFT: nobody has read it standing at the machine. Use the note box and say what it should say.",
-              "bodyweight": true,
-              "progression": "reps"
-            }
-          ],
-          "why": "Assisted dips on your ruling of 2026-09-03: you said you would rather do these than the cable exercise that was giving your arms their work. THEY COME IN ALONGSIDE THAT ONE RATHER THAN REPLACING IT, because your triceps sit on four sets a week and four is the floor, so taking the other out to make room would have dropped them under it. That is the second stop you accepted. Worth knowing what you are buying: a dip trains the chest first and the arms second, so three sets here add one and a half tricep sets rather than three, and the chest work is the larger part of it. PROGRESSION IS REPS AND NOT WEIGHT ON PURPOSE. On this machine the stack carries you, so \"add weight\" would make the exercise easier every week."
         }
       ]
     },
@@ -805,7 +784,7 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Main Lift: Romanian Deadlift",
+          "label": "Romanian Deadlift",
           "tag": "(rack, dumbbells in hand)",
           "exercises": [
             {
@@ -1116,18 +1095,27 @@
           "tag": "(machine, walk in hand)",
           "exercises": [
             {
-              "id": "pec-deck",
-              "name": "Chest Fly Machine",
+              "id": "assisted-dip",
+              "name": "Assisted Dip",
               "sets": 3,
               "reps": "8",
               "rest": "2 min",
               "zone": "machines",
-              "station": "pec-deck",
+              "station": "assisted-dip",
               "log": true,
-              "cue": "Elbows slightly bent and fixed, bring the arms together in front of you and squeeze for one second. Stretch, not a press.",
-              "progression": "weight",
-              "rangeWidth": 3,
+              "cue": "THE MACHINE HELPS YOU, so MORE weight on the stack makes this EASIER, not harder. That is backwards from every other machine on this card, which is why this asks you for more reps rather than more weight. HOW TO DO IT. Set the stack so that eight is just about all you can manage. Kneel or stand on the pad, take a handle in each hand, arms straight, and pull your shoulders DOWN away from your ears before you start. Lower yourself until your upper arms are level with the floor, then press back up until your arms are straight. Keep your elbows pointing backwards rather than flaring out sideways, and let your chest lean forward about the width of a hand. Success looks like: you feel it across the chest and the back of the upper arm, and you can come to a full stop at the bottom instead of dropping into it. If your shoulders creep up toward your ears, add assistance. THIS CUE IS A DRAFT: nobody has read it standing at the machine. Use the note box and say what it should say.",
+              "bodyweight": true,
+              "progression": "reps",
               "alts": [
+                {
+                  "id": "pec-deck",
+                  "name": "Chest Fly Machine",
+                  "zone": "machines",
+                  "station": "pec-deck",
+                  "cue": "Elbows slightly bent and fixed, bring the arms together in front of you and squeeze for one second. Stretch, not a press.",
+                  "sets": 3,
+                  "reps": "8"
+                },
                 {
                   "id": "db-incline-press",
                   "name": "DB Incline Press",
@@ -1144,13 +1132,6 @@
                   "zone": "machines",
                   "station": "chest-press",
                   "cue": "Your second press of the week, moderate rather than heavy: Tuesday is the day the bench gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
-                },
-                {
-                  "id": "assisted-dip",
-                  "name": "Assisted Dip",
-                  "zone": "machines",
-                  "station": "assisted-dip",
-                  "cue": "Lean your chest forward to bias the chest. Enough counterweight for 8 clean reps. You had 5 strict dips in May, so this is trackable."
                 }
               ]
             },
@@ -1167,7 +1148,7 @@
               "bodyweight": false,
               "timed": true,
               "progression": "time",
-              "whyHere": "the carry goes in the press rest: it trains the grip, which pressing does not",
+              "whyHere": "The carry goes in the rest because gripping a heavy weight and pressing your bodyweight share nothing.",
               "alts": [
                 {
                   "id": "db-hold",
@@ -1202,7 +1183,7 @@
               ]
             }
           ],
-          "why": "The chest and the lats are the two muscles here that get no helper credit from anything at all, which is why both are expensive to cover and why both used to sit at the bottom of the week. Nothing else asks the hands to hold on for forty seconds, so the carry goes in the press rest: it trains the grip, which pressing does not. THIS IS THE BLOCK TO DROP IF THE CLOCK BEATS YOU, and the price is that the grip falls from six sets a week to three, under the floor of four."
+          "why": "Assisted dips on your ruling of 2026-09-03: you said you would rather do these than the cable exercise that was giving your arms their work. THEY TAKE A CHEST SLOT THAT ALREADY EXISTED rather than adding a sixth chest exercise. Chest already carries more direct sets than any other muscle in your week, and the first version of this put three more on top of it, which was wrong. The machine this replaces had never been logged once, so nothing you have lifted is lost, and it is still the first swap option. Worth knowing what a dip buys: it trains the chest first and the arms second, so it adds no direct arm sets at all. PROGRESSION IS REPS AND NOT WEIGHT ON PURPOSE, because on this machine the stack carries you, so adding weight would make it easier every week. The carry goes in the rest because gripping a heavy weight and pressing your bodyweight share nothing."
         }
       ]
     },
@@ -1662,9 +1643,55 @@
                   "reps": "15/side"
                 }
               ]
+            },
+            {
+              "id": "db-hammer-curl",
+              "name": "DB Hammer Curl",
+              "sets": 2,
+              "reps": "10",
+              "rest": "60s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "whyHere": "The hammer curl goes in this rest because a bound trains the legs and a curl trains the arms, so it costs nothing here, and this rest was empty while the same curl was crowding the squat.",
+              "alts": [
+                {
+                  "id": "bicep-curl",
+                  "name": "DB Biceps Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly."
+                },
+                {
+                  "id": "cable-curl",
+                  "name": "Cable Curl",
+                  "zone": "cable",
+                  "station": "cable-row",
+                  "cue": "Low cable with a straight or EZ attachment. The cable keeps tension on the muscle at every point, including the top where dumbbells go light. 3x12.",
+                  "sets": 3,
+                  "reps": "12"
+                },
+                {
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                },
+                {
+                  "id": "kb-hammer-curl",
+                  "name": "Kettlebell Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder."
+                }
+              ]
             }
           ],
-          "why": "Three bounds a side and that is the whole set. THE SAME DOSE AS THE JUMPS, and the units hid it: five sets of three jumps is fifteen contacts, three sets of three a side is eighteen. What you are training is how hard you can push off in one go, and a tired bound is a slow bound. Neither counts toward the set total on this card, and neither one asks you to add reps."
+          "why": "Three bounds a side and that is the whole set. THE SAME DOSE AS THE JUMPS, and the units hid it: five sets of three jumps is fifteen contacts, three sets of three a side is eighteen. What you are training is how hard you can push off in one go, and a tired bound is a slow bound. Neither counts toward the set total on this card, and neither one asks you to add reps. The hammer curl goes in this rest because a bound trains the legs and a curl trains the arms, so it costs nothing here, and this rest was empty while the same curl was crowding the squat."
         },
         {
           "role": "main",
@@ -1736,53 +1763,32 @@
               ]
             },
             {
-              "id": "db-hammer-curl",
-              "name": "DB Hammer Curl",
-              "sets": 2,
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
+              "sets": 3,
               "reps": "10",
               "rest": "45s",
               "zone": "rack",
-              "station": null,
+              "station": "rack-pullup-bar",
               "log": true,
-              "cue": "Standing, in the rest between sets of the lift above. A dumbbell in each hand hanging by your sides, palms facing IN toward your thighs and STAYING that way the whole rep: that is what makes it a hammer curl instead of a normal curl. Pin your elbows against your ribs. Bend the elbow and bring the dumbbell up toward your shoulder, then lower it all the way until the arm is straight. Success looks like: your elbows have not travelled forward and your body has not swung to start the rep. If it swings, go lighter. First time out, pick a weight you are sure you could lift 15 times and stop at 12.",
-              "progression": "weight",
-              "rangeWidth": 5,
-              "whyHere": "The curl goes in the rest because the biceps take no part in a squat.",
+              "cue": "Hang from the pull-up bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top KEEP GOING for a couple of inches by curling your hips under you, as if you were trying to show someone the soles of your shoes. That last bit is the part your abdominals actually do: stopping when your thighs are level is hip work and they only hold on. Then lower under control until your legs are straight and you have come to a STOP before the next rep, so every one starts from still rather than from a swing. Success looks like: no swinging, and you feel it across the front of your stomach at the top rather than in the front of your hips the whole way. If you cannot stop the swing, do fewer reps. Ten a set, and when fifteen is easy, straighten the legs instead of adding weight. THIS CUE IS A DRAFT: nobody has read it standing at the bar. Use the note box and say what it should say.",
+              "bodyweight": true,
+              "progression": "reps",
               "alts": [
                 {
-                  "id": "bicep-curl",
-                  "name": "DB Biceps Curl",
-                  "zone": "benchDb",
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "zone": "rack",
                   "station": null,
-                  "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly."
-                },
-                {
-                  "id": "cable-curl",
-                  "name": "Cable Curl",
-                  "zone": "cable",
-                  "station": "cable-row",
-                  "cue": "Low cable with a straight or EZ attachment. The cable keeps tension on the muscle at every point, including the top where dumbbells go light. 3x12.",
+                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
                   "sets": 3,
-                  "reps": "12"
-                },
-                {
-                  "id": "incline-db-curl",
-                  "name": "Incline DB Curl",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
-                },
-                {
-                  "id": "kb-hammer-curl",
-                  "name": "Kettlebell Curl",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "A kettlebell in each hand by the handle, same elbow-pinned curl. The weight hangs behind your hand, which makes the top half harder."
+                  "reps": "30s"
                 }
-              ]
+              ],
+              "whyHere": "The hanging knee raises go in this rest on your ruling of 2026-09-03: the bar is directly above the rack you are already standing in, and you have said nobody else can reach it while your bar is loaded."
             }
           ],
-          "why": "The lighter squat of the two, eight to ten reps against five to seven on the heavy one. Same movement, same bar, different weight. The curl goes in the rest because the biceps take no part in a squat."
+          "why": "The lighter squat of the two, eight to ten reps against five to seven on the heavy one. Same movement, same bar, different weight. The curl goes in the rest because the biceps take no part in a squat. The hanging knee raises go in this rest on your ruling of 2026-09-03: the bar is directly above the rack you are already standing in, and you have said nobody else can reach it while your bar is loaded. ONE COST, STATED RATHER THAN HIDDEN: a front squat is held up by a hard trunk brace, so your abdominals are already assisting the lift, and doing knee raises in its rest works them twice. The tool calls this a loose pairing and does not refuse it, because the abdominals are not what the squat TRAINS. If the last squat set starts to feel loose in the middle, that is the cause: say so in the note box and the knee raises move."
         },
         {
           "role": "main",
@@ -1889,38 +1895,6 @@
             }
           ],
           "why": "The lighter hinge, eight to ten reps against six to eight on the heavy one, and one of only three hamstring exposures in the week. The sideways lunge goes in the rest because it is the only loaded sideways movement on the card and it shares nothing with a hinge."
-        },
-        {
-          "role": "accessory",
-          "pairing": "fill",
-          "label": "Abs",
-          "exercises": [
-            {
-              "id": "hanging-knee-raise",
-              "name": "Hanging Knee Raise",
-              "sets": 3,
-              "reps": "10",
-              "rest": "45s",
-              "zone": "rack",
-              "station": "rack-pullup-bar",
-              "log": true,
-              "cue": "Hang from the pull-up bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top KEEP GOING for a couple of inches by curling your hips under you, as if you were trying to show someone the soles of your shoes. That last bit is the part your abdominals actually do: stopping when your thighs are level is hip work and they only hold on. Then lower under control until your legs are straight and you have come to a STOP before the next rep, so every one starts from still rather than from a swing. Success looks like: no swinging, and you feel it across the front of your stomach at the top rather than in the front of your hips the whole way. If you cannot stop the swing, do fewer reps. Ten a set, and when fifteen is easy, straighten the legs instead of adding weight. THIS CUE IS A DRAFT: nobody has read it standing at the bar. Use the note box and say what it should say.",
-              "bodyweight": true,
-              "progression": "reps",
-              "alts": [
-                {
-                  "id": "hollow-hold",
-                  "name": "Hollow Hold",
-                  "zone": "rack",
-                  "station": null,
-                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
-                  "sets": 3,
-                  "reps": "30s"
-                }
-              ]
-            }
-          ],
-          "why": "Hanging knee raises on your ruling of 2026-09-03, and they get their OWN stop rather than riding in a rest earlier on this day. THE QUESTION AS IT WAS PUT TO YOU WAS WRONG. It said they would ride free in a rest you already stand through, and that rest is not free: it holds the side lunge, which is the only exercise in your week that trains the inner thigh. Moving it out would have taken that muscle from four sets a week to two, under the floor the app refuses to cross. So this is a third stop on Friday and about three minutes. Your abdominal work goes from seven sets a week to ten. The bar is on top of the rack you are already standing in, and you have ruled that nobody else can reach it while you are there."
         },
         {
           "role": "main",

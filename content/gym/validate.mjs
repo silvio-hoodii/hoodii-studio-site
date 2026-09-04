@@ -581,8 +581,50 @@ function checkZoneRoute(dayKey, day) {
   }
 }
 
+/* ------ THE HARD WORK COMES FIRST. Added 2026-09-03, and I broke this myself the same day.
+ *
+ * `role` has been primer | main | accessory since the file was written, and the ORDER of those three
+ * was a convention nobody executed. On 2026-09-03 an accessory block was inserted between two main
+ * lifts on Friday, purely to satisfy the zone-route rule above, and every gate stayed green: the
+ * route was legal, the pairing was legal, the labels were legal, and the day quietly asked him to do
+ * abdominal work and then press overhead.
+ *
+ * HIS WORDS THE SAME EVENING: "Why is it starting the main lift with a shoulder press? Nothing makes
+ * sense." The press-first order on Monday is deliberate and its day title says so, but a reader
+ * cannot tell a deliberate order from a drifted one when nothing enforces either. That is the whole
+ * complaint, and it is not about this one block: it is that the shape of a day was held by habit.
+ *
+ * So the order is a rule now. A primer is a primer because it is done fresh; an accessory is an
+ * accessory because it is what you do when the important work is finished. If a block genuinely
+ * belongs late and is not an accessory, change its ROLE and defend that, rather than sliding it up
+ * the day where no field records the decision.
+ *
+ * IT CAN CONFLICT WITH THE ZONE ROUTE ABOVE, and when it does the answer is never to reorder around
+ * it: it is to put the exercise in a rest that already exists, which is what the week is built on.
+ * That is exactly how the Friday case resolved, and the resolution was better on both counts.
+ * ------------------------------------------------------------------------------------------- */
+const ROLE_RANK = { primer: 0, main: 1, accessory: 2 };
+function checkRoleOrder(dayKey, day) {
+  const blocks = (day.blocks || []).filter((b) => (b.exercises || []).length);
+  for (let i = 1; i < blocks.length; i++) {
+    const prev = blocks[i - 1], here = blocks[i];
+    if (ROLE_RANK[here.role] >= ROLE_RANK[prev.role]) continue;
+    fail(
+      `${dayKey}/${here.label}`,
+      `this block is a "${here.role}" and it sits AFTER "${prev.label}", which is a "${prev.role}". `
+      + `The day runs ${blocks.map((b) => b.role).join(' -> ')}. Hard work comes first: a primer is done fresh, `
+      + `an accessory is what is left when the important work is finished, and a day that mixes them asks him to `
+      + `press overhead after training his abs. Move this block down, or give it the role it is actually being `
+      + `treated as and say why. If it is late only because the zone route forced it there, the real answer is to `
+      + `put the exercise in a rest that already exists rather than to give it a stop of its own.`,
+    );
+    return;
+  }
+}
+
 for (const [dayKey, day] of Object.entries(program.days)) {
   checkZoneRoute(dayKey, day);
+  checkRoleOrder(dayKey, day);
 }
 
 for (const [dayKey, day] of Object.entries(program.days)) {
