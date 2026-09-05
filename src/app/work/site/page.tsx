@@ -56,8 +56,7 @@ export default function WorkSite() {
       <h2 className="sec">What is here</h2>
       <p className="body">
         {facts.pages} pages and {facts.endpoints} endpoints, across {facts.apps} top-level surfaces
-        that each carry their own layout and stylesheet. {facts.recipes} recipes written out step by
-        step. {facts.agentsLines} lines of notes explaining why things are the way they are, which is
+        that each carry their own layout and stylesheet. {facts.agentsLines} lines of notes explaining why things are the way they are, which is
         longer than most of the code it describes and is the file I actually maintain.
       </p>
       <p className="body">

@@ -1,910 +1,372 @@
-/* KitchenOS surface, on the shared token system.
+/* /kitchen, the cookbook. Rebuilt 2026-09-05.
  *
- * Was warm cream + editorial serif + rounded cards. That was the palette research named as the
- * generated-site tell, and it went with the hub on 2026-08-09.
- *
- * What did NOT change is the functional brief from KitchenOS/DESIGN.md, because it was never about
- * style: one step fills the screen, the instruction text is very large, every step carries its own
- * amounts, and a doneness test is a thing you DO. He is a beginner reading this for twenty minutes
- * in a bright room with wet hands. Length is not a cost; ambiguity is.
- *
- * So: same tokens as the index, same mono-label idiom, but the step text is set big and the
- * semantic blocks are kept distinguishable by a coloured left rule rather than a pastel fill.
- * Two colours only, both meaning something: green is "you may proceed", red is "this bites".
+ * Tokens only, no hardcoded colour, rules instead of cards, the same system as /curio. This surface
+ * is read on a phone in a shop aisle and at a stove, so the two things that matter are one big link
+ * to the recipe and a shopping list with tappable rows. Everything else is quiet.
  */
-
-.kos {
-  --pad: 20px;
-  font-family: var(--font-sans);
-  color: var(--foreground);
-  background: var(--background);
-  min-height: 100dvh;
-}
-
-.kos * { box-sizing: border-box; }
 
 .kos .wrap {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: clamp(28px, 7vw, 52px) var(--pad) 112px;
+  padding: clamp(32px, 8vw, 64px) 20px 64px;
 }
 
-/* ---- labels and headings ---- */
+.kos .blurb {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  max-width: 52ch;
+  margin: 14px 0 0;
+}
 
 .kos .eyebrow {
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-foreground);
-  display: block;
-  text-decoration: none;
-}
-.kos a.eyebrow:hover { color: var(--foreground); }
-
-/* h1 comes from globals.css: one scale for the whole site. */
-
-/* :not(.sec), because /kitchen/find and /kitchen/shop use `<h2 class="sec">` for a section label
-   and `.kos h2` (0,1,1) outranks the shared `.sec` (0,1,0). This has already bitten once: when the
-   shared label moved to globals.css, six headings on those two pages silently went from a 12px mono
-   label to a 17px sans heading, and it was caught by diffing computed styles against the live
-   build, not by looking. Either heading is plausible on its own. */
-.kos h2:not(.sec) {
-  font-size: 17px;
-  line-height: 1.3;
-  font-weight: 600;
-  margin: 0;
+  margin: 0 0 6px;
 }
 
-/* .lede, .count, .quiet and .live are declared once in globals.css. */
+/* ---- the ask box ---- */
 
-.kos .divider { margin: 30px 0 0; }
+.kos .ask {
+  margin-top: 28px;
+  padding: 18px 0 22px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
 
-/* ---- the dish list: rows, not cards ---- */
-
-.kos .dish {
+.kos .ask form {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 4px 14px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-  text-decoration: none;
-  color: inherit;
+  gap: 10px;
+  margin-top: 10px;
 }
-.kos a.dish:hover h2 { text-decoration: underline; text-underline-offset: 3px; }
 
-.kos .dish .meta {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 14px;
+.kos .ask input,
+.kos .notebox textarea,
+.kos .unlock input {
+  font: inherit;
+  font-size: 16px; /* 16 stops iOS Safari zooming the page when the field takes focus */
+  padding: 12px 14px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-sm);
+  background: var(--background);
+  color: var(--foreground);
+  min-width: 0;
+}
+
+.kos .ask input:focus-visible,
+.kos .notebox textarea:focus-visible,
+.kos .unlock input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.kos .ask .hint {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin: 10px 0 0;
+  max-width: 56ch;
+}
+
+.kos .waiting {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.kos .waiting li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.kos .waiting li:first-child { border-top: 0; }
+
+.kos .waiting .when {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-}
-.kos .dish .meta b { color: var(--foreground); font-weight: 600; }
-
-.kos .dish .arrow {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--muted-foreground);
+  padding-top: 3px;
 }
 
-/* What the food actually is, under the name. Added 2026-08-11: the card carried a name, a time, a
-   protein figure and a step count, and none of those tell you there is beef and rice in it. */
-.kos .dish .gist {
-  grid-column: 1 / -1;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--foreground);
-  margin-top: 2px;
-}
+.kos .waiting .txt { overflow-wrap: anywhere; }
 
-.kos .changes {
-  grid-column: 1 / -1;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted-foreground);
-  border-left: 2px solid var(--border);
-  padding-left: 11px;
-  margin-top: 6px;
-}
+/* ---- the dish list ---- */
 
-/* Plain lists: off-the-list dishes and the A-to-Z. Reachable, quiet, not competing with the offer. */
-.kos .plainlist {
+.kos .dishes {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.kos .plainlist li {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-}
-/* The row is tall enough; the LINK was 23px, so most of the row was dead to a thumb. This is the
-   surface whose own design doc says a mis-tap costs more here than anywhere else. */
-.kos .plainlist a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--foreground);
+
+.kos .dishes li { border-bottom: 1px solid var(--border); }
+
+.kos .dishes a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  padding: 16px 0;
   text-decoration: none;
-}
-.kos .plainlist a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.kos .plainlist span {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted-foreground);
-  text-align: right;
-}
-.kos .plainlist.az {
-  columns: 2;
-  column-gap: 22px;
-}
-.kos .plainlist.az li { break-inside: avoid; }
-@media (max-width: 460px) {
-  .kos .plainlist.az { columns: 1; }
-}
-
-/* ---- cook mode ---- */
-
-/* Tappable, so getting back to a step is one press and not fourteen. The hit area is padded well
-   past the 2px line it draws, because this is operated with a thumb and wet hands. */
-/* A GRID, NOT A FLEX ROW, since 2026-08-28, and the difference is whether the cook screen scrolls
-   sideways.
-   
-   It was `display: flex` with `gap: 3px` and no wrap, and line 572 below gives each dot
-   `min-width: 26px` for the tap target. A flex item never shrinks below its min-width and this row
-   had no overflow container, so at 390px, where the content column is 350px, thirteen dots need
-   374px and fourteen need 403px. Gnocchi is OFFERED today with fourteen steps and piccata's page has
-   eighteen. That is horizontal page scroll on the one surface DESIGN.md says matters most, operated
-   with wet hands, where the dots are also the only step navigation. Found by 02-kitchen P1-4.
-   
-   `repeat(auto-fit, minmax(26px, 1fr))` solves both ends of it. Long recipes wrap onto a second row
-   with every dot still 26px and still tappable, and short ones collapse the empty tracks so six dots
-   fill the width the way they always did. Wrapping with flex-grow would have stretched the last
-   row's two dots to full width, which reads as two enormous steps. */
-.kos .dots {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(26px, 1fr));
-  gap: 3px;
-  margin: 0 0 16px;
-}
-.kos .dots button {
-  height: 2px;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: var(--border);
-  position: relative;
-}
-.kos .dots button::after {
-  content: '';
-  position: absolute;
-  inset: -13px 0;
-}
-.kos .dots button.on { background: var(--foreground); }
-.kos .dots button:hover { border-color: transparent; }
-
-/* The one rule that is not negotiable: one step fills the screen and is readable at arm's length. */
-.kos .step {
-  font-size: clamp(21px, 4.6vw, 25px);
-  line-height: 1.42;
-  font-weight: 400;
-  margin: 10px 0 20px;
-  letter-spacing: -0.005em;
-}
-
-.kos .amounts {
-  border-top: 1px solid var(--foreground);
-  border-bottom: 1px solid var(--border);
-  margin: 0 0 18px;
-}
-.kos .amounts .row {
-  display: grid;
-  grid-template-columns: 6.5rem 1fr;
-  gap: 14px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-}
-.kos .amounts .row:last-child { border-bottom: 0; }
-.kos .amounts .qty {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* THREE LEVELS IN THE PREP LIST, and until 2026-09-04 they were two pretending to be three.
- *
- * The name was `--muted-foreground` and the prep note next to it asked for `var(--ink-faint)`, a
- * token that IS NOT DEFINED ANYWHERE: three uses in CookClient.tsx, zero declarations in any
- * stylesheet. An undefined custom property makes the declaration invalid at computed-value time,
- * and `color` inherits, so the note fell back to the name's own colour and the two rendered
- * identically. Seven to thirteen elements per dish page were designed to recede and did not.
- *
- * Fixing only the token would have changed nothing visible, because `--muted-foreground` is what
- * the note was already inheriting. So the hierarchy is built out of the tokens that exist: the
- * ingredient NAME is what he is scanning for on a cook screen and takes full ink, and the note
- * that qualifies it recedes. No new palette token: this site has two text weights plus destructive
- * and that is the restraint the palette argument is about. */
-.kos .amounts .nm { color: var(--foreground); }
-.kos .amounts .note { color: var(--muted-foreground); }
-
-/* "you do not have this", the one warning on a cook screen that stops him mid-dish.
- *
- * IT WAS `var(--accent)`, WHICH IS A SURFACE TOKEN: oklch(0.955 0.002 100), a near-white. The cream
- * palette's accent was orange and the rename on 2026-08-09 kept the name and lost the meaning.
- * Measured live on /kitchen/piccata: text lab(94.79) on background lab(99.20), a contrast ratio of
- * about 1.1 to 1. Invisible. Three of the ten recipes carry the warning today.
- *
- * `--destructive` because a missing ingredient is the same class of fact as "this did not save":
- * something is wrong and you need to act before continuing. `lint-tokens.mjs` could not catch the
- * old value, because a token that exists and means the wrong thing is not a colour literal. */
-.kos .amounts .missing {
-  color: var(--destructive);
-  font-weight: 600;
-}
-
-/* The aside under a dish title on a cook screen: time note, protein per serving, step count.
- * Was an inline style block whose colour was the same undefined `--ink-faint`, so unlike the prep
- * notes it had no muted ancestor to inherit from and rendered at FULL INK, competing with the
- * title above it. `.kos .dish .meta` is a different thing: it is the row on a dish CARD in a list,
- * and this element is not inside a `.dish`. */
-.kos .cookmeta {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--muted-foreground);
-}
-
-/* Semantic blocks. A left rule and a mono label, never a pastel fill. */
-.kos .box {
-  border-left: 2px solid var(--border);
-  padding: 2px 0 2px 13px;
-  margin: 0 0 15px;
-  font-size: 15.5px;
-  line-height: 1.55;
-  color: var(--foreground);
-}
-.kos .box .k {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin-bottom: 5px;
-}
-.kos .box.done { border-left-color: var(--signal); }
-.kos .box.done .k { color: var(--signal); }
-/* Heat gets the full-strength rule rather than a colour. It is the thing this project has got wrong
-   most often, so it should read as structural, not as a warning you can wave past. */
-.kos .box.heat { border-left-color: var(--foreground); }
-.kos .box.heat .k { color: var(--foreground); }
-.kos .box.warn { border-left-color: var(--destructive); }
-.kos .box.warn .k { color: var(--destructive); }
-.kos .box.look { color: var(--muted-foreground); }
-
-/* ---- controls ---- */
-
-.kos .nav {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  background: var(--background);
-  border-top: 1px solid var(--border);
-  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
-  display: flex;
-  gap: 8px;
-  max-width: var(--measure);
-  margin: 0 auto;
-}
-
-/* The button is declared once in globals.css. All that is left here is the one thing that is
-   this surface's own: the primary action sits in a fixed bottom bar and shares its width. */
-.kos button.primary, .kos .btn.primary { flex: 1; }
-
-/* Collapsed by default. It answers a question he only asks once per recipe, and it must not stand
-   between him and the ingredient list. */
-.kos .devs {
-  border-left: 2px solid var(--border);
-  padding-left: 13px;
-  margin: 0 0 15px;
-}
-/* 44px, MEASURED. `scripts/probe-taps.mjs` at 390px found these at 22px on /kitchen ("No recipe
-   really needed", "Everything else in here"), at 22px on /kitchen/find ("Narrow it down", "Not here?
-   Name it, or paste a link"), and at 33px on /kitchen/want (the paste box). Every one of them is a
-   control that opens a section, on a surface used with wet hands, and two of them are the only route
-   to a filter. `list-item` display keeps the native marker, so the box grows with padding rather than
-   with flex, which would drop the triangle. */
-.kos .devs summary {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  min-height: 44px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-.kos .devs summary:hover { color: var(--foreground); }
-.kos .devs .dev { margin-top: 11px; font-size: 15px; line-height: 1.55; }
-.kos .devs .dev b { display: block; font-weight: 600; }
-.kos .devs .dev span { color: var(--muted-foreground); }
-
-/* ---- timers ----
- *
- * Sticky rather than fixed, and a sibling of .wrap rather than an overlay, so it takes its own room
- * in the flow and can never sit on top of a step instruction. It only exists when something is
- * actually running, which is why the layout shift it causes is information rather than jitter.
- */
-
-.kos .rail {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: var(--background);
-  border-bottom: 1px solid var(--foreground);
-  padding: 8px var(--pad) 9px;
-  max-width: var(--measure);
-  margin: 0 auto;
-}
-
-.kos .rail-chips {
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.kos .rail-chips::-webkit-scrollbar { display: none; }
-
-.kos .rail .chip {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  padding: 7px 12px;
-  font-family: var(--font-mono);
-  text-align: left;
-  line-height: 1.25;
-}
-.kos .rail .chip .chip-t {
-  font-size: 16px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.kos .rail .chip .chip-l {
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--muted-foreground);
-  max-width: 22ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.kos .rail .chip.open { border-color: var(--foreground); }
-
-/* Finished. The one place --signal is allowed: a value that is true right now. */
-.kos .rail .chip.ready {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: var(--background);
-}
-.kos .rail .chip.ready .chip-l { color: var(--background); opacity: 0.85; }
-
-.kos .rail-open {
-  border-top: 1px solid var(--border);
-  margin-top: 9px;
-  padding-top: 11px;
-}
-.kos .rail-where {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-}
-/* Deliberately smaller than .step: this is a reminder of something happening elsewhere, not the
-   instruction he is following right now, and it must not compete with it. */
-.kos .rail-text {
-  font-size: 16px;
-  line-height: 1.45;
-  margin: 7px 0 12px;
-}
-.kos .rail-acts { display: flex; gap: 8px; }
-.kos .rail-acts button, .kos .rail-acts .btn { font-size: 15px; padding: 10px 14px; }
-
-.kos .timer-row {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  flex-wrap: wrap;
-  margin: 0 0 18px;
-}
-.kos .timer-start { font-size: 15px; padding: 11px 16px; }
-.kos .timer-hint {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted-foreground);
-}
-.kos .timer-live {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.kos .timer-live.ready { color: var(--signal); }
-
-/* password comes from globals.css now; this keeps the textarea. */
-.kos textarea {
-  width: 100%;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  padding: 12px 13px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  background: var(--background);
-  color: var(--foreground);
-}
-.kos textarea:focus, .kos input:focus {
-  outline: 2px solid var(--ring);
-  outline-offset: -1px;
-}
-
-/* ---- the find surface: a menu with photos ----
-   The only images anywhere on this site. Everything else is inline SVG, deliberately, but "does this
-   look interesting" was his actual request and that cannot be answered by a name. */
-
-.kos .meallist { list-style: none; padding: 0; margin: 0; }
-
-.kos .mealrow {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  align-items: start;
-}
-
-.kos .mealthumb {
-  width: 56px;
-  height: 56px;
-  object-fit: cover;
-  background: var(--muted);
-  display: block;
-}
-
-.kos .mealtop {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  justify-content: space-between;
-}
-/* Same again on the dish menu: the name is the target, and it was 24px tall in a 90px row. */
-.kos .mealtop a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
   color: inherit;
-  text-decoration: none;
 }
-.kos .mealtop a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.kos .v {
-  flex: 0 0 auto;
+.kos .dishes a:hover .dname { text-decoration: underline; }
+
+.kos .dname {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.kos .dmeta {
+  grid-column: 1;
+  font-size: 13.5px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+.kos .dmeta .nw { white-space: nowrap; }
+
+.kos .dprot {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
   font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 13px;
   color: var(--muted-foreground);
   white-space: nowrap;
+  padding-top: 4px;
 }
-.kos .v.ok { color: var(--signal); }
 
-.kos .mealmeta,
-.kos .mealuses,
-.kos .mealmiss,
-.kos .mealvia {
-  font-size: 13px;
-  line-height: 1.45;
+/* ---- one dish ---- */
+
+.kos .recipe-link {
+  display: block;
+  margin: 22px 0 0;
+  padding: 18px 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+}
+
+.kos .recipe-link:hover { background: var(--muted); }
+
+.kos .recipe-link .k {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* `.k` is the block and `.v` stays inline, so the external-link arrow globals.css appends to the
+   anchor sits after the publisher's name rather than on a line of its own. */
+.kos .recipe-link .k { display: block; }
+
+.kos .recipe-link .v {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.kos .facts {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 8px 16px;
+  margin: 22px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.kos .facts dt {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  padding-top: 4px;
+}
+
+.kos .facts dd { margin: 0; }
+
+.kos .facts .small {
+  display: block;
+  font-size: 13.5px;
   color: var(--muted-foreground);
   margin-top: 2px;
 }
-/* --foreground, not --signal. This line is a whole sentence ("uses spring mix salad…") and
-   /kitchen/find renders thirty of them at once, which spends the one colour the system reserves for
-   a live value on a paragraph. It still needs to stand out from its muted siblings; ink does that. */
-.kos .mealuses { color: var(--foreground); }
-.kos .mealmiss { color: var(--foreground); }
 
-@media (max-width: 420px) {
-  .kos .mealrow { grid-template-columns: 44px 1fr; gap: 10px; }
-  .kos .mealthumb { width: 44px; height: 44px; }
+.kos .list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* ---- /kitchen/find on a wide screen ----
- *
- * This is the one kitchen route that is a table. It renders up to 60 rows of photo, name, verdict
- * and a line of missing ingredients, and on a 1440px screen all of it was a 680px strip with 380px
- * of nothing on either side (audit finding F21). Two columns halves the scroll on the page whose
- * whole job is "show me five things and let me look at them".
- *
- * Every other kitchen route stays narrow. A dish page is a page to read and the cook screen is one
- * step filling a phone, so the opt-in is a class the FIND PAGE puts on its own wrapper.
- *
- * `:has` rather than a class on the layout, because the layout is shared, and rather than a second
- * hardcoded width on the page, because the site header is a sibling ABOVE the content: it reads
- * --measure too, and if the page moved its own column the header would stay at 680 and sit visibly
- * off-centre over it. Moving the variable on the common ancestor moves both from one declaration.
- */
-@media (min-width: 1024px) {
-  .kos:has(> .wrap.wide) { --measure: 960px; }
-
-  .kos .wrap.wide .meallist {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 34px;
-  }
-  /* A grid item will not shrink below its own content by default, and a dish name is one long
-     unbroken string often enough that the second column would be pushed off the page without it. */
-  .kos .wrap.wide .mealrow,
-  .kos .wrap.wide .mealbody { min-width: 0; }
-}
-
-/* ---- filters ----
-   Links and one GET form, no client JS. Every filter is a URL so it works before hydration, survives
-   a reload mid-cook, and can be bookmarked. Chips are sized for a thumb, not a mouse. */
-
-.kos .filters { margin-top: 16px; }
-
-.kos .searchrow { display: flex; gap: 8px; }
-/* type="url" was picking up NONE of this. The /kitchen/want field is half that page's purpose ("paste
- * the address of any recipe page") and it had no border token, no flex, and critically no 16px, which
- * is the one thing the comment below says is not optional. Invisible to curl, obvious on a phone. */
-.kos .searchrow input[type="search"],
-.kos .searchrow input[type="url"],
-.kos .searchrow input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 16px;               /* 16px or iOS zooms the whole page on focus */
-  padding: 11px 12px;
-  border: 1px solid var(--border-strong);
-  background: var(--background);
-  color: var(--foreground);
-  border-radius: 2px;
-}
-.kos .searchrow button { flex: 0 0 auto; }
-
-.kos .chiprow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-}
-.kos .chiplabel {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin-right: 2px;
-}
-
-/* `.chip` is declared once in globals.css and shared with /gym. */
-.kos .chip i {
-  font-style: normal;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  opacity: 0.65;
-  margin-left: 3px;
-}
-
-/* ---- touch ergonomics ----
-   KitchenOS/DESIGN.md sets 56px minimum on the cook surface and says a mis-tap that jumps three steps
-   is worse here than in any other app, because his hands are wet and there is a pan on. Measured
-   before this block: note buttons 33px, filter chips 35px, progress dots 19x28px. */
-
-.kos { touch-action: manipulation; }          /* kills the 300ms double-tap-zoom delay */
-.kos { -webkit-tap-highlight-color: transparent; }
-
-.kos button,
-.kos .btn,
-.kos .chip {
-  min-height: 56px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.kos button:active,
-.kos .btn:active,
-.kos .chip:active { opacity: 0.65; }          /* replaces the tap highlight we just removed */
-
-/* The dots jump the recipe with no undo, so they get the most generous target on the screen. */
-/* The grid's `minmax(26px, 1fr)` above owns the width now; a min-width here would fight it and
-   reintroduce the overflow the grid was for. Only the height floor stays. */
-.kos .dots button { min-height: 2px; }
-.kos .dots button::after { inset: -22px -1px; }
-
-/* Focus has to be visible on a 2px-tall borderless dot, where the UA ring is not usable. */
-.kos a:focus-visible,
-.kos button:focus-visible,
-.kos .chip:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 2px;
-}
-
-/* The step screen needed a way out. Was: no exit at all, so the only route back to the kitchen was
-   pressing the back arrow once per step. */
-.kos .steptop {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-/* --border measured 1.34:1 against the background, well under the 3:1 non-text floor, which made
-   every secondary button outline and every unfilled progress dot effectively invisible.
-   --border-strong was declared here and was therefore invisible to the other six surfaces, which
-   all kept the unreadable edge. It lives in globals.css now. */
-/* .chip carries --border-strong from its own rule in globals.css now. */
-.kos .dots button { background: var(--border-strong); }
-
-/* ---- plainlist on a phone ----
-   Found 2026-08-13 by screenshotting at 390px, which is what he actually reads on. `.plainlist li` is
-   a flex row with the label left and a value right, and where the label is a sentence rather than a
-   word ("12 dishes need only fresh coriander" plus a reason) the two columns fight and the left one
-   wraps to ONE WORD PER LINE. Unreadable, and invisible from the markup or from curl.
-
-   Rows whose left side is a sentence get `.stack`, which drops the side-by-side entirely below 560px. */
-@media (max-width: 560px) {
-  .kos .plainlist.stack li {
-    display: block;
-  }
-  .kos .plainlist.stack li span {
-    display: block;
-    text-align: left;
-    margin-top: 3px;
-  }
-}
-
-/* ---- the one nav strip ----
-   Wraps rather than scrolls: four labels at 390px take two rows, and a horizontal scroller hides
-   whatever does not fit, which is how "worth buying" stayed invisible. 56px per DESIGN.md's tap floor,
-   applied via padding so the hit area is the whole label and not just the text. */
-.kos .kosnav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 18px;
-  margin: 0 0 18px;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border-strong);
-  padding-bottom: 2px;
-}
-.kos .kosnav a,
-.kos .kosnav .kosnav-here {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  text-decoration: none;
-  /* --muted-foreground, NOT --muted. `--muted` is oklch(0.96), a near-white BACKGROUND token, and
-     putting it in a color slot rendered the three inactive nav links as pale grey on off-white:
-     legible on a laptop at arm's length and effectively invisible on a phone in a kitchen. Caught by
-     screenshotting at 390px, which is the only way this class of bug shows up. --muted-foreground is
-     oklch(0.55), which is the token actually designed for secondary text. */
-  color: var(--muted-foreground);
-}
-.kos .kosnav a:hover { color: var(--foreground); }
-/* The current page is stated, not hidden, so the strip keeps the same shape everywhere.
- *
- * INK, NOT `--signal`, since 2026-08-28. WHERE YOU ARE IS NAVIGATION STATE, not a live value, and it
- * was a green underline on some item on every kitchen page forever. The rest of the site already
- * agrees: `.training .subtab.on` marks current with a `--foreground` border-bottom and the top tabs
- * use an inverted fill. So the axis of divergence was current-marker = inverted fill (tabs) / ink
- * underline (subtabs) / signal underline (kitchen only), and kitchen was the only one spending the
- * one chromatic colour on it. 08-ux-ui P2-4 item 1. The bold weight above already separates it from
- * its siblings; the underline only has to be visible. */
-.kos .kosnav .kosnav-here {
-  color: var(--foreground);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--foreground);
-}
-
-/* ---- provenance chips ----
-   Was a nine-line bordered block above the ingredients, printing the statement, the sources and a
-   second sentence repeating what the statement had already said. On the oats page that was most of
-   the first screen, so the QA voice was drowning the food it exists to qualify.
-
-   Each chip opens to the exact sentence it used to print. Nothing was rewritten and no provenance
-   DATA changed; only how much is on screen before you ask for it.
-
-   The draft chip keeps the destructive edge and says what it means in the label itself, because
-   "treat as a draft" is the one sentence that has to reach him before he turns on heat. */
-.kos .provs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.kos .prov {
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  padding: 0 11px;
-  max-width: 100%;
-}
-
-.kos .prov > summary {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  /* 44px, the tap floor, applied through the summary so the whole chip is the target. */
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-.kos .prov > summary:hover { color: var(--foreground); }
-
-.kos .prov.draft { border-color: var(--destructive); }
-.kos .prov.draft > summary { color: var(--destructive); font-weight: 600; }
-
-.kos .prov[open] {
-  /* Open, it stops being a chip in a row and becomes a paragraph. */
-  flex: 1 1 100%;
-}
-
-.kos .provbody {
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--foreground);
-  padding: 2px 0 12px;
-  max-width: 60ch;
-}
-
-/* Paragraph breaks in the Why panel actually break.
-   Every `look` annotation in the corpus is one long string, and where its sentences were butted
-   together they rendered as "released in one piece.BREAKING IT UP means". Found on 2026-08-14 by
-   reading a recipe as the renderer prints it rather than as JSON, which is the only way this class
-   of defect is visible at all. Recipes with no newlines are unaffected. */
-.kos .box.look { white-space: pre-line; }
-
-/* ---- the source, on the first screen ----
-   Added 2026-08-16. A recipe whose claim is that it follows one published page verbatim has to show
-   which page before he cooks, not behind a collapsed chip below the ingredients. Rule, not a card,
-   like everything else here. The photo is the publisher's own and the whole block is the link. */
-.kos .srcref {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin: 14px 0 0;
-  padding: 10px 0;
-  border-top: 1px solid var(--border);
+.kos .list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 14px;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border);
-  text-decoration: none;
-  color: inherit;
-}
-.kos .srcshot {
-  width: 78px;
-  height: 78px;
-  object-fit: cover;
-  flex: 0 0 auto;
-  background: var(--muted);
-}
-/* How long it keeps. Its own block rather than a line in .meta: for a snack this is the deciding
-   fact, and .meta is a row of small grey asides. */
-.kos .keeps {
-  margin: 14px 0 0;
-  padding: 10px 12px;
-  border-left: 3px solid var(--border);
-  font-size: 14px;
+  font-size: 15.5px;
   line-height: 1.5;
+}
+
+.kos .list .qty {
+  grid-column: 1;
+  font-size: 13.5px;
   color: var(--muted-foreground);
 }
-.kos .keeps b {
-  display: block;
+
+.kos .list .price {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  padding-top: 3px;
+}
+
+.kos .list .lnote {
+  grid-column: 1 / -1;
+  font-size: 13.5px;
+  color: var(--muted-foreground);
+}
+
+.kos .notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kos .notes li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.kos .notes .when {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  padding-top: 4px;
+}
+
+.kos .notes .rating {
+  font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--foreground);
-  margin-bottom: 3px;
-}
-
-.kos .srcmeta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.kos .srcmeta b { font-size: 15px; }
-.kos .srcmeta span { font-size: 13px; color: var(--muted-foreground); }
-.kos .srcref:hover .srcmeta b,
-.kos .srcref:focus-visible .srcmeta b { text-decoration: underline; }
-
-/* The step's own equipment, named as HIS things rather than the source's word for them. */
-.kos .stepgear {
-  margin: 0 0 14px;
-  font-size: 14px;
-  color: var(--muted-foreground);
-  line-height: 1.5;
-}
-.kos .stepgear .k {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-right: 8px;
 }
 
-/* A fold, for everything that is not an answer to "what can I cook". Reachable, not unavoidable. */
-.kos details.fold { margin: 14px 0 0; border-top: 1px solid var(--border); padding-top: 12px; }
-/* 44px, measured at 40px on /kitchen/shop ("What one purchase would unlock the most dishes"). Four
-   pixels under, which is exactly the kind nobody catches by looking. */
-.kos details.fold > summary {
+.kos .notes .rating-wrong { color: var(--destructive); }
+
+.kos .notes p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---- the note box ---- */
+
+.kos .notebox { margin-top: 18px; }
+
+.kos .notebox textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.kos .ratings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.kos .ratings button {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--background);
+  color: var(--foreground);
   cursor: pointer;
+}
+
+.kos .ratings button[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+.kos .send {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 18px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.kos .send:disabled { opacity: 0.55; cursor: default; }
+
+.kos .saved {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  margin: 10px 0 0;
+}
+
+/* The write failed. Say why in place and, if it is the cookie, take the password right here rather
+   than sending anyone to a login page. He raised this as a repeated grievance in the first build. */
+.kos .unlock {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--destructive);
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.kos .unlock form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.kos .unlock .k {
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted-foreground);
-  list-style-position: outside;
-  min-height: 44px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding: 2px 0;
+  color: var(--destructive);
 }
-.kos details.fold[open] > summary { margin-bottom: 10px; color: var(--foreground); }
-.kos details.fold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
 
-/* ---- a quiet control that lives on a dish row ----
- *
- * The shared button in globals.css is 16px sans with 13px of padding, which is right for "Unlock and
- * save" and wrong fourteen times down a list: the page would read as a column of buttons with dishes
- * between them. This is the "not this" tap, and it has to be findable without competing with the dish
- * name above it.
- *
- * Mono, muted, no border, because the split this site declares is that mono carries labels and state
- * and sans carries prose. It sits in the meta block under the dish, so it inherits that column and
- * needs no layout of its own.
- *
- * `min-height: 0` is deliberate and is the same trap the base rule documents: a min-height here would
- * beat the 2px on the cook screen's step dots. The vertical padding gives it a ~30px target, which is
- * under the 44px a primary action should have and is correct for a secondary one on a row whose
- * primary action is the whole title. */
-.kos .rowaction {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 400;
-  padding: 7px 0;
-  min-height: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  color: var(--muted-foreground);
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--border-strong);
-}
-.kos .rowaction:hover {
-  color: var(--foreground);
-  border-color: transparent;
-  text-decoration-color: var(--muted-foreground);
+@media (max-width: 480px) {
+  .kos .ask form,
+  .kos .unlock form { grid-template-columns: 1fr; }
+  .kos .facts { grid-template-columns: 1fr; gap: 2px 0; }
+  .kos .facts dt { padding-top: 10px; }
 }

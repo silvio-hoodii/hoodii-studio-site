@@ -1,6 +1,5 @@
-import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
+import { listDishes, openInbox } from '@/lib/kitchen/cookbook';
 import siteFacts from '../../content/work/site-facts.json';
-import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
 import { today } from '@/lib/day';
@@ -82,40 +81,29 @@ interface Row {
 
 async function kitchenRow(): Promise<Row> {
   try {
-    const [stock, recipes] = await Promise.all([deriveStock(), allRecipes()]);
-    /* isOfferable is shared with /kitchen. This line used to be `offer(r, stock).status === 'ready'`,
-     * which ignored the read gate and the verbatim gate, so the front door announced "14 dishes you can
-     * cook right now" and the page one tap away said "1 ready to start". The first thing the app did on
-     * open was overpromise by 14x. */
-    const ready = recipes.filter((r) => isOfferable(r) && offer(r, stock).status === 'ready').length;
-    const soon = expiringSoon(stock, 5, 2);
-
-    // Stock display names carry the shop's branding, e.g. "spring mix salad (Your Fresh Market)".
-    // Useful in the kitchen, noise on the front door.
-    const short = (s: string) => s.replace(/\s*\([^)]*\)/g, '').trim();
-
-    const sub = soon.length
-      ? soon
-          .map((i) => `${short(i.n)}, ${i.daysLeft! <= 0 ? 'today' : `${i.daysLeft} d left`}`)
-          .join(' · ')
-      : 'nothing about to turn';
-
+    /* Rebuilt 2026-09-05. This row used to print how many dishes he could cook right now, scored
+     * against a fridge model that stopped being fed on 2026-08-23 and kept being read. The kitchen
+     * is a cookbook now: dishes he chose, each with the publisher's recipe and a shopping list. The
+     * honest numbers are how many there are and whether an ask of his is still waiting for a session. */
+    const [dishes, inbox] = await Promise.all([listDishes(), openInbox()]);
+    const n = dishes.length;
     return {
       label: 'Kitchen',
-      line:
-        ready > 0 ? (
-          <>
-            <span className="live tnum">{ready}</span> dish{ready === 1 ? '' : 'es'} you can cook right now
-          </>
-        ) : (
-          'nothing ready without a shop'
-        ),
-      sub,
+      line: (
+        <>
+          <span className="live tnum">{n}</span> dish{n === 1 ? '' : 'es'} with a recipe and a list
+        </>
+      ),
+      sub: inbox.length
+        ? `${inbox.length} ask${inbox.length === 1 ? '' : 's'} waiting for a session`
+        : dishes[0]
+          ? `latest: ${dishes[0].name}`
+          : undefined,
       href: '/kitchen',
     };
   } catch {
     // A database hiccup must not take the front door down with it.
-    return { label: 'Kitchen', line: 'Recipes and what is in the fridge', href: '/kitchen' };
+    return { label: 'Kitchen', line: 'Dishes I chose, with their recipes and lists', href: '/kitchen' };
   }
 }
 

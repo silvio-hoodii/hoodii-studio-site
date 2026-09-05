@@ -11,7 +11,7 @@ This version has breaking changes. APIs, conventions, and file structure may all
 ## What this repo is
 
 **Silvio's personal hub.** A front door at `/` that indexes the small apps he builds for himself,
-plus the apps themselves as routes. Currently `/kitchen`. Gym and French are next.
+plus the apps themselves as routes.
 
 This is [home-cooked software](https://maggieappleton.com/home-cooked-software): built for an
 audience of one, not meant to scale or generalise. That framing is the design brief. The site's job
@@ -75,7 +75,7 @@ always lose to the thing that exists.
 | Route | What | Writes gated |
 |---|---|---|
 | `/` | The hub index. Rows show real state, never a link label | n/a |
-| `/kitchen` | KitchenOS. See `content/kitchen/` and `KitchenOS/WHERE-THINGS-LIVE.md` | yes |
+| `/kitchen` | **A cookbook since 2026-09-05.** Dishes he chose, each with the publisher's recipe link, a shopping list with store links, and his notes; a box to ask for the next one from his phone. Read `KitchenOS/README.md`. Neon: `dish`, `inbox`, `cook_log` | yes (`/kitchen/api/note`, `/kitchen/api/inbox`) |
 | `/gym` | Lifting log + a note box, and lifting ONLY since 2026-08-27. **TWO LIFTING SESSIONS ALTERNATED (A, B) PLUS A SATURDAY SESSION C, since 2026-09-04, and the week is FROZEN until 2026-10-01**: `content/gym/program.json` carries `goal` (his words) and `frozen` (a structural hash `validate.mjs` refuses to let drift without his quoted words). Read `HealthOS/knowledge/AUDIT-2026-09-03-THE-PROGRAMME-AND-WHY-IT-WILL-NOT-LAND.md` before proposing any change to the week; the per-muscle gate is gone and is not coming back. Lifting log + a note box. The notes are READABLE from the page as of the same day, collapsed at the bottom with the count of unanswered ones in the summary; `gym_note` was write-only from the web before that. `content/gym/` + `gym_*` tables | yes |
 | ~~`/gym/conditioning`~~ | **Deleted 2026-08-27.** It held the whole week behind two levels of query parameters and every one of its URLs now 307s from `next.config.ts`: `?p=run` to `/run`, `?p=bike` to `/bike`, `?p=swim` to `/swim`, everything else to `/health`, sub-tab preserved in all three | n/a |
 | `/run` | Running. Three sub-tabs on the `?s=` idiom: Now (last session the watch saw), Plan (the ten-week walk-to-run build, belt settings in both units, the week table), How (cues). Source: `conditioning.json`, unchanged in the move | no writes |
@@ -180,45 +180,27 @@ moves daily, so past one day the badge keeps its label, loses the colour, and pr
 checked. `homeBranchNowStale` in `src/lib/reading/queue-db.ts` is the flag, and it is separate from
 `stale` (seven days, the whole mirror) because the two answer different questions on different clocks.
 
-**Recipes are data, and `pnpm build` runs `content/kitchen/validate.mjs --strict`.** A broken recipe
-cannot deploy. Read `content/kitchen/schema/RECIPE-SCHEMA.md` before touching a recipe.
+**THE KITCHEN WAS REBUILT AS A COOKBOOK ON 2026-09-05, and every paragraph this file used to carry
+about recipe cards, `validate.mjs`, `SOURCING.md`, `import.mjs`, `render.mjs`, `probe-kitchen.mjs`,
+`kitchen-notes.mjs` and the stock fold describes code that no longer exists.** Read
+`KitchenOS/README.md` for what it is now: `dish`, `inbox` and `cook_log` in Neon, two pages and three
+API routes under `src/app/kitchen/`, and `src/lib/kitchen/cookbook.ts`. The page never renders a
+publisher's text; it links to it. The reasoning for the rebuild is in
+`KitchenOS/WHERE-THINGS-LIVE.md`; the retired code is in git history and the retired data in
+`KitchenOS/_archive-2026-09-05/`.
 
-**You do not write cooking steps. Read `content/kitchen/schema/SOURCING.md` first.** Decided
-2026-08-09 after the first dish ever cooked from this app burnt, having passed a six-source check on
-its numbers, a full read of every rendered step, and a clean validator run. All four failures were
-gaps *between* the numbers, and every one came from a sentence an agent wrote. None came from a
-figure a source gave. A recipe now follows ONE published recipe verbatim and agents add only what a
-printed page cannot: stock, definitions, equipment, timers, protein. `validate.mjs` enforces a
-single primary source, `sourceText` on every step, and refuses any number in a step that is not in
-that step's source text.
+Two lessons from the first build survive it and apply to every app here. **An agent-written
+instruction is where the defects live**: on 2026-08-09 the first dish cooked from the app burnt
+having passed a six-source check on its numbers, a full read of every rendered step, and a clean
+validator, and all four failures were sentences an agent wrote between figures a source gave. And
+**a model nobody feeds keeps answering**: stock writes stopped on 2026-08-23 and the home page scored
+"what can I cook now" against that fridge for two weeks with every gate green. A number a page
+prints must either be derived from something that is still moving, or declare its own staleness.
 
-**You do not retype her method either.** `content/kitchen/import.mjs` captures one published recipe
-verbatim into `content/kitchen/imported/<id>.json`, hashed, and `validate.mjs` asserts every
-`sourceText` on a card appears in that capture. Before 2026-08-17 the verbatim check compared a step's
-`text` to its `sourceText`, both typed by the same agent, so it verified that an agent agreed with
-itself. Build the card from the capture. A quote the page does not carry now fails the build.
-
-**Check what is already on the port before you trust a local probe run.** On 2026-08-18 four
-`next start` servers from earlier sessions were still listening on 3002, 3007, 3009 and 3011, all
-serving old builds of this repo. A `pnpm start -p 3007` failed with the port in use, the
-wait-for-server loop was satisfied by the stale one instantly, and the probe printed nine confident
-failures about code that had already been replaced. `probe-kitchen.mjs` now compares the served build
-against `.next/BUILD_ID` and refuses to run rather than reporting, so this costs a message instead of
-an hour. Pick a port nothing holds: `netstat -ano | grep LISTENING | grep :30`.
-
-**Touching `/kitchen`? Run `node scripts/probe-kitchen.mjs <base-url>`.** Same argument as the gym
-probe: the static gates all pass on a page that renders a stale ingredient row, and both bugs found on
-2026-08-16 needed a browser. It drives real Chrome over raw CDP with no new dependency, at 390px, and
-writes nothing. Adding a case that would POST to `/kitchen/api` is forbidden: there is no development
-database and a probe writing into his stock or his cook log is worse than no probe.
-
-Two other gates worth knowing before you edit anything under `content/kitchen/`:
-
-- `provenance.readAt` is the build at which every step was read AS RENDERED. Change one word and the
-  stamp goes stale, strict validation exits 1, and the deploy dies. Use `node
-  content/kitchen/render.mjs <id>` to read one in seconds, which is the reason nobody ever did.
-- `provenance.cookedResult: "failed"` drops a dish from the offered list whatever else it passes.
-  Piccata is currently `failed` and is being rewritten from a source.
+**Check what is already on the port before you trust a local run.** On 2026-08-18 four `next start`
+servers from earlier sessions were still listening on 3002, 3007, 3009 and 3011, all serving old
+builds of this repo, and a probe printed nine confident failures about code that had already been
+replaced. Pick a port nothing holds: `netstat -ano | grep LISTENING | grep :30`.
 
 ## CO-BUILDING WITH HIM, rather than designing for him
 
@@ -648,24 +630,10 @@ accumulates things a reader has to work out are dead.
   failing tests) and swap-revert/swap-toggle, and the first two were each "fixed" with a comment
   saying not to do it again. `exSelectorMeansExercise` is the gate now: every `.ex` must carry
   `data-slot`. A shared look is a CSS decision; a shared class name is an API.
-- **Touching `/kitchen` or a recipe? Run `node scripts/kitchen-notes.mjs` FIRST.** The kitchen twin of
-  `gym-notes.mjs`, added 2026-08-28, and the gym learned the lesson FROM the kitchen: a captured
-  question nobody answers is worse than no capture, because he stops believing the box does anything.
-  The gym got a script for it; the kitchen got a sentence in HOODII/CLAUDE.md, and the 2026-08-26
-  audit then found a `kind:"question"` from 2026-08-19 sitting unanswered with its own answer already
-  written into the log and never folded into the step (audit theme T7). `cook_log.handled` is the
-  column, `--handled <id>` marks one, and the three kinds are not the same work: a `question` gets
-  answered in session AND written into the step, a `broke` gets the step fixed and
-  `provenance.readAt` re-stamped, a `confusing` gets the step rewritten. It exits ZERO on a backlog,
-  unlike gym-notes on an overdue `open` row, because these rows carry no agreed deadline and a
-  permanently red pre-push hook is a check somebody deletes.
-- **`content/kitchen/validate.test.mjs` is that validator's regression suite**, added 2026-08-28 and
-  run by `verify.mjs`. Ten cases, five of which assert the gate lets CORRECT data through. It exists
-  because the bare-colour-endpoint gate shipped the same day got **four out of four wrong on its first
-  live run**, flagging four doneness tests that all already discriminated ("They should not be brown",
-  "foaming rather than browning", "Brown is right. BLACK is burnt"). A person reading the output caught
-  it, which is luck. The gate now looks for DISCRIMINATION rather than a keyword, and both directions
-  are watched.
+- **Touching `/kitchen`? Run `node ../.claude/hooks/kitchen-inbox.mjs` FIRST.** It prints the asks waiting
+  from his phone and the cook notes nobody has read, and `--handled inbox:<id> | cook:<id>` closes one.
+  It replaced `kitchen-notes.mjs` on 2026-09-05 and it is a SessionStart hook in HOODII, so a session
+  opened there sees it without asking. A captured note nobody reads teaches him the box does nothing.
 - **Touching `/gym`? Run `node scripts/gym-notes.mjs` FIRST.** There is a note box at the bottom of
   the workout, added 2026-08-16 at his request, and it writes to `gym_note`. It is the only place
   the app records anything in his own words: everything else is numbers typed into boxes, and a

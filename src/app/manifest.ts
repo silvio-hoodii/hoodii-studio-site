@@ -33,7 +33,7 @@ export default function manifest(): MetadataRoute.Manifest {
        twelve characters and "Silvio Neyra" already clips on a narrow phone. */
     short_name: 'Silvio',
     description:
-      'Small software for an audience of one: a kitchen that knows my fridge, a lifting log, and French flashcards from book pages I worked.',
+      'Small software for an audience of one: a cookbook of dishes I actually cook, a lifting log, and French flashcards from book pages I worked.',
     start_url: '/',
     display: 'standalone',
     /* Derived from the tokens like the root layout's themeColor, but LIGHT unconditionally, and

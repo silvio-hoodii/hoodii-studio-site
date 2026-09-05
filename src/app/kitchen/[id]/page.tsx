@@ -1,78 +1,114 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getRecipe, equipmentVocab, offer, asUse } from '@/lib/kitchen/recipes';
-import { deriveStock } from '@/lib/kitchen/stock';
-import { recentNotes } from '@/lib/kitchen/cook';
-import CookClient from './CookClient';
+import { getDish, cookRows } from '@/lib/kitchen/cookbook';
+import NoteBox from '../NoteBox';
 
 export const dynamic = 'force-dynamic';
 
-/* Every dish page was titled "Kitchen". Open three of them while cooking and the tab strip is three
- * identical words, which is the one moment on this site where someone genuinely has several tabs
- * open and needs to tell them apart. The root layout's template turns this into
- * "Chicken Gyudon · Silvio Neyra". */
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+type Params = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
-  const recipe = await getRecipe(id);
-  return recipe ? { title: recipe.name } : {};
+  const d = await getDish(id);
+  return { title: d?.name ?? 'Kitchen' };
 }
 
-export default async function CookPage({ params }: { params: Promise<{ id: string }> }) {
+const RATING_LABEL: Record<string, string> = { nailed: 'worked', fine: 'fine', wrong: 'went wrong' };
+
+/* One dish. The recipe is the publisher's page, opened in a new tab; this page never carries their
+ * text. What it carries is what a printed recipe cannot: the list built for this kitchen with the
+ * store links, the protein figure with where it came from, and his own notes, including every
+ * substitution he decided on in a session. */
+export default async function DishPage({ params }: Params) {
   const { id } = await params;
-  const recipe = await getRecipe(id);
-  if (!recipe) notFound();
-
-  const [stock, vocab, notes] = await Promise.all([
-    deriveStock(),
-    equipmentVocab(),
-    recentNotes(recipe.name, 3),
-  ]);
-
-  const o = offer(recipe, stock);
-
-  // The prep list is GENERATED from what the steps actually use, in both directions. That is the
-  // whole reason the schema exists: "What baking sheet this wasn't on the list wtf" cannot happen
-  // when the list is derived from the steps rather than typed alongside them.
-  const usedRefs = new Set(recipe.steps.flatMap((s) => (s.uses ?? []).map((u) => asUse(u).ref)));
-  const usedEquip = new Set(recipe.steps.flatMap((s) => s.equipment ?? []));
-
-  const prep = recipe.ingredients
-    .filter((i) => usedRefs.has(i.ref))
-    .map((i) => ({
-      ref: i.ref,
-      display: i.display,
-      qty: i.qty ?? null,
-      unit: i.unit ?? null,
-      prep: i.prep ?? null,
-      missing: o.missing.some((m) => m.ref === i.ref),
-      altText: i.altText ?? null,
-      insteadOf: i.insteadOf ?? null,
-      optional: i.optional ?? false,
-      betterWith: i.betterWith ?? null,
-    }));
-
-  const gear = [...usedEquip]
-    .map((e) => ({ id: e, name: vocab[e]?.name ?? e }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  // What this dish could plausibly finish off, for the one question worth asking at the end.
-  const consumable = recipe.ingredients
-    .filter((i) => i.stock && !i.staple)
-    .map((i) => ({ stock: i.stock!, display: i.display }))
-    .filter((v, idx, arr) => arr.findIndex((x) => x.stock === v.stock) === idx);
+  const d = await getDish(id);
+  if (!d) notFound();
+  const cooks = await cookRows(d.name);
+  const host = new URL(d.sourceUrl).hostname.replace(/^www\./, '');
 
   return (
-    <CookClient
-      recipe={recipe}
-      prep={prep}
-      gear={gear}
-      consumable={consumable}
-      notes={notes.map((n) => ({
-        at: new Date(n.at).toISOString().slice(0, 10),
-        note: n.note,
-        rating: n.rating,
-        step: n.step,
-        kind: n.kind,
-      }))}
-    />
+    <div className="wrap">
+      <p className="eyebrow">Dish</p>
+      <h1>{d.name}</h1>
+
+      <a className="recipe-link" href={d.sourceUrl} target="_blank" rel="noreferrer">
+        <span className="k">Open the recipe</span>
+        <span className="v">{d.publisher ?? host}</span>
+      </a>
+
+      <dl className="facts">
+        {d.proteinG != null && (
+          <>
+            <dt>Protein</dt>
+            <dd>
+              <span className="tnum">{Math.round(d.proteinG)} g</span> a serving
+              {d.proteinNote && <span className="small">{d.proteinNote}</span>}
+            </dd>
+          </>
+        )}
+        {d.servings != null && (
+          <>
+            <dt>Serves</dt>
+            <dd>
+              <span className="tnum">{d.servings}</span>{' '}at the recipe&rsquo;s own scale
+            </dd>
+          </>
+        )}
+        <dt>Added</dt>
+        <dd className="tnum">{d.addedAt}</dd>
+      </dl>
+
+      <h2 className="sec">Shopping list</h2>
+      {d.list.length === 0 ? (
+        <p className="empty">No list yet. It gets built in a session, with the store links.</p>
+      ) : (
+        <ul className="list">
+          {d.list.map((it, i) => (
+            <li key={i}>
+              <span>
+                {it.url ? (
+                  <a href={it.url} target="_blank" rel="noreferrer">
+                    {it.item}
+                  </a>
+                ) : (
+                  it.item
+                )}
+              </span>
+              {it.price && <span className="price tnum">{it.price}</span>}
+              {it.qty && <span className="qty">{it.qty}</span>}
+              {it.note && <span className="lnote">{it.note}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2 className="sec">Notes</h2>
+      {d.notes.length === 0 && cooks.length === 0 ? (
+        <p className="empty">Nothing yet.</p>
+      ) : (
+        <ul className="notes">
+          {d.notes.map((n, i) => (
+            <li key={`n${i}`}>
+              <span className="when tnum">{n.at}</span>
+              <p>{n.text}</p>
+            </li>
+          ))}
+          {cooks.map((c) => (
+            <li key={c.id}>
+              <span className="when tnum">{c.at}</span>
+              <p>
+                {c.rating && RATING_LABEL[c.rating] && (
+                  <span className={`rating rating-${c.rating}`}>{RATING_LABEL[c.rating]}</span>
+                )}
+                {c.note}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2 className="sec">How did it go</h2>
+      <NoteBox dish={d.name} />
+    </div>
   );
 }

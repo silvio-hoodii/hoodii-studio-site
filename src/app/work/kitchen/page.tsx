@@ -62,8 +62,8 @@ export default function KitchenStoryPage() {
 
       <h2 className="sec">The review that found ninety-one</h2>
       <p className="body">
-        The same app matches a few thousand published recipes against what is in my kitchen and
-        offers me the ones I can cook. Every check it owned passed, so I asked a reviewer for the
+        The same app, at the time, matched a few thousand published recipes against what was in my kitchen and
+        offered me the ones I could cook. Every check it owned passed, so I asked a reviewer for the
         opposite: find the dishes it claims I can cook and obviously cannot.
       </p>
 
@@ -86,7 +86,7 @@ export default function KitchenStoryPage() {
 
       <p className="body">
         The kitchen is a small app with one user. What it cost me to get right is the part that
-        transfers. The recipes do not. <Link href="/kitchen">The app is here</Link>, fridge and all.
+        transfers. The recipes do not. <Link href="/kitchen">The app is here</Link>, rebuilt since as a cookbook.
       </p>
     </>
   );

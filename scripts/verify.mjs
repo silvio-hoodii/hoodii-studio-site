@@ -22,7 +22,6 @@
  * or an agent types before pushing, in place of four commands whose exit codes have to be watched.
  *
  *   node scripts/verify.mjs           # the five gates
- *   node scripts/verify.mjs --probe <base-url>   # and drive the real kitchen pages in a browser
  *   node scripts/verify.mjs --no-build           # everything except `pnpm build`. CI only
  *
  * `--no-build` EXISTS FOR ONE CALLER AND IS THE WRONG THING TO TYPE BY HAND. Added 2026-09-04 with
@@ -75,7 +74,6 @@ const GATES = [
    *
    * Here rather than in `pnpm build`, for the gym suite's reason: it copies a directory and spawns a
    * process per case. */
-  ['kitchen-validator-tests', process.execPath, ['content/kitchen/validate.test.mjs']],
   /* THE PROGRESSION ENGINE'S OWN SUITE. Added 2026-08-28.
    *
    * `suggest` decides what goes on the bar and had no tests at all, which is how three defects
@@ -232,7 +230,6 @@ const GATES = [
   ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
   ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];
-if (probeAt) GATES.push(['probe', process.execPath, ['scripts/probe-kitchen.mjs', probeAt]]);
 
 /* --no-build, for CI only. See the header: the build prerenders pages that query Neon, so it cannot
  * run without a live connection string, and Vercel already builds every push. Removed from the list

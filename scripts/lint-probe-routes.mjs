@@ -69,7 +69,6 @@ const READ_ONLY_POSTS = new Set([
  * updated, which is the inventory doing exactly its job.
  * ------------------------------------------------------------------------------------------- */
 const SERVER_ACTION_FILES = new Map([
-  ['src/app/kitchen/want/actions.ts', 'READ ONLY: scores a pasted ingredient list, returns strings, writes nothing'],
   ['src/app/login/page.tsx', 'PUBLIC BY NECESSITY: signIn, the gate itself. See src/lib/login-server.ts'],
 ]);
 
