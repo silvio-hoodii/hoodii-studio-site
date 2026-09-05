@@ -35,6 +35,53 @@ Every claim below traces to one of these. Nothing is from memory or from a previ
 - **No writes.** Nothing was POSTed, no database was touched, no tab of his Chrome was used (a
   separate headless Chrome on port 9333).
 
+## STATUS, 2026-09-05: shipped and live at `00c4024`
+
+Everything below is the audit as written on 2026-09-04. This block is what has since been done, so
+the next session does not re-derive it. Live on hoodii.studio and verified against the real domain,
+not against a local build.
+
+**Done and verified live.** A1 A2 A3 A4 A5 A6 A7 A8 A9 . B1 (layer 1 only) B2 B3 B8 . C none .
+D1 . E1 E2 E3 E4 E5 E7 . G1 G3.
+
+**Not done, and why.**
+
+| Item | Why not |
+|---|---|
+| B1 layers 2 and 3 | Suspense around the corpus scoring and `'use cache'`. Layer 1 shipped and is what changes the felt experience; these change the number. Still worth doing |
+| B4 B5 B6 B7 B10 B11 B12 | Batch 4, the phone details. Untouched |
+| C1 C2 C3 | Thumbnail weight, Neon round trips, font weights. Untouched |
+| D2 D3 | The cookie-is-the-secret design note, and unbounded JSON bodies |
+| E6 | Three private copies of the unlock form. `SaveBlocked`'s `onRetry` returns whether the queued work went through and the three copies return nothing, so collapsing them changes a contract at five call sites on the surface he cooks from. Needs its own pass with the kitchen probe |
+| E8 E9 | Two of E8's three instances were fixed (the CSP comment, the cook screen colour) and two MORE were found (AGENTS.md's Illustrations section described SVGs that do not exist; AGENTS.md line 4 carried an em dash). E9, the phone-only measuring tools, is untouched |
+| F | The `counted` dead variable in `kitchen/page.tsx` and the 56-cell French heatmap on an empty app are both still there. The rest of section F shipped |
+| G2 | Where the stopped-projects section sits. A placement question, deliberately left until G1 had been live for a while |
+
+**Four things this audit got wrong or missed, all found while executing it.**
+
+1. **A7 was undercounted by an order of magnitude.** The audit found four prefetches on `/kitchen`
+   from string-literal hrefs. The expensive ones are built by a helper and no string check can see
+   them: `/reading/shelf` was firing 55 requests at itself through `shelfHref()`, including a
+   27-letter rail, on the page that took 178,000 invocations in twelve hours. `/kitchen/find` fired
+   58. Both are 1 now, which is the page's own document.
+2. **A6 named four child routes and there are six.** `/run/log` and `/bike/log` had the same broken
+   title template.
+3. **The share card was rendering in the palette deleted on 2026-08-09.** All four hex literals in
+   `opengraph-image.tsx` were stale, under a comment asserting they mirrored the tokens. Not in the
+   audit at all. They are derived from the tokens now, gated by `gen-tokens --check`.
+4. **B8's recommended option contradicted his own instruction.** The audit offered stacking the
+   volume table with "the per-lift detail stays behind the tap it already has", and the detail has
+   not been behind a tap since 2026-08-29, when he said "I don't care if it doesn't fit or anything.
+   I want to see one table" and had the two tables merged. He ruled to keep one table.
+
+**And one thing this session broke and fixed.** Adding `loading.tsx` gave every dynamic route a
+complete, correct, STABLE frame with no content in it, which defeated every "wait until the geometry
+stops changing" loop in the repo. A screenshot of grey bars shipped into `public/work/` and was
+caught only by its file size. `shoot.mjs`, `shoot-work-site.mjs` and `probe-taps.mjs` now wait on
+`.skel` being absent. Anything else here that waits for stability needs the same guard.
+
+---
+
 ## The verdict in one paragraph
 
 **The engineering under this site is unusually good and almost none of it is visible to the person
