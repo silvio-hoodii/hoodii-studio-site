@@ -41,12 +41,6 @@ const PROBE = join(process.cwd(), 'scripts', 'probe-gym.js');
 const READ_ONLY_POSTS = new Set([
   '/gym/api/plan',
   '/gym/api/session',
-  /* Reads too: it just calls computeNextUp. Found by this linter on the run that introduced it, and
-   * worth knowing that NOTHING CALLS IT: computeNextUp is invoked server-side in page.tsx and by the
-   * hub, so this route is dead. It is also the one read-shaped POST that src/proxy.ts does NOT let
-   * through the cookie gate, so if anything ever did call it from the client it would 401. Left in
-   * place rather than deleted as part of a change about note-taking; a candidate for removal. */
-  '/gym/api/next',
 ]);
 
 /* ---------------------------------------------------------------------------------------------

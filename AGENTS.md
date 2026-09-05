@@ -1,7 +1,7 @@
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes. APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
 ---
@@ -99,7 +99,7 @@ always lose to the thing that exists.
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
 | `/work/brixel`, `/work/kitchen`, `/work/themoment`, `/work/versatile` | Four case-study pages, static, no data layer. **Omitted from this table until 2026-08-28**, which is the drift the note under this table already describes: a hand-maintained list of what exists will always lose to the thing that exists. **The clause 7(c) check applies here and nowhere else on the site**: these are the only pages that could read as advertising availability for outside work while an immigration file is pending. The 2026-08-26 audit verified they carry zero availability claims. Read `work-permit/CLAUDE.md` before adding a sentence to any of them | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
-| `/kitchen/login`, `/gym/login`, `/health/login`, `/french/login` | The gate, one cookie for all | public |
+| `/login` | **ONE login route since 2026-09-04**, replacing `/kitchen/login`, `/gym/login`, `/health/login` and `/french/login`, which were four near-identical forms for one cookie and one password. Each guarded its redirect with its own app's prefix, so a correct password entered from `/reading/shelf` landed in the kitchen (A3). The guard is `safeReturnTo` in `src/lib/return-to.ts`: same-origin, no app names in it, 40 cases in `return-to.test.ts`. The eyebrow is derived from `?to=`. All four old paths 307 here | public |
 
 **`/music` has a failure mode none of the others have.** Its history is unrecoverable: Spotify
 returns the last 50 plays and nothing else, so anything the cron misses is gone from everywhere, not
@@ -455,19 +455,41 @@ table looked populated and stopped three weeks short, and it aborted before `swi
 `health_target` too. And before 2026-08-21 the mirror carried only `strength` and `swimming`, so no
 run or bike had ever reached the site. Compare row counts across the two stores, not the log line.
 
-## Illustrations
+## Drawings
 
-Drawn as inline SVG in `src/app/page.tsx`, not imported. **No human is in the asset loop** and no
-image files to go stale. Single stroke weight, round caps, one accent colour, 48-unit viewBox.
+**THE HUB ILLUSTRATIONS DESCRIBED HERE NO LONGER EXIST.** This section said they were "drawn as
+inline SVG in `src/app/page.tsx`", and that file contains zero `viewBox` and zero `<svg>`: the hub
+is text rows and has been for some time. Corrected 2026-09-04, found while looking for a mark to
+base a favicon on and discovering there was nothing to match. E8's class, in this file.
 
-Each has to read at 46px on a phone. Two drafts of a kettlebell both read as a handbag before it
-became a dumbbell. **Screenshot at phone size and look at it** rather than trusting the path data.
+The principles survive the drawings, because they are what the ONE mark on the site is built to:
+
+**No human is in the asset loop, and no image files to go stale.** `src/lib/icon-mark.tsx` is the
+browser-tab and home-screen icon, drawn in JSX and rendered by `ImageResponse` at build, taking
+every colour from `src/lib/tokens.generated.ts`. Every dimension in it is a fraction of the canvas,
+so 32px and 512px are one drawing rather than two.
+
+**Each has to read small, and that is checked by looking.** Two drafts of a kettlebell both read as
+a handbag before one became a dumbbell. The icon cost two drafts the same way: an indicator-light
+design was illegible at 32px AND put `--signal` in a logo, which breaks the rule that the colour
+means a value true right now. **Render it and look at it** rather than trusting the path data.
+
+**The one exception is `public/work/*.webp`**, the four screenshots on `/work/site`, and they are
+committed files precisely because a screenshot's value is that it is what the page really looked
+like. A Vercel build container has no browser, so they are taken by `scripts/shoot-work-site.mjs`
+against a local server and their date and commit are PRINTED on the page. Staleness is labelled
+rather than prevented.
 
 ## Live data
 
-`src/lib/fetchers.ts` plus `/api/spotify` and `/api/psn`. Spotify now-playing renders in the hub
-footer and degrades to nothing. `PSN_NPSSO` is currently expired and logs a caught error at build;
-harmless, and PSN is not surfaced on the hub.
+`src/lib/fetchers.ts` plus `/api/spotify`. Spotify now-playing renders in the hub footer and
+degrades to nothing.
+
+**PSN IS DELETED, 2026-09-04.** `/api/psn`, `/api/psn-image`, `fetchPsn` and the `psn-api`
+dependency all went together (E5 and section F of that day's audit). The token had been expired for
+months, both routes had zero callers, nothing on the site rendered a game, and the expired token
+logged a caught error on every build. Keeping a client for a feature with no surface is how a repo
+accumulates things a reader has to work out are dead.
 
 ## Commits and deploy
 

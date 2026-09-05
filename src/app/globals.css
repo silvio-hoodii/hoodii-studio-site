@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 /* DARK MODE IS THE OS SETTING, NOT A CLASS, since 2026-09-04.

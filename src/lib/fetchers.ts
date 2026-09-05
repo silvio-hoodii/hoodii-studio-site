@@ -1,14 +1,13 @@
-// Shared Spotify + PSN fetchers. Both the public API routes
-// (src/app/api/{spotify,psn}/route.ts) AND the RSC root page
-// (src/app/page.tsx) call these: same code path, same response shape,
-// so the initial server-rendered snapshot can hand off cleanly to the
-// 60s client-side polling in useDataSources.
-
-import {
-  exchangeAccessCodeForAuthTokens,
-  exchangeNpssoForAccessCode,
-  getRecentlyPlayedGames,
-} from 'psn-api'
+/* The Spotify fetcher. Both the public API route (src/app/api/spotify/route.ts) and the RSC root
+ * page call it: same code path, same response shape, so the server-rendered snapshot hands off
+ * cleanly to the client-side polling.
+ *
+ * THE PSN HALF IS GONE, 2026-09-04, E5 and section F of that day's audit. `PSN_NPSSO` had been
+ * expired for months, /api/psn and /api/psn-image had zero callers, nothing on the site rendered a
+ * game, and the expired token logged a caught error on every build. The routes, this fetcher and
+ * the `psn-api` dependency went together: keeping the client for a feature with no surface is how
+ * a repo accumulates things a reader has to work out are dead.
+ */
 
 export type SpotifyPayload = {
   isPlaying: boolean
@@ -20,17 +19,6 @@ export type SpotifyPayload = {
    * with no way to tell whether it is hours or a fortnight old. Absent while isPlaying is true,
    * because "now" is the answer. */
   playedAt?: string
-}
-
-export type PsnGame = {
-  name: string
-  platform: string
-  imageUrl: string | null
-  lastPlayedAt: string | null
-}
-
-export type PsnPayload = {
-  games: PsnGame[]
 }
 
 const SPOTIFY_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -100,32 +88,5 @@ export async function fetchSpotify(): Promise<SpotifyPayload> {
     return { isPlaying: false }
   } catch {
     return { isPlaying: false }
-  }
-}
-
-export async function fetchPsn(): Promise<PsnPayload> {
-  const npsso = process.env.PSN_NPSSO ?? process.env.SN_NPSSO
-  if (!npsso) return { games: [] }
-
-  try {
-    const accessCode = await exchangeNpssoForAccessCode(npsso)
-    const auth = await exchangeAccessCodeForAuthTokens(accessCode)
-    const { data } = await getRecentlyPlayedGames(auth, {
-      limit: 5,
-      categories: ['ps5_native_game', 'ps4_game'],
-    })
-    const games = data.gameLibraryTitlesRetrieve?.games ?? []
-
-    return {
-      games: games.map((game) => ({
-        name: game.name,
-        platform: game.platform,
-        imageUrl: game.image?.url ?? null,
-        lastPlayedAt: game.lastPlayedDateTime ?? null,
-      })),
-    }
-  } catch (error) {
-    console.error('PSN fetch failed', error)
-    return { games: [] }
   }
 }

@@ -23,11 +23,28 @@
  *
  *   node scripts/verify.mjs           # the five gates
  *   node scripts/verify.mjs --probe <base-url>   # and drive the real kitchen pages in a browser
- */
+ *   node scripts/verify.mjs --no-build           # everything except `pnpm build`. CI only
+ *
+ * `--no-build` EXISTS FOR ONE CALLER AND IS THE WRONG THING TO TYPE BY HAND. Added 2026-09-04 with
+ * `.github/workflows/verify.yml`.
+ *
+ * `pnpm build` cannot run without a database. It is not that the build merely prefers one: three
+ * pages are prerendered at build time and query Neon while doing it, so with no connection string
+ * the build dies collecting page data for /gym/api/finish, and with a syntactically valid dummy one
+ * it dies exporting /reading/about. Measured both ways before this flag was written.
+ *
+ * That leaves a choice for CI, and the flag is the answer to it. Handing a GitHub Action his real
+ * production connection string, so it can prerender two pages, puts a live credential in a second
+ * system to buy coverage of a build that VERCEL ALREADY RUNS ON EVERY PUSH. What CI adds that
+ * nothing else does is ESLint and the seven suites, none of which touch the database.
+ *
+ * So CI runs everything else, and the skip is loud rather than silent: the closing line names it,
+ * and a green run with the build skipped does not read as a green build. */
 import { spawnSync } from 'node:child_process';
 
 const argv = process.argv.slice(2);
 const probeAt = argv.includes('--probe') ? (argv[argv.indexOf('--probe') + 1] || 'http://localhost:3007') : null;
+const noBuild = argv.includes('--no-build');
 
 /* `pnpm install --frozen-lockfile` is first and is not optional. On 2026-08-09 a dependency was
  * removed by editing package.json directly, every local command passed because node_modules was
@@ -217,8 +234,14 @@ const GATES = [
 ];
 if (probeAt) GATES.push(['probe', process.execPath, ['scripts/probe-kitchen.mjs', probeAt]]);
 
+/* --no-build, for CI only. See the header: the build prerenders pages that query Neon, so it cannot
+ * run without a live connection string, and Vercel already builds every push. Removed from the list
+ * rather than skipped inside the loop, so the closing GREEN line lists what actually ran and cannot
+ * name a gate that did not. */
+const GATES_TO_RUN = noBuild ? GATES.filter(([name]) => name !== 'build') : GATES;
+
 const results = [];
-for (const [name, cmd, args] of GATES) {
+for (const [name, cmd, args] of GATES_TO_RUN) {
   process.stdout.write(`  ${name} ... `);
   /* stdio 'pipe' and NOT inherit, so a gate cannot flood the terminal and push the verdict off the
    * top of the screen. Output is kept and printed only for whatever failed, which is the only output
@@ -245,6 +268,15 @@ if (failed) {
 }
 
 console.log(`GREEN. ${results.map((r) => r.name).join(', ')} all exited 0.`);
+/* A green run with the build skipped must not read as a green build. Said before the probe note,
+   because it is the larger omission of the two. */
+if (noBuild) {
+  console.log('');
+  console.log('THE BUILD DID NOT RUN (--no-build). This says typecheck, lint and the suites pass.');
+  console.log('It says nothing about whether the site compiles or whether the content validators');
+  console.log('accept the data, both of which live in `pnpm build`. Vercel runs that on every push.');
+  console.log('');
+}
 if (!probeAt) {
   console.log('The probe did not run. Green here means the code is consistent with itself, which is');
   console.log('what every gate that missed a real bug also meant. For anything he will read or cook');

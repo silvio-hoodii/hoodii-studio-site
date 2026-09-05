@@ -23,7 +23,18 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
+/* THE REPO ROOT ITSELF WAS NEVER CHECKED, and README.md carried an em dash the whole time.
+ *
+ * Found 2026-09-04. This linter walked three directories, so the two markdown files at the top of
+ * the repo were outside it: `README.md`, which is the file GitHub renders on the landing page and
+ * therefore the most-read prose in the project, and `AGENTS.md`, which is where the no-em-dash rule
+ * is WRITTEN DOWN. The rule's own statement was not subject to the rule.
+ *
+ * The root is added as a file list rather than as a walked directory on purpose: walking `.` would
+ * descend into node_modules, .next and .git, and while SKIP_DIR covers those by name, an
+ * allowlist of two files cannot acquire a fourth by accident. */
 const ROOTS = ['src', 'content', 'scripts'];
+const ROOT_FILES = ['README.md', 'AGENTS.md'];
 const SKIP_DIR = new Set(['node_modules', '.next', '.git', 'corpus', 'imported']);
 const EXT = /\.(tsx?|jsx?|mjs|cjs|css|md|json|sql|html)$/;
 
@@ -128,6 +139,15 @@ function walk(dir) {
     const full = join(dir, e);
     if (statSync(full).isDirectory()) { walk(full); continue; }
     if (!EXT.test(e)) continue;
+    checkFile(full);
+  }
+}
+
+/** One file, by absolute path. Split out of `walk` on 2026-09-04 so the two markdown files at the
+ *  top of the repo can be checked without walking the repo root. See ROOT_FILES. */
+function checkFile(full) {
+  {
+    const e = full.split(/[\\/]/).pop();
     const lines = readFileSync(full, 'utf8').split(/\r?\n/);
     /* A COOK CARD'S QUOTED SENTENCES ARE NOT OUR PROSE. Added 2026-08-23.
      *
@@ -167,6 +187,11 @@ function walk(dir) {
 
 for (const r of ROOTS) {
   try { walk(join(ROOT, r)); } catch { /* a root that does not exist is not a failure */ }
+}
+/* The two markdown files at the top of the repo. See ROOT_FILES: README.md is what GitHub renders,
+   and AGENTS.md is where this rule is written down, and neither was checked until 2026-09-04. */
+for (const f of ROOT_FILES) {
+  try { checkFile(join(ROOT, f)); } catch { /* a file that does not exist is not a failure */ }
 }
 
 for (const b of bad) {

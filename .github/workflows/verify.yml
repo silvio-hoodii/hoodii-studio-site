@@ -1,0 +1,66 @@
+# E2 of the 2026-09-04 audit. There was no CI at all: `.github/workflows` did not exist, and the
+# six suites plus the two gym gates ran only inside `scripts/verify.mjs`, which a person types by
+# hand. `pnpm build` (what Vercel runs) covers the content validators and the lint scripts but
+# neither ESLint nor a single test.
+#
+# In a workspace whose founding law is "a rule that does not execute is decoration", the tests were
+# decoration on every push where nobody typed `verify`. There is a pre-push hook, and a hook is
+# local: it does not exist on a machine that has not run `git config core.hooksPath .githooks`, and
+# it can be skipped with one flag.
+#
+# WHAT THIS DOES NOT DO, deliberately:
+#
+#   No probes. probe-taps, probe-kitchen and run-probe-gym need a real browser AND a server AND the
+#   Neon connection string, and run-probe-gym drives the actual training store. A CI job holding
+#   that secret to press buttons against his real log is a worse idea than the coverage is worth.
+#   They stay as the things a person runs against a local `pnpm start`, which is what AGENTS.md
+#   already says.
+#
+#   No deploy. Vercel owns that, from main, and a second thing that can deploy is a second thing
+#   that can deploy the wrong commit.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # --frozen-lockfile on purpose, and it is the one step most likely to catch something real.
+      # On 2026-08-09 a dependency was removed by editing package.json directly instead of running
+      # `pnpm remove`. Every local command passed, because node_modules was already correct and
+      # install never re-ran. Vercel installs with this flag, refused the mismatch, and the deploy
+      # died in five seconds without reaching the build. This makes that failure arrive on the pull
+      # request instead.
+      - run: pnpm install --frozen-lockfile
+
+      # One command, because CI and the pre-push hook must not drift apart: there is a single list of
+      # what "verified" means and it lives in scripts/verify.mjs, not in this file.
+      #
+      # --no-build, AND THAT IS NOT A CONVENIENCE. `pnpm build` cannot run here. Three pages are
+      # prerendered at build time and query Neon while doing it, so with no connection string the
+      # build dies collecting page data for /gym/api/finish and with a dummy one it dies exporting
+      # /reading/about. Both measured on 2026-09-04 before this line was written.
+      #
+      # The alternative was giving this job his real production connection string so it could
+      # prerender two pages. That puts a live credential in a second system to duplicate a build
+      # VERCEL ALREADY RUNS ON EVERY PUSH. What CI adds that nothing else does is ESLint and the
+      # seven suites, and none of them touch the database.
+      #
+      # verify.mjs prints the omission in its own closing lines, so a green run here cannot be
+      # misread as a green build.
+      - run: node scripts/verify.mjs --no-build
