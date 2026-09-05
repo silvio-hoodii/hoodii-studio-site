@@ -722,6 +722,67 @@
       return { pass: rows === 3, detail: { picked, rows, shownAs: text($('.fill-name', filled)) } };
     },
 
+    /* ---- WHAT COMES BACK AFTER A RELOAD, which the four cases above never asked. -------------------
+     *
+     * They all stub every write, so there was never a fill row to read back, and the first shipped
+     * version was audited by fixture on 2026-09-05 and found to DROP logged fill sets in two cases:
+     * a fill whose lead was on a block that later became paired (the render returned null before it
+     * looked at the fill), and a fill whose lead is not on the tab being shown (neither on a card nor
+     * in the off-plan list, just gone). Same fixture trick as swapSurvivesReload: answer the session
+     * read from `state.sessionRows`, leave the tab and come back to force the hydrate. */
+
+    async fillSurvivesHydrateOnASoloBlock() {
+      const solo = $$('.exgroup').find((g) => $$('.ex[data-slot]', g).length === 1 && $('.fill-toggle', g));
+      if (!solo) return { pass: false, detail: 'no fillable solo block on this tab' };
+      const lead = $('.ex[data-slot]', solo).dataset.slot;
+      state.sessionRows = [
+        { exercise_id: lead, set_idx: 1, weight: 100, reps: 5, done: true, swapped_from: null, off_plan: false, fill_for: null },
+        { exercise_id: 'probe-fill-x', exercise_name: 'Probe Fill', set_idx: 1, weight: null, reps: 12, done: true, swapped_from: null, off_plan: true, fill_for: lead },
+        { exercise_id: 'probe-fill-x', exercise_name: 'Probe Fill', set_idx: 2, weight: null, reps: 11, done: false, swapped_from: null, off_plan: true, fill_for: lead },
+      ];
+      const tabs = $$('.tab'); const here = tabs.find((t) => t.classList.contains('on')); const away = tabs.find((t) => !t.classList.contains('on'));
+      if (!here || !away) return { pass: false, detail: 'need two tabs' };
+      away.click(); await sleep(300); here.click();
+      const filled = await waitFor(() => $$('.fill.filled').find((f) => text($('.fill-name', f)) === 'Probe Fill'));
+      state.sessionRows = null;
+      if (!filled) return { pass: false, detail: { lead, problem: 'fill did not render after re-hydrate' } };
+      const reps = $$('.set-row', filled).map((r) => $$('input', r)[1]?.value);
+      const onLeadBlock = filled.closest('.exgroup') === solo;
+      return { pass: onLeadBlock && reps[0] === '12' && reps[1] === '11', detail: { lead, reps, onLeadBlock } };
+    },
+
+    async fillOnABlockThatBecamePairedStillShows() {
+      /* The lead is the FIRST exercise of a two-exercise block: the RDL after knee raises joined it.
+         A fill logged there before the pairing must still render its sets, not vanish. */
+      const paired = $$('.exgroup').find((g) => $$('.ex[data-slot]', g).length === 2);
+      if (!paired) return { pass: false, detail: 'no paired block on this tab to test against' };
+      const lead = $('.ex[data-slot]', paired).dataset.slot;
+      state.sessionRows = [
+        { exercise_id: 'probe-fill-y', exercise_name: 'Probe Fill Y', set_idx: 1, weight: 20, reps: 9, done: true, swapped_from: null, off_plan: true, fill_for: lead },
+      ];
+      const tabs = $$('.tab'); const here = tabs.find((t) => t.classList.contains('on')); const away = tabs.find((t) => !t.classList.contains('on'));
+      away.click(); await sleep(300); here.click();
+      const filled = await waitFor(() => $$('.fill.filled').find((f) => text($('.fill-name', f)) === 'Probe Fill Y'));
+      state.sessionRows = null;
+      return {
+        pass: !!filled && filled.closest('.exgroup') === paired,
+        detail: filled ? { lead, rendered: 'on its block' } : { lead, problem: 'a fill on a now-paired block was dropped from the screen' },
+      };
+    },
+
+    async fillWhoseLeadIsNotOnThisTabGoesToTheList() {
+      state.sessionRows = [
+        { exercise_id: 'probe-fill-z', exercise_name: 'Probe Fill Z', set_idx: 1, weight: 30, reps: 8, done: true, swapped_from: null, off_plan: true, fill_for: 'not-a-lead-on-any-day' },
+      ];
+      const tabs = $$('.tab'); const here = tabs.find((t) => t.classList.contains('on')); const away = tabs.find((t) => !t.classList.contains('on'));
+      away.click(); await sleep(300); here.click();
+      const inList = await waitFor(() => $$('.extra-item').find((e) => /Probe Fill Z/.test(text(e))));
+      state.sessionRows = null;
+      /* Not on a card (its lead is nowhere), so the honest place is the off-plan list. Absent from
+         both is the defect: two sets he did, invisible. */
+      return { pass: !!inList && !$$('.fill.filled').some((f) => /Probe Fill Z/.test(text(f))), detail: { inList: !!inList, text: inList ? text(inList) : null } };
+    },
+
     async fillSetCarriesTheLeadLift() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
       const filled = $('.fill.filled') || await (async () => {

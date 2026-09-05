@@ -94,8 +94,13 @@ export default function SaveBlocked({
         <p>
           {err === 'offline'
             ? 'The request never reached the server.'
-            : `The server refused it (${err}).`}{' '}
-          Nothing you entered was lost.{waiting}
+            : err === 'conflict'
+              /* A set already sits on that row under another card: a fill and a swap of the same
+                 exercise, or two devices on one date. Not retried, because retrying rewrites his
+                 numbers with the other card's. Say which so he knows where to look. */
+              ? 'That exercise already has sets logged today under another card, so this one was not written over them.'
+              : `The server refused it (${err}).`}{' '}
+          {err === 'conflict' ? 'Log it as one more set on the card that has it.' : 'Nothing you entered was lost.'}{waiting}
         </p>
         <div className="row">
           <button type="button" className="primary" disabled={busy} onClick={() => void retry()}>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { appendOffPlanSet, upsertSet } from '@/lib/gym/db';
+import { appendOffPlanSet, upsertSet, SetConflict } from '@/lib/gym/db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -72,6 +72,9 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
+    /* A refused overwrite is the client's to stop retrying, so it gets its own status. See
+       SetConflict in db.ts and the 409 branch of write() in GymClient. */
+    if (e instanceof SetConflict) return NextResponse.json({ ok: false, error: e.message }, { status: 409 });
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
   }
 }

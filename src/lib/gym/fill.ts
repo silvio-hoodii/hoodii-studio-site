@@ -109,14 +109,21 @@ export async function computeFillOptions(
    * set." Excluding them makes the collision unrepresentable instead of guarded. */
   const prescribedToday = (day: Day): Set<string> => {
     const ids = new Set<string>();
-    for (const b of day.blocks) {
-      for (const ex of b.exercises) {
-        ids.add(ex.id);
-        for (const a of ex.alts ?? []) ids.add(a.id);
-      }
-    }
+    for (const b of day.blocks) for (const ex of b.exercises) ids.add(ex.id);
     return ids;
   };
+  /* ALTS ARE NOT EXCLUDED HERE ANY MORE, and the first version of this file got that wrong in the
+   * direction that hides work. It excluded every alt of every slot, on the reasoning that a swap to
+   * that alt plus a fill of the same id would collide on (date, exercise_id, set_idx). True, but the
+   * reverse lunge is an alt of a squat on every day of the week, so the exercise he actually did in
+   * the overhead press's rest on 2026-09-04 was offered NOWHERE, while the handoff and the reply to
+   * him both said it was "in the fill list". A false "you have this" is the worse error.
+   *
+   * The collision is real and is now refused where it would happen instead of pre-empted by hiding
+   * forty legal options: GymClient hides from this list any id currently EFFECTIVE on the day (a
+   * swapped-in alt) or already appended through the off-plan box, hides from the swap picker any alt
+   * that is a current fill, and `upsertSet` refuses to overwrite a row of the other kind (409). Three
+   * layers, and only the last one is a gate; the first two are so the gate is rarely reached. */
 
   const out: FillOptions = {};
 

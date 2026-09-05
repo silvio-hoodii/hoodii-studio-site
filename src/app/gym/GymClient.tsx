@@ -300,6 +300,16 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+      /* 409 IS NOT RETRIED. The server refuses a set that would overwrite a row of the other kind
+         (a fill over a prescribed set, or the reverse), and retrying it forever with the banner up is
+         a queue that can never drain. It is dropped, and the banner says what happened instead of
+         "failed 409". Every other failure keeps the old behaviour: queue and retry. */
+      if (r.status === 409) {
+        pendingRef.current.delete(key);
+        setPendingSets(countSets());
+        setSaveErr('conflict');
+        return false;
+      }
       if (!r.ok) return queue(r.status === 401 ? 'locked' : `failed ${r.status}`);
       pendingRef.current.delete(key);
       // Recorded here rather than at the call site, so a finish that goes out inside a queue flush
@@ -430,10 +440,17 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
            programme rather than by trusting an index in a URL or in state. A block index is a
            position in a file that a rebuild moves; the lead's id is what he actually did. */
         const filled: Record<string, FillCandidate> = {};
+        /* A FILL WHOSE LEAD IS NOT ON THIS TAB. The row was logged under a day whose block this tab
+           does not show (he opened a different session's tab, or the week was rebuilt under a logged
+           session). It cannot render on a card here, so it goes to the off-plan list at the bottom,
+           where a set with no card has always gone. The first version DROPPED these rows: not on a
+           card, not in the list, two sets he did simply absent from the screen. Found by a fixture,
+           not by the probe, because the probe stubs every write and so never had a row to read back. */
+        const orphanFillIds = new Set<string>();
         for (const r of rows) {
           if (!r.fill_for) continue;
           const key = fillKeyForLead(activeDay, day, r.fill_for);
-          if (!key) continue;
+          if (!key) { orphanFillIds.add(r.exercise_id); continue; }
           const known = (fillOptions[key] ?? []).find((c) => c.id === r.exercise_id);
           filled[key] = known ?? {
             /* NOT IN TODAY'S OPTIONS, which happens when the programme changed under a session that
@@ -455,7 +472,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
            Set rather than merged: this IS the record for that date, and appending to whatever
            survived a soft navigation would double the list. */
         setExtraLog(rows
-          .filter((r) => r.off_plan && !r.fill_for)
+          .filter((r) => r.off_plan && (!r.fill_for || orphanFillIds.has(r.exercise_id)))
           .map((r) => ({
             id: r.exercise_id,
             name: r.exercise_name ?? r.exercise_id,
@@ -688,6 +705,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   function fillSets(id: string): number {
     return Math.max(3, sets[id]?.length ?? 0);
   }
+  /** Every exercise id currently filling a rest today. Read by the swap pickers so an alt that is a
+   *  live fill cannot also be swapped in. */
+  const fillIdsNow = new Set(Object.values(fills).map((f) => f.id));
 
   function persistSwaps(next: Record<string, Alt>) {
     try {
@@ -1123,14 +1143,19 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                   </div>
                 )}
 
-                {ex.alts && ex.alts.some((a) => a.id !== eff.id) && (
+                {ex.alts && ex.alts.some((a) => a.id !== eff.id && !fillIdsNow.has(a.id)) && (
                   <div className="ex-swap">
                     <button className="swap-toggle" onClick={() => toggleAltPicker(ex.id)}>
                       {swap ? 'Pick a different step/alternative ▾' : 'Not available? Pick alternative ▾'}
                     </button>
                     {openAlts.has(ex.id) && (
                       <div className="swap-list">
-                        {ex.alts.filter((a) => a.id !== eff.id).map((a) => (
+                        {/* AN ALT THAT IS CURRENTLY FILLING A REST IS NOT OFFERED AS A SWAP. Swapping to
+                            it would put two cards on one (date, exercise_id, set_idx) key space, and
+                            the second card's typing would overwrite the first's rows. The other
+                            direction is filtered in the fill list; the server refuses whatever slips
+                            through both. */}
+                        {ex.alts.filter((a) => a.id !== eff.id && !fillIdsNow.has(a.id)).map((a) => (
                           <button className="swap-opt" key={a.id} onClick={() => swapExercise(ex.id, a)}>
                             <div className="swap-opt-name">{a.name}</div>
                             <div className="swap-opt-cue">{a.cue}</div>
@@ -1225,13 +1250,27 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             * exercise list and the end of the block, wearing `fill-*` and nothing else. */}
           {(() => {
             const key = `${activeDay}:${bi}`;
-            const options = fillOptions[key];
-            if (!options || !options.length) return null;
             const chosen = fills[key];
             const lead = block.exercises[0]!;
+            /* THE CHOOSER IS GATED ON OPTIONS. THE FILLED STATE IS NOT, and the order of these two
+               checks is a fixed defect. The first version returned null when the block had no
+               options, BEFORE looking at `fills`, so a fill logged on a block that later became paired
+               (his RDL got knee raises the same day this shipped) hid every set he had typed into it.
+               Logged work renders whatever the programme has done since. */
+            const options = fillOptions[key];
+            /* Anything currently EFFECTIVE on this day (a slot, or an alt swapped into one) and
+               anything he has already appended through the off-plan box is hidden from the list, so
+               a fill cannot share a key with either. See fill.ts for why alts are offered at all. */
+            const takenNow = new Set<string>([
+              ...blocks.flatMap((b) => b.exercises.map((e) => effOf(e).id)),
+              ...extraLog.map((e) => e.id),
+              ...Object.values(fills).map((f) => f.id),
+            ]);
+            const offer = (options ?? []).filter((c) => !takenNow.has(c.id));
             const logged = chosen ? (sets[chosen.id]?.some((s) => s && (s.reps !== '' || s.done)) ?? false) : false;
 
             if (!chosen) {
+              if (!offer.length) return null;
               return (
                 <div className="fill">
                   <button className="fill-toggle" onClick={() => setFillOpen(fillOpen === key ? null : key)}>
@@ -1247,7 +1286,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                       <p className="fill-hint quiet">
                         Anything here can be done at the {lead.name} without moving. Yours to pick.
                       </p>
-                      {options.map((c) => (
+                      {offer.map((c) => (
                         <button className="fill-opt" key={c.id} onClick={() => chooseFill(key, c)}>
                           <div className="fill-opt-name">{c.name}</div>
                           <div className="fill-opt-meta quiet">

@@ -158,7 +158,7 @@ export async function upsertSet(s: SetInput) {
       setsPrescribed: await prescribedSetsFor(s.day),
     });
   }
-  await sql`
+  const rows = await sql`
     insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done,
       swapped_from, logged_at, suggested_weight, suggested_reps, estimated, fill_for, off_plan)
     values (${s.date}, ${s.day ?? null}, ${s.exerciseId}, ${s.exerciseName ?? null}, ${s.setIdx},
@@ -184,7 +184,27 @@ export async function upsertSet(s: SetInput) {
          query. That is exactly how this file failed to compile the first time.) */
       fill_for      = excluded.fill_for,
       off_plan      = excluded.off_plan
+    where coalesce(gym_set.fill_for, '') = coalesce(excluded.fill_for, '')
+       or (gym_set.reps is null and gym_set.weight is null)
+    returning set_idx
   `;
+  /* THE ONE COLLISION THE TWO CLIENT FILTERS CANNOT SEE: a fill set landing on a key that already
+     holds a prescribed (or differently-filled) set with numbers in it, or the reverse. Two devices on
+     one date, or a stale tab. The WHERE clause above lets the upsert through only when the existing
+     row is the same kind (an ordinary re-log) or empty (a placeholder nothing has typed into), so a
+     row with his numbers in it under one card is never overwritten by another card. Zero rows back
+     means it was refused, and the route turns that into a 409 the client does not retry. This is the
+     same asymmetry appendOffPlanSet was built on: a duplicate he can see is a nuisance, a set silently
+     overwritten is not recoverable. */
+  if (!rows.length) {
+    throw new SetConflict(`${s.exerciseId} set ${s.setIdx} on ${s.date} already holds a set logged under a different card`);
+  }
+}
+
+/** Thrown by upsertSet when a write would overwrite a set of a different kind. The route maps it to
+ *  409 and the client drops the write rather than retrying it. */
+export class SetConflict extends Error {
+  constructor(message: string) { super(message); this.name = 'SetConflict'; }
 }
 
 /** Most recent prior session (strictly before `beforeDate`) with real logged work for this exercise.
