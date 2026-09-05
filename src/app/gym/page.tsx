@@ -1,6 +1,7 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadExtraSuggestions } from '@/lib/gym/program';
+import { computeFillOptions } from '@/lib/gym/fill';
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getNotes, countNotes } from '@/lib/gym/db';
+import { getNotes, countNotes, getLoggedHistory } from '@/lib/gym/db';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
 import { today } from '@/lib/day';
@@ -29,6 +30,11 @@ export default async function GymHome() {
      FIVE, and the count of the rest is on screen beside them. A cap that does not say it is a cap is
      finding 37 in the audit (the notes list silently holds 20). */
   const [logRows, logTotal, noteCount] = await Promise.all([getGymLog(5), countGymLog(), countNotes()]);
+
+  /* WHAT COULD RIDE IN EACH EMPTY REST, computed on the server so the 103-variant catalogue and the
+     whole of equipment.json stay out of the phone's bundle. See src/lib/gym/fill.ts for why this
+     is a control he operates rather than another partner an agent picked. */
+  const fillOptions = await computeFillOptions(await getLoggedHistory());
   /* COUNTED IN THE DATABASE, NOT IN THE ARRAY. `getNotes` caps at 20 and `notes.filter(...)` could
      only ever see what survived the cap, so an unhandled note older than the twentieth would vanish
      from the count with nothing on screen admitting it. Finding 37. */
@@ -52,7 +58,7 @@ export default async function GymHome() {
         * The hub row at src/app/page.tsx still carries the one-line version, which is where a
         * description of the app belongs: on the page that indexes it, for someone deciding whether
         * to open it. Not inside it. */}
-      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions} nextUp={nextUp} />
+      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions} nextUp={nextUp} fillOptions={fillOptions} />
 
       {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he
         * reads the page in: do the session, glance at what the last few looked like, then write a

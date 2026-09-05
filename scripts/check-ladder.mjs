@@ -176,6 +176,13 @@ for (const r of rows) {
   }
 }
 
+/* THE CAP content/gym/validate.mjs ENFORCES on `rangeWidth`, duplicated here as a number rather than
+   imported, because this script runs standalone against a database while that file is a build gate
+   that reads none. If it changes there and not here, this tool goes straight back to recommending
+   what the gate refuses, which is what it did for the week to 2026-09-04. validate.test.mjs asserts
+   the two agree. */
+const MAX_LEGAL_WIDTH = 8;
+
 const gaps = [];
 const checked = [];
 const unlogged = [];
@@ -223,9 +230,24 @@ for (const [dayKey, day] of Object.entries(program.days)) {
          close" finding on a lift that has no next weight is a finding with no available fix. */
       if (row.step <= 0) continue;
       if (row.margin < 0) {
+        /* THE WIDTH THAT WOULD CLOSE IT, CAPPED AT WHAT validate.mjs WILL ACCEPT. Capped since
+           2026-09-05, and before that this tool spent a week recommending a change the build gate
+           refuses.
+
+           It printed `"rangeWidth": 11` for the lateral raise. validate.mjs caps that field at 8 and
+           says why, with a source: a 12 to 23 rep window is past Iversen's 15 RM ceiling and stops
+           being a lateral raise. So one gate named the fix and the other forbade it, both were
+           individually right, and the lift sat broken in the gap between them for six of the seven
+           days to 2026-09-04 while this exact sentence was written into a log file nobody opens.
+
+           `needWidth` is null when no legal width closes the ladder, and the message below then says
+           what the engine actually does instead. A tool that recommends work another gate will
+           reject is worse than a tool that says nothing: the recommendation is free and the rejection
+           arrives after the work is done. gym-catalogue.mjs carries that same lesson about pairings,
+           in its own words. This is the same failure from the other side. */
         let need = width;
-        while (need < 20 && e1rm(cur.w, bottom + need) < demanded) need++;
-        row.needWidth = need;
+        while (need < MAX_LEGAL_WIDTH && e1rm(cur.w, bottom + need) < demanded) need++;
+        row.needWidth = e1rm(cur.w, bottom + need) >= demanded ? need : null;
         gaps.push(row);
       }
     }
@@ -332,12 +354,31 @@ if (!QUIET) {
 if (gaps.length) {
   console.error(`\n${gaps.length} lift(s) whose next weight is unreachable from the top of their own rep range:`);
   for (const r of gaps) {
+    r.fix = r.needWidth != null
+      ? `Widen it: set "rangeWidth": ${r.needWidth} (reps ${r.bottom} to ${r.bottom + r.needWidth}), which is inside the cap validate.mjs enforces.`
+      : `No legal rep window closes this one, so THE ENGINE HANDLES IT: suggest() holds him at the top of the range for a `
+        + `second session before taking a rung the range does not bank. Nothing to change in program.json. Edit the data only `
+        + `if a smaller step exists on this equipment that he has actually used.`;
     console.error(
       `  ${r.dayKey}/${r.id} at ${r.w} lb: ${r.bottom}-${r.top} banks ${r.banked.toFixed(1)} but the next rung, `
-      + `${r.next} lb (+${r.step}), demands ${r.demanded.toFixed(1)}. Either find a smaller step he has actually `
-      + `used on this equipment, or set "rangeWidth": ${r.needWidth} on it (reps ${r.bottom} to ${r.bottom + r.needWidth}).`,
+      + `${r.next} lb (+${r.step}), demands ${r.demanded.toFixed(1)}. ${r.fix}`,
     );
   }
-  process.exit(1);
+  /* EXIT 0 WHERE THE ENGINE ALREADY ANSWERS IT. This exited 1 on the lateral raise for six of the
+     seven days to 2026-09-04, from inside the health sync, into a log nobody opens, naming a fix
+     the build gate refuses. A red nobody can clear teaches people to ignore the red. It still
+     exits 1 the moment a gap appears that a legal rep window WOULD close, because that one is a
+     real edit somebody has to make. */
+  if (gaps.some((r) => r.needWidth != null)) process.exit(1);
+  console.error(`
+Every one of those is handled by the second-session hold in the engine (RUNG_NOT_EARNED in src/lib/gym/progression.ts). Reported, not failing.`);
 }
-console.log(`\n${checked.length} logged lift(s) checked, every ladder closes.`);
+/* "EVERY LADDER CLOSES" HAS TO STAY A TRUE SENTENCE. The moment the exit above stopped being
+   unconditional, this line began printing directly under a gap the same run had just reported.
+   That is the defect this repo keeps finding on its own pages: a sentence sitting three lines
+   above the table that disproves it. It now says what is true in both states. */
+if (gaps.length) {
+  console.log(`\n${checked.length} logged lift(s) checked, ${gaps.length} whose ladder does not close and is held by the engine instead.`);
+} else {
+  console.log(`\n${checked.length} logged lift(s) checked, every ladder closes.`);
+}

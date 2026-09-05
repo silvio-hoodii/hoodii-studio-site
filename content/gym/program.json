@@ -75,8 +75,14 @@
   },
   "frozen": {
     "until": "2026-10-01",
-    "daysHash": "e4bc87f5a679bb59",
+    "daysHash": "c6d62ffafaaf130e",
     "changes": [
+      {
+        "on": "2026-09-05",
+        "hisWords": "Why no superset again? Did hanging knee raises x10 with bb rdl // Did step back lounges 3x6 x 30 lb per side with shoulder press // Why does calf raise even exist and as a solo // IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE",
+        "hash": "c6d62ffafaaf130e",
+        "what": "ONE block changed. Hanging knee raises now ride in the RDL's three-minute rest, which is the pairing he asked for three times in twelve days and did himself each time (gym_note #10 on 23 Aug, #50 on 3 Sep, #54 on 4 Sep). Nothing else in the week moved. Step-back lunges from #55 were tried here and TAKEN BACK OUT: scripts/gym-strength.mjs went red, because a second unilateral squat twice a week pushed five leg lifts 33.5 fractional sets further past the point Pelland stops finding strength gains, and legs already carry the most. #54 is a standing request and #55 is a record of one evening; writing one evening into a permanent prescription is the reflex behind 53 commits to this file. The other nine solo blocks, the lunge included, are his to fill at the rack with the new control on each card, because an agent choosing partners is what notes #27, #28 and #52 were complaining about."
+      },
       {
         "on": "2026-09-04",
         "hisWords": "1 FULL 2 saturday yes (not really weekday naming) i woudl be session c? swimming ... i think just evenig hhas the lift before the swim samee witrh wlak run whats the ideal ... posture yes, again whatever the validator aare doing ayou are allow to question",
@@ -432,6 +438,7 @@
               "cue": "Standing, a dumbbell in each hand at your sides, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if pouring from two jugs. Lower about twice as slowly as you lifted. Success: your shoulders do not rise toward your ears, and you can stop the weight dead at the top. If either fails, go lighter.",
               "progression": "weight",
               "rangeWidth": 8,
+              "$rangeWidthWhy": "STAYS AT EIGHT, and the fix for this lift went into the ENGINE on 2026-09-05 instead. check-ladder.mjs had exited 1 on it for six of the previous seven days: at 20 lb a window of 12 to 20 banks an estimated max of 33.3 and the next dumbbell, 25 lb, demands 35.0, so he topped the range, the card promoted him, he failed at 25 and dropped back. The tool's own suggested fix was \"rangeWidth\": 11, and validate.mjs REFUSES 11 with a sourced reason (past Iversen's 15 RM ceiling). Two gates in this repo disagreed with each other and the lift sat broken between them for a week. The engine now holds a lift at the top of its range for a second session before taking a rung it cannot earn, which is the fix validate.mjs names in its own failure message. See RUNG_NOT_EARNED in src/lib/gym/progression.ts.",
               "whyHere": "rides in its rest because it needs no fixture and trains a muscle no main lift touches",
               "alts": [
                 {
@@ -509,9 +516,9 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Hinge",
-          "why": "The heavy hinge, first while you are fresh. Three sets, twice a week, at your own rep range of six to eight, going up 5 lb when all three sets reach eight.",
+          "pairing": "fill",
+          "label": "Hinge, knee raises in the rest",
+          "why": "The heavy hinge, first while you are fresh. Three sets, twice a week, at your own rep range of six to eight, going up 5 lb when all three sets reach eight. The knee raises ride in its three-minute rest: your own pairing, done on 23 August, 3 September and 4 September before anyone wrote it down.",
           "exercises": [
             {
               "id": "romanian-deadlift",
@@ -564,11 +571,41 @@
                   "cue": "Back toe lightly touching the floor for balance, but almost all the weight on the front leg. Much easier to balance, so you can load it heavier."
                 },
                 {
-                  "id": "kb-single-leg-rdl",
-                  "name": "KB Single-Leg RDL",
+                  "id": "single-leg-rdl",
+                  "name": "Single-Leg RDL",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Same movement holding a kettlebell. The handle sits closer to your leg, which some people find easier to control. 8/leg."
+                  "cue": "One dumbbell, in the hand OPPOSITE the standing leg. Stand on one leg with a soft knee, push the hips back and let the free leg travel straight back behind you as the dumbbell lowers down the standing shin. Stop when the hamstring of the standing leg pulls; do not chase the floor. Success: your hips stay level, no rolling open to the side. Hold the rack with your free hand if you wobble, that is not cheating. 8/leg."
+                }
+              ]
+            },
+            {
+              "id": "hanging-knee-raise",
+              "name": "Hanging Knee Raise",
+              "sets": 3,
+              "reps": "10",
+              "rest": "45s",
+              "zone": "rack",
+              "station": "rack-pullup-bar",
+              "log": true,
+              "cue": "Hang from the bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top keep going a couple of inches by curling your hips under you. That last bit is the part your abdominals do. Lower under control until your legs are straight and you have come to a STOP before the next rep. No swinging. When fifteen is easy, straighten the legs instead of adding weight.",
+              "progression": "reps",
+              "bodyweight": true,
+              "whyHere": "your own pairing, done on 23 August, 3 September and 4 September before anyone wrote it down",
+              "alts": [
+                {
+                  "id": "hollow-hold",
+                  "name": "Hollow Hold",
+                  "zone": "rack",
+                  "station": null,
+                  "cue": "On your back on the floor, lower back pressed flat into the ground and kept there. Lift the shoulders and both legs a few inches off the floor and hold. The moment your lower back lifts away from the floor the set is over, so bend the knees to make it easier rather than pushing through."
+                },
+                {
+                  "id": "plank-shoulder-taps",
+                  "name": "Plank Shoulder Taps",
+                  "zone": "rack",
+                  "station": null,
+                  "cue": "Top of a push-up position, feet a little wider than usual. Tap one hand to the opposite shoulder, then the other, without letting the hips rotate. Count TAPS, not seconds. Slower is harder."
                 }
               ]
             }
@@ -578,7 +615,7 @@
           "role": "main",
           "pairing": "sequence",
           "label": "Press",
-          "why": "The overhead push, second so it gets a fresh slot. Standing barbell in the rack: the seated dumbbell version sat at 60 to 65 lb since May because the next dumbbell was a jump the reps could not earn, and a barbell moves in 5 lb steps. Your barbell history is 105 to 115 lb.",
+          "why": "The overhead push, second so it gets a fresh slot. Standing barbell in the rack: the seated dumbbell version sat at 60 to 65 lb since May because the next dumbbell was a jump the reps could not earn, and a barbell moves in 5 lb steps. Your barbell history is 105 to 115 lb. This one is left open on purpose: you did step-back lunges here on 4 September, and rather than prescribing them the card lets you pick them, or anything else that can be done at the rack, whenever you want them.",
           "exercises": [
             {
               "id": "bb-overhead-press",
@@ -792,7 +829,7 @@
           "role": "accessory",
           "pairing": "sequence",
           "label": "Optional: dips",
-          "why": "Optional. Nothing the goal measures needs this block. The triceps are trained only as helpers by the presses; you said you would rather do the dip than a cable triceps exercise, so this is the dip, three sets.",
+          "why": "Optional. Nothing the goal measures needs this block. The triceps are trained only as helpers by the presses; you said you would rather do the dip than a cable triceps exercise, so this is the dip, three sets. You asked why the app calls a dip a chest exercise: because the catalogue files it as a horizontal press and chest is the prime mover, which is true and is not why it is here. It is here for the triceps. That is why the alternatives under it are triceps work now rather than four more chest machines.",
           "exercises": [
             {
               "id": "assisted-dip",
@@ -807,6 +844,20 @@
               "progression": "reps",
               "bodyweight": true,
               "alts": [
+                {
+                  "id": "tricep-pushdown",
+                  "name": "Tricep Pushdown",
+                  "zone": "cable",
+                  "station": "cable-pulldown",
+                  "cue": "At the high pulley, elbows pinned to your sides and kept there. Push the bar down until your arms are straight, then let it come back up only as far as your elbows staying put allows. The elbows are the hinge; if they drift forward the set is over. You have worked this at 80 to 87.5 lb."
+                },
+                {
+                  "id": "db-overhead-tricep-extension",
+                  "name": "DB Overhead Tricep Extension",
+                  "zone": "machines",
+                  "station": null,
+                  "cue": "One dumbbell held in both hands, straight above your head, elbows close to your ears. Lower it behind your head by bending only at the elbow, then press back up. Upper arms stay still and vertical the whole time. This one stretches the long head of the triceps where the pushdown shortens it, which is why they are not the same exercise. You have worked this at 42.5 to 50 lb."
+                },
                 {
                   "id": "machine-chest-press",
                   "name": "Machine Chest Press",
@@ -846,7 +897,7 @@
           "role": "accessory",
           "pairing": "sequence",
           "label": "Optional: calves",
-          "why": "Optional. Nothing the goal measures needs this block, so drop it when you are short of time. The calf machine is the version you swapped to yourself on 2026-08-28, and it is the only calf work in the week.",
+          "why": "Optional. Nothing the goal measures needs this block, so drop it when you are short of time. It exists because YOU swapped to this machine on 2026-08-28, not because anything asked for it, and it is the only calf work in the week. No source here says you need calves for the goal in this file. If you want it gone, say so and it goes.",
           "exercises": [
             {
               "id": "standing-calf-raise",

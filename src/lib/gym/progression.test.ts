@@ -251,6 +251,60 @@ check(
   '10: the flag must not leak into the pushup',
 );
 
+/* ---- the rung the rep range cannot earn ------------------------------------------------------- */
+/* HIS REAL LIFT. `a/db-lateral-raise` at 20 lb, window 12 to 20. Epley: 20 * (1 + 20/30) = 33.3
+ * banked; the next dumbbell, 25 lb, demands 25 * (1 + 12/30) = 35.0. Margin -1.7, so topping the
+ * range does not earn the jump. check-ladder.mjs exited 1 on this for six of the seven days to
+ * 2026-09-04 and its warning went to a log file nobody opens. The fix it suggested, rangeWidth 11,
+ * is refused by content/gym/validate.mjs, so the two gates in this repo disagreed and the lift sat
+ * broken between them.
+ *
+ * Both directions are tested: the hold must fire on the FIRST time he tops the range and must get
+ * out of the way on the second, or it is a lift that can never go up at all. */
+
+check(
+  'lateral raise at 20: the first time he tops the range, hold rather than promote',
+  suggest(session('2026-09-03', 3, 20, 20), plan({
+    type: 'weighted', targetReps: 12, rangeWidth: 8, increment: 5, ladder: RACK,
+    recent: [session('2026-09-03', 3, 20, 20), session('2026-08-30', 3, 20, 16)],
+  })),
+  (s) => s.weight === 20 && s.reps === 20,
+  '20 lb again at 20 reps: 25 lb is a 25% jump this range does not bank, and taking it is the loop '
+    + 'that kept the overhead press flat all year',
+);
+
+check(
+  'lateral raise at 20: the SECOND session at the top does take the jump',
+  suggest(session('2026-09-05', 3, 20, 20), plan({
+    type: 'weighted', targetReps: 12, rangeWidth: 8, increment: 5, ladder: RACK,
+    recent: [session('2026-09-05', 3, 20, 20), session('2026-09-03', 3, 20, 20)],
+  })),
+  (s) => s.weight === 25,
+  '25: a gate watched refusing and never watched permitting is a gate that refuses everything',
+);
+
+check(
+  'the hold does not touch a lift whose ladder already closes',
+  suggest(session('2026-09-03', 3, 185, 7), plan({
+    type: 'weighted', targetReps: 5, increment: 5,
+    recent: [session('2026-09-03', 3, 185, 7), session('2026-08-30', 3, 185, 5)],
+  })),
+  (s) => s.weight === 190,
+  '190: at 185 lb a 5 lb step is 2.7%, banked 228 against demanded 222. Every barbell lift on the '
+    + 'page is in this state and none of them should feel this rule',
+);
+
+check(
+  'an assisted lift is exempt, because its number goes DOWN',
+  suggest(session('2026-09-03', 3, 40, 10), plan({
+    type: 'weighted', targetReps: 8, increment: 10, assistance: true, ladder: RACK,
+    recent: [session('2026-09-03', 3, 40, 10), session('2026-08-30', 3, 40, 8)],
+  })),
+  (s) => s.weight != null && s.weight < 40,
+  'less counterweight than 40: "the next rung demands a bigger max" is the wrong question on a '
+    + 'machine where progress means the number falls',
+);
+
 console.log('-'.repeat(70));
-console.log(`22 cases, ${failed} failed`);
+console.log(`26 cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);

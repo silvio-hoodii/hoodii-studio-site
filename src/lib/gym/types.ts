@@ -399,3 +399,46 @@ export interface Conditioning {
  *
  * `Cue` deliberately STAYED here. Run and bike cues are the same shape and the swim types import
  * it from this file, which is the honest direction: the cue is the shared idea, swim is not. */
+
+/* ---- FILLING AN EMPTY REST -------------------------------------------------------------------
+ *
+ * Ten blocks in the week are one lift with nobody in the rest. His standing ruling, 2026-08-29:
+ * "IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE", and six notes over twelve days say
+ * the same thing from the rack (gym_note #10, #28, #50, #52, #54, #55). Two of those pairings are
+ * now in program.json because he ran them himself and wrote them down; the rest is a control on the
+ * card, so the next one does not need an agent.
+ *
+ * THESE ARE HERE AND NOT IN fill.ts because that module is `server-only` and GymClient is a client
+ * component that has to name the prop it receives. */
+
+export interface FillCandidate {
+  id: string;
+  name: string;
+  zone: string;
+  station: string | null;
+  /** The movement pattern's display name, so a list of 40-odd options reads as "Abs", "Biceps",
+   *  "Calf raise" rather than forty lift names in one column. Grouping is the only thing that makes
+   *  a list this long usable on a phone between sets. */
+  group: string;
+  /** Sets he has logged on this id, ever. Orders the list and decides the hint on the row: a lift he
+   *  has done before needs no explanation, a new one does. */
+  logged: number;
+  /** The weight he has used most on it, when there is one, so the card can say what he was doing
+   *  rather than asking him to remember it standing up. */
+  lastWeight: number | null;
+  /** Where it is done, in the words equipment.json uses for the fixture ("Squat rack", "Pull-up bar
+   *  on top of the rack uprights"), or "no machine needed" when it holds none.
+   *
+   *  THE FIRST VERSION OF THIS ROW SAID "nothing to carry" FOR A NULL STATION AND THAT WAS FALSE. A
+   *  null station means the exercise occupies no FIXTURE, which is why it can ride in another lift's
+   *  rest; it says nothing about whether he picks up a dumbbell, and a DB lateral raise is both. It
+   *  also printed the raw station id (`cable-pulldown`), which is a key in a JSON file rather than
+   *  the name of anything in his gym. Caught by looking at the rendered screen at 390px, which is
+   *  the only gate in this repo that catches a sentence being wrong. */
+  where: string;
+}
+
+/** Keyed `${dayKey}:${blockIndex}`. Only blocks that are ONE exercise with a rest of 60 seconds or
+ *  more get an entry, so an absent key IS the test for "not fillable" and no second flag can drift
+ *  away from it. */
+export type FillOptions = Record<string, FillCandidate[]>;

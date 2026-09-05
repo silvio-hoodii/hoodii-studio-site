@@ -9,6 +9,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { pairingRefusal } from './pairing-legal.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const readJson = (f) => JSON.parse(readFileSync(join(HERE, f), 'utf8'));
@@ -1333,15 +1334,23 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * plus calf raise impossible, and the rack's pull-up bar is not because he said that walk works
        * "only when the gym is not busy", which is a condition no card can check. Same safe-defaults
        * rule as the rest of the file: an undeclared pair refuses. */
-      const adjacent = (x, y) => {
-        const sx = stationOf(a.zone, x);
-        const sy = stationOf(b.zone, y);
-        return Boolean(sx?.adjacentTo?.includes(y)) && Boolean(sy?.adjacentTo?.includes(x));
-      };
-      if (stations.length > 1 && !adjacent(a.station, b.station)) {
+      /* THE THREE CLAUSES MOVED TO content/gym/pairing-legal.mjs ON 2026-09-05, and this file asks
+       * that module rather than carrying its own copy. Same move as structural-hash.mjs.
+       *
+       * The reason is not tidiness. There were THREE implementations of one rule: this one,
+       * `ridesFree` in scripts/gym-catalogue.mjs, and (as of 2026-09-05) the list of partners he
+       * picks from at the rack. gym-catalogue's had drifted: it never implemented case (c), so
+       * `--fill`, the tool AGENTS.md names for the partners work, could not see the pairing he asked
+       * for on 23 August, 3 September and 4 September. A tool that suggests work this gate would
+       * reject is a documented failure here; a tool that hides work this gate would ALLOW is the same
+       * failure wearing the opposite sign, and it cost twelve days.
+       *
+       * The refusal comes back as a CODE so each one keeps the distinct, sourced message it had. */
+      const refusal = pairingRefusal(a, b, stationOf);
+      if (refusal?.code === 'two-stations') {
         fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one, unless the two fixtures are declared adjacent in equipment.json, which is case (c) of the rule that file quotes. Either give the partner no fixture, or declare the two adjacent WITH his words for it.`);
       }
-      if (stations.length > 1 && adjacent(a.station, b.station) && a.zone !== b.zone) {
+      if (refusal?.code === 'adjacent-crosszone') {
         fail(where, `${block.pairing} block claims adjacent stations "${a.station}" and "${b.station}" but they are in different zones ("${a.zone}" and "${b.zone}"). Adjacency is arm's reach, which is a fact about one place.`);
       }
 
@@ -1369,9 +1378,8 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * session and a wrong "you cannot" costs a walk. Today exactly two stations are shareable, the
        * bench and the plyo box, and both carry the reason. Answering the open question on
        * cable-pulldown UNLOCKS pairings rather than removing them. */
-      if (stations.length === 1 && a.station != null && b.station != null) {
-        const st = stationOf(a.zone, a.station);
-        if (!st?.sharedInOneWindow) {
+      {
+        if (refusal?.code === 'station-not-shared') {
           fail(where, `${block.pairing} block puts two exercises on "${a.station}" at once, and that station is not declared shareable. `
             + `Two exercises on ONE station is only a superset when neither has to reconfigure it: a bench is shared without touching it, a cable column is not. `
             + `Set sharedInOneWindow on that station in equipment.json WITH the reason, or make this block a sequence. `

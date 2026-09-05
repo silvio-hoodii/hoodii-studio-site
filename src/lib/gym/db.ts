@@ -81,6 +81,18 @@ export interface SetInput {
   suggW?: number | string | null;
   suggR?: number | string | null;
   estimated?: boolean | null;
+  /** THE LEAD LIFT WHOSE REST THIS SET WAS DONE IN, when he filled that rest himself at the rack.
+   *
+   *  Null on every prescribed set and on every set appended through the off-plan box. Set only by
+   *  the "fill this rest" control, which answers the one complaint he has made six times in twelve
+   *  days (gym_note #10, #28, #50, #52, #54, #55). It makes his improvisation DATA rather than
+   *  prose: before this column the only record of the three pairings he ran on 2026-09-04 was four
+   *  sentences typed into a free-text box, which an agent read three days later and turned into
+   *  another redesign of the week.
+   *
+   *  It carries `off_plan` with it, because a partner he chose is by definition not what the day
+   *  prescribed. The two are written together and cannot disagree. */
+  fillFor?: string | null;
 }
 
 /* NO `rir`. The column was dropped from gym_set on 2026-08-27, his call, after holding null in 0 of
@@ -148,11 +160,11 @@ export async function upsertSet(s: SetInput) {
   }
   await sql`
     insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done,
-      swapped_from, logged_at, suggested_weight, suggested_reps, estimated)
+      swapped_from, logged_at, suggested_weight, suggested_reps, estimated, fill_for, off_plan)
     values (${s.date}, ${s.day ?? null}, ${s.exerciseId}, ${s.exerciseName ?? null}, ${s.setIdx},
       ${num(s.weight)}, ${num(s.reps)}, ${!!s.done}, ${s.swappedFrom ?? null},
       ${s.loggedAt ?? new Date().toISOString()}, ${num(s.suggW)}, ${num(s.suggR)},
-      ${s.estimated == null ? null : !!s.estimated})
+      ${s.estimated == null ? null : !!s.estimated}, ${s.fillFor ?? null}, ${s.fillFor != null})
     on conflict (date, exercise_id, set_idx) do update set
       exercise_name = excluded.exercise_name,
       day           = excluded.day,
@@ -163,7 +175,15 @@ export async function upsertSet(s: SetInput) {
       logged_at     = excluded.logged_at,
       suggested_weight = coalesce(excluded.suggested_weight, gym_set.suggested_weight),
       suggested_reps   = coalesce(excluded.suggested_reps, gym_set.suggested_reps),
-      estimated     = coalesce(excluded.estimated, gym_set.estimated)
+      estimated     = coalesce(excluded.estimated, gym_set.estimated),
+      /* NOT coalesce, unlike the two lines above it. Those keep an existing value because a later
+         write that omits a suggestion must not erase the one recorded when the card was first read.
+         This is the opposite case: he can change his mind about which partner is in a rest, so
+         clearing it has to be expressible or a mistaken pick becomes permanent. Same call as done.
+         (No backticks in this comment: it sits inside a template literal, and a stray one ends the
+         query. That is exactly how this file failed to compile the first time.) */
+      fill_for      = excluded.fill_for,
+      off_plan      = excluded.off_plan
   `;
 }
 
@@ -328,9 +348,36 @@ export async function finishSession(opts: { date: string; day?: string | null; s
 export async function getSessionForHydrate(date: string) {
   return sql`
     select exercise_id, exercise_name, set_idx, weight, reps, done, suggested_weight, suggested_reps,
-           swapped_from, coalesce(off_plan, false) as off_plan
+           swapped_from, coalesce(off_plan, false) as off_plan, fill_for
     from gym_set where date = ${date} order by exercise_id, set_idx
   `;
+}
+
+/** WHAT HE HAS ACTUALLY LOADED, EVER, per exercise id: how many sets, and the weight he used most.
+ *
+ *  Orders the fill-a-rest list. A partner he has history on is one the card can put a number
+ *  against; anything else he has to judge cold, standing up, mid-rest. `gym-catalogue.mjs --fill`
+ *  ordered by muscle coverage instead, which is a fact about the programme rather than about him,
+ *  and it buried his own repeated pairing at rank 40 of 43.
+ *
+ *  ONE ROUND TRIP for every id at once, and `mode()` rather than `max`: the working weight is the
+ *  one he used MOST across the set, so a heavy top single does not become "what you were doing".
+ *  Same definition as `workingWeight` in progression.ts, computed in Postgres because this asks it
+ *  of the whole table. Counting round trips rather than work is the billing rule in AGENTS.md. */
+export async function getLoggedHistory(): Promise<Map<string, { sets: number; weight: number | null }>> {
+  const rows = await sql`
+    select exercise_id,
+           count(*)::int as sets,
+           mode() within group (order by weight) filter (where weight is not null) as weight
+      from gym_set
+     where ${PERFORMED} and reps is not null and reps > 0
+     group by exercise_id
+  `;
+  const out = new Map<string, { sets: number; weight: number | null }>();
+  for (const r of rows as unknown as { exercise_id: string; sets: number; weight: number | null }[]) {
+    out.set(r.exercise_id, { sets: r.sets, weight: r.weight == null ? null : Number(r.weight) });
+  }
+  return out;
 }
 
 export async function getSessionDay(date: string): Promise<string | null> {

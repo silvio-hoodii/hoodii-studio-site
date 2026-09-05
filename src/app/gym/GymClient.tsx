@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
 import { today } from '@/lib/day';
-import type { Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem } from '@/lib/gym/types';
+import type {
+  Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem, FillOptions, FillCandidate,
+} from '@/lib/gym/types';
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
@@ -12,12 +14,31 @@ import {
 } from '@/lib/gym/program-shared';
 import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kinds';
 
+/* WHICH BLOCK A FILLED REST BELONGS TO, found by the LEAD LIFT'S ID rather than by a stored index.
+ *
+ * `fill_for` records the lift he was resting between sets of, which is a fact about what he did. A
+ * block index is a position in program.json, and this file has been rewritten 53 times in 24 days:
+ * an index stored on Tuesday points at a different block on Thursday. Same reasoning as
+ * `swapped_from` holding an id, and as `equivalent-ids.ts` refusing to rewrite ids at write time.
+ *
+ * Returns null when today's programme no longer holds that lead, which is a real state after a
+ * rebuild and not an error: the caller renders the sets it has rather than dropping them. */
+function fillKeyForLead(dayKey: DayKey, day: Day, leadId: string): string | null {
+  const i = day.blocks.findIndex((b) => b.exercises.some((e) => e.id === leadId));
+  return i < 0 ? null : `${dayKey}:${i}`;
+}
+
 interface Props {
   program: Program;
   warmups: { lower: WarmupItem[]; upper: WarmupItem[]; posture?: WarmupItem[] };
   cooldowns: Record<string, CooldownItem>;
   extraSuggestions: string[];
   nextUp: NextUp;
+  /** What could legally ride in each empty rest, keyed `${dayKey}:${blockIndex}`, computed on the
+   *  server by src/lib/gym/fill.ts. Only blocks that are one exercise with a rest of 60s or more get
+   *  an entry, so `fillOptions[key]` being undefined is the test for "this block is not fillable"
+   *  and no second flag can disagree with it. */
+  fillOptions: FillOptions;
   /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
      that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
      day: declared in an interface, sent on every render, used by nothing. Removing it also drops a
@@ -135,7 +156,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp }: Props) {
+export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -147,6 +168,24 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
      Per exercise, per page load: a set he logged survives a reload because the hydrate below renders
      as many rows as the log holds. */
   const [extraSets, setExtraSets] = useState<Record<string, number>>({});
+  /* WHAT HE PUT IN EACH EMPTY REST TODAY, keyed `${dayKey}:${blockIndex}`, since 2026-09-05.
+   *
+   * The complaint this answers is the most-repeated one in the whole log: six notes over twelve days
+   * asking why a main lift sits alone on a three-minute rest, ending in #54, "Why no superset
+   * again?", written after he had supersetted three blocks himself that evening. Every previous
+   * answer was an agent choosing a partner and writing it into program.json, which is what produced
+   * #52: "we regressed to having a hanging knee raises with a lat pill down wtf os this".
+   *
+   * SO HE PICKS, AND THE APP RECORDS IT. Sets land in gym_set with `fill_for` naming the lead lift,
+   * which is what turns his improvisation from four sentences in a note box into rows anything can
+   * read. The choice itself rehydrates from those rows below, so nothing is held only in this state.
+   *
+   * The list he picks from is `fillOptions`, computed on the server against the SAME legality rules
+   * validate.mjs enforces. Nothing offered here can be refused by the gate. */
+  const [fills, setFills] = useState<Record<string, FillCandidate>>({});
+  /* Which block's chooser is open. One at a time: this is a list of 20 to 40 options and two of them
+     unrolled at once is the wall of text he has objected to three times. */
+  const [fillOpen, setFillOpen] = useState<string | null>(null);
   /* THE TIME BUDGET IS GONE, 2026-08-22, and he designed the replacement.
    *
    * It made him predict his own session before starting it, which he said he gets wrong in both
@@ -378,7 +417,35 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           exercise_id: string; exercise_name: string | null; set_idx: number;
           weight: number | null; reps: number | null;
           done: boolean; swapped_from: string | null; off_plan: boolean | null;
+          fill_for: string | null;
         }[];
+
+        /* THE FILLED RESTS COME BACK FIRST, because the two branches below both key off knowing
+           which ids they are. A fill row is `off_plan = true` and would otherwise land in the
+           off-plan list at the bottom of the page, which is exactly the wrong place: he did that
+           work inside the lead lift's rest and it belongs on that card, in numbered set rows he can
+           still type into.
+
+           `fill_for` names the lead, and the block is found by looking the lead up in today's
+           programme rather than by trusting an index in a URL or in state. A block index is a
+           position in a file that a rebuild moves; the lead's id is what he actually did. */
+        const filled: Record<string, FillCandidate> = {};
+        for (const r of rows) {
+          if (!r.fill_for) continue;
+          const key = fillKeyForLead(activeDay, day, r.fill_for);
+          if (!key) continue;
+          const known = (fillOptions[key] ?? []).find((c) => c.id === r.exercise_id);
+          filled[key] = known ?? {
+            /* NOT IN TODAY'S OPTIONS, which happens when the programme changed under a session that
+               is already logged. Render what he DID rather than dropping it: the log is the record
+               and this page is reading it back to him. */
+            id: r.exercise_id,
+            name: r.exercise_name ?? r.exercise_id,
+            zone: '', station: null, group: '', logged: 0, lastWeight: null, where: '',
+          };
+        }
+        setFills(filled);
+        const fillIds = new Set(Object.values(filled).map((c) => c.id));
 
         /* THE OFF-PLAN LIST COMES BACK TOO, since 2026-08-28. It started empty on every load and
            nothing refilled it, so after a reload the box showed nothing while the rows sat in the
@@ -388,7 +455,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
            Set rather than merged: this IS the record for that date, and appending to whatever
            survived a soft navigation would double the list. */
         setExtraLog(rows
-          .filter((r) => r.off_plan)
+          .filter((r) => r.off_plan && !r.fill_for)
           .map((r) => ({
             id: r.exercise_id,
             name: r.exercise_name ?? r.exercise_id,
@@ -400,7 +467,11 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           /* OFF-PLAN ROWS ARE NOT CARD ROWS. They share the exercise_id key space with prescribed
              sets, so without this filter an off-plan "Dead Bug" would render inside the prescribed
              dead-bug grid at whatever index the server gave it. They have their own list below. */
-          for (const s of rows.filter((r) => !r.off_plan)) {
+          /* A FILL ROW IS A CARD ROW even though it carries off_plan. The flag says "not what the day
+             prescribed", which is true and is why it is set; it does not say "render at the bottom".
+             `fill_for` is what separates the two, and this is the one place the distinction has to be
+             made or his filled rest comes back after a reload as a flat list of loose sets. */
+          for (const s of rows.filter((r) => !r.off_plan || (r.fill_for && fillIds.has(r.exercise_id)))) {
             const arr = (next[s.exercise_id] = next[s.exercise_id] ? [...next[s.exercise_id]!] : []);
             arr[s.set_idx - 1] = {
               weight: s.weight != null ? String(s.weight) : '',
@@ -477,7 +548,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * far has been `ex.name` written where `eff.name` was meant, and the two are only different after
    * a swap, so it survives any test done without one. Today's log carries the proof:
    * `exercise_id: box-jump` next to `exercise_name: "Broad Jump"`, a row that contradicts itself. */
-  function autosave(slotId: string, eff: Exercise, idx: number, entry: SetEntry) {
+  function autosave(slotId: string, eff: Exercise, idx: number, entry: SetEntry, fillFor?: string) {
     const p = plan[eff.id];
     void write(`set:${date}:${eff.id}:${idx}`, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
@@ -488,6 +559,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       swappedFrom: swaps[slotId] ? slotId : null,
       suggW: p?.suggestion.weight ?? null,
       suggR: p?.suggestion.reps ?? null,
+      /* The lead lift, when this set was done in its rest. Undefined everywhere else, and the route
+         only accepts a non-empty string, so a prescribed set cannot acquire one by accident. */
+      fillFor: fillFor ?? null,
     });
   }
 
@@ -583,6 +657,36 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     updateSet(eff.id, idx, entry);
     autosave(slotId, eff, idx, entry);
     if (entry.done) startTimer(eff.name, restSeconds(eff.rest));
+  }
+
+  /* ---- FILLING A REST -------------------------------------------------------------------------
+   *
+   * Three functions and no cleverness. `chooseFill` puts a partner in a block, `clearFill` takes it
+   * out, and `fillSets` is how many rows it draws.
+   *
+   * NOTHING IS WRITTEN UNTIL HE LOGS A SET. Picking a partner changes what is on screen and touches
+   * no table, which is the honest model: choosing is not doing, and a rest he picked something for
+   * and then skipped should leave no trace claiming otherwise. The first typed number writes the
+   * row, `fill_for` and all, through the same queue-and-retry path as every other set here. */
+  function chooseFill(key: string, cand: FillCandidate) {
+    setFills((prev) => ({ ...prev, [key]: cand }));
+    setFillOpen(null);
+  }
+
+  /* CLEARING IS ONLY OFFERED WHILE NOTHING IS LOGGED, and the guard is in the render rather than
+   * here, because this also has to be able to remove a partner whose rows exist: it deletes nothing
+   * from the database, so the sets stay and would come back on the next reload. A control that
+   * looks like it deleted his work and did not is worse than no control. */
+  function clearFill(key: string) {
+    setFills((prev) => { const n = { ...prev }; delete n[key]; return n; });
+    setFillOpen(null);
+  }
+
+  /* THREE, or however many rows the log already holds. Three because every block in the week is
+     three sets since his note #46 ("Why are there 2 sets of anything that's stupid"), and matching
+     the lead lift is what makes it a superset rather than a thing done afterwards. */
+  function fillSets(id: string): number {
+    return Math.max(3, sets[id]?.length ?? 0);
   }
 
   function persistSwaps(next: Record<string, Alt>) {
@@ -1101,6 +1205,124 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             );
           })}
           </div>
+
+          {/* ---- FILL THIS REST, since 2026-09-05 -------------------------------------------
+            *
+            * The most-repeated complaint in the whole note log gets a control instead of another
+            * redesign. Six notes over twelve days (#10, #28, #50, #52, #54, #55) and one standing
+            * ruling on 2026-08-29, "IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE".
+            * Every previous answer was an agent choosing the partner, which is what #52 was:
+            * "we regressed to having a hanging knee raises with a lat pill down wtf os this".
+            *
+            * IT RENDERS ONLY WHERE THERE IS A REST TO FILL. `fillOptions[key]` is absent unless the
+            * block is one exercise resting 60 seconds or more, so a paired block and a 45-second
+            * accessory show nothing at all. One condition, computed on the server, no second flag on
+            * the client that could disagree with it.
+            *
+            * NOT INSIDE `.ex`. `.ex` means an exercise and nothing else may answer to it: probe-gym
+            * selects it to find the day's cards, and the last block to borrow that class let all 22
+            * tests pass while the harness counted 28 cards on a 10-card day. This sits between the
+            * exercise list and the end of the block, wearing `fill-*` and nothing else. */}
+          {(() => {
+            const key = `${activeDay}:${bi}`;
+            const options = fillOptions[key];
+            if (!options || !options.length) return null;
+            const chosen = fills[key];
+            const lead = block.exercises[0]!;
+            const logged = chosen ? (sets[chosen.id]?.some((s) => s && (s.reps !== '' || s.done)) ?? false) : false;
+
+            if (!chosen) {
+              return (
+                <div className="fill">
+                  <button className="fill-toggle" onClick={() => setFillOpen(fillOpen === key ? null : key)}>
+                    {fillOpen === key ? 'Nothing, leave the rest empty' : `Do something in the ${lead.rest} rest? ▾`}
+                  </button>
+                  {fillOpen === key && (
+                    <div className="fill-list">
+                      {/* THE LIST IS ALREADY LEGAL. Every option here passed the same station and
+                          adjacency test content/gym/validate.mjs enforces, so nothing offered can be
+                          refused later. The old tool got this backwards and recommended three
+                          pairings the gate rejects; its own header records why that is worse than
+                          suggesting nothing. */}
+                      <p className="fill-hint quiet">
+                        Anything here can be done at the {lead.name} without moving. Yours to pick.
+                      </p>
+                      {options.map((c) => (
+                        <button className="fill-opt" key={c.id} onClick={() => chooseFill(key, c)}>
+                          <div className="fill-opt-name">{c.name}</div>
+                          <div className="fill-opt-meta quiet">
+                            {c.group}
+                            {/* WHAT HE LAST PUT ON IT, where there is one. The whole reason history
+                                orders this list is that the card can then say a number instead of
+                                asking him to remember one standing up. */}
+                            {c.logged > 0
+                              ? ` · you have done ${c.logged} set${c.logged === 1 ? '' : 's'}${c.lastWeight != null ? ` at ${c.lastWeight} lb` : ''}`
+                              : ' · new to you'}
+                            {` · ${c.where}`}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <div className="fill filled">
+                <div className="fill-head">
+                  <span className="fill-name">{chosen.name}</span>
+                  <span className="tag">in the {lead.rest} rest</span>
+                </div>
+                <div className="fill-why quiet">Your pick, not the programme&rsquo;s. It is logged as what you did.</div>
+                <div className="sets">
+                  {Array.from({ length: fillSets(chosen.id) }).map((_, i) => {
+                    const entry = getSet(chosen.id, i);
+                    /* A SYNTHETIC Exercise, built here rather than looked up, because the catalogue
+                       entry has no sets, reps, rest or cue: those belong to a SLOT and this is not
+                       one. `autosave` needs a name and an id and reads nothing else off it. */
+                    const asEx = { ...chosen, sets: 3, reps: '', rest: lead.rest, cue: '' } as unknown as Exercise;
+                    return (
+                      <div className="set-row" key={i}>
+                        <span className="n">{i + 1}</span>
+                        <input
+                          type="number" inputMode="decimal" placeholder="lb"
+                          value={entry.weight}
+                          onChange={(e) => updateSet(chosen.id, i, { weight: e.target.value })}
+                          onBlur={() => autosave(chosen.id, asEx, i, getSet(chosen.id, i), lead.id)}
+                        />
+                        <input
+                          type="number" inputMode="decimal" placeholder="reps"
+                          value={entry.reps}
+                          onChange={(e) => updateSet(chosen.id, i, { reps: e.target.value })}
+                          onBlur={() => autosave(chosen.id, asEx, i, getSet(chosen.id, i), lead.id)}
+                        />
+                        <button
+                          type="button" aria-label="mark set done"
+                          className={`done-toggle${entry.done ? ' on' : ''}`}
+                          onClick={() => {
+                            const next = { ...getSet(chosen.id, i), done: !getSet(chosen.id, i).done };
+                            updateSet(chosen.id, i, next);
+                            autosave(chosen.id, asEx, i, next, lead.id);
+                            /* NO REST TIMER OFF A PARTNER. It rides inside the lead lift's rest,
+                               which is the timer already running; starting a second one would put a
+                               countdown on screen that contradicts the one he is actually waiting
+                               on. That is the whole meaning of `fill` in types.ts. */
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* ONLY BEFORE ANYTHING IS LOGGED. Once a set exists, removing the partner from the
+                    screen would leave rows in the table that come back on the next reload, so the
+                    control would be claiming a deletion it did not perform. */}
+                {!logged && (
+                  <button className="swap-toggle" onClick={() => clearFill(key)}>Take it out</button>
+                )}
+              </div>
+            );
+          })()}
         </div>
       ))}
 

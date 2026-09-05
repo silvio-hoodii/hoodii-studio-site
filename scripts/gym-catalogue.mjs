@@ -33,6 +33,7 @@
  * extra time. --pairing lists them.
  */
 import { readFileSync } from 'node:fs';
+import { pairingLegal } from '../content/gym/pairing-legal.mjs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -189,11 +190,29 @@ const stationName = (v) => (holdsNothing(v) ? 'no fixture' : (equip.zones[v.zone
  * for `--pairing`: the suggestion is free and the rejection arrives after the work is done.
  *
  * A comment claiming agreement with another file is worth exactly as much as the code under it. */
-const sharedStation = (v) => equip.zones[v.zone]?.stations?.[v.station]?.sharedInOneWindow === true;
-const ridesFree = (partner, lead) =>
-  partner.zone === lead.zone &&
-  (holdsNothing(partner) || holdsNothing(lead)
-    || (partner.station === lead.station && sharedStation(lead)));
+/* CASE (c) WAS MISSING HERE FOR TWELVE DAYS AND IT IS THE ONE HE KEPT ASKING FOR. Fixed 2026-09-05.
+ *
+ * This function implemented cases (a) and (b) of his 2026-05-23 rule and skipped (c), "adjacent
+ * equipment in arm's reach". `rack` and `rack-pullup-bar` are declared adjacent in equipment.json,
+ * which is exactly what makes hanging knee raises legal in the RDL's rest, and this tool refused it.
+ * So `--fill`, the tool AGENTS.md names as "the tool for the partners work", COULD NOT SEE the
+ * pairing he asked for on 23 August, 3 September and 4 September, and buried it in the tail of the
+ * list on the days it could.
+ *
+ * This file's own header already records the mirror-image lesson, in its own words: "a tool that
+ * suggests work the gate will reject is worse than no tool: the suggestion is free and the rejection
+ * arrives after the work is done." A tool that HIDES work the gate would allow is the same failure
+ * with the sign flipped, and it is worse, because a wrong suggestion gets caught by the validator
+ * and a missing one gets read as "there is nothing to pair with". His words on being told that,
+ * 2026-08-30: "why in the world moving an exercise means the other lift stay solo, is there no more
+ * exercises in the world? ... that just seems to me to be a lazy answer."
+ *
+ * THE FIX IS TO STOP HAVING A COPY. `content/gym/pairing-legal.mjs` is the rule, validate.mjs asks
+ * it, src/lib/gym/fill.ts asks it, and so does this. Three implementations of one rule drift while
+ * all three keep printing plausible answers; this one drifted for ninety-nine days as prose and then
+ * twelve more as code. */
+const stationLookup = (zone, station) => (zone && station ? equip.zones[zone]?.stations?.[station] : undefined);
+const ridesFree = (partner, lead) => pairingLegal(partner, lead, stationLookup);
 
 if (mode === 'pairing') {
   console.log('\nWHAT EACH PAIRED BLOCK COSTS IN WALKING');

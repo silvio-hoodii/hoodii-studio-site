@@ -301,6 +301,51 @@ taxonomy, from all eighteen notes as of 2026-08-27:
 | Volume of text | #12 | The counterweight to the five at the top. Measure at 390px |
 | Improvisation the app did not offer | #10 | The app was missing an option, not wrong |
 
+**THE LAST ROW WAS THE WHOLE TABLE, and it took twelve days and six notes to see it.** #10 became
+#28, #50, #52, #54 and #55, always the same complaint: a main lift alone on a two or three minute
+rest. Every answer was an agent choosing a partner and writing it into `program.json`, and #52 is
+what that gets when the agent chooses differently from him: *"And we regressed to having a hanging
+knee raises with a lat pill down wtf os this"*. His standing ruling, 2026-08-29, went unactioned for
+six days: **"IN GENERAL I DONT WANT SOLO LIFTS OTHER THAN THE MAIN ONE."**
+
+**Since 2026-09-05 he fills a rest himself, on the card, at the rack.** `src/lib/gym/fill.ts`
+computes the legal partners for every solo block against `content/gym/pairing-legal.mjs`, the one
+implementation of his pairing rule that `validate.mjs` now also calls. Sets land in `gym_set` with
+`fill_for` naming the lead lift, so what he improvises is DATA the next session can read instead of
+four sentences in a note box.
+
+**Only ONE pairing went into the week, and the difference is the point.** #54 carries the word
+"again" and is the third time he asked for knee raises in the RDL's rest (23 Aug, 3 Sep, 4 Sep):
+a standing request, so it is prescribed. #55 records what he did on one evening; the step-back lunge
+was tried in the week, `gym-strength.mjs` went red because a second unilateral squat moved five leg
+lifts 33.5 fractional sets further past the strength optimum, and it came back out. **Reading a
+record as a request is the reflex behind 53 commits to `program.json` in 24 days and 22 reversals.**
+
+**Three tools carried three copies of that pairing rule and one had drifted.** `gym-catalogue.mjs
+--fill`, the tool this file names for the partners work, implemented cases (a) and (b) of his
+2026-05-23 rule and skipped (c), "adjacent equipment in arm's reach". `rack` and `rack-pullup-bar`
+are declared adjacent, which is exactly what makes his own pairing legal, **so the tool built to
+suggest partners could not see the one he asked for three times.** This file already records the
+mirror image, that a tool suggesting work the gate rejects is worse than no tool. A tool that HIDES
+work the gate allows is worse still: a wrong suggestion gets caught by the validator, and a missing
+one reads as "there is nothing to pair with". `content/gym/validate.test.mjs` now asserts every
+caller reaches the same verdict, in both directions, eleven cases.
+
+**`check-ladder.mjs` and `validate.mjs` disagreed with each other for a week, and the lift stayed
+broken in the gap.** The tool printed `"rangeWidth": 11` for `db-lateral-raise`; the gate refuses
+anything above 8, with a source. Both were individually right. The engine handles it now: a lift
+whose next rung is not earned by its own rep range holds at the top for a SECOND session before
+taking it (`RUNG_NOT_EARNED` in `src/lib/gym/progression.ts`), which is the fix `validate.mjs`
+already named in its own failure message. The tool no longer recommends what the gate refuses, and
+the test suite asserts the two caps agree.
+
+**`formerIds` DOES SOMETHING NOW.** It was added 2026-08-29 so a renamed slot could say what it used
+to be called, was declared in the validator and reported by `check-ladder.mjs`, and **was read by
+nothing at progression time**: it silenced the warning without fixing the card. The 2026-09-03
+rebuild then deleted every use of it from `program.json`, so `single-leg-rdl` had 21 sets at 40 lb
+that the app could not see and the card would have read "First time". Restore an id or declare it;
+`equivalentIds` follows both.
+
 **"Done" has to mean it changed what he knows, not that it was rendered.** The block `why` was
 required by a validator, present on all 24 blocks, named the questioned exercise in 9 of 11 cases,
 was backed by 61 KB of sourced evidence, and shipped specifically to answer this complaint. He asked

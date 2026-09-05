@@ -164,6 +164,53 @@ export function workingWeight(sets: SetRecord[]): number | null {
   return best;
 }
 
+/* THE RUNG THAT THE RANGE CANNOT EARN, and the two gates in this repo disagreed about it for a week.
+ *
+ * `banked` is the estimated max at the TOP of the prescribed range; `demanded` is the estimated max
+ * the NEXT rung asks for at the BOTTOM of it. Where banked >= demanded the ladder closes and double
+ * progression works: finish the range, take the step, keep it. Where it does not, finishing the
+ * range still does not earn the jump, so he takes it, fails it, falls back, and oscillates. The
+ * overhead press did that all year at 60 to 65 lb.
+ *
+ * ONE LIFT WAS LIVE IN THAT STATE, and this is what it cost. `a/db-lateral-raise` at 20 lb: a
+ * window of 12 to 20 banks 33.3 and the next dumbbell, 25 lb, demands 35.0, a margin of -1.7.
+ * `scripts/check-ladder.mjs` exited 1 on it for six of the seven days to 2026-09-04, writing its
+ * warning into a log file nobody opens. Its suggested fix was `"rangeWidth": 11`, and
+ * `content/gym/validate.mjs` REFUSES 11 with a sourced reason: a 12 to 23 window is past Iversen's
+ * 15 RM ceiling, and the same message says what coaches do instead, which is
+ * "two top-range sets before moving up, or a cable, not with eleven more reps".
+ *
+ * So one tool named a fix the other tool forbids, each was individually right, and the lift stayed
+ * broken in the gap between them. That is the shape of complaint he made on 2026-09-04: "we fix
+ * something, something else changes, something outbreaks".
+ *
+ * THE FIX IS THE ONE validate.mjs ALREADY NAMES, and it lives here rather than in the data because
+ * it is arithmetic and it generalises: any lift whose next rung is not earned by its own range holds
+ * at the top for a SECOND session before taking it. That is a real strength signal rather than a
+ * wider rep window, it needs no per-exercise number to be maintained, and it costs nothing on the
+ * lifts whose ladder already closes, which is every barbell lift on the page.
+ *
+ * Epley throughout, the same formula validate.mjs and check-ladder.mjs both use, so the three
+ * cannot drift. */
+function rungIsEarned(ww: number, next: number, bottom: number, top: number): boolean {
+  if (next <= ww) return true;
+  const banked = ww * (1 + top / 30);
+  const demanded = next * (1 + bottom / 30);
+  return banked >= demanded;
+}
+
+/** Did the session BEFORE the last one also finish at the top of the range, at the same weight?
+ *  `recent[0]` is the same session as `last`, so the second entry is the one that answers this. */
+function toppedPreviousSession(recent: LastSession[] | null | undefined, ww: number, top: number): boolean {
+  const prev = recent?.[1];
+  if (!prev) return false;
+  const ss = (prev.sets || []).filter((x) => (x.reps ?? 0) > 0);
+  if (!ss.length) return false;
+  if (workingWeight(ss) !== ww) return false;
+  const reps = ss.filter((x) => x.weight === ww).map((x) => x.reps ?? 0);
+  return reps.length > 0 && Math.min(...reps) >= top;
+}
+
 export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggestion {
   const type = plan.type || 'weighted';
   const bottom = Number(plan.targetReps) || (type === 'bodyweight' ? 8 : 6);
@@ -307,6 +354,32 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   }
 
   if (minReps >= top && ww != null) {
+    /* HOLD ONE MORE SESSION WHEN THE RANGE DOES NOT EARN THE RUNG. See rungIsEarned above.
+     *
+     * Assistance lifts are exempt: the number goes DOWN there, so "the next rung demands a bigger
+     * estimated max" is not what taking a step means, and the Epley comparison would be answering a
+     * different question than the one asked. */
+    /* `recAll` PRESENT, not `rec`. The stall detector above discards a session with fewer than two
+     * logged sets, because a partial log is a missing session rather than a bad one. This question is
+     * the opposite shape: it asks whether he has ALREADY earned the jump, and a session that shows
+     * him at the top of the range is evidence of that whether he logged two sets or three.
+     *
+     * A caller that supplies no `recent` at all is not saying "no history", it is saying it is not
+     * answering that question, so the hold does not apply and the old behaviour stands. Only the plan
+     * route supplies it, and it always does. */
+    const nextRung = plan.assistance === true ? null : stepUp(ww, increment, ladder);
+    if (
+      recAll != null
+      && nextRung != null
+      && !rungIsEarned(ww, nextRung, bottom, top)
+      && !toppedPreviousSession(recAll, ww, top)
+    ) {
+      return {
+        weight: ww,
+        reps: top,
+        reason: `Hit ${wd} at ${ww}. ${nextRung} lb is a ${Math.round(((nextRung - ww) / ww) * 100)}% jump and this rep range does not earn it, so do ${top} again at ${ww} once more, then take it.`,
+      };
+    }
     /* AN ASSISTANCE LIFT PROGRESSES DOWNWARD, and until 2026-08-28 nothing in the engine knew that.
      *
      * The assisted pull-up logs the COUNTERWEIGHT: less of it is harder, and getting stronger means

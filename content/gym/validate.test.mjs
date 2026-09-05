@@ -1261,6 +1261,115 @@ for (const c of CASES) {
   }
 }
 
+/* ================================================================================================
+ * AGREEMENT CHECKS: the same rule, asked of every file that carries it.
+ *
+ * These are not mutation cases. They exist because the two worst gym defects of the last fortnight
+ * were both TWO FILES DISAGREEING, each individually right:
+ *
+ *   `scripts/check-ladder.mjs` told anyone reading it to set "rangeWidth": 11 on the lateral raise.
+ *   `content/gym/validate.mjs` refuses 11, with a source. The lift sat broken between them for six
+ *   of seven days while the warning went to a log file nobody opens.
+ *
+ *   `scripts/gym-catalogue.mjs --fill`, the tool AGENTS.md names for the partners work, implemented
+ *   two of the three cases of his pairing rule and skipped "adjacent equipment in arm's reach", so
+ *   it could not see the pairing he asked for on 23 August, 3 September and 4 September. The gate
+ *   allowed it the whole time.
+ *
+ * A comment claiming agreement with another file is worth exactly as much as the code under it, so
+ * these run the code.
+ * ============================================================================================== */
+
+let agreements = 0;
+function agree(name, ok, detail) {
+  agreements++;
+  if (ok) { console.log(`ok    ${name}`); return; }
+  failed++;
+  console.log(`FAIL  ${name}\n      ${detail}`);
+}
+
+{
+  /* 1. The rangeWidth cap. check-ladder.mjs recommends a width; validate.mjs enforces a ceiling.
+        A recommendation above the ceiling is advice that cannot be taken. */
+  const ladderSrc = readFileSync(join(HERE, '..', '..', 'scripts', 'check-ladder.mjs'), 'utf8');
+  const validateSrc = readFileSync(join(HERE, 'validate.mjs'), 'utf8');
+  const toolCap = Number(/const MAX_LEGAL_WIDTH = (\d+);/.exec(ladderSrc)?.[1]);
+  const gateCap = Number(/item\.rangeWidth > (\d+)\)/.exec(validateSrc)?.[1]);
+  agree(
+    'check-ladder never recommends a rangeWidth validate.mjs refuses',
+    Number.isFinite(toolCap) && Number.isFinite(gateCap) && toolCap === gateCap,
+    `check-ladder caps at ${toolCap}, validate.mjs refuses above ${gateCap}. `
+      + 'If the ceiling moved, move both. A tool that recommends what the gate rejects is worse than one that says nothing.',
+  );
+}
+
+{
+  /* 1b. `formerIds` HAS TO BE READ BY SOMETHING, and for seven days it was not.
+   *
+   * It shipped 2026-08-29 so a renamed slot could say what it used to be called. The validator gated
+   * its shape, check-ladder.mjs reported orphaned ids, and NOTHING consulted it when deciding what
+   * to put on the bar: a slot could declare its old name, satisfy every gate, and the card would
+   * still read "First time" for a lift with months of history. The alarm was silenced and the fire
+   * was left. `equivalentIds` reads it as of 2026-09-05.
+   *
+   * THIS IS A SOURCE CHECK AND IT IS WEAKER THAN A BEHAVIOUR TEST, which is worth saying rather than
+   * hiding: `equivalent-ids.ts` is `server-only` and takes a database, so this suite cannot call it.
+   * What it catches is the thing that actually happened, twice: a rewrite that removes the reader
+   * while every other gate stays green. The 2026-09-03 rebuild deleted all 1,197 lines that used the
+   * field, and `grep '"formerIds"' program.json` returned nothing for two days with a clean build. */
+  const src = readFileSync(join(HERE, '..', '..', 'src', 'lib', 'gym', 'equivalent-ids.ts'), 'utf8');
+  agree(
+    'formerIds is actually read when history is resolved, not just validated',
+    /formerIds/.test(src),
+    'src/lib/gym/equivalent-ids.ts no longer mentions formerIds, so a renamed slot is back to '
+      + 'declaring its old name, passing every gate, and showing him "First time" for a lift he has months of.',
+  );
+}
+
+{
+  /* 2. The pairing rule, asked of the module every caller now shares. Nine cases, and FIVE of them
+        assert it PERMITS: a gate watched refusing and never watched permitting is a gate that might
+        refuse everything, which is exactly what gym-catalogue was doing to case (c). */
+  const { pairingRefusal, pairingLegal } = await import('./pairing-legal.mjs');
+  const equip = JSON.parse(readFileSync(join(HERE, 'equipment.json'), 'utf8'));
+  const lookup = (zone, station) => (zone && station ? equip.zones[zone]?.stations?.[station] : undefined);
+
+  const rack = { zone: 'rack', station: 'rack' };
+  const bar = { zone: 'rack', station: 'rack-pullup-bar' };
+  const carried = { zone: 'rack', station: null };
+  const pulldown = { zone: 'cable', station: 'cable-pulldown' };
+  const cableAdj = { zone: 'cable', station: 'cable-adjustable' };
+  const calf = { zone: 'machines', station: 'calf-raise' };
+  const legCurl = { zone: 'machines', station: 'leg-curl' };
+  const bench = { zone: 'benchDb', station: 'bench' };
+
+  const cases = [
+    ['a carried partner rides free at any lead', carried, rack, true],
+    ['case (c): the rack and its own pull-up bar are adjacent', bar, rack, true],
+    ['case (c): two cable columns are adjacent', pulldown, cableAdj, true],
+    ['case (a): two exercises on the bench, which is declared shareable', bench, bench, true],
+    ['nothing against nothing is free', carried, { zone: 'rack', station: null }, true],
+    ['two machines that are not adjacent are refused', calf, legCurl, false],
+    ['adjacency may not cross a zone', bar, pulldown, false],
+    ['one cable column shared by two exercises is refused', pulldown, pulldown, false],
+    ['the rack shared by two exercises is refused, it is not declared shareable', rack, rack, false],
+  ];
+
+  for (const [name, a, b, want] of cases) {
+    const got = pairingLegal(a, b, lookup);
+    agree(`pairing: ${name}`, got === want, `expected ${want ? 'legal' : 'refused'}, got ${got ? 'legal' : 'refused'} (${JSON.stringify(pairingRefusal(a, b, lookup))})`);
+  }
+
+  /* 3. THE ONE THAT COST TWELVE DAYS, named on its own. His pairing, three times: hanging knee
+        raises (the rack's pull-up bar) in the RDL's rest (the rack). It is legal, the build gate has
+        always said so, and the tool built to suggest partners could not see it. */
+  agree(
+    'his own pairing (knee raises in the RDL rest) is legal, and every caller agrees',
+    pairingLegal(bar, rack, lookup),
+    'the rule that made --fill blind to what he asked for three times has come back',
+  );
+}
+
 console.log('-'.repeat(70));
-console.log(`${CASES.length} cases, ${failed} failed`);
+console.log(`${CASES.length} mutation cases + ${agreements} agreement checks, ${failed} failed`);
 process.exit(failed ? 1 : 0);

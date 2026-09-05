@@ -658,6 +658,100 @@
       };
     },
 
+    /* ---- filling an empty rest, 2026-09-05 ------------------------------------------------------
+     *
+     * The control answering the most-repeated complaint in the note log: six notes over twelve days
+     * asking why a main lift sits alone on a two or three minute rest, ending in #54, "Why no
+     * superset again?", written after he had supersetted three blocks himself that evening.
+     *
+     * FOUR CASES, AND TWO OF THEM WATCH IT REFUSE. A gate seen only permitting has not been seen to
+     * work. The two that matter most are `fillOnlyWhereThereIsARest` (a paired block and a short
+     * accessory must offer nothing) and `fillSetCarriesTheLeadLift` (the write must name the lift
+     * whose rest it was done in, or the row is indistinguishable from an off-plan set and the whole
+     * point of the column is lost). */
+
+    async fillOffersOnlyLegalPartners() {
+      const t = $('.fill-toggle');
+      if (!t) return { pass: false, detail: 'no block on this day offers to fill a rest' };
+      t.click();
+      const list = await waitFor(() => $('.fill-list'));
+      if (!list) return { pass: false, detail: 'the chooser did not open' };
+      const names = $$('.fill-opt-name', list).map(text);
+      /* The list is computed on the server against validate.mjs's own station and adjacency rules,
+         so this cannot check legality from here. What it CAN check is that the list is real: an
+         empty one renders no control at all, so a control with nothing under it is a bug. */
+      return {
+        pass: names.length > 0,
+        detail: { offered: names.length, first: names.slice(0, 5) },
+      };
+    },
+
+    async fillOnlyWhereThereIsARest() {
+      /* THE REFUSING HALF. Every block that already has two exercises is a rest with somebody in
+         it, and must not offer to fill it again; the same goes for a 45-second accessory. The test
+         is structural: a `.fill` may not appear inside a block whose exercise count is 2. */
+      const groups = $$('.exgroup');
+      if (!groups.length) return { pass: false, detail: 'no blocks rendered' };
+      const wrong = [];
+      for (const g of groups) {
+        const n = $$('.ex[data-slot]', g).length;
+        if (n >= 2 && $('.fill-toggle', g)) wrong.push(text($('.exgroup-label', g)));
+      }
+      return {
+        pass: wrong.length === 0,
+        detail: wrong.length ? { offeredOnAPairedBlock: wrong } : { blocks: groups.length, ok: 'no paired block offers to be filled' },
+      };
+    },
+
+    async fillDrawsSetRows() {
+      let opt = $('.fill-opt');
+      if (!opt) {
+        const t = $('.fill-toggle');
+        if (!t) return { pass: false, detail: 'no fillable block' };
+        t.click();
+        opt = await waitFor(() => $('.fill-opt'));
+      }
+      if (!opt) return { pass: false, detail: 'the chooser did not open' };
+      const picked = text($('.fill-opt-name', opt));
+      opt.click();
+      const filled = await waitFor(() => $('.fill.filled'));
+      if (!filled) return { pass: false, detail: { picked, problem: 'nothing rendered after picking' } };
+      const rows = $$('.set-row', filled).length;
+      /* THREE, matching the lead lift, because every block in the week is three sets since his note
+         #46 and a partner doing fewer is not sharing the rest, it is a thing done afterwards. */
+      return { pass: rows === 3, detail: { picked, rows, shownAs: text($('.fill-name', filled)) } };
+    },
+
+    async fillSetCarriesTheLeadLift() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      const filled = $('.fill.filled') || await (async () => {
+        const t = $('.fill-toggle');
+        if (!t) return null;
+        t.click();
+        const opt = await waitFor(() => $('.fill-opt'));
+        if (opt) opt.click();
+        return waitFor(() => $('.fill.filled'));
+      })();
+      if (!filled) return { pass: false, detail: 'could not get a filled rest on screen' };
+      const before = state.calls.length;
+      const [w] = $$('input', $('.set-row', filled));
+      if (!w) return { pass: false, detail: 'no weight box in the filled rest' };
+      type(w, '35'); blur(w);
+      await sleep(400);
+      const posted = state.calls.slice(before).filter((c) => c.url.includes('/gym/api/set'));
+      if (!posted.length) return { pass: false, detail: 'nothing was written' };
+      /* `install` ALREADY PARSED IT. Line 155 does `JSON.parse(init.body)` and stores the object, so
+         parsing again turns it into the string "[object Object]" and throws. Cost one run. */
+      const body = posted[posted.length - 1].body;
+      /* `fillFor` NAMES THE LEAD, and it is what separates this row from an off-plan set. Without it
+         the set rehydrates into the loose list at the bottom of the page instead of onto the card,
+         which is the exact failure the column was added to prevent. */
+      return {
+        pass: typeof body.fillFor === 'string' && body.fillFor.length > 0 && body.setIdx === 1,
+        detail: { fillFor: body.fillFor ?? null, exerciseId: body.exerciseId, setIdx: body.setIdx },
+      };
+    },
+
     /* ---- refusal and recovery ---- */
 
     async refusedWriteRaisesTheBanner() {

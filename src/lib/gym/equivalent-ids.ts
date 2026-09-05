@@ -1,5 +1,5 @@
 import 'server-only';
-import { loadMovements } from './program';
+import { loadMovements, loadProgram } from './program';
 
 /* ONE EXERCISE, ONE HISTORY, EVEN WHEN IT HAS TWO IDS.
  *
@@ -51,11 +51,51 @@ export async function equivalentIds(id: string): Promise<string[]> {
     return [id];
   }
 
+  const family = new Set<string>([id]);
   for (const movement of Object.values(cat.movements)) {
     for (const variant of movement.variants) {
-      const family = [variant.id, ...(variant.aliases ?? [])];
-      if (family.includes(id)) return [...new Set(family)];
+      const kin = [variant.id, ...(variant.aliases ?? [])];
+      if (kin.includes(id)) for (const k of kin) family.add(k);
     }
   }
-  return [id];
+
+  /* ---- AND THE IDS THIS SLOT USED TO BE CALLED. Added 2026-09-05. -----------------------------
+   *
+   * `formerIds` WAS DECORATION FOR SEVEN DAYS, and that is the more useful half of this story.
+   *
+   * It shipped on 2026-08-29 for 10-gym P1-2, after six slot ids were rewritten and three cards went
+   * back to reading "First time: log your working weight" for movements he had done two days
+   * earlier. `content/gym/validate.mjs` gates its shape and `scripts/check-ladder.mjs` reports any
+   * logged id the programme no longer claims. **Nothing read it at progression time.** So a slot
+   * could declare its old name, satisfy the validator, clear the warning, and the card would still
+   * offer him a first-time prompt for a lift with months of history: the fix silenced the alarm and
+   * left the fire.
+   *
+   * Then the 2026-09-03 rebuild deleted every use of the field from program.json in one 1,197-line
+   * replacement, and `grep '"formerIds"' content/gym/program.json` returned nothing at all. On
+   * 2026-09-05 `single-leg-rdl` held 21 sets at 40 lb going back to May that no card could reach.
+   *
+   * A RENAME IS NOT AN ALIAS, and the two directions above are deliberately different. An alias in
+   * movements.json means one movement with one load scale, and it is symmetric: the machine and
+   * standing calf raise are each other's. A rename is one-way and about HISTORY: the old id is dead,
+   * the new slot inherits what was logged under it, and nothing points back. validate.mjs enforces
+   * that separation by refusing a `formerId` that is still a live id, so this cannot be used to
+   * quietly merge two exercises that are two exercises.
+   *
+   * The programme is loaded rather than passed in, so a caller cannot reintroduce the split by
+   * forgetting to hand it over. Failure here is non-fatal for the same reason as the catalogue read
+   * above: this must never be the thing that takes /gym down. */
+  try {
+    const program = await loadProgram();
+    for (const day of Object.values(program.days ?? {})) {
+      for (const block of day.blocks ?? []) {
+        for (const ex of block.exercises ?? []) {
+          if (ex.id !== id || !ex.formerIds?.length) continue;
+          for (const f of ex.formerIds) family.add(f);
+        }
+      }
+    }
+  } catch { /* see above: a programme that will not load must not narrow the history */ }
+
+  return [...family];
 }

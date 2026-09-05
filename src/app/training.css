@@ -1459,3 +1459,64 @@
   cursor: pointer;
 }
 .training .exnote-sent { font-family: var(--font-mono); font-size: 12px; margin-top: 4px; }
+
+/* ---- filling an empty rest, 2026-09-05 -------------------------------------------------------
+ *
+ * Ten blocks in the week are one lift with nobody in the rest, and the most-repeated complaint in
+ * the whole note log is about exactly that: six notes over twelve days, ending in "Why no superset
+ * again?" written after he had supersetted three blocks himself. This is the control that lets him
+ * do it in the app instead of in a note box.
+ *
+ * IT BORROWS .swap-toggle's METRICS AND NOT ITS CLASS. Same underlined 12px mono link with the same
+ * 44px tap target, because it is the same kind of thing: a quiet control that must not compete with
+ * the set rows. It gets its own name because a shared look is a CSS decision and a shared class name
+ * is an API, which this file has now been bitten by three times (.tab/.surf-tab, swap-revert against
+ * swap-toggle, and the notes block that borrowed .ex and made 10 cards read as 28).
+ *
+ * The "Take it out" control genuinely IS .swap-toggle, reused rather than copied: it is the same
+ * action, undoing a choice he made on this card. */
+.training .fill { margin-top: 10px; }
+.training .fill-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.training .fill-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+/* One sentence saying what the list IS, and it earns its place where the note-box instructions did
+   not: "also this text is useless" was about a box whose placeholder already said what it was for.
+   This list is 20 to 40 exercise names with no visible reason for being those ones, and the fact
+   that every one can be done without walking away from the lift is the whole point of it. */
+.training .fill-hint { font-size: 12.5px; line-height: 1.45; margin: 0 0 4px; }
+.training .fill-opt {
+  text-align: left;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: var(--background);
+  cursor: pointer;
+  min-height: 44px;
+}
+.training .fill-opt:hover { border-color: var(--foreground); }
+.training .fill-opt-name { font-weight: 600; font-size: 14.5px; }
+.training .fill-opt-meta { font-size: 12.5px; margin-top: 2px; }
+/* Once chosen it is a unit of work sharing the lead lift's rest, so it gets the same rule down the
+   side that a prescribed superset gets. The two look alike because they ARE alike; the only
+   difference is who chose the partner, and the line under the name says which. */
+.training .fill.filled {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 12px;
+  margin-top: 12px;
+}
+.training .fill-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.training .fill-name { font-weight: 600; font-size: 15px; }
+.training .fill-head .tag { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted-foreground); }
+.training .fill-why { font-size: 12.5px; margin: 2px 0 8px; }

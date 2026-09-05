@@ -55,6 +55,20 @@ export async function POST(req: Request) {
       suggW: b.suggW,
       suggR: b.suggR,
       estimated: b.estimated ?? null,
+      /* A SET DONE IN ANOTHER LIFT'S REST, on a partner he chose at the rack.
+       *
+       * It goes through this UPSERT and not through `appendOffPlanSet` above, and the difference is
+       * what the two record. That function APPENDS because an off-plan set is a thing he did and has
+       * no edit affordance: the only correct operation is adding one more. A fill partner is a
+       * different shape. It renders as three numbered set rows exactly like a prescribed exercise,
+       * he types into them between sets of the lead lift, and he has to be able to fix a typo. So
+       * the index is STRUCTURAL rather than counted, and the write has to be idempotent.
+       *
+       * The hazard that made appendOffPlanSet necessary (a client deriving an index from state that
+       * is never rehydrated, then overwriting a row it had already written) is removed at the source
+       * rather than guarded: `computeFillOptions` in src/lib/gym/fill.ts excludes every id the day
+       * already prescribes, so a fill set and a prescribed set can never share a key space. */
+      fillFor: typeof b.fillFor === 'string' && b.fillFor ? b.fillFor : null,
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
