@@ -35,5 +35,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://hoodii.studio/work/versatile', changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://hoodii.studio/work/brixel', changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://hoodii.studio/work/kitchen', changeFrequency: 'monthly', priority: 0.8 },
+    /* Added 2026-09-04 with the page. It is the one /work page whose figures move, because they
+       are counted out of the repo on every build rather than written once, so it changes as
+       often as the site does. */
+    { url: 'https://hoodii.studio/work/site', changeFrequency: 'weekly', priority: 0.8 },
   ];
 }

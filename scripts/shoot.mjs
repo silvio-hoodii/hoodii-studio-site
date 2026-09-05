@@ -94,9 +94,25 @@ try {
 
   await send('Page.navigate', { url });
   // Wait for the document to finish and for React to have painted something.
+  //
+  // AND FOR THE LOADING SKELETON TO BE GONE, added 2026-09-04, which is the whole reason this
+  // comment is long. Every app segment gained a `loading.tsx` that day, so a dynamic route now
+  // paints a complete, correct, STABLE frame of grey bars while the data is still coming. That
+  // broke this wait silently: `readyState` is 'complete' while the skeleton is on screen, the
+  // 700ms grace period expires, and the shot is of the placeholder.
+  //
+  // It was caught by looking at the output, not by any check: public/work/kitchen.webp came out at
+  // 6.9 KB against 100 KB for its neighbours, which is what a page of flat grey rectangles
+  // compresses to. Nothing else would have noticed, and the screenshot is the last gate in this
+  // repo that catches what the other gates cannot.
+  //
+  // `.skel` is exact rather than heuristic: it is the class the skeleton is built from, and it
+  // exists on the page if and only if a Suspense boundary has not resolved. See
+  // src/components/SurfaceLoading.tsx.
   for (let i = 0; i < 60; i++) {
-    const ready = await evaluate(`document.readyState === 'complete' && !!document.querySelector('main, body > div')`)
-      .catch(() => false);
+    const ready = await evaluate(
+      `document.readyState === 'complete' && !!document.querySelector('main, body > div') && !document.querySelector('.skel')`,
+    ).catch(() => false);
     if (ready) break;
     await new Promise((r) => setTimeout(r, 250));
   }

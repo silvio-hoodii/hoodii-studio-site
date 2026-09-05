@@ -1,4 +1,5 @@
 import { deriveStock, expiringSoon } from '@/lib/kitchen/stock';
+import siteFacts from '../../content/work/site-facts.json';
 import { allRecipes, offer, isOfferable } from '@/lib/kitchen/recipes';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
@@ -551,6 +552,35 @@ export default async function Home() {
       <hr />
       <div className="rows">
         {rows.map((r) => <RowView key={r.label} r={r} />)}
+      </div>
+
+      {/* THE ONE ROW ABOUT THE SITE ITSELF. G1 of the 2026-09-04 audit: the hub shows a lot of live
+        * state and never shows the software, so a visitor has no way to learn that the cook screen
+        * exists or that a recipe cannot ship carrying a number its source does not contain. The
+        * strongest thing in this repo was the least visible.
+        *
+        * It is a ROW and not a prose link, because this section's rule is that a row shows real
+        * state rather than a link label, and this one obeys it: the count comes from
+        * content/work/site-facts.json, which scripts/gen-site-facts.mjs derives from the build
+        * script itself and `pnpm build` refuses to let go stale. A typed number here would be the
+        * exact thing the page it links to says this site does not do.
+        *
+        * Below the apps rather than above them: the apps are what the site is for, and this is a
+        * note about how they are made. */}
+      <div className="rows">
+        <RowView
+          r={{
+            label: 'This site',
+            line: (
+              <>
+                <span className="tnum">{siteFacts.buildGates}</span> checks refuse a deploy, and the
+                page saying so counts them itself
+              </>
+            ),
+            sub: 'how it is built, what the build will not ship, and what I got wrong',
+            href: '/work/site',
+          }}
+        />
       </div>
 
       <h2 className="sec">In production</h2>

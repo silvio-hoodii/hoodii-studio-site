@@ -130,7 +130,7 @@ const DEFAULT_PATHS = [
      `/work` ROUTE: it renders the 404, which has a header, a heading and one link, and the old
      readiness gate passed it as a measured surface for as long as the list has existed. So four
      published pages went unmeasured while the run reported covering them. */
-  '/work/brixel', '/work/kitchen', '/work/themoment', '/work/versatile',
+  '/work/brixel', '/work/kitchen', '/work/themoment', '/work/versatile', '/work/site',
   /* THE GATE ITSELF WAS NEVER IN THIS LIST. Four login pages existed for a year, each with a
      password field and a submit button, which is exactly the shape the 44px floor exists for, and
      none of them was ever measured here. The 2026-09-04 audit measured them only because its own
@@ -381,6 +381,13 @@ const MEASURE = `JSON.stringify((function () {
          zero and the body text is never short on a page that actually arrived. */
       controls: document.querySelectorAll('a,button,summary,input,select,textarea').length,
       chars: (document.body.innerText || '').length,
+      /* THE LOADING SKELETON IS NOT AN ARRIVAL. Every app segment gained a loading.tsx on
+         2026-09-04, and a skeleton is a complete, stable, correct frame with no content in it:
+         exactly the thing this readiness gate exists to refuse, in a new shape. This check happens
+         to pass today on the character floor alone (a skeleton renders about 27 characters against
+         a floor of 40), but that is luck, and one more word in the loading copy would end it.
+         Asked directly instead. */
+      skeleton: document.querySelectorAll('.skel').length,
       /* WHAT THE BROWSER ACTUALLY GOT, so a failure names its own cause. Without these three, every
          non-arrival printed the same "rendered nothing measurable", and the three causes seen on one
          run needed a screenshot each to tell apart: a 404 (title "Silvio Neyra", "Nothing lives at
@@ -477,7 +484,7 @@ for (const path of PATHS) {
    * page is a probe that reports whichever answer it happened to catch. */
   const key = (x) => JSON.stringify([
     x?.height ?? 0, x?.overflow ?? 0, x?.tabs?.rightEdge ?? 0, x?.tabs?.rows ?? 0, (x?.small || []).length,
-    x?.controls ?? 0, x?.chars ?? 0,
+    x?.controls ?? 0, x?.chars ?? 0, x?.skeleton ?? 0,
   ]);
   /* WHETHER THE PAGE IS THERE AT ALL, and it is a THIRD false pass out of this one wait.
    *
@@ -501,7 +508,7 @@ for (const path of PATHS) {
    * zero, which is the only thing this needs to separate: a 404 or a challenge never reaches here.
    * The floor is deliberately far below every real page rather than just below the shortest one,
    * so adding a terser page later does not re-tune it. */
-  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 40;
+  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 40 && (x?.skeleton ?? 0) === 0;
   let m = null;
   let prev = null;
   let stable = false;

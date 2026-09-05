@@ -11,7 +11,7 @@
     "validate:swim": "node content/swim/validate.mjs",
     "lint:auth": "node scripts/lint-auth.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs",
-    "build": "node scripts/gen-tokens.mjs --check && node scripts/lint-prose.mjs && node scripts/lint-classnames.mjs && node scripts/lint-auth.mjs && node scripts/lint-tokens.mjs && node content/kitchen/lint-aliases.mjs && node content/kitchen/validate.mjs --strict && node content/gym/validate.mjs && node content/swim/validate.mjs && node content/reading/validate.mjs && node scripts/lint-probe-routes.mjs && next build",
+    "build": "node scripts/gen-tokens.mjs --check && node scripts/gen-site-facts.mjs --check && node scripts/lint-prose.mjs && node scripts/lint-classnames.mjs && node scripts/lint-auth.mjs && node scripts/lint-tokens.mjs && node content/kitchen/lint-aliases.mjs && node content/kitchen/validate.mjs --strict && node content/gym/validate.mjs && node content/swim/validate.mjs && node content/reading/validate.mjs && node scripts/lint-probe-routes.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -19,6 +19,7 @@
     "lint:classnames": "node scripts/lint-classnames.mjs",
     "lint:proberoutes": "node scripts/lint-probe-routes.mjs",
     "gen:tokens": "node scripts/gen-tokens.mjs",
+    "gen:facts": "node scripts/gen-site-facts.mjs",
     "verify": "node scripts/verify.mjs"
   },
   "dependencies": {

@@ -28,6 +28,11 @@ export default function SiteFooter({
   return (
     <footer className={standalone ? 'site-footer standalone' : 'site-footer'}>
       {home && <Link href="/">Back to the index</Link>}
+      {/* G3 of the 2026-09-04 audit: the only GitHub link on the site pointed at the PERSON, so
+        * nothing anywhere said that this site is open source or where its own code is. That is one
+        * of the few things a visiting engineer would actually want, and it was one link away from
+        * existing. The profile link stays: the two answer different questions. */}
+      <a href="https://github.com/silvio-hoodii/hoodii-studio-site" target="_blank" rel="noreferrer">This site&rsquo;s code</a>
       <a href="https://github.com/silvio-hoodii" target="_blank" rel="noreferrer">GitHub</a>
       <a href="https://linkedin.com/in/silvio-neyra-rivas" target="_blank" rel="noreferrer">LinkedIn</a>
       {/* The address in full, not a link labelled "Email". A bare mailto opens whatever mail client

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "cook",
+    "src": "/work/cook.webp",
+    "path": "/kitchen/honeygarlicchicken",
+    "label": "The prep list on a cook screen",
+    "caption": "Every quantity appears in the one published recipe this card was built from, and the build refuses a number that does not. The red line is the app admitting the fridge is short.",
+    "width": 390,
+    "height": 1150,
+    "takenAt": "2026-09-04",
+    "commit": "662784d"
+  },
+  {
+    "id": "kitchen",
+    "src": "/work/kitchen.webp",
+    "path": "/kitchen",
+    "label": "What the fridge can make tonight",
+    "caption": "Scored against a stock list read from a photo. The stale rows say how old the reading is rather than hiding it.",
+    "width": 390,
+    "height": 900,
+    "takenAt": "2026-09-04",
+    "commit": "662784d"
+  },
+  {
+    "id": "gym",
+    "src": "/work/gym.webp",
+    "path": "/gym",
+    "label": "The lifting card",
+    "caption": "Filled in between sets, one hand, at the rack. The weight suggestion comes from the last session whose numbers were actually typed.",
+    "width": 390,
+    "height": 1000,
+    "takenAt": "2026-09-04",
+    "commit": "662784d"
+  },
+  {
+    "id": "volume",
+    "src": "/work/volume.webp",
+    "path": "/health?s=volume",
+    "label": "How the week adds up",
+    "caption": "The same arithmetic the build gate runs, rendered. He asked this question three times and got a document three times.",
+    "width": 390,
+    "height": 900,
+    "takenAt": "2026-09-04",
+    "commit": "662784d"
+  }
+]
