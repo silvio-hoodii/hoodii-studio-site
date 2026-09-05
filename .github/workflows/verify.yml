@@ -33,6 +33,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The version comes from `packageManager` in package.json, which is where it was added on
+      # 2026-09-05 after this workflow's FIRST RUN FAILED here: pnpm/action-setup refuses to install
+      # without a version pinned in one place or the other, and neither existed. Pinning it in
+      # package.json rather than in this file means CI and anyone using Corepack get the same pnpm
+      # as the lockfile was written with, instead of two places to keep in step.
       - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
