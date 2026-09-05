@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import { thumb, type Candidate } from '@/lib/kitchen/corpus';
 import HideDish from './HideDish';
 import { mealKey } from '@/lib/kitchen/veto';
@@ -79,11 +79,11 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
             : <div className="mealthumb" />}
         </a>
       ) : (
-        <Link href={href} tabIndex={-1} aria-hidden="true">
+        <WalledLink href={href} tabIndex={-1} aria-hidden="true">
           {t
             ? <img className="mealthumb" src={t} alt="" loading="lazy" width={56} height={56} />
             : <div className="mealthumb" />}
-        </Link>
+        </WalledLink>
       )}
       <div className="mealbody">
         <div className="mealtop">
@@ -92,7 +92,7 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
               it anywhere on the page. The original recipe is still one tap further on. */}
           {external
             ? <a href={href} target="_blank" rel="noreferrer"><b>{c.meal.name}</b></a>
-            : <Link href={href}><b>{c.meal.name}</b></Link>}
+            : <WalledLink href={href}><b>{c.meal.name}</b></WalledLink>}
           {c.cardId && <span className="v ok">card</span>}
           <Verdict c={c} />
         </div>
@@ -141,7 +141,7 @@ export function MealRow({ c, label }: { c: Candidate; label: (id: string) => str
             link, and not offered on a card, which lists its own ingredients on the cook screen. */}
         {external && (
           <div className="mealmeta">
-            <Link href={`/kitchen/want?url=${encodeURIComponent(out)}`}>check it against the kitchen</Link>
+            <WalledLink href={`/kitchen/want?url=${encodeURIComponent(out)}`}>check it against the kitchen</WalledLink>
           </div>
         )}
         {/* "STOP SHOWING ME THIS". The third signal, and the app had only two: he owns the

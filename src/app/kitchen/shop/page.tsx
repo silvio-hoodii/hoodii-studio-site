@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import WalledLink from '@/components/WalledLink';
 import KitchenNav from '../KitchenNav';
 import { shoppingView } from '@/lib/kitchen/shop';
@@ -73,7 +72,7 @@ export default async function Shop() {
                     <span key={k}>
                       {k > 0 && ' · '}
                       {e.source
-                        ? <Link href={`/kitchen/want?url=${encodeURIComponent(e.source)}`}>{e.name}</Link>
+                        ? <WalledLink href={`/kitchen/want?url=${encodeURIComponent(e.source)}`}>{e.name}</WalledLink>
                         : e.name}
                     </span>
                   ))}

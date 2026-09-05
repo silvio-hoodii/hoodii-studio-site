@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import WalledLink from '@/components/WalledLink';
 import KitchenNav from '../KitchenNav';
 import { wantByName, wantByUrl, nameOfItem, type WantHit } from '@/lib/kitchen/want';
 import { isAuthed } from '@/lib/auth-server';
@@ -151,7 +151,7 @@ export default async function Want({
         ) : (
           <p className="lede" style={{ marginTop: 10 }}>
             Reading a link you point at is the one thing here that needs the device unlocked, because
-            it fetches that page from this server. <Link href="/login?to=/kitchen/want">Unlock</Link>{' '}
+            it fetches that page from this server. <WalledLink href="/login?to=/kitchen/want">Unlock</WalledLink>{' '}
             to use it. Searching by name is open to anyone.
           </p>
         )}
@@ -166,9 +166,9 @@ export default async function Want({
           <div>{byUrl.error}</div>
           {byUrl.locked && (
             <div style={{ marginTop: 6 }}>
-              <Link href={`/login?to=${encodeURIComponent(`/kitchen/want?url=${url}`)}`}>
+              <WalledLink href={`/login?to=${encodeURIComponent(`/kitchen/want?url=${url}`)}`}>
                 Unlock and read it
-              </Link>
+              </WalledLink>
             </div>
           )}
         </div>
@@ -213,9 +213,9 @@ export default async function Want({
                           invocations, and they are now rendered only for a device that can use
                           them. */}
                       {unlocked ? (
-                        <Link href={`/kitchen/want?url=${encodeURIComponent(h.source ?? '')}`}>
+                        <WalledLink href={`/kitchen/want?url=${encodeURIComponent(h.source ?? '')}`}>
                           <b>{h.name}</b>
-                        </Link>
+                        </WalledLink>
                       ) : h.source ? (
                         <a href={h.source} target="_blank" rel="noreferrer nofollow">
                           <b>{h.name}</b>
@@ -255,7 +255,7 @@ export default async function Want({
           <ul className="plainlist">
             {['beef stroganoff', 'spaghetti bolognese', 'lasagne', 'chicken curry', 'fried rice', 'meatballs'].map((x) => (
               <li key={x}>
-                <Link href={`/kitchen/want?q=${encodeURIComponent(x)}`}>{x}</Link>
+                <WalledLink href={`/kitchen/want?q=${encodeURIComponent(x)}`}>{x}</WalledLink>
               </li>
             ))}
           </ul>

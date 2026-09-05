@@ -821,7 +821,7 @@ something is unprotected, and re-read them before adding a filter page.
 |---|---|---|
 | 1 | Block AI training crawlers | UA regex, deny. meta-externalagent, GPTBot, ClaudeBot, Bytespider and friends |
 | 2 | Unlocked device bypass | A request carrying the `kos` cookie skips rules 3 and 4 |
-| 3 | Filter surface cost gate | `/reading/shelf`, `/reading/want`, `/kitchen/find` get an edge challenge |
+| 3 | Filter surface cost gate | **FOUR paths**, not three: the live rule is `^/(reading/(shelf\|want)\|kitchen/(find\|want))`. This row said three until 2026-09-05 and omitted `/kitchen/want`, which was challenged the whole time. The 2026-09-04 audit copied the three from here and `src/lib/walled.ts` copied them from the audit, so six `<Link>` elements prefetched a 429 on every visit. **Run `node scripts/check-firewall.mjs`** rather than trusting this row: it reads the live rule and diffs it against `WALLED_PATHS` |
 | 4 | Document burst limit | 150 non-`/_next/` requests per minute per IP, then a challenge |
 
 **Rule 1 names the actual culprit, identified 2026-08-25 from `vercel.request.count` grouped by

@@ -34,8 +34,24 @@
  * caught with that shape on 2026-08-20 and /reading/shelf shipped the same shape the next day.
  */
 
-/** Paths given an edge challenge by firewall rule 3, as prefixes. */
-export const WALLED_PATHS = ['/kitchen/find', '/reading/shelf', '/reading/want'] as const;
+/** Paths given an edge challenge by firewall rule 3, as prefixes.
+ *
+ *  THIS LIST WAS WRONG WITHIN HOURS OF BEING WRITTEN, which is the best possible argument for the
+ *  paragraphs above and the reason the check script below exists. It shipped on 2026-09-04 with
+ *  three entries, copied from the audit, which had copied them from AGENTS.md. The LIVE rule is:
+ *
+ *      path re "^/(reading/(shelf|want)|kitchen/(find|want))"
+ *
+ *  Four paths. `/kitchen/want` was challenged the whole time and was in none of the three
+ *  documents, so six `<Link>` elements kept prefetching a 429, including "check it against the
+ *  kitchen" on every external row of /kitchen. Found by sweeping the live site and getting a 429 on
+ *  a path this file said was fine.
+ *
+ *  Read the real thing before trusting this, and there is now a script for it:
+ *
+ *      node scripts/check-firewall.mjs
+ */
+export const WALLED_PATHS = ['/kitchen/find', '/kitchen/want', '/reading/shelf', '/reading/want'] as const;
 
 /**
  * Whether a link target sits behind the challenge, and so must not be prefetched.
