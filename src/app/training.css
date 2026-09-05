@@ -529,7 +529,64 @@
  * Tables scroll INSIDE their own container. The run and swim ladders are the only wide things on
  * this site, and a page body that scrolls sideways on a phone is worse than a table that does. */
 
-.training .table-scroll { overflow-x: auto; margin: 14px 0 4px; }
+/* THE SIDEWAYS SCROLL, WITH SOMETHING SAYING SO. B8 of the 2026-09-04 audit.
+ *
+ * The muscle table is seven columns on a 390px phone and `overflow-x: auto` is the right answer to
+ * that, on his instruction of 2026-08-29: "I don't care if it doesn't fit or anything. I want to
+ * see one table." That instruction is why the exercises moved INTO each day cell in the first
+ * place, replacing two tables he had to join by eye across two scroll positions, and it stands.
+ *
+ * WHAT WAS ACTUALLY WRONG was not the scroll, it was that nothing said there was one. At 390px the
+ * third column showed "BB / Bul" and "BB / hal / 1.5" cut off at a hard edge, with no shadow, no
+ * fade and no handle, and a horizontal scroll inside a vertical page is the gesture a phone fights
+ * hardest. The caption explaining it sits BELOW the table, which is no use to someone looking at
+ * the clipped edge.
+ *
+ * A stacked layout was offered and rejected for the reason above: it would undo the one thing he
+ * asked for three times.
+ *
+ * THE FADE IS ALWAYS ON, and that is a known imperfection rather than an oversight. Making it
+ * disappear at the end of the scroll needs `animation-timeline: scroll()`, which Safari does not
+ * ship, so the honest choice was a fade that slightly overstates at the far right or no fade at
+ * all. Overstating "there is more that way" by one screen is a smaller cost than a table that
+ * looks truncated, which is what it looked like before. */
+.training .table-scroll {
+  overflow-x: auto;
+  margin: 14px 0 4px;
+  /* Transparent for the last 28px of the box, so the clipped column visibly runs off rather than
+     stopping at a wall. Both properties: -webkit- for Safari, which still needs it for masks.
+     `currentColor` rather than a colour, and that is correct rather than a way around
+     lint-tokens.mjs, which refused `black` here and was right to: a mask reads only the ALPHA
+     channel, so the opaque end of this gradient carries no palette decision at all. Naming a paint
+     colour would have implied one. */
+  -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, currentColor calc(100% - 28px), transparent 100%);
+}
+
+/* No fade where there is nothing to scroll to. A tablet or a laptop shows the whole table, and a
+   fade over a complete table is an affordance for a gesture that does nothing. */
+@media (min-width: 720px) {
+  .training .table-scroll {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* The hint, ABOVE the table, because that is where the person who cannot see the last column is
+   looking. The full explanation stays in the caption below; this is the one clause needed to know
+   the edge is not the end. */
+.training .scrollnote {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted-foreground);
+  margin: 0 0 6px;
+}
+
+@media (min-width: 720px) {
+  .training .scrollnote { display: none; }
+}
 
 .training .plan-table {
   border-collapse: collapse;

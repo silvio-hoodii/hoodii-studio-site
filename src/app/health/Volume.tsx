@@ -134,6 +134,13 @@ export default function Volume({
         <div className="exgroup-label">
           Weekly sets per muscle <span className="tag">({perMuscle.length} muscles)</span>
         </div>
+        {/* B8 of the 2026-09-04 audit. The table is seven columns wide on a phone and scrolls
+            sideways, which is his own instruction ("I don't care if it doesn't fit or anything. I
+            want to see one table"). What was missing is anything SAYING it scrolls: the third
+            column was cut at a hard edge and the sentence explaining it sits below the table,
+            where the person staring at the clipped edge has not read it yet. Phone only, because
+            above 720px the whole table fits and there is nothing to swipe to. */}
+        <p className="scrollnote">Swipe the table sideways for the four days</p>
         <div className="table-scroll">
           <table className="plan-table vol-table">
             <thead>
