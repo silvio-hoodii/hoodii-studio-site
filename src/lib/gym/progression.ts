@@ -263,6 +263,26 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
         return { weight: null, reps: best + 1, reason: `Last log ${gap}d ago, probe: old best +1 rep, see where you are.` };
       }
       const ww = workingWeight(sets) ?? 0;
+      /* NO UPWARD PROBE FROM A WEIGHT HE COULD NOT HIT THE RANGE AT. Added 2026-09-06, found on his
+       * real bench: last logged 2026-08-04 as 185x3, 185x3, 165x8 against a range of 6 to 10. The
+       * working weight is 185 (two sets), so this branch printed "probe: 185 up one step to 190" on
+       * a lift he had not touched in 33 days, for six reps, above a weight he managed for three. For
+       * a beginner training alone under a bar, that card is the one that hurts him.
+       *
+       * The probe goes up only if he was inside the range at the working weight. Otherwise the card
+       * offers the heaviest weight he DID hit the range at (165 here), and if there is none, the
+       * working weight itself. The gap is still named, and "adjust live" still stands. */
+      const repsAtWw = sets.filter((s) => s.weight === ww).map((s) => s.reps ?? 0);
+      const madeRangeAtWw = repsAtWw.length > 0 && Math.min(...repsAtWw) >= bottom;
+      if (!madeRangeAtWw) {
+        const inRange = sets.filter((s) => (s.reps ?? 0) >= bottom && s.weight != null).map((s) => s.weight as number);
+        const hold = inRange.length ? Math.max(...inRange) : ww;
+        return {
+          weight: hold,
+          reps: bottom,
+          reason: `Last log ${gap}d ago, and ${ww} was below the range then (${repsAtWw.join('/')}). Start at ${hold}, where you last made ${bottom}+, adjust live.`,
+        };
+      }
       const next = stepUp(ww, increment, ladder);
       return { weight: next, reps: bottom, reason: `Last log ${gap}d ago, probe: ${ww} up one step to ${next}, adjust live.` };
     }

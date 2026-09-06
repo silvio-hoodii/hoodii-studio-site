@@ -305,6 +305,27 @@ check(
     + 'machine where progress means the number falls',
 );
 
+/* ---- the long-gap probe must not climb from a weight he could not make the range at ------------ */
+/* HIS REAL BENCH, read off the live plan route on 2026-09-06: last logged 2026-08-04 as 185x3, 185x3,
+ * 165x8, range 6 to 10, 33 days ago. The old branch printed "probe: 185 up one step to 190" for six
+ * reps. Both directions: the hold must fire here, and a gap after a session INSIDE the range must
+ * still probe upward, or the probe is gone. */
+
+check(
+  'bench after 33 days, working weight below the range: start where he last made the range, not a step above',
+  suggest({ date: '2026-08-04', sets: [{ weight: 185, reps: 3 }, { weight: 185, reps: 3 }, { weight: 165, reps: 8 }] },
+    plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-09-06' })),
+  (s) => s.weight === 165 && s.reps === 6,
+  '165 x 6: the heaviest weight he hit six or more at. The card said 190 x 6 above a 185 x 3',
+);
+
+check(
+  'a long gap after a session inside the range still probes one step up',
+  suggest(session('2026-08-04', 3, 165, 8), plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-09-06' })),
+  (s) => s.weight === 170,
+  '170: the gap probe is unchanged where he had made the range, or the fix has deleted the feature',
+);
+
 console.log('-'.repeat(70));
-console.log(`26 cases, ${failed} failed`);
+console.log(`28 cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);
