@@ -953,8 +953,9 @@
           "name": "Straight-Arm Pulldown",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-pulldown",
-          "loadable": true
+          "station": "cable-adjustable",
+          "loadable": true,
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         },
         {
           "id": "band-straight-arm-pulldown",
@@ -1011,9 +1012,10 @@
           "name": "Face Pull",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-pulldown",
+          "station": "cable-adjustable",
           "loadable": true,
-          "note": "Logged 6 sets in May and June at up to 35 lb, then dropped."
+          "note": "Logged 6 sets in May and June at up to 35 lb, then dropped.",
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         },
         {
           "id": "pec-deck-reverse",
@@ -1133,9 +1135,10 @@
           "name": "Cable Curl",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-row",
+          "station": "cable-adjustable",
           "loadable": true,
-          "note": "HIS OWN EXAMPLE, 2026-08-27: if the block before it is a straight-arm pulldown, this keeps him at the cable stack instead of walking to the dumbbells. 2.5 lb steps as well."
+          "note": "HIS OWN EXAMPLE, 2026-08-27: if the block before it is a straight-arm pulldown, this keeps him at the cable stack instead of walking to the dumbbells. 2.5 lb steps as well.",
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         },
         {
           "id": "ez-preacher-curl",
@@ -1181,12 +1184,13 @@
           "name": "Tricep Pushdown",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-pulldown",
+          "station": "cable-adjustable",
           "loadable": true,
           "note": "Shoulder neutral, long head SHORTENED. 2.5 lb steps.",
           "aliases": [
             "tricep-pushdown-alt"
-          ]
+          ],
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         },
         {
           "id": "db-overhead-tricep-extension",
@@ -1203,9 +1207,10 @@
           "name": "Cable Overhead Tricep Extension",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-pulldown",
+          "station": "cable-adjustable",
           "loadable": true,
-          "note": "Same lengthened position as the dumbbell version, at the cable stack and in 2.5 lb steps."
+          "note": "Same lengthened position as the dumbbell version, at the cable stack and in 2.5 lb steps.",
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         },
         {
           "id": "ez-skullcrusher",
@@ -1574,9 +1579,10 @@
           "name": "Cable Crunch",
           "implement": "cable",
           "zone": "cable",
-          "station": "cable-pulldown",
+          "station": "cable-adjustable",
           "loadable": true,
-          "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress."
+          "note": "THE ONLY LOADABLE TRUNK OPTION in the gym. Every trunk exercise currently prescribed is bodyweight and therefore cannot progress.",
+          "$station": "MOVED TO THE ADJUSTABLE COLUMN 2026-09-06 on his words: \"The lat pull down is a station within the cable station, but it is only used for lat pulldowns. Same thing as the cable seated row... the straight arm pull down is the one that I do standing and that I can move around the pulley thing. It is the same place where I could do tricep pushdowns.\" An equipment fact only he could know; the catalogue had it wrong and called two exercises he cannot do together one station."
         }
       ],
       "jointAction": "Lumbar flexion, curling the pelvis toward the ribs. The hanging variants flex the hip at the same time, and the hip flexors rather than the abdominals are the prime movers of that half.",

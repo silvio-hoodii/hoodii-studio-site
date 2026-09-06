@@ -1055,12 +1055,15 @@ const CASES = [
      * press overhead. The role order had been a convention for as long as the file existed. */
     name: 'an accessory block sitting before a main lift is refused',
     mutate: (p) => {
-      const day = Object.values(p.days).find((d) => (d.blocks || []).some((b) => b.role === 'accessory')
-        && (d.blocks || []).some((b) => b.role === 'main'));
-      if (!day) throw new Error('no day carries both a main and an accessory block');
-      const acc = day.blocks.findIndex((b) => b.role === 'accessory');
+      /* THE WEEK HAS NO ACCESSORY BLOCKS SINCE 2026-09-06 (every block is a main pair, on his ruling
+         that optional means skipped), so the case synthesises one: a copy of the front squat block,
+         relabelled accessory with fresh ids, dropped in front of the first main. A leg lift, so the
+         warm-up region rule stays quiet and the rule under test is the one that fires. */
+      const day = p.days.b;
       const firstMain = day.blocks.findIndex((b) => b.role === 'main');
-      const [blk] = day.blocks.splice(acc, 1);
+      const blk = structuredClone(day.blocks.find((b) => b.role === 'main' && b.exercises[0].id === 'front-squat'));
+      blk.role = 'accessory';
+      blk.exercises.forEach((e) => { e.id = `${e.id}-acc`; e.name = `${e.name} Acc`; delete e.alts; });
       day.blocks.splice(firstMain, 0, blk);
     },
     expect: 'Hard work comes first',
@@ -1108,7 +1111,15 @@ const CASES = [
     keepFreeze: true,
     mutate: (p) => {
       /* A MAIN pair that does not open its session, since 2026-09-04: the first version took any two-exercise accessory block and found Session C's carry pair, whose reversal put a carry at the front of the day and tripped the warm-up region gate instead of the freeze. */
-      const acc = Object.values(p.days).flatMap((d) => (d.blocks || []).slice(1)).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
+      /* slice(2) since 2026-09-06: block 0 is the primer, block 1 opens with the leg lift, and reversing
+         that pair puts knee raises first, which trips the warm-up region rule before the freeze. */
+      /* THE PRESS BLOCK, NAMED, since 2026-09-06. A generic "any two-exercise main block" search kept
+         landing on pairs whose reversal trips a DIFFERENT rule first: knee raises leading a session
+         (warm-up region), a lateral raise in another zone (route), a carry leading a split squat (the
+         partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
+         at 45s still leave room for three sets of six presses, so the only thing that changes is the
+         hash, which is the one thing this case is about. */
+      const acc = p.days.b.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-overhead-press' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
       acc.exercises.reverse();
       const [first, second] = acc.exercises;
@@ -1124,7 +1135,15 @@ const CASES = [
       /* Four sets would ALSO trip the three-sets rule, so the structural change here is a swap of
          two accessory exercises' order, which changes the hash and nothing else. */
       /* A MAIN pair that does not open its session, since 2026-09-04: the first version took any two-exercise accessory block and found Session C's carry pair, whose reversal put a carry at the front of the day and tripped the warm-up region gate instead of the freeze. */
-      const acc = Object.values(p.days).flatMap((d) => (d.blocks || []).slice(1)).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
+      /* slice(2) since 2026-09-06: block 0 is the primer, block 1 opens with the leg lift, and reversing
+         that pair puts knee raises first, which trips the warm-up region rule before the freeze. */
+      /* THE PRESS BLOCK, NAMED, since 2026-09-06. A generic "any two-exercise main block" search kept
+         landing on pairs whose reversal trips a DIFFERENT rule first: knee raises leading a session
+         (warm-up region), a lateral raise in another zone (route), a carry leading a split squat (the
+         partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
+         at 45s still leave room for three sets of six presses, so the only thing that changes is the
+         hash, which is the one thing this case is about. */
+      const acc = p.days.b.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-overhead-press' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
       acc.exercises.reverse();
       // whyHere belongs to the LAST exercise of a block; keep the pair legal after the swap.
@@ -1145,16 +1164,9 @@ const CASES = [
     mutate: (p) => { p.days.a.scheduledOn = ['monday']; p.frozen.daysHash = structuralHash(p.days); },
     expect: 'exactly two distinct weekdays',
   },
-  {
-    name: 'the athletic session scheduled twice a week is refused',
-    mutate: (p) => {
-      const c = Object.values(p.days).find((d) => !(d.blocks || []).some((b) => b.role === 'main'));
-      if (!c) throw new Error('no session without main lifts; repoint this case');
-      c.scheduledOn = ['saturday', 'sunday'];
-      p.frozen.daysHash = structuralHash(p.days);
-    },
-    expect: 'exactly one weekday',
-  },
+  /* 'the athletic session scheduled twice a week is refused' WAS DELETED 2026-09-06 with Session C.
+     The rule (a session with no main lifts is scheduled once) is still in validate.mjs and has no
+     instance in the week to run against. When a no-main session returns, so does this case. */
   {
     name: 'a rep window wider than eight is refused',
     mutate: (p) => { p.days.a.blocks[0].exercises[0].rangeWidth = 9; },

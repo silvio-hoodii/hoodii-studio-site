@@ -8,13 +8,6 @@ function dateDiffDays(a: string, b: string): number {
   return Math.round((Date.parse(a + 'T00:00:00Z') - Date.parse(b + 'T00:00:00Z')) / 86400000);
 }
 
-/** Which weekday a YYYY-MM-DD Calgary date falls on, parsed as noon UTC so no offset can shift it.
- *  Duplicated from week.ts rather than imported: week.ts pulls conditioning.json off disk on import
- *  and this module has no business reading a content file to answer "is it Saturday". */
-function isSaturday(date: string): boolean {
-  return new Date(`${date}T12:00:00Z`).getUTCDay() === 6;
-}
-
 export interface NextUp {
   today: string;
   lastDay: DayKey | null;
@@ -114,7 +107,10 @@ export async function computeNextUp(today: string): Promise<NextUp> {
   const assumedFromWatch = assumedDates.length;
 
   const rotationNext: DayKey = ROTATION[(base + assumedFromWatch) % ROTATION.length]!;
-  const nextDay: DayKey = isSaturday(today) ? 'c' : rotationNext;
+  /* NO SATURDAY SESSION SINCE 2026-09-06. Session C was folded into A and B on his word ("session c,
+     whatever that is... fold"); the jumps and bounds are primers inside the two sessions now. The
+     rotation is the whole schedule: whichever of A and B he did not do last. */
+  const nextDay: DayKey = rotationNext;
   const todayDay = (await getSessionDay(today)) as DayKey | null;
 
   return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };

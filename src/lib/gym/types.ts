@@ -104,8 +104,9 @@ export interface Exercise {
    *  NOT AN ALIAS, and the difference decides what happens to his numbers. An alias in
    *  `movements.json` means one movement and one history, and `equivalent-ids.ts` merges the sets
    *  on every read; that is right for a machine calf raise and a standing calf raise. These are two
-   *  movements: 50 lb of dumbbell held in two hands is not 50 lb of cable. So this is a pointer for
-   *  a reader, never a merge, and nothing in the progression path reads it.
+   *  movements: 50 lb of dumbbell held in two hands is not 50 lb of cable. Since 2026-09-05
+   *  `equivalentIds` DOES read it, one-way: the new slot inherits the old id's history and nothing
+   *  points back. Before that it was validated, reported, and read by nothing.
    *
    *  It exists because "he has never done this" and "he did it under another name three days ago"
    *  were indistinguishable, and three cards said "First time: log your working weight" for
@@ -222,7 +223,7 @@ export interface Day {
  *  a week); C is the Saturday athletic session, once a week, outside the rotation, since 2026-09-04.
  *  Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a different fact that only the plan
  *  view and the rest-rule gate need. See the note at the top of content/gym/program.json. */
-export type DayKey = 'a' | 'b' | 'c';
+export type DayKey = 'a' | 'b';
 
 /** WHAT THE LIFTING IS FOR, in his words. Required; validate.mjs fails the build without it. It was
  *  stated five times between May and September 2026 and written nowhere, and every rebuild in that

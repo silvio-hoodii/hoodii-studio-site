@@ -171,7 +171,12 @@ const GATES = [
    * priority lift below the minimum effective dose of 1, or a lift moving FURTHER from the optimum
    * than content/gym/strength-baseline.json accepted. A bad-but-stable number is a judgement someone
    * made; a number moving the wrong way is a new decision and needs a person. */
-  ['gym-strength', process.execPath, ['--experimental-strip-types', 'scripts/gym-strength.mjs']],
+  /* GYM-STRENGTH IS OUT OF THE GATES, 2026-09-06, on his word and on the research. It graded every
+   * leg lift against Pelland 2026 Table 4, which is a per-LIFT strength curve whose own authors say
+   * the flat part is mostly people learning a new test, and it went red on 2026-09-05 because a
+   * step-back lunge added half a set of quad work: a per-muscle choice failed on a per-lift table. The
+   * script still runs by hand as a REPORT. His ruling on gates, 2026-09-06: a gate may enforce his
+   * rulings, the layout of his gym, and code correctness. A gate may never enforce a paper. */
 
   /* GYM-TARGETS WAS DESCRIBED IN THE COMMENT ABOVE FOR FOUR DAYS AND NEVER PUT IN THIS LIST. The
    * paragraph explaining what it grades, and why it is not sufficient on its own, was written when

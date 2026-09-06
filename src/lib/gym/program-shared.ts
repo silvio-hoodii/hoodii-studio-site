@@ -6,7 +6,7 @@ import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
 /** THE TABS, in order. A and B are the lifting rotation; C is the Saturday session since 2026-09-04.
  *  Four sessions keyed a to d before 2026-09-03, weekday names before that same day. */
-export const DAY_ORDER: DayKey[] = ['a', 'b', 'c'];
+export const DAY_ORDER: DayKey[] = ['a', 'b'];
 /** THE ROTATION: the next lifting session is always the one of these not done last. C is outside
  *  it; cycle.ts offers C on its scheduled day and never counts it as a rotation step. */
 export const ROTATION: DayKey[] = ['a', 'b'];

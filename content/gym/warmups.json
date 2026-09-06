@@ -1,16 +1,6 @@
 {
   "lower": [
     {
-      "name": "Clamshell x15/side (LEFT first)",
-      "search": "clamshell exercise glute",
-      "cue": "On your side, knees bent 90, short band above the knees, feet together. Open the top knee without rolling the hips back. Do the LEFT side first and give it one extra set. This switches on the glute that goes quiet."
-    },
-    {
-      "name": "Frog Pump x20",
-      "search": "frog pump glute exercise",
-      "cue": "On your back, heels together, knees wide, feet close to your butt. Drive through the heels and squeeze the glutes hard. This position forces the glutes to lead instead of the hamstrings."
-    },
-    {
       "name": "Deep Squat Hold x30s",
       "search": "deep squat hold mobility",
       "cue": "Sit into a deep squat, hold a rack or post for balance, heels down, knees pushed out. Use the stance width that lets you sit comfortably. Relax and breathe."
@@ -67,5 +57,6 @@
       "cue": "Big slow arm circles, then on all fours rotate one arm up to the ceiling, following your hand with your eyes."
     }
   ],
-  "$posture": "ADDED 2026-09-04 on his ask: \"I would also want to do stuff for posture that maybe doesn't really fit within the workout itself or maybe it's either before or after.\" Five minutes before every session, rendered with the lower-body warm-up. The four items are the upper warm-up's posture items reused, not new claims; nothing on disk sources posture work, so this is convention, labelled. Day.warmup is an array now so a session can carry the region warm-up AND this."
+  "$posture": "ADDED 2026-09-04 on his ask: \"I would also want to do stuff for posture that maybe doesn't really fit within the workout itself or maybe it's either before or after.\" Five minutes before every session, rendered with the lower-body warm-up. The four items are the upper warm-up's posture items reused, not new claims; nothing on disk sources posture work, so this is convention, labelled. Day.warmup is an array now so a session can carry the region warm-up AND this.",
+  "$lower": "TRIMMED TO TWO ON 2026-09-06, his words: \"eight exercises for the warm up... I still don't get what the reasoning behind that warmup is.\" Iversen 2021: drop the general warm-up, keep the exercise-specific one; the ramp sets on the first lift are that. The posture list is no longer a warm-up; it renders after the session as optional work, which is where he asked for it."
 }
