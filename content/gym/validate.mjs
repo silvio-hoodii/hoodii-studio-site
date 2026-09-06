@@ -1519,7 +1519,7 @@ if (!conditioning.week?.restRule) {
    * slot means a slot was deleted and its label left behind, which is the shape that leaves a
    * retired thing looking scheduled. */
   {
-    const SLOT_LABEL_KEYS = new Set(['eveningSwim', 'eveningRun', 'saturdayRow']);
+    const SLOT_LABEL_KEYS = new Set(['eveningSwim', 'eveningRun']); // saturdayRow left 2026-09-06 with Session C
     const slotKeys = new Set(
       Object.keys(assigned).filter((k) => !k.startsWith('$') && k !== 'why'),
     );

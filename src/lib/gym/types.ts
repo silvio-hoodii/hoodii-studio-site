@@ -51,6 +51,10 @@ export interface Alt {
    *  "+10 lb" on a card directly above that sentence. A fact about the machine, not a judgement. */
   assistance?: boolean;
   log?: boolean;
+  /** An alt may carry a renamed history too, since 2026-09-06: the dumbbell low incline is the bench's
+   *  first alternative and inherits his 15 sets logged as `db-bench-press`. `equivalentIds` reads
+   *  this on alts as well as slots. */
+  formerIds?: string[];
 }
 
 export interface Exercise {

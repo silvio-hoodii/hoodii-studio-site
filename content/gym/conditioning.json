@@ -57,7 +57,7 @@
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift first. Then the swim after Session A and Session C, the walk-run after Session B, and both on Friday if there is time. The easy row follows Session C on Saturday.",
+      "what": "Lift first. Then the swim after every lift, and the walk-run after Session B before it. Two sessions, A and B, each twice a week. There is no Saturday session since 2026-09-06; the jumps and carries it held are inside A and B.",
       "why": "Lift first, unchanged: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym. The run sits after the shorter session and the swim after the longer one, so no evening carries all three."
     },
     "poolTimes": {
@@ -423,24 +423,21 @@
         "His history is two thirds evening swims (26 of the last 41) and one morning swim since June, and his 2026-09-02",
         "words were \"getting up that early will affect my sleep schedule\". The 2026-09-03 morning ruling never started.",
         "",
-        "Week: Mon A + swim, Tue B + walk-run, Wed off, Thu A + swim, Fri B + walk-run + swim, Sat C + easy row + swim,",
-        "Sun off. Longest run is Thu-Fri-Sat, three days, exactly the rest rule. A Sunday swim makes it four.",
+        "Week: Mon A + swim, Tue B + walk-run, Wed off, Thu A + swim, Fri B + walk-run + swim, Sat off,",
+        "Sun off. Longest run is Thu-Fri, two days. Session C was folded into A and B on 2026-09-06.",
         "",
         "THE COST HE ACCEPTED: the full version of A and B runs about 85 to 90 minutes, so a lift-then-swim evening is",
         "near two and a half hours and Friday is the longest evening of the week. He chose it (\"1 FULL\")."
       ],
       "eveningSwim": [
         "monday",
+        "tuesday",
         "thursday",
-        "friday",
-        "saturday"
+        "friday"
       ],
       "eveningRun": [
         "tuesday",
         "friday"
-      ],
-      "saturdayRow": [
-        "saturday"
       ]
     },
     "howItFits": {

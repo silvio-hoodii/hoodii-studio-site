@@ -90,8 +90,16 @@ export async function equivalentIds(id: string): Promise<string[]> {
     for (const day of Object.values(program.days ?? {})) {
       for (const block of day.blocks ?? []) {
         for (const ex of block.exercises ?? []) {
-          if (ex.id !== id || !ex.formerIds?.length) continue;
-          for (const f of ex.formerIds) family.add(f);
+          if (ex.id === id) for (const f of ex.formerIds ?? []) family.add(f);
+          /* ALTS TOO, since 2026-09-06. The barbell bench is the slot and the dumbbell low incline he
+             has actually been doing is its first alternative, carrying formerIds: ['db-bench-press']
+             for his 15 sets under the old id. The first version of this loop read slots only, so the
+             alt's history would have been invisible the moment he swapped to it, which is the exact
+             "First time: log your working weight" card this field exists to prevent. Claimed as
+             working in the proposal before it was; caught on re-read, before he saw it. */
+          for (const a of ex.alts ?? []) {
+            if (a.id === id) for (const f of a.formerIds ?? []) family.add(f);
+          }
         }
       }
     }

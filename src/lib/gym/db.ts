@@ -420,6 +420,43 @@ export async function getLastRotationRow(keys: string[]): Promise<{ date: string
   return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
 }
 
+/** WHAT HE DID LAST TIME, for the top of the page. Added 2026-09-06 on his words: "I don't
+ *  understand the point of having session a, session b, session c if I don't even know what I did
+ *  last session."
+ *
+ *  Until today nothing above the first exercise said which session he did last or when. The only
+ *  record was a table BELOW the finish button, showing dashes for every duration and three retired
+ *  session names. This returns the most recent session with real logged work, and for each exercise
+ *  in it the heaviest set (and the reps at that weight), in the order he first logged them. Two
+ *  round trips, no derived claims, nothing typed. */
+export interface LastSessionSummary {
+  date: string;
+  day: string | null;
+  lifts: { id: string; name: string; weight: number | null; reps: number | null }[];
+}
+export async function getLastSessionSummary(): Promise<LastSessionSummary | null> {
+  const row = await getLastTrainingRow();
+  if (!row) return null;
+  const rows = await sql`
+    select exercise_id, exercise_name, weight, reps, logged_at from gym_set
+    where date = ${row.date} and ${PERFORMED} and reps is not null and reps > 0
+    order by (logged_at is null) asc, logged_at asc, id asc
+  `;
+  const byId = new Map<string, { id: string; name: string; weight: number | null; reps: number | null }>();
+  for (const r of rows as unknown as { exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[]) {
+    const cur = byId.get(r.exercise_id);
+    const w = r.weight == null ? null : Number(r.weight);
+    const reps = r.reps == null ? null : Number(r.reps);
+    if (!cur) { byId.set(r.exercise_id, { id: r.exercise_id, name: r.exercise_name ?? r.exercise_id, weight: w, reps }); continue; }
+    /* Heaviest set wins; at equal weight, the most reps. A bodyweight lift (weight null) keeps its
+       best rep count. */
+    const heavier = (w ?? -1) > (cur.weight ?? -1);
+    const sameWeightMoreReps = (w ?? -1) === (cur.weight ?? -1) && (reps ?? 0) > (cur.reps ?? 0);
+    if (heavier || sameWeightMoreReps) { cur.weight = w; cur.reps = reps; }
+  }
+  return { date: row.date, day: row.day, lifts: [...byId.values()] };
+}
+
 /** Rolling schedule: the most recent date with real logged work, and its program day. */
 export async function getLastTrainingRow(): Promise<{ date: string; day: string | null; status: string | null } | null> {
   const rows = await sql`

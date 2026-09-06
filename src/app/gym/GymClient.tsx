@@ -39,6 +39,9 @@ interface Props {
    *  an entry, so `fillOptions[key]` being undefined is the test for "this block is not fillable"
    *  and no second flag can disagree with it. */
   fillOptions: FillOptions;
+  /** The most recent session with logged work and the heaviest set of each lift in it. Rendered
+   *  under the day title. His words, 2026-09-06: "I don't even know what I did last session." */
+  lastSession: { date: string; day: string | null; lifts: { id: string; name: string; weight: number | null; reps: number | null }[] } | null;
   /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
      that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
      day: declared in an interface, sent on every render, used by nothing. Removing it also drops a
@@ -156,7 +159,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions }: Props) {
+export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -201,7 +204,8 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
   const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
-  const [openAlts, setOpenAlts] = useState<Set<string>>(new Set());
+  /* `openAlts` IS GONE, 2026-09-06: the alternatives render as a visible row of names, so there is no
+     picker to open or close. */
 
   /* OFF-PLAN CAPTURE. Added 2026-08-27, and it is the most load-bearing thing on this page.
    *
@@ -718,17 +722,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
   function swapExercise(originalId: string, alt: Alt) {
     setSwaps((prev) => { const n = { ...prev, [originalId]: alt }; persistSwaps(n); return n; });
-    setOpenAlts((prev) => { const n = new Set(prev); n.delete(originalId); return n; });
   }
   function revertSwap(originalId: string) {
     setSwaps((prev) => { const n = { ...prev }; delete n[originalId]; persistSwaps(n); return n; });
-  }
-  function toggleAltPicker(id: string) {
-    setOpenAlts((prev) => {
-      const n = new Set(prev);
-      if (n.has(id)) n.delete(id); else n.add(id);
-      return n;
-    });
   }
 
   /* A JUMP SET IS NOT A LIFTING SET, AND THIS COUNTED THEM TOGETHER UNTIL 2026-09-01.
@@ -837,6 +833,35 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       </div>
 
       <div className="count" style={{ marginTop: 22 }}>{day.title}</div>
+
+      {/* WHAT HE DID LAST TIME, one line, under the title, since 2026-09-06. His words: "I don't
+        * understand the point of having session a, session b, session c if I don't even know what I
+        * did last session." Until today the only record was a table below the finish button, with a
+        * dash in every duration column and three retired session names.
+        *
+        * The session's CURRENT name, from the key, not the title stamped when it ran; the date, not
+        * the weekday, on his ruling; then the heaviest set of each lift in the order he did them.
+        * Nothing here is typed and nothing is a claim: it is his own log read back. */}
+      {lastSession && (
+        <div className="lasttime">
+          <span className="lasttime-k">Last time</span>
+          {' '}
+          {lastSession.day && (lastSession.day in program.days) ? splitName(program.days[lastSession.day as DayKey]) : 'a session'}
+          {', '}
+          {new Date(`${lastSession.date}T12:00:00Z`).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
+          {lastSession.lifts.length > 0 && (
+            <>
+              {': '}
+              {lastSession.lifts.map((l, i) => (
+                <span key={l.id} className="tnum">
+                  {i > 0 && ' · '}
+                  {l.name}{l.weight != null ? ` ${l.weight}` : ''}{l.reps != null ? `×${l.reps}` : ''}
+                </span>
+              ))}
+            </>
+          )}
+        </div>
+      )}
 
       {/* THREE PARAGRAPHS WERE HERE AND THEY ARE NOT COMING BACK. Removed 2026-08-27 on his ruling,
         * with the blurb under the h1 in page.tsx. Read this before restoring any of them.
@@ -1145,24 +1170,27 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
                 {ex.alts && ex.alts.some((a) => a.id !== eff.id && !fillIdsNow.has(a.id)) && (
                   <div className="ex-swap">
-                    <button className="swap-toggle" onClick={() => toggleAltPicker(ex.id)}>
-                      {swap ? 'Pick a different step/alternative ▾' : 'Not available? Pick alternative ▾'}
-                    </button>
-                    {openAlts.has(ex.id) && (
-                      <div className="swap-list">
-                        {/* AN ALT THAT IS CURRENTLY FILLING A REST IS NOT OFFERED AS A SWAP. Swapping to
-                            it would put two cards on one (date, exercise_id, set_idx) key space, and
-                            the second card's typing would overwrite the first's rows. The other
-                            direction is filtered in the fill list; the server refuses whatever slips
-                            through both. */}
-                        {ex.alts.filter((a) => a.id !== eff.id && !fillIdsNow.has(a.id)).map((a) => (
-                          <button className="swap-opt" key={a.id} onClick={() => swapExercise(ex.id, a)}>
-                            <div className="swap-opt-name">{a.name}</div>
-                            <div className="swap-opt-cue">{a.cue}</div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                    {/* THE ALTERNATIVES ARE VISIBLE, since 2026-09-06, as a row of names under the
+                        sets. They sat behind "Not available? Pick alternative" and he read the one
+                        variation on the card as a rule: "we are constraining ourselves within one
+                        variation of the exercise... I don't know if that's by design." It was not.
+                        There is no research reason to fix one variation; the data model has one slot
+                        and the rest were one tap out of sight. Names only, on one wrapping line, so
+                        the ten cards do not grow a paragraph each (his note #12). Tapping one swaps
+                        it in; the cue for the new lift then shows under "How to do it" as before.
+
+                        AN ALT THAT IS CURRENTLY FILLING A REST IS NOT OFFERED. Swapping to it would
+                        put two cards on one (date, exercise_id, set_idx) key space. The other
+                        direction is filtered in the fill list; the server refuses what slips
+                        through both. */}
+                    <div className="alt-chips">
+                      <span className="alt-chips-k">or</span>
+                      {ex.alts.filter((a) => a.id !== eff.id && !fillIdsNow.has(a.id)).map((a) => (
+                        <button className="alt-chip" key={a.id} onClick={() => swapExercise(ex.id, a)} title={a.cue}>
+                          {a.name}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -1377,6 +1405,23 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         </details>
       )}
 
+      {/* POSTURE, AFTER, OPTIONAL, since 2026-09-06. His ask on 2026-09-04 was "stuff for posture
+        * that maybe doesn't really fit within the workout itself or maybe it's either before or
+        * after." What shipped was the old upper-body warm-up renamed and put BEFORE every session,
+        * which made the warm-up eight items and made him ask what the reasoning was. There was none.
+        * Here it is where he asked for it, closed by default, costing one row when he has no time. */}
+      {(warmups.posture?.length ?? 0) > 0 && (
+        <details className="fold" style={{ marginTop: 16 }}>
+          <summary>Posture, optional ({warmups.posture!.length})</summary>
+          {warmups.posture!.map((w) => (
+            <div className="warm-item" key={w.name}>
+              <div className="name">{w.name}</div>
+              <div className="cue">{w.cue}</div>
+            </div>
+          ))}
+        </details>
+      )}
+
       {/* ---- a note from the floor ----
         *
         * Asked for on 2026-08-16: "maybe a note place in the end for when I find something that I
@@ -1511,7 +1556,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * One line, under the finish buttons, where a session ends rather than in front of the work.
         * Not a card, not a section: note #12 is "walls of text again why do I need all this". */}
       <p className="ex-cue" style={{ marginTop: -14 }}>
-        <a href="/health?s=volume">How the four days add up, muscle by muscle</a>
+        <a href="/health?s=volume">How the two sessions add up, muscle by muscle</a>
       </p>
 
       <div className={`timer-bar${timer ? '' : ' off'}`}>

@@ -498,25 +498,24 @@
 
     /* ---- swapping ---- */
 
-    async altPickerOpens() {
-      const ex = $$('.ex').find((e) => $('.ex-swap .swap-toggle', e));
+    /* THE ALTERNATIVES ARE VISIBLE CHIPS since 2026-09-06, not a picker behind a tap. The three cases
+       below drive `.alt-chip` directly; there is no toggle to open. Renamed from altPickerOpens. */
+    async altChipsAreVisible() {
+      const ex = $$('.ex').find((e) => $('.ex-swap .alt-chip', e));
       if (!ex) return { pass: false, detail: 'no exercise offers alternatives' };
-      $('.ex-swap .swap-toggle', ex).click();
-      await waitFor(() => $('.swap-opt', ex));
-      const opts = $$('.swap-opt', ex).map((o) => text($('.swap-opt-name', o)));
+      const opts = $$('.alt-chip', ex).map(text);
       return { pass: opts.length > 0, detail: { on: text($('.ex-name', ex)), alternatives: opts } };
     },
 
     async swapChangesTheCard() {
-      const ex = $$('.ex').find((e) => $('.swap-opt', e)) || $$('.ex').find((e) => $('.ex-swap .swap-toggle', e));
+      const ex = $$('.ex').find((e) => $('.ex-swap .alt-chip', e));
       if (!ex) return { pass: false, detail: 'no swappable exercise' };
-      if (!$('.swap-opt', ex)) { $('.ex-swap .swap-toggle', ex).click(); await waitFor(() => $('.swap-opt', ex)); }
       const slot = ex.dataset.slot;
       const before = text($('.ex-name', ex));
       const beforeEff = ex.dataset.eff;
       const beforeMeta = text($('.ex-meta', ex));
-      const wanted = text($('.swap-opt-name', $('.swap-opt', ex)));
-      $('.swap-opt', ex).click();
+      const wanted = text($('.alt-chip', ex));
+      $('.alt-chip', ex).click();
       await waitFor(() => {
         const c = $$('.ex').find((e) => e.dataset.slot === slot);
         return c && c.dataset.eff !== beforeEff ? c : null;
@@ -586,12 +585,11 @@
        mean writing to his training log. */
     async logDerivedSwapHydrates() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
-      const ex = $$('.ex').find((e) => $('.ex-swap .swap-toggle', e) && $('.set-row', e));
+      const ex = $$('.ex').find((e) => $('.ex-swap .alt-chip', e) && $('.set-row', e));
       if (!ex) return { pass: false, detail: 'no swappable exercise that logs sets' };
       const slot = ex.dataset.slot;
-      if (!$('.swap-opt', ex)) $('.ex-swap .swap-toggle', ex).click();
-      const opt = await waitFor(() => $('.swap-opt', ex));
-      if (!opt) return { pass: false, detail: { step: 'open the alt picker', slot, sawOptions: $$('.swap-opt', ex).length } };
+      const opt = $('.alt-chip', ex);
+      if (!opt) return { pass: false, detail: { step: 'find an alternative chip', slot } };
       opt.click();
       const revert = await waitFor(() => {
         const c = $$('.ex').find((e) => e.dataset.slot === slot);
@@ -637,12 +635,11 @@
     },
 
     async 'swapSurvivesReload:before'() {
-      const ex = $$('.ex').find((e) => $('.ex-swap .swap-toggle', e));
+      const ex = $$('.ex').find((e) => $('.ex-swap .alt-chip', e));
       if (!ex) return { pass: false, detail: 'no swappable exercise' };
-      if (!$('.swap-opt', ex)) { $('.ex-swap .swap-toggle', ex).click(); await waitFor(() => $('.swap-opt', ex)); }
-      const wanted = text($('.swap-opt-name', $('.swap-opt', ex)));
+      const wanted = text($('.alt-chip', ex));
       const from = text($('.ex-name', ex));
-      $('.swap-opt', ex).click();
+      $('.alt-chip', ex).click();
       await waitFor(() => $$('.ex').some((e) => text($('.ex-name', e)) === wanted));
       sessionStorage.setItem('__probeSwap', JSON.stringify({ from, to: wanted }));
       return { pass: cardNames().includes(wanted), detail: { from, to: wanted, namesNow: cardNames(), next: 'reload, re-eval, run swapSurvivesReload:after' } };
@@ -870,10 +867,9 @@
       let swapped = $$('.ex').find((e) => $('.swapped-note', e));
       if (!swapped) {
         // Makes its own, because revertRestoresTheOriginal runs before this one.
-        const ex = $$('.ex').find((e) => $('.ex-swap .swap-toggle', e) && $('.done-toggle', e));
+        const ex = $$('.ex').find((e) => $('.ex-swap .alt-chip', e) && $('.done-toggle', e));
         if (!ex) return { pass: false, detail: 'no swappable exercise that logs sets' };
-        if (!$('.swap-opt', ex)) { $('.ex-swap .swap-toggle', ex).click(); await waitFor(() => $('.swap-opt', ex)); }
-        $('.swap-opt', ex).click();
+        $('.alt-chip', ex).click();
         await waitFor(() => $$('.ex').some((e) => $('.swapped-note', e)));
         swapped = $$('.ex').find((e) => $('.swapped-note', e));
         if (!swapped) return { pass: false, detail: 'swap did not take' };

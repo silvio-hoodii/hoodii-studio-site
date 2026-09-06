@@ -1,7 +1,9 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadExtraSuggestions } from '@/lib/gym/program';
 import { computeFillOptions } from '@/lib/gym/fill';
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getNotes, countNotes, getLoggedHistory } from '@/lib/gym/db';
+import { getNotes, countNotes, getLoggedHistory, getLastSessionSummary } from '@/lib/gym/db';
+import { splitName } from '@/lib/gym/program-shared';
+import type { DayKey } from '@/lib/gym/types';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
 import { today } from '@/lib/day';
@@ -35,6 +37,9 @@ export default async function GymHome() {
      whole of equipment.json stay out of the phone's bundle. See src/lib/gym/fill.ts for why this
      is a control he operates rather than another partner an agent picked. */
   const fillOptions = await computeFillOptions(await getLoggedHistory());
+  /* What he did last time, for the strip under the day title. His words, 2026-09-06: "I don't even
+     know what I did last session." */
+  const lastSession = await getLastSessionSummary();
   /* COUNTED IN THE DATABASE, NOT IN THE ARRAY. `getNotes` caps at 20 and `notes.filter(...)` could
      only ever see what survived the cap, so an unhandled note older than the twentieth would vanish
      from the count with nothing on screen admitting it. Finding 37. */
@@ -58,7 +63,7 @@ export default async function GymHome() {
         * The hub row at src/app/page.tsx still carries the one-line version, which is where a
         * description of the app belongs: on the page that indexes it, for someone deciding whether
         * to open it. Not inside it. */}
-      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions} nextUp={nextUp} fillOptions={fillOptions} />
+      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions} nextUp={nextUp} fillOptions={fillOptions} lastSession={lastSession} />
 
       {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he
         * reads the page in: do the session, glance at what the last few looked like, then write a
@@ -80,7 +85,15 @@ export default async function GymHome() {
         moreHref="/gym/log"
         moreLabel="the whole record"
         columns={[
-          { head: 'Day', cell: (r) => (r.dayTitle ? (r.dayTitle.split(':')[0] ?? null) : (r.day ?? null)) },
+          /* THE LIVE SESSION NAME FOR THE KEY, since 2026-09-06, not the title stamped at the time.
+             `day_title` is stamped when a session starts and never rewritten, so after the 09-03
+             relabelling three of five rows here read "Session D", "Lower B" and "Upper A": sessions
+             that no longer exist, on the one table meant to tell him what he did. A key that is still
+             in the programme prints its current name; anything else falls back to the stamped head. */
+          { head: 'Day', cell: (r) => {
+            const d = r.day && (r.day in program.days) ? program.days[r.day as DayKey] : null;
+            return d ? splitName(d) : (r.dayTitle ? (r.dayTitle.split(':')[0] ?? null) : (r.day ?? null));
+          } },
           {
             head: 'Time',
             num: true,

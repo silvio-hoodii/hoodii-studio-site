@@ -420,11 +420,11 @@ export const KIND_LABEL: Record<string, string> = {
    a key here with no slot is dead, and a slot with no key here is a camelCase word in the planned
    week. Add to both, or neither. */
 export const SLOT_LABEL: Record<string, string> = {
-  /* RENAMED AGAIN 2026-09-04 on his ruling: the swim went back to the evening after the lift, the
-     walk-run follows Session B, and the easy row follows Session C on Saturday. */
+  /* RENAMED 2026-09-04 on his ruling: the swim went back to the evening after the lift and the
+     walk-run follows Session B. `saturdayRow` LEFT 2026-09-06 with Session C, which was folded into A
+     and B; the validator compares this list against week.assignedDays in both directions. */
   eveningSwim: 'evening swim',
   eveningRun: 'evening walk-run',
-  saturdayRow: 'easy row',
 };
 
 export { dayOf };
