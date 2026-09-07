@@ -844,7 +844,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * Nothing here is typed and nothing is a claim: it is his own log read back. */}
       {lastSession && (
         <div className="lasttime">
-          <span className="lasttime-k">Last time</span>
+          {/* "TODAY", NOT "LAST TIME", ON THE DAY HE TRAINED. Found within hours of shipping: he
+              finished Session A on 2026-09-06, opened the page, and the strip read "Last time Session A,
+              Sep 6" under a tab already showing his sets. He read that as the app not knowing he had
+              trained ("theres nothing today, i did a session today"). The most recent session IS
+              today's, and the label has to say so. */}
+          <span className="lasttime-k">{lastSession.date === date ? 'Today' : 'Last time'}</span>
           {' '}
           {lastSession.day && (lastSession.day in program.days) ? splitName(program.days[lastSession.day as DayKey]) : 'a session'}
           {', '}
