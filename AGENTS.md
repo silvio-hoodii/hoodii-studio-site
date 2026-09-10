@@ -521,6 +521,26 @@ accumulates things a reader has to work out are dead.
 ## Commits and deploy
 
 - Production deploys from `main`.
+- **After pushing, DO NOT sit in a `curl` + `sleep` loop. Run `node scripts/wait-deploy.mjs` in the
+  background and carry on working.**
+
+  ```
+  node scripts/wait-deploy.mjs --url /health/day --expect "under 5,000 steps"
+  ```
+
+  with the Bash tool's `run_in_background: true`. It prints one line and exits 0 or 1.
+
+  Two reasons it exists, and the second is the one that made it a script rather than a note. **A
+  hand-typed poll blocks the session for the length of the build**, so the agent does nothing while
+  Vercel works and Silvio watches it do nothing: *"you are stuck waiting on production why [not] fix
+  it for any future session"* (2026-09-09). And **a poll on status text answers the wrong question**:
+  the PREVIOUS build serves 200 the entire time yours is building, so a loop that stops at the first
+  200 can go green on the deploy you are replacing. This asks the Vercel API whether the deployment
+  carrying YOUR `meta.githubCommitSha` is `READY`, and only then fetches the URL and looks for a
+  string your change produces, tag-stripped so a phrase wrapping a `<span>` still matches.
+
+  It uses the CLI's own login, so no token. It sets `MSYS_NO_PATHCONV=1` on the child itself rather
+  than telling you to remember it.
 - Verification gate: **`pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm build`.**
   All four, before any push. Or `node scripts/verify.mjs`, which runs all of them plus the two
   validator regression suites and the two gym gates, and prints ONE green-or-red line.
