@@ -277,11 +277,10 @@ function Progression({
               ({records.length} times, {latestRecord.metres.toLocaleString('en-CA')}&nbsp;m)
             </span>
           </summary>
-          <p className="lede">
-            Every swim that beat the longest one before it, newest first. Derived from the sessions
-            rather than read out of Samsung&rsquo;s own record log, which starts too late to know
-            about most of these.
-          </p>
+          {/* The label stays; the provenance went, 2026-09-09. That these are derived from the
+              sessions rather than from Samsung's own record log, which starts too late to hold most
+              of them, is true and is why the table can exist at all. It is also plumbing. */}
+          <p className="lede">Every swim that beat the longest one before it, newest first.</p>
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
@@ -745,10 +744,10 @@ export default async function SwimDeepPage() {
   return (
     <div className="wrap">
       <h1>The whole record</h1>
-      <p className="lede">
-        Eight years of individual lengths, read. This is the page for afterwards, not for the pool
-        deck. <Link href="/swim">Back to Swim</Link>.
-      </p>
+      {/* "Eight years of individual lengths, read" was a typed span beside derived ones, and
+          "this is the page for afterwards, not for the pool deck" tells him where he is standing,
+          which he knows. The link is the only part that does anything. */}
+      <p className="lede"><Link href="/swim">Back to Swim</Link>.</p>
 
       <Swolf points={d.swolf} agreement={d.swolfAgreement} />
       <Progression standings={standings} records={d.distanceRecords} />

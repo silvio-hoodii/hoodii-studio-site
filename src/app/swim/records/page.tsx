@@ -117,8 +117,12 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
         </div>
       </div>
       <p className="ex-cue">
-        Two clocks because a 1,000 m with eleven minutes of standing in it is not a 1,000 m time.
-        The gap between the first two tiles IS the rest, and closing it is the whole plan.
+        {/* KEPT, and it is the test passing rather than failing: this says what the two tiles
+            mean AND what to do about them, which is the definition of a caption that earns its
+            place. "eleven minutes" went, because it was an invented illustration sitting beside
+            real derived figures and reading as one of them. */}
+        Two clocks, because a 1,000 m with minutes of standing in it is not a 1,000 m time. The gap
+        between the first two tiles IS the rest, and closing it is the whole plan.
       </p>
     </div>
   );
@@ -219,11 +223,11 @@ function DerivedCards({ recs, year }: { recs: DerivedRecord[]; year: number }) {
           </div>
         ))}
       </div>
-      <p className="ex-cue">
-        400 and 1,500 are derived here too, even though the watch stores them, because putting them
-        beside the watch&rsquo;s own numbers is the only way to see whether this derivation is
-        trustworthy. They will not match exactly, and the reason is below.
-      </p>
+      {/* DELETED 2026-09-09 on his no-filler ruling. It explained WHY 400 and 1,500 are derived
+          here as well as read from the watch: so the two can be compared and the derivation
+          checked. That is a reason for the page's construction, not a fact about his swimming, and
+          the table below already shows both numbers side by side, which is the whole point being
+          made. Kept here for whoever wonders why the duplication exists. */}
     </div>
   );
 }
