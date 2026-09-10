@@ -75,9 +75,29 @@ export default async function BikePage({
 
       {sub === 'now' && (
         <>
+          {/* "0x A WEEK" SHIPPED TO PRODUCTION AND READ AS A FREQUENCY. `sessionsPerWeek` is 0
+              for the bike, which is TRUE and means the bike is not in the current week at all, and
+              the template rendered it as a rate: "Stationary bike, 0x a week, 43 minutes of
+              Norwegian 4x4". Zero is not a frequency, and a page cannot say how often he does a
+              thing he is not currently prescribed.
+
+              The zero is now a BRANCH rather than a value interpolated into a sentence, which is
+              the class removed: any count going to zero here used to produce a grammatical
+              sentence that was nonsense. /run carries the same shape at sessionsPerWeek 2 and would
+              have read the same way the day it went to 0. */}
           <p className="lede">
-            {c.bike.surface}, {c.bike.sessionsPerWeek}x a week, {c.bike.protocol.totalMinutes} minutes
-            of {c.bike.protocol.name}. The last one the watch saw is below.
+            {c.bike.sessionsPerWeek > 0 ? (
+              <>
+                {c.bike.surface}, {c.bike.sessionsPerWeek}x a week,{' '}
+                {c.bike.protocol.totalMinutes} minutes of {c.bike.protocol.name}.
+              </>
+            ) : (
+              <>
+                {c.bike.surface}, not in the current week. When it comes back it is{' '}
+                {c.bike.protocol.totalMinutes} minutes of {c.bike.protocol.name}.
+              </>
+            )}{' '}
+            The last one the watch saw is below.
           </p>
           <LastSession s={lastSession} />
           {/* ONE SENTENCE, and it is the only one here that LastSession does not already say.
@@ -104,7 +124,11 @@ export default async function BikePage({
       {sub === 'plan' && (
         <div className="exgroup">
           <div className="exgroup-label">
-            {c.bike.title} <span className="tag">({c.bike.sessionsPerWeek}x/week, {c.bike.protocol.totalMinutes} min)</span>
+            {c.bike.title}{' '}
+            <span className="tag">
+              ({c.bike.sessionsPerWeek > 0 ? `${c.bike.sessionsPerWeek}x/week, ` : 'not this week, '}
+              {c.bike.protocol.totalMinutes} min)
+            </span>
           </div>
           <Prose text={c.bike.why} />
           <div className="exlist">
