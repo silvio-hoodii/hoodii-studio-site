@@ -23,6 +23,20 @@ const daysBetween = (a: string, b: string): number => Math.round((Date.parse(b) 
  * surface you read it on. */
 export const STALE_AFTER_DAYS = 14;
 
+/* THE SMOOTHING WINDOW, IN DAYS, and it must equal the one in
+ * HealthOS/server/publish-current.mjs, which is canonical for every number about his body. Named
+ * rather than inlined so the two can be compared by grep instead of by reading two files in two
+ * repos and hoping. */
+export const SMOOTH_WINDOW_DAYS = 30;
+
+/** Shift a YYYY-MM-DD by whole days. Noon UTC so a date-only string cannot fall to the previous
+ *  day, the same guard every other date helper in this repo uses. */
+function shiftDays(iso: string, delta: number): string {
+  const d = new Date(`${iso}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + delta);
+  return d.toISOString().slice(0, 10);
+}
+
 function median(values: number[]): number | null {
   if (!values.length) return null;
   const s = [...values].sort((a, b) => a - b);
@@ -82,9 +96,24 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   const daysSinceLatest = Math.max(0, daysBetween(latest.date, today()));
   const stale = daysSinceLatest > STALE_AFTER_DAYS;
 
+  /* THE 30-DAY FLOOR IS THE WHOLE POINT AND IT WAS MISSING, until 2026-09-09. The comment above
+     says "same method as HealthOS/server/publish-current.mjs" and it was not: that file caps the
+     smoothing window at `date >= date(latest, '-30 days')` and this one had no floor at all, so it
+     took the last five Watch readings however far back they sat.
+
+     Two consequences, and the second is the bad one. The site printed "+0.2 kg" where CURRENT.md,
+     which is canonical for every number about his body, printed "+0.4 kg" for the same anchor and
+     the same span. And the fifth reading it reached for was 2026-08-06, which is THE ROW THE 31-DAY
+     TREND COMPARES AGAINST: the smoothed endpoint contained its own baseline, which drags any delta
+     toward zero and makes a regain look smaller than it is. Flattering, and therefore the expensive
+     direction.
+
+     Measured on the live store the day this was fixed: 5 readings back to 2026-08-06 with a median
+     of 104.90, against the canonical 4 readings back to 2026-08-09 with a median of 105.05. */
   const recentRows = await sql`
     select kg from health_body_comp
     where kg is not null and source = 'Watch' and date <= ${latest.date}
+      and date >= ${shiftDays(latest.date, -SMOOTH_WINDOW_DAYS)}
     order by date desc limit 5
   `;
   const recentKg = (recentRows as unknown as { kg: number }[]).map((r) => r.kg);
