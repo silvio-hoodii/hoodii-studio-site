@@ -1,5 +1,23 @@
-import { shortDate } from '@/lib/format';
+import { dayMonth, shortDate, spanInMonths } from '@/lib/format';
 import type { YearBody } from '@/lib/health/year';
+
+/** The bold date line above the number. HERE for the same reason the sentence is: both pages built
+ *  it out of `peak.date` and `low.date` independently, so the endpoint had to be corrected in two
+ *  files when his ruling changed, and a correction applied to one of two copies is how the two
+ *  disagreed in the first place. The dates and the number now come from one place or neither does.
+ *
+ *  The duration is CALENDAR MONTHS, in the bracket he asked for: "I feel like saying February to
+ *  August is too much ... I also want to make it evident that it's about 6 months." See
+ *  spanInMonths in lib/format.ts, which carries a suite because its month-end clamp cannot fire on
+ *  today's data. */
+export function YearRangeDates({ body }: { body: YearBody }) {
+  return (
+    <>
+      {dayMonth(body.peak.date)} to {dayMonth(body.latest.date)}{' '}
+      <span className="yearline-span">({spanInMonths(body.peak.date, body.latest.date)})</span>
+    </>
+  );
+}
 
 /* THE YEAR'S WEIGHT RANGE, IN ONE SENTENCE, RENDERED IN ONE PLACE.
  *
@@ -32,20 +50,20 @@ export function YearRangeSentence({ body }: { body: YearBody }) {
   return (
     <>
       <span className="tnum">{body.peak.kg.toFixed(1)} kg</span> down to{' '}
-      <span className="tnum">{body.low.kg.toFixed(1)} kg</span>, at{' '}
+      <span className="tnum">{body.latest.kg.toFixed(1)} kg</span>, at{' '}
       <span className="tnum">
         {body.kgPerWeek > 0 ? '+' : ''}{body.kgPerWeek.toFixed(2)} kg
       </span>{' '}
       a week.{' '}
-      {/* THE CLAUSE THAT MAKES THE HEADLINE HONEST, and it is derived rather than chosen: the day the
-          low IS the newest reading, the sentence says so and stops warning about nothing. */}
+      {/* THE LOW IS NAMED RATHER THAN HEADLINED, which is the half of his ruling that keeps the
+          achievement on the page. Derived, so on the day the newest reading IS the low the sentence
+          stops saying it twice. */}
       {body.lowIsLatest ? (
-        <>The lowest reading is also the most recent one, so this is where you are now.</>
+        <>That is also the lowest reading of the year.</>
       ) : (
         <>
-          The most recent reading is{' '}
-          <span className="tnum">{body.latest.kg.toFixed(1)} kg</span> on{' '}
-          {shortDate(body.latest.date)}, so the low is behind you rather than current.
+          Your lowest this year was{' '}
+          <span className="tnum">{body.low.kg.toFixed(1)} kg</span> on {shortDate(body.low.date)}.
         </>
       )}
     </>

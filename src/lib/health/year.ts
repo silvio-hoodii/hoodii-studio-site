@@ -89,7 +89,8 @@ export interface YearBody {
   low: Reading;
   /** Newest reading this year, which is usually but not always the low. */
   latest: Reading;
-  /** low.kg minus peak.kg. Negative when he lost, which is the number he asked for. */
+  /** latest.kg minus peak.kg, his ruling of 2026-09-09. Negative when he lost. The low is kept
+   *  beside it and named in the sentence rather than dropped. */
   deltaKg: number;
   /** Kilos a week across that window. There is no `spanDays` beside it and one was removed on
    *  2026-08-28: the headline states the span in MONTHS now, in the bracket he asked for, and the
@@ -100,7 +101,9 @@ export interface YearBody {
   lowIsLatest: boolean;
   readings: number;
   recordStarts: string;
-  /** Peak and low come from different instruments. Tolerable for weight, and the page says so. */
+  /** The two ends of the headline come from different instruments. Tolerable for weight, and the
+   *  page says so. Named for peak-and-low for its whole life; it compares peak against LATEST now,
+   *  which is what the headline actually spans. */
   peakLowMixedSource: boolean;
   /** Every other measurement, peak reading to newest reading. */
   metrics: Metric[];
@@ -376,8 +379,25 @@ function buildBody(
   }
   const latest = readings[readings.length - 1] as Reading;
 
-  const deltaKg = round1(low.kg - peak.kg);
-  const spanDays = daysBetween(peak.date, low.date);
+  /* HIGHEST TO LATEST, AND IT WAS HIGHEST TO LOWEST UNTIL 2026-09-09. HIS RULING, and it revises an
+     earlier one of his, so both are recorded here rather than the older one being quietly dropped.
+
+     He asked for peak-to-low on 2026-08-28: "difference between the highest weight that I've had
+     this year and the lowest ... I want a big number". That shipped and was right for the question.
+     What it could not do is answer "what do I weigh", and it is the first thing on the landing tab,
+     so it read as current while sitting 1.5 kg below the tile underneath it.
+
+     His revision, 2026-09-09: "I asked that for just the one time, now lets make it to the latest,
+     still maybe from the highest." Put four options with their numbers attached, he took highest to
+     latest WITH THE LOW STILL NAMED in the sentence, so the achievement does not vanish from the
+     page, and kept the highest as the start.
+
+     The cost he accepted, stated because it is real: the headline now moves with every weigh-in.
+     The body-composition pass measured a 30-day window's own noise at sd 2.23 kg across 95
+     historical anchors, so a single endpoint jitters for reasons that are not him. What it buys is
+     that the headline and the tile below it can never again answer the same question differently. */
+  const deltaKg = round1(latest.kg - peak.kg);
+  const spanDays = daysBetween(peak.date, latest.date);
   const kgPerWeek = spanDays > 0 ? Math.round((deltaKg / spanDays) * 7 * 100) / 100 : 0;
 
   /* Peak to LATEST for the other measurements, not peak to low. The low is a weight fact; every
@@ -420,7 +440,7 @@ function buildBody(
     lowIsLatest: low.date === latest.date,
     readings: readings.length,
     recordStarts: (readings[0] as Reading).date,
-    peakLowMixedSource: peak.source !== low.source,
+    peakLowMixedSource: peak.source !== latest.source,
     metrics,
     weightSeries: readings.map((r) => ({ date: r.date, value: r.kg })),
     fatSeries: withSplit.map((r) => ({ date: r.date, value: r.fat_kg as number })),

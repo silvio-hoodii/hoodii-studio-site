@@ -2,9 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
 import { LineChart } from '../HealthCharts';
-import { YearRangeSentence } from '../YearRange';
+import { YearRangeSentence, YearRangeDates } from '../YearRange';
 import { KIND_LABEL } from '@/lib/gym/week';
-import { dayMonth, spanInMonths } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,10 +92,7 @@ function Headline({ body }: { body: YearBody }) {
         {/* THE SAME THREE LINES AS /health, deliberately identical, so one screenshot means the same
             thing wherever he took it. The whole argument is written once, over there. */}
         <div className="yearline-rule">
-          {dayMonth(body.peak.date)} to {dayMonth(body.low.date)}{' '}
-          <span className="yearline-span">
-            ({spanInMonths(body.peak.date, body.low.date)})
-          </span>
+          <YearRangeDates body={body} />
         </div>
         <p className="ex-cue">
           {/* The day count is in the bracket above in months. Here it is only the rate, which is the

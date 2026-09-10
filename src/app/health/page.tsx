@@ -15,11 +15,11 @@ import { getRecentSessions } from '@/lib/gym/session';
 import { AdherenceStrip, LineChart } from './HealthCharts';
 import { RunStanding, RecoveryNotice, PlanWeek, ActualDays } from './Week';
 import Volume from './Volume';
-import { YearRangeSentence } from './YearRange';
+import { YearRangeSentence, YearRangeDates } from './YearRange';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
-import { dayMonth, daysAgoText, shortDate, spanInMonths } from '@/lib/format';
+import { daysAgoText, shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
@@ -340,10 +340,7 @@ export default async function HealthPage({
                     Everything here is DERIVED from the two readings, so the dates, the duration and
                     the number above them move together or not at all. */}
                 <div className="yearline-rule">
-                  {dayMonth(yearBody.peak.date)} to {dayMonth(yearBody.low.date)}{' '}
-                  <span className="yearline-span">
-                    ({spanInMonths(yearBody.peak.date, yearBody.low.date)})
-                  </span>
+                  <YearRangeDates body={yearBody} />
                 </div>
                 {/* THE DATES ARE NOT REPEATED HERE. They are the bold line directly above, and
                     printing them again three lines later is the kind of small redundancy he reads
