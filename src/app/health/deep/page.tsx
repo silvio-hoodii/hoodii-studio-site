@@ -179,11 +179,16 @@ function WhereItWent({ body }: { body: YearBody }) {
           </div>
         </div>
       </div>
+      {/* CUT FROM 338 CHARACTERS TO ONE ACTIONABLE SENTENCE, 2026-09-09, on his ruling. Three of
+          the four sentences here were provenance: that neither line is measured, that both are
+          computed from body fat percent, that they therefore add to the weight. He named this
+          paragraph specifically: "that's not an insight, that's just blur that doesn't help me in
+          any way." The provenance is now VISIBLE instead, in the shared-timeline chart above, where
+          lean mass, body water and resting burn are plainly the same curve. What survives is the
+          only half he can act on. */}
       <p className="ex-cue">
-        Neither the fat line nor the lean line is measured. Body fat percent is the only reading the
-        scale takes, and fat mass and lean mass are both computed from it, so they always add up to
-        the weight. That reading moves with how hydrated you were that morning. If the weights on the
-        bar went up over the same months, the muscle did not leave.
+        A lean-mass drop of a kilo over a few weeks can be water. If the weights on the bar went up
+        over the same months, the muscle did not leave.
       </p>
     </div>
   );
@@ -224,13 +229,13 @@ function Measurements({ body }: { body: YearBody }) {
           </tbody>
         </table>
       </div>
-      <p className="ex-cue">
-        Peak reading to newest reading, so every row covers the same two days as the headline.
-        Nothing here is coloured: this is a cut, so weight and fat falling is the plan and lean mass
-        and muscle falling is the cost of it, and one colour cannot mean both.
-        Skeletal muscle, body water and resting burn are recorded on watch readings only, so a row
-        is blank rather than guessed at if either end came off the scale.
-      </p>
+      {/* DELETED, 2026-09-09, on his ruling. All three sentences were about the page rather than
+          about him: which two days the rows span (the headline states them), why nothing is
+          coloured (a design decision he did not ask about), and why a row can be blank (plumbing).
+          Not one of them told him anything he could act on. The design argument it carried is worth
+          keeping and is kept HERE, where the next agent reads it rather than he does: this is a
+          cut, so weight and fat falling is the plan while lean mass and muscle falling is the cost,
+          and one colour cannot mean both, which is why no row on this table is coloured. */}
     </div>
   );
 }
@@ -302,13 +307,19 @@ function Training({ training, year }: { training: YearTraining; year: number }) 
           </tbody>
         </table>
       </div>
-      <p className="ex-cue">
-        Read straight off the watch, so a session you never opened an app for still counts. The four
-        activities are not equal in what they record: swimming carries a heart rate per second and a
-        row per length, the treadmill carries cadence, lifting and the bike carry a heart rate and
-        nothing else. Counting the days treats them the same because attendance is the same;
-        nothing else on this site does.
-      </p>
+      {/* DELETED, 2026-09-09. Provenance and a design justification, neither of which he can act
+          on, and the first clause is now KNOWN TO BE WRONG in the direction that matters: "read
+          straight off the watch, so a session you never opened an app for still counts" reads as a
+          guarantee of completeness, and this table misses the six days in 2026 that gym_set records
+          as lifts with no watch row (2026-05-25, 05-30, 06-03, 07-15, 07-21, 09-08), so it counts
+          134 training days against a true 140.
+
+          THE COUNT IS NOT FIXED HERE YET, deliberately: the same union defect was fixed in
+          src/lib/health/daily.ts the same day, and this one touches the discipline table, the month
+          table and the longest gap at once. It is being done once, with the strength pass's numbers,
+          rather than twice. The longest gap is unaffected either way, checked: 29 days on both
+          definitions. Removing the sentence that OVERSTATES completeness is not the fix and is not
+          being counted as one. */}
 
       <div className="exgroup-label" style={{ marginTop: 22 }}>
         By month <span className="tag">({months.length})</span>
@@ -459,11 +470,12 @@ function Swim({ pbs, year }: { pbs: Pb[]; year: number }) {
           </tbody>
         </table>
       </div>
+      {/* CUT TO THE LINK, 2026-09-09. The deleted 380 characters described how the import maps
+          Samsung's numeric best-record type onto distances and how the gate re-checks that mapping
+          on every run by requiring pace per 100 m to rise with distance. That is true, it is
+          load-bearing, and it belongs in HealthOS/server/import-swim-pb and in AGENTS.md, which
+          both carry it. On the page it was four lines about plumbing above a table of his times. */}
       <p className="ex-cue">
-        These are the bests the watch itself awarded, not times computed from the lengths. The watch
-        stores a numeric type rather than a distance, and the mapping onto 100, 200, 400 and 1500 is
-        worked out on every import by requiring the pace per 100 m to rise with distance, so a
-        firmware renumbering fails the import instead of quietly relabelling your bests.{' '}
         <Link href="/swim/deep">The whole swimming record</Link> has the stroke efficiency, the pace
         against body weight and the season gaps.
       </p>
