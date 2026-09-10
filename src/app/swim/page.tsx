@@ -155,7 +155,7 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
         {closest && (
           <p className="ex-cue" style={{ marginTop: 10 }}>
             The level you are closest to is <b>{closest.next!.name} at {closest.distanceM} m</b>:{' '}
-            {(100 * closest.next!.gapMs / closest.best!.durationMs).toFixed(0)}% faster, which is{' '}
+            {(100 * closest.next!.gapMs / closest.best!.durationMs).toFixed(1)}% faster, which is{' '}
             {(closest.next!.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} seconds per 100 m.
           </p>
         )}
