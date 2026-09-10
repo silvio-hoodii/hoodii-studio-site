@@ -116,6 +116,13 @@ const GATES = [
      timezone test written from the same arithmetic as the code passes while the code is
      self-consistently wrong, and that is what shipped on 2026-09-08. */
   ['day-clock-tests', process.execPath, ['--experimental-strip-types', 'src/lib/day.test.ts']],
+  /* NO FIGURE TYPED INTO PROSE, on the pages that claim their figures are derived. /health/day
+     shipped with a header reading "NOTHING BELOW IS TYPED" over seven typed figures, one of which
+     was already two years stale, and every gate above this line passed on it. The script's own 13
+     self-test cases run before it checks anything; three of its first four live findings were real
+     and two of them were couplings nobody had noticed (a column heading and its query threshold
+     written as two independent 30s, and "worst 1 in 10" beside a percentile in the SQL). */
+  ['typed-figures', process.execPath, ['scripts/lint-typed-figures.mjs']],
   /* THE LOGIN RETURN PATH. Added 2026-09-04 with the consolidation of four login pages into one.
    *
    * This one is here because the change it covers LOOSENED a redirect guard. The bug (A3) was that

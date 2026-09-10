@@ -140,9 +140,14 @@ export function LineChart({
     <div className="chart-wrap" ref={wrapRef}>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${last.value.toFixed(decimals)} ${unit} as of ${last.date}`}>
         <line className="chart-axis" x1={PAD_L} y1={H - PAD_B} x2={W - PAD_R} y2={H - PAD_B} />
+        {/* THE TICK FORMAT FOLLOWS `decimals`, and it did not until 2026-09-09. It was hardcoded to
+            one decimal for any non-integer, so a steps chart (`decimals={0}`) printed a middle tick
+            of 8002.5: a half step, on an axis whose unit cannot be halved. `niceTicks` divides the
+            padded range into three, so a fractional tick is the normal case rather than the odd one.
+            Integers still print bare at `decimals={1}`, which is what the weight charts want. */}
         {ticks.map((t) => (
           <text key={t} className="chart-axis-label" x={2} y={y(t) + 3.5}>
-            {t.toFixed(t % 1 === 0 ? 0 : 1)}
+            {t.toFixed(t % 1 === 0 ? 0 : decimals)}
           </text>
         ))}
         <path className="chart-line" d={path} />

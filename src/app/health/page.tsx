@@ -242,6 +242,16 @@ export default async function HealthPage({
             <ActualDays week={week} />
           </div>
 
+          {/* THE LINK OUT TO THE PHONE RECORD. Everything above is a SESSION, which only exists on
+              a day trained. /health/day is the days between sessions, the only record that exists
+              every single day, and it has no other way to be found: it carries no hub row of its
+              own, the same call /health/deep already made. Placed here rather than after the tap
+              below because that reveals a strip; this is a whole different data source and reads
+              better beside the count it complicates, not buried under it. */}
+          <Link href="/health/day" className="deeplink">
+            Every day, not just the trained ones &rarr;
+          </Link>
+
           {/* THE SAME QUESTION AT A DIFFERENT RESOLUTION, so it is behind a tap rather than under
               the list. The fortnight above names every session and its length. This is a month at a
               glance, and it is the only thing anywhere that separates "trained" from "also logged

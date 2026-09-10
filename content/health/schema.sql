@@ -236,3 +236,57 @@ create index if not exists health_swim_length_session on health_swim_length (ses
 -- be a second thing to consult that can only ever agree with this one, and `swim_sync`, the other
 -- half of the comparison it was modelled on, was dropped with SwimOS on 2026-08-26.
 alter table health_sync add column if not exists length_rows integer;
+
+-- EIGHT YEARS OF DAILY MOVEMENT, added 2026-09-09. Mirrored from healthos.db `daily_movement`,
+-- written by HealthOS/server/import-daily-movement.mjs, which holds the four traps in this data.
+--
+-- This is the ONLY continuous record of him that exists. Everything else on these pages is either a
+-- session (which only happens when he trains) or a watch reading (5 days in 14, because he wears
+-- the watch for workouts and carries the phone always). Steps, distance, active minutes and
+-- calories are present 14/14 and 90/90 days, back to 2018-11-13, and until today not one number of
+-- it reached any page.
+--
+-- `partial` marks the newest day in each export, which is always half a day because he exports in
+-- the afternoon. Every query that averages or ranks days must exclude it, so it is a column rather
+-- than a rule: see `NOT partial` in src/lib/health/daily.ts.
+--
+-- THREE CALORIE COLUMNS, because Samsung has three and calls two of them `calorie`. `step_cal` is
+-- burn attributed to steps, `active_cal` is all active burn including the swim and the lift (690 vs
+-- 1,948 on 2026-09-07), `rest_cal` is the resting burn underneath both.
+--
+-- `active_min` = `walk_min` + `run_min` + `other_min` on every day in the export, asserted on every
+-- import. `other_min` is therefore active movement that was neither walking nor running, which is
+-- what makes a swim or a lifting session visible in the daily record.
+--
+-- `score` IS SAMSUNG'S OPINION AND IT IS NOT COMPARABLE ACROSS YEARS. 2019 pays a median 111 for a
+-- median 6,254 steps; 2026 pays 77 for 13,261. `sh_ver` carries the app version that wrote each row
+-- so that stays checkable, and it is null on every row before 2024, which is itself why the older
+-- years cannot be compared. Nothing plots it over time.
+create table if not exists health_daily (
+  date                text primary key,
+  partial             boolean not null default false,
+  steps               integer,
+  run_steps           integer,
+  walk_steps          integer,
+  distance_m          real,
+  step_cal            real,
+  active_cal          real,
+  rest_cal            real,
+  active_min          integer,
+  exercise_min        integer,
+  walk_min            integer,
+  run_min             integer,
+  other_min           integer,
+  longest_active_min  integer,
+  move_hours          integer,
+  move_hours_target   integer,
+  floors              real,
+  floors_target       integer,
+  exercise_min_target integer,
+  active_cal_target   real,
+  score               real,
+  sh_ver              text
+);
+create index if not exists health_daily_partial on health_daily (partial, date desc);
+
+alter table health_sync add column if not exists daily_rows integer;

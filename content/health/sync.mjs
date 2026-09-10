@@ -81,6 +81,8 @@ let pbWritten = 0;
 let detailWritten = 0;
 let laps = [];
 let lapWritten = 0;
+let dailyRows = [];
+let dailyWritten = 0;
 
 try {
 
@@ -102,6 +104,49 @@ for (const r of bodyComp) {
   bcWritten++;
 }
 
+/* A READING THAT MOVED DAYS MUST NOT EXIST TWICE.
+ *
+ * Every write above is an upsert, so this mirror can gain a row and can change one, and has never
+ * been able to LOSE one. That is invisible while dates only ever get appended, and it stopped being
+ * invisible on 2026-09-08: parse-body-metrics.js had been filing any weigh-in taken after 18:00 UTC
+ * under the following day, 15 of 211 of them. Correcting it moved those rows to their real dates and
+ * Postgres then held BOTH, 218 rows against sqlite's 204, so /health had fourteen phantom weigh-ins
+ * that healthos.db said nothing about.
+ *
+ * sqlite is canonical, so a key it does not have does not belong here. Guarded on sqlite having
+ * returned rows at all: an empty read is a broken read, and clearing his entire measurement history
+ * on the strength of one would be far worse than the duplicates this removes. */
+if (!DRY && bodyComp.length) {
+  const res = await client.query(
+    `delete from health_body_comp b
+      where not exists (
+        select 1 from unnest($1::text[], $2::text[]) as k(date, source)
+         where k.date = b.date and k.source = b.source
+      )`,
+    [bodyComp.map((r) => r.date), bodyComp.map((r) => r.source)],
+  );
+  if (res.rowCount) {
+    console.log(`body_comp: dropped ${res.rowCount} row(s) sqlite no longer has (a corrected date leaves its old one behind)`);
+  }
+}
+
+/* HIS CLOCK, mirrored alongside the UTC instant.
+ *
+ * `start_time` is the UTC timestamp Samsung recorded and it stays the key, untouched. What it never
+ * carried was any marker saying it was UTC, so it reads as a local time and on 2026-09-08 it was
+ * reported to him as one: a 1:12 pm session became "19:12". `start_local` carries its own offset in
+ * the string, which is what makes that mistake unavailable rather than merely discouraged.
+ *
+ * Added here rather than in a migration file because this script is the only writer of these tables
+ * and runs on every sync, so the column and the value that fills it ship together. */
+for (const [table, col] of [
+  ['health_watch_session', 'start_local'], ['health_watch_session', 'tz_offset'],
+  ['health_session_detail', 'start_local'], ['health_session_detail', 'tz_offset'],
+  ['health_swim_session', 'start_local'], ['health_swim_length', 'session_start_local'],
+]) {
+  if (!DRY) await client.query(`alter table ${table} add column if not exists ${col} text`);
+}
+
 /* --- watch_sessions: EVERY training kind, walking excluded ------------------------------------
  *
  * Was `kind in ('strength','swimming')`, which is why no run or bike has ever reached this site.
@@ -115,16 +160,17 @@ for (const r of bodyComp) {
  * by name inverts that. A kind nobody anticipated now arrives and counts, and the thing that has to
  * be maintained is the short list of what is NOT training rather than the open list of what is. */
 watchSessions = db.prepare(`
-  select date, start_time, kind, minutes, calories, avg_hr from watch_sessions
-  where kind <> 'walking'
+  select date, start_time, start_local, tz_offset, kind, minutes, calories, avg_hr
+  from watch_sessions where kind <> 'walking'
 `).all();
 for (const r of watchSessions) {
   await q(
-    `insert into health_watch_session (date, start_time, kind, minutes, calories, avg_hr)
-     values ($1,$2,$3,$4,$5,$6)
+    `insert into health_watch_session (date, start_time, start_local, tz_offset, kind, minutes, calories, avg_hr)
+     values ($1,$2,$3,$4,$5,$6,$7,$8)
      on conflict (start_time, kind) do update set
-       date = excluded.date, minutes = excluded.minutes, calories = excluded.calories, avg_hr = excluded.avg_hr`,
-    [r.date, r.start_time, r.kind, r.minutes, r.calories, r.avg_hr],
+       date = excluded.date, start_local = excluded.start_local, tz_offset = excluded.tz_offset,
+       minutes = excluded.minutes, calories = excluded.calories, avg_hr = excluded.avg_hr`,
+    [r.date, r.start_time, r.start_local, r.tz_offset, r.kind, r.minutes, r.calories, r.avg_hr],
   );
   wsWritten++;
 }
@@ -147,6 +193,36 @@ if (watchSessions.length) {
     [watchSessions.map((r) => r.start_time), watchSessions.map((r) => r.kind)],
   );
   if (res?.rowCount) console.log(`watch_session: dropped ${res.rowCount} rows filed under a kind this build no longer gives them`);
+}
+
+/* SESSIONS HE HAS DISOWNED, deleted here as well as in sqlite.
+ *
+ * Everything above this line is an upsert, which is the right shape for a mirror that only ever
+ * gains rows and is exactly wrong for one that loses them: a session removed upstream has no way
+ * to reach this store, so it would sit on /health and /gym forever while healthos.db said it never
+ * happened. That is the failure the row-count reconciliation at the bottom of this file exists to
+ * catch, and catching it after the fact is not the same as not causing it.
+ *
+ * Keyed off the same HealthOS/disowned-sessions.json the importers read, so there is one list. */
+const disownedPath = resolve(HEALTHOS_DIR, 'disowned-sessions.json');
+let disownedStarts = [];
+if (existsSync(disownedPath)) {
+  const parsed = JSON.parse(readFileSync(disownedPath, 'utf8'));
+  if (!Array.isArray(parsed.sessions)) throw new Error('disowned-sessions.json has no `sessions` array');
+  disownedStarts = parsed.sessions.map((r) => {
+    if (!r?.start_time) throw new Error(`disowned-sessions.json entry with no start_time: ${JSON.stringify(r)}`);
+    return r.start_time;
+  });
+}
+if (disownedStarts.length) {
+  const ws = await q('delete from health_watch_session where start_time = any($1::text[])', [disownedStarts]);
+  const sd = await q('delete from health_session_detail where start_time = any($1::text[])', [disownedStarts]);
+  const n = (ws?.rowCount || 0) + (sd?.rowCount || 0);
+  console.log(
+    n
+      ? `disowned: dropped ${ws?.rowCount || 0} watch_session and ${sd?.rowCount || 0} session_detail row(s) he says did not happen`
+      : `disowned: ${disownedStarts.length} session(s) listed, none present in the mirror`,
+  );
 }
 
 /* --- recovery freshness ----------------------------------------------------------------------
@@ -199,24 +275,27 @@ const hasDetail = db
   .prepare(`select count(*) c from sqlite_master where type = 'table' and name = 'session_detail'`)
   .get().c > 0;
 if (hasDetail) {
-  const rows = db.prepare(`select uuid, date, kind, start_time, minutes, distance_m, calories,
+  const rows = db.prepare(`select uuid, date, kind, start_time, start_local, tz_offset, minutes,
+    distance_m, calories,
     avg_hr, max_hr, min_hr, pct_easy, pool_length, lengths, avg_swolf, avg_cycles, stroke_rate,
     avg_cadence, max_cadence, detail, imported_at from session_detail`).all();
   for (const r of rows) {
     await q(
-      `insert into health_session_detail (uuid, date, kind, start_time, minutes, distance_m,
+      `insert into health_session_detail (uuid, date, kind, start_time, start_local, tz_offset,
+         minutes, distance_m,
          calories, avg_hr, max_hr, min_hr, pct_easy, pool_length, lengths, avg_swolf, avg_cycles,
          stroke_rate, avg_cadence, max_cadence, detail, imported_at)
-       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19::jsonb,$20)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21::jsonb,$22)
        on conflict (uuid) do update set
-         date=excluded.date, kind=excluded.kind, minutes=excluded.minutes,
+         date=excluded.date, start_local=excluded.start_local, tz_offset=excluded.tz_offset,
+         kind=excluded.kind, minutes=excluded.minutes,
          distance_m=excluded.distance_m, calories=excluded.calories, avg_hr=excluded.avg_hr,
          max_hr=excluded.max_hr, min_hr=excluded.min_hr, pct_easy=excluded.pct_easy,
          pool_length=excluded.pool_length, lengths=excluded.lengths, avg_swolf=excluded.avg_swolf,
          avg_cycles=excluded.avg_cycles, stroke_rate=excluded.stroke_rate,
          avg_cadence=excluded.avg_cadence, max_cadence=excluded.max_cadence,
          detail=excluded.detail, imported_at=excluded.imported_at`,
-      [r.uuid, r.date, r.kind, r.start_time, r.minutes, r.distance_m, r.calories, r.avg_hr,
+      [r.uuid, r.date, r.kind, r.start_time, r.start_local, r.tz_offset, r.minutes, r.distance_m, r.calories, r.avg_hr,
        r.max_hr, r.min_hr, r.pct_easy, r.pool_length, r.lengths, r.avg_swolf, r.avg_cycles,
        r.stroke_rate, r.avg_cadence, r.max_cadence, r.detail, r.imported_at],
     );
@@ -224,6 +303,78 @@ if (hasDetail) {
   }
 } else {
   console.log('session_detail not in healthos.db yet: run HealthOS/server/import-session-detail.mjs');
+}
+
+/* --- daily movement: the only continuous record of him there is -------------------------------
+ *
+ * 2,592 days back to 2018-11-13, from HealthOS/server/import-daily-movement.mjs. Chunked like the
+ * lengths because it is the second-largest write in this file, and every column is a plain scalar
+ * so one unnest handles the lot.
+ *
+ * `partial` travels with the row rather than being recomputed here. The newest day in an export is
+ * always half a day, and a rule that each reader has to remember is a rule that one reader will
+ * forget: see src/lib/health/daily.ts, where every query says `not partial` in one place. */
+dailyRows = db.prepare(`
+  select date, partial, steps, run_steps, walk_steps, distance_m, step_cal, active_cal, rest_cal,
+         active_min, exercise_min, walk_min, run_min, other_min, longest_active_min,
+         move_hours, move_hours_target, floors, floors_target, exercise_min_target,
+         active_cal_target, score, sh_ver
+    from daily_movement order by date
+`).all();
+{
+  const CHUNK = 500;
+  for (let i = 0; i < dailyRows.length; i += CHUNK) {
+    const c = dailyRows.slice(i, i + CHUNK);
+    await q(
+      `insert into health_daily (date, partial, steps, run_steps, walk_steps, distance_m, step_cal,
+         active_cal, rest_cal, active_min, exercise_min, walk_min, run_min, other_min,
+         longest_active_min, move_hours, move_hours_target, floors, floors_target,
+         exercise_min_target, active_cal_target, score, sh_ver)
+       select * from unnest($1::text[], $2::boolean[], $3::int[], $4::int[], $5::int[], $6::real[],
+         $7::real[], $8::real[], $9::real[], $10::int[], $11::int[], $12::int[], $13::int[],
+         $14::int[], $15::int[], $16::int[], $17::int[], $18::real[], $19::int[], $20::int[],
+         $21::real[], $22::real[], $23::text[])
+       on conflict (date) do update set
+         partial = excluded.partial, steps = excluded.steps, run_steps = excluded.run_steps,
+         walk_steps = excluded.walk_steps, distance_m = excluded.distance_m,
+         step_cal = excluded.step_cal, active_cal = excluded.active_cal, rest_cal = excluded.rest_cal,
+         active_min = excluded.active_min, exercise_min = excluded.exercise_min,
+         walk_min = excluded.walk_min, run_min = excluded.run_min, other_min = excluded.other_min,
+         longest_active_min = excluded.longest_active_min, move_hours = excluded.move_hours,
+         move_hours_target = excluded.move_hours_target, floors = excluded.floors,
+         floors_target = excluded.floors_target, exercise_min_target = excluded.exercise_min_target,
+         active_cal_target = excluded.active_cal_target, score = excluded.score,
+         sh_ver = excluded.sh_ver`,
+      [
+        c.map((r) => r.date),
+        c.map((r) => r.partial === 1),
+        /* `?? null` throughout, never `|| null`: zero steps on a sick day is a fact and `||` would
+           file it as "no reading", which is the difference between a rest day and a dark day. */
+        c.map((r) => r.steps ?? null),
+        c.map((r) => r.run_steps ?? null),
+        c.map((r) => r.walk_steps ?? null),
+        c.map((r) => r.distance_m ?? null),
+        c.map((r) => r.step_cal ?? null),
+        c.map((r) => r.active_cal ?? null),
+        c.map((r) => r.rest_cal ?? null),
+        c.map((r) => r.active_min ?? null),
+        c.map((r) => r.exercise_min ?? null),
+        c.map((r) => r.walk_min ?? null),
+        c.map((r) => r.run_min ?? null),
+        c.map((r) => r.other_min ?? null),
+        c.map((r) => r.longest_active_min ?? null),
+        c.map((r) => r.move_hours ?? null),
+        c.map((r) => r.move_hours_target ?? null),
+        c.map((r) => r.floors ?? null),
+        c.map((r) => r.floors_target ?? null),
+        c.map((r) => r.exercise_min_target ?? null),
+        c.map((r) => r.active_cal_target ?? null),
+        c.map((r) => r.score ?? null),
+        c.map((r) => r.sh_ver ?? null),
+      ],
+    );
+    dailyWritten += c.length;
+  }
 }
 
 db.close();
@@ -234,17 +385,17 @@ for (const s of swims) {
   if (!s.uuid || !s.date) continue;
   const avgHr = s.liveHR?.avg ?? s.csvHR?.mean ?? null;
   await q(
-    `insert into health_swim_session (uuid, date, duration_ms, distance_m, pace_per_100m_ms, moving_pace_per_100m_ms, avg_hr, total_lengths)
-     values ($1,$2,$3,$4,$5,$6,$7,$8)
+    `insert into health_swim_session (uuid, date, start_local, duration_ms, distance_m, pace_per_100m_ms, moving_pace_per_100m_ms, avg_hr, total_lengths)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
      on conflict (uuid) do update set
-       date = excluded.date, duration_ms = excluded.duration_ms, distance_m = excluded.distance_m,
+       date = excluded.date, start_local = excluded.start_local, duration_ms = excluded.duration_ms, distance_m = excluded.distance_m,
        pace_per_100m_ms = excluded.pace_per_100m_ms,
        moving_pace_per_100m_ms = excluded.moving_pace_per_100m_ms,
        avg_hr = excluded.avg_hr, total_lengths = excluded.total_lengths`,
     /* `?? null` rather than `|| null` on the two paces. `|| null` maps 0 to null, which is right for
        a distance and wrong here in principle, and more to the point it hides the difference between
        "not measured" and "measured as zero" on the exact column whose ambiguity is being fixed. */
-    [s.uuid, s.date, s.durationMs || null, s.distanceM || null,
+    [s.uuid, s.date, s.startLocal ?? null, s.durationMs || null, s.distanceM || null,
      s.pacePer100mMs ?? null, s.movingPacePer100mMs ?? null, avgHr, s.totalLengths || null],
   );
   swWritten++;
@@ -285,11 +436,13 @@ if (existsSync(SWIM_LAPS_PATH)) {
     const c = laps.slice(i, i + CHUNK);
     await q(
       `insert into health_swim_length (session_uuid, length_index, date, session_start_time,
+         session_start_local,
          lengths_in_session, pool_length, duration_ms, stroke_type, stroke_count, rest_after_ms)
-       select * from unnest($1::text[], $2::int[], $3::text[], $4::text[], $5::int[], $6::int[],
-         $7::int[], $8::text[], $9::int[], $10::int[])
+       select * from unnest($1::text[], $2::int[], $3::text[], $4::text[], $5::text[], $6::int[],
+         $7::int[], $8::int[], $9::text[], $10::int[], $11::int[])
        on conflict (session_uuid, length_index) do update set
          date = excluded.date, session_start_time = excluded.session_start_time,
+         session_start_local = excluded.session_start_local,
          lengths_in_session = excluded.lengths_in_session, pool_length = excluded.pool_length,
          duration_ms = excluded.duration_ms, stroke_type = excluded.stroke_type,
          stroke_count = excluded.stroke_count, rest_after_ms = excluded.rest_after_ms`,
@@ -298,6 +451,7 @@ if (existsSync(SWIM_LAPS_PATH)) {
         c.map((l) => l.lengthIndex),
         c.map((l) => l.date),
         c.map((l) => l.sessionStartTime ?? null),
+        c.map((l) => l.sessionStartLocal ?? null),
         c.map((l) => l.lengthsInSession ?? null),
         c.map((l) => l.poolLength ?? null),
         /* `?? null` and not `|| null`, for the reason the two paces below record: a zero rest and an
@@ -353,6 +507,7 @@ console.log(`${DRY ? '[dry run] ' : ''}swim PBs: ${pbWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}session detail: ${detailWritten} rows`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_session: ${swWritten} rows (json had ${swims.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}swim_length: ${lapWritten} rows (json had ${laps.length})`);
+console.log(`${DRY ? '[dry run] ' : ''}daily movement: ${dailyWritten} rows (sqlite had ${dailyRows.length})`);
 console.log(`${DRY ? '[dry run] ' : ''}target: ${targetWritten} row from current.json`);
 
 const checks = await Promise.all([
@@ -360,6 +515,7 @@ const checks = await Promise.all([
   client.query('select count(*)::int n from health_watch_session'),
   client.query('select count(*)::int n from health_swim_session'),
   client.query('select count(*)::int n from health_swim_length'),
+  client.query('select count(*)::int n from health_daily'),
 ]);
 console.log('Postgres row counts now:', checks.map((c) => c.rows[0].n));
 
@@ -369,6 +525,17 @@ console.log('Postgres row counts now:', checks.map((c) => c.rows[0].n));
    mirror is a copy of sqlite, so more rows in Postgres than sqlite holds means something is stale
    in there, and fewer means the run did not finish. Only asserted on a real run. */
 if (!DRY && !failure) {
+  /* body_comp was NOT gated, and it is the table carrying his weight. checks[0] has been printed on
+     every run since this file was written and nothing ever compared it: on 2026-09-08 it read 218
+     against sqlite's 204 and the run still reported success. His measurements deserve the same gate
+     as his sessions, and this is the count that would have named the fourteen duplicates. */
+  const pgBody = checks[0].rows[0].n;
+  if (pgBody !== bodyComp.length) {
+    failure = `mirror disagrees with sqlite: health_body_comp has ${pgBody} rows, sqlite has ${bodyComp.length}. ` +
+      (pgBody > bodyComp.length
+        ? 'Postgres is holding measurements sqlite no longer has, most likely a reading whose date was corrected upstream while its old row stayed here.'
+        : 'The run did not finish writing.');
+  }
   const pgWatch = checks[1].rows[0].n;
   if (pgWatch !== watchSessions.length) {
     failure = `mirror disagrees with sqlite: health_watch_session has ${pgWatch} rows, sqlite has ${watchSessions.length}. ` +
@@ -392,6 +559,18 @@ if (!DRY && !failure) {
           : 'The run did not finish writing.');
     }
   }
+  /* Same gate on the daily record. It is the largest table here after the lengths and the one whose
+     absence would be least visible: a page that averages steps over a window still renders a
+     confident number when a third of the window failed to write. */
+  if (dailyRows.length) {
+    const pgDaily = checks[4].rows[0].n;
+    if (pgDaily !== dailyRows.length) {
+      failure = `mirror disagrees with sqlite: health_daily has ${pgDaily} rows, sqlite has ${dailyRows.length}. ` +
+        (pgDaily > dailyRows.length
+          ? 'Postgres is holding days sqlite no longer has.'
+          : 'The run did not finish writing, and every average over a window is now computed on a hole.');
+    }
+  }
 }
 if (DRY && before) console.log('Postgres row counts before:', before, '(unchanged, nothing was written)');
 
@@ -399,8 +578,8 @@ if (DRY && before) console.log('Postgres row counts before:', before, '(unchange
    the case the page has to be able to see. Not written on a dry run, which is not a sync. */
 if (!DRY) {
   await client.query(
-    'insert into health_sync (ok, body_rows, watch_rows, swim_rows, length_rows, error) values ($1,$2,$3,$4,$5,$6)',
-    [failure == null, bcWritten, wsWritten, swWritten, lapWritten, failure],
+    'insert into health_sync (ok, body_rows, watch_rows, swim_rows, length_rows, daily_rows, error) values ($1,$2,$3,$4,$5,$6,$7)',
+    [failure == null, bcWritten, wsWritten, swWritten, lapWritten, dailyWritten, failure],
   );
 }
 await client.end();
