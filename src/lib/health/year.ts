@@ -324,22 +324,62 @@ export async function getYearReview(): Promise<YearReview> {
     getYearBody(),
     sql.transaction(
       [
-        sql`select kind, count(*)::int as sessions, count(distinct date)::int as days,
+        /* A TRAINING DAY IS THE UNION OF THE WATCH AND THE APP, in all four of these, and it was
+           the watch alone until 2026-09-09. The cross-discipline pass found six days in 2026 that
+           `gym_set` records as lifts with no watch row at all, so this section counted 134 training
+           days against a true 140, and the caption above it promised that "a session you never
+           opened an app for still counts", which reads as completeness.
+
+           The cause is BACKFILL, not the watch dropping sessions: the strength pass checked each of
+           the six and only 2026-06-03 was logged at the rack, the rest typed 2 to 25 days later. The
+           days are real training days either way, which is why they are counted.
+
+           `app_only` is the shape used four times below: a date `gym_set` holds that the watch does
+           not. Sessions and MINUTES stay the watch's, because an app-logged day has no duration
+           anywhere; a day is added, a fabricated session length is not. Undercounting his training
+           is the direction this pipeline has already been wrong in, and inventing minutes to make a
+           total look complete would be the other one. */
+        sql`with app_only as (
+              select distinct g.date from gym_set g
+               where g.done = true and g.reps > 0
+                 and g.date >= ${from} and g.date <= ${to}
+                 and not exists (select 1 from health_watch_session w where w.date = g.date)
+            )
+            select kind, count(*)::int as sessions, count(distinct date)::int as days,
                    coalesce(sum(minutes), 0)::int as minutes, max(date) as last
-            from health_watch_session
-            where date >= ${from} and date <= ${to}
-            group by kind order by count(*) desc`,
+              from health_watch_session
+             where date >= ${from} and date <= ${to}
+             group by kind
+            union all
+            select 'strength-app-only', count(*)::int, count(*)::int, 0, max(date) from app_only
+            having count(*) > 0`,
 
-        sql`select substring(date, 1, 7) as month, count(distinct date)::int as days,
-                   count(*)::int as sessions, coalesce(sum(minutes), 0)::int as minutes
-            from health_watch_session
-            where date >= ${from} and date <= ${to}
-            group by 1 order by 1`,
+        sql`with days as (
+              select date, 1 as sessions, coalesce(minutes, 0) as minutes
+                from health_watch_session where date >= ${from} and date <= ${to}
+              union all
+              select g.date, 0, 0 from (select distinct date from gym_set
+                     where done = true and reps > 0 and date >= ${from} and date <= ${to}) g
+               where not exists (select 1 from health_watch_session w where w.date = g.date)
+            )
+            select substring(date, 1, 7) as month, count(distinct date)::int as days,
+                   sum(sessions)::int as sessions, sum(minutes)::int as minutes
+              from days group by 1 order by 1`,
 
-        sql`select distinct date from health_watch_session
-            where date >= ${from} and date <= ${to} order by date`,
+        sql`select date from health_watch_session where date >= ${from} and date <= ${to}
+            union
+            select date from gym_set
+             where done = true and reps > 0 and date >= ${from} and date <= ${to}
+            order by date`,
 
-        sql`select max(date) as horizon from health_watch_session`,
+        /* THE HORIZON IS THE LAST DAY ANYTHING KNOWS ABOUT, not the last day the watch does. On
+           2026-09-09 the watch stopped at Sep 7 while gym_set held Sep 8, and the streak sentence on
+           /health?s=now said "the last day the watch mirror has reached" about a date the watch had
+           never seen. */
+        sql`select greatest(
+              (select max(date) from health_watch_session),
+              (select max(date) from gym_set where done = true and reps > 0)
+            ) as horizon`,
 
         sql`select count(*)::int as sessions, count(distinct date)::int as days,
                    coalesce(sum(minutes), 0)::int as minutes
@@ -381,7 +421,25 @@ export async function getYearReview(): Promise<YearReview> {
 
   const dates = (trainedDays as unknown as { date: string }[]).map((r) => r.date);
   const months = byMonth as unknown as MonthCount[];
-  const disciplines = byKind as unknown as Discipline[];
+  /* FOLD THE APP-ONLY DAYS INTO STRENGTH, rather than letting them stand as a kind. They are lifts;
+     the watch simply did not see them. Days are added, sessions are added, MINUTES are not, because
+     an app-logged day has no duration recorded anywhere and a table that invents one to look
+     complete is the failure this union exists to fix, pointed the other way. If strength has no
+     watch row at all in a year, the fold creates the row so the days are not silently dropped. */
+  const rawKinds = byKind as unknown as (Discipline & { kind: string })[];
+  const appOnly = rawKinds.find((d) => d.kind === 'strength-app-only');
+  const disciplines: Discipline[] = rawKinds.filter((d) => d.kind !== 'strength-app-only');
+  if (appOnly) {
+    const strength = disciplines.find((d) => d.kind === 'strength');
+    if (strength) {
+      strength.days += appOnly.days;
+      strength.sessions += appOnly.sessions;
+      if (appOnly.last > strength.last) strength.last = appOnly.last;
+    } else {
+      disciplines.push({ ...appOnly, kind: 'strength' });
+    }
+    disciplines.sort((a, b) => b.sessions - a.sessions);
+  }
   const ly = (lastYearRow as unknown as { sessions: number; days: number; minutes: number }[])[0] ?? null;
 
   const training: YearTraining = {
