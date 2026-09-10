@@ -525,10 +525,14 @@ accumulates things a reader has to work out are dead.
   background and carry on working.**
 
   ```
-  node scripts/wait-deploy.mjs --url /health/day --expect "under 5,000 steps"
+  MSYS_NO_PATHCONV=1 node scripts/wait-deploy.mjs --url /health/day --expect "under 5,000 steps"
   ```
 
-  with the Bash tool's `run_in_background: true`. It prints one line and exits 0 or 1.
+  with the Bash tool's `run_in_background: true`. It prints one line and exits 0 or 1. **Keep the
+  `MSYS_NO_PATHCONV=1`**: Git Bash rewrites `/health/day` into `C:/Program Files/Git/health/day`,
+  and the script refuses rather than fetching a URL that cannot resolve, because the same mangling
+  in `probe-taps.mjs` measured the wrong URL and reported OK. Pass a full `https://` URL when it
+  carries a query string (`"https://hoodii.studio/health?s=now"`).
 
   Two reasons it exists, and the second is the one that made it a script rather than a note. **A
   hand-typed poll blocks the session for the length of the build**, so the agent does nothing while

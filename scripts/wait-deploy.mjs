@@ -45,6 +45,21 @@ const EVERY_MS = Number(flag('--every', '15')) * 1000;
 const paths = many('--url');
 const expects = many('--expect');
 
+/* GIT BASH REWRITES A LEADING SLASH INTO A WINDOWS PATH, and this script's arguments are all
+   leading-slash paths. `--url /health/day` arrives as `C:/Program Files/Git/health/day`, which
+   concatenated onto the base gives a URL that cannot resolve. It is refused here rather than
+   fetched, because the same mangling in scripts/probe-taps.mjs measured the wrong URL and reported
+   OK: a checker that silently checks the wrong thing is worse than one that stops. */
+for (const p of paths) {
+  if (/^[A-Za-z]:[/\\]/.test(p)) {
+    console.error(
+      `wait-deploy: REFUSED. --url arrived as "${p}", which is Git Bash rewriting a leading slash.\n` +
+      '  Prefix the command with MSYS_NO_PATHCONV=1, or pass the full https:// URL.',
+    );
+    process.exit(2);
+  }
+}
+
 const sha = flag('--sha') || spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
 if (!/^[0-9a-f]{7,40}$/.test(sha)) {
   console.error(`wait-deploy: no usable commit sha (${sha || 'empty'}). Pass --sha.`);
@@ -54,29 +69,48 @@ if (!/^[0-9a-f]{7,40}$/.test(sha)) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const deadline = Date.now() + TIMEOUT_S * 1000;
 
-/** The Vercel REST API through the CLI's own credentials. Returns null on any failure, because a
- *  transient CLI error must not read as "the deploy failed": only a real terminal state does. */
+/* THE API PATH IS QUOTED, AND THAT IS NOT STYLE. `vercel` is a .cmd on Windows, so spawnSync needs
+   `shell: true` to find it at all, and cmd.exe reads the `&` in `?limit=10&target=production` as a
+   COMMAND SEPARATOR. Unquoted, this ran `vercel api /v6/deployments?limit=10`, then tried to run
+   `target=production` as a program, and exited 1 with "'target' is not recognized". Caught on the
+   first live run of this script, by it producing no output at all rather than an error. */
+const API = '/v6/deployments?limit=10&target=production';
+
+/** The Vercel REST API through the CLI's own credentials. Returns null on a failure, because one
+ *  transient CLI error must not read as "the deploy failed": only a terminal state does. Repeated
+ *  failures are a different thing and are counted by the caller, not swallowed here. */
 function deployments() {
-  const res = spawnSync('vercel', ['api', '/v6/deployments?limit=10&target=production'], {
+  const res = spawnSync(`vercel api "${API}"`, {
     encoding: 'utf8',
     shell: true,
     env: { ...process.env, MSYS_NO_PATHCONV: '1' },
   });
-  if (res.status !== 0 || !res.stdout) return null;
+  if (res.status !== 0 || !res.stdout) {
+    lastApiError = (res.stderr || res.stdout || `exit ${res.status}`).toString().trim().split('\n').slice(-2).join(' ');
+    return null;
+  }
   try {
     return JSON.parse(res.stdout).deployments ?? null;
-  } catch {
+  } catch (e) {
+    lastApiError = `unparseable response (${e.message})`;
     return null;
   }
 }
+let lastApiError = null;
 
 /* STEP 1: the build. `state` is READY, BUILDING, QUEUED, INITIALIZING, ERROR or CANCELED. A sha that
    never appears is its own failure: the push did not reach the project this CLI is pointed at. */
 let seen = false;
 let state = null;
+/* A RUN OF API FAILURES IS REPORTED, NOT WAITED OUT. The first version returned null on any CLI
+   error and looped, so the shell-quoting bug above presented as a script that printed nothing for
+   fifteen minutes and then said "gave up". A checker that cannot reach its source has to say so:
+   that is a different fact from "the deploy is not ready yet", and it is the one that is actionable. */
+let apiFails = 0;
 while (Date.now() < deadline) {
   const list = deployments();
   if (list) {
+    apiFails = 0;
     const mine = list.find((d) => (d.meta?.githubCommitSha ?? '').startsWith(sha.slice(0, 7)));
     if (mine) {
       seen = true;
@@ -87,6 +121,13 @@ while (Date.now() < deadline) {
         process.exit(1);
       }
     }
+  } else if (++apiFails >= 3) {
+    console.error(
+      `wait-deploy: RED. The Vercel API failed ${apiFails} times running, so this never checked anything.\n` +
+      `  last error: ${lastApiError}\n` +
+      '  Try `vercel whoami`; if that is fine, run the api call by hand and read what it says.',
+    );
+    process.exit(2);
   }
   await sleep(EVERY_MS);
 }
