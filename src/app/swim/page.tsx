@@ -101,6 +101,15 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
     .filter((s) => s.next && s.best)
     .sort((a, b) => (a.next!.gapMs / a.best!.durationMs) - (b.next!.gapMs / b.best!.durationMs))[0];
 
+  /* WHEN THE WATCH STARTED KEEPING RECORDS, over EVERY attempt it kept and not over the four bests
+     shown. The bests are all from this year, so deriving it from them would print 2026 and make the
+     caption assert the opposite of what it exists to say. `history` is the phone app's full top-times
+     list per distance, which is the only place the log's true opening date can be read. */
+  const logOpens = standings
+    .flatMap((s) => s.history.map((h) => h.achievedOn))
+    .filter(Boolean)
+    .sort()[0] ?? null;
+
   return (
     <>
       <div className="exgroup">
@@ -112,7 +121,14 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
             <thead>
               <tr>
                 <th>Distance</th>
-                <th className="tnum">Your best</th>
+                {/* "Your best" UNTIL 2026-09-09, and it overstated. These are the watch's own
+                    awarded records, and its log does not open until the date printed in the caption
+                    below, so it cannot know about anything before that. He swam a faster continuous
+                    100 m in 2023 and a faster one still in 2025 than any of these rows, derived
+                    from the length table under a construction that excludes rest. Calling that
+                    column "Your best" is a false "you improved", which is the expensive direction:
+                    he acts on it for months. */}
+                <th className="tnum">Best logged</th>
                 <th>Level</th>
                 <th className="tnum">Next level</th>
               </tr>
@@ -154,8 +170,9 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
         <details className="src wk">
           <summary>What these two columns are, and why they are not the same kind of time</summary>
           <div className="src-body">
-            Your times come from the watch&rsquo;s own personal-record log: it times a stretch inside
-            a training swim, and it counts the seconds you spent standing at the wall. The 1500 m
+            Your times come from the watch&rsquo;s own personal-record log, which opens on{' '}
+            {logOpens ?? 'its first awarded record'} and knows nothing before it. It times a stretch
+            inside a training swim, and it counts the seconds you spent standing at the wall. The 1500 m
             row is 2026-05-22, and that swim was 600 m, then 100, 100, 100, then 600 m again, with
             four stops of 19 to 43 seconds in between. The levels on the right are RACE standards:
             one continuous swim, no stopping. So the gap is real as a gap between two clocks, and it
