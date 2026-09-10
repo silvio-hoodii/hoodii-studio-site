@@ -80,8 +80,25 @@ function captionText(node) {
   return { text: text.replace(/\s+/g, ' ').trim(), expressions };
 }
 
+/* THE RULING IS ABOUT HIS DATA SURFACES, NOT ABOUT EVERY PAGE THAT HAS WORDS ON IT.
+ *
+ * His complaint was that a caption telling him where a number came from is not an insight. That
+ * argument only applies where a number is the point. On /work/brixel, /work/kitchen, /work/themoment
+ * and /work/versatile the PROSE IS THE PRODUCT: they are case studies written for a reader who is
+ * not him, and cutting them to the sentences containing figures would delete the thing they are.
+ * They are also the only pages on this site governed by the clause 7(c) check in
+ * work-permit/CLAUDE.md, so they are not somewhere to make sweeping edits for tidiness.
+ *
+ * /callback is excluded for the opposite reason: its text is instructions for using the code on the
+ * screen, which is the most actionable prose on the site.
+ *
+ * If a later session wants these swept, that is a conversation with him, not a default. */
+const OUT_OF_SCOPE = /^src\/app\/(work\/|callback\/)/;
+
 const files = execSync('git ls-files "src/app/**/*.tsx"', { cwd: ROOT, encoding: 'utf8' })
   .trim().split('\n').filter(Boolean)
+  .map((f) => f.replace(/\\/g, '/'))
+  .filter((f) => !OUT_OF_SCOPE.test(f))
   .filter((f) => !only || f.includes(only.replace(/^\//, '')));
 
 const findings = [];

@@ -441,9 +441,16 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
             one only has to name the consequence. Same failure as the drawer sentence and as the
             /swim/deep claim its own table disproved: a paragraph that describes the table beside it
             has to be recomputed when the table moves, or it has to stop making the claim. */}
+        {/* THE SECOND SENTENCE WENT, 2026-09-09. It read "It is a description, not a prescription:
+            the week is frozen and this is not a proposal to change it." That sentence was addressed
+            to an AGENT, not to him: it is a guard against a future session reading this section as
+            a reason to change the programme. He does not need to be told the page is not proposing
+            something. The guard is the same either way and lives here now.
+
+            THE GUARD: the programme is frozen until 2026-10-05. Nothing in this section may become
+            a proposal to add a walk, a step target, or anything else to the week. */}
         Against that swing it has barely shifted, which makes it the one thing on the page nobody
-        has tried yet. It is a description, not a prescription: the week is frozen and this is not a
-        proposal to change it.
+        has tried yet.
       </p>
     </div>
   );
