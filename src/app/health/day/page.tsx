@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import {
   getDailyReview, FLOOR_STEPS, WINDOW_DAYS, STRETCH_MIN, TAIL_ONE_IN,
-  type DailyReview, type ScrapsRow,
+  type DailyReview, type ScrapsRow, type MonthPoint,
 } from '@/lib/health/daily';
 import { LineChart } from '../HealthCharts';
 
@@ -379,9 +379,21 @@ function Stairs({ r }: { r: DailyReview }) {
 /* ------------------------------------------------------------------------------------------------
  * THE ONE THING THAT HAS NOT MOVED IN FOUR YEARS
  * ---------------------------------------------------------------------------------------------- */
-function Scraps({ rows }: { rows: ScrapsRow[] }) {
+function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
   if (rows.length < 2) return null;
   const latest = rows[rows.length - 1]!;
+  const first = rows[0]!;
+  /* THE COMPARISON IS COMPUTED, NOT ASSERTED. This paragraph read "it has barely moved since 2023
+     through a year your step count halved and a year it doubled", which is two quantitative claims
+     spelled as words, so `lint-typed-figures` cannot see them and nothing recomputed them. Neither
+     survived a check: no year-over-year median halves or doubles. What is true is the CONTRAST, and
+     it is stronger stated than asserted, so both sides of it are derived here from the same rows the
+     tables above print. If the stretch ever starts responding, the sentence stops claiming it does
+     not. */
+  const inSpan = months.filter((m) => m.month.slice(0, 4) >= first.year);
+  const lo = inSpan.length ? inSpan.reduce((a, b) => (b.p50 < a.p50 ? b : a)) : null;
+  const hi = inSpan.length ? inSpan.reduce((a, b) => (b.p50 > a.p50 ? b : a)) : null;
+  const swing = lo && hi && lo.p50 > 0 ? hi.p50 / lo.p50 : null;
   return (
     <div className="section">
       <div className="section-head"><h2>On a day you do not train, it arrives in scraps</h2></div>
@@ -411,15 +423,27 @@ function Scraps({ rows }: { rows: ScrapsRow[] }) {
       </div>
       <p className="ex-cue">
         On days with no recorded workout, your longest unbroken stretch of movement is{' '}
-        <span className="tnum">{n0(latest.medianLongestMin)} minutes</span>, and it has barely
-        moved since {rows[0]!.year} through a year your step count halved and a year it doubled.
+        <span className="tnum">{n0(latest.medianLongestMin)} minutes</span>, against{' '}
+        <span className="tnum">{n0(first.medianLongestMin)}</span> in {first.year}.
+        {swing != null && lo && hi && (
+          <> Over those same years the median month&apos;s step count ran from{' '}
+            <span className="tnum">{n0(lo.p50)}</span> to{' '}
+            <span className="tnum">{n0(hi.p50)}</span>, a swing of{' '}
+            <span className="tnum">{swing.toFixed(1)}x</span>.</>
+        )}{' '}
         Those <span className="tnum">{n0(latest.medianActiveMin)}</span> active minutes arrive a few
         at a time.
       </p>
       <p className="ex-cue">
-        This is the only column here that has not responded to anything, which makes it the one
-        thing on the page nobody has tried yet. It is a description, not a prescription: the week is
-        frozen and this is not a proposal to change it.
+        {/* "has not responded to anything" until 2026-09-09, which the table above disproves: the
+            stretch fell from 21 minutes to 16 and the rest-day active minutes roughly halved. What
+            is true is the COMPARISON, and the sentence above now prints both sides of it, so this
+            one only has to name the consequence. Same failure as the drawer sentence and as the
+            /swim/deep claim its own table disproved: a paragraph that describes the table beside it
+            has to be recomputed when the table moves, or it has to stop making the claim. */}
+        Against that swing it has barely shifted, which makes it the one thing on the page nobody
+        has tried yet. It is a description, not a prescription: the week is frozen and this is not a
+        proposal to change it.
       </p>
     </div>
   );
@@ -556,7 +580,7 @@ export default async function DayPage() {
       <TheLine r={r} />
       <NotTheWeather r={r} />
       <Stairs r={r} />
-      <Scraps rows={r.scraps} />
+      <Scraps rows={r.scraps} months={r.months} />
       <Limits r={r} />
 
       <p className="ex-cue">
