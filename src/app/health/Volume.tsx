@@ -120,14 +120,20 @@ export default function Volume({
         * honest but it is not a trial finding, and a page that shows 13.5 without saying so is how
         * this went wrong. The pattern is the one /swim and the cue cards already use: render the
         * confidence, do not hide it. */}
+      {/* CUT FROM 542 CHARACTERS TO ONE SENTENCE, 2026-09-09, and NOT deleted, because he asked for
+          this. On 2026-09-01 he asked whether any of these numbers were grounded and the answer was
+          no, and the block above records what that audit found. What he asked for was the
+          CONFIDENCE, not the epistemology of it: that the mapping is anatomy rather than a trial
+          finding, and that nobody has measured his chest growing from a bench press, are true and
+          are why the number is what it is. They are not things he can do anything with.
+
+          The one clause that changes how he reads a figure survives, because a muscle looking
+          healthy on assistance alone is a wrong conclusion he could otherwise draw from this table.
+          The rest is here, and in the block above, where the next agent reads it. */}
       <p className="note">
-        These numbers are computed from which muscles each exercise uses. That mapping is{' '}
-        <strong>anatomy</strong>, not a trial finding: it names the joint action a lift performs and
-        the prime movers of that action. Nobody has measured that your chest grows from a bench press.
-        {' '}Assisting muscles count half a set, which the paper behind that weighting calls an
-        assumption rather than a measurement, so a muscle can show a healthy number here on nothing
-        but other lifts&apos; help. The gate that judges the programme counts only sets where the
-        muscle is a prime mover.
+        Assisting muscles count half a set, so a muscle can show a healthy number here on nothing but
+        other lifts&apos; help. The gate that judges the programme counts only sets where the muscle
+        is a prime mover.
       </p>
 
       <div className="exgroup">
@@ -346,13 +352,16 @@ export default function Volume({
 
             Both columns are shown now, and the saturation line below says out loud when the tier has
             stopped telling him anything. */}
+        {/* TRIMMED, not cut. "It may not be added to the one above" prevents a real wrong answer,
+            because two tables of sets on one page invite a total that means nothing, and the floor
+            and ceiling are thresholds he can act on. What went was the sentence explaining that
+            all-in is "the unit the research actually uses", which is provenance. */}
         <p className="ex-cue">
-          A different count, and it may not be added to the one above: that table is per muscle, this
-          one is per lift. <strong>Only it</strong> is sets of that exact exercise.{' '}
-          <strong>All-in</strong> also counts half a set for every other set in your week that trains
-          the same muscles, which is the unit the research actually uses. For getting stronger at a
-          lift, 1 all-in set a week is the floor and 5 is where the gains stop being big enough for a
-          study to measure. They do not stop.
+          Not addable to the table above: that one is per muscle, this is per lift.{' '}
+          <strong>Only it</strong> is sets of that exact exercise; <strong>all-in</strong> adds half
+          a set for every other set in your week that trains the same muscles. For getting stronger
+          at a lift, 1 all-in set a week is the floor and 5 is where the gains stop being big enough
+          for a study to measure. They do not stop.
         </p>
         <div className="table-scroll">
           <table className="plan-table vol-table">

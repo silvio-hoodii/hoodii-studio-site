@@ -502,11 +502,18 @@ export default async function HealthPage({
                   are inferred from a bioimpedance reading, a small current through the body, and
                   that reading moves with hydration. A kilo off the lean line across a few weeks is
                   as likely to be water as muscle, and the set log is the better witness. */}
+              {/* THE SENTENCE HE QUOTED, cut 2026-09-09: "neither line is measured directly, small
+                  current, whatever ... that's not an insight, that's just blur." Its twin on
+                  /health/deep went first; this is the one he was actually looking at when he said
+                  it, and it outlived that fix by two hours because the sweep was holding this file
+                  while the strength pass read it.
+
+                  Two sentences of provenance gone, two of instruction kept. That both lines are
+                  inferred from bioimpedance is now SHOWN on the shared-timeline chart on
+                  /health/deep, where lean mass, body water and resting burn are visibly one curve. */}
               <p className="ex-cue">
-                Neither line is measured directly. Both are inferred from a bioimpedance reading, a
-                small current passed through the body, and that reading moves with how hydrated you
-                were that morning. Treat a kilo of lean movement over a few weeks as possibly water.
-                If the weights on the bar went up over the same period, the muscle did not leave.
+                A kilo off the lean line across a few weeks is as likely to be water as muscle. If
+                the weights on the bar went up over the same period, the muscle did not leave.
               </p>
             </div>
           )}
