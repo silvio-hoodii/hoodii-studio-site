@@ -189,6 +189,15 @@ export interface Lift {
   lastDate: string;
   lastTop: number;
   delta: number;
+  /** THE BEST HE EVER PUT ON IT THIS YEAR, and the reason it exists: `delta` is first-to-latest, so
+   *  a lift that climbed and came back down prints a rise. The Romanian deadlift read "+20 lb" on
+   *  /health/deep with a peak of 225 and a latest of 165, its lowest since early June. The peak is
+   *  shown beside the other two so a retreat is visible without a sentence claiming one. On an
+   *  assistance lift, where less is progress, the BEST is the minimum. */
+  peakTop: number;
+  /** True when the latest session is below the peak, so the row can say so in the column rather
+   *  than in prose. Derived, never typed. */
+  offPeak: boolean;
   /** The assisted pull-up logs counterweight, so LESS is progress. Read off program.json. */
   assistance: boolean;
 }
@@ -629,6 +638,13 @@ async function buildStrength(
          one meaning for the column: positive is progress everywhere. Its own flag travels with it
          so the page can say "less assistance" rather than printing a rise it does not mean. */
       delta: round1(assistance ? firstTop - lastTop : lastTop - firstTop),
+      /* Minimum for an assistance lift, where the logged number is counterweight. */
+      peakTop: assistance
+        ? Math.min(...[...byDay.values()])
+        : Math.max(...[...byDay.values()]),
+      offPeak: assistance
+        ? lastTop > Math.min(...[...byDay.values()])
+        : lastTop < Math.max(...[...byDay.values()]),
       assistance,
     });
   }

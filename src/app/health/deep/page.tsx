@@ -397,6 +397,12 @@ function Strength({ strength }: { strength: YearStrength }) {
               <th>Lift</th>
               <th className="tnum">Days</th>
               <th className="tnum">First</th>
+              {/* PEAK, ADDED 2026-09-09, because Change is first-to-latest and a lift that climbed
+                  and came back down printed a rise. The Romanian deadlift read "+20 lb" here with a
+                  peak of 225 and a latest of 165, its lowest since early June: true arithmetic,
+                  flattering framing, and the expensive direction to be wrong in. A column rather
+                  than a sentence, per his no-filler ruling of the same day. */}
+              <th className="tnum">Peak</th>
               <th className="tnum">Latest</th>
               <th className="tnum">Change</th>
             </tr>
@@ -410,7 +416,8 @@ function Strength({ strength }: { strength: YearStrength }) {
                 </td>
                 <td className="tnum">{l.sessions}</td>
                 <td className="tnum">{l.firstTop} lb</td>
-                <td className="tnum">{l.lastTop} lb</td>
+                <td className="tnum">{l.peakTop} lb</td>
+                <td className={l.offPeak ? 'tnum off-peak' : 'tnum'}>{l.lastTop} lb</td>
                 <td className="tnum">{signed(l.delta, 0)} lb</td>
               </tr>
             ))}

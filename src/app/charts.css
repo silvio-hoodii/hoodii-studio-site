@@ -161,3 +161,8 @@
   position: absolute; top: 2px; transform: translateX(-50%);
   font-size: 0.62rem; color: var(--muted-foreground); white-space: nowrap;
 }
+
+/* A latest set below the lift's own peak this year. Muted rather than red: the site colours nothing
+ * as failure, and on a cut a lighter bar is often the plan. It marks "this is not your best", which
+ * the Change column cannot say because it measures first to latest. */
+.health .off-peak, .training .off-peak { color: var(--muted-foreground); }
