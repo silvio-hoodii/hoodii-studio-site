@@ -228,8 +228,18 @@ export default async function HealthPage({
       {sub === 'now' && week && (
         <>
           <p className="lede">
+            {/* "Read from the watch, so a session you never opened an app for still counts" until
+                2026-09-09, and it credited the wrong source. `actualBlock` in lib/gym/week.ts reads
+                health_watch_session AND gym_set, which is why 2026-09-08 appears in the streak with
+                no watch row against it: he logged 16 sets that day and the watch saw nothing.
+
+                The union is CORRECT and is not what changed. The sentence was, and it was wrong in
+                the expensive direction: it promised completeness from one source while quietly
+                depending on two, so anyone checking it against the watch alone would have found the
+                count too high and "fixed" it downward. Undercounting his training is the direction
+                this pipeline has already been wrong in. */}
             Lifting, swimming, running and riding in one count, and how many days in a row you have
-            trained. Read from the watch, so a session you never opened an app for still counts.
+            trained. A day counts if the watch saw it or you logged it.
           </p>
 
           <RunStanding week={week} />

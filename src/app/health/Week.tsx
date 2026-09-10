@@ -74,7 +74,11 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
             error here must never go. */}
         {lastKnown && lastKnown.date !== week.actual.days.at(-1)?.date && (
           <div className="ex-cue">
-            Counted to {shortDate(lastKnown.date)}, the last day the watch mirror has reached. Nothing
+            {/* NOT "the last day the watch mirror has reached", which was false on 2026-09-09: the
+                watch stopped at Sep 7 and this line said Sep 8, because `lastKnown` is the last day
+                either source knows about and Sep 8 came from gym_set. Naming one source for a
+                two-source horizon is how the count and the sentence drift apart. */}
+            Counted to {shortDate(lastKnown.date)}, the last day anything is known about. Nothing
             after that is known, and it is not being counted as rest.
           </div>
         )}
