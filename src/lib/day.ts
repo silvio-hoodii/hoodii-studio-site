@@ -40,3 +40,49 @@ export function today(): string {
 export function daysAgo(n: number): string {
   return dayOf(new Date(Date.now() - n * 86400000));
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * WHAT TIME IT WAS, where he was.
+ *
+ * Everything above answers "which day". Nothing answered "which hour", and on 2026-09-08 that gap
+ * cost him a wrong reading of his own training log: `watch_sessions.start_time` is the UTC instant
+ * Samsung recorded, it carried nothing saying so, and an agent read `2026-09-07 19:12` off it and
+ * told him he had lifted at 7 pm. He had lifted at 1:12 pm. The 15:10 session that reads as
+ * mid-afternoon was his 9:10 am CrossFit.
+ *
+ * So the importer now stores `start_local`, a wall clock WITH its offset attached, taken from the
+ * per-row offset in the export rather than from any zone name (see HealthOS/server/local-time.mjs:
+ * DST and travel are already answered there, and a zone constant would have to be right about 2019).
+ *
+ * THIS FUNCTION REFUSES A TIMESTAMP WITH NO OFFSET. That is the whole mechanism. `dayOf` above can
+ * safely assume Calgary because it is answering "what is today" for a server; a stored instant from
+ * an arbitrary past session cannot be assumed, and guessing is exactly how six hours went missing.
+ * A caller holding only the naive UTC field gets null and has to go and find `start_local`.
+ */
+/* `timeZone: 'UTC'` is REQUIRED and is not cosmetic. Without it, Intl formats in whatever zone the
+ * runtime happens to be in: the laptop shifted a 1:12 pm session to 6:12 am, and Vercel, running in
+ * UTC, would have agreed with the digits by luck while every developer machine disagreed. The
+ * digits below are already his wall clock, so the formatter must be told to leave them alone. This
+ * was caught by the test beside this file on the first run, having been written wrong. */
+const CLOCK = new Intl.DateTimeFormat('en-CA', {
+  hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC',
+});
+
+/** `2026-09-07 13:12:01-06:00` -> `1:12 p.m.`  Anything without an offset returns null. */
+export function clockOf(startLocal: string | null | undefined): string | null {
+  if (!startLocal) return null;
+  const m = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})(?::\d{2})?\s*([+-]\d{2}:?\d{2})$/.exec(startLocal.trim());
+  if (!m) return null;                       // no offset: refuse rather than assume a zone
+  /* Formatted off the wall-clock digits, not by re-parsing into an instant. Re-parsing would push
+     it back through the viewer's own timezone, which is how this class of bug regenerates itself on
+     a phone in another country. The digits in the string ARE the answer. */
+  const d = new Date(Date.UTC(2000, 0, 1, Number(m[2]), Number(m[3])));
+  return CLOCK.format(d).replace(/\u202f/g, ' ');
+}
+
+/** `2026-09-07 13:12:01-06:00` -> `2026-09-07`. Null when the offset is missing. */
+export function localDayOf(startLocal: string | null | undefined): string | null {
+  if (!startLocal) return null;
+  const m = /^(\d{4}-\d{2}-\d{2})[ T]\d{2}:\d{2}(?::\d{2})?\s*[+-]\d{2}:?\d{2}$/.exec(startLocal.trim());
+  return m?.[1] ?? null;
+}

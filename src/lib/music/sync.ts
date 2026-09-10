@@ -1,3 +1,4 @@
+import { today } from '@/lib/day';
 import 'server-only';
 import {
   getAccessToken, getRecentlyPlayed, getTopTracks, getTopArtists, TIME_RANGES,
@@ -62,7 +63,9 @@ export async function syncMusic(): Promise<SyncResult> {
       );
     }
 
-    const capturedOn = new Date().toISOString().slice(0, 10);
+    /* `today()`, not `toISOString().slice(0,10)`. This runs on a Vercel cron in UTC, so the
+       evening run stamped every top-tracks snapshot with TOMORROW's date in Calgary. */
+    const capturedOn = today();
     for (const range of TIME_RANGES) {
       try {
         const [tracks, artists] = await Promise.all([

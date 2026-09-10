@@ -1,3 +1,4 @@
+import { today } from '@/lib/day';
 import { NextResponse } from 'next/server';
 import { getLastSession, getRecentSessions } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
@@ -41,7 +42,10 @@ interface PlanExerciseIn {
 export async function POST(req: Request) {
   try {
     const b = await req.json();
-    const date = b?.date || new Date().toISOString().slice(0, 10);
+    /* `today()` is Calgary. The old UTC slice made an evening request with no date fall through
+       to TOMORROW, and the whole point of this route is to look up the last session before a
+       given day. */
+    const date = b?.date || today();
     const exercises: PlanExerciseIn[] = Array.isArray(b?.exercises) ? b.exercises : [];
 
     const out = await Promise.all(

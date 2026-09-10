@@ -1,3 +1,4 @@
+import { dayOf } from '@/lib/day';
 import WalledLink from '@/components/WalledLink';
 import { getWants } from '@/lib/reading/want-db';
 
@@ -48,7 +49,7 @@ export default async function WantList() {
                 <span className="shelftitle">{w.title}</span>
                 <span className="shelfby">{w.author}</span>
                 <span className="shelfmeta">
-                  <span className="shelfwhy">saved {new Date(w.addedAt).toISOString().slice(0, 10)}</span>
+                  <span className="shelfwhy">saved {dayOf(w.addedAt)}</span>
                   {w.note && <span className="shelfwhy">{w.note}</span>}
                 </span>
               </div>

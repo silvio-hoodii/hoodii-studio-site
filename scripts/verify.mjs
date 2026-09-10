@@ -112,6 +112,10 @@ const GATES = [
    * reasoning about it, and the first three written turned out to pass on the broken version. One of
    * the three that survived prints a NEGATIVE remainder unclamped. Watched refusing before trusted. */
   ['format-tests', process.execPath, ['--experimental-strip-types', 'src/lib/format.test.ts']],
+  /* His clock. Two of these cases are sessions he can personally date, which is the point: a
+     timezone test written from the same arithmetic as the code passes while the code is
+     self-consistently wrong, and that is what shipped on 2026-09-08. */
+  ['day-clock-tests', process.execPath, ['--experimental-strip-types', 'src/lib/day.test.ts']],
   /* THE LOGIN RETURN PATH. Added 2026-09-04 with the consolidation of four login pages into one.
    *
    * This one is here because the change it covers LOOSENED a redirect guard. The bug (A3) was that
