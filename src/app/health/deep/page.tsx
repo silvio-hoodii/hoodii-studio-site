@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
 import { LineChart } from '../HealthCharts';
 import { YearRangeSentence, YearRangeDates } from '../YearRange';
+import { MetricStack } from '../MetricStack';
 import { KIND_LABEL } from '@/lib/gym/week';
 
 export const dynamic = 'force-dynamic';
@@ -128,28 +129,15 @@ function TheLine({ body }: { body: YearBody }) {
   return (
     <div className="section">
       <div className="section-head"><h2>The line it took</h2></div>
-      <div className="pair">
-        <figure className="chartfig">
-          <figcaption className="chart-cap">
-            Weight, kg, {when(body.recordStarts)} to {when(body.latest.date)}
-          </figcaption>
-          <LineChart points={body.weightSeries} unit="kg" decimals={1} />
-        </figure>
-        {body.fatSeries.length > 1 && (
-          <figure className="chartfig">
-            <figcaption className="chart-cap">
-              Fat mass, kg, same readings
-            </figcaption>
-            <LineChart points={body.fatSeries} unit="kg" decimals={1} />
-          </figure>
-        )}
-      </div>
+      {/* ONE TIMELINE, EVERY METRIC, ONE CROSSHAIR. Replaces two side-by-side charts that each
+          auto-scaled their own x-axis, so a date sat in a different horizontal position in each and
+          reading down a column meant nothing. His ask: "I want one chart where we have all these
+          metrics somehow drawn there, so I can see at any point of time the six numbers." Drag
+          anywhere on the stack and every row reads that date. */}
+      <MetricStack series={body.series} />
       <p className="ex-cue">
-        {/* The window is in the caption and derived from the series itself, because the Weight tab
-            drew a 120-day picture beside a 34-day trend line and named neither, which is 09-health
-            P3-3. A chart that does not say what it spans is a chart the reader has to guess at. */}
-        Each point is a weigh-in, {body.readings} of them this year. The gaps between them are not
-        flat stretches, they are days nobody stepped on the scale.
+        Each point is a weigh-in, {body.readings} of them this year, {when(body.recordStarts)} to{' '}
+        {when(body.latest.date)}. The gaps between them are days nobody stepped on the scale.
       </p>
     </div>
   );

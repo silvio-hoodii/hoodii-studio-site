@@ -73,3 +73,91 @@
   margin-bottom: 2px;
 }
 .health .tooltip .t-value, .training .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---- MetricStack: every body number on one timeline -------------------------------------------
+ *
+ * His ask, 2026-09-09: one chart where a single point in time can be read across every metric.
+ * Small multiples sharing one x domain and one crosshair, rather than seven lines on one axis,
+ * because weight (103 to 119) and resting burn (near 1,900) cannot share a y scale without one of
+ * them becoming a flat line on the floor.
+ *
+ * Colours come from the tokens only. `--signal` appears on exactly one thing, the newest reading
+ * while nothing is being scrubbed, which is this site's rule for it: a value true right now.
+ */
+.health .mstack, .training .mstack { margin: 0 0 18px; }
+
+.health .mstack-head, .training .mstack-head {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.health .mstack-date, .training .mstack-date {
+  font-size: 0.85rem; font-weight: 600; letter-spacing: 0.01em;
+}
+.health .mstack-reset, .training .mstack-reset {
+  margin-left: auto; background: none; border: 1px solid var(--border);
+  color: var(--muted-foreground); font: inherit; font-size: 0.7rem;
+  padding: 2px 8px; cursor: pointer; min-height: 24px;
+}
+
+/* The whole stack is one pointer surface: a drag anywhere scrubs every row at once. */
+.health .mstack-rows, .training .mstack-rows { cursor: crosshair; }
+
+.health .mstack-row, .training .mstack-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  grid-template-areas: 'label value' 'chart chart';
+  align-items: baseline;
+  padding-top: 6px;
+}
+.health .mstack-label, .training .mstack-label {
+  grid-area: label; font-size: 0.75rem; color: var(--muted-foreground);
+}
+.health .mstack-v, .training .mstack-v {
+  grid-area: value; text-align: right; font-size: 0.95rem; font-weight: 600;
+}
+.health .mstack-v .live, .training .mstack-v .live { color: var(--signal); }
+.health .mstack-u, .training .mstack-u {
+  font-size: 0.68rem; font-weight: 400; color: var(--muted-foreground); margin-left: 3px;
+}
+.health .mstack-svg, .training .mstack-svg {
+  grid-area: chart; width: 100%; height: 46px; display: block;
+}
+
+/* A derived row is the same drawing at lower contrast: it is real data, just not a second
+ * measurement, and dimming says that without spending a sentence on it. */
+.health .mstack-row.is-derived .mstack-line, .training .mstack-row.is-derived .mstack-line {
+  stroke: var(--muted-foreground); stroke-width: 1.5;
+}
+.health .mstack-row.is-derived .mstack-label, .training .mstack-row.is-derived .mstack-label {
+  opacity: 0.75;
+}
+
+.health .mstack-split, .training .mstack-split {
+  margin: 10px 0 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.health .mstack-line, .training .mstack-line {
+  fill: none; stroke: var(--foreground); stroke-width: 2;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.health .mstack-grid, .training .mstack-grid { stroke: var(--border); stroke-width: 1; }
+.health .mstack-cross, .training .mstack-cross { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0.7; }
+.health .mstack-dot, .training .mstack-dot { fill: var(--foreground); }
+.health .mstack-row.is-derived .mstack-dot, .training .mstack-row.is-derived .mstack-dot {
+  fill: var(--muted-foreground);
+}
+
+/* One axis under the lot. Seven stacked date axes is six repetitions of one fact and 120px of a
+ * 390px screen. */
+.health .mstack-axis, .training .mstack-axis {
+  position: relative; height: 1.1rem; margin-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.health .mstack-tick, .training .mstack-tick {
+  position: absolute; top: 2px; transform: translateX(-50%);
+  font-size: 0.62rem; color: var(--muted-foreground); white-space: nowrap;
+}

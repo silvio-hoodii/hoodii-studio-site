@@ -118,6 +118,33 @@ export interface YearBody {
   splitTo: Reading | null;
   /** Worst same-day disagreement between the two instruments, derived, both columns. */
   instrument: { days: number; worstKg: number | null; worstFatKg: number | null };
+  /** EVERY BODY COLUMN AS A SERIES ON ONE SHARED TIMELINE, weight first.
+   *
+   *  His ask, 2026-09-09: "is there a way that we can build that chart, I fast all these numbers in
+   *  the same timeline? This is hard for me to find, say, a point in time in each chart and see
+   *  November of whatever year. I want one chart where we have all these metrics somehow drawn
+   *  there, so I can see at any point of time the six numbers."
+   *
+   *  Separate charts each auto-scaled their own x-axis to their own readings, so a date sat at a
+   *  different horizontal position in each one and reading down a column meant nothing. These share
+   *  one domain, computed across all of them, and the component draws one crosshair through the lot.
+   *
+   *  `derived` IS ON THE SERIES AND IS THE POINT OF STACKING THEM. Checked against the raw export,
+   *  103 full readings: only WEIGHT and BODY FAT PERCENT are measured. Fat mass is weight x bf/100,
+   *  lean mass is weight minus that, total body water is lean x 0.733 exactly, resting burn is
+   *  Katch-McArdle off lean mass, BMI is weight over height squared. All exact on 103 of 103. So
+   *  five of the seven lines are one of the two above them wearing different units, and on a shared
+   *  timeline that is VISIBLE rather than asserted in a caption he has already told us he does not
+   *  want to read. Skeletal muscle is the one partial exception: it tracks lean mass at a ratio
+   *  that moves only between 0.537 and 0.547, so it carries about a percent of its own. */
+  series: {
+    key: string;
+    label: string;
+    unit: string;
+    decimals: number;
+    derived: boolean;
+    points: { date: string; value: number }[];
+  }[];
 }
 
 export interface Discipline {
@@ -205,14 +232,30 @@ const daysBetween = (a: string, b: string) => Math.round((Date.parse(b) - Date.p
    content/health/sync.mjs on every run, published by HealthOS/CURRENT.md, and until today it was
    read by nothing at all in this repo (09-health P2-8). A column written every run and read by
    nothing is the shape that gets deleted by a later cleanup as dead weight. */
-const METRICS: { key: keyof Reading; label: string; unit: string; decimals: number }[] = [
-  { key: 'bf_pct', label: 'Body fat', unit: '%', decimals: 1 },
-  { key: 'fat_kg', label: 'Fat mass', unit: 'kg', decimals: 1 },
-  { key: 'lean_kg', label: 'Lean mass', unit: 'kg', decimals: 1 },
-  { key: 'skm_kg', label: 'Skeletal muscle', unit: 'kg', decimals: 1 },
-  { key: 'water_kg', label: 'Total body water', unit: 'kg', decimals: 1 },
-  { key: 'bmr_cal', label: 'Resting burn', unit: 'cal/day', decimals: 0 },
-  { key: 'bmi', label: 'BMI', unit: '', decimals: 1 },
+/* `derived` WAS ESTABLISHED BY ARITHMETIC, NOT BY READING SAMSUNG'S DOCUMENTATION. Every relation
+ * below was tested against all 103 full readings in the raw export and holds on 103 of 103:
+ *
+ *   fat_kg    = weight x body_fat / 100
+ *   lean_kg   = weight - fat_kg
+ *   water_kg  = lean_kg x 0.733            (a constant, so hydration never varies in this record)
+ *   bmr_cal   = 370 + 21.6 x lean_kg       (Katch-McArdle)
+ *   bmi       = weight / height^2          (height is a setting, not a measurement)
+ *
+ * So the file ships twelve body columns and holds TWO numbers. `muscle_mass` and `vfa_level` are
+ * empty on all 211 rows: Samsung ships the columns and never fills them. `skm_kg` is the only
+ * partial exception, tracking lean mass at a ratio that moves between 0.5374 and 0.5465.
+ *
+ * This flag is not used to hide anything. It is used so the shared-timeline chart can group the two
+ * measured lines apart from the five restatements, which answers "are these all the metrics" by
+ * showing him rather than telling him. */
+const METRICS: { key: keyof Reading; label: string; unit: string; decimals: number; derived: boolean }[] = [
+  { key: 'bf_pct', label: 'Body fat', unit: '%', decimals: 1, derived: false },
+  { key: 'fat_kg', label: 'Fat mass', unit: 'kg', decimals: 1, derived: true },
+  { key: 'lean_kg', label: 'Lean mass', unit: 'kg', decimals: 1, derived: true },
+  { key: 'skm_kg', label: 'Skeletal muscle', unit: 'kg', decimals: 1, derived: true },
+  { key: 'water_kg', label: 'Total body water', unit: 'kg', decimals: 1, derived: true },
+  { key: 'bmr_cal', label: 'Resting burn', unit: 'cal/day', decimals: 0, derived: true },
+  { key: 'bmi', label: 'BMI', unit: '', decimals: 1, derived: true },
 ];
 
 /** The year's body range on its own, for the Weight tab's headline.
@@ -445,6 +488,28 @@ function buildBody(
     weightSeries: readings.map((r) => ({ date: r.date, value: r.kg })),
     fatSeries: withSplit.map((r) => ({ date: r.date, value: r.fat_kg as number })),
     leanSeries: withSplit.map((r) => ({ date: r.date, value: r.lean_kg as number })),
+    series: [
+      {
+        key: 'kg',
+        label: 'Weight',
+        unit: 'kg',
+        decimals: 1,
+        derived: false,
+        points: readings.map((r) => ({ date: r.date, value: r.kg })),
+      },
+      ...METRICS.map((m) => ({
+        key: String(m.key),
+        label: m.label,
+        unit: m.unit,
+        decimals: m.decimals,
+        derived: m.derived,
+        /* Only readings that carry the column. A scale-only day has no body fat, and carrying it
+           forward would draw a flat segment that looks like a measurement holding steady. */
+        points: readings
+          .filter((r) => typeof r[m.key] === 'number')
+          .map((r) => ({ date: r.date, value: r[m.key] as number })),
+      })).filter((s) => s.points.length >= 2),
+    ],
     split: splitFrom && splitTo ? splitOf(splitFrom, splitTo) : null,
     splitFrom,
     splitTo,
