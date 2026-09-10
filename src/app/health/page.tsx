@@ -15,6 +15,7 @@ import { getRecentSessions } from '@/lib/gym/session';
 import { AdherenceStrip, LineChart } from './HealthCharts';
 import { RunStanding, RecoveryNotice, PlanWeek, ActualDays } from './Week';
 import Volume from './Volume';
+import { YearRangeSentence } from './YearRange';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import Prose from '@/components/training/Prose';
@@ -358,13 +359,13 @@ export default async function HealthPage({
                     same fact in two units, three lines apart, and the bracket above is the one he
                     asked for. Same reason the dates left this sentence when they became the bold
                     line: a block that says a thing twice reads as not knowing it said it once. */}
+                {/* THE SENTENCE IS SHARED WITH /health/deep, in ./YearRange, and it was not until
+                    2026-09-09. Both pages read the same getYearBody(), which kept the NUMBERS in
+                    step and let the PROSE drift: deep said the low was behind him and this page,
+                    the default tab, said nothing, so the first thing on the surface read as "you
+                    weigh 103.7" three lines above a tile saying 105.2. */}
                 <p className="ex-cue" style={{ marginTop: 0 }}>
-                  <span className="tnum">{yearBody.peak.kg.toFixed(1)} kg</span> down to{' '}
-                  <span className="tnum">{yearBody.low.kg.toFixed(1)} kg</span>, at{' '}
-                  <span className="tnum">
-                    {yearBody.kgPerWeek > 0 ? '+' : ''}{yearBody.kgPerWeek.toFixed(2)} kg
-                  </span>{' '}
-                  a week.{' '}
+                  <YearRangeSentence body={yearBody} />{' '}
                   {yearBody.peak.date === yearBody.recordStarts
                     ? `That first date is also the first weigh-in of ${yearBody.year}, so it is where the record starts rather than a peak you climbed to, and whatever you weighed in January is not in this database at all.`
                     : `The first weigh-in of ${yearBody.year} is ${shortDate(yearBody.recordStarts)}, so that is the heaviest reading on record rather than the heaviest you were.`}

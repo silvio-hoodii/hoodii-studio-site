@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
 import { LineChart } from '../HealthCharts';
+import { YearRangeSentence } from '../YearRange';
 import { KIND_LABEL } from '@/lib/gym/week';
 import { dayMonth, spanInMonths } from '@/lib/format';
 
@@ -100,12 +101,9 @@ function Headline({ body }: { body: YearBody }) {
         <p className="ex-cue">
           {/* The day count is in the bracket above in months. Here it is only the rate, which is the
               one thing the bracket cannot express. */}
-          <span className="tnum">{body.peak.kg.toFixed(1)} kg</span>, the heaviest reading of the
-          year, down to <span className="tnum">{body.low.kg.toFixed(1)} kg</span>, at{' '}
-          <span className="tnum">{signed(body.kgPerWeek, 2)} kg</span> a week.
-          {body.lowIsLatest
-            ? ' The lowest reading is also the most recent one, so this is where you are now.'
-            : ` The most recent reading is ${body.latest.kg.toFixed(1)} kg on ${when(body.latest.date)}, so the low is behind you rather than current.`}
+          {/* SHARED WITH THE WEIGHT TAB, in ../YearRange. This page had the honest version and
+              /health did not, which is the drift that component exists to make impossible. */}
+          <YearRangeSentence body={body} />
         </p>
         {/* SAID ONLY WHEN IT IS TRUE, and it is false today. The two instruments disagree about
             weight by at most 0.05 kg (derived in year.ts, printed under the split below), which is
