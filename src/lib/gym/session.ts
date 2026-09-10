@@ -144,8 +144,16 @@ export function sessionVerdict(s: SessionDetail): string | null {
   if (s.kind === 'other') {
     return 'You started this on the watch and picked "Other workout" rather than a sport, so the only thing recorded is heart rate.';
   }
-  if ((s.kind === 'treadmill' || s.kind === 'running') && s.avgCadence) {
-    return `${Math.round(s.avgCadence)} steps a minute average. Cadence is measured on the treadmill, so this is real: most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
+  /* THE SENTENCE BRANCHES ON WHERE HE ACTUALLY RAN, and it did not until 2026-09-09: an OUTDOOR run
+     was told its cadence was "measured on the treadmill, so this is real". Both of his 2026 runs
+     that carry cadence, 08-24 and 08-30, are kind = 'running'. The claim was load-bearing rather
+     than decorative, because the reason cadence is trustworthy indoors is that the belt measures it;
+     asserting that about a watch-derived outdoor cadence is asserting a provenance it does not have. */
+  if (s.kind === 'treadmill' && s.avgCadence) {
+    return `${Math.round(s.avgCadence)} steps a minute average, measured on the belt. Most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
+  }
+  if (s.kind === 'running' && s.avgCadence) {
+    return `${Math.round(s.avgCadence)} steps a minute average, from the watch rather than a belt. Most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
   }
   return null;
 }

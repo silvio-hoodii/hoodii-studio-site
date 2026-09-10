@@ -66,10 +66,14 @@ export default function LastSession({ s, noun = 'session' }: {
           m/s and never the 3.6x figure. km/h is what it is drawn in because km/h is what the
           treadmill console shows and what content/gym/conditioning.json tells him to dial, and a
           speed he cannot find on the machine in front of him is a number he cannot use. */}
+      {/* "Belt speed" ON AN OUTDOOR RUN, until 2026-09-09. `isRun` is treadmill OR running, and both
+          of his 2026 runs carrying this trace are kind = 'running': there is no belt. The label is
+          the KIND's own word for the same measurement now. km/h stays for both, because the
+          treadmill console shows km/h and conditioning.json tells him to dial it. */}
       {isRun && s.series.speed && s.series.speed.length > 2 && (
         <Trace
           values={s.series.speed.map((v) => v * 3.6)}
-          label="Belt speed"
+          label={s.kind === 'treadmill' ? 'Belt speed' : 'Speed'}
           unit="km/h"
         />
       )}
