@@ -285,18 +285,31 @@ export async function getDailyReview(): Promise<DailyReview> {
            group by 1, 2 having count(*) >= 20 order by 1, 2`,
 
       /* THE SCRAPS. On days he did not train, how long is his longest unbroken stretch of movement.
-         `other_min = 0` is the rest-day test and it is sound in one direction only: `other_min` is
-         the watch session folded into the daily row rather than an independent signal, verified at
-         9 disagreeing days one way and 10 the other across five years. That makes it exactly right
-         for SPLITTING training days from rest days, and useless as corroboration that a session
-         happened. */
-      sql`select substring(date, 1, 4) as year, count(*)::int as rest_days,
-                 percentile_cont(0.50) within group (order by longest_active_min) as longest,
-                 percentile_cont(0.50) within group (order by active_min) as active,
-                 (count(*) filter (where longest_active_min >= ${STRETCH_MIN}))::numeric * 100 / count(*) as pct30
-            from health_daily
-           where not partial and other_min = 0 and longest_active_min is not null
-             and date >= '2023-01-01'
+       *
+       * A REST DAY IS THE UNION OF THREE SOURCES SAYING NOTHING, and it was `other_min = 0` alone
+       * until 2026-09-09. That test was defended in this comment as "exactly right for SPLITTING
+       * training days from rest days". It is not, and the cross-discipline pass measured the cost:
+       * 15 days since 2023 that he TRAINED are counted as rest here, six of them this year, under a
+       * heading that reads "On a day you do not train".
+       *
+       * The miss is a real shape, not an edge case. `other_min` is the watch session folded into
+       * the daily row, so a lift he logged in the app while not wearing the watch is invisible to
+       * it. Six such days in 2026 (2026-05-25, 05-30, 06-03, 07-15, 07-21, 09-08), none of which
+       * carries an adjacent-date watch row, so it is a miss rather than a timezone artifact.
+       *
+       * `gym_set` and `health_watch_session` are therefore both consulted. Each of the three can
+       * see a session the other two cannot, and a day is rest only when all three are silent. That
+       * makes the reading conservative in the safe direction: a mislabelled rest day inflates a
+       * figure captioned "on days you do not train", which is the flattering error. */
+      sql`select substring(d.date, 1, 4) as year, count(*)::int as rest_days,
+                 percentile_cont(0.50) within group (order by d.longest_active_min) as longest,
+                 percentile_cont(0.50) within group (order by d.active_min) as active,
+                 (count(*) filter (where d.longest_active_min >= ${STRETCH_MIN}))::numeric * 100 / count(*) as pct30
+            from health_daily d
+           where not d.partial and d.other_min = 0 and d.longest_active_min is not null
+             and d.date >= '2023-01-01'
+             and not exists (select 1 from health_watch_session w where w.date = d.date)
+             and not exists (select 1 from gym_set g where g.date = d.date)
            group by 1 order by 1`,
 
       /* WHAT EACH COLUMN CAN ANSWER AND FROM WHEN. Counted, never typed: four of these columns are
