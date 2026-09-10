@@ -151,30 +151,46 @@ const strip = (html) => html
   .replace(/&#x27;|&apos;/g, "'")
   .replace(/\s+/g, ' ');
 
+/* READY IS NOT SERVED. Vercel reports a deployment READY before the production alias has finished
+   swapping on every edge, so a single fetch at that instant can still get the previous build. This
+   returned a FALSE RED on 2026-09-10: the string was on the page seconds later, and it was checked
+   by hand to prove it. A false alarm is exactly how a checker stops being read, which is the whole
+   reason this file exists, so the content check RETRIES before it fails.
+
+   Only the negative is retried. A page that already says the thing is done, and a 200 carrying the
+   string cannot become wrong by waiting. Cache-busting on the retries because an edge that served
+   the old build once will serve it again from the same key. */
+const CONTENT_TRIES = 6;
+const CONTENT_GAP_MS = 10_000;
+
+async function checkOne(url, want, attempt) {
+  const bust = attempt === 0 ? url : `${url}${url.includes('?') ? '&' : '?'}_wd=${Date.now()}`;
+  let res;
+  try {
+    res = await fetch(bust, {
+      headers: { 'user-agent': 'wait-deploy (hoodii-studio-site)', 'cache-control': 'no-cache' },
+    });
+  } catch (e) {
+    return `fetch failed (${e.message})`;
+  }
+  if (!res.ok) return `HTTP ${res.status}`;
+  if (!want) return null;
+  return strip(await res.text()).includes(want) ? null : `200, but "${want}" is not on the page`;
+}
+
 const failures = [];
 const ok = [];
 for (let i = 0; i < paths.length; i++) {
   const url = paths[i].startsWith('http') ? paths[i] : `${BASE}${paths[i]}`;
   const want = expects[i] ?? null;
-  let res;
-  try {
-    res = await fetch(url, { headers: { 'user-agent': 'wait-deploy (hoodii-studio-site)' } });
-  } catch (e) {
-    failures.push(`${url}: fetch failed (${e.message})`);
-    continue;
+  let problem = null;
+  for (let attempt = 0; attempt < CONTENT_TRIES; attempt++) {
+    problem = await checkOne(url, want, attempt);
+    if (problem == null) break;
+    if (attempt < CONTENT_TRIES - 1) await sleep(CONTENT_GAP_MS);
   }
-  if (!res.ok) {
-    failures.push(`${url}: HTTP ${res.status}`);
-    continue;
-  }
-  if (want) {
-    const text = strip(await res.text());
-    if (!text.includes(want)) {
-      failures.push(`${url}: 200, but "${want}" is not on the page`);
-      continue;
-    }
-  }
-  ok.push(want ? `${url} 200 and says "${want}"` : `${url} 200`);
+  if (problem) failures.push(`${url}: ${problem} (after ${CONTENT_TRIES} tries over ${(CONTENT_TRIES - 1) * CONTENT_GAP_MS / 1000}s)`);
+  else ok.push(want ? `${url} 200 and says "${want}"` : `${url} 200`);
 }
 
 if (failures.length) {
