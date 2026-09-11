@@ -135,9 +135,6 @@ export function sessionVerdict(s: SessionDetail): string | null {
   if (s.kind === 'cycling') {
     return 'Heart rate is the only thing the watch records on the bike. No cadence, no power, no resistance, so there is nothing here about whether you rode it well.';
   }
-  if (s.kind === 'swimming' && s.avgSwolf != null && s.strokeRate != null) {
-    return `SWOLF ${s.avgSwolf} at ${s.strokeRate} cycles a minute. SWOLF is seconds plus strokes for a length, so it drops when you get faster OR more efficient. Your stroke rate is the low half of that pair.`;
-  }
   if (s.kind === 'other-auto') {
     return 'The watch started this one by itself, about ten minutes after you did, and it could not tell what the movement was. The heart rate is real; the sport is not recorded anywhere, and neither is whether you meant this as training.';
   }

@@ -572,6 +572,31 @@
   }
 }
 
+/* NO FADE WHERE NOTHING SCROLLS, at any width, since 2026-09-11. The rule above faded every table
+   box under 720px whether or not its table overflowed, so the level table on /swim, which fits
+   390px exactly, lost the last digits of its 1,500 m column and he read it as cut off: "I can't
+   really see the whole table". A scroll-driven animation ties the fade to the box's own scroll
+   position; a box with nothing to scroll has an inactive timeline, so the fade never applies, and
+   it clears as the last column comes into view. Browsers without scroll timelines keep the rule
+   above. */
+@property --table-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@keyframes table-fade {
+  from { --table-fade: 28px; }
+  to { --table-fade: 0px; }
+}
+@supports (animation-timeline: scroll()) {
+  .training .table-scroll {
+    -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - var(--table-fade)), transparent 100%);
+    mask-image: linear-gradient(to right, currentColor calc(100% - var(--table-fade)), transparent 100%);
+    animation: table-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+}
+
 /* The hint, ABOVE the table, because that is where the person who cannot see the last column is
    looking. The full explanation stays in the caption below; this is the one clause needed to know
    the edge is not the end. */
@@ -1037,6 +1062,16 @@
   text-underline-offset: 3px;
 }
 .training .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+
+/* The level ladder: one column per distance, sized to fit 390px without scrolling sideways. */
+.training .level-table { font-size: 12px; }
+.training .level-table th, .training .level-table td { padding-right: 8px; }
+.training .level-table td { color: var(--muted-foreground); }
+.training .level-table td:first-child { color: var(--foreground); }
+.training .level-table td.met { color: var(--foreground); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.training .level-table tr.you td { color: var(--foreground); font-weight: 700; border-top: 1px solid var(--foreground); }
+/* The ladder row he is on this week. */
+.training .plan-table tr.now td { font-weight: 700; color: var(--foreground); }
 
 /* ---- sub-tabs ----
  *

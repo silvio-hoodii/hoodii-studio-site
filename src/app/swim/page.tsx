@@ -1,59 +1,43 @@
 import Link from 'next/link';
 import { loadSwimPlan, loadSwimCoaching, loadSwimTeaching } from '@/lib/swim/content';
-import { getSwimBaseline, getSwimHistory } from '@/lib/swim/db';
-import { getLongestPieces, getLongestPiecesThisYear, type LongestPiece } from '@/lib/swim/deep';
+import { getSwimBaseline, type SwimBaseline } from '@/lib/swim/db';
+import { getSwimYear, LENGTH_MIN_MS, LENGTH_MAX_MS, type SwimYear, type SwimSummary } from '@/lib/swim/deep';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
 } from '@/lib/swim/level';
-import { getRecentSessions, mmss } from '@/lib/gym/session';
+import { getRecentSessions, mmss, type SessionDetail } from '@/lib/gym/session';
 import { BarChart } from '../health/HealthCharts';
 import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
-import RecentSessions from '@/components/training/RecentSessions';
+import { Trace } from '@/components/training/SessionCharts';
 import Prose from '@/components/training/Prose';
-import Cues, { sharedLabel } from '@/components/training/Cues';
+import Cues from '@/components/training/Cues';
 import { shortDate } from '@/lib/format';
-import type { SwimCoaching, SwimTeaching } from '@/lib/swim/types';
+import { today } from '@/lib/day';
+import type { SwimPlan, SwimCoaching, SwimTeaching, SourceQuote, SwimSource } from '@/lib/swim/types';
 
 export const dynamic = 'force-dynamic';
 
-/* SWIM, THE WHOLE SUBJECT, ON ONE ROUTE. Rebuilt 2026-08-26.
- *
- * Until today this URL was the Calgary lane-swim timetable and his actual swimming was a tab three
- * taps inside /gym/conditioning?p=swim. Two halves of one subject, neither linking to the other,
- * and the half that was about him was the one you had to know the query string to find. The
- * schedule is dead, by his decision and knowing that nothing else produces "which pool has lane
- * swim open right now". This is what took its place.
- *
- * THE SUB-TABS ARE UNCHANGED, deliberately, and so is the query-param idiom. That split (Now, Plan,
- * How, Coach me, Coach them) took the swim view from 7.9 phone screens to 2.2 on 2026-08-22, after
- * he said it twice: "if I go to the water, I have to scroll a lot", and "everything else feels like
- * it's just slop that it's sitting there without any real reason". The content was never slop; its
- * ARRANGEMENT was. A rebuild is exactly where that regresses, so nothing here re-stacks.
- *
- * Plain links with a query param rather than client state, for the reasons /gym/conditioning gives:
- * it works before hydration, it survives a reload at the side of a pool, and every view is a URL he
- * can bookmark. `?s=` is the same parameter name, so an old ?p=swim&s=teach bookmark keeps its
- * meaning once /gym/conditioning redirects it here.
- *
- * NOTHING WAS CUT in the move. He has never asked for less of this, only for it to stop being in
- * his way. The swim history numbers that /health used to carry arrived here as well, which is the
- * one thing this page gained: they were on a page about body composition, answering a question
- * about swimming, with no link between them. */
-
+/* Rebuilt 2026-09-11 on his ask for insight over text: every figure here is derived, and each tab
+   pays only for its own reads. Five chips, because a sixth overflows 390px; records and the whole
+   record are routes. */
 const SUB_TABS = [
   { id: 'now', label: 'Now' },
   { id: 'plan', label: 'Plan' },
   { id: 'how', label: 'How' },
-  /* TWO COACHING TABS, split 2026-08-22. "Me" is him in the water on his own; "Them" is him on the
-   * deck coaching somebody else. They were one tab, and every cue in it read "stand next to them
-   * and watch", which answered none of the questions he was actually asking about his own swimming.
-   * His words: "there's the need for another tab, like the coach for me and me coaching someone
-   * else, because I want both things." */
   { id: 'me', label: 'Coach me' },
   { id: 'teach', label: 'Coach them' },
 ] as const;
+
+/** The distances with a personal best, in the level table. */
+const LEVEL_DISTANCES = [100, 200, 400, 1500];
+
+/** A piece this long counts as a long piece on the How and Coach me tabs. */
+const LONG_PIECE_M = 300;
+
+/** The distance in plan.json's goal, which the Plan tab counts his swim days against. */
+const GOAL_M = 1000;
 
 function SubNav({ sub }: { sub: string }) {
   return (
@@ -72,271 +56,442 @@ function SubNav({ sub }: { sub: string }) {
   );
 }
 
-/** Milliseconds to "1:48" per 100 m. Whole seconds: a pace is a rate, and hundredths on a rate
- *  computed from a whole session imply a precision the wall clock does not have. `fmtTime` in
- *  lib/swim/level.ts is the one that keeps hundredths, because a personal best is a measurement. */
-function msToPace(ms: number | null): string {
-  if (!ms) return 'N/A';
-  const totalSec = Math.round(ms / 1000);
-  const min = Math.floor(totalSec / 60);
-  return `${min}:${String(totalSec % 60).padStart(2, '0')}`;
+function median(xs: number[]): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = s.length >> 1;
+  return s.length % 2 ? (s[m] as number) : ((s[m - 1] as number) + (s[m] as number)) / 2;
 }
 
-/* WHERE HE IS, AS A SWIMMER. Built 2026-08-22.
- *
- * His ask: "there have to be reference or benchmarks on timings for specific levels. I want to know
- * on what level I am with my current timings." And he called the honest problem before I hit it:
- * real standards exist only at the sharp end, so the lower tiers had to be built.
- *
- * So provenance is rendered, not hidden in a comment. Three of these tiers are published standards
- * for men aged 35 to 39 in a 25 m pool; two are multiples of one of them that I picked; one is not
- * a time at all. Showing which is which is what makes the sourced rows worth anything, and it is
- * the same reason the cue cards on this page print `confidence`. */
-function SwimLevel({ standards, standings }: { standards: SwimStandards; standings: DistanceStanding[] }) {
-  const withPb = standings.filter((s) => s.best);
-  if (!withPb.length) return null;
-  const tierName = (id: string | null) => standards.tiers.find((t) => t.id === id)?.name ?? null;
-  /* The distance he is CLOSEST to levelling up in, proportionally. An absolute gap is misleading:
-     18 s off at 100 m and 141 s off at 1500 m sound like the 100 is closer, and it is the furthest. */
-  const closest = [...withPb]
-    .filter((s) => s.next && s.best)
-    .sort((a, b) => (a.next!.gapMs / a.best!.durationMs) - (b.next!.gapMs / b.best!.durationMs))[0];
+function mean(xs: number[]): number {
+  return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0;
+}
 
-  /* WHEN THE WATCH STARTED KEEPING RECORDS, over EVERY attempt it kept and not over the four bests
-     shown. The bests are all from this year, so deriving it from them would print 2026 and make the
-     caption assert the opposite of what it exists to say. `history` is the phone app's full top-times
-     list per distance, which is the only place the log's true opening date can be read. */
-  const logOpens = standings
-    .flatMap((s) => s.history.map((h) => h.achievedOn))
-    .filter(Boolean)
-    .sort()[0] ?? null;
+/** Swimming pace per 100 m, rest excluded. */
+function per100(seconds: number, metres: number): string {
+  return metres > 0 ? mmss(seconds / (metres / 100)) : '-';
+}
 
+const newestFirst = (a: { date: string }, b: { date: string }) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
+
+/** "Your number plus 100 m" becomes "500 m" once a number exists. The relative wording stays in the data. */
+function resolvePiece(piece: string, base: number | null): string {
+  if (!base) return piece;
+  return piece
+    .replace(/your number plus (\d+) m/gi, (_m, n) => `${base + Number(n)} m`)
+    // Floored at 100 m: a small number once made the week 7 to 8 rung resolve to 0 m.
+    .replace(/your number minus (\d+) m/gi, (_m, n) => `${Math.max(100, base - Number(n))} m`)
+    .replace(/your number/gi, `${base} m`);
+}
+
+interface Rung {
+  week: number;
+  weeks: string;
+  piece: string;
+  rest: string;
+}
+
+/** The ladder row he is on, counted in weeks from the day his number was set. */
+function currentRung(plan: SwimPlan, baseline: SwimBaseline | null): Rung | null {
+  if (!baseline) return null;
+  const days = Math.floor((Date.parse(today()) - Date.parse(baseline.measuredOn)) / 86_400_000);
+  const week = Math.max(1, Math.floor(days / 7) + 1);
+  for (const r of plan.structure.ladder) {
+    const m = /^(\d+)\s*(?:to\s*(\d+)|on)$/i.exec(r.weeks.trim());
+    if (!m) continue;
+    const lo = Number(m[1]);
+    const hi = m[2] ? Number(m[2]) : Number.POSITIVE_INFINITY;
+    if (week >= lo && week <= hi) {
+      return { week, weeks: r.weeks, piece: resolvePiece(r.piece, baseline.metres), rest: r.rest };
+    }
+  }
+  return null;
+}
+
+function lastSwimLine(s: SwimSummary | null): string | null {
+  if (!s) return null;
+  if (s.stops === 0) return `${s.metres.toLocaleString('en-CA')} m in one piece, no stops.`;
+  return `Longest piece ${s.longestM} m. ${s.stops} ${s.stops === 1 ? 'stop' : 'stops'}, ${mmss(s.stoppedS)} standing in all.`;
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+
+function LastSwims({ rows }: { rows: SwimSummary[] }) {
+  if (!rows.length) return null;
   return (
-    <>
-      <div className="exgroup">
-        <div className="exgroup-label">
-          Where you are <span className="tag">(men {standards.meta.ageGroup}, {standards.meta.course} 25 m, freestyle)</span>
-        </div>
-        <div className="table-scroll">
-          <table className="plan-table">
-            <thead>
-              <tr>
-                <th>Distance</th>
-                {/* "Your best" UNTIL 2026-09-09, and it overstated. These are the watch's own
-                    awarded records, and its log does not open until the date printed in the caption
-                    below, so it cannot know about anything before that. He swam a faster continuous
-                    100 m in 2023 and a faster one still in 2025 than any of these rows, derived
-                    from the length table under a construction that excludes rest. Calling that
-                    column "Your best" is a false "you improved", which is the expensive direction:
-                    he acts on it for months. */}
-                <th className="tnum">Best logged</th>
-                <th>Level</th>
-                <th className="tnum">Next level</th>
-              </tr>
-            </thead>
-            <tbody>
-              {withPb.map((s) => (
-                <tr key={s.distanceM}>
-                  <td className="tnum">{s.distanceM} m</td>
-                  <td className="tnum">
-                    {fmtTime(s.best!.durationMs)}
-                    <span className="quiet-inline"> {s.best!.achievedOn}</span>
-                  </td>
-                  <td>{tierName(s.tierId) ?? 'below the table'}</td>
-                  <td className="tnum">
-                    {s.next
-                      ? <>{fmtTime(s.next.timeMs)} <span className="quiet-inline">for {s.next.name}</span></>
-                      : '-'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {closest && (
-          <p className="ex-cue" style={{ marginTop: 10 }}>
-            The level you are closest to is <b>{closest.next!.name} at {closest.distanceM} m</b>:{' '}
-            {(100 * closest.next!.gapMs / closest.best!.durationMs).toFixed(1)}% faster, which is{' '}
-            {(closest.next!.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} seconds per 100 m.
-          </p>
-        )}
-        {/* WHAT THE TWO SIDES OF THAT COMPARISON ACTUALLY ARE, said out loud since 2026-09-02.
-            The left column is Samsung's own personal-record log, which times a stretch of a
-            training swim and counts the walls he stood at. The 1500 m row is 2026-05-22, and that
-            swim went 600 + 100 + 100 + 100 + 600 with four standing rests of 19 to 43 seconds. The
-            right column is a masters standard, which is a race: continuous, from a dive, no stops
-            permitted. Neither number is wrong and the comparison is not like for like, and the
-            sentence above it ("4% faster") is the single most actionable line on this tab. A page
-            that prints a gap has to say what the gap is between. */}
-        <details className="src wk">
-          <summary>What these two columns are, and why they are not the same kind of time</summary>
-          <div className="src-body">
-            Your times come from the watch&rsquo;s own personal-record log, which opens on{' '}
-            {logOpens ?? 'its first awarded record'} and knows nothing before it. It times a stretch
-            inside a training swim, and it counts the seconds you spent standing at the wall. The 1500 m
-            row is 2026-05-22, and that swim was 600 m, then 100, 100, 100, then 600 m again, with
-            four stops of 19 to 43 seconds in between. The levels on the right are RACE standards:
-            one continuous swim, no stopping. So the gap is real as a gap between two clocks, and it
-            is not a prediction of what you would swim in a race. Swim a timed continuous one and
-            that row becomes comparable.
-          </div>
-        </details>
-      </div>
-
-      {/* THE WHOLE LADDER, BEHIND A TAP. Ten rungs is 1,200px of a phone screen, and the only two
-          he needs on any given day are his own and the one above it, both of which are already in
-          the table above. Open it when you want to see how far the top is; otherwise it is in the
-          way, which is the complaint that produced these sub-tabs in the first place. */}
-      <details className="exgroup ladder-all">
-        <summary className="exgroup-label">What the levels are <span className="tag">(all 10)</span></summary>
-        <div className="tierlist">
-          {standards.tiers.map((t) => {
-            const src = standards.sources.find((x) => x.id === t.sourceId);
-            const at100 = tierTimeMs(t, 100, standards.tiers);
-            return (
-              <div className="tier" key={t.id}>
-                <div className="tier-head">
-                  <span className="tier-name">{t.name}</span>
-                  {/* "/100 m" read as a PACE. It is the tier's time FOR the 100, which is a different number
-                      and the one place on this page a reader could quietly take away the wrong figure. */}
-                  {at100 != null && <span className="tier-time tnum">{fmtTime(at100)} <span className="quiet-inline">at 100 m</span></span>}
-                  <span className={`prov ${t.provenance}`}>
-                    {t.provenance === 'sourced' ? 'sourced'
-                      : t.provenance === 'sourced-other-course' ? 'sourced, other course'
-                      : t.provenance === 'third-party' ? 'third party'
-                      : t.provenance === 'constructed' ? 'our number'
-                      : 'not a time'}
-                  </span>
-                </div>
-                <div className="ex-cue">{t.what}</div>
-                {/* A real tap target. These were 15px tall on the first build, which is a third of
-                    the 44px floor this repo enforces, on the one control that lets him check a
-                    number I am asking him to trust. */}
-                {src && (
-                  <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">
-                    {src.label}
-                  </a>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <p className="ex-cue" style={{ marginTop: 10 }}>
-          Two rungs are published standards for men your age and six come from an independent
-          project that matches the official qualifying time exactly at its top rung. One is ours.
-          Each says which it is, so you know what to argue with.
-        </p>
-      </details>
-
-      <div className="exgroup">
-        <div className="exgroup-label">What the shape of it says</div>
-        <Prose text={standards.profileNote} />
-        <details className="src wk">
-          <summary>Why there is no 25 m or 50 m here</summary>
-          <div className="src-body">
-            Samsung records no personal best under 100 m. Deriving one from single lengths does not
-            survive the data: the fastest length ever recorded is 9.03 s, which is faster than a
-            world-record 25 m split, and filtering the sensor miscounts moves the answer from
-            14.42 s to 18.55 s depending on where the threshold goes. A number that swings four
-            seconds on a threshold somebody picked is not a personal best. Swim a timed 25 and 50
-            from a push and they become real.
-          </div>
-        </details>
-      </div>
-    </>
+    <div className="table-scroll">
+      <table className="plan-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th className="tnum">Swum</th>
+            <th className="tnum">Longest</th>
+            <th className="tnum">Stops</th>
+            <th className="tnum">Pace/100</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.uuid}>
+              <td>{shortDate(r.date)}</td>
+              <td className="tnum">{r.metres.toLocaleString('en-CA')} m</td>
+              <td className="tnum">{r.longestM} m</td>
+              <td className="tnum">{r.stops}</td>
+              <td className="tnum">{per100(r.swimS, r.metres)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
-/* HIS OWN SWIMMING. Every check shows the sentence it came from and links the page, because he
- * asked for exactly that: "I don't want hallucination here so try to keep it as literal as you
- * can." The quote is on the card rather than behind a tap, so an invented cue would have nowhere
- * to hide. content/swim/validate.mjs refuses a "sourced" check with no quote and no source. */
-function SwimCoachMe({ c }: { c: SwimCoaching }) {
-  const byId = new Map(c.sources.map((s) => [s.id, s]));
+function Toward1000({ year, baseline, plan }: { year: SwimYear; baseline: SwimBaseline | null; plan: SwimPlan }) {
+  const s = year.summaries;
+  if (!s.length) return null;
+  const last = s.slice(-10);
+  const before = s.slice(-20, -10);
+  const top = year.pieces[0] ?? null;
+  const rung = currentRung(plan, baseline);
+  const typical = (xs: number[]) => {
+    const m = median(xs);
+    return m == null ? null : Math.round(m);
+  };
+  const lastLongest = typical(last.map((x) => x.longestM));
+  const lastStops = typical(last.map((x) => x.stops));
+  const prevLongest = typical(before.map((x) => x.longestM));
+  const prevStops = typical(before.map((x) => x.stops));
+  const bestRecent = Math.max(...last.map((x) => x.longestM));
+  return (
+    <div className="exgroup">
+      <div className="exgroup-label">Toward 1,000 m unbroken</div>
+      {rung && baseline && (
+        <p className="ex-cue" style={{ marginTop: 0 }}>
+          <b>This week: {rung.piece}</b>, rest {rung.rest}. Week {rung.week} of the ladder from your
+          number, {baseline.metres} m, set {shortDate(baseline.measuredOn)}.
+        </p>
+      )}
+      <div className="stats">
+        {top && (
+          <div>
+            <div className="stat-k">Longest this year</div>
+            <div className="stat-v">{top.metres}<span className="stat-u">m</span></div>
+            <div className="stat-d">{shortDate(top.date)}, in {mmss(top.seconds)}</div>
+          </div>
+        )}
+        <div>
+          <div className="stat-k">Best, last {last.length}</div>
+          <div className="stat-v">{bestRecent}<span className="stat-u">m</span></div>
+          <div className="stat-d">longest piece</div>
+        </div>
+        {lastStops != null && (
+          <div>
+            <div className="stat-k">Stops a swim</div>
+            <div className="stat-v">{lastStops}</div>
+            <div className="stat-d">typical, last {last.length}</div>
+          </div>
+        )}
+      </div>
+      <p className="ex-meta" style={{ marginTop: 14 }}>
+        Longest unbroken piece, every swim in {today().slice(0, 4)}
+      </p>
+      <BarChart points={s.map((x) => ({ date: x.date, value: x.longestM }))} unit="m" />
+      {lastLongest != null && lastStops != null && prevLongest != null && prevStops != null && (
+        <p className="ex-cue" style={{ marginTop: 10 }}>
+          Your last {last.length} swims: a typical longest piece of <b>{lastLongest} m</b> and{' '}
+          <b>{lastStops} stops</b>. The {before.length} before: {prevLongest} m and {prevStops}.
+        </p>
+      )}
+      <LastSwims rows={[...last].reverse()} />
+    </div>
+  );
+}
+
+function SwimLevel({ standards, standings }: { standards: SwimStandards; standings: DistanceStanding[] }) {
+  const mine = new Map(standings.filter((x) => x.best).map((x) => [x.distanceM, x]));
+  const dists = LEVEL_DISTANCES.filter((d) => mine.has(d));
+  if (!dists.length) return null;
+  const tiers = standards.tiers.filter((t) => dists.some((d) => tierTimeMs(t, d, standards.tiers) != null));
+  const closest = [...mine.values()]
+    .filter((x) => x.next && x.best)
+    .sort((a, b) => a.next!.gapMs / a.best!.durationMs - b.next!.gapMs / b.best!.durationMs)[0];
+  const bests = dists.map((d) => mine.get(d)!.best!);
+  return (
+    <div className="exgroup">
+      <div className="exgroup-label">
+        Your level <span className="tag">(men {standards.meta.ageGroup}, 25 m pool)</span>
+      </div>
+      {closest?.next && closest.best && (
+        <p className="ex-cue" style={{ marginTop: 0 }}>
+          Closest to moving up: <b>{closest.next.name} at {closest.distanceM.toLocaleString('en-CA')} m</b>,{' '}
+          {(closest.next.gapMs / 1000).toFixed(1)} s away, which is{' '}
+          {(closest.next.gapMs / 1000 / (closest.distanceM / 100)).toFixed(1)} s per 100 m.
+        </p>
+      )}
+      <div className="table-scroll">
+        <table className="plan-table level-table">
+          <thead>
+            <tr>
+              <th>Level</th>
+              {dists.map((d) => (
+                <th className="tnum" key={d}>{d.toLocaleString('en-CA')} m</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {tiers.map((t) => (
+              <tr key={t.id}>
+                <td>{t.name}{t.provenance === 'constructed' ? '*' : ''}</td>
+                {dists.map((d) => {
+                  const ms = tierTimeMs(t, d, standards.tiers);
+                  const met = mine.get(d)?.tierId === t.id;
+                  return (
+                    <td key={d} className={`tnum${met ? ' met' : ''}`}>{ms != null ? fmtTime(ms) : '-'}</td>
+                  );
+                })}
+              </tr>
+            ))}
+            <tr className="you">
+              <td>You</td>
+              {bests.map((b) => (
+                <td className="tnum" key={b.distanceM}>{fmtTime(b.durationMs)}</td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="ex-meta">
+        Underlined: the level each best reaches. Set{' '}
+        {bests.map((b) => `${shortDate(b.achievedOn)} (${b.distanceM.toLocaleString('en-CA')} m)`).join(', ')}.
+        Levels are race times, one swim with no stops. *Our own rung, the rest are published.
+      </p>
+      <details className="src">
+        <summary>Where the levels come from</summary>
+        <div className="src-body">
+          {standards.sources.map((src) => (
+            <p key={src.id}>
+              <a href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+            </p>
+          ))}
+        </div>
+      </details>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+
+/** Swim days, oldest first. A morning and an evening swim on one date are one day's distance. */
+function swimDays(s: SwimSummary[]): { date: string; metres: number; longestM: number }[] {
+  const byDay = new Map<string, { date: string; metres: number; longestM: number }>();
+  for (const x of s) {
+    const d = byDay.get(x.date) ?? { date: x.date, metres: 0, longestM: 0 };
+    d.metres += x.metres;
+    d.longestM = Math.max(d.longestM, x.longestM);
+    byDay.set(x.date, d);
+  }
+  return [...byDay.values()].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+}
+
+function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBaseline | null; year: SwimYear | null }) {
+  const rung = currentRung(plan, baseline);
+  /* Derived since 2026-09-11. The typed line said "about 1,000 m every time" while three of his
+     last ten swims were under 1,000 m. */
+  const days = year ? swimDays(year.summaries).slice(-10) : [];
+  const reached = days.filter((d) => d.metres >= GOAL_M).length;
+  const longest = Math.max(0, ...days.map((d) => d.longestM));
+  return (
+    <div className="exgroup">
+      <div className="exgroup-label">
+        {plan.title} <span className="tag">({plan.sessionsPerWeek})</span>
+      </div>
+      <div className="exlist">
+        <div className="ex">
+          <div className="ex-name">{plan.theGoal.target}</div>
+          <div className="ex-cue">{plan.theGoal.whatThatActuallyIs}</div>
+          {days.length > 0 && (
+            <div className="ex-cue">
+              {reached} of your last {days.length} swim days reached {GOAL_M.toLocaleString('en-CA')} m.
+              The longest piece in any of them: {longest} m.
+            </div>
+          )}
+        </div>
+      </div>
+      {rung && baseline && (
+        <p className="ex-cue">
+          <b>This week: {rung.piece}</b>, rest {rung.rest}. Your number is {baseline.metres} m, set{' '}
+          {shortDate(baseline.measuredOn)}.
+        </p>
+      )}
+      <p className="lede">{plan.structure.note}</p>
+      <div className="table-scroll">
+        <table className="plan-table">
+          <thead>
+            <tr>
+              <th className="tnum">Weeks</th>
+              <th className="wide">Continuity piece</th>
+              <th>Rest</th>
+            </tr>
+          </thead>
+          <tbody>
+            {plan.structure.ladder.map((s) => {
+              const on = rung?.weeks === s.weeks;
+              return (
+                <tr key={s.weeks} className={on ? 'now' : undefined}>
+                  <td className="tnum">{s.weeks}{on ? ', now' : ''}</td>
+                  <td>
+                    {resolvePiece(s.piece, baseline?.metres ?? null)}
+                    {s.note && <div className="quiet">{s.note}</div>}
+                  </td>
+                  <td>{s.rest}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <details className="src wk">
+        <summary>{plan.structure.calibration.name}</summary>
+        <div className="src-body">
+          <p>{plan.structure.calibration.what}</p>
+          <p><b>The test.</b> {plan.structure.calibration.test}</p>
+          <BaselineForm current={baseline} />
+        </div>
+      </details>
+    </div>
+  );
+}
+
+/** Every length time of a session, inside the plausible band the rest of /swim uses. */
+function lengthSeconds(s: SessionDetail): number[] {
+  return (s.series.lengths ?? []).map((l) => l.s).filter((x) => x * 1000 >= LENGTH_MIN_MS && x * 1000 <= LENGTH_MAX_MS);
+}
+
+function HowTab({ plan, year, recent }: { plan: SwimPlan; year: SwimYear; recent: SessionDetail[] }) {
+  const long = year.pieces.filter((p) => p.metres >= LONG_PIECE_M).sort(newestFirst).slice(0, 3);
+  const last = recent[0] ?? null;
+  /* The pace cue's arithmetic, done: his last middle length plus the plan's seconds. The cue told
+     him to work this out at the pool. */
+  const mid = last ? median(lengthSeconds(last)) : null;
+  const usual = median(recent.flatMap(lengthSeconds));
+  const add = plan.theOneTechniqueChange.addSeconds;
+  return (
+    <div className="exgroup">
+      <div className="exgroup-label">Swimming the continuity piece</div>
+      <div className="exlist">
+        <div className="ex">
+          <div className="ex-name">Pace</div>
+          <div className="ex-cue">{plan.theOneTechniqueChange.what} {plan.theOneTechniqueChange.why}</div>
+          {last && mid != null && (
+            <div className="ex-cue">
+              <b>Target: {(mid + add).toFixed(1)} s a length.</b> Your middle length on{' '}
+              {shortDate(last.date)} was {mid.toFixed(1)} s, plus {add}.
+            </div>
+          )}
+          {long.length > 0 && usual != null && (
+            <div className="ex-cue">
+              Your usual length over the last {recent.length} swims: {usual.toFixed(1)} s. Your last
+              pieces of {LONG_PIECE_M} m or more:{' '}
+              {long.map((p) => `${p.metres} m at ${(p.seconds / p.lengths).toFixed(1)} s on ${shortDate(p.date)}`).join('; ')}.
+            </div>
+          )}
+        </div>
+        <div className="ex">
+          <div className="ex-name">Pull buoy</div>
+          <div className="ex-cue">{plan.pullBuoyRule}</div>
+        </div>
+      </div>
+      <Cues cues={plan.cues ?? []} note={plan.cuesNote} heading="In the water" intro="" />
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+
+/** The source's own sentences under a cue, then the pages they came from. */
+function Quotes({ quotes, sources }: { quotes: SourceQuote[]; sources: Map<string, SwimSource> }) {
+  if (!quotes.length) return null;
+  const pages = [...new Set(quotes.map((q) => q.source))]
+    .map((id) => sources.get(id))
+    .filter((x): x is SwimSource => x != null);
+  return (
+    <div className="stale cue-quote">
+      <span className="k">Their words</span>
+      {quotes.map((q) => (
+        <p className="ex-cue" key={q.text}>&ldquo;{q.text}&rdquo;</p>
+      ))}
+      {pages.map((src) => (
+        <a key={src.id} className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
+      ))}
+    </div>
+  );
+}
+
+function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent: SessionDetail[] }) {
+  const sources = new Map(c.sources.map((s) => [s.id, s]));
+  const byUuid = new Map(recent.map((s) => [s.uuid, s]));
+  const usual = median(recent.map((s) => s.avgCycles).filter((x): x is number => x != null));
+  const long = year.pieces
+    .filter((p) => p.metres >= LONG_PIECE_M && (byUuid.get(p.uuid)?.series.lengths?.length ?? 0) >= p.lastIndex)
+    .sort(newestFirst)
+    .slice(0, 2);
   return (
     <>
       <div className="exgroup">
-        <div className="exgroup-label">{c.theQuestion.title}</div>
-        <Prose text={c.theQuestion.body} />
-      </div>
-
-      {/* COLLAPSED BY DEFAULT, and the same markup as `Cues` rather than a second pattern for the
-          same job. Rendered open, these twelve took this tab to 8.21 phone screens at 390px, which
-          is LONGER than the 7.9-screen page whose length he complained about in the first place.
-          The wall was inherited, not introduced by the swim migration, and it had probably never
-          been measured: the 2.2-screen figure in the docs was about the Now view. Closed, the
-          twelve names are a checklist he can scan and each opens on its own, which is also how he
-          would use them, one at a time, between lengths. */}
-      <div className="exgroup-label" style={{ marginTop: 22 }}>
-        What to check <span className="tag">({c.checks.length})</span>
-      </div>
-      <p className="lede" style={{ marginBottom: 6 }}>
-        Each one is a test you perform, not a feeling you have to have. Tap to open.
-      </p>
-      <div className="cuelist">
-        {c.checks.map((k) => {
-          const src = byId.get(k.source ?? k.from ?? '');
-          const quote = k.quote ?? k.fromQuote;
+        <div className="exgroup-label">What your swims say</div>
+        {usual != null && (
+          <p className="ex-cue" style={{ marginTop: 0 }}>
+            Your usual stroke count is <b>{usual.toFixed(1)} cycles a length</b>, over your last{' '}
+            {recent.length} swims.
+          </p>
+        )}
+        {long.map((p) => {
+          const cycles = (byUuid.get(p.uuid)?.series.lengths ?? [])
+            .slice(p.firstIndex - 1, p.lastIndex)
+            .map((l) => l.c);
+          const tail = cycles.slice(-4);
+          const head = cycles.slice(0, -4);
           return (
-            <details className="cue" key={k.id}>
-              <summary>
-                <span className="cue-n tnum">{k.n}</span>
-                <span className="cue-name">{k.name}</span>
-                {k.confidence !== 'sourced' && (
-                  <span className={`conf ${k.confidence}`}>{k.confidence}</span>
-                )}
-              </summary>
-              <div className="cue-body">
-                <div className="ex-cue">{k.say}</div>
-                {k.say2 && <div className="ex-cue">{k.say2}</div>}
-                <div className="ex-meta cue-test"><b>How you check it.</b> {k.test}</div>
-                {k.sharedWith?.length ? (
-                  <div className="ex-meta quiet">
-                    Also on <b>{sharedLabel(k.sharedWith[0]!)}</b>, from this same sentence. Same
-                    physics, different job: one is what you do, the other is what you watch for.
-                  </div>
-                ) : null}
-                {quote && (
-                  <div className="stale cue-quote">
-                    <span className="k">{k.confidence === 'inference' ? 'Reasoned from' : 'Their words'}</span>
-                    <p className="ex-cue">&ldquo;{quote}&rdquo;</p>
-                    {src && (
-                      <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-                    )}
-                  </div>
-                )}
-              </div>
-            </details>
+            <div key={`${p.uuid}-${p.firstIndex}`}>
+              <Trace
+                values={cycles}
+                label={`${p.metres} m on ${shortDate(p.date)}, strokes per length`}
+                unit="cycles"
+                over="that piece"
+              />
+              {head.length > 0 && (
+                <p className="ex-cue">
+                  Last {tail.length} lengths: {mean(tail).toFixed(1)} cycles, against {mean(head).toFixed(1)} before.{' '}
+                  {mean(tail) - mean(head) >= 0.5 ? 'The count climbed before the piece ended.' : 'The count held to the end.'}
+                </p>
+              )}
+            </div>
           );
         })}
       </div>
-
-      <div className="exgroup" style={{ marginTop: 22 }}>
-        <div className="exgroup-label">Where all of this comes from</div>
-        <div className="tierlist">
-          {c.sources.map((src) => (
-            <div className="tier" key={src.id}>
-              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-              {src.note && <div className="ex-cue">{src.note}</div>}
-            </div>
-          ))}
+      {c.groups.map((g) => (
+        <div className="exgroup" key={g.id}>
+          <div className="exgroup-label">{g.name}</div>
+          <div className="cuelist">
+            {g.items.map((k) => (
+              <details className="cue" key={k.id}>
+                <summary><span className="cue-name">{k.name}</span></summary>
+                <div className="cue-body">
+                  <div className="ex-cue"><b>Do.</b> {k.do}</div>
+                  <div className="ex-meta cue-test"><b>Check.</b> {k.check}</div>
+                  <Quotes quotes={k.quotes} sources={sources} />
+                </div>
+              </details>
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
     </>
   );
 }
 
-/* THE HANDBOOK, for when somebody at the pool asks him what to work on.
- *
- * "I have no idea how to explain principles that I'm already familiar with but not sure how to
- * explain... I'm not really sure how to tell them what to work on or what to improve."
- *
- * The safety line is first and it is not decoration. The most valuable thing he can say to a
- * frightened non-swimmer is that he is not a teacher, and every fix here is a TEST HE CAN SEE from
- * the side of the pool rather than a sensation the other person has to report. Nothing in this file
- * was written from an agent's memory: the staging is Swim England's and the freestyle is US Masters
- * Swimming's, and the one line that has no source says so on its own card. */
-function SwimTeach({ t }: { t: SwimTeaching }) {
+function CoachThem({ t }: { t: SwimTeaching }) {
+  const sources = new Map(t.sources.map((s) => [s.id, s]));
   return (
     <>
       <div className="exgroup">
@@ -345,85 +500,29 @@ function SwimTeach({ t }: { t: SwimTeaching }) {
           <Prose text={t.beforeYouStart.body} />
         </div>
       </div>
-
-      <div className="exgroup">
-        <div className="exgroup-label">{t.whatToLookFor.title}</div>
-        <p className="ex-cue">{t.whatToLookFor.intro}</p>
-        <div className="lookfor">
-          {t.whatToLookFor.items.map((i) => (
-            <div className="lf" key={i.see}>
-              <div className="lf-see">{i.see}</div>
-              <div className="lf-say">{i.say}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {t.stages.map((st) => (
-        <div className="exgroup" key={st.id}>
-          <div className="exgroup-label">
-            {st.n}. {st.name}
+      {t.groups.map((g) => (
+        <div className="exgroup" key={g.id}>
+          <div className="exgroup-label">{g.name}</div>
+          <div className="cuelist">
+            {g.items.map((it) => (
+              <details className="cue" key={it.id}>
+                <summary><span className="cue-name">{it.see}</span></summary>
+                <div className="cue-body">
+                  <div className="ex-cue"><b>Say.</b> {it.say}</div>
+                  {it.show && <div className="ex-cue"><b>Show.</b> {it.show}</div>}
+                  <div className="ex-meta cue-test"><b>Watch for.</b> {it.watch}</div>
+                  <Quotes quotes={it.quotes} sources={sources} />
+                </div>
+              </details>
+            ))}
           </div>
-          <p className="ex-cue"><b>Who this is for.</b> {st.who}</p>
-          <Cues
-            cues={st.cues}
-            heading="What to say, and what to watch for"
-            intro="Each one is something you can SEE from the side of the pool, not something they have to feel and tell you about. Tap to open."
-          />
         </div>
       ))}
-
-      <div className="exgroup">
-        <div className="exgroup-label">Where all of this comes from</div>
-        <div className="tierlist">
-          {t.sources.map((src) => (
-            <div className="tier" key={src.id}>
-              <a className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-              {src.note && <div className="ex-cue">{src.note}</div>}
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   );
 }
 
-/** The two longest distances swum unbroken this year, and the days each one happened. */
-function yearLine(pieces: LongestPiece[]): string | null {
-  const distances = [...new Set(pieces.map((p) => p.metres))].slice(0, 2);
-  if (!distances.length) return null;
-  return distances
-    .map((m, i) => {
-      const at = pieces.filter((p) => p.metres === m);
-      const perDay = new Map<string, number>();
-      for (const p of at) perDay.set(p.date, (perDay.get(p.date) ?? 0) + 1);
-      const days = [...perDay.keys()].sort().map((d) => {
-        const n = perDay.get(d) ?? 1;
-        return n > 1 ? `${shortDate(d)} (${n === 2 ? 'twice' : `${n} times`})` : shortDate(d);
-      });
-      const list = days.length > 1 ? `${days.slice(0, -1).join(', ')} and ${days[days.length - 1] ?? ''}` : (days[0] ?? '');
-      const time = i === 0 && at.length === 1 && at[0] ? `, in ${mmss(at[0].seconds)}` : '';
-      return `${i ? 'Then ' : ''}${m} m on ${list}${time}.`;
-    })
-    .join(' ');
-}
-
-/* Turns "Your number plus 100 m" into "500 m" once the calibration swim has happened.
- *
- * Text substitution rather than a restructured data model, deliberately: the rung wording is prose
- * that changes with the plan, and the alternative is a schema of operations that has to be kept in
- * step with sentences somebody rewrites. If a phrase stops matching, the reader sees the original
- * relative wording, which is still true and still followable. It degrades to correct. */
-function resolvePiece(piece: string, base: number | null): string {
-  if (!base) return piece;
-  return piece
-    .replace(/your number plus (\d+) m/gi, (_m, n) => `${base + Number(n)} m`)
-    /* Floored at 100 m, four lengths, the smallest piece worth writing down in a 25 m pool. A
-       200 m baseline made the week 7 to 8 rung resolve to "0 m", which is not a prescription. The
-       ladder's own note already covers what a small baseline means for the later rungs. */
-    .replace(/your number minus (\d+) m/gi, (_m, n) => `${Math.max(100, base - Number(n))} m`)
-    .replace(/your number/gi, `${base} m`);
-}
+/* ---------------------------------------------------------------------------------------------- */
 
 export default async function SwimPage({
   searchParams,
@@ -433,34 +532,20 @@ export default async function SwimPage({
   const sp = await searchParams;
   const sub = SUB_TABS.find((x) => x.id === sp.s)?.id ?? 'now';
 
-  /* One read per tab, and only the tab that is open pays for it. The four plan tabs were static
-     content before the tracker moved here; giving them a Neon round trip so the Now tab could share
-     a fetch would put a database call in front of a page he opens at the side of a pool. */
-  const plan = await loadSwimPlan();
-  const teaching = sub === 'teach' ? await loadSwimTeaching() : null;
-  const coaching = sub === 'me' ? await loadSwimCoaching() : null;
-  const baseline = sub === 'plan' ? await getSwimBaseline() : null;
-  const now = sub === 'now'
-    ? await (async () => {
-        /* getRecentSessions returns newest first, so its head IS the last session. Calling
-           getLastSession as well would fetch the same row a second time. */
-        const [standards, pbs, recent, history, longestPieces, yearPieces] = await Promise.all([
-          loadSwimStandards(), getSwimPbs(), getRecentSessions('swimming', 10), getSwimHistory(90),
-          /* The longest unbroken piece per swim, derived. It replaces a typed list of nine numbers
-             under a label saying ten, whose diagnosis the live laps contradict. See getLongestPieces. */
-          getLongestPieces(10),
-          getLongestPiecesThisYear(),
-        ]);
-        return {
-          standards,
-          standings: ratedDistances(standards).map((d) => standingFor(d, pbs, standards)),
-          lastSession: recent[0] ?? null,
-          recent,
-          history,
-          longestPieces,
-          yearPieces,
-        };
-      })()
+  const [plan, year, baseline, teaching, coaching, recent, standards, pbs] = await Promise.all([
+    loadSwimPlan(),
+    sub === 'teach' ? null : getSwimYear(),
+    sub === 'now' || sub === 'plan' ? getSwimBaseline() : null,
+    sub === 'teach' ? loadSwimTeaching() : null,
+    sub === 'me' ? loadSwimCoaching() : null,
+    sub === 'now' ? getRecentSessions('swimming', 1)
+      : sub === 'me' || sub === 'how' ? getRecentSessions('swimming', 10) : null,
+    sub === 'now' ? loadSwimStandards() : null,
+    sub === 'now' ? getSwimPbs() : null,
+  ]);
+  const lastSession = sub === 'now' ? (recent?.[0] ?? null) : null;
+  const lastSummary = lastSession && year
+    ? (year.summaries.find((x) => x.uuid === lastSession.uuid) ?? null)
     : null;
 
   return (
@@ -469,307 +554,27 @@ export default async function SwimPage({
 
       <SubNav sub={sub} />
 
-      {sub === 'now' && now && (
+      {sub === 'now' && year && standards && pbs && (
         <>
-          <LastSession s={now.lastSession} />
-          <RecentSessions sessions={now.recent} kind="swimming" />
-
-          <SwimLevel standards={now.standards} standings={now.standings} />
-
-          {/* THE WAY INTO THE DEEP DIVE, and the only thing this page gained on 2026-08-27.
-              A LINK AND NOT A SIXTH SUB-TAB. The five chips above measure 337px of a 390px screen
-              and `.subtabs` is a flex row with neither wrap nor scroll, so a sixth breaks the "0
-              horizontal overflows, 0 wrapped nav rows" invariant that holds across all eleven
-              training views. Folding eight sections of analysis into this tab instead would add
-              height to the one view he opens at the side of a pool, which is the complaint the
-              sub-tabs exist to answer. It sits under the tier table because that is the question it
-              extends: the table says what level he is, this says how he got there. */}
-          <p className="ex-cue" style={{ marginTop: 14 }}>
-            <Link href="/swim/deep">The whole record, eight years of lengths</Link>. Stroke
-            efficiency over time, how each personal best got there, and what the data cannot say.
+          <LastSession s={lastSession} insight={lastSwimLine(lastSummary)} />
+          <Toward1000 year={year} baseline={baseline} plan={plan} />
+          <SwimLevel
+            standards={standards}
+            standings={ratedDistances(standards).map((d) => standingFor(d, pbs, standards))}
+          />
+          <p className="ex-cue" style={{ marginTop: 18 }}>
+            <Link href="/swim/records">Records</Link>: every distance this year, the 1,000 included.
           </p>
-
-          {/* RECORDS, added 2026-09-03. His ask: "I just want to have a reference for the 1,000,
-              which the watch doesn't have as a default. It goes from 400 to 1,500."
-              A SECOND LINK RATHER THAN A SIXTH CHIP, for the reason above this block: the five
-              chips already measure 337px of 390px. It sits under the deep link because the two
-              answer different questions off the same lengths, and this is the shorter one: deep is
-              how the bests got there, records is what the time for a distance IS. */}
           <p className="ex-cue">
-            <Link href="/swim/records">Records, every distance this year</Link>. The four the watch
-            keeps, plus the 1,000 it does not, and how close you have come to it unbroken.
+            <Link href="/swim/deep">The whole record</Link>: every length on file.
           </p>
-
-          {/* THE HISTORY, which lived on /health until today.
-              It was a section about swimming on a page about body composition, and the two numbers
-              that matter most here (best pace on the wall clock, best pace with the rest removed)
-              sat there with no route to the tier table that gives them meaning. Same numbers, same
-              two-pace split, on the page that is about swimming. */}
-          <div className="exgroup">
-            <div className="exgroup-label">
-              {/* THE COUNT AND THE CHART ARE ON DIFFERENT CLOCKS and the label said neither.
-                  `totalSessions` is every swim the mirror holds; the bar chart below is the last 90
-                  days. "What the history says (475 sessions)" over a three-month chart invites the
-                  reading that the chart is the 475. The bests below it ARE all-time, which is why
-                  the count stays: it is the right number for three of the four things in this
-                  block and the wrong one for the chart, so both spans now say which. */}
-              What the history says{' '}
-              <span className="tag">(all {now.history.totalSessions} swims; the chart is the last 90 days)</span>
-            </div>
-            {now.history.bestMovingPacePer100mMs != null && (
-              <p className="lede" style={{ marginTop: 0 }}>
-                Two paces, because a swim includes standing at the wall. Whole session counts that
-                rest; swimming pace removes it, and exists for{' '}
-                <span className="tnum">{now.history.movingPaceSessions}</span> of{' '}
-                <span className="tnum">{now.history.totalSessions}</span> sessions, the ones the
-                watch timed length by length.
-                {/* WHAT THE FLOOR THREW OUT, said out loud rather than left as a silently better
-                    number. Two different reasons a session has no swimming pace here, and they are
-                    not the same fact: the watch did not time the lengths, or it did and the swim was
-                    mostly standing still. */}
-                {now.history.mostlyRestSessions > 0 && (
-                  <>
-                    {' '}Of those,{' '}
-                    <span className="tnum">{now.history.mostlyRestSessions}</span> were more than half
-                    rest, so they are left out of the best: a rest-excluded pace off a swim that was
-                    mostly standing at the wall is the fastest length you happened to swim, not a pace
-                    you held.
-                  </>
-                )}
-              </p>
-            )}
-            <div className="stats">
-              <div>
-                <div className="stat-k">Longest</div>
-                <div className="stat-v">{Math.round(now.history.longestDistanceM ?? 0)}<span className="stat-u">m</span></div>
-              </div>
-              {/* "Best pace / 100m" was ONE tile reading 1:31, and it was wrong in the way that is
-                  hardest to notice: not out of range, just quietly answering a different question
-                  than its label asked. It came from a column computed two ways and a minimum always
-                  picks the flattering one, so it reported a rest-excluded pace off a 300 m session
-                  that ran 25 minutes with 4 minutes of swimming in it, FASTER than the official
-                  100 m personal best in the table above. Two tiles, each saying which clock it ran
-                  on. CAPTIONS STAY SHORT: `.stats` is a wrap-flex and a tile is as wide as its
-                  widest child, so a long caption spills across the row above at 390px. */}
-              <div>
-                <div className="stat-k">Best pace / 100m</div>
-                <div className="stat-v">{msToPace(now.history.bestWallPacePer100mMs)}</div>
-                <div className="stat-d">whole session</div>
-              </div>
-              {/* THE NUMBER NOW CARRIES THE SWIM IT CAME FROM, since 2026-08-28.
-                  Splitting the column in two on 2026-08-26 fixed the column and left the MINIMUM
-                  unguarded, so this tile still read 1:31 while the personal-best table three blocks
-                  above said 1:38.71 over 100 m. Faster over 300 m than over 100 m is not a pace.
-                  Measured: it came from a 26-minute session on 2025-01-22 with FIVE minutes of
-                  swimming in it, 82 percent rest. `getSwimHistory` now floors the minimum at
-                  half the session actually being swimming, and returns which swim won, so the tile
-                  states it. A caption saying "rest removed" was true and did not stop the reader
-                  believing the number, which is the same shape as putting a correction underneath a
-                  prescription. */}
-              {now.history.bestMovingPacePer100mMs != null && (
-                <div>
-                  <div className="stat-k">Swimming pace / 100m</div>
-                  <div className="stat-v">{msToPace(now.history.bestMovingPacePer100mMs)}</div>
-                  {/* THE REST SHARE IS PRINTED, since 2026-09-02. It was computed on 2026-08-28,
-                      returned in `bestMovingPaceFrom`, and never rendered, so the caption said
-                      "rest removed, over 1300 m" and left the reader to assume the number was a
-                      pace he had held. It is the average speed of his repeats in a session that
-                      was half standing at the wall, and the only way to stop that reading is to
-                      say so on the tile. */}
-                  <div className="stat-d">
-                    {now.history.bestMovingPaceFrom
-                      ? `rest removed, over ${now.history.bestMovingPaceFrom.distanceM} m of freestyle on ${now.history.bestMovingPaceFrom.date}, a session that was ${now.history.bestMovingPaceFrom.restShare}% rest`
-                      : 'rest removed'}
-                  </div>
-                </div>
-              )}
-            </div>
-            <BarChart
-              points={now.history.sessions
-                .filter((s) => s.distanceM != null)
-                .map((s) => ({ date: s.date, value: s.distanceM as number }))}
-              unit="m"
-            />
-            {/* WHERE THE DATA STOPS, said out loud. The mirror went sixteen days without a swim
-                refresh in August and a 5,000 m swim on the 15th, tying his longest ever, simply was
-                not on the site. Nothing looked broken: a stalled sync draws exactly like three
-                quiet weeks. It cannot draw like that any more. */}
-            {now.history.lastSessionOn && (
-              <p className="ex-cue" style={{ marginTop: 10 }}>
-                Last swim the watch export has reached: {shortDate(now.history.lastSessionOn)}.
-                Anything after that is unknown, not zero.
-              </p>
-            )}
-          </div>
-
-          <div className="exgroup">
-            <div className="exgroup-label">What the lap data says</div>
-            <div className="exlist">
-              {/* WALKED, NOT NAMED. Until 2026-08-21 this block read three baseline fields by name
-                  and summarised them in one line, and two false claims lived in those slots for
-                  weeks: "600 m on 2026-06-27" (right distance, wrong date) and a best continuous
-                  effort of "around 3 minutes" when the lap data says 11:36. The data had to fit the
-                  sentence. Now each fact carries its own label and the page cannot outgrow what the
-                  laps say. */}
-              <div className="ex">
-                <div className="ex-name">Where you are</div>
-                {plan.baseline
-                  .filter((f) => !f.secondary)
-                  .map((f) => (
-                    <div className="ex-cue" key={f.label}>
-                      <b>{f.label}.</b>{' '}
-                      {f.derived === 'longestThisYear' ? (yearLine(now.yearPieces) ?? f.value) : f.value}
-                      {/* THE LONGEST PIECES ARE DERIVED NOW, since 2026-08-28 (11-swim P1-4).
-                          This fact used to carry a typed list: "Longest piece in your last ten swims:
-                          100, 100, 100, 500, 125, 250, 150, 100, 150 m. The long one happens monthly,
-                          not weekly. That is the gap, not fitness." Nine values under a label saying
-                          ten, ending around 2026-08-22, and a diagnosis the live laps contradict:
-                          seven of the last ten hold a piece of 150 m or more, six inside eleven days.
-                          The block's own comment two paragraphs up says the 2026-08-21 fix means "the
-                          page cannot outgrow what the laps say". It labelled the facts and left them
-                          typed, so it could and it did. */}
-                      {f.derived === 'longestPieces' && now.longestPieces.length > 0 && (
-                        <>
-                          {' '}Longest unbroken piece in each of your last{' '}
-                          <span className="tnum">{now.longestPieces.length}</span> swims:{' '}
-                          {now.longestPieces.map((x) => `${x.metres} m`).join(', ')}.{' '}
-                          <span className="tnum">
-                            {now.longestPieces.filter((x) => x.metres >= 150).length}
-                          </span>{' '}
-                          of them are 150 m or more.
-                        </>
-                      )}
-                    </div>
-                  ))}
-                {/* The backing numbers go behind a tap. Adding five labelled facts took this view to
-                    5,821px on a 390px screen, which is the seven-screen scroll the tabs were built
-                    to kill. The data keeps every fact; the page shows the ones that change what he
-                    does. */}
-                {plan.baseline.some((f) => f.secondary) && (
-                  <details className="src">
-                    <summary>The rest of the numbers</summary>
-                    <div className="src-body">
-                      {plan.baseline
-                        .filter((f) => f.secondary)
-                        .map((f) => (
-                          <p key={f.label}>
-                            <b>{f.label}.</b> {f.value}
-                          </p>
-                        ))}
-                    </div>
-                  </details>
-                )}
-              </div>
-            </div>
-          </div>
         </>
       )}
 
-      {sub === 'plan' && (
-        <div className="exgroup">
-          <div className="exgroup-label">
-            {plan.title} <span className="tag">({plan.sessionsPerWeek})</span>
-          </div>
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">{plan.theGoal.target}</div>
-              <div className="ex-cue">{plan.theGoal.whatThatActuallyIs}</div>
-              <div className="ex-cue">{plan.theGoal.whyItIsAchievable}</div>
-            </div>
-          </div>
-
-          <p className="lede">{plan.structure.note}</p>
-
-          {/* THE SLOT FOR THE NUMBER. Added 2026-08-22: every rung below reads "your number plus
-              100 m" and there was nowhere to put the number, so the plan could not be followed as
-              written. Above the calibration card, because once the number exists the card is
-              history and the ladder is the thing he reads. */}
-          <BaselineForm current={baseline} />
-
-          {/* THE CALIBRATION SWIM SITS ABOVE THE TABLE, because every row in the table is measured
-              from the number it returns and the table is unreadable without it. It is not styled as
-              a row of the ladder: it is a gate on the ladder. */}
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">{plan.structure.calibration.name}</div>
-              <div className="ex-meta">{plan.structure.calibration.what}</div>
-              <div className="ex-meta cue-test">
-                <b>The test.</b> {plan.structure.calibration.test}
-              </div>
-              {/* The reasoning is why he trusts it, and it is also 90 words he does not need at the
-                  poolside. Same treatment the cues get. */}
-              <details className="src">
-                <summary>Why there is no number written here</summary>
-                <div className="src-body">{plan.structure.calibration.why}</div>
-              </details>
-            </div>
-          </div>
-
-          <div className="table-scroll">
-            <table className="plan-table">
-              <thead>
-                <tr>
-                  <th className="tnum">Weeks</th>
-                  <th className="wide">Continuity piece</th>
-                  {/* NOT .tnum: the last two rows say "then easy swimming" and "the whole thing,
-                      unbroken", and nowrap on prose forced the table to scroll sideways. */}
-                  <th>Rest</th>
-                </tr>
-              </thead>
-              <tbody>
-                {plan.structure.ladder.map((s) => (
-                  <tr key={s.weeks}>
-                    <td className="tnum">{s.weeks}</td>
-                    {/* NOT .nowrap any more. The rungs stopped being "2 x 400 m" on 2026-08-21 and
-                        became sentences relative to his measured number, and nowrap on a sentence is
-                        how you force a phone to scroll sideways. */}
-                    {/* "Your number plus 100 m" becomes "500 m" the moment the number exists.
-                        The relative wording stays in the DATA, because the ladder has to be
-                        readable before the calibration swim and correct after it, and a stored
-                        absolute would be wrong for whoever reads it first. */}
-                    <td>
-                      {resolvePiece(s.piece, baseline?.metres ?? null)}
-                      {s.note && <div className="quiet">{s.note}</div>}
-                    </td>
-                    <td>{s.rest}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {sub === 'how' && (
-        <div className="exgroup">
-          <div className="exgroup-label">How to swim it</div>
-          <div className="exlist">
-            <div className="ex">
-              <div className="ex-name">The one change: go slower</div>
-              <div className="ex-meta">{plan.theOneTechniqueChange.what}</div>
-              <div className="ex-cue">{plan.theOneTechniqueChange.why}</div>
-              <div className="ex-cue">{plan.theOneTechniqueChange.howToKnow}</div>
-            </div>
-            <div className="ex">
-              <div className="ex-name">Paddles</div>
-              <div className="ex-meta">{plan.paddleRule.rule}</div>
-              <Prose text={plan.paddleRule.why} />
-            </div>
-            <div className="ex">
-              <div className="ex-name">Pull buoy</div>
-              <div className="ex-cue">{plan.pullBuoyRule}</div>
-            </div>
-            <div className="ex">
-              <div className="ex-name">Drills</div>
-              <div className="ex-cue">{plan.onDrills}</div>
-            </div>
-          </div>
-          <Cues cues={plan.cues ?? []} note={plan.cuesNote} />
-        </div>
-      )}
-
-      {sub === 'me' && coaching && <SwimCoachMe c={coaching} />}
-      {sub === 'teach' && teaching && <SwimTeach t={teaching} />}
+      {sub === 'plan' && <PlanTab plan={plan} baseline={baseline} year={year} />}
+      {sub === 'how' && year && <HowTab plan={plan} year={year} recent={recent ?? []} />}
+      {sub === 'me' && coaching && year && <CoachMe c={coaching} year={year} recent={recent ?? []} />}
+      {sub === 'teach' && teaching && <CoachThem t={teaching} />}
     </div>
   );
 }

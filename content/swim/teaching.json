@@ -1,98 +1,25 @@
 {
   "$comment": [
-    "RENDERING NOTE, and it is a correction made the same day: the four per-stage notes are `$note`",
-    "and NOT `note`, because SwimTeach in src/app/swim/page.tsx renders st.n, st.name, st.who and",
-    "st.cues and nothing else. They were written as `note` on 2026-09-02, shipped nowhere, and were",
-    "caught by screenshotting the tab at 390px rather than by any gate: a field that reads like",
-    "content and reaches no screen is worse than no field, because the next agent believes the stage",
-    "explains itself on the page. They are provenance now and are named as such. If a stage rationale",
-    "should be VISIBLE to him, that is a page change and a judgement about how much text the tab",
-    "carries, which note #12 in AGENTS.md says is his: \"Walls of text again why do I need all this\".",
+    "COACH THEM, rebuilt 2026-09-11 as a pool-side lookup, on his ask:",
+    "  \"I want to be able to pull my phone out, read some stuff that will just give me an idea of what to",
+    "   explain or what to show, because sometimes they're approaching me at the pool.\"",
+    "The version before was four stages of two cues each and a five-line prompt list, and he read it as",
+    "four things. Now each item is what he sees, what to say, what to show, and how he knows it worked,",
+    "grouped by stroke, fifteen of them.",
     "",
-    "COACH THEM. Re-sourced 2026-09-02 from Swim England learn-to-swim material, on his ruling, and",
-    "the ruling was about SOURCES rather than about sentences:",
+    "SOURCES ARE SWIM ENGLAND ONLY, his ruling of 2026-09-02: the two coaching tabs draw on different",
+    "families, and Coach me keeps US Masters Swimming. Every item quotes a page captured under",
+    "content/swim/sources/, and validate.mjs refuses a quote that is not on that page. Say, show and",
+    "watch restate the quoted sentences in fewer words; nothing a quote does not carry is on this tab.",
     "",
-    "  \"I don't know if these two things come from the same source. I think they should be from",
-    "   different sources.\"",
-    "",
-    "He had opened both coaching tabs and found them saying the same things. They were: eight of the",
-    "nine cues on this tab quoted the same four US Masters Swimming freestyle guides that Coach me",
-    "quotes, and validate.mjs counted SIX sentences cited on both tabs. Editing the six sentences to",
-    "differ would have left one source feeding two tabs and the overlap would have grown back, so the",
-    "fix is at the source: this tab now quotes learn-to-swim pages only, and Coach me keeps USMS.",
-    "",
-    "WHAT THAT COST, said plainly because it is not free. Learn-to-swim material does not teach the",
-    "model USMS teaches. There is no seesaw, no \"press the chest down and the hips come up\", no",
-    "early-elbow catch and no kick-starts-at-the-hip. Swim England teaches beginners to stretch long,",
-    "keep the legs long with loose ankles and kick continuously, pull each arm through to the thigh in",
-    "one continuous cycle, and turn the head inside the bow wave. So the CUES CHANGED, not just their",
-    "citations. Keeping the old cues and swapping in quotes that do not support them is the exact",
-    "failure content/swim/capture-source.mjs names in its own header: a sentence above a quote that",
-    "the quote does not carry. A quote is evidence for the sentence it is under or it is decoration.",
-    "",
-    "NOTHING WAS LOST, IT MOVED TO THE RIGHT TAB. The two observations dropped from whatToLookFor,",
-    "the splashing kick and the straight-arm pull, are the USMS model and they are still on Coach me,",
-    "which is where a competitive guide belongs. This tab is for the person being taught.",
-    "",
-    "WHO IT IS FOR, his words: \"really beginners that have never actually swum to friends that swim",
-    "kind of weakly, on and off, and they want to focus more on form and understanding the concept.\"",
-    "Swim England publishes a framework for exactly that population and this tab is now built on it.",
-    "",
-    "THE DISCLAIMER IS GONE, per his ruling: \"We don't need the disclaimer, whatever, like that thing",
-    "that I'm not coaching. We know that already.\" The credentials half of beforeYouStart is out. The",
-    "WATER-SAFETY half is still there and was NOT treated as covered by that ruling, because it is a",
-    "different thing and validate.mjs gates the block by name for that reason. It is raised with him",
-    "rather than deleted quietly. See beforeYouStart.$whatChanged.",
-    "",
-    "STAGE IDS: one changed. \"catch\" became \"arms\", because no cue in it mentions a catch any more and",
-    "an id describing content it no longer holds is how a label outlives its meaning.",
-    "",
-    "--- the record before 2026-09-02 ---",
-    "THE TEACHING HANDBOOK. Built 2026-08-22 from his own problem, in his words:",
-    "",
-    "  'Sometimes people approach me when I'm swimming or just outside the pool, or just friends,",
-    "  and ask me if I can teach them how to swim, which I can't... I have no idea how to explain",
-    "  principles that I'm already familiar with but not sure how to explain.'",
-    "",
-    "  'There are a lot of people that I've met at the pool that I go to that ask me some stuff. I'm",
-    "  not really sure how to tell them what to work on or what to improve.'",
-    "",
-    "AGENTS DO NOT WRITE SWIM INSTRUCTION FROM MEMORY. The same rule the kitchen learned the hard",
-    "way on 2026-08-09: every failure there came from a sentence an agent wrote, and not one came",
-    "from a figure a source gave. Somebody could get hurt taking bad water advice, so every stage",
-    "and every fix below traces to a named source, and the two that do not say so on the page.",
-    "",
-    "THE BACKBONE is Swim England's Learn to Swim framework, which teaches nine core aquatic skills",
-    "rather than strokes: entry, exit, floatation, rotation, streamlining, breathing, travel and",
-    "coordination, water safety, and fitness. That ordering is why the first two stages here contain",
-    "no swimming at all. Someone who cannot float and cannot breathe out underwater does not have a",
-    "stroke problem.",
-    "",
-    "THAT COUNT OF NINE IS CORRECT AND WAS OVERWRITTEN ONCE. On 2026-08-22 the sources note below",
-    "was changed to say FOUR, with the quote truncated after the fourth bullet, and this paragraph",
-    "was left alone. Re-read over CDP on 2026-09-02: the page lists nine. The file disagreed with",
-    "itself for eleven days and the half that rendered on his phone was the wrong half.",
-    "",
-    "THE FREESTYLE HALF is US Masters Swimming's own coaching guides: body position, breathing, pull",
-    "and kick. A governing body's coaching resource, not a blog, and the phrasing that is quoted is",
-    "quoted rather than paraphrased.",
-    "",
-    "EVERY FIX IS A TEST HE CAN WATCH, not a feeling the other person has to have. Same house rule",
-    "the kitchen runs on: 'wait until it sizzles rather than hisses' failed, and 'tilt the pan, if",
-    "liquid runs it is not ready' replaced it. He is standing on a pool deck looking at somebody. He",
-    "needs something he can SEE.",
-    "",
-    "AND THE FIRST PAGE IS A REFUSAL. The most useful thing he can tell a nervous non-swimmer is",
-    "that he is not a teacher and deep water is where people drown. That is not modesty, it is the",
-    "single highest-stakes sentence in this file."
+    "beforeYouStart is his ruling of 2026-09-03 and stays word for word. The history of every earlier",
+    "version of this file is in git."
   ],
   "meta": {
     "builtOn": "2026-08-22",
-    "reSourcedOn": "2026-09-02",
-    "stroke": "freestyle",
-    "who": "Beginners who have never really swum, through to people who swim weakly and on and off and want the form and the idea behind it.",
-    "groundedOn": "2026-09-02",
-    "sourceFamily": "Swim England learn-to-swim and Just Swim pages only. US Masters Swimming is Coach me and does not appear here."
+    "rebuiltOn": "2026-09-11",
+    "who": "Anyone at the pool who asks: complete beginners through to people who swim a bit and want it to feel easier.",
+    "sourceFamily": "Swim England learn-to-swim and Just Swim pages only."
   },
   "beforeYouStart": {
     "title": "Before you take anyone in the water",
@@ -101,205 +28,213 @@
       "in shallow water, do not take a nervous person into deep water to demonstrate anything, and do",
       "not hold anyone up. Drowning is quiet and it is fast."
     ],
-    "$whatChanged": "THE CREDENTIALS DISCLAIMER WAS REMOVED 2026-09-02 on his ruling: \"We don't need the disclaimer, whatever, like that thing that I'm not coaching. We know that already.\" Gone with it: \"You are not a swimming teacher and this is not a lesson. What follows is for someone who can already get in and move, and wants to know what to work on.\" The title changed from \"Say this first\" because that title was about the disclaimer.\n\nTHE WATER-SAFETY HALF IS KEPT, AND THAT IS NOW HIS RULING TOO, GIVEN 2026-09-03. DO NOT ASK AGAIN. It was put to him as its own question rather than treated as covered by the disclaimer ruling, because the block carried two different things: a statement about who he is, which is what he told me to drop, and advice about not taking a frightened person into deep water, which is not about credentials at all. Reading one ruling across both halves would have been reading it wider than it was made. Offered as keep / drop / shorten to one line, he chose keep, unchanged, all three lines.\n\nSO THE GATE AT content/swim/validate.mjs IS NOW BACKED BY A DECISION AND NOT ONLY BY ITS OWN COMMENT. That gate fails teaching.json outright if this block is missing, and its message says why: \"he is being handed a script to read to a stranger in deep water.\" Before 2026-09-03 the block survived on that comment alone, which is a gate defending a judgement nobody had made. Anyone shortening or removing these three lines is now overruling him, not tidying an agent's caution.\n\nWHAT WAS DELIBERATELY NOT DONE: the shorten-to-one-line option would have dropped \"do not hold anyone up\", which is the specific thing that drowns the helper rather than the swimmer. He did not pick it. Recorded so the option is not re-proposed as an improvement."
+    "$whatChanged": "HIS RULING, 2026-09-03: keep all three lines, unchanged. DO NOT ASK AGAIN. The credentials disclaimer went on his ruling of 2026-09-02; the water-safety half stays. The shorten-to-one-line option was offered and not chosen, because it drops \"do not hold anyone up\", which is the line that stops the helper drowning."
   },
-  "stages": [
+  "groups": [
     {
-      "id": "comfort",
-      "n": 1,
-      "name": "Comfortable, before anything else",
-      "who": "They can stand in the pool but will not put their face in, or they hold their breath and rush.",
-      "sourceId": "swim-england",
-      "cues": [
+      "id": "start",
+      "name": "Getting started",
+      "items": [
         {
-          "name": "Breathe OUT under the water",
-          "cue": "Face in, and let the air out the whole time the face is down. It can trickle out gently or go all at once, through the mouth or the nose or both, whichever they find easier. Come up only to breathe in.",
-          "test": "Stand next to them and watch for bubbles. Continuous bubbles means they are breathing out. No bubbles means they are holding their breath, which is the thing to fix before anything else.",
-          "why": "Holding the breath is what makes people panic and rush. The guide says not to hold it, and it deliberately offers two ways of letting it out rather than one, which matters for a beginner who will find one of them impossible.",
+          "id": "nervous",
+          "see": "Nervous, or has never put their face in",
+          "say": "Go at your own pace. Feet first, then a little deeper, then splash your face, then breathe out into the water.",
+          "show": "Standing in water they can stand in: splash the face like washing it, then face in and blow bubbles.",
+          "watch": "They can put the face in and breathe out without grabbing for the side. If they cannot, that is a class, not you.",
           "confidence": "sourced",
-          "grounding": "Swim England, Just Swim: Improve your breathing in front crawl. The source gives the choice of trickle or explosive and of mouth, nose or both, so the cue gives it too rather than picking one for them.",
-          "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
-          "source": "se-breathing",
-          "quote": "Make sure you exhale under the water and try not to hold your breath. It may be a trickle (gentle and continuous) or explosive (all in one go). It can be through your mouth, nose or a combination of the two."
+          "quotes": [
+            { "source": "se-fear", "text": "Start by getting your feet wet and try to gradually get deeper into the water" },
+            { "source": "se-fear", "text": "When you can stand in water deep enough splash water on your face as if you are washing it." },
+            { "source": "se-fear", "text": "Next try to learn to hold your breath under the water and breathe out into the water. Basically, blow bubbles!" },
+            { "source": "se-fear", "text": "Don't feel rushed to make progress." }
+          ]
         },
         {
-          "name": "Float on the front, stretched as long as you can",
-          "cue": "Face in the water, and stretch out until they are as long as they can make themselves, head to toes. Then do nothing and let the water hold them up.",
-          "test": "Do they stay up without moving? If the legs sink the moment they stop kicking, they are not floating yet and there is no point talking about a stroke.",
-          "why": "Floatation and Balance is one of the nine core aquatic skills the Swim England framework names, and it sits ahead of Travel and Coordination in that list. Stretching long is how the learn-to-swim material opens every front-facing stroke, so it is the first thing to build and not a refinement.",
+          "id": "float",
+          "see": "Legs drop the moment they stop moving",
+          "say": "Face in, stretch as long as you can, and let the water hold you up.",
+          "show": "A noodle under the armpits while they get the feel of lying flat.",
+          "watch": "They stay up, stretched out, for a few seconds without kicking or grabbing.",
           "confidence": "sourced",
-          "grounding": "Swim England, Tips for learning the four swimming strokes, front crawl. NOTE ON THIS QUOTE: the same sentence opens the front crawl, breaststroke and butterfly sections of that page, so it is the framework's common starting position for any stroke swum on the front, not a front-crawl detail. Quoted as the general instruction it is.",
-          "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
-          "source": "se-strokes",
-          "quote": "Float on your front with your face in the water, stretching your body as long as possible."
+          "quotes": [
+            { "source": "se-strokes", "text": "Float on your front with your face in the water, stretching your body as long as possible." },
+            { "source": "se-aids", "text": "held out in front to use as a float while practicing leg kick, under the armpits as a support when swimming" }
+          ]
+        },
+        {
+          "id": "gear",
+          "see": "Wants to practise just the legs, or just the arms",
+          "say": "Kickboard for the legs. Pull buoy between the thighs for the arms and the breathing.",
+          "show": "Board held out in front, a strong push off the wall, then kick with the body flat at the surface.",
+          "watch": "The body stays flat and at the surface for the whole length.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-aids", "text": "Simply hold the float out in front of you, with your hands through the two hand holes or gripping over the top of the float. Try to get your body in a horizontal position at the surface of the water. Then begin your leg kick. It is easier if you start with a strong push-off from the wall." },
+            { "source": "se-aids", "text": "The pull buoy is a figure of eight shaped float, which can be placed between the thighs or ankles to provide support to the body without using the legs. This means that you are free to focus on your arm strokes, whilst also developing upper-body strength." }
+          ]
         }
-      ],
-      "$note": "There is no stroke in this stage on purpose. The Swim England framework teaches the core aquatic skills first and every stroke comes after them."
+      ]
     },
     {
-      "id": "position",
-      "n": 2,
-      "name": "Long, flat, and the legs never stop",
-      "who": "They can get down a length but it looks like hard work, and the legs drag behind them.",
-      "sourceId": "se-strokes",
-      "cues": [
+      "id": "crawl",
+      "name": "Front crawl",
+      "items": [
         {
-          "name": "Legs long, ankles floppy, kick that never stops",
-          "cue": "Legs long behind them with the toes pointed away, ankles loose enough to flop, kicking up and down one after the other. Small and fast and continuous, not in bursts. The guide's own image is that the feet are flippers.",
-          "test": "Watch from the side for one length. Does the kick stop and start, or does it run the whole way? A kick that stops whenever the arms are working is the common version of this and it is what drops the legs.",
-          "why": "A beginner whose legs sink usually has stiff ankles and a kick that pauses, not a body-position problem. This is where the learn-to-swim material and a competitive guide part company, and this tab follows the learn-to-swim one.",
+          "id": "breath-out",
+          "see": "Comes up gasping after a few strokes",
+          "say": "Breathe out the whole time your face is in, slowly or all at once. Come up only to breathe in.",
+          "show": "Standing: face in, bubbles out, turn to breathe in. Ten in a row.",
+          "watch": "Bubbles the whole time the face is down. No bubbles means they are still holding it.",
           "confidence": "sourced",
-          "grounding": "Swim England, Tips for learning the four swimming strokes, front crawl. \"Floppy\" and \"feet like flippers\" are the source's words, kept because they are the kind of instruction a beginner can act on immediately.",
-          "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
-          "source": "se-strokes",
-          "quote": "Keep your legs long with toes pointed. Kick your legs up and down (alternating) making your ankles as floppy as possible, using your feet like flippers. Kick your legs fast and continuously."
+          "quotes": [
+            { "source": "se-breathing", "text": "Make sure you exhale under the water and try not to hold your breath. It may be a trickle (gentle and continuous) or explosive (all in one go). It can be through your mouth, nose or a combination of the two." },
+            { "source": "se-fear", "text": "Next try to learn to hold your breath under the water and breathe out into the water. Basically, blow bubbles!" }
+          ]
         },
         {
-          "name": "The head turns inside the wave, it does not lift forward",
-          "cue": "The head stays where the water piles up in front of it and turns to the side as the body rolls. It does not come up and forward. There is a pocket of air in that dip and that is what they are breathing from.",
-          "test": "Watch the head from the side. If it comes UP and forward to breathe, the hips drop on every single breath. If it turns and stays low, they have found the pocket.",
-          "why": "Telling someone not to lift the head explains nothing about where the air is instead. The source says there is a trough of air in front of the head, which turns a prohibition into somewhere to aim.",
+          "id": "head",
+          "see": "Lifts the head up and forward to breathe",
+          "say": "Turn your head to the side as your body rolls. Keep one ear in the water.",
+          "watch": "One ear stays in the water through the whole breath.",
           "confidence": "sourced",
-          "grounding": "Swim England, Just Swim: Improve your breathing in front crawl. The same page explains the mechanism in the next sentence: \"The bow wave will create a trough or pocket of air for you to breathe into, protecting your mouth and nose from the water.\" Quoted here as the reason rather than as a second cue.",
-          "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
-          "source": "se-breathing",
-          "quote": "The head stays in the bow wave, and smoothly turns to one side, not lifting forwards, to inhale as the body rotates."
+          "quotes": [
+            { "source": "se-breathing", "text": "The head stays in the bow wave, and smoothly turns to one side, not lifting forwards, to inhale as the body rotates." },
+            { "source": "se-strokes", "text": "Try to keep one ear in the water as you turn your head." }
+          ]
+        },
+        {
+          "id": "legs",
+          "see": "Legs low and dragging, lots of effort",
+          "say": "Legs long, toes pointed, ankles floppy like flippers, and never stop kicking.",
+          "show": "A length on a kickboard, so they feel the kick on its own.",
+          "watch": "The kick runs the whole length, including while the arms pull.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-strokes", "text": "Keep your legs long with toes pointed. Kick your legs up and down (alternating) making your ankles as floppy as possible, using your feet like flippers. Kick your legs fast and continuously." }
+          ]
+        },
+        {
+          "id": "arms",
+          "see": "A pause with both hands out in front",
+          "say": "Pull all the way to your thigh. As one hand goes in, the other should be leaving at your thigh.",
+          "watch": "Never both hands in front of the head at the same time.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-strokes", "text": "Pull one arm under your body all the way to the thigh." },
+            { "source": "se-strokes", "text": "Keep pulling your arms in a continuous movement so that as one arm enters, the other is ready to exit at the thigh." }
+          ]
+        },
+        {
+          "id": "front-arm",
+          "see": "The front hand drops or pulls early while they breathe",
+          "say": "While your head turns, leave the other arm stretched out in front, just under the surface. Face back in before that hand pulls.",
+          "watch": "The front hand stays out in front until the face is back in the water.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-breathing", "text": "As you turn your head, keep your opposite arm extended in front of you and in line with your shoulder. It will be about 20-30 cm under the water with your elbow higher than your wrist. Your wrist higher than your finger tips." },
+            { "source": "se-breathing", "text": "Your face returns to the water before your hand does." }
+          ]
+        },
+        {
+          "id": "rhythm",
+          "see": "Fine for one length, wrecked by the second or third",
+          "say": "Breathe every three strokes, decided before you push off, and keep it for the whole length.",
+          "watch": "Count their breaths on two lengths. The same number both times means they are on a rhythm.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-breathing", "text": "The breath cycle is commonly every three or five arm strokes" },
+            { "source": "se-breathing", "text": "Try to keep the rhythm of your stroke unaffected by breathing." }
+          ]
         }
-      ],
-      "$note": "The learn-to-swim answer to dragging legs is not a trick with the chest. It is longer legs, looser ankles, and a kick that does not stop."
+      ]
     },
     {
-      "id": "arms",
-      "n": 3,
-      "name": "One continuous arm movement",
-      "who": "They are flat and relaxed, and the arms stop and start: there is a moment with both hands out in front and nothing happening.",
-      "sourceId": "se-strokes",
-      "cues": [
+      "id": "breast",
+      "name": "Breaststroke",
+      "items": [
         {
-          "name": "As one hand goes in, the other is leaving at the thigh",
-          "cue": "Each arm pulls all the way under the body to the thigh, comes out, sweeps forward over the water and reaches in again in front of the head. It runs continuously, so at the moment one hand enters, the other should be arriving at the thigh.",
-          "test": "Watch from the end of the lane. Is there ever a moment with both hands in front of the head? That gap is the thing to remove, and it is easier to see than anything about the shape of the pull.",
-          "why": "A beginner who pauses with both arms in front stops and restarts the whole body every stroke. Naming where the other hand should be at the moment of entry gives them one checkable instant instead of a description of a whole arm path.",
+          "id": "bs-kick",
+          "see": "The kick goes nowhere, or the knees come up under the chest",
+          "say": "Heels to your bottom, not knees to your chest. Turn the feet out, push back in a circle, finish with the legs together.",
+          "watch": "The soles face up as the heels come in, and the feet stay turned out on the push, not floppy.",
           "confidence": "sourced",
-          "grounding": "Swim England, Tips for learning the four swimming strokes, front crawl. The pull goes \"all the way to the thigh\" in the source, which is the half beginners cut short.",
-          "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
-          "source": "se-strokes",
-          "quote": "Start with your arms stretched out long in front of your head. Pull one arm under your body all the way to the thigh. Bring your arm out of the water and sweep it over the water stretching it ready to enter the water in front of your head. Keep pulling your arms in a continuous movement so that as one arm enters, the other is ready to exit at the thigh."
+          "quotes": [
+            { "source": "se-breaststroke-kick", "text": "Bring your heels towards your bottom with the soles of your feet facing the ceiling." },
+            { "source": "se-breaststroke-kick", "text": "Concentrate on bringing your feet to your bottom rather than your knees to your chest." },
+            { "source": "se-breaststroke-kick", "text": "As your heels come up, turn your feet and knees out and push backwards in a circular motion." },
+            { "source": "se-breaststroke-kick", "text": "Keep your feet in this flat, turned out position rather than loose." }
+          ]
         },
         {
-          "name": "The front arm waits, extended, while they breathe",
-          "cue": "When the head turns to breathe, the other arm stays stretched out in front, in line with its own shoulder and a little under the surface, about the length of a forearm down. It waits there until the head is back.",
-          "test": "From the side, watch the front hand at the moment they breathe. Does it stay out in front, or does it drop and start pulling early to help the head round? The early pull is the common fault and it is what makes a breath cost them a stroke.",
-          "why": "The breath is where most weak swimmers lose the stroke, and the reason is usually the arm they are not thinking about. The source gives a depth, 20 to 30 cm, which is close enough to a forearm to be usable poolside.",
+          "id": "bs-timing",
+          "see": "Everything happens at once, and there is no glide",
+          "say": "Pull, breathe, kick, glide. Breathe in as the hands come together, then stretch out and glide.",
+          "watch": "After every kick there is a moment stretched out long with the face in.",
           "confidence": "sourced",
-          "grounding": "Swim England, Just Swim: Improve your breathing in front crawl. The 20 to 30 cm and the elbow-above-wrist-above-fingertips ordering are the source's. \"About the length of a forearm\" is a restatement of the source's figure in something visible without a ruler, and it is flagged here as a restatement rather than a quote.",
-          "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
-          "source": "se-breathing",
-          "quote": "As you turn your head, keep your opposite arm extended in front of you and in line with your shoulder. It will be about 20-30 cm under the water with your elbow higher than your wrist. Your wrist higher than your finger tips."
+          "quotes": [
+            { "source": "se-breaststroke", "text": "Lift your head to breathe in as the arms start to come together, stretch your arms out and return your head to the water to breathe out. Breath every stroke: \"Pull, Breathe, Kick, Glide\"." }
+          ]
+        },
+        {
+          "id": "bs-arms",
+          "see": "The arms sweep all the way back to the hips",
+          "say": "A small circle in front of the shoulders: thumbs down, press out and round, thumbs up, hands together.",
+          "watch": "The hands stay in front of the shoulders the whole time.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-breaststroke", "text": "Turn your hands so that the thumbs point down with both hands pressing out and round. Turn your hands so the thumbs point up and draw the hands together in a small circular action in front of the shoulders." }
+          ]
         }
-      ],
-      "$note": "This stage was called Holding the water and taught the catch. Learn-to-swim material does not teach a catch, it teaches a cycle that never has a gap in it, so that is what this stage teaches now."
+      ]
     },
     {
-      "id": "keepgoing",
-      "n": 4,
-      "name": "Keeping it going",
-      "who": "The stroke is fine for a length and falls apart over four.",
-      "sourceId": "se-breathing",
-      "cues": [
+      "id": "back",
+      "name": "Backstroke",
+      "items": [
         {
-          "name": "Pick the breath cycle before pushing off",
-          "cue": "Decide before they start: a breath every three arm strokes, or every five. Then hold whichever one they chose for the whole length, instead of breathing when it starts to feel bad.",
-          "test": "Count their breaths over one length, twice. If the number is different each time, they are breathing on feel and not on a cycle, which is what makes the fourth length fall apart.",
-          "why": "Breathing on discomfort means the breath arrives later and later as they tire, and the stroke degrades with it. A number chosen in advance is something they can hold to and something a watcher can count.",
+          "id": "bk-position",
+          "see": "Sitting in the water, hips low, knees breaking the surface",
+          "say": "Ears just in the water, eyes up, stretch long. Knees stay under, toes make a small splash.",
+          "watch": "The knees stay under the surface and the splash is at the toes.",
           "confidence": "sourced",
-          "grounding": "Swim England, Just Swim: Improve your breathing in front crawl. NOTE THE NUMBERS: this source says every three or five strokes. It does NOT offer every two, which the Coach me tab discusses at length from a different source and a different population. This tab does not import that argument.",
-          "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
-          "source": "se-breathing",
-          "quote": "The breath cycle is commonly every three or five arm strokes"
+          "quotes": [
+            { "source": "se-backstroke", "text": "Float on your back, with your ears just in the water and eyes looking up; stretch your body as long as possible." },
+            { "source": "se-backstroke", "text": "Keep knees under the water with your toes making a small splash." }
+          ]
         },
         {
-          "name": "Breathe on the timing, and keep one ear in the water",
-          "cue": "The head turns when one arm is stretched out in front and the other is back at the thigh. One ear stays in the water the whole time it turns. As the back arm sweeps over, the face goes back in and the air starts coming out again.",
-          "test": "Watch from the side: does an ear stay in the water through the breath, or does the whole head clear the surface? The ear is the easiest thing to see from the deck and it is a yes or no.",
-          "why": "This is the same instruction as the stage-2 head cue, aimed at a different problem: not whether they lift the head but WHEN in the arm cycle they turn it. A breath taken at the wrong moment in the cycle costs the stroke even when the head stays low.",
+          "id": "bk-arms",
+          "see": "Bent arms over the water, or the hand slaps in thumb first",
+          "say": "A straight arm over the top, and the little finger goes in first.",
+          "watch": "The little finger enters first and the arm is straight as it comes over.",
           "confidence": "sourced",
-          "grounding": "Swim England, Tips for learning the four swimming strokes, front crawl. \"Keep one ear in the water\" is the source's own test and it is the reason this quote was chosen over the several other breathing sentences available.",
-          "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
-          "source": "se-strokes",
-          "quote": "Turn your head to the side to breathe in. Turn as one arm is stretched in front and one at the thigh. Try to keep one ear in the water as you turn your head. As the arm sweeps over the water return your face back into the water and breathe out."
+          "quotes": [
+            { "source": "se-backstroke", "text": "Your arm should be kept straight bringing it out of the water over the top in an arc action. Enter your hands into the water with your little fingers first, keeping your arm straight." },
+            { "source": "se-backstroke-arms", "text": "Your little finger will enter the water first with your palm facing outwards." }
+          ]
+        },
+        {
+          "id": "bk-pull",
+          "see": "The arms windmill round without moving them anywhere",
+          "say": "Under the water, bend the arm and push the water towards your feet, finishing at the thigh.",
+          "watch": "The hand finishes down by the thigh on every stroke.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "se-backstroke-arms", "text": "Your arm will start to bend so that the palm and forearm are facing towards your feet. When the elbow gets to a 90 degree bend, push the water towards your hip." },
+            { "source": "se-backstroke", "text": "Pull your arm under the water all the way to the thigh." }
+          ]
         }
-      ],
-      "$note": "Everything in this stage is about the breath, because that is what decides whether a stroke survives four lengths."
+      ]
     }
   ],
-  "whatToLookFor": {
-    "title": "If they just ask what to work on",
-    "intro": "Watch one length from the side and one from the end. Almost every adult freestyle problem is one of these five, and they are in the order worth fixing.",
-    "items": [
-      {
-        "see": "Holding their breath, coming up gasping",
-        "say": "Let the air out the whole time your face is down",
-        "stage": "comfort"
-      },
-      {
-        "see": "Legs low and dragging, lots of effort",
-        "say": "Stretch longer, loosen the ankles, and do not let the kick stop",
-        "stage": "position"
-      },
-      {
-        "see": "Head lifts up and forward to breathe",
-        "say": "Turn it in the dip in front of your head instead of lifting it",
-        "stage": "position"
-      },
-      {
-        "see": "A pause with both hands out in front",
-        "say": "As one hand goes in, the other should be leaving at your thigh",
-        "stage": "arms"
-      },
-      {
-        "see": "Fine for one length, wrecked by four",
-        "say": "Choose every three or every five before you push off, and hold it",
-        "stage": "keepgoing"
-      }
-    ],
-    "$whatChanged": "REBUILT 2026-09-02 with the stages. Two items were the USMS model and went with it: \"Big splashing kick, feet out of the water\" answered by \"Smaller and faster, from the hip, feet just under the surface\", and \"Straight arm pulling, hand slipping through\" answered by \"Bend the elbow early and face the palm backwards\". Both are still on Coach me, which keeps USMS. They were not deleted for being wrong; they were moved off a tab that no longer cites the guide they came from. A prompt sheet telling him to say things no cue on the same tab supports is how the two tabs drifted into each other in the first place. One item was ADDED, the held breath, because it is the first stage and nothing pointed at it."
-  },
   "sources": [
-    {
-      "id": "se-adult-framework",
-      "label": "Swim England Adult Swimming Framework",
-      "url": "https://www.swimming.org/learntoswim/swim-england-adult-swimming-framework/",
-      "note": "Swim England's framework for adults, four stages, complete beginner through to weak swimmer wanting technique. Cited for who this tab is for.",
-      "$note": "THE AUDIENCE MATCH IS WHY THIS SOURCE IS HERE. The page describes the framework as \"suitable for everyone, from complete beginners to experienced swimmers who would just like some additional coaching to improve their technique\", which is close to word for word what he described: \"really beginners that have never actually swum to friends that swim kind of weakly, on and off, and they want to focus more on form and understanding the concept.\" It also states that adults learn differently from children and are taught to different goals, which is the reason a child's learn-to-swim stage list is not the structure used here. NO CUE QUOTES THIS PAGE, because there is no technique on it: it is a programme description. Captured over CDP 2026-09-02."
-    },
-    {
-      "id": "se-strokes",
-      "label": "Swim England Learn to Swim, Tips for learning the four swimming strokes",
-      "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/",
-      "note": "Swim England's learn-to-swim stroke instructions, four bullets per stroke in beginner language.",
-      "$note": "Its opening line places it after the basics rather than at them: \"Learning the four swimming strokes comes after you have mastered the basic skills of swimming.\" Four of the eight cues on this tab quote it. Captured over CDP 2026-09-02. ONE THING TO KNOW BEFORE QUOTING IT AGAIN: the sentence \"Float on your front with your face in the water, stretching your body as long as possible.\" opens the front crawl, breaststroke AND butterfly sections, so it is the framework's common starting position for any stroke swum on the front rather than a front-crawl detail. It is quoted here as the general instruction it is."
-    },
-    {
-      "id": "se-breathing",
-      "label": "Swim England Just Swim, Improve your breathing in front crawl",
-      "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/",
-      "note": "Swim England's nine breathing tips for front crawl, and the only source here that gives numbers you can check from the deck.",
-      "$note": "The checkable numbers are a breath cycle of every three or five strokes and a front arm 20 to 30 cm under the surface. Four of the eight cues on this tab quote it. NOTE THE FREQUENCY: this page offers every three or five and does NOT offer every two, which the Coach me tab argues about at length from a different source and a different population. That argument is deliberately not imported here. Captured over CDP 2026-09-02."
-    },
-    {
-      "id": "se-frontcrawl",
-      "label": "Swim England Just Swim, Tips for getting front crawl right",
-      "url": "https://www.swimming.org/justswim/tips-for-getting-front-crawl-right/",
-      "note": "Swim England's front crawl tips. Cited only for where front crawl sits in the pathway: stage 3, after the basic skills.",
-      "$note": "NO CUE QUOTES THIS PAGE, DELIBERATELY. Its four front-crawl bullets are the same four sentences as se-strokes, so quoting it would put one sentence under two source ids and make one page look like corroboration of the other. It is captured and listed because the pathway sentence is its own: \"Learning all the main swimming strokes comes after you have mastered the basic skills of swimming. This is during Stage 3 of the Learn to Swim Pathway for adults learning to swim.\"\n\nFLAGGED FOR WHOEVER READS IT NEXT: the page carries a copy-paste error of its own, an intro paragraph about being \"ready to develop\" breaststroke on a front crawl page. Nothing here rests on that sentence. It is recorded because a source with a visible error deserves a note beside it rather than silent trust, and because the next agent to open it should not spend a message wondering whether the capture is of the wrong page. Captured over CDP 2026-09-02."
-    },
-    {
-      "id": "swim-england",
-      "label": "Swim England Learn to Swim Framework",
-      "url": "https://www.swimming.org/learntoswim/swim-england-learn-to-swim-framework/",
-      "note": "Swim England's Learn to Swim Framework. Names nine core aquatic skills, taught through games rather than strokes, which is why stage 1 here has no swimming in it.",
-      "$note": "The nine, as the page lists them: Entry, Exits, Floatation and Balance, Rotation and Orientation, Streamlining, Aquatic Breathing, Travel and Coordination, Water Safety, Health and Fitness.\n\nTHIS NOTE SPENT ELEVEN DAYS SAYING FOUR. A 2026-08-22 pass overwrote a correct nine with four, listed four, and quoted the source sentence with the list cut off after the fourth bullet, on the stated reasoning that the earlier nine had been \"written from memory\" because a fetcher got a 403. The earlier nine was correct. The four-item read was a truncation presented as a correction, and it shipped with a provenance note boasting that the source had finally been opened. The file then disagreed with itself for eleven days: $comment said nine and listed nine, this note said four, and the half that rendered on his phone was the wrong half.\n\nThe rule the 2026-08-22 note drew is still the right one and it applies to itself: do not trust a note about a source, INCLUDING a note that says it read the source. Read the source. Re-read over CDP 2026-09-02, and again while re-sourcing this tab.\n\n--- carried forward ---\n\nTHE 2026-08-22 \"CORRECTION\" MADE A RIGHT FACT WRONG. From that date this note read \"Names FOUR core aquatic skills\", listed four, and quoted the source sentence with the list cut off after the fourth bullet, on the stated reasoning that the earlier nine had been \"written from memory\" because a fetcher got a 403. The earlier nine was correct. The page lists nine and always did; the four-item read was a truncation presented as a correction, and it shipped with a provenance note boasting that the source had finally been opened.\n\nThe file then disagreed with itself for eleven days: $comment at the top said nine and listed nine, this note said four, and the half that rendered on his phone was the wrong half. The rule the 2026-08-22 note drew is still the right one and it applies to itself: do not trust a note about a source, INCLUDING a note that says it read the source. Read the source."
-    }
+    { "id": "se-fear", "label": "Swim England: Help to overcome a fear of swimming", "url": "https://www.swimming.org/learntoswim/tips-to-help-overcome-a-fear-of-swimming/" },
+    { "id": "se-strokes", "label": "Swim England: Tips for learning the four swimming strokes", "url": "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/" },
+    { "id": "se-aids", "label": "Swim England: 4 adult swimming aids to help you learn", "url": "https://www.swimming.org/learntoswim/4-adult-swimming-aids-to-help-you-learn/" },
+    { "id": "se-breathing", "label": "Swim England Just Swim: Improve your breathing in front crawl", "url": "https://www.swimming.org/justswim/improving-your-breathing-in-front-crawl/" },
+    { "id": "se-breaststroke", "label": "Swim England Just Swim: Tips for getting breaststroke right", "url": "https://www.swimming.org/justswim/tips-getting-breaststroke-right/" },
+    { "id": "se-breaststroke-kick", "label": "Swim England Just Swim: Improve your kicking in breaststroke", "url": "https://www.swimming.org/justswim/improving-your-kicking-in-breaststroke/" },
+    { "id": "se-backstroke", "label": "Swim England Just Swim: Tips for getting backstroke right", "url": "https://www.swimming.org/justswim/getting-backstroke-right/" },
+    { "id": "se-backstroke-arms", "label": "Swim England Just Swim: Improving your arm technique in backstroke", "url": "https://www.swimming.org/justswim/improving-your-arm-technique-in-backstroke/" }
   ]
 }

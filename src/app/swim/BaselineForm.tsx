@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { today } from '@/lib/day';
+import { shortDate } from '@/lib/format';
 
 /* THE SLOT FOR THE NUMBER. Built 2026-08-22.
  *
@@ -57,7 +58,7 @@ export default function BaselineForm({
     <div className="baseline">
       {current && (
         <p className="ex-cue">
-          <b>Your number is {current.metres} m</b>, set {current.measuredOn}
+          <b>Your number is {current.metres} m</b>, set {shortDate(current.measuredOn)}
           {current.noBuoy ? ', no buoy' : ', WITH the buoy, so the ladder below is measured from an assisted swim'}.
           Swim it again whenever it stops being true.
         </p>

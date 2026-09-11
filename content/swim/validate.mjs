@@ -61,14 +61,30 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
 // decision than the one this migration was authorised to make.
 // ---------------------------------------------------------------------------------------------
 {
-  for (const k of ['title', 'sessionsPerWeek', 'baseline', 'theGoal', 'theOneTechniqueChange', 'onDrills', 'structure', 'paddleRule', 'pullBuoyRule']) {
+  for (const k of ['title', 'sessionsPerWeek', 'theGoal', 'theOneTechniqueChange', 'structure', 'pullBuoyRule']) {
     if (plan[k] == null) fail('plan.json', `missing "${k}", which /swim renders directly`);
   }
-  if (!Array.isArray(plan.baseline) || !plan.baseline.length) {
-    fail('plan.json', 'baseline must be a non-empty array of {label, value}. It is an ARRAY rather than named fields on purpose: the page read three fields by name until 2026-08-21, so the data had to fit the slots, and two false claims survived in them for weeks.');
+  if (plan.theGoal && 'whyItIsAchievable' in plan.theGoal) {
+    fail('plan.json', 'theGoal.whyItIsAchievable is gone since 2026-09-11: the Plan tab derives that line from his swim days. The typed one said about 1,000 m every time while three of his last ten swims were under it.');
   }
-  for (const f of plan.baseline || []) {
-    if (!f.label || !f.value) fail('plan.json', `a baseline fact needs both a label and a value, got ${JSON.stringify(f)}`);
+  // The How tab prints a pace target as his last middle length plus addSeconds. The sentence above it
+  // and the pace cue both say the number in words, so all three must agree or the page gives two
+  // instructions for one swim.
+  {
+    const n = plan.theOneTechniqueChange?.addSeconds;
+    const paceCue = (plan.cues || []).find((c) => /pace/i.test(c.name));
+    if (!Number.isFinite(n)) {
+      fail('plan.json', 'theOneTechniqueChange.addSeconds is missing: the How tab adds it to his last middle length to print the target.');
+    } else {
+      for (const [where, text] of [['theOneTechniqueChange.what', plan.theOneTechniqueChange.what], [`the cue named "${paceCue?.name}"`, paceCue?.cue]]) {
+        if (!String(text || '').includes(`${n} second`)) {
+          fail('plan.json', `${where} does not say ${n} seconds, and the How tab prints a target built from addSeconds = ${n}.`);
+        }
+      }
+    }
+  }
+  if ('baseline' in plan) {
+    fail('plan.json', 'baseline is gone since 2026-09-11: the Now tab derives where he is from the lengths. A typed copy is how "600 m twice" outlived the data.');
   }
   for (const k of ['name', 'what', 'test', 'why']) {
     if (!plan.structure?.calibration?.[k]) {
@@ -126,7 +142,7 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
     if (!OPEN_TOPICS.has(q.topic)) fail(where, `topic must be one of ${[...OPEN_TOPICS].join(' | ')}, got ${JSON.stringify(q.topic ?? null)}. gym-notes.mjs prints it, because the topic changes what an answer IS.`);
   }
 
-  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, ${plan.baseline.length} baseline facts, calibration block present, ${(plan.cues || []).length} cues gated, ${(plan.open || []).length} open question(s) with a shape`);
+  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, calibration block present, ${(plan.cues || []).length} cues gated, ${(plan.open || []).length} open question(s) with a shape`);
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -228,42 +244,10 @@ const PROVENANCE = new Set(['sourced', 'sourced-other-course', 'third-party', 'c
 // `convention` may not, and that is exactly what it is for: it is how a line admits that nobody
 // studied it.
 // ---------------------------------------------------------------------------------------------
-const TEACH_CONF = new Set(['sourced', 'convention']);
-
 {
-  const stages = swimTeaching.stages || [];
-  if (!stages.length) fail('teaching.json', 'no stages');
   if (!swimTeaching.beforeYouStart?.body?.length) {
-    fail('teaching.json', 'beforeYouStart is missing. That block is the safety line and it is the first thing on the page: he is being handed a script to read to a stranger in deep water.');
+    fail('teaching.json', 'beforeYouStart is missing. That block is the safety line and it is the first thing on the page: he is being handed a script to read to a stranger in deep water. His ruling of 2026-09-03 keeps it, all three lines.');
   }
-  const srcIds = new Set((swimTeaching.sources || []).map((x) => x.id));
-  const stageIds = new Set(stages.map((x) => x.id));
-  for (const st of stages) {
-    const where = `teaching.json/${st.id || "?"}`;
-    if (!st.name || !st.who) fail(where, 'a stage needs a name and a `who` so he can pick it by recognising the person in front of him');
-    if (st.sourceId && !srcIds.has(st.sourceId)) fail(where, `sourceId "${st.sourceId}" is not in sources[]`);
-    if (!st.cues?.length) fail(where, 'a stage with no cues teaches nothing');
-    for (const c of st.cues || []) {
-      const w2 = `${where}/${c.name || "?"}`;
-      if (!c.cue) fail(w2, 'no cue');
-      if (!c.test || c.test.length < 20) {
-        fail(w2, 'every teaching point needs a TEST of at least 20 characters. He is on a pool deck looking at somebody: it has to be something he can SEE, not something they have to feel.');
-      }
-      if (!TEACH_CONF.has(c.confidence)) {
-        fail(w2, `confidence must be ${[...TEACH_CONF].join(" | ")}, got ${JSON.stringify(c.confidence ?? null)}`);
-      }
-      if (c.confidence === 'sourced' && !c.url) {
-        fail(w2, 'confidence is "sourced" but there is no url. A sourced claim about what to do in water has to name where it came from, or it is an agent writing swim instruction from memory.');
-      }
-    }
-  }
-  for (const i of swimTeaching.whatToLookFor?.items || []) {
-    if (!stageIds.has(i.stage)) {
-      fail('teaching.json', `whatToLookFor points at stage "${i.stage}", which does not exist`);
-    }
-  }
-  const nCues = stages.reduce((a, x) => a + (x.cues?.length || 0), 0);
-  out.push(`ok    [teaching.json] ${stages.length} stages, ${nCues} cues, all with a test and a stated confidence`);
 }
 
 /* NO CUE WITHOUT A QUOTE. Added 2026-08-22, at his instruction and in his words:
@@ -288,45 +272,46 @@ const TEACH_CONF = new Set(['sourced', 'convention']);
  * A quote is not proof it was quoted correctly. Nothing here can check that, and pretending
  * otherwise would be worse than admitting it: what this stops is the case with no source at all,
  * which is the one that has actually happened. */
-function checkGroundedCues(fileLabel, doc, entries) {
+/* Both coaching files share one shape since 2026-09-11: groups of items, each with its own quotes. */
+function checkItems(fileLabel, doc, confidences, required, testOf) {
   const sourceIds = new Set((doc.sources || []).map((x) => x.id));
   for (const src of doc.sources || []) {
     if (!/^https?:\/\//.test(String(src.url || ''))) {
       fail(fileLabel, `source "${src.id}" has no usable url (${JSON.stringify(src.url ?? null)}). Every source must be a link he can open and check.`);
     }
   }
-  for (const c of entries) {
-    const where = `${fileLabel}/${c.id || c.name || c.say || '?'}`;
-    const hasSource = sourceIds.has(c.source) || /^https?:\/\//.test(String(c.url || ''));
-    const conf = c.confidence;
-    if (!['sourced', 'inference', 'convention'].includes(conf)) {
-      fail(where, `confidence must be sourced | inference | convention, got ${JSON.stringify(conf ?? null)}. An unlabelled cue is an agent's opinion wearing a coach's voice.`);
-      continue;
-    }
-    if (conf === 'sourced') {
-      if (!c.quote || String(c.quote).trim().length < 15) {
-        fail(where, 'marked "sourced" with no verbatim quote. Paste the sentence from the guide, or mark it convention.');
+  const groups = doc.groups || [];
+  if (!groups.length) fail(fileLabel, 'no groups');
+  let n = 0;
+  for (const g of groups) {
+    if (!g.name || !g.items?.length) fail(`${fileLabel}/${g.id || '?'}`, 'a group needs a name and at least one item');
+    for (const it of g.items || []) {
+      n++;
+      const where = `${fileLabel}/${it.id || '?'}`;
+      if (!it.id) fail(where, 'an item needs an id');
+      if (required(it).some((x) => !x || String(x).trim().length < 3)) fail(where, 'missing its name or its instruction');
+      const test = testOf(it);
+      if (!test || String(test).trim().length < 20) {
+        fail(where, 'no test of at least 20 characters. Every item must come with something he can check or see, not a sensation somebody is supposed to have.');
       }
-      /* Either a `source` id into this file's list, or a `url` on the cue itself. The teaching
-         file already used the second shape and the first version of this gate did not know about
-         it, which made it report nine ungrounded cues that were not ungrounded. They were missing
-         the QUOTE, which is the half that matters and the half that is still enforced below. */
-      if (!hasSource) {
-        fail(where, `marked "sourced" but names neither a source id from this file's list (${[...sourceIds].join(', ')}) nor a url of its own.`);
+      if (!confidences.includes(it.confidence)) {
+        fail(where, `confidence must be ${confidences.join(' | ')}, got ${JSON.stringify(it.confidence ?? null)}. An unlabelled cue is an agent's opinion wearing a coach's voice.`);
+        continue;
       }
-    }
-    if (conf === 'inference') {
-      if (!sourceIds.has(c.from)) {
-        fail(where, `marked "inference" but ${JSON.stringify(c.from ?? null)} is not one of this file's sources. An inference has to say what it reasons FROM.`);
+      if (it.confidence === 'sourced') {
+        if (!it.quotes?.length) fail(where, 'marked "sourced" with no verbatim quote. Paste the sentence from the page, or mark it convention.');
+        for (const q of it.quotes || []) {
+          if (!sourceIds.has(q.source)) fail(where, `quotes source "${q.source}", which is not in this file's sources list (${[...sourceIds].join(', ')})`);
+          if (!q.text || String(q.text).trim().length < 15) fail(where, 'a quote under 15 characters is not a sentence anyone can check');
+        }
       }
-      if (!c.fromQuote || String(c.fromQuote).trim().length < 15) {
-        fail(where, 'marked "inference" with no fromQuote. Paste the sentence the reasoning starts from so he can judge the leap himself.');
+      if (it.confidence === 'inference') {
+        if (!sourceIds.has(it.from)) fail(where, `marked "inference" but ${JSON.stringify(it.from ?? null)} is not one of this file's sources. An inference has to say what it reasons FROM.`);
+        if (!it.fromQuote || String(it.fromQuote).trim().length < 15) fail(where, 'marked "inference" with no fromQuote. Paste the sentence the reasoning starts from.');
       }
-    }
-    if (!c.test || String(c.test).trim().length < 15) {
-      fail(where, 'no test. Every cue must come with something he can actually check, not a sensation he is supposed to have.');
     }
   }
+  out.push(`ok    [${fileLabel}] ${groups.length} groups, ${n} items, every one with a test and a stated confidence`);
 }
 
 /* TWO TABS QUOTING ONE SENTENCE MUST KNOW ABOUT EACH OTHER. Added 2026-09-02.
@@ -483,8 +468,14 @@ function checkQuotesAgainstSources() {
   }
 
   const items = [];
-  for (const c of swimCoaching.checks || []) items.push(['coaching.json', c.id || c.name, c.source || c.from, c.quote || c.fromQuote]);
-  for (const st of swimTeaching.stages || []) for (const c of st.cues || []) items.push(['teaching.json', c.name, c.source, c.quote]);
+  for (const [file, doc] of [['coaching.json', swimCoaching], ['teaching.json', swimTeaching]]) {
+    for (const g of doc.groups || []) {
+      for (const it of g.items || []) {
+        for (const q of it.quotes || []) items.push([file, it.id, q.source, q.text]);
+        if (it.fromQuote) items.push([file, it.id, it.from, it.fromQuote]);
+      }
+    }
+  }
 
   let checked = 0;
   const followed = [];
@@ -528,16 +519,16 @@ function checkQuotesAgainstSources() {
 
 checkQuotesAgainstSources();
 
+/* One entry per quote, so a sentence quoted on both tabs is found whichever item carries it. */
+const perQuote = (doc) => (doc.groups || []).flatMap((g) => g.items || []).flatMap((it) =>
+  (it.quotes || []).map((q, i) => ({ id: `${it.id}#${i}`, quote: q.text, source: q.source, sharedWith: it.sharedWith })));
 checkSharedQuotes([
-  ['coaching', swimCoaching.checks || []],
-  ['teaching', (swimTeaching.stages || []).flatMap((st) => st.cues || [])],
+  ['coaching', perQuote(swimCoaching)],
+  ['teaching', perQuote(swimTeaching)],
 ]);
 
-checkGroundedCues('coaching.json', swimCoaching, swimCoaching.checks || []);
-checkGroundedCues('teaching.json', swimTeaching, (swimTeaching.stages || []).flatMap((st) => st.cues || []));
-if ((swimCoaching.checks || []).length) {
-  out.push(`ok    [coaching.json] ${swimCoaching.checks.length} self-checks, every one carrying a test, a stated confidence and a source`);
-}
+checkItems('coaching.json', swimCoaching, ['sourced', 'inference', 'convention'], (it) => [it.name, it.do], (it) => it.check);
+checkItems('teaching.json', swimTeaching, ['sourced', 'convention'], (it) => [it.see, it.say], (it) => it.watch);
 
 console.log(out.join('\n'));
 console.log('-'.repeat(70));

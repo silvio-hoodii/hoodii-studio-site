@@ -61,5 +61,96 @@
     "fetchedOn": "2026-09-03",
     "sha256": "f3d647158ea5c995",
     "characters": 4071
+  },
+  "se-fear": {
+    "url": "https://www.swimming.org/learntoswim/tips-to-help-overcome-a-fear-of-swimming/",
+    "file": "se-fear.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "a33e7a72bb9a0ac9",
+    "characters": 3496
+  },
+  "se-exercises": {
+    "url": "https://www.swimming.org/learntoswim/learning-to-swim-exercises/",
+    "file": "se-exercises.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "db8a484fdf1195d1",
+    "characters": 4496
+  },
+  "se-aids": {
+    "url": "https://www.swimming.org/learntoswim/4-adult-swimming-aids-to-help-you-learn/",
+    "file": "se-aids.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "be87e828b5fc2832",
+    "characters": 4691
+  },
+  "se-breaststroke": {
+    "url": "https://www.swimming.org/justswim/tips-getting-breaststroke-right/",
+    "file": "se-breaststroke.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "1af0abb811177a1b",
+    "characters": 3764
+  },
+  "se-breaststroke-kick": {
+    "url": "https://www.swimming.org/justswim/improving-your-kicking-in-breaststroke/",
+    "file": "se-breaststroke-kick.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "bcdfe37aac65b289",
+    "characters": 3441
+  },
+  "se-backstroke": {
+    "url": "https://www.swimming.org/justswim/getting-backstroke-right/",
+    "file": "se-backstroke.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "02f9e13bd38149dc",
+    "characters": 3910
+  },
+  "se-backstroke-arms": {
+    "url": "https://www.swimming.org/justswim/improving-your-arm-technique-in-backstroke/",
+    "file": "se-backstroke-arms.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "99c121e214e58ccc",
+    "characters": 3588
+  },
+  "usms-turns": {
+    "url": "https://www.usms.org/fitness-and-training/guides/turns",
+    "file": "usms-turns.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "6336b07c4c232ac5",
+    "characters": 14293
+  },
+  "usms-bilateral": {
+    "url": "https://www.usms.org/fitness-and-training/articles-and-videos/articles/should-you-breathe-to-both-sides-in-freestyle",
+    "file": "usms-bilateral.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "096db2acbf315259",
+    "characters": 7477
+  },
+  "usms-breathing-drills": {
+    "url": "https://www.usms.org/fitness-and-training/articles-and-videos/articles/drills-thatll-help-you-build-your-lung-strength-and-improve-your-freestyle-breathing-pattern",
+    "file": "usms-breathing-drills.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "0e233f7576ba2cfc",
+    "characters": 6513
+  },
+  "usms-adult-training": {
+    "url": "https://www.usms.org/fitness-and-training/guides/swimming-101/adult-swim-training",
+    "file": "usms-adult-training.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "99a1a50669c34521",
+    "characters": 61706
+  },
+  "usms-stroke-basics": {
+    "url": "https://www.usms.org/fitness-and-training/guides/swimming-101/the-stroke-basics",
+    "file": "usms-stroke-basics.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "7f3b2f9a38cd6dcc",
+    "characters": 47039
+  },
+  "usms-open-turns": {
+    "url": "https://www.usms.org/fitness-and-training/guides/turns/open-turns",
+    "file": "usms-open-turns.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "35b343c78ffe0e14",
+    "characters": 14086
   }
 }

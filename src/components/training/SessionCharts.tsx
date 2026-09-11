@@ -112,8 +112,7 @@ export function LengthBars({ lengths, poolLength }: { lengths: LengthRow[]; pool
         })}
       </svg>
       <div className="trace-foot">
-        {lengths.length} lengths of {poolLength ?? 25} m. Taller is slower. The marked bar is the
-        fastest one. A bar with a notch under it is where you stopped.
+        Taller is slower. A notch under a bar is a stop.
       </div>
     </div>
   );

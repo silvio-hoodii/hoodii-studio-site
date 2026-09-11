@@ -13,7 +13,7 @@ import { Trace, LengthBars, SessionStats } from './SessionCharts';
  * Shared since 2026-08-26. /gym/conditioning draws it for lifting, running and cycling; /swim draws
  * it for swimming. One component, because the swim panel is the branch that already existed inside
  * it and copying the file to a second route is how the two would drift. */
-export default function LastSession({ s, noun = 'session' }: {
+export default function LastSession({ s, noun = 'session', insight = null }: {
   s: SessionDetail | null;
   /* WHAT THIS BLOCK IS ACTUALLY SHOWING. Added 2026-08-28 (09-health P1-4).
    *
@@ -30,6 +30,8 @@ export default function LastSession({ s, noun = 'session' }: {
    * Defaulted, so /swim, /run and /bike are untouched: on a discipline route the block IS about that
    * discipline and "session" is exact. Only the index has to say which kind. */
   noun?: string;
+  /** A line computed by the page from this session's data, shown in place of the generic verdict. */
+  insight?: string | null;
 }) {
   if (!s) {
     return (
@@ -87,7 +89,7 @@ export default function LastSession({ s, noun = 'session' }: {
           {...(s.kind === 'strength' ? { floor: 110 } : {})}
         />
       )}
-      {verdict && <p className="ex-cue" style={{ marginTop: 10 }}>{verdict}</p>}
+      {(insight ?? verdict) && <p className="ex-cue" style={{ marginTop: 10 }}>{insight ?? verdict}</p>}
     </div>
   );
 }

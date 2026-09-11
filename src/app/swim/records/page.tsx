@@ -36,8 +36,9 @@ export const metadata: Metadata = {
  *
  * NOTHING ON THIS PAGE IS TYPED. Every figure is returned from getSwimRecords or getSwimPbs. The
  * one hardcoded set of numbers is the watch-clock comparison inside the method note, which is a
- * measurement OF the watch rather than of his swimming, and it names the four distances it checked
- * so it can be re-run. */
+ * measurement OF the watch rather than of his swimming, and it names the swim it checked so it can
+ * be re-run. Until 2026-09-11 there was a second one, a plan time window quoted in the Closest
+ * block, and it outlived the plan text it quoted by a day. */
 
 const DISTANCES = [400, 800, 1000, 1500];
 
@@ -91,8 +92,7 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
         The 1,000 <span className="tag">({r.swims} swims in {year} contained one)</span>
       </div>
       <p className="lede" style={{ marginTop: 0 }}>
-        The watch keeps 400 and 1,500 and nothing between, so this is read off the lengths. Any
-        1,000 m inside a longer swim counts, which is how you asked for it.
+        Read off the lengths: any 1,000 m inside a longer swim counts.
       </p>
       <div className="stats">
         <div>
@@ -116,14 +116,9 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
           <div className="stat-d">across 39 walls</div>
         </div>
       </div>
-      <p className="ex-cue">
-        {/* KEPT, and it is the test passing rather than failing: this says what the two tiles
-            mean AND what to do about them, which is the definition of a caption that earns its
-            place. "eleven minutes" went, because it was an invented illustration sitting beside
-            real derived figures and reading as one of them. */}
-        Two clocks, because a 1,000 m with minutes of standing in it is not a 1,000 m time. The gap
-        between the first two tiles IS the rest, and closing it is the whole plan.
-      </p>
+      {/* "The gap between the first two tiles IS the rest" stood here until 2026-09-11, and it was
+          false: the first two tiles are the typical and the best wall clock, and the gap between
+          them is how much better the best day was. The rest is the fourth tile. */}
     </div>
   );
 }
@@ -135,6 +130,8 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
 function Closest({ r }: { r: DerivedRecord | undefined }) {
   if (!r || r.leastRestMs === null) return null;
   const stops = r.leastRestStops;
+  const cuts = [0, ...stops.map((s) => s.atM), r.distanceM];
+  const longestPiece = Math.max(...cuts.slice(1).map((c, i) => c - (cuts[i] as number)));
   return (
     <div className="exgroup">
       <div className="exgroup-label">The closest you have come to 1,000 unbroken</div>
@@ -145,10 +142,10 @@ function Closest({ r }: { r: DerivedRecord | undefined }) {
           </div>
           <div className="ex-cue">
             {stops.length === 0 ? (
-              <>No pauses at all inside it. That is the goal, already done.</>
+              <>No stops inside it. That is the goal, already done.</>
             ) : (
               <>
-                {stops.length === 1 ? 'One pause' : `${stops.length} pauses`}, at{' '}
+                {stops.length === 1 ? 'One stop' : `${stops.length} stops`}, at{' '}
                 {stops.map((s, i) => (
                   <span key={s.atM}>
                     {i > 0 && (i === stops.length - 1 ? ' and ' : ', ')}
@@ -159,17 +156,16 @@ function Closest({ r }: { r: DerivedRecord | undefined }) {
               </>
             )}
           </div>
-          <div className="ex-meta cue-test">
-            <b>What it means.</b> The plan asks for 1,000 m unbroken in 20:40 to 22:00. That swim was
-            inside the window on the wall clock. What is left is not fitness, it is{' '}
-            {stops.length ? (
-              <>
-                {stops.length === 1 ? 'one stop' : `${stops.length} stops`} adding up to{' '}
-                <span className="tnum">{mmss(r.leastRestMs)}</span>
-              </>
-            ) : 'nothing'}
-            .
-          </div>
+          {/* "The plan asks for 1,000 m unbroken in 20:40 to 22:00" stood here until 2026-09-11. The
+              plan stopped carrying a time window when it was cut to three lines that morning, so
+              this quoted a plan that no longer said it. What is left is derived instead. */}
+          {stops.length > 0 && r.leastRestWallMs !== null && (
+            <div className="ex-meta cue-test">
+              <b>Without the stops</b> it was{' '}
+              <span className="tnum">{mmss(r.leastRestWallMs - r.leastRestMs)}</span> of swimming.
+              The longest piece in it: <span className="tnum">{longestPiece}</span> m.
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -282,15 +278,12 @@ function WatchRecords({ pbs, year }: { pbs: PbRow[]; year: number }) {
           );
         })}
       </div>
-      <p className="ex-cue">
-        Nothing between 400 and 1,500, which is the gap the table above fills.
-        {olderCount > 0 && (
-          <>
-            {' '}The watch also holds <span className="tnum">{olderCount}</span> older times from
-            before {year}. Left out on purpose.
-          </>
-        )}
-      </p>
+      {olderCount > 0 && (
+        <p className="ex-cue">
+          <span className="tnum">{olderCount}</span> older times are on{' '}
+          <Link href="/swim/deep">the whole record</Link>.
+        </p>
+      )}
     </div>
   );
 }
@@ -326,7 +319,7 @@ function Method({ r }: { r: SwimRecords }) {
           <p>
             <b>Freestyle only, and contiguous.</b> A window has to be an unbroken run of lengths by
             index. A mixed-stroke 1,000 is excluded, which also removes one bad number: the fastest
-            any-stroke 1,000 m is 16:54, a shade off his 100 m best pace, and it contains two
+            any-stroke 1,000 m is 16:54, a shade off your 100 m best pace, and it contains two
             lengths of 14 and 16 seconds carrying four and six stroke cycles. Those are push-offs or
             a mis-segmented length, not swimming.
           </p>

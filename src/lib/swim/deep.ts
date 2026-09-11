@@ -125,8 +125,12 @@ export interface WeightBand {
   loKg: number;
   hiKg: number;
   swims: number;
-  avgPaceSeconds: number;
-  bestPaceSeconds: number;
+  /** The MEDIAN rest-excluded pace. Not the minimum and not the mean. One 300 m session in January
+   *  2025 reads 1:31 per 100 m against 8:31 of wall clock, faster than his 100 m personal best, and
+   *  a minimum always picks it: it chose the "fastest band" and the "fastest year" on /swim/deep
+   *  until 2026-09-11. One 50 m session reading 36 minutes per 100 m did the same to a mean, and
+   *  put 4:15 in the "no lifting" row. A median cannot be won by one row. */
+  medianPaceSeconds: number;
 }
 
 /** One year: how much he swam, what he weighed, and how fast he was.
@@ -142,8 +146,8 @@ export interface YearProfile {
   swims: number;
   metres: number;
   avgKg: number | null;
-  avgPaceSeconds: number | null;
-  bestPaceSeconds: number | null;
+  /** Median, for the reason written on WeightBand. */
+  medianPaceSeconds: number | null;
 }
 
 /** The day the furthest-ever swim got further. A running maximum, DERIVED, and the derivation is
@@ -168,8 +172,9 @@ export interface DistanceRecord {
 export interface ProximityCohort {
   label: string;
   swims: number;
-  avgPaceSeconds: number | null;
-  avgSwolf: number | null;
+  /** Medians, for the reason written on WeightBand. */
+  medianPaceSeconds: number | null;
+  medianSwolf: number | null;
 }
 
 export interface StrokeSlice {
@@ -295,37 +300,47 @@ async function swolfAgreement(): Promise<SwolfAgreement> {
   };
 }
 
-/** Work to rest, per session, from session duration minus the sum of its lengths.
+/** Work to rest, per session. Rest is the LARGER of two readings.
  *
- *  Deliberately NOT from `rest_after_ms`, which does not exist before 2025. This arithmetic works
- *  in every year the mirror holds. */
+ *  Session duration minus the sum of the lengths works in every year the mirror holds, but the
+ *  watch's session clock stops while the watch is paused, so a paused stop is invisible to it. The
+ *  per-length rest carries the pause (HealthOS folds any pause of 5 s or more into it), so where it
+ *  is larger it wins. Before 2025 it is 0 and the clock reading stands.
+ *
+ *  Until 2026-09-11 this used the clock alone, the one figure on /swim still blind to the hidden
+ *  stops fixed that day, and it ordered by date only, so of two swims on 10 Sep it printed the
+ *  earlier one as "last swim" while the pieces section below named the later one. */
 async function restHistory(): Promise<RestPoint[]> {
   const rows = await sql`
     with l as (
       select session_uuid,
              min(session_start_time) as st,
-             sum(duration_ms) as len_ms
+             sum(duration_ms) filter (
+               where duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) as len_ms,
+             coalesce(sum(coalesce(rest_after_ms, 0)) filter (
+               where length_index < lengths_in_session), 0) as rest_ms
       from health_swim_length
-      where duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}
       group by session_uuid
     )
     select ((l.st::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text as d,
-           l.len_ms, s.duration_ms
+           l.len_ms, l.rest_ms, s.duration_ms
     from l
     join health_swim_session s on s.uuid = l.session_uuid
-    where s.duration_ms > 0 and l.st is not null
-    order by d asc
+    where s.duration_ms > 0 and l.st is not null and l.len_ms > 0
+    order by l.st asc
   `;
   return (rows as unknown as Record<string, unknown>[]).map((r) => {
     const swimMs = num(r.len_ms);
-    const sessionMs = num(r.duration_ms);
-    const overran = swimMs > sessionMs;
+    const byClock = num(r.duration_ms) - swimMs;
+    const byRows = num(r.rest_ms);
+    const restMs = Math.max(0, byClock, byRows);
+    const wallMs = swimMs + restMs;
     return {
       date: String(r.d).slice(0, 10),
-      restPct: Math.max(0, Math.round((100 * (sessionMs - swimMs)) / sessionMs)),
+      restPct: Math.round((100 * restMs) / wallMs),
       swimSeconds: Math.round(swimMs / 1000),
-      sessionSeconds: Math.round(sessionMs / 1000),
-      overran,
+      sessionSeconds: Math.round(wallMs / 1000),
+      overran: byClock < 0 && byRows === 0,
     };
   });
 }
@@ -419,8 +434,8 @@ async function yearProfile(): Promise<YearProfile[]> {
            count(*) as swims,
            sum(s.distance_m) as metres,
            avg(w.kg) as avg_kg,
-           avg(s.moving_pace_per_100m_ms) as avg_pace,
-           min(s.moving_pace_per_100m_ms) as best_pace
+           percentile_cont(0.5) within group (order by s.moving_pace_per_100m_ms)
+             filter (where s.moving_pace_per_100m_ms > 0) as median_pace
     from health_swim_session s
     left join lateral (
       select b.kg from health_body_comp b
@@ -436,8 +451,7 @@ async function yearProfile(): Promise<YearProfile[]> {
     swims: num(r.swims),
     metres: Math.round(num(r.metres) || 0),
     avgKg: r.avg_kg == null ? null : Math.round(num(r.avg_kg) * 10) / 10,
-    avgPaceSeconds: r.avg_pace == null ? null : Math.round(num(r.avg_pace) / 1000),
-    bestPaceSeconds: r.best_pace == null ? null : Math.round(num(r.best_pace) / 1000),
+    medianPaceSeconds: r.median_pace == null ? null : Math.round(num(r.median_pace) / 1000),
   }));
 }
 
@@ -450,13 +464,15 @@ function bandByWeight(points: WeightPacePoint[]): WeightBand[] {
   for (let start = lo; start < hi; start += 5) {
     const inBand = points.filter((p) => p.kg >= start && p.kg < start + 5);
     if (!inBand.length) continue;
-    const paces = inBand.map((p) => p.paceSeconds);
+    const paces = inBand.map((p) => p.paceSeconds).sort((a, b) => a - b);
+    const m = paces.length >> 1;
     bands.push({
       loKg: start,
       hiKg: start + 5,
       swims: inBand.length,
-      avgPaceSeconds: Math.round(paces.reduce((a, b) => a + b, 0) / paces.length),
-      bestPaceSeconds: Math.min(...paces),
+      medianPaceSeconds: paces.length % 2
+        ? (paces[m] as number)
+        : Math.round(((paces[m - 1] as number) + (paces[m] as number)) / 2),
     });
   }
   return bands;
@@ -496,8 +512,8 @@ async function proximityCohorts(): Promise<ProximityCohort[]> {
              else 'Later the same day'
            end as label,
            count(*) as swims,
-           avg(pace_ms) as avg_pace_ms,
-           avg(avg_swolf) as avg_swolf
+           percentile_cont(0.5) within group (order by pace_ms) as median_pace_ms,
+           percentile_cont(0.5) within group (order by avg_swolf) as median_swolf
     from j
     group by 1
     order by count(*) desc
@@ -505,8 +521,8 @@ async function proximityCohorts(): Promise<ProximityCohort[]> {
   return (rows as unknown as Record<string, unknown>[]).map((r) => ({
     label: String(r.label),
     swims: num(r.swims),
-    avgPaceSeconds: r.avg_pace_ms == null ? null : Math.round(num(r.avg_pace_ms) / 1000),
-    avgSwolf: r.avg_swolf == null ? null : Math.round(num(r.avg_swolf) * 10) / 10,
+    medianPaceSeconds: r.median_pace_ms == null ? null : Math.round(num(r.median_pace_ms) / 1000),
+    medianSwolf: r.median_swolf == null ? null : Math.round(num(r.median_swolf) * 10) / 10,
   }));
 }
 
@@ -643,8 +659,11 @@ interface PieceRow {
   session_uuid: string;
   st: string | null;
   day: string;
+  n: string | number;
   metres: string | number;
   ms: string | number;
+  first_i: string | number;
+  last_i: string | number;
 }
 
 /** Unbroken freestyle pieces: one ends at any stop, at any other stroke, and at any length outside the band. */
@@ -680,7 +699,8 @@ async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): 
        where ok
     )
     select session_uuid, min(session_start_time) as st, min(day) as day,
-           sum(pool_length) as metres, sum(duration_ms) as ms
+           count(*) as n, sum(pool_length) as metres, sum(duration_ms) as ms,
+           min(length_index) as first_i, max(length_index) as last_i
       from g
      group by session_uuid, grp
   `) as unknown as PieceRow[];
@@ -692,24 +712,85 @@ const toPiece = (r: PieceRow): LongestPiece => ({
   seconds: Math.round(Number(r.ms) / 1000),
 });
 
-/** The longest unbroken piece in each of the last N swims, newest swim first. */
-export async function getLongestPieces(limit = 10): Promise<LongestPiece[]> {
+export interface SwimSummary {
+  uuid: string;
+  /** His day, off the row's own offset. */
+  date: string;
+  metres: number;
+  longestM: number;
+  longestS: number;
+  /** Stops between lengths, watch pauses included; the rest after the last length is not a stop. */
+  stops: number;
+  stoppedS: number;
+  swimS: number;
+}
+
+export interface SwimYearPiece extends LongestPiece {
+  lengths: number;
+  uuid: string;
+  /** 1-based length indexes of the piece inside its swim, for reading its lengths off session detail. */
+  firstIndex: number;
+  lastIndex: number;
+}
+
+export interface SwimYear {
+  /** Oldest first. */
+  summaries: SwimSummary[];
+  /** Longest first. */
+  pieces: SwimYearPiece[];
+}
+
+/** This calendar year, swim by swim, plus every unbroken piece in it. One pieces query serves both. */
+export async function getSwimYear(): Promise<SwimYear> {
+  const since = `${today().slice(0, 4)}-01-01`;
+  const [agg, rows] = await Promise.all([
+    sql`
+      select ln.session_uuid,
+             min(ln.session_start_time) as st,
+             min(coalesce(left(ln.session_start_local, 10),
+                 ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text)) as day,
+             sum(ln.pool_length) as metres,
+             sum(ln.duration_ms) as swim_ms,
+             count(*) filter (where ln.rest_after_ms > 0 and ln.length_index < ln.lengths_in_session) as stops,
+             coalesce(sum(ln.rest_after_ms) filter (where ln.length_index < ln.lengths_in_session), 0) as stopped_ms
+        from health_swim_length ln
+       where ln.session_uuid in (select u.session_uuid from ${sql.unsafe(SWIM_USABLE_SESSIONS)} u)
+         and coalesce(left(ln.session_start_local, 10),
+             ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text) >= ${since}
+       group by ln.session_uuid
+       order by st asc
+    `,
+    unbrokenPieces({ sinceDay: since }),
+  ]);
   const best = new Map<string, PieceRow>();
-  for (const r of await unbrokenPieces({ lastSwims: limit })) {
+  for (const r of rows) {
     const cur = best.get(r.session_uuid);
     if (!cur || Number(r.metres) > Number(cur.metres)
       || (Number(r.metres) === Number(cur.metres) && Number(r.ms) < Number(cur.ms))) best.set(r.session_uuid, r);
   }
-  return [...best.values()].sort((a, b) => String(b.st).localeCompare(String(a.st))).map(toPiece);
-}
-
-/** Every unbroken piece this calendar year, longest first. */
-export async function getLongestPiecesThisYear(limit = 20): Promise<LongestPiece[]> {
-  const rows = await unbrokenPieces({ sinceDay: `${today().slice(0, 4)}-01-01` });
-  return rows
+  const summaries = (agg as unknown as Record<string, unknown>[]).map((r) => {
+    const b = best.get(String(r.session_uuid));
+    return {
+      uuid: String(r.session_uuid),
+      date: String(r.day),
+      metres: Number(r.metres),
+      longestM: b ? Number(b.metres) : 0,
+      longestS: b ? Math.round(Number(b.ms) / 1000) : 0,
+      stops: Number(r.stops),
+      stoppedS: Math.round(Number(r.stopped_ms) / 1000),
+      swimS: Math.round(Number(r.swim_ms) / 1000),
+    };
+  });
+  const pieces = [...rows]
     .sort((a, b) => Number(b.metres) - Number(a.metres) || Number(a.ms) - Number(b.ms))
-    .slice(0, limit)
-    .map(toPiece);
+    .map((r) => ({
+      ...toPiece(r),
+      lengths: Number(r.n),
+      uuid: r.session_uuid,
+      firstIndex: Number(r.first_i),
+      lastIndex: Number(r.last_i),
+    }));
+  return { summaries, pieces };
 }
 
 /** What the mirror holds, including what this page threw away. */

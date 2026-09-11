@@ -76,7 +76,7 @@ function dur(seconds: number): string {
 function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwim['swolfAgreement'] }) {
   const s = swolfSummary(points);
   if (!s) return null;
-  const { best, latest, bestRecent, first, recent, worstAllTime } = s;
+  const { best, latest, bestRecent, recent } = s;
   /* Against the best of the last twelve months, not the all-time best. Measuring this week against
      June 2025 tells him he has got worse, which is true and useless; measuring it against the last
      year is a target he can reach. */
@@ -88,11 +88,9 @@ function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwi
       <div className="exgroup-label">
         Stroke efficiency <span className="tag">({points.length} sessions, freestyle)</span>
       </div>
-      <p className="lede" style={{ marginTop: 0 }}>
-        SWOLF is seconds for a length plus strokes for that length. It drops when you get faster or
-        when you get longer, which is why it is the number worth watching: effort moves the first
-        half and technique moves the second.
-      </p>
+      {/* THE DEFINITION WENT, 2026-09-11. He knows what SWOLF is, and said the app kept telling
+          him: "you repeat the same thing about what SWOLF is". The split of his own number, under
+          the chart, is the part the definition was standing in for. */}
       <div className="stats">
         <div>
           <div className="stat-k">Best ever</div>
@@ -117,19 +115,14 @@ function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwi
       </div>
       <LineChart points={recent.map((p) => ({ date: p.date, value: p.swolf }))} unit="SWOLF" decimals={1} />
       <p className="ex-meta" style={{ marginTop: 6 }}>
-        The last twelve months, <span className="tnum">{recent.length}</span> of{' '}
-        <span className="tnum">{points.length}</span> sessions. The full series runs back to{' '}
-        {when(first.date)} and its worst session is <span className="tnum">{worstAllTime.swolf}</span>{' '}
-        ({when(worstAllTime.date)}), which drawn on the same axis flattens everything since into a
-        straight line.
+        Last 12 months, <span className="tnum">{recent.length}</span> of{' '}
+        <span className="tnum">{points.length}</span> sessions.
       </p>
       <p className="ex-cue" style={{ marginTop: 10 }}>
-        Your last swim was <b className="tnum">{latest.swolf}</b>, which is{' '}
-        {off > 0 ? <>{off} off</> : <>at or better than</>} your best of the last twelve months
-        (<span className="tnum">{target.swolf}</span> on {when(target.date)}). The two halves of
-        it were <span className="tnum">{latest.avgSeconds}s</span> a length and{' '}
-        <span className="tnum">{latest.avgStrokes}</span> strokes. Taking one stroke off a length is
-        worth exactly as much as taking a second off it, and it is the easier of the two to change.
+        Last swim <b className="tnum">{latest.swolf}</b>: <span className="tnum">{latest.avgSeconds}</span> s
+        and <span className="tnum">{latest.avgStrokes}</span> strokes a length.{' '}
+        {off > 0 ? <><span className="tnum">{off}</span> off</> : <>At or better than</>} your 12-month
+        best, <span className="tnum">{target.swolf}</span> on {when(target.date)}.
       </p>
 
       {/* THE SECOND DEFINITION, SAID OUT LOUD. This is the pace column's mistake waiting to happen
@@ -150,14 +143,10 @@ function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwi
             Where they part company is interval swims, and the gap reaches{' '}
             <span className="tnum">{agreement.maxDiff}</span>. On a session of 25s with a minute at
             the wall between them, the stored number counts the waiting and this one does not.
-            Neither is wrong. They answer different questions, and the reason this page names which
-            one it used is that a single mixed pace column once put a best of 1:31 per 100 m on
-            /health off a session that was 82% rest.
           </p>
           <p>
-            Freestyle only, and that is not a rounding decision. Kickboard lengths have almost no
-            strokes in them, so averaging them in reads as a large efficiency gain that is really
-            just a change of equipment.
+            Freestyle only: a kickboard length has almost no strokes in it, so averaging it in reads
+            as a technique gain that is really a change of equipment.
           </p>
         </div>
       </details>
@@ -195,22 +184,13 @@ function Progression({
       <div className="exgroup-label">
         How the personal bests got there <span className="tag">(Samsung&rsquo;s own top times)</span>
       </div>
-      <p className="lede" style={{ marginTop: 0 }}>
-        /swim shows the best at each distance. This is every attempt the watch kept, oldest at the
-        bottom, so an improvement is a shape rather than a single number.
-      </p>
       {logStart != null && logStartsAfterFirstRecord && (
-        /* THE CAVEAT THAT OUTRANKS THE TABLES BELOW, so it goes above them.
-           Samsung's record log does not reach back as far as his swimming does, and the proof is
-           the derived table further down: it holds swims that predate the log and beat what the log
-           calls a record. Stated here because a reader who takes these tables as a full history
-           will believe he first swam 100 m in 2023. */
-        <p className="ex-cue">
-          <b>These start where Samsung&rsquo;s record log starts, not where your swimming does.</b>{' '}
-          Its earliest entry at any distance is {when(logStart)}, and the mirror holds swims from{' '}
-          {when(firstRecord!.date)}. Anything faster before that date is not in the log, so treat
-          the bottom row of each table as the first time the WATCH noticed, not the first time you
-          did it.
+        /* THE CAVEAT THAT OUTRANKS THE TABLES BELOW, so it goes above them, cut to one line on
+           2026-09-11. Samsung's record log does not reach back as far as his swimming does, and a
+           reader who takes these tables as a full history will believe he first swam 100 m in 2023. */
+        <p className="ex-cue" style={{ marginTop: 0 }}>
+          Samsung&rsquo;s log starts {when(logStart)}; your swims go back to{' '}
+          {when(firstRecord!.date)}. The bottom row is when the watch first noticed.
         </p>
       )}
       {withHistory.map((s) => {
@@ -318,38 +298,31 @@ function Progression({
 function WeightAgainstPace({ d }: { d: DeepSwim }) {
   const bands = d.weightBands;
   if (bands.length < 2) return null;
-  const fastest = [...bands].sort((a, b) => a.bestPaceSeconds - b.bestPaceSeconds)[0]!;
+  const byPace = [...bands].sort((a, b) => a.medianPaceSeconds - b.medianPaceSeconds);
+  const fastest = byPace[0]!;
+  const slowest = byPace[byPace.length - 1]!;
   const lightest = bands[0]!;
-  /* Only years with a real sample, and only ones carrying a pace at all: 2018 holds two swims and
-     2021 holds one, and letting three sessions win "fastest year" would be the same mistake as
-     letting one length win a session average. */
-  const years = d.years;
-  const rated = years.filter((y) => y.swims >= 10 && y.bestPaceSeconds != null);
+  const heaviest = bands[bands.length - 1]!;
+  /* Only years with a real sample: 2018 holds two swims and 2021 one. */
+  const years = d.years.filter((y) => y.swims >= 10);
+  const rated = years.filter((y) => y.medianPaceSeconds != null);
   const fastestYear = rated.length
-    ? rated.reduce((a, b) => (b.bestPaceSeconds! < a.bestPaceSeconds! ? b : a))
+    ? rated.reduce((a, b) => (b.medianPaceSeconds! < a.medianPaceSeconds! ? b : a))
     : null;
   const biggestYear = rated.length ? rated.reduce((a, b) => (b.swims > a.swims ? b : a)) : null;
-  /* The sample is the argument here, so it is computed rather than described. */
-  const lightestIsThin = lightest.swims < fastest.swims / 2;
 
   return (
     <div className="exgroup">
       <div className="exgroup-label">
         Weight against pace <span className="tag">({d.weightPace.length} swims with both)</span>
       </div>
-      <p className="lede" style={{ marginTop: 0 }}>
-        Every swim with a rest-excluded pace, told against the nearest weighing within a month. Read
-        the sample sizes before the paces: this cannot separate weight from fitness, and the reason
-        is in the table itself.
-      </p>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
             <tr>
               <th className="tnum">Weight</th>
               <th className="tnum">Swims</th>
-              <th className="tnum">Best / 100 m</th>
-              <th className="tnum">Average</th>
+              <th className="tnum">Typical / 100 m</th>
             </tr>
           </thead>
           <tbody>
@@ -357,36 +330,28 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
               <tr key={b.loKg}>
                 <td className="tnum">{b.loKg} to {b.hiKg} kg</td>
                 <td className="tnum">{b.swims}</td>
-                <td className="tnum">{pace(b.bestPaceSeconds)}</td>
-                <td className="tnum">{pace(b.avgPaceSeconds)}</td>
+                <td className="tnum">{pace(b.medianPaceSeconds)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <p className="ex-cue" style={{ marginTop: 10 }}>
-        Your fastest swimming sits in the{' '}
-        <b className="tnum">{fastest.loKg} to {fastest.hiKg} kg</b> band, not the lightest one.
-        {lightestIsThin && (
-          <>
-            {' '}The lightest band holds <span className="tnum">{lightest.swims}</span> swims against{' '}
-            <span className="tnum">{fastest.swims}</span> in that one, so read the counts before the
-            times.
-          </>
-        )}{' '}
-        Being lighter has not, so far, made you faster in the water. That is worth knowing, because
-        the opposite is what everybody assumes. What it is NOT is evidence that carrying weight
-        helps, and the year table below is why.
+        Fastest: <b className="tnum">{fastest.loKg} to {fastest.hiKg} kg</b>, at{' '}
+        <span className="tnum">{pace(fastest.medianPaceSeconds)}</span>. Slowest:{' '}
+        <b className="tnum">{slowest.loKg} to {slowest.hiKg} kg</b>, at{' '}
+        <span className="tnum">{pace(slowest.medianPaceSeconds)}</span>.
+        {fastest === heaviest && slowest === lightest && (
+          <> Your heaviest band is your fastest and your lightest is your slowest.</>
+        )}
       </p>
+      {/* MEDIANS SINCE 2026-09-11. This table printed a best (a minimum) and an average (a mean)
+          per band, and a minimum always picks the one 300 m session of 22 January 2025 that reads
+          1:31 per 100 m against 8:31 of wall clock. That one row made 110 to 115 kg the fastest
+          band in the sentence here. */}
 
-      {/* THE TABLE THAT SETTLES IT, and the reason it exists is a sentence that was wrong.
-          This section first read "the heaviest band is also the period he swam most", which is the
-          obvious confound and is not what the record says: the band with the most swims is not the
-          heaviest, and his biggest year by volume was one of his LIGHTER ones. That claim was
-          written from a story rather than a query and the screenshot is what exposed it, because
-          the table sat three lines above the sentence contradicting it. */}
       <details className="src">
-        <summary>Why this cannot be untangled, year by year</summary>
+        <summary>Year by year</summary>
         <div className="src-body">
           <div className="table-scroll">
             <table className="plan-table">
@@ -396,17 +361,17 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
                   <th className="tnum">Swims</th>
                   <th className="tnum">Distance</th>
                   <th className="tnum">Weight</th>
-                  <th className="tnum">Best / 100 m</th>
+                  <th className="tnum">Typical / 100 m</th>
                 </tr>
               </thead>
               <tbody>
-                {years.filter((y) => y.swims >= 10).map((y) => (
+                {years.map((y) => (
                   <tr key={y.year}>
                     <td className="tnum">{y.year}</td>
                     <td className="tnum">{y.swims}</td>
                     <td className="tnum">{Math.round(y.metres / 1000)} km</td>
                     <td className="tnum">{y.avgKg ?? '-'}{y.avgKg != null && ' kg'}</td>
-                    <td className="tnum">{pace(y.bestPaceSeconds)}</td>
+                    <td className="tnum">{pace(y.medianPaceSeconds)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -414,40 +379,16 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
           </div>
           {fastestYear && biggestYear && (
             <p>
-              Your fastest year was <b className="tnum">{fastestYear.year}</b>, at an average of{' '}
-              <span className="tnum">{fastestYear.avgKg}</span> kg on{' '}
-              <span className="tnum">{fastestYear.swims}</span> swims. Your biggest year was{' '}
+              Fastest year <b className="tnum">{fastestYear.year}</b>, at{' '}
+              <span className="tnum">{fastestYear.avgKg}</span> kg. Biggest year{' '}
               <b className="tnum">{biggestYear.year}</b>, at{' '}
-              <span className="tnum">{biggestYear.avgKg}</span> kg on{' '}
-              <span className="tnum">{biggestYear.swims}</span>.{' '}
-              {biggestYear.year !== fastestYear.year
-                && biggestYear.avgKg != null && fastestYear.avgKg != null
-                && biggestYear.avgKg < fastestYear.avgKg ? (
-                  <>
-                    So the year you swam most was one of the LIGHTER ones and the year you swam
-                    fastest was heavier. Weight and volume did not move together, which means
-                    neither of them on its own explains the pace, and a table sorted by weight
-                    cannot tell you which is doing the work.
-                  </>
-                ) : (
-                  <>
-                    Those two are not the same year, so the weight bands above have folded several
-                    different training years into each other and cannot separate weight from
-                    fitness.
-                  </>
-                )}
+              <span className="tnum">{biggestYear.avgKg}</span> kg. Weight, volume and fitness all
+              changed over the same years, so neither table can say which one set the pace.
             </p>
           )}
           <p>
-            To settle it you would need a stretch of steady weight with changing volume, or the
-            reverse. Eight years of this record do not contain one.
-          </p>
-          <p>
-            The weighing is the nearest one within 30 days, which is as tight as{' '}
-            {d.weightPace.length} matched swims allows. Body composition also moves with hydration,
-            so a kilo either way may be water. And the best-pace column favours short, heavily
-            rested efforts, because rest is excluded from it: the average column is the fairer
-            comparison between rows.
+            Rest-excluded pace, all strokes, against the nearest weighing within a month. A kilo
+            either way may be water.
           </p>
         </div>
       </details>
@@ -459,23 +400,22 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
  * SWIMMING AFTER LIFTING. Association, with the sample sizes on the face of it.
  * ---------------------------------------------------------------------------------------------- */
 function AfterLifting({ cohorts }: { cohorts: DeepSwim['proximity'] }) {
-  const real = cohorts.filter((c) => c.avgPaceSeconds != null);
+  const real = cohorts.filter((c) => c.medianPaceSeconds != null);
   if (real.length < 2) return null;
   const smallest = Math.min(...real.map((c) => c.swims));
+  const byPace = [...real].sort((a, b) => a.medianPaceSeconds! - b.medianPaceSeconds!);
+  const fastest = byPace[0]!;
+  const spread = byPace[byPace.length - 1]!.medianPaceSeconds! - fastest.medianPaceSeconds!;
   return (
     <div className="exgroup">
       <div className="exgroup-label">Swimming after lifting</div>
-      <p className="lede" style={{ marginTop: 0 }}>
-        How long after racking the last set the swim started, against how the swim went. Computed
-        from the start times, so it is the real gap and not the calendar day.
-      </p>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
             <tr>
               <th className="wide">When the swim started</th>
               <th className="tnum">Swims</th>
-              <th className="tnum">Pace / 100 m</th>
+              <th className="tnum">Pace</th>
               <th className="tnum">SWOLF</th>
             </tr>
           </thead>
@@ -484,19 +424,31 @@ function AfterLifting({ cohorts }: { cohorts: DeepSwim['proximity'] }) {
               <tr key={c.label}>
                 <td>{c.label}</td>
                 <td className="tnum">{c.swims}</td>
-                <td className="tnum">{pace(c.avgPaceSeconds)}</td>
-                <td className="tnum">{c.avgSwolf ?? '-'}</td>
+                <td className="tnum">{pace(c.medianPaceSeconds)}</td>
+                <td className="tnum">{c.medianSwolf ?? '-'}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {/* "On this sample it looks slightly better" stood here until 2026-09-11, typed, over a table
+          whose within-45-minutes row was the slower of the two lifting rows, beside a mean that one
+          broken 50 m session had pushed to 4:15. Medians now, and the sentence is the spread. Five
+          seconds per 100 m is under one and a half seconds a length. */}
       <p className="ex-cue" style={{ marginTop: 10 }}>
-        Swimming straight after lifting does not look like it costs anything, and on this sample it
-        looks slightly better. Treat that as a reason not to worry rather than a reason to do it:
-        the smallest group here is <b className="tnum">{smallest}</b> swims, and you swim after
-        lifting on the days you have a plan, so the groups differ by intention as much as by
-        fatigue.
+        Typical pace per 100 m, rest excluded.{' '}
+        {spread <= 5 ? (
+          <>
+            The groups sit within <b className="tnum">{spread}</b> s per 100 m of each other, so
+            lifting first does not show in the pace.
+          </>
+        ) : (
+          <>
+            Fastest: {fastest.label.toLowerCase()}, by <b className="tnum">{spread}</b> s per 100 m
+            over the slowest.
+          </>
+        )}{' '}
+        Smallest group: <span className="tnum">{smallest}</span> swims.
       </p>
     </div>
   );
@@ -518,10 +470,9 @@ function WorkToRest({ d }: { d: DeepSwim }) {
         Work to rest <span className="tag">({avgRecent}% at the wall, last {recent.length} swims)</span>
       </summary>
       <p className="lede">
-        Session duration minus the time the lengths actually took. Derived that way rather than from
-        the per-length rest reading, which does not exist before{' '}
-        {d.coverage.restFirstYear ?? 'recently'} and would read eight years of interval swimming as
-        unbroken.
+        Rest is the larger of two readings: session time minus the lengths, and the rest logged at
+        each wall with watch pauses included, which exists from{' '}
+        {d.coverage.restFirstYear ?? 'recently'} on.
       </p>
       <div className="stats">
         <div>
@@ -574,11 +525,6 @@ function StrokeMix({ strokes }: { strokes: DeepSwim['strokes'] }) {
           </tbody>
         </table>
       </div>
-      <p className="ex-cue" style={{ marginTop: 10 }}>
-        This is why the efficiency chart above says freestyle only. A kickboard length has almost no
-        strokes in it, so mixing them into one average reads as technique improving when what
-        changed was the equipment.
-      </p>
     </details>
   );
 }

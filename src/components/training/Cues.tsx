@@ -41,9 +41,11 @@ export default function Cues({
           and wrong on the teaching tab, where the test is one he performs on somebody else while
           standing on the deck. Same component, because a teaching point and a training cue are the
           same shape; different sentence, because the person doing the looking is different. */}
-      <p className="lede" style={{ marginBottom: 6 }}>
-        {intro ?? 'Each one is a test you perform, not a feeling you have to have. Tap to open.'}
-      </p>
+      {intro !== '' && (
+        <p className="lede" style={{ marginBottom: 6 }}>
+          {intro ?? 'Each one is a test you perform, not a feeling you have to have. Tap to open.'}
+        </p>
+      )}
       {/* COLLAPSED BY DEFAULT, and measured before and after rather than guessed. Rendering all
           seven open took the Run tab to 8,536 px, which is TALLER than the 6,287 px page he
           complained about in the first place. Fixing one wall of text by building a bigger one is
