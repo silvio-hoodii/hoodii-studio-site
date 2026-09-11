@@ -146,6 +146,8 @@ for (const [table, col] of [
 ]) {
   if (!DRY) await client.query(`alter table ${table} add column if not exists ${col} text`);
 }
+// rest_after_ms carries watch pauses since 2026-09-11; this keeps the watch's own rest detection beside it.
+if (!DRY) await client.query('alter table health_swim_length add column if not exists rest_recorded_ms integer');
 
 /* --- watch_sessions: EVERY training kind, walking excluded ------------------------------------
  *
@@ -437,15 +439,17 @@ if (existsSync(SWIM_LAPS_PATH)) {
     await q(
       `insert into health_swim_length (session_uuid, length_index, date, session_start_time,
          session_start_local,
-         lengths_in_session, pool_length, duration_ms, stroke_type, stroke_count, rest_after_ms)
+         lengths_in_session, pool_length, duration_ms, stroke_type, stroke_count, rest_after_ms,
+         rest_recorded_ms)
        select * from unnest($1::text[], $2::int[], $3::text[], $4::text[], $5::text[], $6::int[],
-         $7::int[], $8::int[], $9::text[], $10::int[], $11::int[])
+         $7::int[], $8::int[], $9::text[], $10::int[], $11::int[], $12::int[])
        on conflict (session_uuid, length_index) do update set
          date = excluded.date, session_start_time = excluded.session_start_time,
          session_start_local = excluded.session_start_local,
          lengths_in_session = excluded.lengths_in_session, pool_length = excluded.pool_length,
          duration_ms = excluded.duration_ms, stroke_type = excluded.stroke_type,
-         stroke_count = excluded.stroke_count, rest_after_ms = excluded.rest_after_ms`,
+         stroke_count = excluded.stroke_count, rest_after_ms = excluded.rest_after_ms,
+         rest_recorded_ms = excluded.rest_recorded_ms`,
       [
         c.map((l) => l.sessionUuid),
         c.map((l) => l.lengthIndex),
@@ -461,6 +465,7 @@ if (existsSync(SWIM_LAPS_PATH)) {
         c.map((l) => l.strokeType ?? null),
         c.map((l) => l.strokeCount ?? null),
         c.map((l) => l.restAfterMs ?? null),
+        c.map((l) => l.restRecordedMs ?? null),
       ],
     );
     lapWritten += c.length;

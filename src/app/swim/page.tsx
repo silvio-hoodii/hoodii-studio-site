@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { loadSwimPlan, loadSwimCoaching, loadSwimTeaching } from '@/lib/swim/content';
-import { getSwimBaseline, getSwimHistory, getLongestPieces } from '@/lib/swim/db';
+import { getSwimBaseline, getSwimHistory } from '@/lib/swim/db';
+import { getLongestPieces, getLongestPiecesThisYear, type LongestPiece } from '@/lib/swim/deep';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
 } from '@/lib/swim/level';
-import { getRecentSessions } from '@/lib/gym/session';
+import { getRecentSessions, mmss } from '@/lib/gym/session';
 import { BarChart } from '../health/HealthCharts';
 import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
@@ -387,6 +388,26 @@ function SwimTeach({ t }: { t: SwimTeaching }) {
   );
 }
 
+/** The two longest distances swum unbroken this year, and the days each one happened. */
+function yearLine(pieces: LongestPiece[]): string | null {
+  const distances = [...new Set(pieces.map((p) => p.metres))].slice(0, 2);
+  if (!distances.length) return null;
+  return distances
+    .map((m, i) => {
+      const at = pieces.filter((p) => p.metres === m);
+      const perDay = new Map<string, number>();
+      for (const p of at) perDay.set(p.date, (perDay.get(p.date) ?? 0) + 1);
+      const days = [...perDay.keys()].sort().map((d) => {
+        const n = perDay.get(d) ?? 1;
+        return n > 1 ? `${shortDate(d)} (${n === 2 ? 'twice' : `${n} times`})` : shortDate(d);
+      });
+      const list = days.length > 1 ? `${days.slice(0, -1).join(', ')} and ${days[days.length - 1] ?? ''}` : (days[0] ?? '');
+      const time = i === 0 && at.length === 1 && at[0] ? `, in ${mmss(at[0].seconds)}` : '';
+      return `${i ? 'Then ' : ''}${m} m on ${list}${time}.`;
+    })
+    .join(' ');
+}
+
 /* Turns "Your number plus 100 m" into "500 m" once the calibration swim has happened.
  *
  * Text substitution rather than a restructured data model, deliberately: the rung wording is prose
@@ -423,11 +444,12 @@ export default async function SwimPage({
     ? await (async () => {
         /* getRecentSessions returns newest first, so its head IS the last session. Calling
            getLastSession as well would fetch the same row a second time. */
-        const [standards, pbs, recent, history, longestPieces] = await Promise.all([
+        const [standards, pbs, recent, history, longestPieces, yearPieces] = await Promise.all([
           loadSwimStandards(), getSwimPbs(), getRecentSessions('swimming', 10), getSwimHistory(90),
           /* The longest unbroken piece per swim, derived. It replaces a typed list of nine numbers
              under a label saying ten, whose diagnosis the live laps contradict. See getLongestPieces. */
           getLongestPieces(10),
+          getLongestPiecesThisYear(),
         ]);
         return {
           standards,
@@ -436,6 +458,7 @@ export default async function SwimPage({
           recent,
           history,
           longestPieces,
+          yearPieces,
         };
       })()
     : null;
@@ -594,7 +617,8 @@ export default async function SwimPage({
                   .filter((f) => !f.secondary)
                   .map((f) => (
                     <div className="ex-cue" key={f.label}>
-                      <b>{f.label}.</b> {f.value}
+                      <b>{f.label}.</b>{' '}
+                      {f.derived === 'longestThisYear' ? (yearLine(now.yearPieces) ?? f.value) : f.value}
                       {/* THE LONGEST PIECES ARE DERIVED NOW, since 2026-08-28 (11-swim P1-4).
                           This fact used to carry a typed list: "Longest piece in your last ten swims:
                           100, 100, 100, 500, 125, 250, 150, 100, 150 m. The long one happens monthly,

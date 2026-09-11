@@ -311,18 +311,17 @@ function Method({ r }: { r: SwimRecords }) {
             rests between them, what a clock on the wall would show.
           </p>
           <p>
-            <b>The watch uses a third clock and it is neither of those.</b> Checked on 2026-09-03
-            against the lengths of the swims each record was set in: on 100 m and 200 m all three
-            agree, because there was no rest inside. On 400 m the stored record is 5 seconds faster
-            than the first 400 m of that swim, so it is the best 400 m somewhere in a 5,000 m
-            session, not the opening one. On 1,500 m the stored record is 30:58.56 where pure
-            swimming was 29:42 and the wall clock 31:55, so it counts roughly 58% of the rest.
+            <b>The watch uses a third clock and it is neither of those.</b> Its records run on its
+            own session clock, and the lengths do not always add up to it. The 400 m of 10 Sep had
+            no rest in it at all: the watch says 7:03.84 and its sixteen lengths add up to 7:13. So
+            a time read off the lengths can sit seconds away from the watch&rsquo;s record for the
+            same swim with no rest involved.
           </p>
           <p>
-            That explains something that would otherwise look wrong. The stored 1,500 is 2:04 per
-            100 m and the best derived 1,000 on the wall clock is 2:05, which reads as faster over
-            the longer distance. Put the 1,000 on the watch&rsquo;s own clock and it lands near
-            20:30, about 2:03, and longer is slower again as it should be.
+            <b>A paused watch records no rest.</b> At some stops the watch is paused, and while it
+            is paused it cannot see the stop, so the swim reads as continuous. The pause is still in
+            the export, so it counts here: a pause of 5 seconds or more is a stop, rest recorded or
+            not.
           </p>
           <p>
             <b>Freestyle only, and contiguous.</b> A window has to be an unbroken run of lengths by

@@ -54,12 +54,10 @@ import { LENGTH_MIN_MS, LENGTH_MAX_MS } from './deep';
  *                                          is the best 400 m window in a 5,000 m swim, not the first)
  *   1500 m PB 30:58.56 the whole swim:     swimming 29:42, wall 31:55 (PB sits BETWEEN the two)
  *
- * So the watch's number is neither. On the 1500 it counts about 58% of the rest. That matters for
- * exactly one reason: it explains an apparent artifact rather than leaving it to be rediscovered.
- * The stored 1500 PB is 2:04 per 100 m and the best derived 1,000 m on the wall clock is 2:05, which
- * reads as faster over the longer distance. Once the 1,000 m is put on the watch's own clock it
- * lands near 20:30, about 2:03 per 100 m, and longer is slower again. **Never print a derived time
- * in the same column as a stored personal best without saying they are different clocks.**
+ * So the watch's number is neither. This used to say it "counts about 58% of the rest"; the 400 m of
+ * 2026-09-10 had no rest at all and the watch still timed it 9.6 s under its own lengths, so that
+ * reading is dead. **Never print a derived time in the same column as a stored personal best without
+ * saying they are different clocks.**
  */
 
 /** One derived record for one distance, over the current calendar year. */

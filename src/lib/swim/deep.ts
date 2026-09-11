@@ -1,5 +1,6 @@
 import 'server-only';
-import { sql } from './db';
+import { sql, SWIM_USABLE_SESSIONS } from './db';
+import { today } from '../day';
 
 /* EIGHT YEARS OF LENGTHS, READ. Built 2026-08-27, Phase D item 2 of the training redesign.
  *
@@ -32,7 +33,8 @@ import { sql } from './db';
  *    a work-to-rest ratio built on it would read eight years of interval swimming as unbroken. So
  *    per-length rest is used only to split a session into pieces, only where it exists, and the
  *    session-level rest figure comes from the arithmetic that works in every year: session duration
- *    minus the sum of the lengths.
+ *    minus the sum of the lengths. Since 2026-09-11 rest_after_ms also carries watch pauses, so
+ *    rest_recorded_ms is the column that answers "does this swim have rest detection at all".
  *
  * NOTHING IN THIS FILE IS TYPED INTO PROSE. Every figure the page prints is returned from here,
  * including the ones about the data's own limits, because a number written into a sentence is a
@@ -568,19 +570,14 @@ async function seasonGaps(): Promise<SeasonGap[]> {
   }));
 }
 
-/** The last session split into pieces at the walls he actually stopped at.
- *
- *  Only possible where `rest_after_ms` exists, which is 2025 onward. Returns null rather than
- *  inventing one continuous piece out of a session whose rests were never recorded. */
+/** The latest swim with usable rest data (a recorded rest, or a clock proving none), split at its stops. */
 async function lastPieces(): Promise<PieceSession | null> {
   const rows = await sql`
     with last_session as (
-      select session_uuid
-      from health_swim_length
-      where session_start_time is not null
-      group by session_uuid
-      having max(rest_after_ms) > 0
-      order by min(session_start_time) desc
+      select u.session_uuid
+      from ${sql.unsafe(SWIM_USABLE_SESSIONS)} u
+      where u.st is not null
+      order by u.st desc
       limit 1
     )
     select ((session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text as d,
@@ -635,6 +632,86 @@ async function lastPieces(): Promise<PieceSession | null> {
   return { date, pieces };
 }
 
+export interface LongestPiece {
+  /** His day, off the row's own offset. */
+  date: string;
+  metres: number;
+  seconds: number;
+}
+
+interface PieceRow {
+  session_uuid: string;
+  st: string | null;
+  day: string;
+  metres: string | number;
+  ms: string | number;
+}
+
+/** Unbroken freestyle pieces: one ends at any stop, at any other stroke, and at any length outside the band. */
+async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): Promise<PieceRow[]> {
+  const since = opts.sinceDay ?? null;
+  return (await sql`
+    with scope as (
+      select u.session_uuid
+        from ${sql.unsafe(SWIM_USABLE_SESSIONS)} u
+       where u.st is not null
+       order by u.st desc
+       limit ${opts.lastSwims ?? null}
+    ),
+    l as (
+      select ln.session_uuid, ln.length_index, ln.pool_length, ln.duration_ms, ln.session_start_time,
+             coalesce(left(ln.session_start_local, 10),
+                      ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text) as day,
+             (ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) as ok,
+             lag(ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) over w as prev_ok,
+             lag(coalesce(ln.rest_after_ms, 0)) over w as prev_rest,
+             lag(ln.length_index) over w as prev_idx
+        from health_swim_length ln
+       where ln.session_uuid in (select session_uuid from scope)
+         and (${since}::text is null
+              or coalesce(left(ln.session_start_local, 10),
+                          ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text) >= ${since})
+      window w as (partition by ln.session_uuid order by ln.length_index)
+    ),
+    g as (
+      select *, sum(case when prev_ok is not true or prev_rest > 0 or prev_idx <> length_index - 1 then 1 else 0 end)
+                  over (partition by session_uuid order by length_index rows unbounded preceding) as grp
+        from l
+       where ok
+    )
+    select session_uuid, min(session_start_time) as st, min(day) as day,
+           sum(pool_length) as metres, sum(duration_ms) as ms
+      from g
+     group by session_uuid, grp
+  `) as unknown as PieceRow[];
+}
+
+const toPiece = (r: PieceRow): LongestPiece => ({
+  date: String(r.day),
+  metres: Number(r.metres),
+  seconds: Math.round(Number(r.ms) / 1000),
+});
+
+/** The longest unbroken piece in each of the last N swims, newest swim first. */
+export async function getLongestPieces(limit = 10): Promise<LongestPiece[]> {
+  const best = new Map<string, PieceRow>();
+  for (const r of await unbrokenPieces({ lastSwims: limit })) {
+    const cur = best.get(r.session_uuid);
+    if (!cur || Number(r.metres) > Number(cur.metres)
+      || (Number(r.metres) === Number(cur.metres) && Number(r.ms) < Number(cur.ms))) best.set(r.session_uuid, r);
+  }
+  return [...best.values()].sort((a, b) => String(b.st).localeCompare(String(a.st))).map(toPiece);
+}
+
+/** Every unbroken piece this calendar year, longest first. */
+export async function getLongestPiecesThisYear(limit = 20): Promise<LongestPiece[]> {
+  const rows = await unbrokenPieces({ sinceDay: `${today().slice(0, 4)}-01-01` });
+  return rows
+    .sort((a, b) => Number(b.metres) - Number(a.metres) || Number(a.ms) - Number(b.ms))
+    .slice(0, limit)
+    .map(toPiece);
+}
+
 /** What the mirror holds, including what this page threw away. */
 async function coverage(): Promise<LengthCoverage> {
   const rows = await sql`
@@ -652,10 +729,11 @@ async function coverage(): Promise<LengthCoverage> {
       (select count(*) from health_swim_session s
          where not exists (select 1 from health_swim_length l where l.session_uuid = s.uuid))
         as sessions_without_lengths,
-      (select count(*) from health_swim_length where rest_after_ms > 0) as rows_with_rest,
+      (select count(*) from health_swim_length
+         where coalesce(rest_recorded_ms, rest_after_ms) > 0) as rows_with_rest,
       (select min(left(((session_start_time::timestamp at time zone 'UTC')
                          at time zone 'America/Edmonton')::date::text, 4))
-         from health_swim_length where rest_after_ms > 0) as rest_first_year
+         from health_swim_length where coalesce(rest_recorded_ms, rest_after_ms) > 0) as rest_first_year
   `;
   const r = (rows[0] ?? {}) as Record<string, unknown>;
   return {

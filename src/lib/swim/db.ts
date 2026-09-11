@@ -164,6 +164,17 @@ const SWIM_CLEAN_FREESTYLE = `(
          group by 1
       )`;
 
+/** Sessions whose stops can be trusted: the watch detected a rest in them, or their clock leaves no room for one.
+ *  The clock test tracks recorded rest at r = 0.95 over 185 sessions and none of them comes in under 30 s. */
+export const SWIM_USABLE_SESSIONS = `(
+        select ln2.session_uuid, min(ln2.session_start_time) as st
+          from health_swim_length ln2
+          left join health_swim_session s2 on s2.uuid = ln2.session_uuid
+         group by ln2.session_uuid
+        having sum(coalesce(ln2.rest_recorded_ms, ln2.rest_after_ms, 0)) > 0
+            or max(s2.duration_ms) - sum(ln2.duration_ms) <= 30000
+      )`;
+
 const SWIM_LOCAL_DATE = `coalesce(
         ((l.st::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
         ((d.start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date,
@@ -281,114 +292,6 @@ export async function getSwimHistory(days = 90): Promise<SwimHistory> {
 }
 
 
-/** The longest UNBROKEN piece in each of the last N swims, derived. 11-swim P1-4.
- *
- *  WHAT IT REPLACES. `content/swim/plan.json` carried this as a typed sentence:
- *
-  *    "Longest piece in your last ten swims: 100, 100, 100, 500, 125, 250, 150, 100, 150 m.
-  *     The long one happens monthly, not weekly. That is the gap, not fitness."
- *
- *  Nine values under a label saying ten, a snapshot ending around 2026-08-22, and a diagnosis the
- *  live data contradicts. Recomputed: SEVEN of the last ten swims hold a piece of 150 m or more,
- *  six of them inside eleven days, and the newest is a 200 m piece on 2026-08-26 which is exactly
- *  the number he recorded as his baseline two days later. The long one happens most swims now.
- *
- *  That sentence is the premise of the whole ten-week continuity ladder, and the page prints it
- *  under the heading "Where you are". The block's own comment says the 2026-08-21 fix means "the
- *  page cannot outgrow what the laps say"; it labelled the facts and left them typed, so it could
- *  and it did.
- *
- *  A PIECE ENDS AT A RECORDED REST. `rest_after_ms` is what the watch stores between lengths, so a
- *  run of consecutive lengths with no rest between them is one unbroken swim.
- *
- *  THE GUARD THAT WAS MEANT TO EXCLUDE THE PRE-2025 ERA DID NOTHING, and that was measured on
- *  2026-09-02. It read `where rest_after_ms is not null`, and its own docstring said "sessions with
- *  no rest data at all are excluded rather than counted as one enormous piece, which is the
- *  flattering reading and the one this file has been burned by before". The column is **0, never
- *  NULL**: 19,327 of 19,327 rows are non-null, including all 10,037 rows from 2018 to 2024 that
- *  `src/lib/swim/deep.ts` correctly describes as carrying no rest. So every row passed. The only
- *  reason it never printed a 2,000 m "unbroken" piece is that `limit 10` and `limit 40` both land
- *  inside 2026, where he swims often enough that the window never reaches back.
- *
- *  THE REPLACEMENT IS THE DISCRIMINATOR, NOT AN ERA TEST. A session's rest data is usable if it
- *  either records a rest, or the session clock proves there was none to record: session duration
- *  minus the sum of the lengths. That proxy tracks the recorded rest at r = 0.95 across the 185
- *  sessions carrying both, slope 1.06, and **not one of those 185 comes in under 30 seconds**. So a
- *  gap under 30 s means no rest, in any year, and it is the only test that can see the five 2,000 m
- *  swims of March and April 2023 where the two clocks agree to within 23 seconds. Those are his
- *  longest continuous swims on record, 3.3 times the 600 m this plan calls his longest piece, and
- *  the old guard is the reason nothing on /swim could see them.
- */
-export interface LongestPiece {
-  date: string;
-  metres: number;
-  seconds: number;
-}
-
-export async function getLongestPieces(limit = 10): Promise<LongestPiece[]> {
-  const rows = (await sql`
-    /* THE SAME l, s AND d ALIASES the rest of this file uses, because SWIM_LOCAL_DATE is written
-       against them and there is exactly one definition of a swim's local date on this site. The
-       first draft aliased health_swim_length as l directly and the query threw "column l.st does not
-       exist": l in that expression is the SUBQUERY holding min(session_start_time) as st, not the
-       length table. The lengths are ln here for that reason. Reusing the expression rather than
-       writing a second date conversion is the point: four date columns describe these swims and 94
-       of 475 rows are a day out.
-       NO BACKTICKS IN HERE. This is inside a tagged template and a backtick ends it. Ninth instance
-       of that class today, in a comment that already says so twelve lines up in this same file. */
-    select ln.session_uuid,
-           ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date,
-           ln.length_index, ln.pool_length, ln.duration_ms,
-           coalesce(ln.rest_after_ms, 0) as rest
-      from health_swim_length ln
-      left join health_swim_session s on s.uuid = ln.session_uuid
-      left join (
-        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
-      ) l on l.session_uuid = ln.session_uuid
-      left join health_session_detail d on d.uuid = ln.session_uuid and d.kind = 'swimming'
-     where ln.session_uuid in (
-       /* USABLE REST DATA, per the note above: the session records a rest, or the session clock
-          proves there was none. The old test, rest_after_ms is not null, passed every row in the
-          table, including eight years that carry no rest at all. */
-       select ln2.session_uuid
-         from health_swim_length ln2
-         left join health_swim_session s2 on s2.uuid = ln2.session_uuid
-        group by ln2.session_uuid
-       having sum(coalesce(ln2.rest_after_ms, 0)) > 0
-           or max(s2.duration_ms) - sum(ln2.duration_ms) <= 30000
-        order by min(ln2.session_start_time) desc
-        limit ${limit}
-     )
-     order by ln.session_start_time desc, ln.length_index asc
-  `) as unknown as {
-    session_uuid: string; date: string; length_index: number;
-    pool_length: number | null; duration_ms: number | null; rest: number;
-  }[];
-
-  const bySession = new Map<string, { date: string; lengths: typeof rows }>();
-  for (const r of rows) {
-    const hit = bySession.get(r.session_uuid);
-    if (hit) hit.lengths.push(r);
-    else bySession.set(r.session_uuid, { date: r.date, lengths: [r] });
-  }
-
-  const out: LongestPiece[] = [];
-  for (const { date, lengths } of bySession.values()) {
-    let bestM = 0; let bestS = 0; let runM = 0; let runS = 0;
-    for (const l of lengths) {
-      runM += Number(l.pool_length) || 25;
-      runS += (Number(l.duration_ms) || 0) / 1000;
-      if (Number(l.rest) > 0) {
-        if (runM > bestM) { bestM = runM; bestS = runS; }
-        runM = 0; runS = 0;
-      }
-    }
-    if (runM > bestM) { bestM = runM; bestS = runS; }
-    if (bestM > 0) out.push({ date, metres: bestM, seconds: Math.round(bestS) });
-  }
-  out.sort((a, b) => (a.date < b.date ? 1 : -1));
-  return out;
-}
 
 /** The one line the front door needs: last swim, how far, and how long ago.
  *

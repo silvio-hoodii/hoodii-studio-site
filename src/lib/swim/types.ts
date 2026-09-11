@@ -37,7 +37,7 @@ export interface BaselineFact {
    *
    *  A string here rather than a boolean because more of this file will follow: every typed figure
    *  in `baseline` is a candidate, and naming which derivation applies keeps the page from guessing. */
-  derived?: 'longestPieces';
+  derived?: 'longestPieces' | 'longestThisYear';
 }
 
 /** A rung. `piece` is written RELATIVE to the number the week-0 calibration swim returns, never as

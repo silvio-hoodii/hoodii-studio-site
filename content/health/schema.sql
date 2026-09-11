@@ -227,6 +227,9 @@ create table if not exists health_swim_length (
 );
 create index if not exists health_swim_length_date on health_swim_length (date);
 create index if not exists health_swim_length_session on health_swim_length (session_uuid, length_index);
+-- A paused watch detects no rest, so rest_after_ms includes pauses (HealthOS/server/swim-pauses.mjs).
+-- rest_recorded_ms is the watch's own rest detection alone: use it to ask whether a swim HAS rest data.
+alter table health_swim_length add column if not exists rest_recorded_ms integer;
 
 -- The liveness figure for the lengths mirror goes in the row health_sync already writes, rather
 -- than into a table of its own.

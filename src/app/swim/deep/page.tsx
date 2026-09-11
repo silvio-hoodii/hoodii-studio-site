@@ -588,18 +588,19 @@ function StrokeMix({ strokes }: { strokes: DeepSwim['strokes'] }) {
  * it is the only thing gated on the year that reading starts.
  * ---------------------------------------------------------------------------------------------- */
 function Pieces({ session, coverage }: { session: DeepSwim['lastPieces']; coverage: DeepSwim['coverage'] }) {
-  if (!session || session.pieces.length < 2) return null;
+  if (!session || !session.pieces.length) return null;
   const total = session.pieces.reduce((a, p) => a + p.metres, 0);
+  const unbroken = session.pieces.length === 1;
   return (
     <details className="exgroup ladder-all">
       <summary className="exgroup-label">
         The last session, piece by piece{' '}
         <span className="tag">
-          ({session.pieces.length} pieces, {total.toLocaleString('en-CA')} m, {when(session.date)})
+          ({unbroken ? 'one piece, unbroken' : `${session.pieces.length} pieces`}, {total.toLocaleString('en-CA')} m, {when(session.date)})
         </span>
       </summary>
       <p className="lede">
-        Split at the walls where the watch recorded a rest. Available from{' '}
+        Split at every stop, paused watch included. Available from{' '}
         {coverage.restFirstYear ?? 'recently'} onward only:{' '}
         <span className="tnum">{coverage.rowsWithRest.toLocaleString('en-CA')}</span> of{' '}
         <span className="tnum">{coverage.rows.toLocaleString('en-CA')}</span> lengths carry one.
