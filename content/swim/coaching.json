@@ -1,19 +1,26 @@
 {
   "$comment": [
-    "COACH ME, rebuilt 2026-09-11 on his complaint that there was not much there he could use. The",
-    "twelve checks of 2026-08-22 were sound and sourced; what was missing was any link to his own swims",
-    "and a way to read one at the side of the pool. Now the tab opens on what his lengths say (derived",
-    "on the page, from the stroke counts inside his last long pieces), then the checks grouped by where",
-    "in the swim they matter, each one a Do line and a Check line with the source's own words under it.",
+    "COACH ME, rebuilt twice on 2026-09-11. Morning: his complaint that there was not much there he could",
+    "use, so the tab opened on his own stroke counts and the checks became Do and Check cards.",
     "",
-    "SOURCES ARE US MASTERS SWIMMING ONLY, his ruling of 2026-09-02. Two were added today: the open",
-    "turns guide, because his stops happen at the wall, and the breathing drills article, whose one",
-    "sentence quoted here puts the hum in US Masters' own words. Its hypoxic drills are deliberately",
-    "NOT used: plan.json's breathing cue forbids every 4 or 5 on the continuity piece, for the reason",
-    "written in its stop cue. Every quote is checked against content/swim/sources/ by validate.mjs.",
+    "AFTERNOON, on his own report of how he swims, in his words: the 450 ended on breathing and arms; the",
+    "400 was a set he chose after getting out to rest; he does the high elbow and still cannot feel his",
+    "lats; pressing the chest makes him dip like a small dive; the hum works but the internet disagrees",
+    "about how much to breathe out; he cannot find rotation or the kick from the hips; he wants questions",
+    "to ask himself mid-swim, things to do on land, and drills that fit a public lane. Every one of those",
+    "is answered below from US Masters Swimming's own pages, several of them already captured: the pull",
+    "guide says the catch is a reposition and the hand speeds up through the pull; the breathing guide",
+    "says slow exhale then a final forceful one; the body position guide says the shoulders lead the",
+    "roll; and both guides carry dryland work, including a cord squeeze written as a learning tool for",
+    "feeling the back muscles. Each Check reads as a question he can answer in the water.",
     "",
-    "The history of every earlier check, including three tests that were inverted or unperformable,",
-    "is in git and in HealthOS/knowledge/SWIM-ADVERSARIAL-2026-09-02.md."
+    "SOURCES ARE US MASTERS SWIMMING ONLY, his ruling of 2026-09-02. The research on where to put your",
+    "attention while swimming (Freudenheim and colleagues 2010) is a study, not a USMS page, so it is a",
+    "cue on the How tab rather than a card here. Every quote is checked against content/swim/sources/",
+    "by validate.mjs.",
+    "",
+    "yourWords is what HE reported about a piece, which only he can know. It renders beside that piece's",
+    "trace. Add a row when he says how one ended; never write one for him."
   ],
   "meta": {
     "builtOn": "2026-08-22",
@@ -21,30 +28,186 @@
     "stroke": "freestyle",
     "who": "Him, in the water, alone."
   },
+  "yourWords": [
+    { "date": "2026-09-09", "metres": 450, "on": "2026-09-11", "said": "Tired, mostly: breathing and arms together." },
+    { "date": "2026-09-10", "metres": 400, "on": "2026-09-11", "said": "A set you chose, after getting out to rest. You could have kept going, and stopped because your form would have slipped." }
+  ],
   "groups": [
     {
+      "id": "every",
+      "name": "Every swim",
+      "items": [
+        {
+          "id": "one-thing",
+          "name": "One thing per swim",
+          "do": "Before you get in, pick one card below. Think only about that one, and ask its question every few lengths. Keep the same card until it happens without thinking.",
+          "check": "After the swim, can you name the one thing you worked on, and was its answer yes more often at the end than at the start?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-drills", "text": "Take your time as you swim to think about just that one thing. It's easy to get lost in all the technical details. Picking one at a time means you can narrow it down and focus on change." },
+            { "source": "usms-drills", "text": "It's going to take repeated, focused drills over time to make a lasting correction to your stroke." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull",
+      "name": "The pull",
+      "items": [
+        {
+          "id": "catch",
+          "name": "The catch is a reposition, not the pull",
+          "do": "From the stretch, drop the hand down and in while the elbow bends out to the side. Smooth and easy: you are turning the forearm to face back, not pulling yet.",
+          "check": "Was the catch the easy part? If it felt like the hard part, you started pulling before the forearm faced back.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-pull", "text": "Your catch doesn't involve grabbing or holding water; it's simply repositioning your arm in preparation for creating propulsion with an effective pull." },
+            { "source": "usms-pull", "text": "The action should be smooth and the change in position shouldn't require much effort. Think about repositioning as opposed to actively pulling." }
+          ]
+        },
+        {
+          "id": "accelerate",
+          "name": "Speed the hand up through the pull",
+          "do": "Once the forearm faces back, push the water straight back and let the hand get faster toward your hip. On a long piece, start slow and finish slightly faster.",
+          "check": "Is my hand moving faster at my hip than it was at the catch?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-pull", "text": "Increase your hand speed throughout your pull. When attempting to sprint, start with a high hand speed and get faster; if you're doing a distance swim, start much slower and end slightly faster on your pull." },
+            { "source": "usms-pull", "text": "Your primary focus should be on pulling and pushing directly backward." }
+          ]
+        },
+        {
+          "id": "paddle",
+          "name": "Hand and forearm, one paddle",
+          "do": "Keep the hand and forearm facing back together, elbow out to the side, for as long as the pull lasts. The feel of the back muscles behind it is easier to learn on land: the cord squeeze at the bottom.",
+          "check": "Is the pressure along my forearm too, or only in my palm?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-pull", "text": "To pull effectively, have your hand and forearm facing backward." },
+            { "source": "usms-pull", "text": "Once you've created a large surface area, your goal should be to maintain the same surface area as long as possible throughout your pull." }
+          ]
+        },
+        {
+          "id": "finish",
+          "name": "Finish past the hip, then back and up",
+          "do": "Finish just past your hip, and in the last part pull back and up so the arm swings straight into the recovery. The very end is small muscles, so do not force it.",
+          "check": "Does my hand brush my thigh, and does the arm leave the water without a stall?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-pull", "text": "your hands should finish your pull just past your hips. Your arm should not be completely straight at this point." },
+            { "source": "usms-pull", "text": "during the last part of your pulling phase, think about pulling back and up, rather than just straight back." },
+            { "source": "usms-pull", "text": "Because there's very little surface area moving backward at this point (just your hand) and the muscles performing the work are relatively small (just your triceps), you won't create much propulsion, however." }
+          ]
+        },
+        {
+          "id": "kick-through",
+          "name": "Pull harder, keep the kick going",
+          "do": "When you work on the pull, keep the legs kicking. A harder pull sinks the hips, and the kick is what holds them up.",
+          "check": "When I focus on the pull, do my legs start to drag?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-kick", "text": "For instance, the beginning of your pull causes your hips to sink, and the harder you pull, the more your hips sink. A strong kick counteracts this sinking effect." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "breath",
+      "name": "Breathing",
+      "items": [
+        {
+          "id": "exhale",
+          "name": "Breathe out slowly, then blow the rest just before you turn",
+          "do": "Face in: let the air out slowly, like a hum, keeping some in to float on. Just before you turn to breathe, one hard blow to empty. Then the breath in is quick.",
+          "check": "When my mouth clears the water, is the only thing left to do breathe in?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-breathing", "text": "After inhaling and returning your head to the water, patiently and slowly exhale. There is no urgency to this action, and it does not need to be forceful. Just prior to breathing in again, perform a final, forceful exhalation during which your lungs are cleared of air." },
+            { "source": "usms-breathing-drills", "text": "Exhale as you swim, letting air out slowly as if you're humming." },
+            { "source": "usms-breathing", "text": "The stronger the buoyant force, the less work that needs to be done to maintain a proper body position in the water." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "name": "Body line",
+      "items": [
+        {
+          "id": "chest",
+          "name": "Lean on your chest, and hold the lean",
+          "do": "From the push-off, lean your head and chest into the water and keep that lean the whole length. A lean is a position you hold, not a push on every stroke.",
+          "check": "Is the lean steady from wall to wall, or do I dip on each stroke? A dip every stroke means ease off and hold it.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-position", "text": "The first strategy is to press your head and chest, the lighter end of the seesaw, down into the water." },
+            { "source": "usms-position", "text": "By leaning into the water and leaning into your lungs, you'll put pressure into the flotation you feel in your chest." }
+          ]
+        },
+        {
+          "id": "tension",
+          "name": "Firm the back of your body",
+          "do": "If the lean is not enough, tighten your lower back, glutes and the backs of your legs together. The superman on the land cards is the same feeling on the floor.",
+          "check": "Do my heels feel close to the surface?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-position", "text": "Some swimmers also need to think about creating tension in their lower back and legs to lift their hips and legs." },
+            { "source": "usms-position", "text": "Your lower back and hips are key for creating tension in the back of your body. This tension holds your legs up at the surface of the water, preventing them from sinking." }
+          ]
+        },
+        {
+          "id": "rotation",
+          "name": "Shoulders lead the roll, hips follow",
+          "do": "Let the shoulders start the roll and the hips come with them, spine straight, no twist at the waist. Roll only as far as your arm needs to clear the water.",
+          "check": "Does my arm swing over the water without dragging? If it drags, roll more. If it clears, that is enough.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-position", "text": "The role of rotation is to allow for extra range of motion in your shoulders, so your shoulders should lead the rotation." },
+            { "source": "usms-position", "text": "If you're unable to recover your arms smoothly over the surface, you need to rotate more. Once you can rotate your arms smoothly over the surface, that amount of rotation is sufficient and more would be counterproductive." },
+            { "source": "usms-position", "text": "Rotation only works if you keep your spine relatively straight. Your whole spine needs to rotate in the same way at the same time for your rotation to fulfill its function." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kick",
+      "name": "Kick",
+      "items": [
+        {
+          "id": "kick-small",
+          "name": "Small, fast kick",
+          "do": "Keep the kick small and quick, feet under the surface.",
+          "check": "Is there air on the soles of my feet? There should not be.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-kick", "text": "Kicking is expensive. It takes a lot of energy to produce speed with your legs, and a big kick takes a lot more energy than a smaller kick." }
+          ]
+        },
+        {
+          "id": "kick-hip",
+          "name": "The kick starts at the hip",
+          "do": "Hip first, knee second, ankle third, like a whip.",
+          "check": "You cannot see this from inside the water. A phone on the deck filming one length is the only way to know.",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-kick", "text": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third." },
+            { "source": "usms-drills", "text": "Use videos of yourself swimming and mental pictures or words to help you understand the change you're trying to make." }
+          ]
+        }
+      ]
+    },
+    {
       "id": "long",
-      "name": "Holding the long piece",
+      "name": "The long piece",
       "items": [
         {
           "id": "count",
           "name": "Count your strokes on every length",
           "do": "Count stroke cycles on one arm, every length of the long piece.",
-          "check": "A length two or more above your usual count cost more than it should have, whatever it felt like.",
+          "check": "Is this length two or more above my usual count? Then it cost more than it should have, whatever it felt like.",
           "confidence": "sourced",
           "quotes": [
             { "source": "usms-pull", "text": "Counting your strokes is a measure of swimming efficiency. The fewer strokes you can take, the more efficiently you're swimming." }
-          ]
-        },
-        {
-          "id": "exhale",
-          "name": "Breathe out the whole time your face is in",
-          "do": "Let the air out slowly while your face is down. Hum it.",
-          "check": "The hum runs until your mouth clears the water, and your first move there is to breathe in, not out.",
-          "confidence": "sourced",
-          "quotes": [
-            { "source": "usms-breathing", "text": "You should exhale while your mouth is underwater and inhale when it's out of the water." },
-            { "source": "usms-breathing-drills", "text": "Exhale as you swim, letting air out slowly as if you're humming." }
           ]
         }
       ]
@@ -70,7 +233,7 @@
           "id": "approach",
           "name": "Arrive on a full stroke",
           "do": "Adjust your stroke three or four cycles out so you reach the wall on a full stroke.",
-          "check": "You touch on a full reach, with no glide in and no short chopped stroke.",
+          "check": "Did I touch on a full reach, with no glide in and no short chopped stroke?",
           "confidence": "sourced",
           "quotes": [
             { "source": "usms-open-turns", "text": "Start adjusting your stroke three or four cycles from the wall to ensure you hit the wall on a full stroke." }
@@ -79,83 +242,80 @@
       ]
     },
     {
-      "id": "body",
-      "name": "Body line and kick",
+      "id": "drills",
+      "name": "Drills for a busy lane",
       "items": [
         {
-          "id": "chest",
-          "name": "Legs low: press the chest down first",
-          "do": "If your legs ride low, press your head and chest down before you try kicking harder.",
-          "check": "Kick harder and nothing changes: it is not the kick. Press the chest and see whether the legs rise.",
+          "id": "wall-pull",
+          "name": "Wall pull, at the end of the lane",
+          "do": "At the wall, hands and forearms flat on the deck at pull width. Press down with the whole arm to lift yourself a little, lower, a few times. Then swim a length looking for the same pressure.",
+          "check": "Could I feel the pressure along the whole forearm, and find it again in the length after?",
           "confidence": "sourced",
           "quotes": [
-            { "source": "usms-position", "text": "The first strategy is to press your head and chest, the lighter end of the seesaw, down into the water." }
+            { "source": "usms-pull", "text": "The goal is to focus on creating pressure with your whole arm, as well as experimenting with different positions of your arm." },
+            { "source": "usms-pull", "text": "place your hands and forearms on the surface of the pool deck at approximately the width and angle of your arm pull" },
+            { "source": "usms-pull", "text": "Each series of drills is followed by a freestyle repetition to practice these skills during the goal movement of freestyle." }
           ]
         },
         {
-          "id": "tension",
-          "name": "Keep the lower back and hips firm",
-          "do": "Hold tension through the lower back and hips.",
-          "check": "Push off and glide with no kick: count how long before the legs drop. Longer over the weeks is the line improving.",
+          "id": "fist",
+          "name": "Fists, then open hands",
+          "do": "Swim one length with tight fists, then one with open hands. It looks like normal swimming, so it fits any lane.",
+          "check": "On the open-hand length, do I feel the water on my palm and forearm more?",
           "confidence": "sourced",
           "quotes": [
-            { "source": "usms-position", "text": "Your lower back and hips are key for creating tension in the back of your body. This tension holds your legs up at the surface of the water, preventing them from sinking." }
-          ]
-        },
-        {
-          "id": "kick-small",
-          "name": "Small, fast kick",
-          "do": "Keep the kick small and quick, feet under the surface.",
-          "check": "No air on the soles of your feet.",
-          "confidence": "sourced",
-          "quotes": [
-            { "source": "usms-kick", "text": "Kicking is expensive. It takes a lot of energy to produce speed with your legs, and a big kick takes a lot more energy than a smaller kick." }
-          ]
-        },
-        {
-          "id": "kick-hip",
-          "name": "The kick starts at the hip",
-          "do": "Hip first, knee second, ankle third.",
-          "check": "You cannot see this from inside the water. A phone on the deck filming one length is the only way to know.",
-          "confidence": "sourced",
-          "quotes": [
-            { "source": "usms-kick", "text": "Your down-kick begins at your hip, your knee moves second, and your ankle moves third." }
+            { "source": "usms-pull", "text": "By closing your fists, you're forced to better integrate your forearm into your pull to compensate for the smaller surface area pushing against the water. This helps you learn to use all the surface area that your arm provides. Furthermore, when you reopen your hands, it's much easier to feel the water." }
           ]
         }
       ]
     },
     {
-      "id": "pull",
-      "name": "The pull",
+      "id": "land",
+      "name": "On land",
       "items": [
         {
-          "id": "catch",
-          "name": "Bend the elbow before you pull",
-          "do": "From the stretch, drop the hand down and in as the elbow bends out to the side.",
-          "check": "One length with tight fists, one with open hands. Barely slower on fists means the forearm is already doing the work.",
+          "id": "catch-land",
+          "name": "The catch, standing up",
+          "do": "One arm straight up. Turn the hand down while the elbow bends out to the side, then back. Ten slow ones, at home or at the wall between lengths.",
+          "check": "Does the elbow stay high while the hand drops?",
           "confidence": "sourced",
           "quotes": [
-            { "source": "usms-pull", "text": "drop your hand down and in from the outstretched position while your elbow bends, pointing out to the side." }
+            { "source": "usms-pull", "text": "Rotate your hand down while simultaneously bending your elbow to the side." },
+            { "source": "usms-pull", "text": "You can practice this movement anywhere, including while resting between repetitions during a workout." }
           ]
         },
         {
-          "id": "finish",
-          "name": "Finish every pull past the hip",
-          "do": "Push the water all the way back until your hand passes your hip.",
-          "check": "Your hand brushes your thigh before it leaves the water.",
+          "id": "cord-squeeze",
+          "name": "Cord squeeze: learn to feel your back",
+          "do": "Band anchored high in front. Straight arms, pull down to your hips, hold 3 to 5 seconds, let it back up. Hard but manageable. On a pull-down at the gym, the same finish: elbows into your ribs.",
+          "check": "Do I feel it in my back, below the armpits, rather than in my arms?",
           "confidence": "sourced",
           "quotes": [
-            { "source": "usms-pull", "text": "your hands should finish your pull just past your hips. Your arm should not be completely straight at this point." }
+            { "source": "usms-pull", "text": "The purpose of this exercise is to help you feel the contraction of the strong muscles of your back. These muscles are most effective at creating a powerful pull." },
+            { "source": "usms-pull", "text": "This is less of a strength exercise and more of a learning tool. It can help increase your awareness of how to use these muscles. That awareness can help you pull more effectively in the water." },
+            { "source": "usms-pull", "text": "With straight arms, pull against the cord and bring your hands down to your hips. Hold that position for 3-5 seconds." },
+            { "source": "usms-pull", "text": "Focus on squeezing your elbows to your torso to determine your range of motion." }
           ]
         },
         {
-          "id": "rotation",
-          "name": "Rotate hips and shoulders together",
-          "do": "Turn the whole spine as one, not the shoulders alone.",
-          "check": "If your count climbs on the side you breathe to, the rotation is not even.",
+          "id": "superman",
+          "name": "Alternating superman: the back of the body",
+          "do": "On your stomach, arms forward. Squeeze your back and glutes, lift one arm and the opposite leg, hold a moment, switch.",
+          "check": "Do my glutes and lower back switch on together? That is the tension that lifts your legs in the water.",
           "confidence": "sourced",
           "quotes": [
-            { "source": "usms-position", "text": "Rotation only works if you keep your spine relatively straight. Your whole spine needs to rotate in the same way at the same time for your rotation to fulfill its function." }
+            { "source": "usms-position", "text": "Alternating Superman improves your ability to create tension on the back of your body while also developing strength and endurance to maintain these skills." },
+            { "source": "usms-position", "text": "Squeeze the muscles of your back and hips and lift one arm and the opposite leg off the ground." }
+          ]
+        },
+        {
+          "id": "rolling-plank",
+          "name": "Rolling elbow plank: the roll without a bend",
+          "do": "From a plank on your elbows, roll onto one elbow with the body in one straight line, back to both, then the other side.",
+          "check": "Did I roll as one piece, or bend at the waist?",
+          "confidence": "sourced",
+          "quotes": [
+            { "source": "usms-position", "text": "Rolling elbow plank allows you to practice that skill on land while also developing the muscles responsible for ensuring it happens in the water. The key is for your movement to be purely rotational, rather than a bend at your waist." }
           ]
         }
       ]
@@ -167,6 +327,7 @@
     { "id": "usms-breathing-drills", "label": "US Masters Swimming: Drills for your freestyle breathing pattern", "url": "https://www.usms.org/fitness-and-training/articles-and-videos/articles/drills-thatll-help-you-build-your-lung-strength-and-improve-your-freestyle-breathing-pattern" },
     { "id": "usms-open-turns", "label": "US Masters Swimming: Open Turns", "url": "https://www.usms.org/fitness-and-training/guides/turns/open-turns" },
     { "id": "usms-position", "label": "US Masters Swimming: Freestyle, Body Position", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/body-position" },
-    { "id": "usms-kick", "label": "US Masters Swimming: Freestyle, Kick", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick" }
+    { "id": "usms-kick", "label": "US Masters Swimming: Freestyle, Kick", "url": "https://www.usms.org/fitness-and-training/guides/freestyle/kick" },
+    { "id": "usms-drills", "label": "US Masters Swimming: Why swimmers should be doing drills", "url": "https://www.usms.org/fitness-and-training/articles-and-videos/articles/why-swimmers-should-be-doing-drills" }
   ]
 }

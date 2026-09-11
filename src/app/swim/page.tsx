@@ -427,6 +427,34 @@ function Quotes({ quotes, sources }: { quotes: SourceQuote[]; sources: Map<strin
   );
 }
 
+/** Mean heart rate over each length of a swim, one value per length.
+ *
+ *  The stored trace is thinned to about 120 points across the whole recording (see
+ *  HealthOS/server/import-session-detail.mjs), so a length holds a few of them. They are spread over
+ *  the lengths-plus-rest timeline rather than the session clock, because the rest carries the watch
+ *  pauses and the session clock does not. Good for the shape of a piece, not for a single number. */
+function hrPerLength(s: SessionDetail): number[] {
+  const L = s.series.lengths ?? [];
+  const hr = s.series.hr ?? [];
+  if (!L.length || !hr.length) return [];
+  const span = Math.max((s.minutes ?? 0) * 60, L.reduce((a, l) => a + l.s + (l.rest || 0), 0));
+  const step = span / hr.length;
+  let t = 0;
+  let prev = 0;
+  return L.map((l) => {
+    const a = Math.floor(t / step);
+    const b = Math.max(a + 1, Math.floor((t + l.s) / step));
+    t += l.s + (l.rest || 0);
+    const seg = hr.slice(a, b).filter((x) => x > 0);
+    prev = seg.length ? Math.round(mean(seg)) : prev;
+    return prev;
+  });
+}
+
+/** A heart rate this far under the swim's own peak, at the end of a piece, says the heart was not
+ *  what ended it. 15 bpm is well outside the wobble of a few wrist readings per length. */
+const HR_HEADROOM = 15;
+
 function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent: SessionDetail[] }) {
   const sources = new Map(c.sources.map((s) => [s.id, s]));
   const byUuid = new Map(recent.map((s) => [s.uuid, s]));
@@ -446,11 +474,13 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
           </p>
         )}
         {long.map((p) => {
-          const cycles = (byUuid.get(p.uuid)?.series.lengths ?? [])
-            .slice(p.firstIndex - 1, p.lastIndex)
-            .map((l) => l.c);
+          const s = byUuid.get(p.uuid) as SessionDetail;
+          const cycles = (s.series.lengths ?? []).slice(p.firstIndex - 1, p.lastIndex).map((l) => l.c);
+          const hr = hrPerLength(s).slice(p.firstIndex - 1, p.lastIndex);
           const tail = cycles.slice(-4);
           const head = cycles.slice(0, -4);
+          const hrEnd = hr.length >= 4 ? Math.round(mean(hr.slice(-4))) : null;
+          const said = c.yourWords?.find((w) => w.date === p.date && w.metres === p.metres);
           return (
             <div key={`${p.uuid}-${p.firstIndex}`}>
               <Trace
@@ -465,9 +495,25 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
                   {mean(tail) - mean(head) >= 0.5 ? 'The count climbed before the piece ended.' : 'The count held to the end.'}
                 </p>
               )}
+              {hr.length > 0 && <Trace values={hr} label="Heart rate per length" unit="bpm" over="that piece" />}
+              {hrEnd != null && s.maxHr != null && (
+                <p className="ex-cue">
+                  Last 4 lengths: {hrEnd} bpm. This swim&rsquo;s peak: {s.maxHr} bpm.
+                  {s.maxHr - hrEnd >= HR_HEADROOM ? ' Your heart was well under its peak when the piece ended.' : ''}
+                </p>
+              )}
+              {said && (
+                <p className="ex-cue"><b>You, {shortDate(said.on)}:</b> {said.said}</p>
+              )}
             </div>
           );
         })}
+        {long.length > 0 && (
+          <p className="ex-meta">
+            Heart rate is the watch on your wrist, in water, a few readings per length. Read the shape,
+            not the exact number.
+          </p>
+        )}
       </div>
       {c.groups.map((g) => (
         <div className="exgroup" key={g.id}>
@@ -478,7 +524,10 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
                 <summary><span className="cue-name">{k.name}</span></summary>
                 <div className="cue-body">
                   <div className="ex-cue"><b>Do.</b> {k.do}</div>
-                  <div className="ex-meta cue-test"><b>Check.</b> {k.check}</div>
+                  {/* "Ask yourself" since 2026-09-11, and the cards were rewritten as questions with
+                      it: "what questions should I ask myself ... while I swim". A test you run on
+                      yourself mid-length is the only kind of feedback he has in the water. */}
+                  <div className="ex-meta cue-test"><b>Ask yourself.</b> {k.check}</div>
                   <Quotes quotes={k.quotes} sources={sources} />
                 </div>
               </details>

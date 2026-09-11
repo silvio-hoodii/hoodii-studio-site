@@ -56,8 +56,19 @@ export interface SwimCoachingItem {
   fromQuote?: string;
 }
 
+/** What HE said about how one piece ended. Only he can author it; it renders beside that piece. */
+export interface SwimReport {
+  /** The piece's local date and distance, which is how the page finds it. */
+  date: string;
+  metres: number;
+  /** The day he said it. */
+  on: string;
+  said: string;
+}
+
 export interface SwimCoaching {
   meta: { builtOn: string; rebuiltOn?: string; stroke: string; who: string };
+  yourWords?: SwimReport[];
   groups: { id: string; name: string; items: SwimCoachingItem[] }[];
   sources: SwimSource[];
 }

@@ -152,5 +152,12 @@
     "fetchedOn": "2026-09-11",
     "sha256": "35b343c78ffe0e14",
     "characters": 14086
+  },
+  "usms-drills": {
+    "url": "https://www.usms.org/fitness-and-training/articles-and-videos/articles/why-swimmers-should-be-doing-drills",
+    "file": "usms-drills.txt",
+    "fetchedOn": "2026-09-11",
+    "sha256": "3e7796d4044ee665",
+    "characters": 11196
   }
 }
