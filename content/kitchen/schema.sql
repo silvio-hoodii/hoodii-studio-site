@@ -10,6 +10,25 @@
 -- Apply with: node content/kitchen/apply-schema.mjs   (idempotent, create-if-not-exists only)
 
 -- A dish he decided to cook. Written by an agent in a session, read by the phone.
+--
+-- `list` IS [{item, qty, url, price, note, need}] AND `need` IS NOT OPTIONAL. Added 2026-09-12 with
+-- the one shopping list at /kitchen/shop, which unions every dish's list into one page. It is one of
+-- exactly three strings:
+--
+--   buy       he does not have it, or not enough of it, and the trip fails without it
+--   optional  the dish works without it. A topping, a nice-to-have, a piece of gear that is not blocking
+--   owned     he has it. Confirmed, and it must never appear on a buy list
+--
+-- WHY IT IS A FIELD AND NOT A SENTENCE. Until then this lived in prose inside `note` and `price`:
+-- "ESSENTIAL", "STILL NEEDED", "OPTIONAL", "DO NOT BUY", price 'ALREADY OWNED', price 'already have'.
+-- Six spellings of three states, and every one of them was an agent's phrasing rather than a value.
+-- A global list built by grepping those strings sends him to the shop for something in his cupboard
+-- the first time a session writes the same idea a seventh way, and it looks like a shopping list
+-- while it does it. See .agents/ENGINEERING.md law 1.
+--
+-- An item with no valid `need` is not guessed at in either direction. It lands in an "unsorted"
+-- section that /kitchen/shop counts at the top of the page, so the gap is visible rather than being
+-- silently resolved into a wrong answer.
 create table if not exists dish (
   id           text primary key,                 -- slug, e.g. honeygarlicchicken
   name         text not null,                    -- display name; cook_log.dish matches on this
@@ -18,9 +37,31 @@ create table if not exists dish (
   servings     int,                              -- at the publisher's scale
   protein_g    numeric,                          -- grams per serving
   protein_note text,                             -- where that number comes from: their panel, or the arithmetic
-  list         jsonb not null default '[]',      -- [{item, qty, url, price, note}] the Walmart list, links included
+  list         jsonb not null default '[]',      -- [{item, qty, url, price, note, need}]. See the block above
   notes        jsonb not null default '[]',      -- [{at, text}] his comments and substitutions, folded in from chat
   added_at     timestamptz not null default now()
+);
+
+-- One row per thing he has ticked off the shopping list, keyed the way `src/lib/kitchen/shoplist.ts`
+-- keys a row: "url:<the walmart link>", "name:<the lowercased item>", or "extra:<shop_extra.id>".
+--
+-- A TICK EXPIRES AFTER A FORTNIGHT, and that is deliberate. It records "I bought this", which is a
+-- fact about one trip, not "I have this", which is a fact about the kitchen. Modelling the kitchen is
+-- what died on 2026-09-05. After TICK_DAYS the row returns to the list carrying the date it was last
+-- bought, so it is a visible return he can re-tick in one tap instead of a silent reappearance. The
+-- permanent answer to "I own this" is need='owned' on the dish row, which a session writes on purpose.
+create table if not exists shop_tick (
+  key   text primary key,
+  label text not null,                            -- what it was called when ticked, so the got list reads right
+  at    timestamptz not null default now()
+);
+
+-- Things he typed into the box on /kitchen/shop that no recipe knows about: dish soap, beer, milk.
+-- They tick off through shop_tick under the key extra:<id> like anything else.
+create table if not exists shop_extra (
+  id   bigserial primary key,
+  text text not null,
+  at   timestamptz not null default now()
 );
 
 -- "I want to make X", typed on the phone, anywhere. Read at session start by

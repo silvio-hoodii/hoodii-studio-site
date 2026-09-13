@@ -123,7 +123,14 @@ const DEFAULT_PATHS = [
   '/swim/deep', '/swim/records',
   '/run', '/run?s=plan', '/run?s=how',
   '/bike', '/bike?s=plan', '/bike?s=how',
-  '/kitchen', '/kitchen/find', '/kitchen/shop', '/kitchen/want',
+  /* THREE OF THE FOUR KITCHEN PATHS HERE WERE 404s FOR A WEEK, which is the `/work` failure this
+     list already records twice, still live. `/kitchen/find` and `/kitchen/want` were deleted in the
+     2026-09-05 cookbook rebuild and stayed in this list, so every run since measured the 404 page
+     three times and reported covering three surfaces. `/kitchen/shop` was deleted with them and is
+     a real page again as of 2026-09-12, which is the only reason its entry is not a fourth.
+     A dish page is added because it is where the recipe link and the note box live, and no
+     `[id]` route on this site had ever been measured. */
+  '/kitchen', '/kitchen/shop', '/kitchen/californiaroll',
   '/french', '/curio', '/music',
   '/reading', '/reading/shelf', '/reading/want', '/reading/about', '/reading/finished',
   /* THE FOUR CASE STUDIES, ONE PATH EACH. This list said `/work` until 2026-08-28 and THERE IS NO

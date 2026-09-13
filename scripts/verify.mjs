@@ -133,6 +133,23 @@ const GATES = [
    * `//host`, `/` plus backslash, and the whitespace-smuggled variants that get past a naive check
    * and are then normalised by something downstream. */
   ['return-to-tests', process.execPath, ['--experimental-strip-types', 'src/lib/return-to.test.ts']],
+  /* THE ONE SHOPPING LIST. Added 2026-09-12 with /kitchen/shop, which unions every dish's list.
+   *
+   * Every way of getting this wrong is invisible on the page: a merge that should have happened
+   * leaves two rows for one bag of cheese, a merge that should not have happened leaves one row for
+   * two products, and a misclassified row either sends him to the shop for something in his cupboard
+   * or drops a blocking ingredient off the trip. None of those look like a bug; they look like a
+   * shopping list, and the oracle is him standing in an aisle.
+   *
+   * Two of its cases give a row a note that says the OPPOSITE of its `need` field, in both
+   * directions. The obvious way to build the page was to grep the note for "ESSENTIAL" and "DO NOT
+   * BUY", which is where that state lived until this shipped, and it would have passed every eyeball
+   * check on today's rows. Those two cases fail it instead.
+   *
+   * It earned its place on its first run: the merge picked the longest label and was comparing raw
+   * strings, so "salted   BUTTER" beat "Salted butter" and the row rendered under the sloppier of
+   * the two names. */
+  ['shoplist-tests', process.execPath, ['--experimental-strip-types', 'src/lib/kitchen/shoplist.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

@@ -38,6 +38,15 @@ export default async function KitchenPage() {
         </ul>
       )}
 
+      {/* THE ONE LIST, ADDED 2026-09-12. Until then a shopping list existed only per dish, so a trip
+          meant opening seven pages and doing the union by hand. His words: "I want one big shopping
+          list that knows everything across every recipe." Above the dishes, because this is the
+          screen he opens in a shop and that is a different errand from choosing what to cook. */}
+      <Link className="shoplink" href="/kitchen/shop">
+        <span className="k">Shopping list</span>
+        <span className="v">Everything every dish needs, in one list</span>
+      </Link>
+
       <h2 className="sec">Dishes</h2>
       {dishes.length === 0 ? (
         <p className="empty">Nothing yet. Say what you want to make in the box above.</p>

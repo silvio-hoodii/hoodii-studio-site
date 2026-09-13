@@ -148,7 +148,8 @@
 
 /* ---- one dish ---- */
 
-.kos .recipe-link {
+.kos .recipe-link,
+.kos .shoplink {
   display: block;
   margin: 22px 0 0;
   padding: 18px 20px;
@@ -158,9 +159,11 @@
   color: inherit;
 }
 
-.kos .recipe-link:hover { background: var(--muted); }
+.kos .recipe-link:hover,
+.kos .shoplink:hover { background: var(--muted); }
 
-.kos .recipe-link .k {
+.kos .recipe-link .k,
+.kos .shoplink .k {
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -170,9 +173,11 @@
 
 /* `.k` is the block and `.v` stays inline, so the external-link arrow globals.css appends to the
    anchor sits after the publisher's name rather than on a line of its own. */
-.kos .recipe-link .k { display: block; }
+.kos .recipe-link .k,
+.kos .shoplink .k { display: block; }
 
-.kos .recipe-link .v {
+.kos .recipe-link .v,
+.kos .shoplink .v {
   font-size: 18px;
   font-weight: 600;
   line-height: 1.35;
@@ -300,9 +305,14 @@
   margin: 0 0 10px;
 }
 
+/* THE 44px FLOOR, AND THIS ROW WAS 39px FOR A WEEK. Found 2026-09-12 the first time a dish page was
+   put in front of `scripts/probe-taps.mjs`: /kitchen/[id] had never been in its path list, so the
+   three buttons he taps at the stove with one hand were never measured. Same shape as the `/work`
+   entry that script's own comments record. */
 .kos .ratings button {
   font: inherit;
   font-size: 14px;
+  min-height: 44px;
   padding: 8px 14px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
@@ -369,4 +379,291 @@
   .kos .unlock form { grid-template-columns: 1fr; }
   .kos .facts { grid-template-columns: 1fr; gap: 2px 0; }
   .kos .facts dt { padding-top: 10px; }
+}
+
+/* ---- /kitchen/shop, the one list across every dish. Added 2026-09-12 ----
+ *
+ * Read walking around a Walmart with one thumb, so every control clears the 44px floor that
+ * `scripts/probe-taps.mjs` measures at 390px. That probe's first full run found three summaries on
+ * this very surface at 22px, so the disclosures below carry the floor explicitly rather than
+ * inheriting whatever the text happens to make.
+ */
+
+.kos .snotice {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  border-left: 2px solid var(--foreground);
+  padding-left: 13px;
+  margin: 22px 0 0;
+}
+
+.kos .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 0;
+}
+
+.kos .chip {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  font-family: inherit;
+  font-size: 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.kos .chip[aria-pressed='true'] {
+  border-color: var(--foreground);
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.kos .chip .tnum {
+  color: var(--muted-foreground);
+  font-size: 12.5px;
+}
+
+.kos .sadd {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.kos .sadd input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.kos .sadd input:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+}
+
+.kos .shoplist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kos .shoprow {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* A row nobody can tick: the already-have and not-sorted sections. No box, no gutter. */
+.kos .shoprow-flat {
+  grid-template-columns: 1fr;
+}
+
+.kos .shoprow.is-busy {
+  opacity: 0.45;
+}
+
+/* THE TICK IS 44px SQUARE AND THE BOX INSIDE IT IS 22px. The target is what the thumb needs; the
+   box is what the eye needs. Sizing the target to the drawing is how a checkbox ends up at 22px. */
+.kos .tick {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.kos .tick span {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--foreground);
+  border-radius: var(--radius);
+}
+
+.kos .tick[aria-pressed='true'] span {
+  background: var(--muted);
+}
+
+.kos .sbody {
+  min-width: 0;
+  padding-top: 9px;
+}
+
+.kos .stop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+
+.kos .sprice {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.kos .smeta {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+
+.kos .swarn {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--foreground);
+  border-left: 2px solid var(--foreground);
+  padding-left: 10px;
+  margin-top: 6px;
+}
+
+.kos .sfold {
+  margin-top: 4px;
+}
+
+.kos .sfold > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+
+.kos .sfold > p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted-foreground);
+  margin: 0 0 8px;
+}
+
+.kos .sfor {
+  color: var(--foreground);
+}
+
+/* A whole section behind a tap, rather than a note on one row. */
+.kos .sfold-sec {
+  margin-top: var(--gap);
+  border-top: 1px solid var(--border);
+}
+
+.kos .sfold-sec > summary {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.kos .sdrop {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* The count in a filter chip. It rendered glued to the dish name ("Dak Bulgogi1") because the only
+   separator was a JSX space between two inline elements, which is the width of one space in a
+   proportional font next to a mono digit. The gap belongs to the chip, not to the markup. */
+.kos .chip .tnum {
+  margin-left: 8px;
+  color: var(--muted-foreground);
+  font-size: 12.5px;
+}
+
+.kos .chip {
+  display: inline-flex;
+  align-items: center;
+  text-align: left;
+}
+
+.kos .sfilter {
+  margin-top: 22px;
+}
+
+.kos .sfilter > summary {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 14px;
+}
+
+.kos .sfilter .chips {
+  margin-top: 10px;
+}
+
+/* A DISCLOSURE HAS TO LOOK LIKE ONE, and `display: flex` on a `<summary>` silently removes the
+   browser's own triangle. Caught in a screenshot: "Note" and "ALREADY HAVE 6" both rendered as
+   plain labels with nothing saying they open, on the surface he reads one-handed in a shop. The
+   flex is what holds the 44px floor, so the marker is drawn rather than the layout changed.
+   `currentColor` so it follows the summary's own colour in both themes. */
+.kos .sfold > summary {
+  list-style: none;
+}
+
+.kos .sfold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.kos .sfold > summary::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  margin-right: 2px;
+}
+
+.kos .sfold[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+/* THE PRODUCT LINK IS A 44px TARGET WITHOUT BEING A 44px LINE. Its first measured run reported
+   fourteen of these at 22.5px, which is a link he taps in an aisle to check a product against a
+   shelf, one-handed, holding a basket.
+
+   Padding plus an equal negative margin, rather than a taller row: the hit box grows above and
+   below the text while the row keeps the height it was designed at. The siblings it overlaps are
+   the quantity and dish lines, which are not interactive, so there is nothing underneath to steal
+   a tap from. */
+.kos .stop a {
+  display: inline-block;
+  padding-block: 11px;
+  margin-block: -11px;
 }
