@@ -85,6 +85,13 @@ const nextConfig: NextConfig = {
       { source: '/es/:path*', destination: '/', permanent: true },
       { source: '/studio', destination: '/', permanent: true },
 
+      /* THE /work CASE STUDIES ARE DELETED, 2026-09-15, with the portfolio sections on the front
+       * page, on his call that the content read as AI slop and the site should be the apps. Any
+       * link already sent out lands on the front door instead of a 404. 307 rather than 308 for the
+       * reason given under /reading/all below: a product decision, not a permanent URL move. */
+      { source: '/work', destination: '/', permanent: false },
+      { source: '/work/:path*', destination: '/', permanent: false },
+
       /* /reading/all is retired into /reading/shelf, 2026-08-21. Both browsed the same pool and
        * the shelf page now does everything /reading/all did (search, filters, the full catalogue)
        * plus covers, descriptions, six sorts, tiers, a want list and pagination. The last two

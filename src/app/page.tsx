@@ -1,5 +1,4 @@
 import { listDishes, openInbox } from '@/lib/kitchen/cookbook';
-import siteFacts from '../../content/work/site-facts.json';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
 import { today } from '@/lib/day';
@@ -73,10 +72,6 @@ interface Row {
   href?: string;
   external?: boolean;
   off?: boolean;
-  /* Not a link, but not an absence either. `off` means an app whose data we cannot reach and which
-   * therefore shows no state. `plain` means a real thing that simply has no public URL to send you
-   * to, which is a different claim and should not be dimmed like a failure. */
-  plain?: boolean;
 }
 
 async function kitchenRow(): Promise<Row> {
@@ -375,109 +370,6 @@ const STATIC_ROWS: Row[] = [
    * The app still exists and is untouched; it is just not advertised until it has content. */
 ];
 
-/* Work that other people use.
- *
- * Every number here is verified and traceable, not estimated. The order count came from the Square
- * export, the templates were counted as files, the phases and steps were counted in the deployed
- * hub. Anything that could not be checked that way is not on this page. The standing rule behind
- * that lives in CareerOS/strategy/project-evidence-ledger.md, which also lists, per project, the
- * claims that are NOT allowed: no adoption metrics, no revenue, no team-size implications, and
- * nothing that reads as an employment relationship rather than work delivered.
- *
- * Since 2026-08-16 these rows open MY page about the work rather than the client's website. The
- * client URL still exists one level down, on the "Live at" line of each page. That ordering is the
- * point: a row that jumped straight to themomentyyc.com sent you to a bakery, which tells you
- * nothing about what I did there. `external` comes off together with the href, so the glyph flips
- * from ↗ to → on its own instead of being hand-edited into agreement.
- */
-const WORK: Row[] = [
-  {
-    label: 'The Moment',
-    line: 'Storefront, checkout and admin for a bakery here in Calgary',
-    /* This said "154 real orders had gone through it", meaning the storefront, and it was false.
-       The 154 records in themoment/sales/exports/orders-raw.json split by Square `source.name` into
-       135 with no source (sold in person at markets), 17 hand-made Payment Links, and 2 from the
-       app. The online store has taken one real order since opening on 2 July 2026. The bad number
-       came from CareerOS/strategy/project-evidence-ledger.md, which counted the bakery's Square
-       ACCOUNT and called it throughput; that line is fixed at source.
-
-       Still not `.live`. --signal means a value that is true right now, and this is a snapshot from
-       a store this site has no connection to. Dated instead. */
-    sub: <><span className="tnum">154</span> orders through July 2026, nearly all taken in person at markets. The online store has taken one</>,
-    /* themomentyyc.com, NOT themoment.ca. The .ca is an unrelated business and it is wrong in
-     * several repo files, which is how it kept getting shipped. Confirmed 2026-08-11 by reading the
-     * title: .ca returns "The Moment | Discover Insight Today". A 200 is not a confirmation. */
-    href: '/work/themoment',
-  },
-  {
-    label: 'Versatile',
-    /* "eight worksheets the staff actually fill in" was the first draft and it is exactly the claim
-     * the evidence ledger forbids: adoption is not something we have measured, only deployment. */
-    /* Four and fifteen, not five and sixteen. The bigger pair describes a static HTML hub retired in
-     * 2026; the live one at hub.versatilecpa.ca runs s1 to s15 across four phases and says
-     * "Fifteen steps, one place" on its own page. Same stale ledger line as the row above. */
-    line: 'Marketing site and the internal operations hub for a Calgary accounting firm. A tax season mapped into four phases and fifteen steps, plus eight process templates',
-    sub: 'the site is public, the hub sits behind the firm’s own login',
-    href: '/work/versatile',
-  },
-  {
-    /* "Trades company. The site and the lead intake, plus the quoting and contract paperwork behind
-     * it" was this row until 2026-08-16, and it had the same defect Silvio found in the page: it
-     * leads with the website, which is the least of it, and never names the job that happened. */
-    label: 'Brixel',
-    line: 'A construction company that sits between builders and the trades. I built the pricing, the quoting and the contract paperwork',
-    /* Not "end to end", and not "signed". A reviewer checking this against Brixel/ on 2026-08-16
-     * found the contract folders empty and the gravel phase uninvoiced. See the header comment on
-     * src/app/work/brixel/page.tsx. */
-    sub: 'one exterior foundation package priced, subcontracted and invoiced, on six quote revisions',
-    href: '/work/brixel',
-  },
-];
-
-/* What got killed, and why it is on the page at all.
- *
- * Anyone can list what they shipped, and a generated portfolio lists it better. What cannot be
- * faked is a post-mortem on your own work, because it requires having been wrong in a specific,
- * checkable way. Each `sub` is the rule that survived the thing dying, which is the only part that
- * was ever worth keeping.
- *
- * Sources, so nobody softens these later into something vaguer and less true:
- * LanguageOS/DESIGN.md (1,359 cards, 1 review), content/kitchen/schema/SOURCING.md (the burnt
- * dish), AGENTS.md (the room), _archive/red-panda-reader-2026-08-10/.
- */
-const STOPPED: Row[] = [
-  {
-    label: 'A 3D room',
-    line: 'This site used to be a WebGL studio you could walk around. I deleted it, and the eight dependencies under it, in an afternoon',
-    sub: 'I had been redesigning it for months because there was nothing behind it to finish',
-    plain: true,
-  },
-  {
-    label: 'French, twice',
-    /* Also not `.live`. This is a count of cards in a database that no longer exists, under a
-       heading that says "what I stopped building". A finished fact about a dead project is the
-       precise opposite of a value that is true right now. */
-    line: <>Two versions before this one. <span className="tnum">1,359</span> cards generated for me up front, and exactly one review ever logged</>,
-    sub: 'the third takes a card only from a page I have actually sat down and worked',
-    plain: true,
-  },
-  {
-    label: 'A reader',
-    line: 'Built a reading app for a serial I then stopped reading. I retired it rather than keep it alive out of politeness',
-    sub: 'a tool with one user should die the moment that user loses interest',
-    plain: true,
-  },
-  {
-    label: 'Written recipes',
-    line: 'The first dish I ever cooked from my own kitchen app burnt. It had passed a six-source check on every quantity, a full read of all eighteen steps, and a clean validator',
-    sub: 'every failure was a sentence the model wrote, and none was a number a source gave, so it now copies one published recipe and adds only what a printed page cannot',
-    /* The only row in this section with a destination, because it is the only one whose post-mortem
-     * got written up. Without it /work/kitchen is in the sitemap and linked from nowhere, which is
-     * the orphan state the rest of the site is careful not to create. */
-    href: '/work/kitchen',
-  },
-];
-
 function RowView({ r }: { r: Row }) {
   const inner = (
     <>
@@ -486,13 +378,12 @@ function RowView({ r }: { r: Row }) {
         <div className="line">{r.line}</div>
         {r.sub && <div className="sub">{r.sub}</div>}
       </div>
-      {/* Two different destinations should not wear the same glyph. Every other row on this page
-          opens an app on this domain; these three open somebody else's website. */}
+      {/* An app on this domain gets →, somebody else’s website gets ↗. */}
       <div className="arrow">{r.href && !r.off ? (r.external ? '↗' : '→') : '·'}</div>
     </>
   );
 
-  if (!r.href) return <div className={`row ${r.plain ? 'plain' : 'off'}`}>{inner}</div>;
+  if (!r.href) return <div className="row off">{inner}</div>;
   return (
     <a className="row" href={r.href} {...(r.external ? { target: '_blank', rel: 'noreferrer' } : {})}>
       {inner}
@@ -531,59 +422,21 @@ export default async function Home() {
         Small software for an audience of one, mostly to answer questions I got tired of asking
         myself. This is the front door to it.
       </p>
-      <p className="blurb">
-        Before these, twelve years of pointing the same instinct at other people’s problems:
-        discovery, requirements and delivery, usually as the person sitting between the business and
-        the engineers. These days I build the thing as well as specify it.
-      </p>
+      {/* THE PORTFOLIO LAYER WAS REMOVED ON 2026-09-15, on his call: a résumé paragraph, a row about
+        * the build gates, three client projects under "In production" and four post-mortems under
+        * "What I stopped building", plus the /work pages behind them. His words: "i dont like the
+        * content itself ... its clearly ai lsopppy so i rather just take it out and foucs on the
+        * actual apps". The front door is the apps. Do not add a section about the person, the clients
+        * or the process back without him asking for it. Recoverable from git history. */}
 
       <hr />
       <div className="rows">
         {rows.map((r) => <RowView key={r.label} r={r} />)}
       </div>
 
-      {/* THE ONE ROW ABOUT THE SITE ITSELF. G1 of the 2026-09-04 audit: the hub shows a lot of live
-        * state and never shows the software, so a visitor has no way to learn that the cook screen
-        * exists or that a recipe cannot ship carrying a number its source does not contain. The
-        * strongest thing in this repo was the least visible.
-        *
-        * It is a ROW and not a prose link, because this section's rule is that a row shows real
-        * state rather than a link label, and this one obeys it: the count comes from
-        * content/work/site-facts.json, which scripts/gen-site-facts.mjs derives from the build
-        * script itself and `pnpm build` refuses to let go stale. A typed number here would be the
-        * exact thing the page it links to says this site does not do.
-        *
-        * Below the apps rather than above them: the apps are what the site is for, and this is a
-        * note about how they are made. */}
-      <div className="rows">
-        <RowView
-          r={{
-            label: 'This site',
-            line: (
-              <>
-                <span className="tnum">{siteFacts.buildGates}</span> checks refuse a deploy, and the
-                page saying so counts them itself
-              </>
-            ),
-            sub: 'how it is built, what the build will not ship, and what I got wrong',
-            href: '/work/site',
-          }}
-        />
-      </div>
-
-      <h2 className="sec">In production</h2>
-      <div className="rows">
-        {WORK.map((r) => <RowView key={r.label} r={r} />)}
-      </div>
-
-      <h2 className="sec">What I stopped building</h2>
-      <div className="rows">
-        {STOPPED.map((r) => <RowView key={r.label} r={r} />)}
-      </div>
-
       {/* The same row /curio and /music carry, minus the link home, because this is home. Brixel was
-        * in here once and should not have been: this row is how to reach me, a company is not a
-        * contact method, and it already has its own line under In production. */}
+        * in here once and should not have been: this row is how to reach me, and a company is not a
+        * contact method. */}
       {/* Guarded on `title`, not on `isPlaying`. It used to be both, which meant that on a quiet
         * evening `fetchSpotify` fetched a perfectly good last-played track, returned it, and this
         * line threw it away. The API offers both and the fetcher already asked for both.

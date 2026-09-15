@@ -68,7 +68,7 @@ export default function Image() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontSize: 86, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05 }}>Silvio Neyra</div>
           <div style={{ fontSize: 33, color: MUTED, marginTop: 22, lineHeight: 1.4, maxWidth: 900 }}>
-            Twelve years bridging business and technology, now building the software myself.
+            Small software for an audience of one.
           </div>
         </div>
 

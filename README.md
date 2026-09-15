@@ -1,8 +1,8 @@
 # hoodii-studio-site
 
-[hoodii.studio](https://hoodii.studio). A personal hub and the small apps behind it: a kitchen that
-scores what I can cook against what is actually in my fridge, a lifting log filled in between sets,
-a swim tracker, French flashcards built only from book pages I have worked, and a reading queue.
+[hoodii.studio](https://hoodii.studio). A personal hub and the small apps behind it: a cookbook of
+dishes I chose with a shopping list for each, a lifting log filled in between sets, a swim tracker,
+French flashcards built only from book pages I have worked, and a reading queue.
 
 [Home-cooked software](https://maggieappleton.com/home-cooked-software), built for an audience of
 one. That is the design brief rather than an apology: nothing here is meant to scale or generalise,
@@ -12,17 +12,13 @@ and several decisions only make sense because there is exactly one user.
 
 Not the pages. What the build refuses to ship.
 
-A recipe step cannot contain a number that does not appear in the published recipe it quotes. No
-colour can be written outside the one file that defines the palette, and no background token can be
+No colour can be written outside the one file that defines the palette, and no background token can be
 used as a text colour. The password check exists in exactly one place and a second copy fails the
 build. A write endpoint that is not declared in the test harness fails the build, because otherwise
 a test would post into my real training log.
 
 Each of those exists because something specific went wrong once. The reasoning is in `AGENTS.md`,
 which is the file I actually maintain and is longer than most of the code it describes.
-
-[/work/site](https://hoodii.studio/work/site) is the same story with pictures, and every figure on
-it is counted out of this repository at build time rather than typed.
 
 ## Stack
 

@@ -17,6 +17,23 @@ This is [home-cooked software](https://maggieappleton.com/home-cooked-software):
 audience of one, not meant to scale or generalise. That framing is the design brief. The site's job
 is to name the things, show which are open, and get out of the way.
 
+## The portfolio layer was removed on 2026-09-15
+
+From 2026-08-11 the front page carried a second job as a portfolio: a résumé paragraph ("twelve
+years of pointing the same instinct at other people's problems"), a "This site" row about the build
+gates, three client projects under "In production" (The Moment, Versatile, Brixel), four post-mortems
+under "What I stopped building", and five `/work/*` case-study pages behind them with their own
+screenshots and a generated facts file. **All of it is gone**, and `/work/*` 307s to `/`.
+
+Silvio's words, 2026-09-15: *"i know partly is me asking for kind of hybrid fportfolio stuff but i
+dont like the content itself i feel like it doesnt really add valu because its clearly ai lsopppy so
+i rather just take it out and foucs on the actual apps"*
+
+**Do not add a section about him, his clients or how the site is built back to the front page
+without him asking.** The Google description and the share card lost the "Twelve years bridging
+business and technology" line in the same change. Everything is recoverable from git history at the
+commit before the one that removed it.
+
 ## The 3D world was removed on 2026-08-09
 
 This repo used to be an immersive WebGL room ("an agent's studio"). `src/world/`, `src/overlay/` and
@@ -98,7 +115,6 @@ always lose to the thing that exists.
 | `/reading/about` | Explains the score, the five tracks, tagged-vs-not, and lists every real source list behind the scores, counted from `reading_source_list` rather than typed. This line said "33" until 2026-08-28 and the table held 55, which is the drift a hand-typed number always ends in; the hub row carried the same typed 55 and now derives it. Static-shaped | no writes |
 | `/reading/finished` | Recall cards + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
-| `/work/brixel`, `/work/kitchen`, `/work/themoment`, `/work/versatile` | Four case-study pages, static, no data layer. **Omitted from this table until 2026-08-28**, which is the drift the note under this table already describes: a hand-maintained list of what exists will always lose to the thing that exists. **The clause 7(c) check applies here and nowhere else on the site**: these are the only pages that could read as advertising availability for outside work while an immigration file is pending. The 2026-08-26 audit verified they carry zero availability claims. Read `work-permit/CLAUDE.md` before adding a sentence to any of them | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
 | `/login` | **ONE login route since 2026-09-04**, replacing `/kitchen/login`, `/gym/login`, `/health/login` and `/french/login`, which were four near-identical forms for one cookie and one password. Each guarded its redirect with its own app's prefix, so a correct password entered from `/reading/shelf` landed in the kitchen (A3). The guard is `safeReturnTo` in `src/lib/return-to.ts`: same-origin, no app names in it, 40 cases in `return-to.test.ts`. The eyebrow is derived from `?to=`. All four old paths 307 here | public |
 
@@ -502,12 +518,6 @@ a handbag before one became a dumbbell. The icon cost two drafts the same way: a
 design was illegible at 32px AND put `--signal` in a logo, which breaks the rule that the colour
 means a value true right now. **Render it and look at it** rather than trusting the path data.
 
-**The one exception is `public/work/*.webp`**, the four screenshots on `/work/site`, and they are
-committed files precisely because a screenshot's value is that it is what the page really looked
-like. A Vercel build container has no browser, so they are taken by `scripts/shoot-work-site.mjs`
-against a local server and their date and commit are PRINTED on the page. Staleness is labelled
-rather than prevented.
-
 ## Live data
 
 `src/lib/fetchers.ts` plus `/api/spotify`. Spotify now-playing renders in the hub footer and
@@ -567,7 +577,7 @@ accumulates things a reader has to work out are dead.
   /gym, which is the one control that answers the question he asks most; the warmup and cooldown at
   16.5px, opened mid-session with one hand; and three kitchen section summaries at 22px. All 36 are
   clean as of 2026-08-28 and it has been watched refusing (restoring the old `.kos .dots` CSS and
-  rebuilding makes it report the sideways scroll; pointing it at `/work` makes it report the 404).
+  rebuilding makes it report the sideways scroll; pointing it at a path with no route makes it report the 404).
 
   **RUN IT AGAINST A LOCAL `pnpm start`, NOT THE LIVE DOMAIN.** A 33-path run loads enough assets to
   trip **the site's own firewall rule 4** (150 non-`/_next/` requests a minute per IP), and the

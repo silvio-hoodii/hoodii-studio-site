@@ -28,16 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://hoodii.studio/swim', changeFrequency: 'weekly', priority: 0.6 },
     { url: 'https://hoodii.studio/reading', changeFrequency: 'monthly', priority: 0.6 },
 
-    /* The four project pages, published 2026-08-16. `monthly` rather than `weekly`: they describe
-     * work that is finished, so the honest answer is that they change rarely. Each one declares its
-     * own canonical, which is the rule this site follows for every indexed route. */
-    { url: 'https://hoodii.studio/work/themoment', changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://hoodii.studio/work/versatile', changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://hoodii.studio/work/brixel', changeFrequency: 'monthly', priority: 0.8 },
-    { url: 'https://hoodii.studio/work/kitchen', changeFrequency: 'monthly', priority: 0.8 },
-    /* Added 2026-09-04 with the page. It is the one /work page whose figures move, because they
-       are counted out of the repo on every build rather than written once, so it changes as
-       often as the site does. */
-    { url: 'https://hoodii.studio/work/site', changeFrequency: 'weekly', priority: 0.8 },
+    /* The /work case studies were listed here until 2026-09-15, when they were deleted along with
+     * the portfolio sections on the front page. Their URLs redirect to / from next.config.ts. */
   ];
 }

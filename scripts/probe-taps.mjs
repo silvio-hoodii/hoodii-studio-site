@@ -133,11 +133,9 @@ const DEFAULT_PATHS = [
   '/kitchen', '/kitchen/shop', '/kitchen/californiaroll',
   '/french', '/curio', '/music',
   '/reading', '/reading/shelf', '/reading/want', '/reading/about', '/reading/finished',
-  /* THE FOUR CASE STUDIES, ONE PATH EACH. This list said `/work` until 2026-08-28 and THERE IS NO
-     `/work` ROUTE: it renders the 404, which has a header, a heading and one link, and the old
-     readiness gate passed it as a measured surface for as long as the list has existed. So four
-     published pages went unmeasured while the run reported covering them. */
-  '/work/brixel', '/work/kitchen', '/work/themoment', '/work/versatile', '/work/site',
+  /* THE FOUR CASE STUDIES WERE HERE until 2026-09-15, when /work was deleted. Worth keeping the
+     history: this list said `/work` until 2026-08-28 and THERE WAS NO `/work` ROUTE, so it measured
+     the 404 page and the old readiness gate passed it as a surface for as long as the list existed. */
   /* THE GATE ITSELF WAS NEVER IN THIS LIST. Four login pages existed for a year, each with a
      password field and a submit button, which is exactly the shape the 44px floor exists for, and
      none of them was ever measured here. The 2026-09-04 audit measured them only because its own

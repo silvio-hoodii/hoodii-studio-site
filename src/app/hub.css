@@ -125,10 +125,6 @@
 .idx .row.off .label { color: var(--muted-foreground); }
 .idx .row.off .arrow { opacity: 0.35; }
 
-/* `plain` is a real thing with no public URL, not a degraded one. It keeps full contrast and only
- * loses the arrow, because the arrow is a promise that something happens when you click. */
-.idx .row.plain .arrow { opacity: 0.3; }
-
 /* ---- sections ----
  *
  * A heading, not a card lid. Same mono/uppercase/tracking as the label column so it reads as part
