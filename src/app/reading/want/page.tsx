@@ -30,14 +30,14 @@ export default async function WantList() {
 
       <h1>Want list</h1>
       <p className="blurb">
-        Saved from <WalledLink href="/reading/shelf">Shelf check</WalledLink> for the next shop or library trip.
+        Saved from <WalledLink href="/reading/shelf">Browse</WalledLink> for the next shop or library trip.
         Nothing here is in the queue, and saving one never pushes a book out of the ten.
       </p>
 
       {wants.length === 0
         ? (
           <h2 className="sec">
-            Nothing saved yet. Tap <strong>want</strong> on any row in Shelf check.
+            Nothing saved yet. Tap <strong>want</strong> on any row in Browse.
           </h2>
         )
         : (
@@ -55,7 +55,7 @@ export default async function WantList() {
               </div>
             ))}
             <p className="src">
-              Remove one from its row on <WalledLink href="/reading/shelf">Shelf check</WalledLink>, where the
+              Remove one from its row on <WalledLink href="/reading/shelf">Browse</WalledLink>, where the
               button knows whether a book is already saved.
             </p>
           </>

@@ -75,7 +75,7 @@ export default async function ReadingAbout() {
       </p>
       <p className="qwhy">
         The tracks below are labels on a row, not rankings. Nothing is scored against its own
-        corpus any more. On Shelf check the tiers <em>are</em> per section, deliberately: general
+        corpus any more. On Browse the tiers <em>are</em> per section, deliberately: general
         fiction is covered by thirteen lists and crime by one, so ranking them on one scale made
         every Edgar winner look like a long shot.
       </p>

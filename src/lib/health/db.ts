@@ -155,9 +155,11 @@ export interface SyncLiveness {
  * himself lately and the page was answering both with one sentence. A store filled once and never
  * again looks exactly like a person who stopped stepping on the scale.
  *
- * 36 hours, the same threshold /music uses for its collector: a daily job that has not run in a day
- * and a half has missed one, and one is enough to say so. */
-const SYNC_STALE_AFTER_HOURS = 36;
+ * EIGHT DAYS, since 2026-09-15. It was 36 hours, the threshold /music uses, from when a scheduled
+ * task ran this sync every morning. That task was retired on 2026-09-04 and he now exports on
+ * Sundays, so 36 hours made /health and the front door say "the sync has stopped" from every Tuesday
+ * to every Sunday. A week plus a day means a missed Sunday is what trips it. */
+const SYNC_STALE_AFTER_HOURS = 8 * 24;
 
 export async function getSyncLiveness(): Promise<SyncLiveness> {
   const rows = await sql`
@@ -165,7 +167,10 @@ export async function getSyncLiveness(): Promise<SyncLiveness> {
   `;
   const all = rows as unknown as { ran_at: string; ok: boolean; error: string | null }[];
   const lastOk = all.find((r) => r.ok) ?? null;
-  const lastErr = all.find((r) => !r.ok && r.error)?.error ?? null;
+  /* Only a failure NEWER than the last success. This took the newest failure anywhere in twenty rows,
+     so /health printed "database is not open" from a run on Sep 9 under two good runs on Sep 11. */
+  const lastOkIdx = all.findIndex((r) => r.ok);
+  const lastErr = (lastOkIdx === -1 ? all : all.slice(0, lastOkIdx)).find((r) => !r.ok && r.error)?.error ?? null;
   if (!lastOk) {
     // No successful run on record at all, including the case where the table is empty.
     return { lastOkAt: null, hoursSince: null, stale: true, lastError: lastErr };

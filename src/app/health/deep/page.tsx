@@ -418,7 +418,7 @@ function Strength({ strength }: { strength: YearStrength }) {
                 <td className="tnum">{l.firstTop} lb</td>
                 <td className="tnum">{l.peakTop} lb</td>
                 <td className={l.offPeak ? 'tnum off-peak' : 'tnum'}>{l.lastTop} lb</td>
-                <td className="tnum">{signed(l.delta, 0)} lb</td>
+                <td className="tnum">{signed(l.delta, Number.isInteger(l.delta) ? 0 : 1)} lb</td>
               </tr>
             ))}
           </tbody>

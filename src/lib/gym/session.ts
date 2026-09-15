@@ -44,6 +44,9 @@ export interface SessionDetail {
   kind: SessionKind;
   startTime: string;
   minutes: number | null;
+  /** Exact seconds for a swim, off health_swim_session. `minutes` is an INTEGER column, so a 7:04
+   *  swim reads 7 and any pace worked out from it comes out fast. Null for anything but a swim. */
+  durationSec: number | null;
   distanceM: number | null;
   calories: number | null;
   avgHr: number | null;
@@ -67,6 +70,7 @@ const map = (r: Record<string, unknown>): SessionDetail => ({
   kind: String(r.kind) as SessionKind,
   startTime: String(r.start_time),
   minutes: r.minutes == null ? null : Number(r.minutes),
+  durationSec: r.swim_duration_ms == null ? null : Number(r.swim_duration_ms) / 1000,
   distanceM: r.distance_m == null ? null : Number(r.distance_m),
   calories: r.calories == null ? null : Number(r.calories),
   avgHr: r.avg_hr == null ? null : Number(r.avg_hr),
@@ -87,9 +91,11 @@ const map = (r: Record<string, unknown>): SessionDetail => ({
 export async function getLastSession(kind: SessionKind): Promise<SessionDetail | null> {
   const kinds = kind === 'treadmill' ? ['treadmill', 'running'] : [kind];
   const rows = await sql`
-    select * from health_session_detail
-    where kind = any(${kinds})
-    order by start_time desc
+    select d.*, s.duration_ms as swim_duration_ms
+    from health_session_detail d
+    left join health_swim_session s on s.uuid = d.uuid
+    where d.kind = any(${kinds})
+    order by d.start_time desc
     limit 1
   `;
   const r = rows[0] as Record<string, unknown> | undefined;
@@ -100,9 +106,11 @@ export async function getLastSession(kind: SessionKind): Promise<SessionDetail |
 export async function getRecentSessions(kind: SessionKind, limit = 10): Promise<SessionDetail[]> {
   const kinds = kind === 'treadmill' ? ['treadmill', 'running'] : [kind];
   const rows = await sql`
-    select * from health_session_detail
-    where kind = any(${kinds})
-    order by start_time desc
+    select d.*, s.duration_ms as swim_duration_ms
+    from health_session_detail d
+    left join health_swim_session s on s.uuid = d.uuid
+    where d.kind = any(${kinds})
+    order by d.start_time desc
     limit ${limit}
   `;
   return (rows as unknown as Record<string, unknown>[]).map(map);

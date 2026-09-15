@@ -132,12 +132,18 @@ export function SessionStats({ s }: { s: SessionDetail }) {
        100 m on a swim he actually swam at about 2:04: the difference is every second he spent on
        the wall. Labelling that "Pace" would have been a false number on the page, and the swimming
        one is the one that compares to his personal bests. */
-    const swimSec = s.series.lengths?.reduce((a, l) => a + l.s, 0) ?? 0;
+    /* ONE CLOCK FOR BOTH, since 2026-09-15. The 400 m on Sep 10 printed 1:48 swimming and 1:45 with
+       rest, which cannot happen. Two faults: "with rest" divided the INTEGER `minutes` (7, for a swim
+       the watch timed at 7:03.84), and the lengths summed to 7:14, ten seconds MORE than the whole
+       session. So the wall clock is the exact duration now, and swimming time may not exceed it. */
+    const lengthSec = s.series.lengths?.reduce((a, l) => a + l.s, 0) ?? 0;
+    const wallSec = s.durationSec ?? (s.minutes ? s.minutes * 60 : 0);
+    const swimSec = wallSec > 0 ? Math.min(lengthSec, wallSec) : lengthSec;
     if (swimSec > 0 && s.distanceM) {
       items.push({ k: 'Pace swimming', v: `${mmss(swimSec / (s.distanceM / 100))} / 100 m` });
     }
-    if (s.distanceM && s.minutes) {
-      items.push({ k: 'Pace with rest', v: `${mmss((s.minutes * 60) / (s.distanceM / 100))} / 100 m` });
+    if (s.distanceM && wallSec > 0) {
+      items.push({ k: 'Pace with rest', v: `${mmss(wallSec / (s.distanceM / 100))} / 100 m` });
     }
   }
   if (s.kind === 'treadmill' || s.kind === 'running') {

@@ -219,8 +219,11 @@ export default async function HealthPage({
           {sync.lastOkAt
             ? `The mirror behind this page last updated ${daysAgoText(Math.floor((sync.hoursSince ?? 0) / 24))}.`
             : 'The mirror behind this page has never recorded a successful update.'}{' '}
-          Everything below is whatever it held at that point, whether or not the laptop has newer
-          numbers. Run <code>node content/health/sync.mjs</code> in hoodii-studio-site.
+          Everything below is whatever it held at that point. Upload a Samsung Health export to
+          Drive and tell a session.
+          {/* It said "Run node content/health/sync.mjs in hoodii-studio-site" until 2026-09-15. He
+              does not run commands, and that one is only the last step: HOODII/CLAUDE.md names
+              run-health-sync.ps1 as the whole job, run by the agent he tells. */}
           {sync.lastError && <span className="why">{sync.lastError}</span>}
         </div>
       )}
@@ -465,27 +468,13 @@ export default async function HealthPage({
                     && `, so all of the loss was fat and the lean line ${split.dLean > 0 ? 'went up' : 'held'}`}
                   {split.fatShare == null && split.leanOpposed && split.dKg > 0
                     && `, so the gain was not fat and the fat line ${split.dFat < 0 ? 'went down' : 'held'}`}
-                  .{' '}
-                  {/* THE ENDPOINTS' INSTRUMENT, NAMED. Both ends are the same machine by
-                      construction now, and the section two below draws the Scale/Watch distinction,
-                      so leaving the reader to assume which one this was is the small wrongness that
-                      teaches them the labels mean nothing. */}
-                  Both readings are {split.source.toLowerCase()} readings.{' '}
-                  {/* THE OLD SENTENCE HERE WAS A TAUTOLOGY SOLD AS A CHECK. It read "fat mass plus
-                      lean mass equals weight exactly, so this is arithmetic rather than a model", and
-                      that identity holds because the columns are DEFINED that way: `fat_kg` is
-                      `kg * bf_pct / 100` on 196 of 197 rows and `lean_kg` is `kg - fat_kg` on all 197
-                      (09-health P1-2). One measurement restated twice cannot disagree with itself, so
-                      the agreement was evidence of nothing, and the caveat two paragraphs below
-                      already says both lines are inferred from a bioimpedance reading. A reassurance
-                      that cannot fail is worse than none: it invites trust the numbers have not
-                      earned. */}
-                  {/* "the same reading", NOT "the same scale reading". The clause above now names
-                      the instrument, and on a watch pair the two sentences contradicted each other
-                      one line apart. Caught by reading the rendered page, which is the only thing
-                      that ever catches this class. */}
-                  Both figures come from that same reading, so they add up by construction rather
-                  than by agreement.
+                  .
+                  {/* TWO SENTENCES WERE HERE UNTIL 2026-09-15: "Both readings are watch readings.
+                      Both figures come from that same reading, so they add up by construction rather
+                      than by agreement." They are the exact words he quoted on 2026-09-09 when he
+                      ruled that a caption about where a number came from is not an insight, and
+                      commit e92496f, titled "the sentence he actually quoted is gone", removed a
+                      different one. Provenance lives in this comment, not on the page. */}
                 </p>
               )}
               <div className="pair">

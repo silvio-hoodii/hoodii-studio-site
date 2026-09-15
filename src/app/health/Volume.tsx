@@ -199,7 +199,7 @@ export default function Volume({
                   <td className="tnum live">
                     {fmt(m.loadedSets)}
                     {m.loadedSets !== m.sets && (
-                      <div className="vol-loaded">{fmt(m.sets)} with jumps and carries</div>
+                      <div className="vol-loaded">{fmt(m.sets)} with bodyweight, jumps and carries</div>
                     )}
                   </td>
                   {m.byDay.map((v, i) => (

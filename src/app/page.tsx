@@ -2,7 +2,7 @@ import { listDishes, openInbox } from '@/lib/kitchen/cookbook';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
 import { today } from '@/lib/day';
-import { daysAgoText } from '@/lib/format';
+import { daysAgoText, shortDate } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import SiteFooter from '@/components/SiteFooter';
@@ -176,8 +176,11 @@ async function healthRow(): Promise<Row> {
     }
     return {
       label: 'Health',
-      line: <>Weight <span className="live tnum">{summary.latest.kg.toFixed(1)} kg</span></>,
-      sub: `as of ${summary.latest.date}`,
+      /* Green only for a reading from today or yesterday, since 2026-09-15. It was green up to the
+         14-day stale line, so a nine-day-old weight wore the colour reserved for a value true right
+         now, beside a raw ISO date. The age now reads the same way it does in the two branches above. */
+      line: <>Weight <span className={(summary.daysSinceLatest ?? 0) <= 1 ? 'live tnum' : 'tnum'}>{summary.latest.kg.toFixed(1)} kg</span></>,
+      sub: `last measured ${daysAgoText(summary.daysSinceLatest ?? 0)}`,
       href: '/health',
     };
   } catch {
@@ -186,12 +189,14 @@ async function healthRow(): Promise<Row> {
   }
 }
 
-async function frenchRow(): Promise<Row> {
+/* A ROW RETURNS NULL WHEN ITS APP HAS NOTHING CURRENT TO SAY, since 2026-09-15, on his call. French
+ * and Reading were two of eight rows and one said "No cards yet" while the other said its library
+ * check was 26 days old, so a quarter of the front door advertised an app with nothing in it. Both
+ * come back on their own the moment the data does: this is a condition, not a deletion. */
+async function frenchRow(): Promise<Row | null> {
   try {
     const s = await getFrenchSummary();
-    if (s.total === 0) {
-      return { label: 'French', line: 'No cards yet', sub: 'review queue built from three physical books', href: '/french' };
-    }
+    if (s.total === 0) return null;
     return {
       label: 'French',
       line: s.dueNow > 0 ? <><span className="live tnum">{s.dueNow}</span> due</> : 'nothing due today',
@@ -204,13 +209,15 @@ async function frenchRow(): Promise<Row> {
   }
 }
 
-async function readingRow(): Promise<Row> {
+async function readingRow(): Promise<Row | null> {
   try {
     /* ONE Neon round trip for all six numbers plus liveness, not five concurrent ones. See
        `getReadingFrontRow` in src/lib/reading/queue-db.ts. `allPacks()` is the filesystem and stays
        separate. */
     const [packs, r] = await Promise.all([allPacks(), getReadingFrontRow()]);
     if (!packs.length && !r.queued) throw new Error('no packs, no queue');
+    /* Hidden past the seven-day window rather than shouting about it. See the note above frenchRow. */
+    if (r.liveness.stale) return null;
 
     /* Counted off the files and the mirror, like every other row that has data behind it. This
        row's own history is why: the hand-written version once said "The shelf, the queue, and
@@ -229,7 +236,7 @@ async function readingRow(): Promise<Row> {
        a home-branch shelf as of Aug 20" is still a useful thing to know and is the difference
        between a mirror and a lie. Past the seven-day window the count is dropped entirely, because
        at that point nobody knows. */
-    const borrowNowSayable = r.borrowNowAtHome > 0 && !r.liveness.stale;
+    const borrowNowSayable = r.borrowNowAtHome > 0;
     const asOf = r.liveness.acquireGenerated
       ? new Date(r.liveness.acquireGenerated).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
       : null;
@@ -241,13 +248,10 @@ async function readingRow(): Promise<Row> {
             ? <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf as of {asOf}, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>
             : <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>)
         : <><span className="tnum">{r.queued}</span> queued to read next, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>,
-      /* The shout, which is the half of the /music treatment this row was missing. A hand-run sync
-         that has stopped is invisible otherwise: the page keeps rendering a queue and nothing ages. */
-      sub: r.liveness.stale
-        ? `library check last run ${r.liveness.ageDays == null ? 'never' : `${r.liveness.ageDays} days ago`}, so shelf availability is unknown`
-        : r.wants > 0
-          ? `${r.shelfTotal.toLocaleString()} books scored, ${r.wants} saved to want, ${packs.length} finished with recall cards`
-          : `${r.shelfTotal.toLocaleString()} books scored from ${r.sourceLists} published lists, ${packs.length} finished with recall cards`,
+      /* The stale shout that lived here is gone with the row: past the window the row is hidden. */
+      sub: r.wants > 0
+        ? `${r.shelfTotal.toLocaleString()} books scored, ${r.wants} saved to want, ${packs.length} finished with recall cards`
+        : `${r.shelfTotal.toLocaleString()} books scored from ${r.sourceLists} published lists, ${packs.length} finished with recall cards`,
       href: '/reading',
     };
   } catch {
@@ -282,7 +286,7 @@ async function swimRow(): Promise<Row> {
           Last swim <b className="tnum">{Math.round(s.lastDistanceM ?? 0)} m</b>, {daysAgoText(days)}
         </>
       ),
-      sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0)} m`,
+      sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0).toLocaleString('en-CA')} m`,
       href: '/swim',
     };
   } catch {
@@ -345,7 +349,7 @@ async function musicRow(): Promise<Row> {
       line: (
         <>
           <span className="live tnum">{s.plays}</span> plays collected
-          {s.since ? ` since ${s.since.slice(0, 10)}` : ''}
+          {s.since ? ` since ${shortDate(s.since.slice(0, 10))}` : ''}
         </>
       ),
       sub:
@@ -395,7 +399,9 @@ export default async function Home() {
   const [kitchen, gym, health, french, curio, music, swim, reading] = await Promise.all([
     kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(), readingRow(),
   ]);
-  const rows = [kitchen, gym, health, french, curio, music, swim, reading, ...STATIC_ROWS];
+  const rows = [kitchen, gym, health, french, curio, music, swim, reading, ...STATIC_ROWS].filter(
+    (r): r is Row => r !== null,
+  );
 
   /* Who this is, in the form a search engine reads rather than infers. Both links are already
    * printed in the footer below, so nothing here is newly public. `sameAs` is the whole point: it
@@ -420,7 +426,7 @@ export default async function Home() {
       </div>
       <p className="blurb">
         Small software for an audience of one, mostly to answer questions I got tired of asking
-        myself. This is the front door to it.
+        myself.
       </p>
       {/* THE PORTFOLIO LAYER WAS REMOVED ON 2026-09-15, on his call: a résumé paragraph, a row about
         * the build gates, three client projects under "In production" and four post-mortems under

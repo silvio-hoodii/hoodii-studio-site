@@ -123,8 +123,7 @@ export function RecoveryNotice({ week }: { week: TrainingWeek }) {
       ) : sameNight ? (
         <>
           Sleep and heart-rate variability both stop on {shortDate(dates[0] as string)},{' '}
-          {agoText(named[0]?.daysSince ?? 0)}. Sessions are still arriving daily, so the watch is on
-          all day and off at night.
+          {agoText(named[0]?.daysSince ?? 0)}.
         </>
       ) : (
         <>
