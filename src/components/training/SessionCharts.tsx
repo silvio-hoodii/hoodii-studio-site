@@ -20,6 +20,7 @@ export function Trace({
   unit,
   floor,
   over = 'the session',
+  range,
 }: {
   values: number[];
   height?: number;
@@ -32,6 +33,10 @@ export function Trace({
    *  A chart that tells a screen reader it covers "the session" when it covers three months is
    *  wrong in the one place nobody looking at the page would ever catch it. */
   over?: string;
+  /** Overrides the printed range. The heart-rate series is thinned to about 120 points, so its
+   *  own max sat under the watch's recorded max on the tile beside it: "132 max" over "77 to 127".
+   *  A caller holding the real extremes passes them, and the chart and the tile agree. */
+  range?: { min: number | null; max: number | null };
 }) {
   const v = values.filter((x) => Number.isFinite(x));
   if (v.length < 3) return null;
@@ -49,7 +54,7 @@ export function Trace({
       <div className="trace-head">
         <span className="trace-label">{label}</span>
         <span className="trace-range tnum">
-          {Math.round(min)} to {Math.round(max)} {unit}
+          {Math.round(range?.min ?? min)} to {Math.round(range?.max ?? max)} {unit}
         </span>
       </div>
       <svg

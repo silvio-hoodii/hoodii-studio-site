@@ -207,13 +207,13 @@ const row = (label: string, price: string | null): ShopRow => ({
 });
 
 eq('nothing at all', totalLine([]), 'Nothing here.');
-eq('one priced item is singular', totalLine([row('a', '$5.00')]), '1 item, $5.00 for the 1 with a price.');
-eq('two priced items add up', totalLine([row('a', '$5.00'), row('b', '$2.50')]), '2 items, $7.50 for the 2 with a price.');
+eq('one priced item is singular', totalLine([row('a', '$5.00')]), '1 item, $5.00.');
+eq('two priced items add up', totalLine([row('a', '$5.00'), row('b', '$2.50')]), '2 items, $7.50.');
 eq('an unpriced item is counted, not guessed at', totalLine([row('a', '$5.00'), row('b', null)]), '2 items, $5.00 for the 1 with a price, 1 with no price.');
 eq('nothing priced at all', totalLine([row('a', null), row('b', null)]), '2 items, 2 with no price.');
 /* THE PUNCTUATION CASE. The page this replaces printed "15 to buy. , 15 with no price yet" when the
  * middle clause was empty, because the separators were typed between the conditionals. */
-eq('a range makes the total a floor', totalLine([row('a', '$4.98 to $7.98')]), '1 item, from $4.98 for the 1 with a price.');
+eq('a range makes the total a floor', totalLine([row('a', '$4.98 to $7.98')]), '1 item, at least $4.98.');
 
 /* ---- day arithmetic ---------------------------------------------------------------------------- */
 

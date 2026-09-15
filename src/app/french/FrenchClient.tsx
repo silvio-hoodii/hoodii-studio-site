@@ -259,7 +259,7 @@ export default function FrenchClient({
     summary.total === 0
       ? canEdit
         ? 'No cards yet. Do a section in the book, then send a photo of the page.'
-        : 'Build three. Cards enter only from pages of a book I have actually sat down and worked, so this is empty until I do. The two versions before it were seeded with 1,359 cards and got one review.'
+        : 'No cards yet.'
       : summary.learned === 0
         ? `${summary.total} card${summary.total === 1 ? '' : 's'} in, all still settling.`
         : `${summary.learned} of ${summary.total} cards holding past three weeks.`;
@@ -422,12 +422,6 @@ export default function FrenchClient({
         <div className="act strip">
           {cells.map((c) => <i key={c.date} className={c.level} title={`${c.date}: ${c.value}`} />)}
         </div>
-        <p className="lede" style={{ fontSize: 14 }}>
-          {/* First person, like the rest of the site. This was addressed to "you", which on a
-            * public page reads as an instruction to the reader. */}
-          Cards come from pages I have actually worked. I photograph the page, send it over, and it
-          lands here. Nothing is ever bulk-loaded.
-        </p>
       </div>
 
       <div className={`rev${reviewing ? ' on' : ''}`}>

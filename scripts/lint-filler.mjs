@@ -90,9 +90,13 @@ function captionText(node) {
  * deleted on 2026-09-15 along with the portfolio sections of the front page. */
 const OUT_OF_SCOPE = /^src\/app\/callback\//;
 
-const files = execSync('git ls-files "src/app/**/*.tsx"', { cwd: ROOT, encoding: 'utf8' })
+/* `git ls-files -- src/app` and a suffix filter, NOT a double-star pathspec, which git without
+ * `:(glob)` magic reads as needing a subdirectory and so skipped src/app/page.tsx. Same hole, and the
+ * same fix, as lint-page-text.mjs on 2026-09-15. */
+const files = execSync('git ls-files -- src/app', { cwd: ROOT, encoding: 'utf8' })
   .trim().split('\n').filter(Boolean)
   .map((f) => f.replace(/\\/g, '/'))
+  .filter((f) => f.endsWith('.tsx'))
   .filter((f) => !OUT_OF_SCOPE.test(f))
   .filter((f) => !only || f.includes(only.replace(/^\//, '')));
 

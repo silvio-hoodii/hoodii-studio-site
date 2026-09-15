@@ -30,7 +30,6 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
   if (!p) notFound();
 
   const unit = unitLabel(p);
-  const namedSources = p.sources.filter((s) => !/^raw\//.test(s));
 
   return (
     <div className="reading pack">
@@ -112,12 +111,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           path to a reader is worse than printing nothing, because it reads as a citation and
           resolves to nothing they can open. Five of the seven packs have only that, so the sentence
           has to stand on its own. */}
-      <p className="src">
-        Written from study guides and source texts fetched and saved at the time, never from a
-        model&apos;s memory of the book.
-        {namedSources.length > 0 && ` Built from ${namedSources.join('; ')}.`} Card grades are kept
-        on this device only, so clearing your browser data resets them and nobody else can see them.
-      </p>
+      <p className="src">Card grades are kept on this device only; clearing browser data resets them.</p>
     </div>
   );
 }

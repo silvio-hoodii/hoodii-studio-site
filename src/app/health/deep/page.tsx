@@ -107,15 +107,6 @@ function Headline({ body }: { body: YearBody }) {
             nothing against a change this size, so crossing them here is fine and the fat/lean split
             two blocks down still refuses to. Stating that difference is what stops the split's
             same-instrument rule reading as an inconsistency. */}
-        {body.peakLowMixedSource && (
-          <p className="ex-cue">
-            Those two readings came off different machines, the{' '}
-            {body.peak.source.toLowerCase()} and the {body.low.source.toLowerCase()}. For weight that
-            is safe: across the {body.instrument.days} days carrying both, the two never disagreed by
-            more than <span className="tnum">{body.instrument.worstKg?.toFixed(2)} kg</span>. For fat
-            and lean it is not, which is why the split below uses one machine at both ends.
-          </p>
-        )}
       </div>
     </div>
   );
@@ -135,16 +126,12 @@ function TheLine({ body }: { body: YearBody }) {
           metrics somehow drawn there, so I can see at any point of time the six numbers." Drag
           anywhere on the stack and every row reads that date. */}
       <MetricStack series={body.series} />
-      <p className="ex-cue">
-        Each point is a weigh-in, {body.readings} of them this year, {when(body.recordStarts)} to{' '}
-        {when(body.latest.date)}. The gaps between them are days nobody stepped on the scale.
-      </p>
     </div>
   );
 }
 
 function WhereItWent({ body }: { body: YearBody }) {
-  const { split, splitFrom, splitTo, instrument } = body;
+  const { split, splitFrom, splitTo } = body;
   if (!split || !splitFrom || !splitTo) return null;
 
   return (
@@ -167,15 +154,6 @@ function WhereItWent({ body }: { body: YearBody }) {
             )}
             {split.fatShare == null && split.leanOpposed && ', so more than all of the loss came off fat'}
             .
-          </div>
-          <div className="ex-cue">
-            Both endpoints are {splitFrom.source.toLowerCase()} readings, on purpose. The two
-            instruments agree about weight to{' '}
-            <span className="tnum">{instrument.worstKg?.toFixed(2)} kg</span> at worst across the{' '}
-            <span className="tnum">{instrument.days}</span> days that carry both, and disagree about
-            fat mass by up to <span className="tnum">{instrument.worstFatKg?.toFixed(2)} kg</span>.
-            A change of one or two kilos read across two instruments is mostly the difference between
-            the instruments, so this split never mixes them.
           </div>
         </div>
       </div>
@@ -351,17 +329,14 @@ function Training({ training, year }: { training: YearTraining; year: number }) 
         <p className="ex-cue">
           The longest break inside the year was{' '}
           <span className="tnum">{longestGap.days}</span> days, between {when(longestGap.from)} and{' '}
-          {when(longestGap.to)}. It is measured from your first session of the year rather than from
-          January the first, because the weeks before that first session are missing from the export
-          as surely as they are missing from your training, and from here the two look identical.
+          {when(longestGap.to)}.
         </p>
       )}
       {lastYear && (
         <p className="ex-cue">
           For scale, {year - 1} in full: <span className="tnum">{lastYear.days}</span> training days,{' '}
           <span className="tnum">{lastYear.sessions}</span> sessions,{' '}
-          <span className="tnum">{hours(lastYear.minutes)}</span>. That is a whole year against a part
-          of one, so it is a size and not a verdict.
+          <span className="tnum">{hours(lastYear.minutes)}</span>.
         </p>
       )}
     </div>
@@ -384,11 +359,8 @@ function Strength({ strength }: { strength: YearStrength }) {
         What went up <span className="tag">({up} up, {flat} flat, {down} down)</span>
       </div>
       <p className="ex-cue">
-        This is the only section that is not the year. The watch has seen every session; the gym app
-        only holds what you typed into it, and its first set this year is {when(logStart)}. So this
-        is <span className="tnum">{strength.sets}</span> sets across{' '}
-        <span className="tnum">{strength.days}</span> logged days, and the months before that are
-        real training with no weights against them.
+        Since {when(logStart)}: <span className="tnum">{strength.sets}</span> sets across{' '}
+        <span className="tnum">{strength.days}</span> logged days.
       </p>
       <div className="table-scroll">
         <table className="plan-table">
@@ -424,15 +396,6 @@ function Strength({ strength }: { strength: YearStrength }) {
           </tbody>
         </table>
       </div>
-      <p className="ex-cue">
-        Heaviest set of the first logged day against the heaviest set of the latest, for every lift
-        logged on two or more days.{' '}
-        <span className="tnum">{strength.singleSessionLifts}</span> more were logged on exactly one
-        day, which is a weight and not a trajectory, so they are counted here and not listed.
-        Bodyweight sets and any set typed in from memory are left out: a line drawn through a
-        recalled number is a line drawn through a guess. A lift that has not moved is the finding
-        rather than the absence of one, so the flat rows stay in.
-      </p>
     </div>
   );
 }
@@ -483,8 +446,7 @@ function Swim({ pbs, year }: { pbs: Pb[]; year: number }) {
           load-bearing, and it belongs in HealthOS/server/import-swim-pb and in AGENTS.md, which
           both carry it. On the page it was four lines about plumbing above a table of his times. */}
       <p className="ex-cue">
-        <Link href="/swim/deep">The whole swimming record</Link> has the stroke efficiency, the pace
-        against body weight and the season gaps.
+        <Link href="/swim/deep">The whole swimming record</Link>
       </p>
     </div>
   );
@@ -493,47 +455,9 @@ function Swim({ pbs, year }: { pbs: Pb[]; year: number }) {
 /* ------------------------------------------------------------------------------------------------
  * WHAT THIS PAGE CANNOT SAY
  * ---------------------------------------------------------------------------------------------- */
-function Limits({ body, training, year }: { body: YearBody | null; training: YearTraining; year: number }) {
-  return (
-    <details className="exgroup ladder-all">
-      <summary className="exgroup-label">What this page cannot say</summary>
-      <ul className="rules">
-        {body && (
-          <li>
-            <strong>{body.peak.kg.toFixed(1)} kg is the heaviest reading of {year}, not the heaviest
-            you were.</strong> The first weigh-in of the year is {when(body.recordStarts)}, so
-            January and most of February have no reading at all. Whatever the scale would have said
-            in that stretch is not in this database and nothing here should be read as a claim
-            about it.
-          </li>
-        )}
-        {body && (
-          <li>
-            <strong>{body.readings} readings across the whole year.</strong> The lines are the shape
-            of those readings joined up, not a weight for every day, and one dry morning moves a
-            point by more than a week of eating does.
-          </li>
-        )}
-        <li>
-          <strong>Training days stop at {training.horizon ? when(training.horizon) : 'no date at all'}.</strong>{' '}
-          That is as far as the watch export has reached, so anything after it is unknown rather
-          than a rest day, and every count above covers only the days it reached.
-        </li>
-        <li>
-          <strong>Nothing here measures effort.</strong> A 40-minute session and a 40-minute session
-          are the same row whether one of them was hard. The watch records a heart rate on a lift
-          and nothing else, and it cannot judge a lift.
-        </li>
-        <li>
-          <strong>Every number on this page is queried when you open it.</strong> None of it is typed
-          into a sentence, which is the only reason any of it can be checked. If a figure here
-          disagrees with another page, one of the two is reading a different window, and the window
-          is stated in both places.
-        </li>
-      </ul>
-    </details>
-  );
-}
+/* Limits, "What this page cannot say", was here until 2026-09-15: five caveats about the record
+ * (January has no weigh-in, the lines join 22 readings, the horizon, nothing measures effort, every
+ * number is queried). Method, not facts about him. AGENTS.md, "Page text". */
 
 export default async function HealthDeepPage() {
   const review = await getYearReview();
@@ -543,10 +467,6 @@ export default async function HealthDeepPage() {
     <div className="wrap">
       <Link href="/health?s=weight" className="eyebrow">&larr; Body and the week</Link>
       <h1>The year so far</h1>
-      <p className="lede">
-        Everything {year} has on record about your body and your training, from the heaviest reading
-        of the year to the newest one. Read on the sofa, not at the rack.
-      </p>
 
       {body ? (
         <>
@@ -564,7 +484,6 @@ export default async function HealthDeepPage() {
       <Training training={training} year={year} />
       <Strength strength={strength} />
       <Swim pbs={swimPbs} year={year} />
-      <Limits body={body} training={training} year={year} />
     </div>
   );
 }

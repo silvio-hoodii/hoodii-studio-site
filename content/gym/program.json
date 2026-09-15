@@ -84,7 +84,7 @@
           "role": "primer",
           "pairing": "sequence",
           "label": "Jump",
-          "why": "Three jumps of three between your squat warm-up sets, while you are fresh. Your own ask on 15 August: \"working out as an athlete\". It is here instead of in a session of its own so the athletic work happens in the session you are already in.",
+          "why": "Three jumps of three between your squat warm-up sets, while you are fresh.",
           "exercises": [
             {
               "id": "box-jump",
@@ -182,7 +182,7 @@
                   "name": "Front Squat",
                   "zone": "rack",
                   "station": "rack",
-                  "cue": "Lighter than the back squat on purpose. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
+                  "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
                   "sets": 3,
                   "reps": "8",
                   "rest": "2 min"
@@ -192,7 +192,7 @@
                   "name": "Reverse Lunge",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up. Stepping backward rather than forward keeps the load off the front knee."
+                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
                 },
                 {
                   "id": "walking-lunge",
@@ -303,7 +303,7 @@
                   "name": "Machine Chest Press",
                   "zone": "machines",
                   "station": "chest-press",
-                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Machine on purpose, so a tired chest does not have to balance dumbbells. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
+                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
                 }
               ]
             },
@@ -343,7 +343,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Row, reverse flies in the rest",
-          "why": "The heavy horizontal pull, still at the rack. The reverse flies ride in its rest because they travel and they are the back-of-the-shoulder work you asked for as posture: a loadable exercise, 15 lb so far, not a band.",
+          "why": "The heavy horizontal pull, still at the rack. The reverse flies ride in its rest because they travel and they are the back-of-the-shoulder work you asked for as posture.",
           "exercises": [
             {
               "id": "bb-row",
@@ -363,7 +363,7 @@
                   "name": "Lat Pulldown",
                   "zone": "cable",
                   "station": "cable-pulldown",
-                  "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight. Building toward real pull-ups.",
+                  "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight.",
                   "sets": 3,
                   "reps": "8",
                   "rest": "2 min"
@@ -373,7 +373,7 @@
                   "name": "Straight-Arm Pulldown",
                   "zone": "cable",
                   "station": "cable-adjustable",
-                  "cue": "This is your freestyle catch trained directly, which is why it stays even though the rest of the day changed. Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
+                  "cue": "Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
                 },
                 {
                   "id": "chest-supported-row",
@@ -463,7 +463,7 @@
                   "name": "Front Squat",
                   "zone": "rack",
                   "station": "rack",
-                  "cue": "Lighter than the back squat on purpose. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
+                  "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
                   "sets": 3,
                   "reps": "8",
                   "rest": "2 min"
@@ -473,7 +473,7 @@
                   "name": "Reverse Lunge",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up. Stepping backward rather than forward keeps the load off the front knee."
+                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
                 },
                 {
                   "id": "walking-lunge",
@@ -529,7 +529,7 @@
                   "name": "KB Farmer Carry",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Kettlebells instead, and THE RACK STOPS AT 50 LB EACH: that is the whole set, 20 up to 50, two of each. His note #18, 2026-08-25: 'Therea no kettlebell after 50 for farmers'. He is right, and it is why the prescribed version is dumbbells, which go to 90 and which he has already carried at 75 per hand. Use this one when the dumbbells are taken, not when you want it heavier. They hang differently and swing a little, so the grip works harder at the same weight."
+                  "cue": "Kettlebells instead, and THE RACK STOPS AT 50 LB EACH: that is the whole set, 20 up to 50, two of each. Use this one when the dumbbells are taken, not when you want it heavier. They hang differently and swing a little, so the grip works harder at the same weight."
                 },
                 {
                   "id": "kb-suitcase-hold",
@@ -571,7 +571,7 @@
           "role": "primer",
           "pairing": "sequence",
           "label": "Bound sideways",
-          "why": "Three bounds of three each side, first, while you are fresh. Your own ask on 15 August: \"all this lifting is just one plane. I am not doing side or whatever else.\" Inside the session rather than in one of its own, so it happens.",
+          "why": "Three bounds of three each side, first, while you are fresh.",
           "exercises": [
             {
               "id": "lateral-bound",
@@ -732,7 +732,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Press, curls in the rest",
-          "why": "The overhead press, standing barbell in the rack, 5 lb steps, which is why it is the barbell and not the seated dumbbells that sat at 60 lb since May. The curls ride in its rest: the plain dumbbell curl you swapped to yourself, because the dumbbells travel to the rack and biceps do nothing in a press. Hammer and incline curls are one tap away.",
+          "why": "The overhead press, standing barbell in the rack, 5 lb steps. The curls ride in its rest: the plain dumbbell curl, because the dumbbells travel to the rack and biceps do nothing in a press. Hammer and incline curls are one tap away.",
           "exercises": [
             {
               "id": "bb-overhead-press",
@@ -749,10 +749,10 @@
               "alts": [
                 {
                   "id": "db-overhead-press",
-                  "name": "Seated DB Overhead Press",
+                  "name": "Standing DB Overhead Press",
                   "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "STANDING, not seated: that is the difference between this and the seated version in the alternatives, and it is why this needs no bench. Done second in the session from 2026-08-22, and the reason is in \"Why this is here\". Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter."
+                  "station": null,
+                  "cue": "Standing, no bench. Dumbbells at shoulder height, palms facing forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up until the arms are locked out with the dumbbells over the middle of your head, not in front of your face. Lower under control to the shoulders. Success looks like: your ribs stay down and you can hold the lockout still for a second. If your back arches to start the rep, go lighter."
                 },
                 {
                   "id": "machine-shoulder-press",
@@ -766,7 +766,7 @@
                   "name": "Half-Kneeling Single-Arm Press",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. It is two exercises at once: a press, and your trunk refusing to bend sideways under a load held on one side. Lighter than the two-dumbbell version by a lot, and that is the point."
+                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. Much lighter than the two-dumbbell version."
                 },
                 {
                   "id": "db-seated-ohp",
@@ -830,7 +830,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "Lighter than the back squat on purpose. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
+              "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
               "progression": "weight",
               "rangeWidth": 2,
               "alts": [
@@ -859,7 +859,7 @@
                   "name": "Reverse Lunge",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up. Stepping backward rather than forward keeps the load off the front knee."
+                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
                 },
                 {
                   "id": "walking-lunge",
@@ -896,7 +896,7 @@
               "bodyweight": true,
               "log": true,
               "progression": "reps",
-              "cue": "On the floor beside the rack between front squat sets. On your back, arms straight up, knees bent over your hips. Press your lower back FLAT into the floor and keep it there: that is the whole exercise. Slowly lower one arm behind your head and the opposite leg toward the floor, breathing out. Stop the moment your lower back lifts. Swap sides. Your most-logged exercise: 21 sets in the last month.",
+              "cue": "On the floor beside the rack between front squat sets. On your back, arms straight up, knees bent over your hips. Press your lower back FLAT into the floor and keep it there: that is the whole exercise. Slowly lower one arm behind your head and the opposite leg toward the floor, breathing out. Stop the moment your lower back lifts. Swap sides.",
               "alts": [],
               "whyHere": "the trunk work for this session, so core is not all in Session A"
             }
@@ -906,7 +906,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "Pull, triceps in the rest",
-          "why": "The lat pulldown, at the pulldown station specifically (not the straight-arm station, which is a different column), last because the walk to the cables is one you make once. The dumbbell tricep extension rides in its rest because one dumbbell travels, and triceps do nothing in a pull. You have worked it at 42.5 to 50 lb.",
+          "why": "The lat pulldown at the pulldown station, last because the walk to the cables is one you make once. The dumbbell tricep extension rides in its rest because one dumbbell travels, and triceps do nothing in a pull.",
           "exercises": [
             {
               "id": "lat-pulldown",
@@ -917,7 +917,7 @@
               "zone": "cable",
               "station": "cable-pulldown",
               "log": true,
-              "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight. Building toward real pull-ups.",
+              "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight.",
               "progression": "weight",
               "rangeWidth": 2,
               "alts": [
@@ -926,7 +926,7 @@
                   "name": "Straight-Arm Pulldown",
                   "zone": "cable",
                   "station": "cable-adjustable",
-                  "cue": "This is your freestyle catch trained directly, which is why it stays even though the rest of the day changed. Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
+                  "cue": "Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
                 },
                 {
                   "id": "assisted-pullup",
@@ -951,7 +951,7 @@
               "name": "DB Overhead Tricep Extension",
               "zone": "cable",
               "station": null,
-              "cue": "One dumbbell held in both hands, straight above your head, elbows close to your ears. Lower it behind your head by bending only at the elbow, then press back up. Upper arms stay still and vertical the whole time. This one stretches the long head of the triceps where the pushdown shortens it, which is why they are not the same exercise. You have worked this at 42.5 to 50 lb.",
+              "cue": "One dumbbell held in both hands, straight above your head, elbows close to your ears. Lower it behind your head by bending only at the elbow, then press back up. Upper arms stay still and vertical the whole time.",
               "sets": 3,
               "reps": "10",
               "rest": "45s",

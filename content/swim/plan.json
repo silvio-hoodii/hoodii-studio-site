@@ -72,7 +72,7 @@
   },
   "$onDrills": "Not prescribed. The evidence that isolated drills improve adult freestyle endurance is thin, so pacing comes first.",
   "structure": {
-    "note": "Continuity piece first, fresh, no buoy. The rest of the swim is yours. The rows move with your number.",
+    "note": "Continuity piece first, fresh, no buoy. The rest of the swim is yours.",
     "ladder": [
       {
         "weeks": "1 to 2",
@@ -131,7 +131,7 @@
       "a week. Which is why the cap comes back on its own rather than being renegotiated."
     ]
   },
-  "pullBuoyRule": "Never in the continuity piece, so the number means something. Useful afterwards: a longer piece with the buoy teaches the pacing for a distance you cannot yet hold alone.",
+  "pullBuoyRule": "Never in the continuity piece. Useful afterwards, for a longer piece you cannot yet hold alone.",
   "cues": [
     {
       "name": "The stop",

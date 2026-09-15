@@ -78,3 +78,47 @@ against Neon. Vercel function invocations by route and status for 2026-09-06 to 
 Kitchen index and shop list render and add up; Curio's digest ran this morning (Sep 15); the music
 collector ran at 15:00 UTC today and added 17 plays at 07:00; swim, run and bike tabs all pass the
 tap probe; no non-200 responses on any app route in ten days.
+
+## Pass 2, same day: the text sweep, and what happened to each open item
+
+His answers and ask: *"those incomiplete days i just didn have time to finish so i forgot to finish
+the workoput on the app, and the overhead press i can do both, i think the default is standing ...
+in general i feel there so much text that adds no value, everywhere, so tahts the type of audit that
+i want but also whats the criteria to determine what stays and what not, then fix all items in that
+list or find more"*.
+
+**The criteria** are in AGENTS.md under "Page text: what stays and what goes": a fact about him,
+something to do, a warning inside the line it changes, or a short label. Everything else goes.
+
+**Measured, not estimated.** Rendered text of 33 pages with every collapsed section opened, before
+and after, off a local `pnpm start` against the live database: 182,715 characters to 105,814, 42%
+less. Largest: Health Plan 83%, run How 69%, bike Plan 69%, /health/day 62%, dish page 60%. /gym
+moved 5%, because nearly all of it is cues at the rack.
+
+**Mechanism.** `scripts/lint-page-text.mjs`, in `pnpm build`, refuses paths, typed changelog dates,
+defence phrases, research citations and provenance phrases in JSX text and in the content fields that
+render. Its first version passed a planted violation because a double-star `git ls-files` pathspec
+skipped every top-level file, `src/app/page.tsx` included; `lint-filler.mjs` had the same hole. Both
+fixed, and the plant now fails as it should.
+
+| # | Item | Outcome |
+|---|---|---|
+| 1 | Gym sessions left unfinished | Not a bug: he ran out of time and did not press finish. No change |
+| 2 | Two "Seated DB Overhead Press" | `db-overhead-press` renamed "Standing DB Overhead Press", `station` null, in program.json and movements.json; its cue opens "Standing, no bench." `validate.mjs` passes, frozen hash included |
+| 3 | Kitchen notes | Rewritten in Neon: list notes without the old ESSENTIAL/OPTIONAL prefixes or third person, 80 dish notes to 64 with history, ratings and "his ask" removed and every stove and safety note kept, protein notes trimmed to the arithmetic. Backup `KitchenOS/_archive-2026-09-05/dish-table-before-text-audit-2026-09-15.json` |
+| 4 | 8 dishes with no list | **Still open.** A list is built in a shopping conversation with him, per the kitchen rule |
+| 5 | Run plan contradictions | Week 8 note no longer says three sessions; "lower days" clause gone |
+| 6 | Bike form promise | Sentence cut |
+| 7 | Heart-rate tile vs chart | The chart's range prints the session's recorded min and max, so the two agree |
+| 8 | Swim level no-stops claim | Sentence cut, along with the sources list |
+| 9 | Volume gate claim | Cut; the legend is one line |
+| 10 | Provenance captions | Cut across health, swim, run, bike, reading, music, curio, French |
+| 11 | Mixed dates | ISO dates on the Weight tab and kitchen pages print as "Sep 6". The numeric "13/02 to 06/09" range stays: his ask, 2026-08-28 |
+| 12 | Hub wording | "things I looked up", "the watch sync has stopped" |
+| 13 | Recovery box | Removed; permanent because he does not wear the watch to sleep |
+| 14 | French empty, Reading stale | **Still his call.** Both hidden from the hub until they have current data |
+
+**Found in pass 2 and fixed:** `/reading/about` deleted (307 to /reading); the bike page's "Before
+that / Only one session here so far" block no longer renders; the shopping total no longer says "for
+the 11 with a price" when all 11 have one; "Upload a Samsung Health export" replaces a command in the
+/health banner.

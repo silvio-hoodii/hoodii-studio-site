@@ -132,7 +132,7 @@ const DEFAULT_PATHS = [
      `[id]` route on this site had ever been measured. */
   '/kitchen', '/kitchen/shop', '/kitchen/californiaroll',
   '/french', '/curio', '/music',
-  '/reading', '/reading/shelf', '/reading/want', '/reading/about', '/reading/finished',
+  '/reading', '/reading/shelf', '/reading/want', '/reading/finished',
   /* THE FOUR CASE STUDIES WERE HERE until 2026-09-15, when /work was deleted. Worth keeping the
      history: this list said `/work` until 2026-08-28 and THERE WAS NO `/work` ROUTE, so it measured
      the 404 page and the old readiness gate passed it as a surface for as long as the list existed. */

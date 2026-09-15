@@ -3,7 +3,6 @@ import { loadConditioning } from '@/lib/gym/program';
 import { getRecentSessions } from '@/lib/gym/session';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
-import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 
 export const dynamic = 'force-dynamic';
@@ -76,8 +75,7 @@ export default async function RunPage({
               there is no article to get wrong rather than branching on the digit: 8, 11 and 18 all
               take "an" and the next edit to the plan would have reintroduced it. */}
           <p className="lede">
-            {c.run.surface}, {c.run.sessionsPerWeek}x a week, over {c.run.weeks.length} weeks. The
-            last one the watch saw is below.
+            {c.run.surface}, {c.run.sessionsPerWeek}x a week, over {c.run.weeks.length} weeks.
           </p>
           <LastSession s={lastSession} />
           <RecentSessions sessions={recent} kind="treadmill" />
@@ -85,8 +83,7 @@ export default async function RunPage({
               The log reads health_watch_session, which has 318 going back to 2019. Both are honest
               about their own source; only one answers "how much have I run". */}
           <p className="ex-cue" style={{ marginTop: 14 }}>
-            <Link href="/run/log">Every session the watch recorded</Link>, treadmill and outdoors,
-            back to 2019.
+            <Link href="/run/log">Every run on record</Link>
           </p>
         </>
       )}
@@ -96,7 +93,8 @@ export default async function RunPage({
           <div className="exgroup-label">
             {c.run.title} <span className="tag">({c.run.surface}, {c.run.sessionsPerWeek}x/week)</span>
           </div>
-          <Prose text={c.run.why} />
+          {/* `why` (the trial behind the plan) and `whyTheClockNotTheConsole` rendered here until
+              2026-09-15. Both are still in conditioning.json. AGENTS.md, "Page text". */}
           <div className="exlist">
             <div className="ex">
               <div className="ex-name">How hard</div>
@@ -114,10 +112,8 @@ export default async function RunPage({
                 <b className="nowrap">{c.run.beltSettings.walk}</b>
               </div>
               <div className="ex-cue">{c.run.beltSettings.theUnitTest}</div>
-              <div className="ex-cue quiet">{c.run.beltSettings.whyBothUnits}</div>
             </div>
           </div>
-          <Prose text={c.run.whyTheClockNotTheConsole} />
           <div className="table-scroll">
             <table className="plan-table">
               <thead>

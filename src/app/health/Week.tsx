@@ -21,12 +21,6 @@ const DAY_SHORT: Record<string, string> = {
   sunday: 'Sun',
 };
 
-/** "3 days ago", and "today" rather than "0 days ago". */
-function agoText(days: number): string {
-  if (days <= 0) return 'today';
-  if (days === 1) return 'yesterday';
-  return `${days} days ago`;
-}
 
 /* WHERE HE STANDS, and it is the first thing on the page because it is the only thing here that
  * changes daily. Everything else is a plan and the plan does not move.
@@ -58,9 +52,9 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
                 : `${rule.maxConsecutive - actual.currentRun} more before a day off.`}
         </div>
         <div className="ex-meta">
-          {actual.currentRun > 0 && actual.currentRunFrom
-            ? `${shortDate(actual.currentRunFrom)} to ${shortDate(lastKnown?.date ?? actual.currentRunFrom)}.`
-            : 'Last session was more than a day ago.'}{' '}
+          {actual.currentRun > 1 && actual.currentRunFrom
+            ? `${shortDate(actual.currentRunFrom)} to ${shortDate(lastKnown?.date ?? actual.currentRunFrom)}. `
+            : actual.currentRun === 0 ? 'Last session was more than a day ago. ' : ''}
           {actual.longestRun > actual.currentRun && actual.longestRunFrom && actual.longestRunTo && (
             <>
               Longest in the last four weeks was {actual.longestRun}, {shortDate(actual.longestRunFrom)}{' '}
@@ -78,8 +72,7 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
                 watch stopped at Sep 7 and this line said Sep 8, because `lastKnown` is the last day
                 either source knows about and Sep 8 came from gym_set. Naming one source for a
                 two-source horizon is how the count and the sentence drift apart. */}
-            Counted to {shortDate(lastKnown.date)}, the last day anything is known about. Nothing
-            after that is known, and it is not being counted as rest.
+            Counted to {shortDate(lastKnown.date)}.
           </div>
         )}
       </div>
@@ -87,65 +80,10 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
   );
 }
 
-/* THE CAVEAT THAT OUTRANKS THE RULE. Sleep and HRV are the only measurements that could turn this
- * arithmetic into an observation, and they are too sparse to do it: the watch is worn all day and
- * taken off at night.
- *
- * This is not a footnote. A page that counts sessions and then implies a recovery verdict is
- * inventing a measurement, and the cheapest fix in the whole project is him wearing the watch to
- * bed. So it says that, with the number of days, above the plan.
- *
- * THE WORD "DARK" WAS WRONG AND WAS CORRECTED 2026-09-03. This comment used to say the two feeds
- * "had both been dark for six nights", which was accurate on 2026-08-21 when the rule was built.
- * The 2026-08-26 export holds 24,864 sleep-stage rows and 1,451 HRV rows running to 2026-08-23, so
- * nothing is dark. What is true is that only two nights fall between 2026-08-15 and the 26th, which
- * is too sparse to trend and reaches the same conclusion by a different route. The rendered version
- * of this claim lived in conditioning.json's restRule.theHonestCaveat and was corrected there too;
- * its `$caveatChanged` carries the counts.
- *
- * DO NOT PUT A SLEEP DURATION ON THIS PAGE YET. Those tables have been parsed four ways and every
- * combination returned medians of 3.7 to 5.3 hours with bedtimes between 3 and 8 am, which
- * contradicts his own account. When a parse disagrees with the person who slept, the parse is the
- * suspect. Row counts and date ranges are safe to state; a duration is not, until one night he can
- * confirm from memory has been checked against what the tables say for that night. */
-export function RecoveryNotice({ week }: { week: TrainingWeek }) {
-  if (!week.recovery.dark) return null;
-  const named = week.recovery.metrics.filter((m) => m.lastSeen);
-  /* The two metrics almost always stop on the same night, because it is one watch coming off one
-     wrist. Printing "hrv Aug 15, sleep Aug 15" made that read as two separate facts. */
-  const dates = [...new Set(named.map((m) => m.lastSeen as string))];
-  const sameNight = dates.length === 1 && named.length > 1;
-  return (
-    <div className="stale">
-      <span className="k">This is load, not recovery</span>
-      {!named.length ? (
-        <>No sleep or heart-rate readings have reached this page at all.</>
-      ) : sameNight ? (
-        <>
-          Sleep and heart-rate variability both stop on {shortDate(dates[0] as string)},{' '}
-          {agoText(named[0]?.daysSince ?? 0)}.
-        </>
-      ) : (
-        <>
-          The last reading was{' '}
-          {named
-            .map((m) => `${m.metric} on ${shortDate(m.lastSeen as string)}`)
-            .join(', ')}
-          .
-        </>
-      )}{' '}
-      {/* THE SENTENCE HERE USED TO END "and wearing the watch to bed is the only thing that would".
-          Removed 2026-09-03 on his ruling: "sleeping will always be eincosjsten beacuse I dont wear
-          the watch to sleep". It read as a standing nudge toward a thing he has now settled, on the
-          page he opens most, and a suggestion left rendered is one he declines again every visit.
-          THIS WAS THE THIRD COPY. The other two were in conditioning.json, and fixing those without
-          grepping for the sentence left this one live on the surface he actually reads: a ruling is
-          not applied until every place that states the opposite has been found. */}
-      The count above is arithmetic on sessions. It is load, not recovery, and it cannot tell you
-      whether you are recovered.
-    </div>
-  );
-}
+/* RecoveryNotice, the "This is load, not recovery" box, was here until 2026-09-15. It fired on every
+ * visit because he does not wear the watch to sleep, a question he settled on 2026-09-03, so it told
+ * him something he already knew every time he opened the Now tab. The sleep-parsing warnings it
+ * carried (medians of 3.7 to 5.3 hours that contradict his own account) are in git history. */
 
 /* THE PLAN, as a week. Lifting titles come from program.json and the slots from conditioning.json,
  * so nothing here is a second copy of either. A day with no work on it is drawn as such rather than
@@ -216,8 +154,7 @@ export function ActualDays({ week }: { week: TrainingWeek }) {
           IBM Plex Mono at 12px, which is right for "3 x 8, rest 2 min" and wrong for a sentence.
           Same type split the kitchen settled on 2026-08-15: data stays mono, prose goes sans. */}
       <div className="ad-legend ex-cue">
-        Right-hand number is how many days in a row that day was. {week.rule.text} Lifting, runs,
-        rides and swims all come from the watch, so sessions you never opened the app for still count.
+        Right-hand number: days in a row.
       </div>
     </div>
   );

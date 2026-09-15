@@ -73,7 +73,7 @@ function dur(seconds: number): string {
  * STROKE EFFICIENCY. The headline, because it is the one number that moves with technique rather
  * than with effort, and the one his plan is built to change.
  * ---------------------------------------------------------------------------------------------- */
-function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwim['swolfAgreement'] }) {
+function Swolf({ points }: { points: SwolfPoint[] }) {
   const s = swolfSummary(points);
   if (!s) return null;
   const { best, latest, bestRecent, recent } = s;
@@ -128,28 +128,6 @@ function Swolf({ points, agreement }: { points: SwolfPoint[]; agreement: DeepSwi
       {/* THE SECOND DEFINITION, SAID OUT LOUD. This is the pace column's mistake waiting to happen
           again: two defensible numbers for one name, and nothing on either page admitting the other
           exists. The agreement figure is queried, not claimed. */}
-      <details className="src">
-        <summary>Why this can disagree with the SWOLF on your last session card</summary>
-        <div className="src-body">
-          <p>
-            This chart computes SWOLF from the length rows with the rest taken out: seconds swum per
-            length plus strokes per length, freestyle only. Samsung stores its own session figure and
-            /swim prints that one. On the{' '}
-            <span className="tnum">{agreement.sessions}</span> sessions carrying both, the two agree
-            within 1.0 on <span className="tnum">{agreement.within1}</span> of them, and the average
-            distance between them is <span className="tnum">{agreement.avgAbsDiff}</span>.
-          </p>
-          <p>
-            Where they part company is interval swims, and the gap reaches{' '}
-            <span className="tnum">{agreement.maxDiff}</span>. On a session of 25s with a minute at
-            the wall between them, the stored number counts the waiting and this one does not.
-          </p>
-          <p>
-            Freestyle only: a kickboard length has almost no strokes in it, so averaging it in reads
-            as a technique gain that is really a change of equipment.
-          </p>
-        </div>
-      </details>
     </div>
   );
 }
@@ -168,31 +146,14 @@ function Progression({
 }) {
   const withHistory = standings.filter((s) => s.history.length > 1);
   if (!withHistory.length) return null;
-  /* The oldest date anywhere in Samsung's record log, computed. It is the same day for every
-     distance, which is the tell that the log was started or reset rather than being a full history,
-     and it is the caveat the whole section needs. */
-  const logStart = withHistory
-    .flatMap((s) => s.history.map((h) => h.achievedOn))
-    .sort()[0];
   const firstRecord = records[0];
   const latestRecord = records[records.length - 1];
-  const logStartsAfterFirstRecord = logStart != null && firstRecord != null
-    && firstRecord.date < logStart;
 
   return (
     <div className="exgroup">
       <div className="exgroup-label">
         How the personal bests got there <span className="tag">(Samsung&rsquo;s own top times)</span>
       </div>
-      {logStart != null && logStartsAfterFirstRecord && (
-        /* THE CAVEAT THAT OUTRANKS THE TABLES BELOW, so it goes above them, cut to one line on
-           2026-09-11. Samsung's record log does not reach back as far as his swimming does, and a
-           reader who takes these tables as a full history will believe he first swam 100 m in 2023. */
-        <p className="ex-cue" style={{ marginTop: 0 }}>
-          Samsung&rsquo;s log starts {when(logStart)}; your swims go back to{' '}
-          {when(firstRecord!.date)}. The bottom row is when the watch first noticed.
-        </p>
-      )}
       {withHistory.map((s) => {
         const oldest = s.history[s.history.length - 1]!;
         const best = s.best!;
@@ -260,7 +221,6 @@ function Progression({
           {/* The label stays; the provenance went, 2026-09-09. That these are derived from the
               sessions rather than from Samsung's own record log, which starts too late to hold most
               of them, is true and is why the table can exist at all. It is also plumbing. */}
-          <p className="lede">Every swim that beat the longest one before it, newest first.</p>
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
@@ -382,14 +342,9 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
               Fastest year <b className="tnum">{fastestYear.year}</b>, at{' '}
               <span className="tnum">{fastestYear.avgKg}</span> kg. Biggest year{' '}
               <b className="tnum">{biggestYear.year}</b>, at{' '}
-              <span className="tnum">{biggestYear.avgKg}</span> kg. Weight, volume and fitness all
-              changed over the same years, so neither table can say which one set the pace.
+              <span className="tnum">{biggestYear.avgKg}</span> kg.
             </p>
           )}
-          <p>
-            Rest-excluded pace, all strokes, against the nearest weighing within a month. A kilo
-            either way may be water.
-          </p>
         </div>
       </details>
     </div>
@@ -402,7 +357,6 @@ function WeightAgainstPace({ d }: { d: DeepSwim }) {
 function AfterLifting({ cohorts }: { cohorts: DeepSwim['proximity'] }) {
   const real = cohorts.filter((c) => c.medianPaceSeconds != null);
   if (real.length < 2) return null;
-  const smallest = Math.min(...real.map((c) => c.swims));
   const byPace = [...real].sort((a, b) => a.medianPaceSeconds! - b.medianPaceSeconds!);
   const fastest = byPace[0]!;
   const spread = byPace[byPace.length - 1]!.medianPaceSeconds! - fastest.medianPaceSeconds!;
@@ -436,7 +390,6 @@ function AfterLifting({ cohorts }: { cohorts: DeepSwim['proximity'] }) {
           broken 50 m session had pushed to 4:15. Medians now, and the sentence is the spread. Five
           seconds per 100 m is under one and a half seconds a length. */}
       <p className="ex-cue" style={{ marginTop: 10 }}>
-        Typical pace per 100 m, rest excluded.{' '}
         {spread <= 5 ? (
           <>
             The groups sit within <b className="tnum">{spread}</b> s per 100 m of each other, so
@@ -447,8 +400,7 @@ function AfterLifting({ cohorts }: { cohorts: DeepSwim['proximity'] }) {
             Fastest: {fastest.label.toLowerCase()}, by <b className="tnum">{spread}</b> s per 100 m
             over the slowest.
           </>
-        )}{' '}
-        Smallest group: <span className="tnum">{smallest}</span> swims.
+        )}
       </p>
     </div>
   );
@@ -462,18 +414,12 @@ function WorkToRest({ d }: { d: DeepSwim }) {
   if (!rest.length) return null;
   const recent = rest.slice(-20);
   const latest = rest[rest.length - 1]!;
-  const overran = rest.filter((r) => r.overran).length;
   const avgRecent = Math.round(recent.reduce((a, b) => a + b.restPct, 0) / recent.length);
   return (
     <details className="exgroup ladder-all">
       <summary className="exgroup-label">
         Work to rest <span className="tag">({avgRecent}% at the wall, last {recent.length} swims)</span>
       </summary>
-      <p className="lede">
-        Rest is the larger of two readings: session time minus the lengths, and the rest logged at
-        each wall with watch pauses included, which exists from{' '}
-        {d.coverage.restFirstYear ?? 'recently'} on.
-      </p>
       <div className="stats">
         <div>
           <div className="stat-k">Last swim</div>
@@ -487,13 +433,6 @@ function WorkToRest({ d }: { d: DeepSwim }) {
         </div>
       </div>
       <LineChart points={recent.map((r) => ({ date: r.date, value: r.restPct }))} unit="% rest" decimals={0} />
-      {overran > 0 && (
-        <p className="ex-cue" style={{ marginTop: 10 }}>
-          On <span className="tnum">{overran}</span> sessions the lengths add up to slightly more
-          than the session itself, so their rest figure is shown as 0 and is really unknown and
-          small. That is a rounding artifact in the export, not a swim with no rest in it.
-        </p>
-      )}
     </details>
   );
 }
@@ -533,7 +472,7 @@ function StrokeMix({ strokes }: { strokes: DeepSwim['strokes'] }) {
  * THE LAST SESSION, PIECE BY PIECE. The only thing here that needs the per-length rest reading, so
  * it is the only thing gated on the year that reading starts.
  * ---------------------------------------------------------------------------------------------- */
-function Pieces({ session, coverage }: { session: DeepSwim['lastPieces']; coverage: DeepSwim['coverage'] }) {
+function Pieces({ session }: { session: DeepSwim['lastPieces'] }) {
   if (!session || !session.pieces.length) return null;
   const total = session.pieces.reduce((a, p) => a + p.metres, 0);
   const unbroken = session.pieces.length === 1;
@@ -545,12 +484,6 @@ function Pieces({ session, coverage }: { session: DeepSwim['lastPieces']; covera
           ({unbroken ? 'one piece, unbroken' : `${session.pieces.length} pieces`}, {total.toLocaleString('en-CA')} m, {when(session.date)})
         </span>
       </summary>
-      <p className="lede">
-        Split at every stop, paused watch included. Available from{' '}
-        {coverage.restFirstYear ?? 'recently'} onward only:{' '}
-        <span className="tnum">{coverage.rowsWithRest.toLocaleString('en-CA')}</span> of{' '}
-        <span className="tnum">{coverage.rows.toLocaleString('en-CA')}</span> lengths carry one.
-      </p>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -597,8 +530,6 @@ function Gaps({ gaps }: { gaps: DeepSwim['gaps'] }) {
             <span className="tnum">{Math.max(...gaps.map((g) => g.days))}</span> days.{' '}
           </>
         )}
-        A count of sessions since 2018 reads as eight years of swimming. The gaps are what it
-        actually was.
       </p>
       <div className="table-scroll">
         <table className="plan-table">
@@ -622,63 +553,16 @@ function Gaps({ gaps }: { gaps: DeepSwim['gaps'] }) {
       </div>
       {gaps.length > recent.length && (
         <p className="ex-cue" style={{ marginTop: 10 }}>
-          The six most recent. There are{' '}
-          <span className="tnum">{gaps.length - recent.length}</span> older ones, including the two
-          that span the years you were not swimming at all.
+          The six most recent of <span className="tnum">{gaps.length}</span>.
         </p>
       )}
     </details>
   );
 }
 
-function Limits({ coverage }: { coverage: DeepSwim['coverage'] }) {
-  return (
-    <details className="exgroup ladder-all">
-      <summary className="exgroup-label">Where this data stops</summary>
-      <div className="src-body">
-        <p>
-          <b>What is here.</b> <span className="tnum">{coverage.rows.toLocaleString('en-CA')}</span>{' '}
-          individual lengths across <span className="tnum">{coverage.sessions}</span> sessions, from{' '}
-          {when(coverage.firstDate)} to {when(coverage.lastDate)}.
-        </p>
-        <p>
-          <b>What is missing.</b> <span className="tnum">{coverage.sessionsWithoutLengths}</span>{' '}
-          recorded swims have no per-length detail at all, so they appear in the distance and pace
-          figures on /swim and in none of the charts here. The gap list above deliberately counts
-          them, because a swim with no detail is still a swim and leaving it out would invent a break
-          that never happened.
-        </p>
-        <p>
-          <b>What was thrown away.</b>{' '}
-          <span className="tnum">{coverage.excludedRows}</span> length rows sit outside the plausible
-          band of 12 to 120 seconds and are excluded from every figure on this page. The fastest
-          length in the file is 9.03 seconds, which beats a world-record 25 m split, and the slowest
-          runs to 22 minutes, which is a watch left running at the wall.
-        </p>
-        <p>
-          {/* `{' '}` and not a plain space. React drops a literal space between a closing tag and a
-              text child that wraps onto further lines, and the served HTML read
-              "not read.The stored". Every sibling bullet here survived because a <span> or a {' '}
-              follows its label. Found by grepping the rendered HTML for `</b>` followed by a
-              letter, which is the only place it was visible. */}
-          <b>The dates are derived, not read.</b>{' '}
-          The stored date column is UTC, so an evening swim
-          in Calgary is filed a day late. Converting the start time to Alberta&rsquo;s own timezone
-          reproduces the date the watch independently recorded on 359 of 361 sessions where both
-          exist, against 271 for the raw column, so every date on this page is converted. Those two
-          counts were measured once, on 27 August 2026, and are the evidence for the conversion
-          rather than a live reading of it. The two sessions that still disagree are both January
-          2018.
-        </p>
-        <p>
-          <b>Stroke counts are cycles.</b> Not arm strokes. A median of 9 per 25 m as single strokes
-          would be 2.78 m of travel each, which is not a thing that happens. Every stroke figure here
-          depends on that reading.
-        </p>
-      </div>
-    </details>
-  );
-}
+/* Limits, "Where this data stops", was here until 2026-09-15: what is in the record, what is
+ * missing, what was excluded, that the dates are converted from UTC, and that stroke counts are
+ * cycles. Method. The derivations and their evidence are in src/lib/swim/deep.ts. */
 
 export default async function SwimDeepPage() {
   const [d, standards, pbs] = await Promise.all([
@@ -696,15 +580,14 @@ export default async function SwimDeepPage() {
           which he knows. The link is the only part that does anything. */}
       <p className="lede"><Link href="/swim">Back to Swim</Link>.</p>
 
-      <Swolf points={d.swolf} agreement={d.swolfAgreement} />
+      <Swolf points={d.swolf} />
       <Progression standings={standings} records={d.distanceRecords} />
       <WeightAgainstPace d={d} />
       <AfterLifting cohorts={d.proximity} />
       <WorkToRest d={d} />
       <StrokeMix strokes={d.strokes} />
-      <Pieces session={d.lastPieces} coverage={d.coverage} />
+      <Pieces session={d.lastPieces} />
       <Gaps gaps={d.gaps} />
-      <Limits coverage={d.coverage} />
     </div>
   );
 }

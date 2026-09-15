@@ -13,12 +13,11 @@ import { computeCoverage } from '@/lib/gym/coverage.mts';
 import { getTrainingWeek } from '@/lib/gym/week';
 import { getRecentSessions } from '@/lib/gym/session';
 import { AdherenceStrip, LineChart } from './HealthCharts';
-import { RunStanding, RecoveryNotice, PlanWeek, ActualDays } from './Week';
+import { RunStanding, PlanWeek, ActualDays } from './Week';
 import Volume from './Volume';
 import { YearRangeSentence, YearRangeDates } from './YearRange';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
-import Prose from '@/components/training/Prose';
 import { daysAgoText, shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
 
@@ -91,7 +90,7 @@ function SubNav({ sub }: { sub: string }) {
 function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek: number } | null): string {
   if (!t) return 'not enough history';
   const sign = (n: number) => (n > 0 ? '+' : '');
-  return `vs ${t.fromDate} (${t.spanDays} d): ${sign(t.kg)}${t.kg} kg, ${sign(t.perWeek)}${t.perWeek} kg/wk`;
+  return `vs ${shortDate(t.fromDate)} (${t.spanDays} d): ${sign(t.kg)}${t.kg} kg, ${sign(t.perWeek)}${t.perWeek} kg/wk`;
 }
 
 export default async function HealthPage({
@@ -230,23 +229,10 @@ export default async function HealthPage({
 
       {sub === 'now' && week && (
         <>
-          <p className="lede">
-            {/* "Read from the watch, so a session you never opened an app for still counts" until
-                2026-09-09, and it credited the wrong source. `actualBlock` in lib/gym/week.ts reads
-                health_watch_session AND gym_set, which is why 2026-09-08 appears in the streak with
-                no watch row against it: he logged 16 sets that day and the watch saw nothing.
-
-                The union is CORRECT and is not what changed. The sentence was, and it was wrong in
-                the expensive direction: it promised completeness from one source while quietly
-                depending on two, so anyone checking it against the watch alone would have found the
-                count too high and "fixed" it downward. Undercounting his training is the direction
-                this pipeline has already been wrong in. */}
-            Lifting, swimming, running and riding in one count, and how many days in a row you have
-            trained. A day counts if the watch saw it or you logged it.
-          </p>
-
+          {/* No lede and no recovery box, since 2026-09-15. The lede defined what a training day is;
+              the box said sleep and HRV had stopped, which is permanent because he does not wear the
+              watch to sleep. Neither changes anything he does. AGENTS.md, "Page text". */}
           <RunStanding week={week} />
-          <RecoveryNotice week={week} />
 
           <LastSession s={lastLift} noun="lift" />
           <RecentSessions sessions={recentLifts} kind="strength" nounPlural="lifts" />
@@ -286,8 +272,6 @@ export default async function HealthPage({
                 (09-health P1-3). `trained` is any discipline now; `logged` is still lifting only,
                 because a missing LOG means missing weights and that gap is the useful one. */}
             <p className="ex-cue">
-              Trained is any discipline the watch saw, lifting or swimming or running or riding.
-              Logged is lifting typed into the gym app, which is the only place the weights exist.{' '}
               <span className="live tnum">{trainedCount}</span> trained,{' '}
               <span className="tnum">{loggedCount}</span> with the lifting logged
               {trainedCount > loggedCount
@@ -295,9 +279,8 @@ export default async function HealthPage({
                 : ''}.
               {unknownDays > 0 && (
                 <>
-                  {' '}The watch export stops at {horizon ?? 'no date at all'}, so{' '}
-                  <span className="tnum">{unknownDays}</span> day{unknownDays === 1 ? '' : 's'} in this
-                  window are unknown rather than rest, and those counts cover only the days it reached.
+                  {' '}<span className="tnum">{unknownDays}</span> day{unknownDays === 1 ? '' : 's'} after{' '}
+                  {horizon ?? 'the last sync'} not synced yet.
                 </>
               )}
             </p>
@@ -311,10 +294,7 @@ export default async function HealthPage({
           {!sync.stale && bodySummary?.stale && (
             <div className="stale">
               <span className="k">No recent measurement</span>
-              The sync is running, so this is current: the last time you weighed in was{' '}
-              {daysAgoText(bodySummary.daysSinceLatest ?? 0)}, on {bodySummary.latest?.date}. Nothing
-              below has moved since then, and the days after it are not rest days, they are days this
-              page knows nothing about.
+              Last weigh-in {daysAgoText(bodySummary.daysSinceLatest ?? 0)}.
             </div>
           )}
 
@@ -375,10 +355,7 @@ export default async function HealthPage({
                     the default tab, said nothing, so the first thing on the surface read as "you
                     weigh 103.7" three lines above a tile saying 105.2. */}
                 <p className="ex-cue" style={{ marginTop: 0 }}>
-                  <YearRangeSentence body={yearBody} />{' '}
-                  {yearBody.peak.date === yearBody.recordStarts
-                    ? `That first date is also the first weigh-in of ${yearBody.year}, so it is where the record starts rather than a peak you climbed to, and whatever you weighed in January is not in this database at all.`
-                    : `The first weigh-in of ${yearBody.year} is ${shortDate(yearBody.recordStarts)}, so that is the heaviest reading on record rather than the heaviest you were.`}
+                  <YearRangeSentence body={yearBody} />
                 </p>
                 <Link href="/health/deep" className="deeplink">
                   The whole year, every measurement &rarr;
@@ -413,7 +390,7 @@ export default async function HealthPage({
                       <div className="stat-v">
                         {bodySummary.latest.bf_pct.toFixed(1)}<span className="stat-u">%</span>
                       </div>
-                      <div className="stat-d">{bodySummary.latest.date}</div>
+                      <div className="stat-d">{shortDate(bodySummary.latest.date)}</div>
                     </div>
                   )}
                 </div>
@@ -455,7 +432,7 @@ export default async function HealthPage({
                       readings. Saying "the scale" on the one page that draws that distinction is
                       the kind of small wrongness that teaches a reader the labels do not mean
                       anything. */}
-                  Between {split.from} and {split.to} your weight moved{' '}
+                  Between {shortDate(split.from)} and {shortDate(split.to)} your weight moved{' '}
                   <span className="live tnum">{split.dKg > 0 ? '+' : ''}{split.dKg.toFixed(1)} kg</span>:{' '}
                   <span className="tnum">{split.dFat > 0 ? '+' : ''}{split.dFat.toFixed(1)}</span> of that
                   was fat and <span className="tnum">{split.dLean > 0 ? '+' : ''}{split.dLean.toFixed(1)}</span> was
@@ -510,19 +487,12 @@ export default async function HealthPage({
           {/* WATCH ONLY, and the section says so rather than letting a line quietly skip scale days. */}
           {(watchComp?.length ?? 0) > 1 && (
             <div className="section">
-              <div className="section-head"><h2>What only the watch sees</h2></div>
-              <p className="lede" style={{ marginTop: 0, marginBottom: 14 }}>
-                Skeletal muscle and total body water are recorded on watch readings and not on scale
-                readings, so these two are drawn from{' '}
-                <span className="tnum">{watchComp?.length}</span> watch readings alone and the scale
-                days are absent rather than guessed at.
-                {watchComp?.at(-1)?.bmr_cal != null && (
-                  <>
-                    {' '}Resting burn on the newest of them was{' '}
-                    <span className="tnum">{watchComp?.at(-1)?.bmr_cal}</span> cal a day.
-                  </>
-                )}
-              </p>
+              <div className="section-head"><h2>Muscle and water</h2></div>
+              {watchComp?.at(-1)?.bmr_cal != null && (
+                <p className="ex-cue" style={{ marginTop: 0, marginBottom: 14 }}>
+                  Resting burn on the newest reading: <span className="tnum">{watchComp?.at(-1)?.bmr_cal}</span> cal a day.
+                </p>
+              )}
               <div className="pair">
                 <figure className="chartfig">
                   <figcaption className="chart-cap">Skeletal muscle, kg</figcaption>
@@ -561,36 +531,11 @@ export default async function HealthPage({
               The plan <span className="tag">({week.plan.trainingDays} days, longest run {week.plan.longestRun})</span>
             </div>
             <PlanWeek week={week} />
-            <p className="ex-cue" style={{ marginTop: 10 }}>
-              Cardio sits on days that are already training days, so it adds work without adding a
-              day. That is what leaves Wednesday and the weekend clear.
-            </p>
           </div>
 
-          {/* WHY FOUR THINGS AND NOT ONE. He asked twice and it had never been answered anywhere he
-              could see: "If this translates into the swimming, how does the running on the bike
-              complement that?" The answer was already sourced in the evidence file and had simply
-              never reached a page, which is the same reason he said the programme reads as
-              arbitrary. Behind a tap because it is read once and then believed, not consulted. */}
-          {conditioning.week?.howItFits && (
-            <details className="exgroup ladder-all">
-              <summary className="exgroup-label">
-                {conditioning.week.howItFits.title}{' '}
-                <span className="tag">({conditioning.week.howItFits.points.length})</span>
-              </summary>
-              <p className="ex-cue">{conditioning.week.howItFits.lead}</p>
-              <div className="exlist">
-                {conditioning.week.howItFits.points.map((pt) => (
-                  <div className="ex" key={pt.claim}>
-                    <div className="ex-name">{pt.claim}</div>
-                    <div className="ex-cue">{pt.detail}</div>
-                    <div className="ex-cue quiet-inline">{pt.source}</div>
-                  </div>
-                ))}
-              </div>
-              <p className="ex-cue">{conditioning.week.howItFits.sourceNote}</p>
-            </details>
-          )}
+          {/* "Why four things and not one" was a tap-to-open essay here until 2026-09-15: five
+              research claims with citations. It is still in conditioning.json (week.howItFits) and in
+              HealthOS/knowledge/training-programme-evidence.md. Not the page. */}
 
           <div className="exgroup">
             <div className="exgroup-label">The rest rule</div>
@@ -600,20 +545,11 @@ export default async function HealthPage({
                   like machine output. */}
               <div className="ex">
                 <div className="ex-name">{week.rule.text}</div>
-                <div className="ex-cue">{conditioning.week?.restRule?.whenItFires}</div>
-                <div className="ex-cue">{conditioning.week?.restRule?.theHonestCaveat}</div>
               </div>
             </div>
-            {/* `.wk` lifts the tap target to 44px. Bare `.src` summaries are 32px on purpose across
-                this site, which is fine for the tertiary "where this came from" citations under a
-                cue, but this one is the main way to read why the rule has the shape it has. */}
-            <details className="src wk">
-              <summary>What counts as a training day, and why a rule instead of a fixed day off</summary>
-              <div className="src-body">
-                <Prose text={conditioning.week?.restRule?.whatCountsAsTraining ?? ''} />
-                <Prose text={conditioning.week?.restRule?.whyThisShape ?? ''} />
-              </div>
-            </details>
+            {/* When the rule fires, the caveat that three is his number and not a study's, and what
+                counts as a training day were printed under the rule until 2026-09-15. They live in
+                conditioning.json (week.restRule). */}
           </div>
 
           <div className="exgroup">

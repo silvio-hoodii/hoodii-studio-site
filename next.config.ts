@@ -92,6 +92,11 @@ const nextConfig: NextConfig = {
       { source: '/work', destination: '/', permanent: false },
       { source: '/work/:path*', destination: '/', permanent: false },
 
+      /* /reading/about IS DELETED, 2026-09-15. It explained how the score works and listed every
+       * source list behind it; nothing on it was a fact about him or something to do. AGENTS.md,
+       * "Page text". */
+      { source: '/reading/about', destination: '/reading', permanent: false },
+
       /* /reading/all is retired into /reading/shelf, 2026-08-21. Both browsed the same pool and
        * the shelf page now does everything /reading/all did (search, filters, the full catalogue)
        * plus covers, descriptions, six sorts, tiers, a want list and pagination. The last two

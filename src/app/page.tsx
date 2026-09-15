@@ -162,7 +162,7 @@ async function healthRow(): Promise<Row> {
       return {
         label: 'Health',
         line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
-        sub: 'the sync from the watch has stopped, so nothing here is moving',
+        sub: 'the watch sync has stopped',
         href: '/health',
       };
     }
@@ -301,7 +301,7 @@ async function curioRow(): Promise<Row> {
     if (!s.items) throw new Error('nothing synced');
     return {
       label: 'Curio',
-      line: <><span className="live tnum">{s.items}</span> things I looked up properly</>,
+      line: <><span className="live tnum">{s.items}</span> things I looked up</>,
       sub: s.latestQuestion ?? `${s.digests} mornings`,
       href: '/curio',
     };
@@ -329,7 +329,7 @@ async function musicRow(): Promise<Row> {
       };
     }
     if (s.plays === 0) {
-      return { label: 'Music', line: 'Nothing collected yet', sub: 'the first scheduled run fills it in', href: '/music' };
+      return { label: 'Music', line: 'Nothing collected yet', href: '/music' };
     }
     /* Was "plays kept that Spotify would have dropped". Spotify hands back the last fifty plays on
      * request, and the table holds fifty: exactly one batch, nothing yet preserved that asking again
@@ -354,7 +354,7 @@ async function musicRow(): Promise<Row> {
       ),
       sub:
         newestAgeDays != null && newestAgeDays >= 2
-          ? `nothing new for ${newestAgeDays} days, newest play ${s.latest?.slice(0, 10)}`
+          ? `nothing new for ${newestAgeDays} days`
           : `${s.artists} artists, ${s.tracks} tracks`,
       href: '/music',
     };

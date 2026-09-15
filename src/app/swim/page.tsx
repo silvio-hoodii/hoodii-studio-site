@@ -15,7 +15,7 @@ import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 import { shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
-import type { SwimPlan, SwimCoaching, SwimTeaching, SourceQuote, SwimSource } from '@/lib/swim/types';
+import type { SwimPlan, SwimCoaching, SwimTeaching } from '@/lib/swim/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -241,7 +241,7 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
           <tbody>
             {tiers.map((t) => (
               <tr key={t.id}>
-                <td>{t.name}{t.provenance === 'constructed' ? '*' : ''}</td>
+                <td>{t.name}</td>
                 {dists.map((d) => {
                   const ms = tierTimeMs(t, d, standards.tiers);
                   const met = mine.get(d)?.tierId === t.id;
@@ -260,21 +260,12 @@ function SwimLevel({ standards, standings }: { standards: SwimStandards; standin
           </tbody>
         </table>
       </div>
-      <p className="ex-meta">
-        Underlined: the level each best reaches. Set{' '}
-        {bests.map((b) => `${shortDate(b.achievedOn)} (${b.distanceM.toLocaleString('en-CA')} m)`).join(', ')}.
-        Levels are race times, one swim with no stops. *Our own rung, the rest are published.
-      </p>
-      <details className="src">
-        <summary>Where the levels come from</summary>
-        <div className="src-body">
-          {standards.sources.map((src) => (
-            <p key={src.id}>
-              <a href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-            </p>
-          ))}
-        </div>
-      </details>
+      {/* Underlined is the only thing this table needs said. Until 2026-09-15 it also printed the
+          dates of each best, "Levels are race times, one swim with no stops", a note that the
+          Fitness rung is our own, and a list of where the levels come from. The no-stops sentence
+          was wrong beside his row: the 1,500 m best on May 22 cannot be unbroken when the longest
+          unbroken piece that day was 600 m. The sources are still in content/swim. */}
+      <p className="ex-meta">Underlined: the level each best reaches.</p>
     </div>
   );
 }
@@ -381,7 +372,7 @@ function HowTab({ plan, year, recent }: { plan: SwimPlan; year: SwimYear; recent
       <div className="exlist">
         <div className="ex">
           <div className="ex-name">Pace</div>
-          <div className="ex-cue">{plan.theOneTechniqueChange.what} {plan.theOneTechniqueChange.why}</div>
+          <div className="ex-cue">{plan.theOneTechniqueChange.what}</div>
           {last && mid != null && (
             <div className="ex-cue">
               <b>Target: {(mid + add).toFixed(1)} s a length.</b> Your middle length on{' '}
@@ -408,24 +399,11 @@ function HowTab({ plan, year, recent }: { plan: SwimPlan; year: SwimYear; recent
 
 /* ---------------------------------------------------------------------------------------------- */
 
-/** The source's own sentences under a cue, then the pages they came from. */
-function Quotes({ quotes, sources }: { quotes: SourceQuote[]; sources: Map<string, SwimSource> }) {
-  if (!quotes.length) return null;
-  const pages = [...new Set(quotes.map((q) => q.source))]
-    .map((id) => sources.get(id))
-    .filter((x): x is SwimSource => x != null);
-  return (
-    <div className="stale cue-quote">
-      <span className="k">Their words</span>
-      {quotes.map((q) => (
-        <p className="ex-cue" key={q.text}>&ldquo;{q.text}&rdquo;</p>
-      ))}
-      {pages.map((src) => (
-        <a key={src.id} className="tier-src" href={src.url} target="_blank" rel="noreferrer">{src.label}</a>
-      ))}
-    </div>
-  );
-}
+/* THE SOURCE QUOTES NO LONGER RENDER under the coaching cards, since 2026-09-15. Every card on
+ * Coach me and Coach them carried a "Their words" block and a link to the page they came from. The
+ * quotes are still in content/swim, still checked word for word against the captured pages by
+ * validate.mjs, and still the reason a card says what it says. They are the research record, not
+ * the page. See AGENTS.md, "Page text". */
 
 /** Mean heart rate over each length of a swim, one value per length.
  *
@@ -456,7 +434,6 @@ function hrPerLength(s: SessionDetail): number[] {
 const HR_HEADROOM = 15;
 
 function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent: SessionDetail[] }) {
-  const sources = new Map(c.sources.map((s) => [s.id, s]));
   const byUuid = new Map(recent.map((s) => [s.uuid, s]));
   const usual = median(recent.map((s) => s.avgCycles).filter((x): x is number => x != null));
   const long = year.pieces
@@ -508,12 +485,6 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
             </div>
           );
         })}
-        {long.length > 0 && (
-          <p className="ex-meta">
-            Heart rate is the watch on your wrist, in water, a few readings per length. Read the shape,
-            not the exact number.
-          </p>
-        )}
       </div>
       {c.groups.map((g) => (
         <div className="exgroup" key={g.id}>
@@ -528,7 +499,6 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
                       it: "what questions should I ask myself ... while I swim". A test you run on
                       yourself mid-length is the only kind of feedback he has in the water. */}
                   <div className="ex-meta cue-test"><b>Ask yourself.</b> {k.check}</div>
-                  <Quotes quotes={k.quotes} sources={sources} />
                 </div>
               </details>
             ))}
@@ -540,7 +510,6 @@ function CoachMe({ c, year, recent }: { c: SwimCoaching; year: SwimYear; recent:
 }
 
 function CoachThem({ t }: { t: SwimTeaching }) {
-  const sources = new Map(t.sources.map((s) => [s.id, s]));
   return (
     <>
       <div className="exgroup">
@@ -560,7 +529,6 @@ function CoachThem({ t }: { t: SwimTeaching }) {
                   <div className="ex-cue"><b>Say.</b> {it.say}</div>
                   {it.show && <div className="ex-cue"><b>Show.</b> {it.show}</div>}
                   <div className="ex-meta cue-test"><b>Watch for.</b> {it.watch}</div>
-                  <Quotes quotes={it.quotes} sources={sources} />
                 </div>
               </details>
             ))}
@@ -612,10 +580,10 @@ export default async function SwimPage({
             standings={ratedDistances(standards).map((d) => standingFor(d, pbs, standards))}
           />
           <p className="ex-cue" style={{ marginTop: 18 }}>
-            <Link href="/swim/records">Records</Link>: every distance this year, the 1,000 included.
+            <Link href="/swim/records">Records</Link>
           </p>
           <p className="ex-cue">
-            <Link href="/swim/deep">The whole record</Link>: every length on file.
+            <Link href="/swim/deep">The whole record</Link>
           </p>
         </>
       )}

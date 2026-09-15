@@ -57,12 +57,12 @@
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift first. Then the swim after every lift, and the walk-run after Session B before it. Two sessions, A and B, each twice a week. There is no Saturday session since 2026-09-06; the jumps and carries it held are inside A and B.",
+      "what": "Lift first. Then the swim after every lift, and the walk-run after Session B before it.",
       "why": "Lift first, unchanged: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym. The run sits after the shorter session and the swim after the longer one, so no evening carries all three."
     },
     "poolTimes": {
-      "weekdayEarly": "Weekday early: ~6 am, the one this plan is built on",
-      "weekdayLate": "Weekday late: ~9 pm, the one you have used for almost every swim so far",
+      "weekdayEarly": "Weekday early: ~6 am",
+      "weekdayLate": "Weekday late: ~9 pm",
       "saturday": "Saturday: ~noon or ~2 pm",
       "sunday": "Sunday: ~noon or ~2 pm"
     }
@@ -81,9 +81,9 @@
       "That is the entire point and the reason it is written down rather than left to feel."
     ],
     "howHard": {
-      "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down. There is no version of this plan where running harder is better.",
-      "secondary": "If you want a number, keep your heart rate below about 140. Your swims run 130 to 155, so this should feel EASIER than a swim.",
-      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph), then let the talk test move it. Not a guess: on 2026-08-18 you averaged 7.8 km/h at mean heart rate 113, which passes the talk test comfortably. Whatever number it settles at is your number."
+      "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, slow the belt down.",
+      "secondary": "If you want a number, keep your heart rate below about 140.",
+      "startingSpeed": "Set the belt to 8.0 km/h (5.0 mph), then let the talk test move it."
     },
     "weeks": [
       {
@@ -92,7 +92,7 @@
         "session": "6:00 walk · 3:45 run · 2:24 walk · 3:45 run",
         "clockTotal": "15:54",
         "consoleCheck": "1.70 km, or 1.06 miles",
-        "note": "Verbatim from the trial arm that got hurt least. The doses did not change on 2026-08-21; only the unit did."
+        "note": null
       },
       {
         "week": 2,
@@ -142,19 +142,19 @@
         "session": "6:00 walk · 7:08 run · 2:24 walk · 7:08 run",
         "clockTotal": "22:40",
         "consoleCheck": "2.60 km, or 1.62 miles",
-        "note": "5.7 km a week across three sessions. Reassess here before deciding whether to keep climbing or hold."
+        "note": "Reassess here before deciding whether to keep climbing or hold."
       }
     ],
     "rules": [
       "Never add more than 10% in a week, and never add distance and speed in the same week.",
       "A missed week means repeat the last week you completed, not jump to where the calendar says.",
-      "Any pain that changes how you walk means stop and say so. Shin and knee are the two to watch, and the hip abduction work on lower days is the insurance against exactly those."
+      "Any pain that changes how you walk means stop and say so. Shin and knee are the two to watch."
     ],
     "cues": [
       {
         "name": "Step rate",
-        "cue": "Measure your own step rate, then raise it by 5 percent and hold it there. Step rate, also called cadence, is the number of times a foot lands on the belt in one minute, counting both feet together. Measure it like this: two minutes into a running block, count every time your RIGHT foot lands for 30 seconds, then multiply by 4. Write that number in the log. Your target is that number times 1.05. To hit it you take slightly shorter and quicker steps. You do NOT change the belt speed and you do NOT push harder. Do not use 180 as a target: 180 is a number that comes from runners much faster than you. Re-measure your baseline and recompute the target any time the belt speed changes by 0.5 km/h or more, because step rate moves with speed and your target must move with it. One honest trade, said out loud: 5 percent more steps per minute at the same speed also means 5 percent more foot landings per kilometre. Each landing is softer, but there are more of them, and nobody has studied that trade in runners your size.",
-        "test": "In the FIRST running block only, after you have said your passage, count your RIGHT foot landings for 30 seconds and multiply by 4. PASS = the number is your target or higher, or no more than 4 below it. FAIL = more than 4 below. On a fail, take shorter and quicker steps at the same belt speed and re-count in the second block. A number ABOVE your target is a pass and needs no action at all. The tolerance of 4 is one miscount's worth and it is my number, not a study's. If your watch has a cadence or step rate field, check it once against your hand count before you trust it: some watches report STRIDES per minute, which is half of steps per minute, so a true 160 would show as 80.",
+        "cue": "Measure your own step rate, then raise it by 5 percent and hold it there. Step rate, also called cadence, is the number of times a foot lands on the belt in one minute, counting both feet together. Measure it like this: two minutes into a running block, count every time your RIGHT foot lands for 30 seconds, then multiply by 4. Write that number in the log. Your target is that number times 1.05. To hit it you take slightly shorter and quicker steps. You do NOT change the belt speed and you do NOT push harder. Re-measure your baseline and recompute the target any time the belt speed changes by 0.5 km/h or more.",
+        "test": "In the FIRST running block only, after you have said your passage, count your RIGHT foot landings for 30 seconds and multiply by 4. PASS = the number is your target or higher, or no more than 4 below it. FAIL = more than 4 below. On a fail, take shorter and quicker steps at the same belt speed and re-count in the second block. A number ABOVE your target is a pass and needs no action at all. If your watch has a cadence or step rate field, check it once against your hand count before you trust it: some watches report STRIDES per minute, which is half of steps per minute, so a true 160 would show as 80.",
         "why": "Raising step rate is the one form change with a consistent measured effect on how hard your legs get hit. Shorter steps mean a lower peak force between foot and belt (the technical name is vertical ground reaction force) and that force builds more slowly (the loading rate). It is also the only form change you can verify with a number instead of a feeling. The 5 percent is the small end of the range the review covers, deliberately.",
         "confidence": "evidence",
         "grounding": "Figueiredo I, Reis e Silva M, Sousa JE. The Influence of Running Cadence on Biomechanics and Injury Prevention: A Systematic Review. Cureus. 2025 Aug 17;17(8):e90322. Fetched https://pmc.ncbi.nlm.nih.gov/articles/PMC12440572/ myself. 18 studies, search 2009 to April 2025. Verbatim: \"A moderate increase in cadence (typically 5-10%) led to consistent biomechanical improvements, including reduced vertical ground reaction forces, lower loading rates, shorter stride length, and improved lower limb alignment\", and cadence change \"did not negatively affect metabolic cost\". THREE CAVEATS I AM NOT HIDING. (1) The review's own stated limitations: \"small sample sizes, methodological heterogeneity, and a predominance of surrogate biomechanical outcomes over clinically meaningful endpoints\", plus inconsistent control of running velocity. (2) Cureus is a low-barrier journal, so treat the synthesis as directional. (3) The review does not address heavier or obese runners at all, and I searched separately and found no study of step-rate manipulation at BMI 30 to 35. For why 180 is not his number: Leacox A, Fashingbauer L, Ferguson T, Zajakowski A, Baum B, Reinking M. The Effect of Running Speed on Cadence and Running Kinetics. Int J Sports Phys Ther. 2025;20(7):957-963, fetched at https://pmc.ncbi.nlm.nih.gov/articles/PMC12222555/. n=30 (19M, 11F, ages 21-49), inclusion was \"running at least 15 miles per week for one year\", and the paper calls them EXPERIENCED runners, not recreational. Cadence rose 169.2, 169.9, 170.5, 172.3, 174.3, 175.9, 177.9 steps/min across 2.68 m/s (10 min/mile) to 3.83 m/s (7 min/mile). Eight of the 30 changed by less than 4 steps/min across that whole range, which is why the target has to come off his own baseline. WHAT I WILL NOT CLAIM: the paper says nothing about speeds below 2.68 m/s, nothing about novices, and its introduction actually cites prior work linking LOWER cadence to higher injury risk (Kliethermes 2021, Luedke 2016). So I assert only that 180 is not a universal floor, and I have deleted the earlier draft's \"150s or low 160s is normal at his pace\" band as an unsourced extrapolation below the tested range.",
@@ -171,7 +171,7 @@
       },
       {
         "name": "Incline zero",
-        "cue": "Set the console incline to 0.0 percent and keep it at 0.0 for the entire session, walks and runs alike. Ignore the widely repeated advice to run treadmills at 1 percent.",
+        "cue": "Set the console incline to 0.0 percent and keep it at 0.0 for the entire session, walks and runs alike.",
         "test": "Two looks, both must read 0.0. (1) Before you press Start, the incline readout says 0.0. If it says anything else, press incline down until it does. (2) During the 200 m walk between the two running blocks, look again. PASS = both looks show 0.0. FAIL = either look shows anything else, in which case set it back to 0.0 and write it in the log, because a console programme that moves the incline on its own will do it again next time.",
         "why": "The 1 percent habit is a real study applied outside the conditions it tested. It exists to make the energy cost of treadmill running match the energy cost of running OUTDOORS, for trained runners at racing speeds. Matching outdoor energy cost is not one of your goals, and your speed is below anything that study measured. Incline adds work for no stated reason, and the design principle of week one is that it should feel absurdly easy.",
         "confidence": "evidence",
@@ -180,7 +180,7 @@
       },
       {
         "name": "Belt speed",
-        "cue": "Run the running blocks with both hands off the handrails, arms free at your sides. Grabbing a rail because you stumbled or lost your balance is ALWAYS the right move and is never a failure. Holding a rail to keep up with the belt is different, and it means the belt is too fast. The belt speed is found by testing, not chosen in advance, because 7.0 km/h is a guess that nobody sourced.",
+        "cue": "Run the running blocks with both hands off the handrails, arms free at your sides. Grabbing a rail because you stumbled or lost your balance is ALWAYS the right move and is never a failure. Holding a rail to keep up with the belt is different, and it means the belt is too fast. The belt speed is found by testing, not chosen in advance.",
         "test": "Sessions 1 and 2 are familiarisation: rail grabs do not count at all while you learn a moving belt. From session 3 onward, PASS = you finished both running blocks without holding a rail to keep up. A grab you let go of within about two steps is a balance grab and is always a pass. FAIL = you were still holding after two steps, or you were holding when the block ended. On a fail, the next session runs 0.5 km/h slower. HARD LIMITS, and these override every other test in this set: a maximum of ONE 0.5 km/h reduction per session no matter how many tests you failed, and never below 6.0 km/h. If you reach 6.0 km/h and are still failing, stop dropping the belt, write it in the log, and the plan gets revisited instead.",
         "why": "Holding the rails takes weight off your legs and does your balancing for you, so a speed you can hold while gripping is not a speed you are actually running. It also corrupts your other gauge: leaning on the rails lowers your heart rate and makes talking easier, so both the passage and the watch will read easier than the truth. Two honest caveats. In week one a rail grab is at least as likely to be unfamiliarity with a moving belt as it is to be speed, which is why the first two sessions do not count. And the 6.0 km/h floor exists because a belt driven low enough stops being running and becomes walking, at which point you are no longer doing the protocol the low injury number came from.",
         "confidence": "convention",
@@ -207,7 +207,7 @@
       },
       {
         "name": "Shoes",
-        "cue": "Choose running shoes on fit first, using the test below. If two pairs both pass the fit test, take the softer and more cushioned one. Do not pay extra for anything sold as stability or motion control, and do not trust a shoe because the box says it is for heavier runners. The one large trial on this question changed only how soft the foam was and nothing else, so it says nothing whatsoever about stability or motion control, and it cannot tell you whether cushioning protects a man your size.",
+        "cue": "Choose running shoes on fit first, using the test below. If two pairs both pass the fit test, take the softer and more cushioned one. Do not pay extra for anything sold as stability or motion control, and do not trust a shoe because the box says it is for heavier runners.",
         "test": "Do this late in the day, in the socks you will run in. Pull the insole out of the shoe first. The insole is the loose flat liner you can lift out from inside. Put it on the floor and stand on it. Three checks, all three must pass. (1) Look down at the gap in front of your longest toe, which is not always the big toe. PASS = the insole extends at least a thumb width past the end of it. (2) Look at the sides of the insole. PASS = no part of your foot hangs over the edge anywhere. (3) Put the insole back, lace the shoe and walk 20 steps. The heel cup is the stiff cup at the back of the shoe that wraps around your heel. PASS = your heel stays down inside it and does not lift away as you step. Any one fail means it is the wrong shoe, whatever the price, the brand or the review says.",
         "why": "The trial split its runners at the middle of their own body-mass range, 78.2 kg for men. At 104.9 kg you sit above even the heavier half, so the trial does not really cover you. In that heavier half the harder shoe still pointed the wrong way, about 23 percent more injury risk, but the range around that number ran from 25 percent lower to roughly double, so it could easily be chance. The honest reading is that the question is unsettled for a man your size, not that cushioning is irrelevant. Fit is where beginners actually get hurt in month one: a shoe that is too short or too narrow produces black toenails and forefoot pain inside a few weeks.",
         "confidence": "contested",
@@ -219,7 +219,7 @@
     "beltSettings": {
       "run": "8.0 km/h, which is 5.0 mph.",
       "walk": "5.0 km/h, which is 3.1 mph.",
-      "theUnitTest": "Read the speed display once, on the first run. Near 8 means km/h, so check the km figure below. Near 5 means miles. Settled for good.",
+      "theUnitTest": "Read the speed display once, on the first run. Near 8 means km/h. Near 5 means miles.",
       "whyBothUnits": "Both units printed, because you have said you think the console is in miles."
     },
     "whyTheClockNotTheConsole": [
@@ -252,17 +252,16 @@
       "name": "Norwegian 4x4",
       "structure": "10 min easy · then 4 rounds of [4 min hard, 3 min easy] · then 5 min easy",
       "totalMinutes": 43,
-      "shortVersion": "If the morning is tight: 5 min easy · 3 rounds of [4 min hard, 3 min easy] · 5 min easy. 31 minutes.",
+      "shortVersion": "Short version: 5 min easy · 3 rounds of [4 min hard, 3 min easy] · 5 min easy. 31 minutes.",
       "evidenceNote": "The 4x4 itself is well established and has been replicated on cycling as well as running. The commonly quoted 10 to 15% VO2max improvement in untrained adults comes from secondary summaries rather than a primary paper read end to end, so treat the protocol as sourced and that percentage as indicative."
     },
     "howHard": {
-      "hardPiece": "By the end of each 4 minutes you should only be able to get out two or three words at a time. Not a sprint: a sprint dies at 90 seconds and this has to last 4 minutes. Pick a resistance you could hold for 5 minutes but would not want to.",
-      "heartRate": "Aim to finish each hard piece somewhere around 150 to 165. That band is your plan's number and it has not changed. What did change, on 2026-08-28: this sentence used to say \"your highest recorded swim heart rate is 175\", and that was false. The highest reading in your watch export is {PEAK_BPM} on {PEAK_DATE}, and 23 of your last 60 swims went above 175. Six of them tie at exactly 175, which is where the number almost certainly came from: it was the most common ceiling, not the ceiling. Nothing about the prescribed 150 to 165 was derived from it, so nothing here moves. What moves is that the page has stopped claiming a fact it did not have.",
+      "hardPiece": "By the end of each 4 minutes you should only be able to get out two or three words at a time. Pick a resistance you could hold for 5 minutes but would not want to.",
+      "heartRate": "Aim to finish each hard piece around 150 to 165.",
       "easyPiece": "Genuinely easy. Keep pedalling, get your breath fully back before the next one."
     },
     "rules": [
-      "Never on the morning before a heavy lower day if you can avoid it.",
-      "The first two sessions, deliberately undercook the hard pieces. You have not done intervals and the first honest 4 minutes is a shock."
+      "The first two sessions, deliberately undercook the hard pieces."
     ],
     "cues": [
       {
@@ -277,7 +276,7 @@
       {
         "name": "Make the two numbers readable before you start",
         "cue": "Every rule below is a glance at two numbers at a named second: your live heart rate, and how long you are into the CURRENT piece. Set both up before the first pedal stroke. On the watch, start a workout that shows heart rate as a number on the screen. The bike console counts total elapsed time for the whole session, so it can never tell you that you are two minutes into interval three. The watch can: press the lap button at the start of every 4 minute effort and again at the start of every 3 minute recovery, so the lap timer always shows time inside the piece you are in. If your watch cannot do laps, set a repeating countdown on your phone, 4 minutes then 3 minutes, and read the countdown instead.",
-        "test": "Sitting on the bike, before you start: can you see a heart rate number in beats per minute AND a timer you can reset to zero, at the same time, without pressing more than one button? If no, fix it now, before the warm-up. Doing arithmetic on the console's total time at 160 beats per minute is not a thing that happens.",
+        "test": "Sitting on the bike, before you start: can you see a heart rate number in beats per minute AND a timer you can reset to zero, at the same time, without pressing more than one button? If no, fix it now, before the warm-up.",
         "why": "Eight of the checks in this list are unperformable without a live heart rate and interval-relative time, and nothing in the plan establishes either. This is not evidence-based, it is the difference between a rule you can follow and a rule you cannot.",
         "confidence": "convention",
         "grounding": "CONVENTION",
@@ -285,7 +284,7 @@
       },
       {
         "name": "Warm up to a heart-rate number, and still finish on time",
-        "cue": "The 10 easy minutes have a target, not just a duration. Pedal hard enough that your heart rate reads 105 to 123 by minute 8, and hold it to minute 10. For the 3 minute recoveries between efforts, 88 to 123 is fine, and note that is a WIDER band than the warm-up, not the same one. The published protocol asks for 60 to 70 percent of peak heart rate in the warm-up and 50 to 70 percent in the recoveries. Applied to 175 that gives those two bands, and 175 turned out not to be your peak: your highest recorded reading is {PEAK_BPM}. The bands stay where they are until you rule on which anchor to use, because moving them is a decision about intensity rather than arithmetic, and low is the safe direction to be wrong in. Whatever the number says at minute 8, the warm-up ends at minute 10 and interval 1 starts. Do not extend it. The session is 43 minutes and it stays 43 minutes.",
+        "cue": "The 10 easy minutes have a target, not just a duration. Pedal hard enough that your heart rate reads 105 to 123 by minute 8, and hold it to minute 10. For the 3 minute recoveries between efforts, 88 to 123 is fine, and note that is a WIDER band than the warm-up, not the same one. Whatever the number says at minute 8, the warm-up ends at minute 10 and interval 1 starts. Do not extend it. The session is 43 minutes and it stays 43 minutes.",
         "test": "One look at the watch at minute 8 of the warm-up. Heart rate 105 to 123: hold this resistance and start interval 1 at minute 10. Under 105: add one resistance level, and still start at minute 10. Over 123: drop one level. Then during each 3 minute recovery, one look at 2:00 into it. Above 123: drop one level. Below 88: add one level.",
         "why": "The plan currently says \"easy\", which is a feeling, and the protocol puts percentages on it. The honest gap, corrected 2026-08-28: HRpeak means a peak from a maximal test, and this cue used to say 175 was \"the highest number his watch has happened to record\". It is not. The export's highest is {PEAK_BPM}, from {PEAK_KIND} on {PEAK_DATE}, and 23 of 60 swims beat 175. So the conclusion the old sentence reached is still right and its reason was wrong: these bands are low, and by a wider margin than was believed. That is still the safe direction for week one. It is not a reason to go looking for the real number, and it is not a reason to prescribe from {PEAK_BPM} either, which is the open question parked on this block.",
         "confidence": "evidence",
@@ -294,7 +293,7 @@
       },
       {
         "name": "Hold the RPM, change the resistance",
-        "cue": "Cadence means how many complete circles one foot makes in a minute. The console shows it as RPM, sometimes labelled cadence. Pick a number near 80 and keep it there all session, hard minutes and easy ones alike. When the session needs to be harder or easier you change the RESISTANCE LEVEL, never the RPM. One variable, and the RPM is the one you hold still, so that \"level 9 for four minutes\" means the same thing next Tuesday as it did this Tuesday. The exact number is not sacred: nothing bad happens at 75 or at 85. If the console shows no RPM at all, count one foot's circles for 15 seconds and multiply by four (20 circles in 15 seconds is 80 RPM), do that once during the warm-up so you know what it feels like at that resistance, and then run the whole session on the resistance rule alone.",
+        "cue": "Cadence means how many complete circles one foot makes in a minute. The console shows it as RPM, sometimes labelled cadence. Pick a number near 80 and keep it there all session, hard minutes and easy ones alike. When the session needs to be harder or easier you change the RESISTANCE LEVEL, never the RPM. One variable, and the RPM is the one you hold still, so that \"level 9 for four minutes\" means the same thing next Tuesday as it did this Tuesday. If the console shows no RPM at all, count one foot's circles for 15 seconds and multiply by four (20 circles in 15 seconds is 80 RPM), do that once during the warm-up so you know what it feels like at that resistance, and then run the whole session on the resistance rule alone.",
         "test": "Look at the RPM readout once per effort, at 2:00, in the same glance as the heart rate, and not before. Below 70: drop one resistance level, and that is the only change you make this interval. Above 95: add one level. Between 70 and 95: leave it alone. That is the entire cadence rule for the session.",
         "why": "The real reason is bookkeeping, not physiology: holding cadence makes resistance the only thing that moves, so the numbers you write down mean something a week later. There is a second reason that is arithmetic rather than a study: power equals force times pedal speed, so at the same watts a slower stroke means more force per push. I went looking for evidence that a particular cadence protects the knee and it is mixed, so I did not build the cue on it. The one paper I fetched supporting it (Ebbecke, Hansen, Nackel, Viellehner & Potthast, ISB Stockholm 2025 conference abstract, https://fis.dshs-koeln.de/en/publications/knee-joint-loading-during-cycling-should-osteoarthritis-patients-/) tested 12 male ACTIVE cyclists with diagnosed knee osteoarthritis, age 57.3 +/- 7.9, BMI 25.7 +/- 2.9, at 157 to 261 W, and states verbatim \"The only exceptions were KAMpeak at 157 W and 210 W between 60 and 80 rpm\", so at the low power outputs a beginner actually rides, 60 to 80 rpm made no significant difference to peak knee load. Wrong age, wrong BMI, joint disease he does not have, powers above what he will hold, and not peer reviewed.",
         "confidence": "convention",
@@ -303,7 +302,7 @@
       },
       {
         "name": "Do not touch the resistance before 2:00",
-        "cue": "Set the resistance in the first 15 seconds of each 4 minute effort and then leave it completely alone until 2:00. At 30 and 60 seconds the watch will look too low. That is normal: on a bike the heart rate takes over a minute to arrive, and the published protocol expects the target to be reached \"within two minutes\". Cranking the resistance at 40 seconds because the watch says 128 is the single most likely way a first interval session goes wrong. At 2:00 you make one decision, in a fixed order, cadence first and then heart rate, and then you ride out the last two minutes. Also expect the resistance level to be LOWER in interval 4 than in interval 1. That is normal and it is not you failing, the effort needed to produce a given heart rate falls as the session goes on. Write down the level you finished each effort on, so next week starts from real numbers.",
+        "cue": "Set the resistance in the first 15 seconds of each 4 minute effort and then leave it completely alone until 2:00. At 30 and 60 seconds the watch will look too low. That is normal: on a bike the heart rate takes over a minute to arrive. Cranking the resistance at 40 seconds because the watch says 128 is the single most likely way a first interval session goes wrong. At 2:00 you make one decision, in a fixed order, cadence first and then heart rate, and then you ride out the last two minutes. Also expect the resistance level to be LOWER in interval 4 than in interval 1. Write down the level you finished each effort on, so next week starts from real numbers.",
         "test": "At 2:00 into each 4 minute effort, one look, two readouts, at most one change. (1) RPM below 70? Drop one resistance level and stop there, no heart rate check this interval. (2) Otherwise, heart rate 150 to 165: change nothing. Under 150: add one level. Over 165: drop one level. No further changes until the next effort, with two standing overrides that beat this rule at any second: if you have to come off the seat to turn the pedals, drop a level, and if a stop rule fires, stop. The session succeeded if all four efforts ended with heart rate between 150 and 165. Whether the resistance number went up, down, or nowhere is not part of that test.",
         "why": "The load-bearing fact, that heart rate lags well over a minute on a bike, is sourced twice and is the whole reason the 2:00 checkpoint exists. The single-decision design and the falling-number reassurance are my convention layered on top of that fact, not findings, and the falling number is deliberately not a success criterion because a session where all four efforts landed in the band is a good session whatever the resistance did.",
         "confidence": "evidence",
@@ -321,7 +320,7 @@
       },
       {
         "name": "The four things that stop the effort",
-        "cue": "The run half of this plan has a hard stop, \"any pain that changes how you walk means stop\". The bike half is the only place in the week that goes near maximum, and it had none. Here it is. (1) KNEE: any sharp pain in or around the knee, or any ache that gets worse across an effort rather than staying level. Stop the effort, spin easy at the recovery resistance to the end of the session, and do not do the remaining efforts. (2) CHEST: pressure or pain in the chest, or pain spreading into the jaw, neck or left arm. Stop, get off, tell staff, and talk to a doctor before you finish or drive anywhere. (3) HEAD: dizziness, feeling faint, going cold and clammy, or your vision going patchy at the edges. Stop, get off, and sit down on the floor rather than on a machine. (4) HEART RATE ABOVE {PEAK_BPM}, which is the highest reading anywhere in your watch export ({PEAK_KIND}, {PEAK_DATE}) and which nothing has passed: drop to the recovery resistance for two minutes, check the watch strap is snug first because a loose wrist sensor reads high, then decide whether the session continues. Everything else on this page is \"drop one level and carry on\". These four are not.",
+        "cue": "(1) KNEE: any sharp pain in or around the knee, or any ache that gets worse across an effort rather than staying level. Stop the effort, spin easy at the recovery resistance to the end of the session, and do not do the remaining efforts. (2) CHEST: pressure or pain in the chest, or pain spreading into the jaw, neck or left arm. Stop, get off, tell staff, and talk to a doctor before you finish or drive anywhere. (3) HEAD: dizziness, feeling faint, going cold and clammy, or your vision going patchy at the edges. Stop, get off, and sit down on the floor rather than on a machine. (4) HEART RATE ABOVE {PEAK_BPM}, your highest reading ever: drop to the recovery resistance for two minutes, check the watch strap is snug first because a loose wrist sensor reads high, then decide whether the session continues. Everything else on this page is \"drop one level and carry on\". These four are not.",
         "test": "Before each effort starts, one sentence to yourself: \"chest, head, knee\". Anything other than normal in any of the three, and the effort does not start. During an effort, if any of the four items above is present AT ALL, you stop rather than adjust. There is no severity judgement to make, presence is the whole test.",
         "why": "I looked for a citable plain-language stop list for unsupervised interval training and did not find one I could read. What exists is ACSM's criteria for terminating a supervised exercise TEST, with a technician and an ECG in the room, and dressing that up as a source for a man alone on a gym bike would be exactly the kind of fake grounding this exercise is meant to catch. It is here because the alternative was no stop rule at all.",
         "confidence": "convention",

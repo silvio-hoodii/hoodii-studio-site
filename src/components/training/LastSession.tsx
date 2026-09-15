@@ -38,7 +38,7 @@ export default function LastSession({ s, noun = 'session', insight = null }: {
       <div className="exgroup">
         <div className="exgroup-label">Your last {noun}</div>
         <p className="ex-cue">
-          Nothing recorded yet for this one. Sessions arrive with the daily watch export.
+          Nothing recorded yet.
         </p>
       </div>
     );
@@ -86,6 +86,7 @@ export default function LastSession({ s, noun = 'session', insight = null }: {
           values={s.series.hr}
           label="Heart rate"
           unit="bpm"
+          range={{ min: s.minHr ?? null, max: s.maxHr ?? null }}
           {...(s.kind === 'strength' ? { floor: 110 } : {})}
         />
       )}

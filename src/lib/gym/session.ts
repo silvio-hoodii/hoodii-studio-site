@@ -136,29 +136,14 @@ export function pacePer100(distanceM: number | null, minutes: number | null): st
  * without any real reason" he complained about. It CAN say how much of the hour was spent under
  * 110 bpm, which is a fact about the shape of his session and the one that found a 28-minute hole. */
 export function sessionVerdict(s: SessionDetail): string | null {
-  if (s.kind === 'strength') {
-    if (s.pctEasy == null) return null;
-    return `${Math.round(s.pctEasy)}% of this session was under 110 bpm. That is the standing-around, and it is the only thing a wrist heart rate can honestly tell you about a lifting session.`;
-  }
-  if (s.kind === 'cycling') {
-    return 'Heart rate is the only thing the watch records on the bike. No cadence, no power, no resistance, so there is nothing here about whether you rode it well.';
-  }
+  /* ONE SENTENCE SURVIVES, since 2026-09-15. The strength sentence restated the "Under 110 bpm" tile
+     beside it and added that a wrist heart rate cannot judge a lift; the bike one said the watch
+     records nothing but heart rate; "Other workout" explained which button he pressed; the cadence
+     ones restated the cadence tile and pointed at 170, which contradicts the run cue (raise your
+     own number by 5 percent). None changed what he does. The auto-detected one stays, because it
+     is the only thing that says a session on the page was not one he started. */
   if (s.kind === 'other-auto') {
-    return 'The watch started this one by itself, about ten minutes after you did, and it could not tell what the movement was. The heart rate is real; the sport is not recorded anywhere, and neither is whether you meant this as training.';
-  }
-  if (s.kind === 'other') {
-    return 'You started this on the watch and picked "Other workout" rather than a sport, so the only thing recorded is heart rate.';
-  }
-  /* THE SENTENCE BRANCHES ON WHERE HE ACTUALLY RAN, and it did not until 2026-09-09: an OUTDOOR run
-     was told its cadence was "measured on the treadmill, so this is real". Both of his 2026 runs
-     that carry cadence, 08-24 and 08-30, are kind = 'running'. The claim was load-bearing rather
-     than decorative, because the reason cadence is trustworthy indoors is that the belt measures it;
-     asserting that about a watch-derived outdoor cadence is asserting a provenance it does not have. */
-  if (s.kind === 'treadmill' && s.avgCadence) {
-    return `${Math.round(s.avgCadence)} steps a minute average, measured on the belt. Most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
-  }
-  if (s.kind === 'running' && s.avgCadence) {
-    return `${Math.round(s.avgCadence)} steps a minute average, from the watch rather than a belt. Most coaching points at somewhere near 170, and raising it is the usual first fix for a heavy, over-striding gait.`;
+    return 'The watch started this one by itself and could not tell what it was.';
   }
   return null;
 }

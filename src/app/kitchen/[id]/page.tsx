@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getDish, cookRows } from '@/lib/kitchen/cookbook';
+import { shortDate } from '@/lib/format';
 import NoteBox from '../NoteBox';
 
 export const dynamic = 'force-dynamic';
@@ -55,7 +56,7 @@ export default async function DishPage({ params }: Params) {
           </>
         )}
         <dt>Added</dt>
-        <dd className="tnum">{d.addedAt}</dd>
+        <dd className="tnum">{d.addedAt.length === 10 ? shortDate(d.addedAt) : d.addedAt}</dd>
       </dl>
 
       <h2 className="sec">Shopping list</h2>

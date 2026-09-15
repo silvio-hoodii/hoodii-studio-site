@@ -115,9 +115,7 @@ export default function SaveBlocked({
     <div className={cls} role="alert">
       <span className="k">This device cannot save</span>
       <p>
-        Reading is open to anyone. Changing your logs is not, because everything else is worked out
-        from them. Unlock this device once and it stays unlocked for a year. Nothing you entered was
-        lost.{waiting}
+        Unlock this device once and it stays unlocked for a year. Nothing you entered was lost.{waiting}
       </p>
       <div className="row">
         <input

@@ -737,10 +737,10 @@
       "variants": [
         {
           "id": "db-overhead-press",
-          "name": "Seated DB Overhead Press",
+          "name": "Standing DB Overhead Press",
           "implement": "dumbbell",
           "zone": "benchDb",
-          "station": "bench",
+          "station": null,
           "loadable": true,
           "note": "Stuck: at 65 lb the jump to 70 demands more than the top of its rep range banks.\n\nIT WAS CALLED \"Standing DB Overhead Press\" UNTIL 2026-08-28 AND HE HAS NEVER DONE IT STANDING. His note #26 at the rack: \"Also whatever history is on standing db has always been seated, ive never done standing db\", and #25: \"Standing db overhead is not really practical either Standing barbell or seated db\". Twenty sets of history sit under this id going back to 2026-05-26, all of them seated, and the logged rows are stamped \"DB Overhead Press\" with no \"Standing\" in them: the word was added by the catalogue and never by him.\n\nSo the station is `bench` now, not null. That is not cosmetic. A null station means the exercise holds no fixture and can partner anything, which is how a seated press could have been paired with something that needs the bench. His name for it is the true one.\n\nWHETHER THE PROGRAMME SHOULD KEEP SEATED DUMBBELLS OR MOVE TO A STANDING BARBELL IS HIS CALL, and it is parked as an open question on this variant. Renaming records what he has been doing; it does not decide what he should do.",
           "$answered": "2026-09-03: the programme moved the overhead press to the standing barbell (bb-overhead-press), on the audit's recommendation and his go-ahead to execute it. The barbell moves in 5 lb steps, which is the whole reason this variant had been stuck at 60 to 65 lb since May. This variant stays in the catalogue as a swap."

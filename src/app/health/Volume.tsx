@@ -100,11 +100,6 @@ export default function Volume({
 
   return (
     <>
-      <p className="lede">
-        Every set the four days ask of you, added up by muscle. A set counts once for a muscle the
-        lift trains directly and half for one that only assists, which is how the study below counted
-        them.
-      </p>
 
 
       {/* WHERE THESE NUMBERS COME FROM, said on the page rather than in a comment.
@@ -130,11 +125,9 @@ export default function Volume({
           The one clause that changes how he reads a figure survives, because a muscle looking
           healthy on assistance alone is a wrong conclusion he could otherwise draw from this table.
           The rest is here, and in the block above, where the next agent reads it. */}
-      <p className="note">
-        Assisting muscles count half a set, so a muscle can show a healthy number here on nothing but
-        other lifts&apos; help. The gate that judges the programme counts only sets where the muscle
-        is a prime mover.
-      </p>
+      {/* Cut to the legend on 2026-09-15. "The gate that judges the programme counts only sets where
+          the muscle is a prime mover" named a per-muscle gate AGENTS.md records as deleted. */}
+      <p className="note">Assisting muscles count half a set.</p>
 
       <div className="exgroup">
         <div className="exgroup-label">
@@ -146,7 +139,7 @@ export default function Volume({
             column was cut at a hard edge and the sentence explaining it sits below the table,
             where the person staring at the clipped edge has not read it yet. Phone only, because
             above 720px the whole table fits and there is nothing to swipe to. */}
-        <p className="scrollnote">Swipe the table sideways for the four days</p>
+        <p className="scrollnote">Swipe the table sideways for both sessions</p>
         <div className="table-scroll">
           <table className="plan-table vol-table">
             <thead>
@@ -236,16 +229,11 @@ export default function Volume({
           </table>
         </div>
         <p className="ex-cue">
-          <span className="tnum">{MIN_EFFECTIVE_DOSE}</span> sets a week is the smallest dose that
-          produced measurable growth. From <span className="tnum">{MIN_EFFECTIVE_DOSE + 1}</span> to{' '}
-          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> is where each extra set buys the most,
-          and a muscle with no note under its name is in that band. Past{' '}
-          <span className="tnum">{EFFICIENT_ZONE_TOP}</span> the extra sets still work, they just buy
-          less than the ones before them. Right now <span className="tnum">{totals.below}</span>{' '}
-          muscle{totals.below === 1 ? ' is' : 's are'} under the minimum and{' '}
-          <span className="tnum">{totals.pastEfficient}</span> are over the top of the band. Each
-          session column shows one performance; the weekly number counts the session twice, because
-          each is trained twice a week. The columns scroll sideways inside the table.
+          <span className="tnum">{MIN_EFFECTIVE_DOSE}</span> sets a week is the minimum;{' '}
+          <span className="tnum">{MIN_EFFECTIVE_DOSE + 1}</span> to <span className="tnum">{EFFICIENT_ZONE_TOP}</span>{' '}
+          is where each set buys the most. Right now <span className="tnum">{totals.below}</span> under
+          the minimum and <span className="tnum">{totals.pastEfficient}</span> over{' '}
+          <span className="tnum">{EFFICIENT_ZONE_TOP}</span>.
         </p>
       </div>
 
@@ -357,11 +345,9 @@ export default function Volume({
             and ceiling are thresholds he can act on. What went was the sentence explaining that
             all-in is "the unit the research actually uses", which is provenance. */}
         <p className="ex-cue">
-          Not addable to the table above: that one is per muscle, this is per lift.{' '}
-          <strong>Only it</strong> is sets of that exact exercise; <strong>all-in</strong> adds half
-          a set for every other set in your week that trains the same muscles. For getting stronger
-          at a lift, 1 all-in set a week is the floor and 5 is where the gains stop being big enough
-          for a study to measure. They do not stop.
+          <strong>Only it</strong>: sets of that exact lift. <strong>All-in</strong>: plus half a set
+          for every other set that trains the same muscles. For strength, 1 all-in set a week is the
+          floor and 5 is where the gains get small.
         </p>
         <div className="table-scroll">
           <table className="plan-table vol-table">
@@ -405,10 +391,8 @@ export default function Volume({
           trains the same muscles as half.
           {totals.strengthTierSaturated ? (
             <>
-              {' '}Every one of these {perLift.length} lifts is in the same efficiency band, so that
-              band cannot tell you which lift to change. The number that still can is Days: one more
-              session a week is worth about fifteen times what one more set is worth, for strength,
-              and costs almost nothing for size.
+              {' '}All {perLift.length} lifts are in the same band, so Days is the lever: one more
+              session a week is worth about fifteen times one more set, for strength.
             </>
           ) : null}
         </p>
@@ -435,7 +419,7 @@ export default function Volume({
                 <div className="ex-cue">
                   {p.strict
                     ? `Both train ${p.shared.join(', ')} as a main muscle, so the second one is done on a tired muscle.`
-                    : `The lift also uses ${p.alsoShared.join(', ')}, which is what the partner trains directly. Whether that counts is a judgement, so it is shown rather than counted.`}
+                    : `The lift also uses ${p.alsoShared.join(', ')}, which is what the partner trains directly.`}
                 </div>
               </div>
             ))}
@@ -453,13 +437,11 @@ export default function Volume({
           on this page checks out against it, but the available copy is the online-first version and
           carries no volume or pages, so the page range is unverified and no longer printed. A
           citation precise enough to look wrong is worse than one that stops where the evidence does. */}
+      {/* One link since 2026-09-15. It printed the full citation, sample sizes, the tier arithmetic,
+          the Zhang reference and the source file that does the counting. He asked for the source of
+          the 10 on 2026-08-29, so the link stays; the rest is in this file's comments. */}
       <p className="ex-cue vol-cite">
-        Pelland JC et al. The Resistance Training Dose Response. Sports Med, doi:10.1007/s40279-025-02344-w,
-        Tables 3 and 4. 67 studies, 2,058 participants. The 5 to 10 band is Table 3&rsquo;s
-        &ldquo;higher efficiency&rdquo; tier: past it, another detectable increment of growth costs
-        about 8.5 more sets a week instead of about 6. Zhang 2025, Sports Med 55(4):953-975, for the
-        pairing rule. The counting is done by src/lib/gym/coverage.mts, the same code behind{' '}
-        <code>node scripts/gym-coverage.mjs</code>, so this page and that gate cannot disagree.
+        <a href="https://doi.org/10.1007/s40279-025-02344-w" target="_blank" rel="noreferrer">Source for the bands</a>
       </p>
     </>
   );

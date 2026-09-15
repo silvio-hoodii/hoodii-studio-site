@@ -28,10 +28,6 @@ export default async function ShopPage() {
         <Link href="/kitchen">Kitchen</Link>
       </p>
       <h1>Shopping</h1>
-      <p className="blurb">
-        Everything the dishes need, in one list, each thing once however many recipes want it. Tick
-        it off as you go.
-      </p>
       <ShopClient list={list} />
     </div>
   );

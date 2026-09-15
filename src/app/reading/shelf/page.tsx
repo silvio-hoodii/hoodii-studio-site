@@ -95,14 +95,11 @@ export default async function ShelfCheck({
       </p>
 
       <h1>Browse</h1>
-      <p className="blurb">
-        Every book on record, for two different moments. In a shop or a library: search the spine
-        in your hand, or walk the alphabet by author. At home: sort by best, shortest or best
-        rated and see what turns up.
-        {wantKeys.size > 0 && (
-          <> <WalledLink href="/reading/want">{wantKeys.size} saved to your want list</WalledLink>.</>
-        )}
-      </p>
+      {wantKeys.size > 0 && (
+        <p className="blurb">
+          <WalledLink href="/reading/want">{wantKeys.size} saved to your want list</WalledLink>
+        </p>
+      )}
 
       <form action="/reading/shelf" method="get" className="csearch">
         <input
@@ -267,12 +264,9 @@ export default async function ShelfCheck({
         ))}
       </dl>
       <p className="src">
-        Ranked within a section, not across them: general fiction is covered by thirteen source
-        lists and crime by one, so a crime novel competing against literary fiction on one scale
-        made every Edgar winner look like a long shot. A <strong>grab</strong> in mystery means
-        best of the mysteries.
+        Ranked within a section, not across them. A <strong>grab</strong> in mystery means best of
+        the mysteries.
       </p>
-      <p className="src"><WalledLink href="/reading/about">How this works and where the numbers come from</WalledLink></p>
     </div>
   );
 }

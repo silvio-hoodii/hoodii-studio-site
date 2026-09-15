@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getSwimRecords, type DerivedRecord, type SwimRecords } from '@/lib/swim/records';
+import { getSwimRecords, type DerivedRecord } from '@/lib/swim/records';
 import { getSwimPbs, fmtTime, type PbRow } from '@/lib/swim/level';
 
 export const dynamic = 'force-dynamic';
@@ -91,9 +91,6 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
       <div className="exgroup-label">
         The 1,000 <span className="tag">({r.swims} swims in {year} contained one)</span>
       </div>
-      <p className="lede" style={{ marginTop: 0 }}>
-        Read off the lengths: any 1,000 m inside a longer swim counts.
-      </p>
       <div className="stats">
         <div>
           <div className="stat-k">Typical</div>
@@ -292,54 +289,10 @@ function WatchRecords({ pbs, year }: { pbs: PbRow[]; year: number }) {
  * THE METHOD, behind a tap. It is the answer to "can I trust this", which is worth having and is
  * not worth reading twice. Same treatment the cues get.
  * --------------------------------------------------------------------------------------------- */
-function Method({ r }: { r: SwimRecords }) {
-  return (
-    <div className="exgroup">
-      <div className="exgroup-label">Where these come from</div>
-      <details className="src">
-        <summary>Three clocks, and why the derived times will not match the watch</summary>
-        <div className="src-body">
-          <p>
-            <b>Swimming.</b> The length times added up, rest removed. <b>Wall.</b> Those plus the
-            rests between them, what a clock on the wall would show.
-          </p>
-          <p>
-            <b>The watch uses a third clock and it is neither of those.</b> Its records run on its
-            own session clock, and the lengths do not always add up to it. The 400 m of 10 Sep had
-            no rest in it at all: the watch says 7:03.84 and its sixteen lengths add up to 7:13. So
-            a time read off the lengths can sit seconds away from the watch&rsquo;s record for the
-            same swim with no rest involved.
-          </p>
-          <p>
-            <b>A paused watch records no rest.</b> At some stops the watch is paused, and while it
-            is paused it cannot see the stop, so the swim reads as continuous. The pause is still in
-            the export, so it counts here: a pause of 5 seconds or more is a stop, rest recorded or
-            not.
-          </p>
-          <p>
-            <b>Freestyle only, and contiguous.</b> A window has to be an unbroken run of lengths by
-            index. A mixed-stroke 1,000 is excluded, which also removes one bad number: the fastest
-            any-stroke 1,000 m is 16:54, a shade off your 100 m best pace, and it contains two
-            lengths of 14 and 16 seconds carrying four and six stroke cycles. Those are push-offs or
-            a mis-segmented length, not swimming.
-          </p>
-          <p>
-            <b>What was read.</b> <span className="tnum">{r.coverage.lengthsRead.toLocaleString('en-CA')}</span>{' '}
-            lengths across <span className="tnum">{r.coverage.sessions}</span> swims,{' '}
-            {r.coverage.firstDay} to {r.coverage.lastDay}.{' '}
-            <span className="tnum">{r.coverage.lengthsRefused}</span> were refused as under 12
-            seconds, over two minutes, or carrying no stroke count.
-          </p>
-          <p>
-            <b>Times are m:ss and not hundredths</b> for the derived rows, because a sum of rounded
-            length durations does not measure to a hundredth. The watch&rsquo;s own records keep
-            theirs, because those are its measurement and not ours.
-          </p>
-        </div>
-      </details>
-    </div>
-  );
-}
+/* Method, "Where these come from" and its three-clocks explainer, was here until 2026-09-15. Why a
+ * derived time sits seconds off the watch's own record (the 400 m of 10 Sep: 7:03.84 on the watch,
+ * 7:13 summed from its lengths), how pauses count as stops, and what was refused, are in
+ * src/lib/swim/records.ts. AGENTS.md, "Page text". */
 
 export default async function SwimRecordsPage() {
   const [records, pbs] = await Promise.all([getSwimRecords(DISTANCES), getSwimPbs()]);
@@ -349,15 +302,13 @@ export default async function SwimRecordsPage() {
     <div className="wrap">
       <h1>Records</h1>
       <p className="lede">
-        Every distance for {records.year}, including the ones the watch does not keep.{' '}
-        <Link href="/swim">Back to Swim</Link>.
+        <Link href="/swim">Back to Swim</Link>
       </p>
 
       <TheThousand r={thousand} year={records.year} />
       <Closest r={thousand} />
       <DerivedCards recs={records.derived} year={records.year} />
       <WatchRecords pbs={pbs} year={records.year} />
-      <Method r={records} />
     </div>
   );
 }

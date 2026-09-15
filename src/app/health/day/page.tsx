@@ -64,7 +64,7 @@ const n0 = (v: number | null | undefined) => (v == null ? '-' : Math.round(v).to
  * THE HEADLINE, AND THE REASON NOT TO OVER-READ IT, TOGETHER
  * ---------------------------------------------------------------------------------------------- */
 function Headline({ r }: { r: DailyReview }) {
-  const { now, preCollapse } = r;
+  const { now } = r;
   return (
     <div className="yearline">
       <div className="yearline-year">Last {WINDOW_DAYS} days</div>
@@ -86,18 +86,6 @@ function Headline({ r }: { r: DailyReview }) {
             THE CLAIM IS SCOPED TO ONE EVENT AND NOT TO ALL TIME. It read "has never predicted the
             next four", which is a universal built on a single window: there is one collapse in this
             record, so the evidence supports "it did not see that one coming" and nothing wider. */}
-        <p className="ex-cue">
-          <strong>This number says what the last four weeks were. It did not see the one collapse in
-          this record coming.</strong> In the {preCollapse.days} days to {when(preCollapse.to)} it read{' '}
-          <span className="tnum">{preCollapse.belowFloor}</span>, and over the{' '}
-          {r.afterPreCollapse.days} days that followed it was{' '}
-          <span className="tnum">{r.afterPreCollapse.belowFloor}</span>. The worst 1 in{' '}
-          {TAIL_ONE_IN} does not rescue it either:{' '}
-          <span className="tnum">{n0(preCollapse.p10)}</span> steps then
-          against <span className="tnum">{n0(now.p10)}</span> now. The only figure that separates
-          the two windows is the average, <span className="tnum">{n0(preCollapse.meanSteps)}</span>{' '}
-          then against <span className="tnum">{n0(now.meanSteps)}</span> now.
-        </p>
       </div>
     </div>
   );
@@ -175,7 +163,6 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
           </>
         )}
       </p>
-      <SubFloorWereReal r={r} />
     </div>
   );
 }
@@ -191,23 +178,8 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
  * `move_hours` is the whole argument, and it is now derived rather than typed. The leading clause is
  * conditional on the number, because at two or three hours the same figure argues the other way and
  * the sentence has to follow it. */
-function SubFloorWereReal({ r }: { r: DailyReview }) {
-  const s = r.limits.subFloor;
-  if (!s || s.days === 0 || s.minMoveHours == null) return null;
-  const spreadOut = s.minMoveHours >= 4;
-  return (
-    <p className="ex-cue">
-      {spreadOut
-        ? 'The bad days were real days, not days the phone was in a drawer. '
-        : 'Some of those days may be days the phone was not on you. '}
-      Of the <span className="tnum">{s.days}</span> days under{' '}
-      {FLOOR_STEPS.toLocaleString('en-CA')} steps this year, the quietest still recorded movement in{' '}
-      <span className="tnum">{s.minMoveHours}</span> separate hours of the day. That is the only
-      column here that says the phone was on you: the resting burn on the same row is written
-      whether it was or not.
-    </p>
-  );
-}
+/* SubFloorWereReal was here until 2026-09-15: a paragraph arguing that the low-step days were real
+ * days and not the phone left in a drawer. Provenance. The check it printed is r.limits.subFloor. */
 
 function monthLabelFull(ym: string): string {
   return new Date(`${ym}-01T12:00:00Z`).toLocaleDateString('en-CA', {
@@ -224,13 +196,6 @@ function TheLine({ r }: { r: DailyReview }) {
   if (pts.length < 2) return null;
   const peak = r.months.reduce((a, b) => (b.p50 > a.p50 ? b : a));
   const trough = r.months.reduce((a, b) => (b.p50 < a.p50 ? b : a));
-  /* THE HOLE THIS CHART STARTS AFTER, DERIVED. It read "because 2020 and 2021 are missing" with both
-     years typed into the sentence AND into the filter that counted them, which is the same figure
-     written twice from memory. The chart's own first month decides which years are behind it now, so
-     the retention window in daily.ts can move without this paragraph becoming false. */
-  const startYear = r.months[0]!.month.slice(0, 4);
-  const before = r.gaps.filter((g) => g.year < startYear && g.missing > 30);
-  const missingBefore = before.reduce((s, g) => s + g.missing, 0);
   return (
     <div className="section">
       <div className="section-head"><h2>The line it took</h2></div>
@@ -251,17 +216,6 @@ function TheLine({ r }: { r: DailyReview }) {
         The high point is {monthLabelFull(peak.month)} at{' '}
         <span className="tnum">{n0(peak.p50)}</span> and the low is{' '}
         {monthLabelFull(trough.month)} at <span className="tnum">{n0(trough.p50)}</span>.
-        {before.length > 0 && (
-          <> It starts in {startYear} because{' '}
-            {before.map((g, i) => (
-              <span key={g.year}>{i > 0 ? (i === before.length - 1 ? ' and ' : ', ') : ''}{g.year}</span>
-            ))}{' '}
-            {before.length > 1 ? 'are' : 'is'} missing{' '}
-            <span className="tnum">{missingBefore}</span> days
-            {before.length > 1 ? ' between them' : ''}, and a line drawn through a gap reads as
-            stillness rather than as an absence.
-          </>
-        )}
       </p>
     </div>
   );
@@ -315,16 +269,13 @@ function NotTheWeather({ r }: { r: DailyReview }) {
         </table>
       </div>
       <p className="ex-cue">
-        Steps on a normal day, by calendar month. If daylight and warm weather were doing this, the
-        same months would win every year. They do not:{' '}
         {extremes.map((e, i) => (
           <span key={e.year}>
             {i > 0 ? '; ' : ''}
             {e.year} peaked in {monthName(e.best.mm)} and bottomed in {monthName(e.worst.mm)}
           </span>
         ))}
-        . This is the one thing on the page that needs all the years, because the counter-example is
-        not in this one.
+        .
       </p>
     </div>
   );
@@ -336,10 +287,6 @@ function NotTheWeather({ r }: { r: DailyReview }) {
 function Stairs({ r }: { r: DailyReview }) {
   const f = r.floors;
   if (f.medianRecent == null) return null;
-  /* r IS NOT r-SQUARED, and the page said it was. At r = 0.56 the shared variance is 0.31, so what
-     the step count does NOT account for is about 69% and not "roughly half". Derived here rather
-     than restated, so the sentence follows the correlation wherever it goes. */
-  const unexplainedPct = f.corrSteps == null ? null : Math.round((1 - f.corrSteps ** 2) * 100);
   return (
     <div className="exgroup">
       <div className="exgroup-label">
@@ -357,15 +304,6 @@ function Stairs({ r }: { r: DailyReview }) {
               this page can reach. The gate itself is the claim worth making, and it runs whether or
               not a number about it is printed: see the floors substitution gate in
               HealthOS/server/import-daily-movement.mjs, which exits non-zero on a disagreement. */}
-          <div className="ex-cue">
-            This is not the step count wearing a hat. Across this year it moves with steps at{' '}
-            <span className="tnum">{f.corrSteps == null ? '-' : f.corrSteps.toFixed(2)}</span>, so
-            about <span className="tnum">{unexplainedPct ?? '-'}%</span> of what it does is something
-            the other numbers here cannot see. It is also the only figure on this page counted one
-            event at a time rather than summarised by Samsung: the daily column it replaces went
-            dead at a Samsung changeover, and on every day where both still exist the two agree to
-            the unit, re-checked on every import.
-          </div>
         </div>
       </div>
       <p className="ex-cue">
@@ -459,112 +397,14 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
 /* ------------------------------------------------------------------------------------------------
  * WHAT THIS RECORD CAN AND CANNOT SAY
  * ---------------------------------------------------------------------------------------------- */
-function Limits({ r }: { r: DailyReview }) {
-  const holes = r.gaps.filter((g) => g.missing > 30);
-  /* EVERY FIGURE IN THESE BULLETS IS NOW RETURNED FROM `limits` IN src/lib/health/daily.ts.
-     Seven of them were typed until 2026-09-09, on the one section of the page whose subject is that
-     an undeclared number goes wrong quietly, and one of the seven had already gone wrong: the score
-     line quoted the current year as paying 77 for 13,261 steps, which is the 2024 pair. A bullet
-     whose figures are missing renders as nothing rather than as a hedge. */
-  const L = r.limits;
-  return (
-    <details className="exgroup ladder-all">
-      <summary className="exgroup-label">What this record can and cannot say</summary>
-      <div className="table-scroll">
-        <table className="plan-table">
-          <thead>
-            <tr>
-              <th>This column</th>
-              <th>answers</th>
-              <th className="tnum">from</th>
-              <th className="tnum">days</th>
-            </tr>
-          </thead>
-          <tbody>
-            {r.coverage.map((c) => (
-              <tr key={c.column}>
-                <td className="tnum">{c.column}</td>
-                <td>{c.reads}</td>
-                <td className="tnum">{when(c.from)}</td>
-                <td className="tnum">{c.days.toLocaleString('en-CA')}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ul className="rules">
-        {holes.length > 0 && (
-          <li>
-            <strong>There are holes.</strong>{' '}
-            {holes.map((g, i) => (
-              <span key={g.year}>{i > 0 ? ', ' : ''}{g.year} is missing {g.missing} days</span>
-            ))}
-            . Nothing here averages across them, and no chart starts before them.
-          </li>
-        )}
-        {L.restFit && L.restMoves && (
-          <li>
-            <strong>Resting calories are not on this page, and they are in the data.</strong>{' '}
-            Samsung spreads an estimated resting burn over the part of the day you were not moving.
-            Undo that and the figure barely moves: across the{' '}
-            <span className="tnum">{L.restFit.days}</span> days between two weigh-ins it drifts by{' '}
-            <span className="tnum">{L.restFit.spread.toFixed(1)}</span> calories, on days ranging
-            from <span className="tnum">{L.restFit.loActive}</span> to{' '}
-            <span className="tnum">{L.restFit.hiActive}</span> active minutes. Of the{' '}
-            <span className="tnum">{L.restMoves.days}</span> days it did move by more than twice
-            that, <span className="tnum">{L.restMoves.nearWeighIn}</span> sit within a day of a
-            weigh-in. It is your weight arriving through a second door, not a fact about how you
-            moved.
-          </li>
-        )}
-        {L.distCorr != null && L.mpsMin && L.mpsMax && (
-          <li>
-            <strong>Distance is not on this page either.</strong> It follows the step count at{' '}
-            <span className="tnum">{L.distCorr.toFixed(3)}</span> across{' '}
-            <span className="tnum">{L.distDays}</span> days this year, and the metres-per-step figure
-            Samsung applies has ranged from{' '}
-            <span className="tnum">{L.mpsMin.value.toFixed(3)}</span> in {L.mpsMin.year} to{' '}
-            <span className="tnum">{L.mpsMax.value.toFixed(3)}</span> in {L.mpsMax.year}, a spread of{' '}
-            <span className="tnum">{L.mpsDriftPct == null ? '-' : Math.round(L.mpsDriftPct)}%</span>,
-            in jumps applied to every past day at once. That is a recalibration, not your stride, and
-            it makes any kilometre total spanning more than one year meaningless.
-          </li>
-        )}
-        {L.scoreFirst && L.scoreLast && (
-          <li>
-            <strong>Samsung&apos;s own daily score is not on this page.</strong> In{' '}
-            {L.scoreFirst.year} it paid a median{' '}
-            <span className="tnum">{n0(L.scoreFirst.score)}</span> for a median{' '}
-            <span className="tnum">{n0(L.scoreFirst.steps)}</span> steps. In {L.scoreLast.year} it
-            pays <span className="tnum">{n0(L.scoreLast.score)}</span> for{' '}
-            <span className="tnum">{n0(L.scoreLast.steps)}</span>. The formula changed under you
-            {L.shVerFrom && (
-              <>, and the app version that wrote each row is blank on everything before{' '}
-                {when(L.shVerFrom)}</>
-            )}
-            , so the years cannot be compared even to check.
-          </li>
-        )}
-        <li>
-          <strong>Nothing here is about sleep, heart-rate variability or recovery.</strong> You wear
-          the watch to train and carry the phone the rest of the time, so those readings exist on a
-          minority of days and are missing entirely from most. This page only ever uses what the
-          phone saw, which is the reason it can cover every day.
-        </li>
-        <li>
-          <strong>The newest day is never counted.</strong> Exports are taken mid-afternoon, so the
-          last day in the file is half a day. It is stored and excluded, not thrown away.
-        </li>
-      </ul>
-    </details>
-  );
-}
+/* Limits, "What this record can and cannot say", was here until 2026-09-15: a table of which column
+ * answers what, the missing years, and why resting calories, distance, Samsung's score and sleep are
+ * not on the page. Method, not facts about him. The derivations are still in src/lib/health/daily.ts. */
 
 export default async function DayPage() {
   const r = await getDailyReview();
 
   const steps = r.coverage.find((c) => c.column === 'steps');
-  const stepDays = steps?.days ?? 0;
   const startYear = steps?.from.slice(0, 4) ?? null;
 
   /* `.wrap` and nothing else. The layout above already supplies `.training health measure-data`,
@@ -574,13 +414,9 @@ export default async function DayPage() {
     <div className="wrap">
       <Link href="/health" className="eyebrow">&larr; Body and the week</Link>
       <h1>{startYear ? <>Every day, since {startYear}</> : 'Every day the phone recorded'}</h1>
-      <p className="lede">
-        What the phone in your pocket recorded, on {stepDays.toLocaleString('en-CA')} days. It is
-        the only thing here that was measured every day, because you carry it every day.
-        {r.daysBehind != null && r.daysBehind > 2 && (
-          <> The newest complete day is {when(r.newest!)}, {r.daysBehind} days ago.</>
-        )}
-      </p>
+      {r.daysBehind != null && r.daysBehind > 2 && (
+        <p className="lede">Newest complete day: {when(r.newest!)}, {r.daysBehind} days ago.</p>
+      )}
 
       <Headline r={r} />
       <FloorNotCeiling r={r} />
@@ -588,11 +424,9 @@ export default async function DayPage() {
       <NotTheWeather r={r} />
       <Stairs r={r} />
       <Scraps rows={r.scraps} months={r.months} />
-      <Limits r={r} />
 
       <p className="ex-cue">
-        <Link href="/health">Back to training</Link>. The body numbers and this year&apos;s
-        attendance are on <Link href="/health/deep">the year so far</Link>.
+        <Link href="/health">Back to training</Link> · <Link href="/health/deep">The year so far</Link>
       </p>
     </div>
   );

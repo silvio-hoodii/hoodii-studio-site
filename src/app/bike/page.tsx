@@ -4,7 +4,6 @@ import { getPeakHr, getRecentSessions } from '@/lib/gym/session';
 import { fill, fillCue } from '@/lib/gym/hr-anchor';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
-import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
 
 export const dynamic = 'force-dynamic';
@@ -93,30 +92,21 @@ export default async function BikePage({
               </>
             ) : (
               <>
-                {c.bike.surface}, not in the current week. When it comes back it is{' '}
-                {c.bike.protocol.totalMinutes} minutes of {c.bike.protocol.name}.
+                {c.bike.surface}, not in the current week.
               </>
-            )}{' '}
-            The last one the watch saw is below.
+            )}
           </p>
           <LastSession s={lastSession} />
-          {/* ONE SENTENCE, and it is the only one here that LastSession does not already say.
-              The first draft of this block opened with "the watch gives a bike session a heart rate
-              and nothing else", which is the card's own second line verbatim, one paragraph apart.
-              Caught by screenshotting the page rather than by reading the source, where the two
-              sentences live in different files and never appear next to each other. */}
-          <p className="ex-cue">
-            Which is why the resistance levels get typed instead. Somewhere to type them is the next
-            thing to land here.
-          </p>
+          {/* "Which is why the resistance levels get typed instead. Somewhere to type them is the next
+              thing to land here." sat here until 2026-09-15: a promise three weeks old about a form
+              that does not exist. /bike/api/ride does. Build the form or leave the page quiet. */}
           <RecentSessions sessions={recent} kind="cycling" />
           {/* THE BLOCK ABOVE SAYS "the only one the watch has ever recorded" AND THAT IS FALSE.
               It reads health_session_detail, which holds one cycling row. The watch holds 76, back
               to 2021. Correcting the block itself is finding 54 and needs its own ruling; this link
               at least gives him the real number in the meantime. */}
           <p className="ex-cue" style={{ marginTop: 14 }}>
-            <Link href="/bike/log">Every ride the watch recorded</Link>, back to 2021. There are more
-            than the block above can see.
+            <Link href="/bike/log">Every ride on record</Link>
           </p>
         </>
       )}
@@ -130,13 +120,13 @@ export default async function BikePage({
               {c.bike.protocol.totalMinutes} min)
             </span>
           </div>
-          <Prose text={c.bike.why} />
+          {/* `why` and `protocol.evidenceNote` rendered here until 2026-09-15; both still in
+              conditioning.json. AGENTS.md, "Page text". */}
           <div className="exlist">
             <div className="ex">
               <div className="ex-name">{c.bike.protocol.name}</div>
               <div className="ex-meta">{c.bike.protocol.structure}</div>
               <div className="ex-cue">{c.bike.protocol.shortVersion}</div>
-              <div className="ex-cue quiet">{c.bike.protocol.evidenceNote}</div>
             </div>
             <div className="ex">
               <div className="ex-name">How hard</div>

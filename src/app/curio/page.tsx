@@ -73,7 +73,7 @@ function Row(it: CurioItem) {
             verified one (05-small-apps C4). On a page whose whole subject is settled facts, that is
             the one label that has to be visible. */}
         {it.sourceKind === 'verify' && (
-          <span className="unverified" title="Marked for checking. The weekly digest verifies these before sending.">
+          <span className="unverified">
             not checked yet
           </span>
         )}
@@ -108,10 +108,6 @@ export default async function CurioPage() {
           their only name was the 12px word in the header bar, and a screen reader found no h1 at
           all on the page. */}
       <h1>Curio</h1>
-      <p className="blurb">
-        Things I got curious about and looked up properly, two a morning. Kept here because the
-        answer is worth more than the moment of wondering, and because I forget them otherwise.
-      </p>
 
       <div className="stat">
         <span className="live tnum">{summary.items}</span> answered
@@ -144,17 +140,14 @@ export default async function CurioPage() {
           which is why this is a note and not the alarm /music gets. */}
       {staleDays != null && staleDays >= 3 && recent.length > 0 && (
         <p className="empty">
-          No morning since {summary.latestDay}, {staleDays} days ago. The daily job or its sync has
-          stopped. The ledger on the laptop keeps accumulating either way, so nothing is lost: this
-          page is just behind it.
+          No morning since {summary.latestDay}, {staleDays} days ago.
         </p>
       )}
 
       <div className="digests">
         {recent.length === 0 ? (
           <p className="empty">
-            No mornings yet. A scheduled job writes one each day, so if this stays empty, that job
-            has stopped.
+            No mornings yet.
           </p>
         ) : (
           recent.map(Morning)
@@ -179,8 +172,7 @@ export default async function CurioPage() {
       <div className="ledger">
         {items.length === 0 ? (
           <p className="empty">
-            Nothing logged yet. A row lands here whenever I ask something in a session and it gets
-            answered, so this one fills up on its own.
+            Nothing logged yet.
           </p>
         ) : (
           items.slice(0, OPEN_ROWS).map(Row)

@@ -26,10 +26,6 @@ export default async function ReadingFinished() {
       </p>
 
       <h1>Finished</h1>
-      <p className="blurb">
-        What each book was about, and whether I still have it. Open one, run the cards, and whatever
-        I miss comes back as a recap of just that stretch.
-      </p>
       <p className="stat">
         <span className="tnum">{packs.length}</span> books
         <span className="dot">·</span>
@@ -46,7 +42,6 @@ export default async function ReadingFinished() {
         </Link>
       ))}
 
-      <p className="src">Built from study guides and source texts, never a model&apos;s memory of the book.</p>
     </div>
   );
 }

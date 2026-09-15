@@ -50,20 +50,20 @@ const TREND: Partial<
     label: 'SWOLF',
     unit: '',
     of: (s) => s.avgSwolf,
-    note: 'SWOLF is seconds plus stroke cycles for one length, so DOWN is better: it falls when you get faster, more efficient, or both.',
+    note: 'Lower is better.',
   },
   treadmill: {
     label: 'Cadence',
     unit: 'spm',
     of: (s) => s.avgCadence,
     floor: 170,
-    note: 'Steps a minute, averaged over each run. UP is the direction you want, and cadence is genuinely measured on a treadmill rather than estimated.',
+    note: 'Higher is better.',
   },
   strength: {
     label: 'Under 110 bpm',
     unit: '%',
     of: (s) => s.pctEasy,
-    note: 'How much of each session your heart rate stayed under 110. That is the standing-around, so DOWN is a denser session. It is also the only thing a wrist heart rate can honestly say about lifting.',
+    note: 'Lower is a denser session.',
   },
 };
 
@@ -114,35 +114,11 @@ export default function RecentSessions({
   kind: SessionKind;
   nounPlural?: string;
 }) {
-  /* ONE SESSION IS NOT A HISTORY, and drawing this block around it would repeat the card above it
-     with worse formatting. Nothing at all is the wrong answer too: "you have ridden once" is a real
-     and useful fact, and silence reads as a page that has not been built yet. */
-  if (sessions.length <= 1) {
-    return (
-      <div className="exgroup">
-        <div className="exgroup-label">Before that</div>
-        <p className="ex-cue">
-          {/* THE CLAIM IS ABOUT THIS BLOCK'S SOURCE, NOT ABOUT HIS LIFE. Corrected 2026-08-28
-              (12-run-bike B3). It said "This is the only one the watch has ever recorded", and the
-              watch has recorded 76 cycling sessions across 55 dates going back to 2021-09-05. What
-              holds ONE is `health_session_detail`, the per-second table this block reads.
-
-              /bike's own comment already said the sentence was false, and the mitigation shipped
-              instead was a link placed BELOW it: "There are more than the block above can see." A
-              correction underneath a wrong claim is the pattern that destroyed a dish on 2026-08-05,
-              where the five-second test was written under the prescription. The claim itself has to
-              stop being wrong.
-
-              This component serves five surfaces, so it cannot know his real total without being
-              told. It can stop asserting one: naming its own source is both honest and something it
-              can actually check. */}
-          {sessions.length === 1
-            ? 'Only one session here so far. This block reads the per-second detail the watch exports, which holds one of these; the watch itself may hold more, and the log below is the fuller record.'
-            : 'Nothing recorded yet. Sessions arrive with the daily watch export.'}
-        </p>
-      </div>
-    );
-  }
+  /* ONE SESSION IS NOT A HISTORY, so nothing renders, since 2026-09-15. It printed "Before that" over
+     "Only one session here so far", which is a fact about health_session_detail (one cycling row)
+     and not about him (76 rides back to 2021, one link away on /bike/log). The empty case needs no
+     sentence either: LastSession above already says nothing is recorded. */
+  if (sessions.length <= 1) return null;
 
   /* Oldest first: a trend reads left to right, and Trace marks its LAST point as the current one. */
   const chrono = [...sessions].reverse();

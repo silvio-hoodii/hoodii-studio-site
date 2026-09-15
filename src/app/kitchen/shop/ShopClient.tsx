@@ -151,9 +151,7 @@ export default function ShopClient({ list }: { list: ShopList }) {
     <>
       {list.unsorted.length > 0 && (
         <p className="snotice" role="status">
-          {list.unsorted.length} item{list.unsorted.length === 1 ? ' has' : 's have'} not been sorted
-          into buy, optional or already have. {list.unsorted.length === 1 ? 'It is' : 'They are'} at
-          the bottom, off the list, until a session says which.
+          {list.unsorted.length} item{list.unsorted.length === 1 ? '' : 's'} not sorted yet, at the bottom.
         </p>
       )}
 
@@ -253,8 +251,7 @@ export default function ShopClient({ list }: { list: ShopList }) {
             Got it <span className="quiet tnum">{got.length}</span>
           </summary>
           <p className="lede">
-            Ticked off in the last {TICK_DAYS} days. After that a row comes back onto the list with
-            the date on it, because a tick says you bought it, not that you still have it.
+            Ticked off in the last {TICK_DAYS} days. After that it comes back onto the list.
           </p>
           <ul className="shoplist">
             {got.map((r) => (
@@ -269,9 +266,6 @@ export default function ShopClient({ list }: { list: ShopList }) {
           <summary>
             Already have <span className="quiet tnum">{owned.length}</span>
           </summary>
-          <p className="lede">
-            Confirmed in the kitchen, so it is off the list. Only a session changes this.
-          </p>
           <ul className="shoplist">
             {owned.map((r) => (
               <li className="shoprow shoprow-flat" key={r.key}>
@@ -301,8 +295,7 @@ export default function ShopClient({ list }: { list: ShopList }) {
             Not sorted yet <span className="quiet tnum">{unsorted.length}</span>
           </summary>
           <p className="lede">
-            These carry no buy, optional or already-have value, so they are not guessed at in either
-            direction. Ask a session to sort them.
+            Ask a session to sort these.
           </p>
           <ul className="shoplist">
             {unsorted.map((r) => (

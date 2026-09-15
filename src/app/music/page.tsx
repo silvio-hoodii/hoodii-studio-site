@@ -80,12 +80,6 @@ export default async function MusicPage() {
     <div className="music">
       {/* See /curio: this page had no h1 either. */}
       <h1>Music</h1>
-      <p className="blurb">
-        What I am listening to. The charts come from Spotify, which works them out over its own
-        windows. The history underneath does not: Spotify hands back the last fifty plays and
-        nothing further, so a job collects them three times a day and this page shows what it has
-        caught. It starts where the collecting started.
-      </p>
 
       {/* The integration is dead. This is the failure the whole build exists to make visible, so it
         * gets the loudest thing on the page rather than a console line nobody reads.
@@ -118,10 +112,6 @@ export default async function MusicPage() {
       {!summary.liveness.stale && summary.liveness.lastOkWarning && (
         <div className="alarm">
           <strong>Some plays were lost between runs.</strong>{' '}
-          The run {summary.liveness.lastOkWarningAt ? timeAgo(summary.liveness.lastOkWarningAt) : 'just now'} came
-          back with the full fifty plays Spotify will hand over, which means the listening outran the
-          eight-hour gap between runs. Whatever fell off the end of that window is gone from Spotify
-          too, not just from here.
           <span className="why">{summary.liveness.lastOkWarning}</span>
         </div>
       )}
@@ -285,7 +275,7 @@ export default async function MusicPage() {
         </>
       ) : (
         <p className="empty">
-          Nothing collected yet. The first scheduled run will fill this in.
+          Nothing collected yet.
         </p>
       )}
 

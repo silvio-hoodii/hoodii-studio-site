@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { listDishes, lastCooked, openInbox } from '@/lib/kitchen/cookbook';
+import { shortDate } from '@/lib/format';
 import AskBox from './AskBox';
 
 export const dynamic = 'force-dynamic';
@@ -20,10 +21,6 @@ export default async function KitchenPage() {
   return (
     <div className="wrap">
       <h1>Kitchen</h1>
-      <p className="blurb">
-        The dishes I have decided to cook. Each one opens the recipe where it was published, with the
-        shopping list built for it and what I found when I made it.
-      </p>
 
       <AskBox />
 
@@ -64,7 +61,7 @@ export default async function KitchenPage() {
                   <span className="dmeta">
                     {d.publisher ?? new URL(d.sourceUrl).hostname.replace(/^www\./, '')}
                     {' · '}
-                    <span className="nw">{last ? `last cooked ${last}` : 'not cooked yet'}</span>
+                    <span className="nw">{last ? `last cooked ${last.length === 10 ? shortDate(last) : last}` : 'not cooked yet'}</span>
                   </span>
                 </Link>
               </li>

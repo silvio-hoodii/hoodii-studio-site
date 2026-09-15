@@ -59,10 +59,6 @@ export default function AskBox() {
           {busy ? 'Sending' : 'Send'}
         </button>
       </form>
-      <p className="hint">
-        The next session picks it up: finds the recipe, asks what you already have, and builds the
-        list with links. Anything you are not sure you have goes on the list.
-      </p>
       {saved && !err && <p className="saved">Saved. It is in the list below, waiting.</p>}
       {err && <Unlock err={err} onRetry={send} />}
     </section>

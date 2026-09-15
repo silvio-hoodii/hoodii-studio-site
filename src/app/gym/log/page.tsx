@@ -181,12 +181,8 @@ export default async function GymLogPage() {
           * version carried are gone: this says what the columns mean and what the blanks mean, and
           * nothing at all about how the page is put together. */}
         <p className="log-caption">
-          <strong>{unlogged} of these {rows.length}</strong> have no sets: the watch saw the session
-          and the app has no record of it. <strong>Sets</strong> is what you ticked over what the day
-          asked for, stamped when the session starts so it survives the programme changing afterwards;
-          rows before today have no denominator because nothing recorded one. <strong>Time</strong>{' '}
-          and <strong>Easy</strong> are the watch&apos;s, Easy being the percent under 110 bpm, blank
-          before 2026-04-25 where the per-second detail stops.
+          <strong>{unlogged} of these {rows.length}</strong> have no sets logged. <strong>Easy</strong> is
+          the percent of the session under 110 bpm.
           {total > rows.length
             ? ` ${total - rows.length} older sessions are in the export and not on this screen.`
             : ''}

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
    * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
    * src/app/kitchen/layout.tsx. */
   title: { default: 'Gym', template: '%s · Silvio Neyra' },
-  description: 'My lifting log. An upper/lower split on a rolling cycle, filled in between sets.',
+  description: 'My lifting log, filled in between sets.',
   robots: { index: false, follow: false },
 };
 

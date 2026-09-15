@@ -54,10 +54,6 @@ export default async function ReadingQueue() {
       </p>
 
       <h1>Next up</h1>
-      <p className="blurb">
-        The ten books queued to read next, why each earned a place, and whether I can actually get
-        it today.
-      </p>
       <p className="stat">
         <span className="tnum">{queue.length}</span> books
         {liveness.queueUpdated && <><span className="dot">·</span>queue as of {liveness.queueUpdated}</>}
@@ -70,16 +66,14 @@ export default async function ReadingQueue() {
           old BORROW NOW claim is the opposite of that. */}
       {liveness.hasAcquisitionData && liveness.stale && (
         <div className="stale">
-          <span className="k">Acquisition status is stale</span>
-          Holds move daily, and this hasn&apos;t refreshed in over a week. BORROW NOW and BUY calls
-          below may no longer be right. Re-run acquire.mjs, then sync.
+          <span className="k">Library check is over a week old</span>
+          BORROW NOW and BUY below may no longer be right.
           {liveness.lastError && <span className="why">{liveness.lastError}</span>}
         </div>
       )}
       {!liveness.hasAcquisitionData && (
         <p className="note">
-          No acquisition data synced yet. Every book below shows its ranking only, not whether
-          it&apos;s actually gettable today.
+          No library check yet.
           {liveness.lastError && <span className="why">{liveness.lastError}</span>}
         </p>
       )}
@@ -93,7 +87,6 @@ export default async function ReadingQueue() {
         />
       ))}
 
-      <p className="src"><Link href="/reading/about">How this works and where the numbers come from</Link></p>
     </div>
   );
 }
@@ -155,7 +148,7 @@ function QueueRow({ entry, acquisition, liveness }: {
         {entry.why && <p className="qwhy">{entry.why}</p>}
         <p className="qpicked">
           {entry.score != null && (
-            <><span className="tnum" title="How much independent evidence there is: a jury, a curated list, a reader vote, and what is being read right now. Each list weighted by how selective it is. Not a rating out of 10.">
+            <><span className="tnum">
               {entry.score} score
             </span> · </>
           )}

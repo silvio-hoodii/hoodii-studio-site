@@ -108,7 +108,6 @@ export default async function GymHome() {
               r.setsPrescribed != null ? `${r.setsLogged}/${r.setsPrescribed}` : `${r.setsLogged}`,
           },
         ]}
-        caption="Sets you ticked over sets the day asked for. Time is what the watch recorded, not how long the page was open."
       />
 
       {/* THE NOTE BOX HAD NO OTHER END. Notes have been written from the bottom of this page since
@@ -134,8 +133,7 @@ export default async function GymHome() {
             </span>
           </summary>
           <p className="ex-cue">
-            Everything typed into the box at the end of a workout, newest first. A note marked
-            &ldquo;acted on&rdquo; means someone changed something because of it.
+            A note marked &ldquo;acted on&rdquo; means someone changed something because of it.
           </p>
           {/* `note-row`, NOT `ex`. See training.css: `.ex` is what the probe harness selects to find
               today's exercises, and reusing it here made its cardNames() return 28 things on a

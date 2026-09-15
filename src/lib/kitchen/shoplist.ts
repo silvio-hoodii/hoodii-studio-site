@@ -328,10 +328,14 @@ export function totalLine(rows: ShopRow[]): string {
    * replaces, where hand-typed separators between three conditionals rendered "15 to buy. , 15 with
    * no price yet" the moment the middle clause was empty. The separator belongs to the join. */
   const clauses: string[] = [];
-  if (priced.length > 0) {
-    clauses.push(`${anyRange ? 'from ' : ''}$${sum.toFixed(2)} for the ${priced.length} with a price`);
-  }
   const unpriced = rows.length - priced.length;
+  /* "for the 11 with a price" said nothing when all 11 had one, and "from $63.21" read as a starting
+     price. Since 2026-09-15 the qualifier appears only when some rows are unpriced, and a range
+     says "at least". */
+  if (priced.length > 0) {
+    const money = `${anyRange ? 'at least ' : ''}$${sum.toFixed(2)}`;
+    clauses.push(unpriced > 0 ? `${money} for the ${priced.length} with a price` : money);
+  }
   if (unpriced > 0) clauses.push(`${unpriced} with no price`);
 
   const head = `${rows.length} item${rows.length === 1 ? '' : 's'}`;

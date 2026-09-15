@@ -817,7 +817,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
      * right. This says the true thing, and it is the one instruction on the page that makes the
      * session SHORTER rather than longer: the rest is being spent either way. */
     if (block.pairing === 'fill') {
-      return 'Do the second one during the first one’s rest, not after it. It adds no time to the session.';
+      return 'Do the second one during the first one’s rest.';
     }
     return 'Finish all sets of the first, then start the second.';
   }
@@ -1317,7 +1317,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                           pairings the gate rejects; its own header records why that is worse than
                           suggesting nothing. */}
                       <p className="fill-hint quiet">
-                        Anything here can be done at the {lead.name} without moving. Yours to pick.
+                        Anything here can be done at the {lead.name} without moving.
                       </p>
                       {offer.map((c) => (
                         <button className="fill-opt" key={c.id} onClick={() => chooseFill(key, c)}>
@@ -1346,7 +1346,6 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                   <span className="fill-name">{chosen.name}</span>
                   <span className="tag">in the {lead.rest} rest</span>
                 </div>
-                <div className="fill-why quiet">Your pick, not the programme&rsquo;s. It is logged as what you did.</div>
                 <div className="sets">
                   {Array.from({ length: fillSets(chosen.id) }).map((_, i) => {
                     const entry = getSet(chosen.id, i);
@@ -1447,9 +1446,6 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * to send and got wiped out of the box is gone from the world. */}
       <div className="extra-box">
         <div className="section-label">Did something else? Log it</div>
-        <p className="quiet extra-hint">
-          Anything not on this list. It counts as training, and without it the app reads the session as unfinished.
-        </p>
         <input
           className="extra-name"
           list="gym-extra-names"
