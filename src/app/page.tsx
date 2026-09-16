@@ -38,8 +38,38 @@ import './hub.css';
  *
  * What 600 actually trades is the app-state rows: dishes ready, next lift, queue length. Those
  * change when he cooks or trains, a few times a day, not every minute. And ISR serves the stale
- * copy WHILE regenerating, so the lag is never a wait, only an older number. */
-export const revalidate = 600;
+ * copy WHILE regenerating, so the lag is never a wait, only an older number.
+ *
+ * WHY 3600 NOW, 2026-09-16. Both numbers above were chosen against Vercel Active CPU, and they won
+ * that fight: Active CPU is ~0.6 CPU-hr/month against a Hobby allowance of 4. But Neon moved to
+ * pay-as-you-go (Launch v3, $0.106/CU-hour, nothing included) and bills something else entirely,
+ * and by THAT meter this one line was 76.6% of every database call the account made: 22,260 of
+ * 29,051 in 7.6 days, because each regeneration runs all ten row functions, which fan out to about
+ * thirty round trips.
+ *
+ * NEON DOES NOT BILL QUERIES, IT BILLS WALL TIME AWAKE, and the compute cannot sleep for 300
+ * seconds after the last one. On Launch that 300 is fixed and cannot be configured; 60 seconds is
+ * a Scale-plan feature. So the bill is not how many queries a render makes, it is how many distinct
+ * five-minute windows contain at least one. That makes this number the bill, near enough exactly:
+ *
+ *     awake = min(1, 300 / revalidate)      600 -> 50.0% predicted, 49.4% measured over 15 days
+ *
+ * Batching the thirty round trips into one sql.transaction, which is what getShelfBundle does for
+ * /reading/shelf, is therefore NOT the fix here. It would move Provisioned Memory, which is at 1.4%
+ * of its allowance, and leave the wake untouched. Blocking crawlers is not the fix either, and that
+ * was already measured on 2026-08-25: the rate did not move, because regenerations are limited by
+ * this window rather than by demand.
+ *
+ * At 3600 the same arithmetic gives 8.3%. What it trades is the same thing 600 traded, only more
+ * of it: the app-state rows can be an hour old. They are still served instantly and still
+ * regenerate in the background, so the lag is an older number and never a wait. The apps behind
+ * the rows are live on every visit; only this index is cached.
+ *
+ * THE REAL FIX IS ON-DEMAND, and this is the stopgap. A crawler can still wake the database here,
+ * which is a class of problem rather than a number to tune. Calling revalidatePath('/') from the
+ * write routes and dropping this to a daily safety net would mean the index regenerates only when
+ * something it shows actually changed, inside a wake his own write already paid for. */
+export const revalidate = 3600;
 
 /* Declared here rather than in the root layout, where it would be inherited by every route and
  * would tell a crawler the whole site is a duplicate of this page. */
