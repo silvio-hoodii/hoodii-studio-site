@@ -102,6 +102,18 @@ export async function lastCooked(): Promise<Record<string, string>> {
   return out;
 }
 
+/** Every rated cook per dish, oldest first: nailed, fine or wrong. A row with no rating is a note,
+ *  not a cook, and is left out. For the marks on the dish list, 2026-09-27. */
+export async function cookRatings(): Promise<Record<string, string[]>> {
+  const rows = (await sql`
+    select dish, rating from cook_log
+     where step is null and rating in ('nailed', 'fine', 'wrong')
+     order by at`) as { dish: string; rating: string }[];
+  const out: Record<string, string[]> = {};
+  for (const r of rows) (out[r.dish] ??= []).push(r.rating);
+  return out;
+}
+
 export async function cookRows(dishName: string): Promise<CookRow[]> {
   const rows = (await sql`
     select id, at, rating, note from cook_log

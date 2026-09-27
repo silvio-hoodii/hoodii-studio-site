@@ -32,9 +32,13 @@ export interface Ladder {
   known: number;
 }
 
+/* The saved-links pile, sorted so far. */
+export interface Pile { kept: number; dropped: number; left: number }
+
 export interface Today {
   day: string;
   ladder: Ladder;
+  pile: Pile;
   quiz: QuizCard[];
   saves: SaveCard[];
   kept: SaveCard[];
@@ -48,7 +52,7 @@ export async function getToday(): Promise<Today> {
   const day = today();
   /* ONE round trip. Neon bills the time it is awake, and on this site every query is a request to it
      (AGENTS.md, "What costs money"), so three reads go as one transaction. */
-  const [pool, saves, kept] = await sql.transaction([
+  const [pool, saves, kept, pileRows] = await sql.transaction([
     /* His own questions first, newest first, then everything else in the order it was logged. The
        ledger's `asked` rows are the ones he actually wondered about. */
     sql`
@@ -67,11 +71,17 @@ export async function getToday(): Promise<Today> {
       select id, title, tldr, url, category from curio_save
        where verdict = 'keep'
        order by judged_at desc`,
+    sql`
+      select count(*) filter (where verdict = 'keep')::int as kept,
+             count(*) filter (where verdict = 'drop')::int as dropped,
+             count(*) filter (where verdict is null)::int as left
+        from curio_save`,
   ]) as [
     Array<{ id: string; question: string; answer: string; source_kind: string; source_url: string | null;
       box: number | null; due: unknown; first_seen: unknown }>,
     Array<{ id: string; title: string; tldr: string; url: string | null; category: string }>,
     Array<{ id: string; title: string; tldr: string; url: string | null; category: string }>,
+    Pile[],
   ];
 
   const ladder: Ladder = { total: pool.length, fresh: 0, learning: 0, known: 0 };
@@ -103,7 +113,8 @@ export async function getToday(): Promise<Today> {
   const card = (s: { id: string; title: string; tldr: string; url: string | null; category: string }) => ({
     id: s.id, title: s.title, line: s.tldr, url: s.url, category: s.category,
   });
-  return { day, ladder, quiz, saves: saves.map(card), kept: kept.map(card) };
+  const pile = pileRows[0] ?? { kept: 0, dropped: 0, left: 0 };
+  return { day, ladder, pile, quiz, saves: saves.map(card), kept: kept.map(card) };
 }
 
 export async function gradeCard(id: string, knew: boolean): Promise<void> {

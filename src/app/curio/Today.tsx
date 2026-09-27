@@ -59,7 +59,7 @@ function Cards({ data }: { data: TodayData }) {
           starts over instead of pointing into a list that changed under it. */}
       <Quiz key={data.quiz.map((q) => q.id).join()} cards={data.quiz} />
       <LadderBar l={data.ladder} />
-      <Saves key={data.saves.map((q) => q.id).join()} saves={data.saves} kept={data.kept} />
+      <Saves key={data.saves.map((q) => q.id).join()} saves={data.saves} kept={data.kept} pile={data.pile} />
       <Remind />
     </section>
   );
@@ -130,7 +130,7 @@ export function Quiz({ cards, heading = 'Today' }: { cards: QuizCard[]; heading?
   );
 }
 
-function Saves({ saves, kept: keptIn }: { saves: SaveCard[]; kept: SaveCard[] }) {
+function Saves({ saves, kept: keptIn, pile }: { saves: SaveCard[]; kept: SaveCard[]; pile?: TodayData['pile'] }) {
   const [at, setAt] = useState(0);
   const [kept, setKept] = useState(keptIn);
   const [last, setLast] = useState<{ card: SaveCard; verdict: 'keep' | 'drop' } | null>(null);
@@ -166,6 +166,7 @@ function Saves({ saves, kept: keptIn }: { saves: SaveCard[]; kept: SaveCard[] })
   return (
     <div className="tblock">
       <h2 className="sec">From your saves</h2>
+      {pile && <PileBar p={pile} />}
       {!card ? (
         <p className="done">Done for now.</p>
       ) : (
@@ -223,6 +224,27 @@ function LadderBar({ l }: { l: TodayData['ladder'] }) {
         <span><b className="k" />{l.known} known</span>
         <span><b className="l" />{l.learning} learning</span>
         <span><b />{l.fresh} new</span>
+      </div>
+    </div>
+  );
+}
+
+/* The pile, sorted so far: kept, dropped, still to go. The same three-part bar as the ladder above,
+   so the two read alike. Shown from the first verdict on. */
+function PileBar({ p }: { p: TodayData['pile'] }) {
+  const total = p.kept + p.dropped + p.left;
+  if (!total || p.kept + p.dropped === 0) return null;
+  const pct = (n: number) => `${(n / total) * 100}%`;
+  return (
+    <div className="ladder" role="img" aria-label={`${p.kept} kept, ${p.dropped} dropped, ${p.left} to sort`}>
+      <div className="lbar">
+        <i className="k" style={{ width: pct(p.kept) }} />
+        <i className="l" style={{ width: pct(p.dropped) }} />
+      </div>
+      <div className="lkey tnum">
+        <span><b className="k" />{p.kept} kept</span>
+        <span><b className="l" />{p.dropped} dropped</span>
+        <span><b />{p.left} to sort</span>
       </div>
     </div>
   );

@@ -137,7 +137,7 @@
 
 .kos .dprot {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   align-self: start;
   font-family: var(--font-mono);
   font-size: 13px;
@@ -235,7 +235,7 @@
 
 .kos .list .price {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--muted-foreground);
@@ -690,3 +690,10 @@
   display: list-item;
   padding-top: 14px;
 }
+
+/* How each dish has gone, one mark per rated cook (2026-09-27). */
+.kos .cooks { grid-column: 1; display: flex; gap: 4px; margin: 2px 0; }
+.kos .cooks i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--foreground); }
+.kos .cooks i.nailed { background: var(--foreground); }
+.kos .cooks i.fine { background: color-mix(in srgb, var(--foreground) 40%, transparent); border-color: color-mix(in srgb, var(--foreground) 40%, transparent); }
+.kos .cooks i.wrong { background: transparent; }

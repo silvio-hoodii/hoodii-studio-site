@@ -1618,3 +1618,13 @@
 .training .ladder-track figcaption i { display: inline-block; width: 16px; height: 0; margin-right: 6px; vertical-align: 3px; border-top: 1.5px solid var(--foreground); }
 .training .ladder-track figcaption i.k-goal { border-top-style: dashed; opacity: 0.7; }
 .training .ladder-track .lwk { margin-left: auto; }
+
+/* ---- the year of weight with lifting days (2026-09-27) ---- */
+.training .yearlifts { margin: 12px 0 10px; color: var(--foreground); }
+.training .yearlifts svg { display: block; width: 100%; max-width: 560px; height: auto; }
+.training .yearlifts .mgrid { stroke: currentColor; stroke-width: 0.5; opacity: 0.12; }
+.training .yearlifts .mlab { font-family: var(--font-mono), ui-monospace, monospace; font-size: 8px; fill: var(--muted-foreground); }
+.training .yearlifts figcaption { display: flex; gap: 16px; margin-top: 4px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
+.training .yearlifts figcaption i { display: inline-block; margin-right: 6px; background: var(--foreground); vertical-align: 2px; }
+.training .yearlifts .k-line { width: 14px; height: 1.6px; }
+.training .yearlifts .k-tick { width: 1.5px; height: 9px; vertical-align: -1px !important; opacity: 0.7; }

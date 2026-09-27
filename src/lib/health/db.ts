@@ -248,3 +248,15 @@ export async function getLiftingAdherence(days = 30): Promise<{ days: AdherenceD
    * has never reached. Found by an adversarial pass on 2026-08-14. */
   return { days: out, horizon };
 }
+
+/** Every day since `from` on which he lifted: a strength session on the watch, or sets logged in the
+ *  app, which is its own evidence (the watch is sometimes not worn). For the year chart's tick row.
+ *  Added 2026-09-27. */
+export async function getLiftDays(from: string): Promise<string[]> {
+  const rows = (await sql`
+    select date::text as d from health_watch_session where kind = 'strength' and date >= ${from}
+    union
+    select date::text from gym_set where done = true and reps > 0 and date >= ${from}
+    order by 1`) as unknown as { d: string }[];
+  return rows.map((r) => r.d.slice(0, 10));
+}

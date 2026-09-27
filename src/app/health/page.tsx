@@ -3,10 +3,12 @@ import {
   getBodyCompSeries,
   getBodyCompSummary,
   getLiftingAdherence,
+  getLiftDays,
   getSyncLiveness,
   getWatchComposition,
 } from '@/lib/health/db';
 import { getYearBody } from '@/lib/health/year';
+import YearLifts from '@/components/training/YearLifts';
 import { splitOf, sameSourcePair } from '@/lib/health/split';
 import { loadConditioning, loadProgram, loadMovements, splitName } from '@/lib/gym/program';
 import { computeCoverage } from '@/lib/gym/coverage.mts';
@@ -137,7 +139,9 @@ export default async function HealthPage({
      charts, which was two identical round trips to Neon, and `fat_kg` and `lean_kg` were already in
      every row it fetched and had never been drawn. Counting round trips rather than work is the
      lesson /reading/shelf paid for: this site's entire external-API bill is Neon. */
-  const [bodySummary, comp, watchComp, yearBody] =
+  const yearStart = `${today().slice(0, 4)}-01-01`;
+  const yearDays = Math.round((Date.parse(`${today()}T12:00:00Z`) - Date.parse(`${yearStart}T12:00:00Z`)) / 86_400_000) + 1;
+  const [bodySummary, comp, watchComp, yearBody, yearSeries, liftDays] =
     sub === 'weight'
       ? await Promise.all([
           getBodyCompSummary(),
@@ -148,8 +152,10 @@ export default async function HealthPage({
              and the lowest." It is computed by the same function /health/deep uses, not by a second
              copy here, so the two pages cannot print different answers. */
           getYearBody(),
+          getBodyCompSeries(yearDays),
+          getLiftDays(yearStart),
         ])
-      : [null, null, null, null];
+      : [null, null, null, null, null, null];
   const seriesOf = (key: 'kg' | 'bf_pct' | 'fat_kg' | 'lean_kg') =>
     (comp ?? []).filter((r) => r[key] != null).map((r) => ({ date: r.date, value: r[key] as number }));
   const weightSeries = seriesOf('kg');
@@ -357,6 +363,12 @@ export default async function HealthPage({
                 <p className="ex-cue" style={{ marginTop: 0 }}>
                   <YearRangeSentence body={yearBody} />
                 </p>
+                <YearLifts
+                  from={yearStart}
+                  to={today()}
+                  weights={(yearSeries ?? []).filter((r) => r.kg != null).map((r) => ({ date: String(r.date).slice(0, 10), kg: Number(r.kg) }))}
+                  lifts={liftDays ?? []}
+                />
                 <Link href="/health/deep" className="deeplink">
                   The whole year, every measurement &rarr;
                 </Link>

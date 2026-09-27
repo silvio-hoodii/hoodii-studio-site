@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { listDishes, lastCooked } from '@/lib/kitchen/cookbook';
+import { cookRatings, listDishes, lastCooked } from '@/lib/kitchen/cookbook';
 import { shortDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
  * chat, and in his words "it's usually an agent that helps me out". The kitchen also left the front
  * page the same day; dish pages stay because sessions send him their links. */
 export default async function KitchenPage() {
-  const [dishes, cooked] = await Promise.all([listDishes(), lastCooked()]);
+  const [dishes, cooked, ratings] = await Promise.all([listDishes(), lastCooked(), cookRatings()]);
 
   return (
     <div className="wrap">
@@ -39,6 +39,13 @@ export default async function KitchenPage() {
                   <span className="dname">{d.name}</span>
                   {d.proteinG != null && (
                     <span className="dprot tnum">{Math.round(d.proteinG)} g protein</span>
+                  )}
+                  {/* One mark per rated cook, oldest first: filled nailed it, grey fine, hollow went
+                      wrong. How often and how well, at a glance, without opening the dish. */}
+                  {(ratings[d.name]?.length ?? 0) > 0 && (
+                    <span className="cooks" aria-label={`cooked ${ratings[d.name]!.length} times: ${ratings[d.name]!.join(', ')}`}>
+                      {ratings[d.name]!.map((r, i) => <i key={i} className={r} />)}
+                    </span>
                   )}
                   <span className="dmeta">
                     {d.publisher ?? new URL(d.sourceUrl).hostname.replace(/^www\./, '')}
