@@ -23,8 +23,18 @@ export interface SaveCard {
   category: string;
 }
 
+/* Where every question stands on the ladder: never seen, still learning (due within a week), or
+   known (spaced a fortnight or more). A picture of progress, not a backlog: nothing here is "due". */
+export interface Ladder {
+  total: number;
+  fresh: number;
+  learning: number;
+  known: number;
+}
+
 export interface Today {
   day: string;
+  ladder: Ladder;
   quiz: QuizCard[];
   saves: SaveCard[];
   kept: SaveCard[];
@@ -64,6 +74,13 @@ export async function getToday(): Promise<Today> {
     Array<{ id: string; title: string; tldr: string; url: string | null; category: string }>,
   ];
 
+  const ladder: Ladder = { total: pool.length, fresh: 0, learning: 0, known: 0 };
+  for (const r of pool) {
+    if (r.box == null) ladder.fresh += 1;
+    else if (r.box >= 3) ladder.known += 1;
+    else ladder.learning += 1;
+  }
+
   const d = (v: unknown) => (v instanceof Date ? v.toISOString().slice(0, 10) : v == null ? null : String(v));
   const candidates: Candidate[] = pool.map((r) => ({
     id: r.id,
@@ -86,7 +103,7 @@ export async function getToday(): Promise<Today> {
   const card = (s: { id: string; title: string; tldr: string; url: string | null; category: string }) => ({
     id: s.id, title: s.title, line: s.tldr, url: s.url, category: s.category,
   });
-  return { day, quiz, saves: saves.map(card), kept: kept.map(card) };
+  return { day, ladder, quiz, saves: saves.map(card), kept: kept.map(card) };
 }
 
 export async function gradeCard(id: string, knew: boolean): Promise<void> {

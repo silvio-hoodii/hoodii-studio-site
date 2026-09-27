@@ -3,7 +3,7 @@ import type { CurioDigest, CurioItem } from '@/lib/curio/db';
 import Today from './Today';
 import gamesJson from '../../../content/curio/games.json';
 
-interface GameItem { name: string; url: string; learn: string; do?: string; cost: 'free' | 'paid' | 'free+paid' }
+interface GameItem { name: string; url: string; learn: string; do?: string; cost: 'free' | 'paid' | 'free+paid'; site?: string }
 const games = gamesJson as unknown as { groups: { name: string; items: GameItem[] }[] };
 
 /* ISR, one hour. A one-way mirror of CuriosityOS/log.md that only changes when a sync runs, so a
@@ -91,7 +91,15 @@ function Row(it: CurioItem) {
 function Game(g: GameItem) {
   return (
     <li className="game" key={g.url}>
-      <a className="gname" href={g.url} target="_blank" rel="noreferrer">{g.name}</a>
+      <a className="gname" href={g.url} target="_blank" rel="noreferrer">
+        {/* The site's own icon, so the list scans as pictures before words. Google's favicon service
+            rather than fetching each site: one host, cached by the browser, and a missing icon
+            degrades to a blank square rather than a broken page. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- 16px favicons, nothing to optimise */}
+        <img className="gicon" src={`https://www.google.com/s2/favicons?domain=${g.site ?? new URL(g.url).hostname}&sz=64`}
+          alt="" width={20} height={20} />
+        {g.name}
+      </a>
       {/* Only the exceptions are labelled. Nearly every row is free, and "free" twenty times down
           the right edge was the loudest thing in the list. */}
       {g.cost !== 'free' && (

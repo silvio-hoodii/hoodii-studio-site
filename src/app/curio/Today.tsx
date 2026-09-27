@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Today as TodayData, QuizCard, SaveCard } from '@/lib/curio/today';
 import Remind from './Remind';
+import { forgetCard, forgetSave, useToday } from './today-cache';
 
 /* The top of /curio: a few questions to recall, then one saved link to keep or drop.
  *
@@ -14,12 +15,6 @@ import Remind from './Remind';
  *
  * Recall first, THEN the answer. A card that shows the answer straight away is the email again,
  * which is the thing he stopped opening. */
-
-type Load =
-  | { state: 'loading' }
-  | { state: 'locked' }
-  | { state: 'error'; message: string }
-  | { state: 'ready'; data: TodayData };
 
 export async function post(path: string, body: unknown): Promise<boolean> {
   try {
@@ -35,23 +30,7 @@ export async function post(path: string, body: unknown): Promise<boolean> {
 }
 
 export default function Today() {
-  const [load, setLoad] = useState<Load>({ state: 'loading' });
-
-  useEffect(() => {
-    let live = true;
-    fetch('/curio/api/today', { cache: 'no-store' })
-      .then(async (r) => {
-        if (!live) return;
-        if (r.status === 401) return setLoad({ state: 'locked' });
-        const j = await r.json();
-        if (!r.ok || !j.ok) return setLoad({ state: 'error', message: String(j.error ?? r.status) });
-        setLoad({ state: 'ready', data: j });
-      })
-      .catch((e) => live && setLoad({ state: 'error', message: String(e) }));
-    return () => {
-      live = false;
-    };
-  }, []);
+  const load = useToday();
 
   if (load.state === 'loading') return <section className="today" aria-busy="true" />;
   if (load.state === 'locked') {
@@ -76,8 +55,11 @@ export default function Today() {
 function Cards({ data }: { data: TodayData }) {
   return (
     <section className="today">
-      <Quiz cards={data.quiz} />
-      <Saves saves={data.saves} kept={data.kept} />
+      {/* Keyed on the cards, so when the fresh copy replaces this device's saved one the card state
+          starts over instead of pointing into a list that changed under it. */}
+      <Quiz key={data.quiz.map((q) => q.id).join()} cards={data.quiz} />
+      <LadderBar l={data.ladder} />
+      <Saves key={data.saves.map((q) => q.id).join()} saves={data.saves} kept={data.kept} />
       <Remind />
     </section>
   );
@@ -99,6 +81,7 @@ export function Quiz({ cards, heading = 'Today' }: { cards: QuizCard[]; heading?
        here while it stays due in the database, and it would come back tomorrow with no trace. */
     if (!ok) return setFailed(true);
     setFailed(false);
+    forgetCard(card.id);
     setShown(false);
     setAt((i) => i + 1);
   };
@@ -162,6 +145,7 @@ function Saves({ saves, kept: keptIn }: { saves: SaveCard[]; kept: SaveCard[] })
     setBusy(false);
     if (!ok) return setFailed(true);
     setFailed(false);
+    forgetSave(card.id, verdict);
     setLast({ card, verdict });
     if (verdict === 'keep') setKept((k) => [card, ...k]);
     setAt((i) => i + 1);
@@ -219,6 +203,27 @@ function Saves({ saves, kept: keptIn }: { saves: SaveCard[]; kept: SaveCard[] })
           </ul>
         </details>
       )}
+    </div>
+  );
+}
+
+/* Where every question stands: known (spaced 16 days or more), learning, never seen. Shown once
+   anything has been graded, because before that it is one grey bar saying "nothing yet". Darker is
+   further along, the same rule the music grid uses. */
+function LadderBar({ l }: { l: TodayData['ladder'] }) {
+  if (!l || l.known + l.learning === 0) return null;
+  const pct = (n: number) => `${(n / Math.max(1, l.total)) * 100}%`;
+  return (
+    <div className="ladder" role="img" aria-label={`${l.known} known, ${l.learning} learning, ${l.fresh} not seen yet`}>
+      <div className="lbar">
+        <i className="k" style={{ width: pct(l.known) }} />
+        <i className="l" style={{ width: pct(l.learning) }} />
+      </div>
+      <div className="lkey tnum">
+        <span><b className="k" />{l.known} known</span>
+        <span><b className="l" />{l.learning} learning</span>
+        <span><b />{l.fresh} new</span>
+      </div>
     </div>
   );
 }

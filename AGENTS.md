@@ -911,6 +911,15 @@ on GitHub as of 2026-08-10 (`silvio-hoodii/hoodii-studio-site`). Git history was
 secrets first; keep it that way: dependency/API keys go in `.env.local` (gitignored) or Vercel env
 vars, never inline.
 
+## Where the functions run: pdx1, next to the database
+
+**Since 2026-09-27 `vercel.json` pins `regions: ["pdx1"]` (Portland).** Until then every function ran
+in Vercel's default `iad1` (Virginia) while Neon lives in `us-west-2` (Oregon) and his requests enter
+at the `pdx1` edge, so every database round trip crossed the continent twice. Read the proof off any
+response: `x-vercel-id: pdx1::iad1::...` meant edge Portland, function Virginia. His words: the pages
+took "a little more time to load ... in every app". Keep the function region beside the Neon region;
+if the database ever moves, this line moves with it.
+
 ## What costs money, and the gate that is NOT in this repo
 
 **Four Vercel firewall rules protect this site and none of them are visible in these files.**
