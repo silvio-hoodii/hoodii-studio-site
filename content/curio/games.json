@@ -1,0 +1,55 @@
+{
+  "$comment": "Games and apps that teach something by making him recall it, rendered under Games on /curio. Started 2026-09-26 from his ask: 'I'm interested in all this, but I don't want to lose it ... if there's more, you can just keep finding and adding them'. He leans free; paid only if it is good enough. Every url was fetched on 2026-09-27 and answered 200 with the right page title (Merlin and Seek point at Google Play because their own sites refuse non-browser requests). Artle (National Gallery of Art) was dropped because its page could not be confirmed. Within a group, the order is the order to try them in. `learn` and `do` render; keep each to a few words. `cost` is one of free | paid | free+paid.",
+  "groups": [
+    {
+      "name": "Maps and flags",
+      "items": [
+        { "name": "Seterra", "url": "https://www.geoguessr.com/quiz/seterra", "learn": "Countries, capitals and flags", "do": "One region until you hit 100%, then the next", "cost": "free" },
+        { "name": "Ultimate Geography (Anki deck)", "url": "https://github.com/anki-geo/ultimate-geography", "learn": "Every country's map, flag and capital, kept for good", "do": "AnkiDroid, Get shared decks, search Ultimate Geography", "cost": "free" },
+        { "name": "AnkiDroid", "url": "https://play.google.com/store/apps/details?id=com.ichi2.anki", "learn": "The flashcard app the deck runs in", "cost": "free" },
+        { "name": "Worldle", "url": "https://worldle.teuteuf.fr", "learn": "A country from its outline, daily", "cost": "free" },
+        { "name": "Flagle", "url": "https://www.flagle.io", "learn": "A flag, daily", "cost": "free" },
+        { "name": "Globle", "url": "https://globle-game.com", "learn": "Where countries sit relative to each other", "cost": "free" },
+        { "name": "Travle", "url": "https://travle.earth", "learn": "Borders: get from one country to another", "cost": "free" },
+        { "name": "Tradle", "url": "https://oec.world/en/games/tradle", "learn": "A country from what it exports", "cost": "free" },
+        { "name": "OpenGuessr", "url": "https://openguessr.com", "learn": "Where in the world a street photo is", "cost": "free" },
+        { "name": "GeoGuessr", "url": "https://www.geoguessr.com", "learn": "The same, the original, harder", "cost": "paid" }
+      ]
+    },
+    {
+      "name": "History",
+      "items": [
+        { "name": "Wikitrivia", "url": "https://wikitrivia.tomjwatson.com", "learn": "Put real events in date order", "cost": "free" },
+        { "name": "TimeGuessr", "url": "https://timeguessr.com", "learn": "Where and when a photo was taken, daily", "cost": "free" },
+        { "name": "Chronophoto", "url": "https://www.chronophoto.app", "learn": "The year a photo was taken", "cost": "free" }
+      ]
+    },
+    {
+      "name": "Numbers and logic",
+      "items": [
+        { "name": "Lichess puzzles", "url": "https://lichess.org/training", "learn": "Chess tactics, rated as you go", "cost": "free" },
+        { "name": "Zetamac", "url": "https://arithmetic.zetamac.com", "learn": "Mental arithmetic, two minutes", "cost": "free" },
+        { "name": "Nerdle", "url": "https://nerdlegame.com", "learn": "Wordle with an equation, daily", "cost": "free" },
+        { "name": "Khan Academy", "url": "https://www.khanacademy.org", "learn": "Maths, science, economics, with practice", "cost": "free" },
+        { "name": "Brilliant", "url": "https://brilliant.org", "learn": "Maths, logic, computer science, by solving", "cost": "paid" }
+      ]
+    },
+    {
+      "name": "Nature and sky",
+      "items": [
+        { "name": "Merlin Bird ID", "url": "https://play.google.com/store/apps/details?id=com.labs.merlinbirdid.app", "learn": "Birds around you, by their song", "cost": "free" },
+        { "name": "Seek", "url": "https://play.google.com/store/apps/details?id=org.inaturalist.seek", "learn": "Point the camera at a plant or bug, get its name", "cost": "free" },
+        { "name": "Metazooa", "url": "https://metazooa.com", "learn": "An animal, through the tree of life, daily", "cost": "free" },
+        { "name": "Stellarium Web", "url": "https://stellarium-web.org", "learn": "Stars and constellations overhead", "cost": "free" }
+      ]
+    },
+    {
+      "name": "Words, music, trivia",
+      "items": [
+        { "name": "NYT Games", "url": "https://www.nytimes.com/crosswords", "learn": "English words and idioms", "do": "Wordle, Connections, Strands and the Mini are free", "cost": "free+paid" },
+        { "name": "musictheory.net exercises", "url": "https://www.musictheory.net/exercises", "learn": "Notes, intervals and chords by ear and on the staff", "cost": "free" },
+        { "name": "Sporcle", "url": "https://www.sporcle.com", "learn": "Timed quizzes on anything", "cost": "free" }
+      ]
+    }
+  ]
+}

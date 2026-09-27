@@ -1,6 +1,10 @@
 import { getDigests, getItems, getSummary } from '@/lib/curio/db';
 import type { CurioDigest, CurioItem } from '@/lib/curio/db';
-import { today } from '@/lib/day';
+import Today from './Today';
+import gamesJson from '../../../content/curio/games.json';
+
+interface GameItem { name: string; url: string; learn: string; do?: string; cost: 'free' | 'paid' | 'free+paid' }
+const games = gamesJson as unknown as { groups: { name: string; items: GameItem[] }[] };
 
 /* ISR, one hour. A one-way mirror of CuriosityOS/log.md that only changes when a sync runs, so a
  * render per request was pure waste. */
@@ -82,111 +86,68 @@ function Row(it: CurioItem) {
   );
 }
 
-/* How many ledger rows stay open. */
-const OPEN_ROWS = 12;
-
-/* How many mornings stay open. Six is about a screen and a half of reading, which is enough to see
-   what this is without committing to all of it. */
-const OPEN_MORNINGS = 6;
+/* One game or app off content/curio/games.json. The name is the link; what it teaches sits under
+   it, the way the hub's rows carry a second line. */
+function Game(g: GameItem) {
+  return (
+    <li className="game" key={g.url}>
+      <a className="gname" href={g.url} target="_blank" rel="noreferrer">{g.name}</a>
+      {/* Only the exceptions are labelled. Nearly every row is free, and "free" twenty times down
+          the right edge was the loudest thing in the list. */}
+      {g.cost !== 'free' && (
+        <span className="gcost">{g.cost === 'free+paid' ? 'part paid' : 'paid'}</span>
+      )}
+      <span className="glearn">{g.learn}</span>
+      {g.do && <span className="gdo">{g.do}</span>}
+    </li>
+  );
+}
 
 export default async function CurioPage() {
   const [summary, digests, items] = await Promise.all([getSummary(), getDigests(), getItems()]);
-  const recent = digests.slice(0, OPEN_MORNINGS);
-  const earlier = digests.slice(OPEN_MORNINGS);
-
-  /* Against the CALGARY day, from `src/lib/day.ts`, not `new Date()`. `latestDay` is a date string
-     the digest job wrote in local time, so comparing it to a UTC today reports one extra day every
-     evening after six, which is the same fault that put four swim date columns a day apart and that
-     /french's whole ceiling reset on. */
-  const staleDays = summary.latestDay
-    ? Math.floor((Date.parse(`${today()}T00:00:00Z`) - Date.parse(`${summary.latestDay}T00:00:00Z`)) / 86_400_000)
-    : null;
 
   return (
     <div className="curio">
-      {/* Every other surface opens with a title. These two opened straight into a paragraph, so
-          their only name was the 12px word in the header bar, and a screen reader found no h1 at
-          all on the page. */}
       <h1>Curio</h1>
 
+      {/* THE PAGE WAS AN ARCHIVE OF EMAILS UNTIL 2026-09-27, and he had stopped opening the emails.
+          It opens on something to do now: recall, then check. Today renders in the browser and
+          only for a signed-in device; see Today.tsx for why it is not rendered here. */}
+      <Today />
+
+      <h2 className="sec">Games</h2>
+      <div className="games">
+        {games.groups.map((grp) => (
+          <div className="ggroup" key={grp.name}>
+            <h3>{grp.name}</h3>
+            <ul>{grp.items.map(Game)}</ul>
+          </div>
+        ))}
+      </div>
+
+      {/* The mornings and the one-line ledger stay, folded. The morning email is paused (the
+          scheduled task is disabled, not deleted), so the three-day "no morning since" warning
+          that used to sit here would now fire forever about a choice rather than a failure, and
+          it went with the change. */}
+      <h2 className="sec">Archive</h2>
       <div className="stat">
-        <span className="live tnum">{summary.items}</span> answered
+        <span className="tnum">{summary.items}</span> answered
         <span className="dot">·</span>
-        <span className="live tnum">{summary.digests}</span> mornings
+        <span className="tnum">{summary.digests}</span> mornings
         {summary.latestDay && <><span className="dot">·</span>latest {summary.latestDay}</>}
       </div>
-
-      <h2 className="sec">The mornings</h2>
-      {/* This page had no answer for being empty. With no rows it rendered two headings over blank
-          space and a footer link, which reads as broken rather than as new, and the one thing a
-          reader needs to know at that moment is whether the digest is arriving. Both states name
-          the reason rather than saying "no data". */}
-      {/* Inside .digests rather than beside it, so the section keeps the rule under its heading:
-          `.sec + .digests` is what draws it, and an empty state that skipped the wrapper would
-          take the section's own top line away with it. */}
-      {/* THE JOB STOPPING IS A STATE THIS PAGE HAD NO WAY TO SHOW, and the empty state below was the
-          proof: it only rendered with ZERO rows, so once any content existed the page kept serving
-          yesterday's archive forever with no aging signal beyond the small "latest {day}" the reader
-          has to subtract from today himself. /health and /music both earned a 36-hour shout; /curio
-          had `latestDay` sitting right there and did not use it (05-small-apps C3).
-
-          Where the shout goes is the point. `CuriosityOS/digest/run-curiosity.ps1` logs `WARN: curio
-          sync exit ...` and carries on, into a log nobody reads. A warning in a log is not a
-          mechanism; a line on the page he opens is.
-
-          THREE DAYS, not 36 hours, and not seven. The digest is daily, so two missed mornings is
-          noise (a laptop off for a weekend) and three is a stopped job. Unlike /music the loss is
-          recoverable, because log.md keeps accumulating on the laptop whatever this mirror does,
-          which is why this is a note and not the alarm /music gets. */}
-      {staleDays != null && staleDays >= 3 && recent.length > 0 && (
-        <p className="empty">
-          No morning since {summary.latestDay}, {staleDays} days ago.
-        </p>
-      )}
-
-      <div className="digests">
-        {recent.length === 0 ? (
-          <p className="empty">
-            No mornings yet.
-          </p>
-        ) : (
-          recent.map(Morning)
-        )}
-      </div>
-
-      {/* This page was 28,000px tall and every one of them was open. Two answers a morning is not a
-          lot; two hundred of them in one scroll is, and the newest is the one worth arriving at.
-          A native <details> rather than pagination or a "load more" button: the older mornings stay
-          in the document, so browser find-in-page and a crawler both still reach them, and it costs
-          no client JavaScript on a page that otherwise ships none. */}
-      {earlier.length > 0 && (
+      {digests.length > 0 && (
         <details className="more">
-          <summary>{earlier.length} earlier mornings, back to {earlier[earlier.length - 1]?.day}</summary>
-          <div className="digests">
-            {earlier.map(Morning)}
-          </div>
+          <summary>The mornings</summary>
+          <div className="digests">{digests.map(Morning)}</div>
         </details>
       )}
-
-      <h2 className="sec">Everything, in one line each</h2>
-      <div className="ledger">
-        {items.length === 0 ? (
-          <p className="empty">
-            Nothing logged yet.
-          </p>
-        ) : (
-          items.slice(0, OPEN_ROWS).map(Row)
-        )}
-      </div>
-      {/* The ledger was 13,289px of a 19,108px page at 390 wide: 64 rows, and "one line each" is a
-          line and a half on a phone. Same fold as the mornings above. */}
-      {items.length > OPEN_ROWS && (
+      {items.length > 0 && (
         <details className="more">
-          <summary>the other {items.length - OPEN_ROWS}</summary>
-          <div className="ledger">{items.slice(OPEN_ROWS).map(Row)}</div>
+          <summary>Everything, in one line each</summary>
+          <div className="ledger">{items.map(Row)}</div>
         </details>
       )}
-
     </div>
   );
 }

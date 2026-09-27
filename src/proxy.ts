@@ -86,6 +86,17 @@ export function proxy(req: NextRequest) {
    * prefix, AND '/bike/api/:path*' in `config.matcher` below. A prefix without a matcher entry
    * reads as a gate and is none, because the proxy never runs on a path the matcher does not
    * name. Verified in the failing direction rather than assumed. */
+  /* /curio/api is THE ONE PREFIX WHERE READS ARE GATED TOO, since 2026-09-27. It serves his
+   * ReadLater pile (curio_save), which content/curio/schema.sql has kept off every public surface
+   * since the day /curio was built: unfiltered personal reading, including job-hunting links. The
+   * quiz grades ride along because they come back in the same response. The PAGE stays public; the
+   * daily cards are fetched by the browser and render only for a signed-in device. Two edits, as
+   * with /swim and /bike: this block AND '/curio/api/:path*' in `config.matcher`. */
+  if (pathname.startsWith('/curio/api')) {
+    if (authed) return NextResponse.next();
+    return NextResponse.json({ ok: false, error: 'locked' }, { status: 401 });
+  }
+
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
       || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')
       || pathname.startsWith('/swim/api') || pathname.startsWith('/bike/api')) {
@@ -129,5 +140,7 @@ export const config = {
     '/swim/api/:path*',
     /* Same, and /bike has no pages at all yet. Added with the route, not after it. */
     '/bike/api/:path*',
+    /* Reads AND writes, see the /curio/api block above. */
+    '/curio/api/:path*',
   ],
 };

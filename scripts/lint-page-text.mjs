@@ -57,6 +57,7 @@ const CONTENT = [
   ['content/swim/plan.json', /^\.(?:pullBuoyRule|structure\.note|theGoal\.(?:target|whatThatActuallyIs)|theOneTechniqueChange\.what|cues\[\d+\]\.(?:cue|test|name)|structure\.calibration\.(?:what|test))$/],
   ['content/swim/coaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:do|check|name)$/],
   ['content/swim/teaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:say|show|watch|see)$|^\.beforeYouStart\.body$/],
+  ['content/curio/games.json', /^\.groups\[\d+\]\.(?:name|items\[\d+\]\.(?:name|learn|do))$/],
 ];
 
 function jsonStrings(obj, path = '', out = []) {

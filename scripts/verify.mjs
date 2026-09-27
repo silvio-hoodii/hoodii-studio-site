@@ -150,6 +150,7 @@ const GATES = [
    * strings, so "salted   BUTTER" beat "Salted butter" and the row rendered under the sloppier of
    * the two names. */
   ['shoplist-tests', process.execPath, ['--experimental-strip-types', 'src/lib/kitchen/shoplist.test.ts']],
+  ['curio-spacing-tests', process.execPath, ['--experimental-strip-types', 'src/lib/curio/spacing.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

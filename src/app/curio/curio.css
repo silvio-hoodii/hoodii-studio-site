@@ -236,3 +236,189 @@
 /* The page title. It had none: /curio opened straight into a paragraph and its only name was the
    word in the header bar. The scale comes from globals.css. */
 .curio h1 { margin: 0 0 4px; }
+
+
+/* ---- today: the quiz, the saves, the reminder (since 2026-09-27) ----
+ *
+ * The one place on this page that is not prose. Same system: a rule above each card rather than a
+ * box around it, buttons at the 44px floor he taps one-handed, and --signal kept for the one thing
+ * that is true right now, which here is "new". Two buttons side by side at equal width so neither
+ * answer is the bigger, easier target. */
+
+.curio .today { min-height: 12px; }
+.curio .today .tblock + .tblock { margin-top: 8px; }
+
+.curio .qcard,
+.curio .scard {
+  padding: 4px 0 18px;
+}
+
+.curio .qmeta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 8px;
+}
+
+.curio .qnew { color: var(--signal); margin-left: 10px; font-weight: 600; }
+
+.curio .qq {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 14px;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+
+.curio .qa {
+  font-size: 15.5px;
+  line-height: 1.65;
+  margin: 0 0 16px;
+  max-width: 62ch;
+  padding-left: 12px;
+  border-left: 2px solid var(--border-strong);
+}
+
+.curio .qa a { margin-left: 4px; }
+.curio .qa .unverified { margin-left: 8px; }
+
+.curio .stitle {
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 6px;
+  max-width: 48ch;
+}
+
+.curio .stitle a { color: inherit; text-underline-offset: 3px; }
+
+.curio .sline {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  margin: 0 0 16px;
+  max-width: 62ch;
+}
+
+.curio .acts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 420px;
+}
+
+.curio .acts button,
+.curio .undo {
+  font: inherit;
+  font-size: 15px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.curio .acts button.primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.curio .acts button:disabled,
+.curio .undo:disabled { opacity: 0.5; cursor: default; }
+
+.curio .undo {
+  border-color: transparent;
+  background: none;
+  color: var(--muted-foreground);
+  padding-left: 0;
+  font-size: 13.5px;
+}
+
+.curio .done {
+  font-size: 15px;
+  color: var(--muted-foreground);
+  margin: 0 0 12px;
+}
+
+.curio .err {
+  font-size: 13.5px;
+  color: var(--destructive);
+  margin: 10px 0 0;
+}
+
+.curio .kept {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.curio .kept li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.curio .remind { margin-top: 22px; }
+.curio .remind .acts { max-width: 420px; }
+
+
+/* ---- games ---- */
+
+.curio .ggroup + .ggroup { margin-top: 22px; }
+
+.curio .ggroup h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.curio .ggroup ul { list-style: none; padding: 0; margin: 0; }
+
+/* Name and cost on one line, what it teaches under it: the same two-level row the hub uses. */
+.curio .game {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.curio .gname {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-underline-offset: 3px;
+  /* The tap target reaches into the row's own padding rather than pushing the line under it down:
+     44px tall for the finger, about 24px of it visible. */
+  min-height: 44px;
+  margin: -10px 0 -8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.curio .gcost {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  align-self: center;
+}
+
+.curio .glearn,
+.curio .gdo {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.curio .gdo { font-style: italic; }

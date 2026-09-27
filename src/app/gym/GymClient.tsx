@@ -1560,6 +1560,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         <a href="/health?s=volume">How the two sessions add up, muscle by muscle</a>
       </p>
 
+      {/* THE SECOND POINTER, 2026-09-27, and the reason is the same one: reach. /gym is the one page
+        * he opens every training day, and Curio's daily questions were built to be answered in about
+        * the length of a rest. One line, same place, same size as the one above. */}
+      <p className="ex-cue">
+        <a href="/curio">Today&apos;s questions</a>
+      </p>
+
       <div className={`timer-bar${timer ? '' : ' off'}`}>
         <div>
           <div className="timer-label">{timer?.label} rest</div>

@@ -1,7 +1,8 @@
 import { neon } from '@neondatabase/serverless';
 
-/* Read-only. CuriosityOS/log.md is the ledger and content/curio/sync.mjs pushes a mirror here;
- * nothing on the web ever writes back, which is why there is no /curio/api at all. */
+/* CuriosityOS/log.md is the ledger and content/curio/sync.mjs pushes a mirror here. The web never
+ * writes to the mirror. Since 2026-09-27 it does write quiz grades and save verdicts, to their own
+ * tables, through /curio/api and `today.ts`; see content/curio/schema.sql for why they are apart. */
 const DATABASE_URL =
   process.env.CURIO_DATABASE_URL || process.env.GYM_DATABASE_URL || process.env.KITCHEN_DATABASE_URL;
 if (!DATABASE_URL) {
