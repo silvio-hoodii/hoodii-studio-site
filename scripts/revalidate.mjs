@@ -3,8 +3,11 @@
  * than on its six-hour timer. Called at the end of HealthOS/sync/run-health-sync.ps1 and
  * ReadLaterOS/run-readlater.ps1; see src/app/api/revalidate/route.ts for why.
  *
- *   node scripts/revalidate.mjs             # the index
- *   node scripts/revalidate.mjs / /curio    # named pages
+ *   node scripts/revalidate.mjs                  # the index
+ *   node scripts/revalidate.mjs index curio      # by name: index, music, curio, archive, reading
+ *
+ * NAMES, NOT PATHS. Git Bash rewrites a bare `/` argument into `C:/Program Files/Git/`, so the
+ * first live call revalidated nothing while printing ok. A name cannot be mangled by any shell.
  *
  * CRON_SECRET comes from the environment or from .env.local, the same way scripts/lib/db-url.mjs
  * finds the database. Exits 0 and says so when the secret is absent: a fresh clone has none, and a
@@ -31,7 +34,8 @@ if (!token) {
   console.log('revalidate: no CRON_SECRET here, nothing sent');
   process.exit(0);
 }
-const paths = process.argv.slice(2);
+const NAMES = { index: '/', music: '/music', curio: '/curio', archive: '/curio/archive', reading: '/reading' };
+const paths = process.argv.slice(2).map((a) => NAMES[a] ?? a);
 let status = 0;
 let text = '';
 try {
