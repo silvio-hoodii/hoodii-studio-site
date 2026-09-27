@@ -1,4 +1,3 @@
-import { listDishes, openInbox } from '@/lib/kitchen/cookbook';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
 import { today } from '@/lib/day';
@@ -7,14 +6,16 @@ import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
 import SiteFooter from '@/components/SiteFooter';
 import NowPlaying from '@/components/NowPlaying';
-import { getBodyCompSummary, getSyncLiveness } from '@/lib/health/db';
-import { getSummary as getFrenchSummary } from '@/lib/french/db';
+import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSyncLiveness } from '@/lib/health/db';
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
-import { getSummary as getMusicSummary } from '@/lib/music/db';
-import { getSwimFrontRow } from '@/lib/swim/db';
-import { allPacks } from '@/lib/reading/packs';
-import { getReadingFrontRow } from '@/lib/reading/queue-db';
+import { getRecentPlays, getSummary as getMusicSummary, spotifyImage } from '@/lib/music/db';
+import { getSwimFrontRow, getSwimHistory } from '@/lib/swim/db';
+import { getShelves } from '@/lib/reading/goodreads';
+import { BarSpark, DayStrip, LineSpark } from '@/components/Spark';
+import Track from '@/components/Track';
+import HubQuiz from './HubQuiz';
 import './hub.css';
+import './curio/curio.css';
 
 /* ISR. Added 2026-08-22 at 60 seconds after Active CPU passed the Hobby allowance, raised to 600
  * on 2026-08-25 after measuring what it was actually costing.
@@ -102,43 +103,23 @@ interface Row {
   href?: string;
   external?: boolean;
   off?: boolean;
-}
-
-async function kitchenRow(): Promise<Row> {
-  try {
-    /* Rebuilt 2026-09-05. This row used to print how many dishes he could cook right now, scored
-     * against a fridge model that stopped being fed on 2026-08-23 and kept being read. The kitchen
-     * is a cookbook now: dishes he chose, each with the publisher's recipe and a shopping list. The
-     * honest numbers are how many there are and whether an ask of his is still waiting for a session. */
-    const [dishes, inbox] = await Promise.all([listDishes(), openInbox()]);
-    const n = dishes.length;
-    return {
-      label: 'Kitchen',
-      line: (
-        <>
-          <span className="live tnum">{n}</span> dish{n === 1 ? '' : 'es'} with a recipe and a list
-        </>
-      ),
-      sub: inbox.length
-        ? `${inbox.length} ask${inbox.length === 1 ? '' : 's'} waiting for a session`
-        : dishes[0]
-          ? `latest: ${dishes[0].name}`
-          : undefined,
-      href: '/kitchen',
-    };
-  } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Kitchen', line: 'Dishes I chose, with their recipes and lists', href: '/kitchen' };
-  }
+  /* A word-sized picture of the same fact, since 2026-09-27 ("more graphic stuff instead of just
+     walls of text"). See src/components/Spark.tsx. */
+  viz?: React.ReactNode;
 }
 
 async function gymRow(): Promise<Row> {
   try {
-    const [nextUp, program, streak] = await Promise.all([
+    const [nextUp, program, streak, adherence] = await Promise.all([
       computeNextUp(today()),
       loadProgram(),
       getTrainingStreak(),
+      getLiftingAdherence(28),
     ]);
+    /* The last four weeks as squares: lifted, rested, or not reported yet. */
+    const strip = adherence.days.map((d) => (!d.known ? 'unknown' : d.trained ? 'on' : 'off') as 'on' | 'off' | 'unknown');
+    const lifted = adherence.days.filter((d) => d.trained).length;
+    const viz = <DayStrip days={strip} label={`${lifted} of the last ${strip.length} days trained`} />;
     const day = program.days[nextUp.nextDay];
     const next = day ? splitName(day) : nextUp.nextDay;
     const since = nextUp.daysSince;
@@ -162,6 +143,7 @@ async function gymRow(): Promise<Row> {
          the watch recorded advanced the count one click away and not here. */
       sub: streak.run > 0 ? `${streak.run}-day streak` : 'logged between sets',
       href: '/gym',
+      viz,
     };
   } catch {
     // A database hiccup must not take the front door down with it.
@@ -183,8 +165,10 @@ async function healthRow(): Promise<Row> {
      * The distinction matters in the other direction too: a dead mirror is not evidence he stopped
      * training, and telling him he has not measured when the pipeline is what broke sends him to the
      * scale to fix a laptop. */
-    const [summary, sync] = await Promise.all([getBodyCompSummary(), getSyncLiveness()]);
+    const [summary, sync, series] = await Promise.all([getBodyCompSummary(), getSyncLiveness(), getBodyCompSeries(120)]);
     if (!summary.latest?.kg) throw new Error('no readings');
+    const kgs = series.map((p) => Number(p.kg)).filter((v) => Number.isFinite(v));
+    const viz = <LineSpark values={kgs} label={`Weight over the last 120 days, ${kgs.length} readings`} />;
 
     /* `.live` is reserved for a value that is true right now, so a reading two weeks old must not
      * wear it, and neither must one arriving through a pipeline that has stopped. */
@@ -194,6 +178,7 @@ async function healthRow(): Promise<Row> {
         line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
         sub: 'the watch sync has stopped',
         href: '/health',
+        viz,
       };
     }
     if (summary.stale) {
@@ -202,6 +187,7 @@ async function healthRow(): Promise<Row> {
         line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
         sub: `no measurement since ${summary.latest.date}`,
         href: '/health',
+        viz,
       };
     }
     return {
@@ -212,6 +198,7 @@ async function healthRow(): Promise<Row> {
       line: <>Weight <span className={(summary.daysSinceLatest ?? 0) <= 1 ? 'live tnum' : 'tnum'}>{summary.latest.kg.toFixed(1)} kg</span></>,
       sub: `last measured ${daysAgoText(summary.daysSinceLatest ?? 0)}`,
       href: '/health',
+      viz,
     };
   } catch {
     // A database hiccup must not take the front door down with it.
@@ -219,81 +206,35 @@ async function healthRow(): Promise<Row> {
   }
 }
 
-/* A ROW RETURNS NULL WHEN ITS APP HAS NOTHING CURRENT TO SAY, since 2026-09-15, on his call. French
- * and Reading were two of eight rows and one said "No cards yet" while the other said its library
- * check was 26 days old, so a quarter of the front door advertised an app with nothing in it. Both
- * come back on their own the moment the data does: this is a condition, not a deletion. */
-async function frenchRow(): Promise<Row | null> {
-  try {
-    const s = await getFrenchSummary();
-    if (s.total === 0) return null;
-    return {
-      label: 'French',
-      line: s.dueNow > 0 ? <><span className="live tnum">{s.dueNow}</span> due</> : 'nothing due today',
-      sub: s.streak > 0 ? `${s.streak}-day streak` : `${s.total} cards`,
-      href: '/french',
-    };
-  } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'French', line: 'Review queue built from three physical books', href: '/french' };
-  }
-}
-
+/* READING IS GOODREADS SINCE 2026-09-27. The row it replaces counted a ReadingOS queue that had not
+ * been synced in a month and hid itself for being stale. This one shows the cover of what he is
+ * reading, off the same cached feed /reading uses, so it costs no database call at all. */
 async function readingRow(): Promise<Row | null> {
   try {
-    /* ONE Neon round trip for all six numbers plus liveness, not five concurrent ones. See
-       `getReadingFrontRow` in src/lib/reading/queue-db.ts. `allPacks()` is the filesystem and stays
-       separate. */
-    const [packs, r] = await Promise.all([allPacks(), getReadingFrontRow()]);
-    if (!packs.length && !r.queued) throw new Error('no packs, no queue');
-    /* Hidden past the seven-day window rather than shouting about it. See the note above frenchRow. */
-    if (r.liveness.stale) return null;
-
-    /* Counted off the files and the mirror, like every other row that has data behind it. This
-       row's own history is why: the hand-written version once said "The shelf, the queue, and
-       whether a book is worth keeping" before there was any queue feature at all, and it sat there
-       reading perfectly plausibly until somebody opened the deployed page. Writing a fact down
-       here that a script did not just compute is the exact mistake that comment is about.
-
-       "55 published lists" WAS SUCH A FACT, typed into the sub line below this very comment, and it
-       is `r.sourceLists` now (04-reading P3-1). It was true when written and AGENTS.md, which
-       carries the same number in prose, already said 33.
-
-       "RIGHT NOW" IS GATED, since 2026-08-28. This row claimed "N of the next ten on a home-branch
-       shelf right now" off a snapshot that was six days old the day the audit read it, and it never
-       called getLiveness at all (04-reading P1-1, audit theme T3). The sync is run by hand and holds
-       move daily. So past a day the sentence dates itself instead of asserting a present tense: "on
-       a home-branch shelf as of Aug 20" is still a useful thing to know and is the difference
-       between a mirror and a lie. Past the seven-day window the count is dropped entirely, because
-       at that point nobody knows. */
-    const borrowNowSayable = r.borrowNowAtHome > 0;
-    const asOf = r.liveness.acquireGenerated
-      ? new Date(r.liveness.acquireGenerated).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
-      : null;
-
+    const { current, read } = await getShelves();
+    const now = current[0];
+    if (!now && !read.length) return null;
     return {
       label: 'Reading',
-      line: borrowNowSayable
-        ? (r.liveness.homeBranchNowStale
-            ? <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf as of {asOf}, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>
-            : <><span className="tnum">{r.borrowNowAtHome}</span> of the next ten on a home-branch shelf right now, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>)
-        : <><span className="tnum">{r.queued}</span> queued to read next, <span className="tnum">{r.shelfWorth.toLocaleString()}</span> worth pulling in a shop</>,
-      /* The stale shout that lived here is gone with the row: past the window the row is hidden. */
-      sub: r.wants > 0
-        ? `${r.shelfTotal.toLocaleString()} books scored, ${r.wants} saved to want, ${packs.length} finished with recall cards`
-        : `${r.shelfTotal.toLocaleString()} books scored from ${r.sourceLists} published lists, ${packs.length} finished with recall cards`,
+      line: now ? <>Reading <b>{now.title}</b></> : <><span className="tnum">{read.length}</span> read</>,
+      sub: now ? now.author : read[0]?.title,
       href: '/reading',
+      viz: now ? (
+        // eslint-disable-next-line @next/next/no-img-element -- a 40px Goodreads cover, not worth an optimiser call
+        <img className="vcover" src={now.cover} alt="" loading="lazy" />
+      ) : undefined,
     };
   } catch {
-    // A filesystem or Neon hiccup must not take the front door down with it.
-    return { label: 'Reading', line: 'The next ten to read, and a debrief for what I have finished', href: '/reading' };
+    return { label: 'Reading', line: 'What I am reading', href: '/reading' };
   }
 }
 
 async function swimRow(): Promise<Row> {
   try {
-    const s = await getSwimFrontRow();
+    const [s, hist] = await Promise.all([getSwimFrontRow(), getSwimHistory(120)]);
     if (!s.lastDate) throw new Error('nothing synced');
+    /* The last twelve swims as bars, oldest first. The store orders newest first. */
+    const swims = [...hist.sessions].sort((a, b) => (a.date < b.date ? -1 : 1)).filter((x) => (x.distanceM ?? 0) > 0).slice(-12).map((x) => x.distanceM ?? 0);
 
     /* THIS ROW USED TO COUNT POOLS. It read "N Calgary pools with lane swim open right now", off
        six scrapers and a nightly mirror, and all of that was deleted on 2026-08-26 along with the
@@ -318,6 +259,7 @@ async function swimRow(): Promise<Row> {
       ),
       sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0).toLocaleString('en-CA')} m`,
       href: '/swim',
+      viz: <BarSpark values={swims} label={`Distance of the last ${swims.length} swims`} />,
     };
   } catch {
     // A database hiccup must not take the front door down with it.
@@ -343,7 +285,20 @@ async function curioRow(): Promise<Row> {
 
 async function musicRow(): Promise<Row> {
   try {
-    const s = await getMusicSummary();
+    const [s, recent] = await Promise.all([getMusicSummary(), getRecentPlays(80)]);
+    /* The last six albums played, as covers. Distinct by album, newest first. */
+    const albums: { name: string; image: string }[] = [];
+    for (const p of recent) {
+      if (!p.albumImage || albums.some((a) => a.name === p.albumName)) continue;
+      albums.push({ name: p.albumName ?? '', image: spotifyImage(p.albumImage, 64) ?? p.albumImage });
+      if (albums.length === 6) break;
+    }
+    const viz = albums.length ? (
+      <span className="vcovers" aria-label="The last albums played">
+        {/* eslint-disable-next-line @next/next/no-img-element -- Spotify's 64px thumbnails, already sized */}
+        {albums.map((a) => <img key={a.name} src={a.image} alt="" loading="lazy" />)}
+      </span>
+    ) : undefined;
 
     /* A broken collector outranks any number this row could show. Plays are perishable: while the
      * refresh token is dead, listening is being lost permanently rather than merely not displayed,
@@ -387,6 +342,7 @@ async function musicRow(): Promise<Row> {
           ? `nothing new for ${newestAgeDays} days`
           : `${s.artists} artists, ${s.tracks} tracks`,
       href: '/music',
+      viz,
     };
   } catch {
     // A database hiccup must not take the front door down with it.
@@ -411,6 +367,7 @@ function RowView({ r }: { r: Row }) {
       <div className="body">
         <div className="line">{r.line}</div>
         {r.sub && <div className="sub">{r.sub}</div>}
+        {r.viz && <div className="viz">{r.viz}</div>}
       </div>
       {/* An app on this domain gets →, somebody else’s website gets ↗. */}
       <div className="arrow">{r.href && !r.off ? (r.external ? '↗' : '→') : '·'}</div>
@@ -426,10 +383,12 @@ function RowView({ r }: { r: Row }) {
 }
 
 export default async function Home() {
-  const [kitchen, gym, health, french, curio, music, swim, reading] = await Promise.all([
-    kitchenRow(), gymRow(), healthRow(), frenchRow(), curioRow(), musicRow(), swimRow(), readingRow(),
+  /* Kitchen and French left this list on 2026-09-27, on the usage audit and his call. The order is
+     the order he uses things, and it matches the app row in the header. */
+  const [gym, health, swim, curio, music, reading] = await Promise.all([
+    gymRow(), healthRow(), swimRow(), curioRow(), musicRow(), readingRow(),
   ]);
-  const rows = [kitchen, gym, health, french, curio, music, swim, reading, ...STATIC_ROWS].filter(
+  const rows = [gym, health, swim, curio, music, reading, ...STATIC_ROWS].filter(
     (r): r is Row => r !== null,
   );
 
@@ -465,6 +424,8 @@ export default async function Home() {
         * actual apps". The front door is the apps. Do not add a section about the person, the clients
         * or the process back without him asking for it. Recoverable from git history. */}
 
+      <Track app="home" />
+      <HubQuiz />
       <hr />
       <div className="rows">
         {rows.map((r) => <RowView key={r.label} r={r} />)}

@@ -243,17 +243,20 @@
  * The one place on this page that is not prose. Same system: a rule above each card rather than a
  * box around it, buttons at the 44px floor he taps one-handed, and --signal kept for the one thing
  * that is true right now, which here is "new". Two buttons side by side at equal width so neither
- * answer is the bigger, easier target. */
+ * answer is the bigger, easier target.
+ *
+ * `.hubq` is the same quiz card mounted on the index (src/app/HubQuiz.tsx), so the one card has one
+ * set of rules wherever it appears. */
 
-.curio .today { min-height: 12px; }
-.curio .today .tblock + .tblock { margin-top: 8px; }
+:is(.curio, .hubq) .today { min-height: 12px; }
+:is(.curio, .hubq) .today .tblock + .tblock { margin-top: 8px; }
 
-.curio .qcard,
-.curio .scard {
+:is(.curio, .hubq) .qcard,
+:is(.curio, .hubq) .scard {
   padding: 4px 0 18px;
 }
 
-.curio .qmeta {
+:is(.curio, .hubq) .qmeta {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11.5px;
   letter-spacing: 0.08em;
@@ -262,9 +265,9 @@
   margin-bottom: 8px;
 }
 
-.curio .qnew { color: var(--signal); margin-left: 10px; font-weight: 600; }
+:is(.curio, .hubq) .qnew { color: var(--signal); margin-left: 10px; font-weight: 600; }
 
-.curio .qq {
+:is(.curio, .hubq) .qq {
   font-size: 19px;
   font-weight: 600;
   line-height: 1.4;
@@ -273,7 +276,7 @@
   text-wrap: pretty;
 }
 
-.curio .qa {
+:is(.curio, .hubq) .qa {
   font-size: 15.5px;
   line-height: 1.65;
   margin: 0 0 16px;
@@ -282,10 +285,10 @@
   border-left: 2px solid var(--border-strong);
 }
 
-.curio .qa a { margin-left: 4px; }
-.curio .qa .unverified { margin-left: 8px; }
+:is(.curio, .hubq) .qa a { margin-left: 4px; }
+:is(.curio, .hubq) .qa .unverified { margin-left: 8px; }
 
-.curio .stitle {
+:is(.curio, .hubq) .stitle {
   font-size: 16.5px;
   font-weight: 600;
   line-height: 1.4;
@@ -293,9 +296,9 @@
   max-width: 48ch;
 }
 
-.curio .stitle a { color: inherit; text-underline-offset: 3px; }
+:is(.curio, .hubq) .stitle a { color: inherit; text-underline-offset: 3px; }
 
-.curio .sline {
+:is(.curio, .hubq) .sline {
   font-size: 14.5px;
   line-height: 1.6;
   color: var(--muted-foreground);
@@ -303,15 +306,15 @@
   max-width: 62ch;
 }
 
-.curio .acts {
+:is(.curio, .hubq) .acts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 8px;
   max-width: 420px;
 }
 
-.curio .acts button,
-.curio .undo {
+:is(.curio, .hubq) .acts button,
+:is(.curio, .hubq) .undo {
   font: inherit;
   font-size: 15px;
   min-height: 44px;
@@ -323,17 +326,17 @@
   cursor: pointer;
 }
 
-.curio .acts button.primary {
+:is(.curio, .hubq) .acts button.primary {
   background: var(--primary);
   color: var(--primary-foreground);
   border-color: var(--primary);
   font-weight: 600;
 }
 
-.curio .acts button:disabled,
-.curio .undo:disabled { opacity: 0.5; cursor: default; }
+:is(.curio, .hubq) .acts button:disabled,
+:is(.curio, .hubq) .undo:disabled { opacity: 0.5; cursor: default; }
 
-.curio .undo {
+:is(.curio, .hubq) .undo {
   border-color: transparent;
   background: none;
   color: var(--muted-foreground);
@@ -341,33 +344,33 @@
   font-size: 13.5px;
 }
 
-.curio .done {
+:is(.curio, .hubq) .done {
   font-size: 15px;
   color: var(--muted-foreground);
   margin: 0 0 12px;
 }
 
-.curio .err {
+:is(.curio, .hubq) .err {
   font-size: 13.5px;
   color: var(--destructive);
   margin: 10px 0 0;
 }
 
-.curio .kept {
+:is(.curio, .hubq) .kept {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.curio .kept li {
+:is(.curio, .hubq) .kept li {
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
   font-size: 14.5px;
   line-height: 1.45;
 }
 
-.curio .remind { margin-top: 22px; }
-.curio .remind .acts { max-width: 420px; }
+:is(.curio, .hubq) .remind { margin-top: 22px; }
+:is(.curio, .hubq) .remind .acts { max-width: 420px; }
 
 
 /* ---- games ---- */

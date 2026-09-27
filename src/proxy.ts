@@ -81,25 +81,24 @@ export function proxy(req: NextRequest) {
    * the calibration-baseline write with it. TWO edits were needed, not one: this prefix, and
    * '/swim/api/:path*' in the `config.matcher` at the bottom of this file. The matcher named no
    * /swim path at all, so adding the prefix on its own would have read as a gate and been none. */
-  /* /bike/api joined on 2026-08-27 with POST /bike/api/ride, the first write route on this site
-   * that exists before its page does. Same two edits as /swim, and for the same reason: this
-   * prefix, AND '/bike/api/:path*' in `config.matcher` below. A prefix without a matcher entry
-   * reads as a gate and is none, because the proxy never runs on a path the matcher does not
-   * name. Verified in the failing direction rather than assumed. */
   /* /curio/api is THE ONE PREFIX WHERE READS ARE GATED TOO, since 2026-09-27. It serves his
    * ReadLater pile (curio_save), which content/curio/schema.sql has kept off every public surface
    * since the day /curio was built: unfiltered personal reading, including job-hunting links. The
    * quiz grades ride along because they come back in the same response. The PAGE stays public; the
    * daily cards are fetched by the browser and render only for a signed-in device. Two edits, as
-   * with /swim and /bike: this block AND '/curio/api/:path*' in `config.matcher`. */
-  if (pathname.startsWith('/curio/api')) {
+   * with /swim: this block AND '/curio/api/:path*' in `config.matcher`.
+   *
+   * /me/api joined on 2026-09-27: the per-app open beacon (src/components/Track.tsx). Gated so that
+   * every row it writes is him; a stranger's beacon dies here with a 401 and never wakes Neon. */
+  if (pathname.startsWith('/curio/api') || pathname.startsWith('/me/api')) {
     if (authed) return NextResponse.next();
     return NextResponse.json({ ok: false, error: 'locked' }, { status: 401 });
   }
 
+  /* /french/api, /reading/api and /bike/api were here until 2026-09-27, when the usage audit found
+   * none of them had ever been written to and the routes were deleted. */
   if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
-      || pathname.startsWith('/french/api') || pathname.startsWith('/reading/api')
-      || pathname.startsWith('/swim/api') || pathname.startsWith('/bike/api')) {
+      || pathname.startsWith('/swim/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
     return NextResponse.json(
       { ok: false, error: 'locked', hint: 'Sign in once and this device stays signed in.' },
@@ -134,13 +133,10 @@ export const config = {
     '/kitchen/:path*',
     '/gym/:path*',
     '/health/:path*',
-    '/french/:path*',
-    '/reading/api/:path*',
     /* Only the API, not the pages: /swim is public like every other page on this site. */
     '/swim/api/:path*',
-    /* Same, and /bike has no pages at all yet. Added with the route, not after it. */
-    '/bike/api/:path*',
     /* Reads AND writes, see the /curio/api block above. */
     '/curio/api/:path*',
+    '/me/api/:path*',
   ],
 };

@@ -868,3 +868,80 @@
 }
 .reading .pickbtn:hover { background: var(--foreground); color: var(--background); }
 .reading .pickclear { font-size: 13px; color: var(--muted-foreground); }
+
+
+/* ---- the Goodreads page (2026-09-27) ----
+ * Covers carry the page. A thin rule under each row of covers rather than a card around each one,
+ * no shadow, radius near zero, and the one --signal is the count of books read. Stars sit in the
+ * foreground colour with the unfilled ones faded, not in gold: a star rating is a fact about him,
+ * not a decoration. */
+
+.reading .now { margin: 18px 0 8px; }
+
+.reading .nowrow {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 18px;
+  align-items: end;
+  padding-bottom: 18px;
+}
+.reading .nowrow + .nowrow { border-top: 1px solid var(--border); padding-top: 18px; }
+
+.reading .nt { font-size: 20px; font-weight: 600; line-height: 1.25; margin-top: 6px; }
+.reading .na { font-size: 15px; color: var(--muted-foreground); margin-top: 4px; }
+.reading .nm {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-top: 10px;
+}
+
+.reading .cov { display: block; text-decoration: none; color: inherit; }
+.reading .cov img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.reading .cov.big img { border-color: var(--border-strong); }
+
+.reading .covers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 18px 14px;
+  margin: 14px 0 8px;
+}
+.reading .covers.small { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 12px 10px; }
+
+.reading .stars {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--foreground);
+}
+.reading .stars .off { opacity: 0.2; }
+
+.reading .yr {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  margin: 18px 0 0;
+}
+
+.reading .links {
+  margin-top: 36px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+.reading .links a {
+  color: var(--foreground);
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  text-underline-offset: 3px;
+}

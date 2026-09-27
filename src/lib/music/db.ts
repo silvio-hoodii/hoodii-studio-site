@@ -1,4 +1,5 @@
 import 'server-only';
+import { today } from '@/lib/day';
 import { neon } from '@neondatabase/serverless';
 import type { PlayRow, TopRow, TimeRange } from './spotify';
 
@@ -246,4 +247,94 @@ export async function getLatestTop(kind: 'track' | 'artist', range: TimeRange): 
      where kind = ${kind} and time_range = ${range} and captured_on = ${capturedOn}
      order by rank`) as TopEntry[];
   return { capturedOn, entries };
+}
+
+/* ---- the pictures on /music (2026-09-27) ---------------------------------------------------------
+ *
+ * His ask: "it's just like showing off songs, so maybe we can just find something else to kind of
+ * show instead of just lists of songs, something more graphic". Everything below is counted from
+ * music_play, OUR collected history, never from Spotify's top charts.
+ *
+ * THE HOUR IS CALGARY'S BY ZONE NAME, and that is a deliberate exception to the workspace rule that
+ * an offset comes off the row: Spotify's recently-played gives a UTC instant and no offset, so there
+ * is nothing on the row to read. America/Edmonton is right for every play he makes at home, which is
+ * all of them so far. A play made abroad would land in the wrong hour of the clock and nowhere else.
+ */
+
+/** Spotify serves every album image at three sizes on the same hash; only the size prefix differs. */
+export function spotifyImage(url: string | null, size: 64 | 300 | 640): string | null {
+  if (!url) return null;
+  const code = size === 64 ? 'ab67616d00004851' : size === 300 ? 'ab67616d00001e02' : 'ab67616d0000b273';
+  return url.replace(/ab67616d0000(?:b273|1e02|4851)/, code);
+}
+
+export interface Listening {
+  days: number;
+  /** minutes[weekday 0=Mon..6=Sun][hour 0..23] */
+  clock: number[][];
+  perDay: { day: string; minutes: number }[];
+  albums: { name: string; artist: string; image: string | null; plays: number }[];
+  artists: Tally[];
+  totalMinutes: number;
+}
+
+export async function getListening(days = 60): Promise<Listening> {
+  const [clockRows, dayRows, albumRows, artistRows] = (await sql.transaction([
+    sql`
+      select extract(isodow from played_at at time zone 'America/Edmonton')::int as dow,
+             extract(hour   from played_at at time zone 'America/Edmonton')::int as hour,
+             sum(coalesce(duration_ms, 0))::float / 60000 as minutes
+        from music_play
+       where played_at > now() - make_interval(days => ${days})
+       group by 1, 2`,
+    sql`
+      select to_char(played_at at time zone 'America/Edmonton', 'YYYY-MM-DD') as day,
+             sum(coalesce(duration_ms, 0))::float / 60000 as minutes
+        from music_play
+       where played_at > now() - make_interval(days => 30)
+       group by 1 order by 1`,
+    sql`
+      select album_name as name, min(artist_name) as artist, max(album_image) as image, count(*)::int as plays
+        from music_play
+       where played_at > now() - make_interval(days => ${days}) and album_name is not null
+       group by album_name order by plays desc, name limit 15`,
+    sql`
+      select artist_name as name, count(*)::int as plays
+        from music_play
+       where played_at > now() - make_interval(days => ${days})
+       group by artist_name order by plays desc, name limit 8`,
+  ])) as [
+    Array<{ dow: number; hour: number; minutes: number }>,
+    Array<{ day: string; minutes: number }>,
+    Array<{ name: string; artist: string; image: string | null; plays: number }>,
+    Tally[],
+  ];
+
+  const clock = Array.from({ length: 7 }, () => Array<number>(24).fill(0));
+  let totalMinutes = 0;
+  for (const r of clockRows) {
+    const row = clock[r.dow - 1];
+    if (row) row[r.hour] = r.minutes;
+    totalMinutes += r.minutes;
+  }
+
+  /* Every one of the last 30 days, zeros included: a day with no music is part of the picture. */
+  const byDay = new Map(dayRows.map((r) => [r.day, r.minutes]));
+  const perDay: { day: string; minutes: number }[] = [];
+  const todayCal = today();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(`${todayCal}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    perDay.push({ day: key, minutes: byDay.get(key) ?? 0 });
+  }
+
+  return {
+    days,
+    clock,
+    perDay,
+    albums: albumRows.map((a) => ({ ...a, image: spotifyImage(a.image, 300) })),
+    artists: artistRows,
+    totalMinutes,
+  };
 }

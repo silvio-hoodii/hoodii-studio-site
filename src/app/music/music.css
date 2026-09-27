@@ -248,3 +248,77 @@
 
 /* See curio.css: this page had no title either. Scale from globals.css. */
 .music h1 { margin: 0 0 4px; }
+
+
+/* ---- the pictures (2026-09-27) ----
+ * Monochrome: the foreground colour at varying strength, darker meaning more. --signal stays on the
+ * "playing now" dot, the one thing on this page that is true this second. */
+
+.music .clock,
+.music .bars { display: block; width: 100%; max-width: 560px; height: auto; color: var(--foreground); margin-top: 10px; }
+.music .clock .ax,
+.music .bars .ax {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 8px;
+  fill: var(--muted-foreground);
+}
+
+.music .wall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: dense;
+  gap: 6px;
+  margin-top: 12px;
+  max-width: 560px;
+}
+@media (min-width: 720px) { .music .wall { grid-template-columns: repeat(6, 1fr); } }
+.music .wall .w { position: relative; margin: 0; aspect-ratio: 1; }
+.music .wall .w.big { grid-column: span 2; grid-row: span 2; }
+.music .wall img,
+.music .wall .noimg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.music .wall .noimg {
+  font-size: 11px;
+  padding: 6px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  overflow: hidden;
+}
+/* The play count on the cover's corner, on a background of the page colour so it reads on any art. */
+.music .wall figcaption {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  line-height: 1;
+  padding: 3px 5px;
+  background: var(--background);
+  color: var(--foreground);
+  border-radius: var(--radius-sm);
+}
+
+.music .abars { list-style: none; padding: 0; margin: 12px 0 0; max-width: 560px; }
+.music .abars li {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) 1fr 2.5rem;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 14px;
+}
+.music .abars .an { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music .abars .ab { height: 10px; background: var(--muted); border-radius: var(--radius-sm); overflow: hidden; }
+.music .abars .ab i { display: block; height: 100%; background: var(--foreground); opacity: 0.75; }
+.music .abars .ac {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-align: right;
+}

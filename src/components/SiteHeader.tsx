@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Track from './Track';
 
 /* One way home, in the same place, on every surface that is not the hub.
  *
@@ -20,13 +21,47 @@ import Link from 'next/link';
  * that variable on a wrapper and the header follows it automatically. The prop this component used
  * to carry for exactly that job is gone, along with its own docstring predicting it would be.
  */
+/* THE HEADER IS THE NAVIGATION SINCE 2026-09-27. It was a link home and a label, so going from the
+ * gym to the swim page meant going home first, every time. His ask that day: "the navigation
+ * experience ... that way I don't have to click so much". Every app is one tap from every other
+ * now, and the one you are in is marked.
+ *
+ * Kitchen is not in the row: it left the front page the same day, and its dish pages are reached
+ * from the links sessions send him. The row scrolls sideways rather than wrapping if it ever outgrows
+ * a phone.
+ *
+ * Track counts the open, for him only; see Track.tsx. */
+const NAV: { href: string; label: string; key: string }[] = [
+  { href: '/gym', label: 'Training', key: 'training' },
+  { href: '/curio', label: 'Curio', key: 'curio' },
+  { href: '/music', label: 'Music', key: 'music' },
+  { href: '/reading', label: 'Reading', key: 'reading' },
+];
+
+/* ONE "TRAINING" ENTRY, NOT THREE. The first version of this row listed Gym, Health and Swim, and on
+   a phone the training pages then carried three stacked rows of navigation: this one, the training
+   chips (Lift, Swim, Run, Bike, Body) and the page's own tabs, the first two naming the same places.
+   The training chips already reach all five, so this row takes you into training and they take it
+   from there. It lands on /gym because lifting is what he opens most. */
+const SECTION: Record<string, string> = { gym: 'training', health: 'training', swim: 'training', run: 'training', bike: 'training' };
+
 export default function SiteHeader({ app }: { app?: string }) {
+  const key = app?.toLowerCase() ?? '';
+  const here = SECTION[key] ?? key;
   return (
     <header className="site-header">
-      <div className="site-header-in">
-        <Link href="/">Silvio Neyra</Link>
-        {app && <span>{app}</span>}
-      </div>
+      <nav className="site-header-in" aria-label="Apps">
+        <Link href="/" className="home">Silvio Neyra</Link>
+        <div className="appnav">
+          {NAV.map((n) => (
+            <Link key={n.key} href={n.href} className={n.key === here ? 'on' : undefined}
+              aria-current={n.key === here ? 'page' : undefined}>
+              {n.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+      {key && key !== 'callback' && <Track app={key} />}
     </header>
   );
 }

@@ -63,7 +63,6 @@
     '/gym/api/finish',
     '/gym/api/note',
     '/swim/api/baseline',
-    '/bike/api/ride',
   ];
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has

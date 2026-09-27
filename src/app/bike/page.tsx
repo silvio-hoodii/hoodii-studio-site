@@ -99,7 +99,7 @@ export default async function BikePage({
           <LastSession s={lastSession} />
           {/* "Which is why the resistance levels get typed instead. Somewhere to type them is the next
               thing to land here." sat here until 2026-09-15: a promise three weeks old about a form
-              that does not exist. /bike/api/ride does. Build the form or leave the page quiet. */}
+              that does not exist. The route behind it was deleted unused on 2026-09-27. */}
           <RecentSessions sessions={recent} kind="cycling" />
           {/* THE BLOCK ABOVE SAYS "the only one the watch has ever recorded" AND THAT IS FALSE.
               It reads health_session_detail, which holds one cycling row. The watch holds 76, back

@@ -1,217 +1,112 @@
 import Link from 'next/link';
-import WalledLink from '@/components/WalledLink';
-import { getAcquisitionMap, getLiveness, getQueue } from '@/lib/reading/queue-db';
-import {
-  dedupePriceItems, formatPriceLine, pickedViaLabel, priceChannelLabel, priceChannelOrder, trackLabel,
-  verdictLabel,
-} from '@/lib/reading/queue-types';
-import type { AcquisitionEntry, QueueEntry } from '@/lib/reading/queue-types';
-import type { ReadingLiveness } from '@/lib/reading/queue-db';
+import { getShelves, GOODREADS_PROFILE, type Book } from '@/lib/reading/goodreads';
+import { shortDate } from '@/lib/format';
+
+/* Revalidates with the feeds (FEED_TTL in goodreads.ts), so a book added on Goodreads shows here the
+   same day. A literal because Next reads route config statically. */
+export const revalidate = 21600;
 
 export const metadata = {
-  title: 'Reading: Next up',
-  description: 'The ten books queued to read next, why each is in the ten, and whether I can get it today.',
+  title: 'Reading',
+  description: 'What I am reading and what I have read.',
   alternates: { canonical: '/reading' },
 };
 
-/* Same reason /swim carries this: the data lives in Neon and changes whenever content/reading/
- * sync.mjs runs, with no redeploy in between. Static prerendering would bake the queue in at
- * build time and then never look at it again, which is exactly the staleness /swim already
- * solved once. */
-/* ISR, five minutes. The queue is a hand-run mirror: refill.mjs then sync.mjs, both deliberate
- * acts. Five minutes between a sync and the page catching up is not a staleness problem, and it
- * is not the build-time bake AGENTS.md warns about, because ISR regenerates against Neon. */
-export const revalidate = 300;
+/* Covers, not rows. His ask on 2026-09-27 was "more graphic stuff instead of just walls of text",
+   and a book is recognised by its cover faster than by its title. Text under a cover is only what
+   a cover cannot say: his stars. */
 
-/* The queue is DATA, mirrored from ReadingOS/data/queue.json + data/acquire.json by
- * content/reading/sync.mjs, run by hand after refill.mjs / acquire.mjs on the laptop -- acquire.mjs
- * needs Silvio's own logged-in Chrome over CDP for CPL branch lookups and retail prices, so it can
- * never run here. Read-only: there is no /reading/api for the queue, the same as /swim.
- *
- * `position` preserves QUEUE.md's rendered order and is never a re-sort by score. That order is
- * gentlest-first, the on-ramp, which is deliberately not the pick order: The Catcher in the Rye
- * (7.07) sits first while The Grapes of Wrath (9.10) sits fifth. Showing a different order than
- * QUEUE.md would be a second, disagreeing "the queue" existing at the same time, which is the
- * exact drift this whole app is built to avoid.
- *
- * The old example here was Middlesex, "score 1, owned, the one being read". It stopped being true
- * on 2026-08-21 when the scoring was rebuilt and refill.mjs started re-ranking instead of topping
- * up. A comment naming specific data goes stale on its own; check it against queue.json before
- * trusting it.
- */
-export default async function ReadingQueue() {
-  const [queue, acquisitionMap, liveness] = await Promise.all([
-    getQueue(), getAcquisitionMap(), getLiveness(),
-  ]);
+function Stars({ n }: { n: number }) {
+  if (!n) return null;
+  return (
+    <span className="stars" aria-label={`${n} of 5 stars`}>
+      {'★'.repeat(n)}
+      <span className="off">{'★'.repeat(5 - n)}</span>
+    </span>
+  );
+}
+
+function Cover({ b, big = false }: { b: Book; big?: boolean }) {
+  return (
+    <a className={big ? 'cov big' : 'cov'} href={b.link} target="_blank" rel="noreferrer" title={`${b.title}, ${b.author}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- remote covers, no optimiser: an image
+          transformation per cover is a bill for pictures Goodreads already sized. */}
+      <img src={b.cover} alt={`${b.title} by ${b.author}`} loading="lazy" />
+      {!big && <Stars n={b.rating} />}
+    </a>
+  );
+}
+
+function year(b: Book): string {
+  return (b.readAt ?? b.addedAt ?? '').slice(0, 4) || 'Undated';
+}
+
+export default async function ReadingPage() {
+  const { current, read, want, ok } = await getShelves();
+  const pages = read.reduce((n, b) => n + (b.pages ?? 0), 0);
+  const years = [...new Set(read.map(year))];
 
   return (
     <div className="reading">
-      <p className="surf-nav">
-        <span className="rtab on">Next up</span>
-        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
-        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
-        <Link className="rtab" href="/reading/finished">Finished</Link>
-      </p>
-
-      <h1>Next up</h1>
-      <p className="stat">
-        <span className="tnum">{queue.length}</span> books
-        {liveness.queueUpdated && <><span className="dot">·</span>queue as of {liveness.queueUpdated}</>}
-      </p>
-
-      {/* Two different states, not one, same split /swim and /health already made: a badge that
-          is WRONG (a hold could have cleared, a shelf copy could be gone) is worse than a badge
-          that is simply ABSENT, because absence is honest and a stale claim is not. --destructive
-          only for the first: --signal stays reserved for a fact that is true right now, and a week-
-          old BORROW NOW claim is the opposite of that. */}
-      {liveness.hasAcquisitionData && liveness.stale && (
-        <div className="stale">
-          <span className="k">Library check is over a week old</span>
-          BORROW NOW and BUY below may no longer be right.
-          {liveness.lastError && <span className="why">{liveness.lastError}</span>}
-        </div>
-      )}
-      {!liveness.hasAcquisitionData && (
-        <p className="note">
-          No library check yet.
-          {liveness.lastError && <span className="why">{liveness.lastError}</span>}
+      <h1>Reading</h1>
+      {!ok && (
+        <p className="empty">
+          Goodreads did not answer. <a href={GOODREADS_PROFILE}>Open it there</a>.
         </p>
       )}
 
-      {queue.map((entry) => (
-        <QueueRow
-          key={entry.key}
-          entry={entry}
-          acquisition={acquisitionMap.get(entry.key)}
-          liveness={liveness}
-        />
-      ))}
-
-    </div>
-  );
-}
-
-function QueueRow({ entry, acquisition, liveness }: {
-  entry: QueueEntry;
-  acquisition?: AcquisitionEntry;
-  liveness: ReadingLiveness;
-}) {
-  const owned = !acquisition && (entry.status === 'reading' || entry.status === 'finished' || entry.format);
-  /* THE GREEN BADGE HAS TO EARN ITS PRESENT TENSE, since 2026-08-28.
-   *
-   * `actionableNow` was `acquisition?.homeBranchNow ?? false` and nothing gated it on liveness, so
-   * the `.now` class (which is `--signal`) rendered off a snapshot up to a week old. The banner above
-   * fires at seven days and the badge underneath stayed green even then. Both this file's comment and
-   * `reading.css` line 404 already stated the rule the code was breaking: --signal is reserved for a
-   * fact that is true right now, and a week-old BORROW NOW claim is the opposite of that.
-   * 04-reading P1-1, audit theme T3.
-   *
-   * `homeBranchNowStale` is one day, not seven, because a hold moves daily. Past it the badge keeps
-   * its label and loses its colour, and the date goes next to it: "BORROW NOW, as of Aug 20" is a
-   * useful thing to know and an honest one. */
-  const actionableNow = (acquisition?.homeBranchNow ?? false) && !liveness.homeBranchNowStale;
-  const datedShelfClaim = (acquisition?.homeBranchNow ?? false) && liveness.homeBranchNowStale;
-  const checkedOn = acquisition?.checkedAt
-    ? new Date(acquisition.checkedAt).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
-    : null;
-
-  return (
-    <details className="qrow">
-      <summary>
-        <span className="qmain">
-          <span className="qt">{entry.title}</span>
-          <span className="qa">{entry.author}{entry.year ? ` · ${entry.year}` : ''}</span>
-        </span>
-        <span className="qmeta">
-          <span className="qtrack">{trackLabel[entry.track]}</span>
-          {owned && <span className="verdict owned">In hand</span>}
-          {/* THE WORDS CARRY THE FACT, NOT THE COLOUR. 08-ux-ui P2-2, measured on the live page at
-              390px: The Underground Railroad wore a green "BORROW NOW" chip (a copy on the
-              home-branch shelf that day) and Life After Life a grey "BORROW NOW" chip (borrowable
-              somewhere, not at his branch), same screen, same text, same shape. Colour was the only
-              carrier of the one fact `queue-types.ts` calls "the one fact that changes what to do
-              today", which leaves a colourblind reader, a greyscale print or an e-ink screen with
-              two identical chips.
-
-              So a home-branch copy says "On the shelf", and past a day it says when it was last
-              checked. The green stays where it is still true. */}
-          {acquisition && (
-            <span className={`verdict${actionableNow ? ' now' : ''}`}>
-              {acquisition.homeBranchNow ? 'On the shelf' : verdictLabel[acquisition.verdict]}
-              {datedShelfClaim && checkedOn && <span className="asof"> as of {checkedOn}</span>}
-            </span>
-          )}
-        </span>
-      </summary>
-
-      <div className="body qbody">
-        {entry.why && <p className="qwhy">{entry.why}</p>}
-        <p className="qpicked">
-          {entry.score != null && (
-            <><span className="tnum">
-              {entry.score} score
-            </span> · </>
-          )}
-          Here for {pickedViaLabel(entry.pickedVia)}.
-        </p>
-        <p className="qtags">
-          {[entry.pace, entry.era, entry.language, entry.pages ? `${entry.pages}pp` : null]
-            .filter(Boolean).join(' · ')}
-          {entry.mood.length > 0 && <> · {entry.mood.join(', ')}</>}
-        </p>
-
-        {owned && <p className="qacq">Already yours (status: {entry.status}{entry.format ? `, ${entry.format}` : ''}).</p>}
-
-        {acquisition && <AcquisitionDetail acquisition={acquisition} />}
-      </div>
-    </details>
-  );
-}
-
-function AcquisitionDetail({ acquisition }: { acquisition: AcquisitionEntry }) {
-  const { verdict, verdictDetail, payload, homeBranchLabel, homeBranchNow } = acquisition;
-  const branches = payload.branchInfo?.ok ? payload.branchInfo.branches : [];
-  const availableBranches = branches.filter((b) => b.status === 'Available');
-
-  return (
-    <div className="qacq">
-      {verdictDetail && <p className="qacq-detail">{verdictDetail}</p>}
-
-      {verdict === 'BORROW NOW' && branches.length > 0 && (
-        <div className="qbranches">
-          <p className="qacq-label">
-            {homeBranchNow
-              ? `Available at a home branch right now: ${homeBranchLabel}.`
-              : 'Not available at Westbrook or Central right now:'}
-          </p>
-          {!homeBranchNow && availableBranches.map((b, i) => (
-            <div className="qbranch" key={i}>
-              <span className="qb-name">{b.branch}</span>
-              <span className="qb-status">{b.collection}</span>
+      {current.length > 0 && (
+        <section className="now all-external">
+          {current.map((b) => (
+            <div className="nowrow" key={b.id}>
+              <Cover b={b} big />
+              <div className="nowtxt">
+                <div className="eyebrow">Reading now</div>
+                <div className="nt">{b.title}</div>
+                <div className="na">{b.author}</div>
+                <div className="nm tnum">
+                  {b.pages && <>{b.pages} pages</>}
+                  {b.pages && b.addedAt && <span className="dot">·</span>}
+                  {b.addedAt && <>since {shortDate(b.addedAt)}</>}
+                </div>
+              </div>
             </div>
           ))}
-        </div>
+        </section>
       )}
 
-      {verdict === 'BUY' && payload.price && (
-        <div className="qprices">
-          {priceChannelOrder.map((chKey) => {
-            const ch = payload.price?.[chKey];
-            if (!ch) return null;
-            const items = ch.ok ? dedupePriceItems(ch.items) : [];
-            return (
-              <div className="qpricegroup" key={chKey}>
-                <span className="qp-channel">{priceChannelLabel[chKey] ?? chKey}</span>
-                {ch.ok
-                  ? items.map((item, i) => (
-                      <span className="qp-line" key={i}>{formatPriceLine(item)}</span>
-                    ))
-                  : <span className="qp-line qp-failed">Not resolved: {ch.reason}</span>}
+      {read.length > 0 && (
+        <>
+          <h2 className="sec">Read</h2>
+          <p className="stat">
+            <span className="live tnum">{read.length}</span> {read.length === 1 ? 'book' : 'books'}
+            {pages > 0 && <><span className="dot">·</span><span className="tnum">{pages.toLocaleString('en-CA')}</span> pages</>}
+          </p>
+          {years.map((y) => (
+            <div key={y}>
+              {years.length > 1 && <h3 className="yr tnum">{y}</h3>}
+              <div className="covers all-external">
+                {read.filter((b) => year(b) === y).map((b) => <Cover key={b.id} b={b} />)}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          ))}
+        </>
       )}
+
+      {want.length > 0 && (
+        <>
+          <h2 className="sec">Want to read</h2>
+          <div className="covers small all-external">
+            {want.map((b) => <Cover key={b.id} b={b} />)}
+          </div>
+        </>
+      )}
+
+      <p className="links">
+        <a href={GOODREADS_PROFILE} target="_blank" rel="noreferrer">Goodreads</a>
+        <span className="dot">·</span>
+        <Link href="/reading/finished">Recall decks</Link>
+      </p>
     </div>
   );
 }

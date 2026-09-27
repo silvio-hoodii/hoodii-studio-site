@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { listDishes, lastCooked, openInbox } from '@/lib/kitchen/cookbook';
+import { listDishes, lastCooked } from '@/lib/kitchen/cookbook';
 import { shortDate } from '@/lib/format';
-import AskBox from './AskBox';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,39 +13,22 @@ export const dynamic = 'force-dynamic';
  *
  * What is here now is what he asked for, five times, in his own words: "I want to make this. What
  * do I need?" A box to say so from anywhere, and the dishes he has already decided on, each with the
- * publisher's recipe, its shopping list and his notes. */
+ * publisher's recipe, its shopping list and his notes.
+ *
+ * 2026-09-27: THE ASK BOX AND THE ONE SHOPPING LIST ARE GONE, on the usage audit. Neither had been used
+ * once: 0 rows in `inbox` from the box, 0 ticks and 0 extras on /kitchen/shop. He asks for dishes in
+ * chat, and in his words "it's usually an agent that helps me out". The kitchen also left the front
+ * page the same day; dish pages stay because sessions send him their links. */
 export default async function KitchenPage() {
-  const [dishes, cooked, inbox] = await Promise.all([listDishes(), lastCooked(), openInbox()]);
+  const [dishes, cooked] = await Promise.all([listDishes(), lastCooked()]);
 
   return (
     <div className="wrap">
       <h1>Kitchen</h1>
 
-      <AskBox />
-
-      {inbox.length > 0 && (
-        <ul className="waiting" aria-label="Waiting for a session">
-          {inbox.map((r) => (
-            <li key={r.id}>
-              <span className="when tnum">{r.at}</span>
-              <span className="txt">{r.text}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* THE ONE LIST, ADDED 2026-09-12. Until then a shopping list existed only per dish, so a trip
-          meant opening seven pages and doing the union by hand. His words: "I want one big shopping
-          list that knows everything across every recipe." Above the dishes, because this is the
-          screen he opens in a shop and that is a different errand from choosing what to cook. */}
-      <Link className="shoplink" href="/kitchen/shop">
-        <span className="k">Shopping list</span>
-        <span className="v">Everything every dish needs, in one list</span>
-      </Link>
-
       <h2 className="sec">Dishes</h2>
       {dishes.length === 0 ? (
-        <p className="empty">Nothing yet. Say what you want to make in the box above.</p>
+        <p className="empty">Nothing yet.</p>
       ) : (
         <ul className="dishes">
           {dishes.map((d) => {

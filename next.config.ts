@@ -106,7 +106,17 @@ const nextConfig: NextConfig = {
        * project wrote down after finding a standalone spine-check page duplicating this one. A
        * 307 rather than a 308: this is a product decision that could be reversed, not a permanent
        * URL move, and a permanent redirect is cached by browsers forever. */
-      { source: '/reading/all', destination: '/reading/shelf', permanent: false },
+      { source: '/reading/all', destination: '/reading', permanent: false },
+
+      /* THE USAGE AUDIT, 2026-09-27. Each of these had zero writes ever, or a data mirror a month
+       * stale, and he approved removing them. /reading is Goodreads now (src/lib/reading/goodreads.ts);
+       * French stays on the laptop in LanguageOS. 307s, because each is a decision that could be
+       * reversed, and every bookmark and crawler link lands somewhere real instead of a 404. */
+      { source: '/reading/shelf', destination: '/reading', permanent: false },
+      { source: '/reading/want', destination: '/reading', permanent: false },
+      { source: '/kitchen/shop', destination: '/kitchen', permanent: false },
+      { source: '/french', destination: '/', permanent: false },
+      { source: '/french/:path*', destination: '/', permanent: false },
 
       /* /gym/conditioning IS DELETED, 2026-08-27, and every URL it ever had lands somewhere real.
        *

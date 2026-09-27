@@ -1,9 +1,8 @@
 import Link from 'next/link';
-import WalledLink from '@/components/WalledLink';
 import { allPacks, kindLabel } from '@/lib/reading/packs';
 
 export const metadata = {
-  title: 'Reading: Finished',
+  title: 'Reading: Recall',
   description: 'Recall cards and a debrief for books I have finished, so I can tell whether any of it stuck.',
   alternates: { canonical: '/reading/finished' },
 };
@@ -19,13 +18,11 @@ export default async function ReadingFinished() {
   return (
     <div className="reading">
       <p className="surf-nav">
-        <Link className="rtab" href="/reading">Next up</Link>
-        <WalledLink className="rtab" href="/reading/shelf">Browse</WalledLink>
-        <WalledLink className="rtab" href="/reading/want">Want</WalledLink>
-        <span className="rtab on">Finished</span>
+        <Link className="rtab" href="/reading">Books</Link>
+        <span className="rtab on">Recall</span>
       </p>
 
-      <h1>Finished</h1>
+      <h1>Recall</h1>
       <p className="stat">
         <span className="tnum">{packs.length}</span> books
         <span className="dot">·</span>

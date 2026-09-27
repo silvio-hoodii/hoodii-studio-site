@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getDish, cookRows } from '@/lib/kitchen/cookbook';
+import { getDish, cookRows, type ListItem } from '@/lib/kitchen/cookbook';
 import { shortDate } from '@/lib/format';
 import NoteBox from '../NoteBox';
 
@@ -20,6 +20,36 @@ const RATING_LABEL: Record<string, string> = { nailed: 'worked', fine: 'fine', w
  * text. What it carries is what a printed recipe cannot: the list built for this kitchen with the
  * store links, the protein figure with where it came from, and his own notes, including every
  * substitution he decided on in a session. */
+const LIST_GROUPS: [string, string][] = [
+  ['buy', 'Buy'],
+  ['optional', 'Optional'],
+  ['unsorted', 'Not sorted yet'],
+  ['owned', 'Already have'],
+];
+
+function groupOf(need: string | undefined): string {
+  return need === 'buy' || need === 'optional' || need === 'owned' ? need : 'unsorted';
+}
+
+function Item(it: ListItem, i: number) {
+  return (
+    <li key={i}>
+      <span>
+        {it.url ? (
+          <a href={it.url} target="_blank" rel="noreferrer">
+            {it.item}
+          </a>
+        ) : (
+          it.item
+        )}
+      </span>
+      {it.price && <span className="price tnum">{it.price}</span>}
+      {it.qty && <span className="qty">{it.qty}</span>}
+      {it.note && <span className="lnote">{it.note}</span>}
+    </li>
+  );
+}
+
 export default async function DishPage({ params }: Params) {
   const { id } = await params;
   const d = await getDish(id);
@@ -63,24 +93,28 @@ export default async function DishPage({ params }: Params) {
       {d.list.length === 0 ? (
         <p className="empty">No list yet. It gets built in a session, with the store links.</p>
       ) : (
-        <ul className="list">
-          {d.list.map((it, i) => (
-            <li key={i}>
-              <span>
-                {it.url ? (
-                  <a href={it.url} target="_blank" rel="noreferrer">
-                    {it.item}
-                  </a>
-                ) : (
-                  it.item
-                )}
-              </span>
-              {it.price && <span className="price tnum">{it.price}</span>}
-              {it.qty && <span className="qty">{it.qty}</span>}
-              {it.note && <span className="lnote">{it.note}</span>}
-            </li>
-          ))}
-        </ul>
+        /* GROUPED BY `need` SINCE 2026-09-27. The one-list page did this grouping and this page did
+           not, so when /kitchen/shop was deleted this became the list he shops from while still
+           printing things he owns in the same run as things to buy. An item with no valid `need` is
+           not guessed at in either direction: it gets its own group. */
+        <>
+          {LIST_GROUPS.map(([key, label]) => {
+            const items = d.list.filter((it) => groupOf(it.need) === key);
+            if (!items.length) return null;
+            const body = <ul className="list">{items.map(Item)}</ul>;
+            return key === 'owned' ? (
+              <details className="more" key={key}>
+                <summary>{label}, {items.length}</summary>
+                {body}
+              </details>
+            ) : (
+              <div key={key}>
+                {LIST_GROUPS.length > 1 && <h3 className="lgroup">{label}</h3>}
+                {body}
+              </div>
+            );
+          })}
+        </>
       )}
 
       <h2 className="sec">Notes</h2>

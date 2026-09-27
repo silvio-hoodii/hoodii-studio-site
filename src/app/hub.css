@@ -184,3 +184,48 @@
 @media (prefers-reduced-motion: reduce) {
   .idx .eq i { animation: none; }
 }
+
+/* ---- the pictures in the rows (2026-09-27) ----
+ * Under the sub line, in the muted colour, so the number still reads first and the picture confirms
+ * it. Covers get a hairline and no radius beyond the system's, and they are small on purpose: this
+ * is a glance, the page behind the row is where to look properly. */
+.idx .viz { margin-top: 10px; color: var(--foreground); line-height: 0; }
+.idx .viz .spark { display: block; overflow: visible; }
+.idx .vcover {
+  width: 40px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.idx .vcovers { display: flex; gap: 4px; }
+.idx .vcovers img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* Today's Curio card, on the index for a signed-in device only. It sits above the rows with the same
+   label column the rows use, so it reads as the first row rather than as a banner. */
+.idx .hubq {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 16px;
+  padding: 18px 0 4px;
+  border-top: 1px solid var(--foreground);
+  margin-top: 28px;
+}
+.idx .hubq-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+@media (max-width: 460px) {
+  .idx .hubq { grid-template-columns: 1fr; gap: 8px; }
+}
+.idx .hubq + hr { margin-top: 0; }

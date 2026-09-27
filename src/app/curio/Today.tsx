@@ -21,7 +21,7 @@ type Load =
   | { state: 'error'; message: string }
   | { state: 'ready'; data: TodayData };
 
-async function post(path: string, body: unknown): Promise<boolean> {
+export async function post(path: string, body: unknown): Promise<boolean> {
   try {
     const r = await fetch(path, {
       method: 'POST',
@@ -83,7 +83,7 @@ function Cards({ data }: { data: TodayData }) {
   );
 }
 
-function Quiz({ cards }: { cards: QuizCard[] }) {
+export function Quiz({ cards, heading = 'Today' }: { cards: QuizCard[]; heading?: string | null }) {
   const [at, setAt] = useState(0);
   const [shown, setShown] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -105,7 +105,7 @@ function Quiz({ cards }: { cards: QuizCard[] }) {
 
   return (
     <div className="tblock">
-      <h2 className="sec">Today</h2>
+      {heading && <h2 className="sec">{heading}</h2>}
       {!card ? (
         <p className="done">Done for today.</p>
       ) : (

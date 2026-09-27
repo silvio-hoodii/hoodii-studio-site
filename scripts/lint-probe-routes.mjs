@@ -27,10 +27,8 @@ import { join, relative, sep } from 'node:path';
 const API_ROOTS = [
   { dir: join(process.cwd(), 'src', 'app', 'gym', 'api'), url: '/gym/api' },
   { dir: join(process.cwd(), 'src', 'app', 'swim', 'api'), url: '/swim/api' },
-  /* Added 2026-08-27 with POST /bike/api/ride, in the same commit as the route. /bike has no page
-     yet, so nothing on the site calls this route and no probe touches it today. That is exactly
-     when a write route escapes a harness: when adding it to the list feels like paperwork. */
-  { dir: join(process.cwd(), 'src', 'app', 'bike', 'api'), url: '/bike/api' },
+  /* /bike/api was here from 2026-08-27 until 2026-09-27, when POST /bike/api/ride was deleted
+     unused (0 rides ever, per the usage audit). */
 ];
 const PROBE = join(process.cwd(), 'scripts', 'probe-gym.js');
 

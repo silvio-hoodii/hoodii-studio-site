@@ -667,3 +667,26 @@
   padding-block: 11px;
   margin-block: -11px;
 }
+
+/* The dish list's groups (2026-09-27): Buy, Optional, Not sorted yet, and Already have folded. */
+.kos .lgroup {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 16px 0 4px;
+}
+.kos .more > summary {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  min-height: 44px;
+  display: list-item;
+  padding-top: 14px;
+}

@@ -1,9 +1,16 @@
 import 'server-only';
 import { sql } from './db';
 import { dayOf } from '../day';
-import type { DishSource, Extra, ListItem, Tick } from './shoplist';
 
-export type { ListItem } from './shoplist';
+/** One row of a dish's shopping list, written by a session. `need` is buy | optional | owned. */
+export interface ListItem {
+  item: string;
+  qty?: string;
+  url?: string;
+  price?: string;
+  note?: string;
+  need?: string;
+}
 
 /* The cookbook, rebuilt 2026-09-05.
  *
@@ -116,62 +123,4 @@ export async function openInbox(): Promise<InboxRow[]> {
     select id, at, text from inbox where handled = false order by at desc
   `) as { id: string; at: Date; text: string }[];
   return rows.map((r) => ({ id: String(r.id), at: dayOf(r.at), text: r.text }));
-}
-
-export async function addInbox(text: string) {
-  await sql`insert into inbox (text) values (${text})`;
-}
-
-/* ---- the one shopping list ---------------------------------------------------------------------
- *
- * The aggregation itself is in `shoplist.ts`, which touches no database so its suite can run in CI.
- * These four read and write what it needs. Added 2026-09-12: "I want one big shopping list that
- * knows everything across every recipe."
- */
-
-/** Every dish that carries a list, with only the fields the union needs. */
-export async function shopSources(): Promise<DishSource[]> {
-  const rows = (await sql`
-    select id, name, list from dish
-    where jsonb_array_length(list) > 0
-    order by added_at desc
-  `) as { id: string; name: string; list: unknown }[];
-  return rows.map((r) => ({
-    id: r.id,
-    name: r.name,
-    list: Array.isArray(r.list) ? (r.list as ListItem[]) : [],
-  }));
-}
-
-export async function shopTicks(): Promise<Tick[]> {
-  const rows = (await sql`select key, at from shop_tick`) as { key: string; at: Date }[];
-  return rows.map((r) => ({ key: r.key, at: dayOf(r.at) }));
-}
-
-export async function shopExtras(): Promise<Extra[]> {
-  const rows = (await sql`select id, text, at from shop_extra order by at asc`) as
-    { id: string | number; text: string; at: Date }[];
-  return rows.map((r) => ({ id: String(r.id), text: r.text, at: dayOf(r.at) }));
-}
-
-/** Tick a row off. Re-ticking a row that came back after its fortnight restarts the clock. */
-export async function tickShop(key: string, label: string) {
-  await sql`
-    insert into shop_tick (key, label, at) values (${key}, ${label}, now())
-    on conflict (key) do update set label = excluded.label, at = now()
-  `;
-}
-
-export async function untickShop(key: string) {
-  await sql`delete from shop_tick where key = ${key}`;
-}
-
-export async function addShopExtra(text: string) {
-  await sql`insert into shop_extra (text) values (${text})`;
-}
-
-/** Remove something he typed by mistake. The tick goes with it, or it would outlive its row. */
-export async function removeShopExtra(id: string) {
-  await sql`delete from shop_tick where key = ${`extra:${id}`}`;
-  await sql`delete from shop_extra where id = ${Number(id)}`;
 }

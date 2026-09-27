@@ -490,7 +490,11 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
   opacity: 0.75;
   text-decoration: none;
 }
-.all-external a[target='_blank']::after {
+/* The same selector as the rule above plus the class, so it WINS. Until 2026-09-27 this read
+   `.all-external a[target='_blank']::after`, one attribute and one class short of the rule it was
+   meant to override (0,2,2 against 0,3,2), so it never applied anywhere: the arrows it existed to
+   remove stayed on /music's charts all along. Found under the Goodreads covers on /reading. */
+.all-external a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
   content: '' / '';
   margin: 0;
 }
@@ -740,6 +744,27 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
 .site-header-in span {
   color: var(--muted-foreground);
   letter-spacing: 0.1em;
+}
+
+/* The app row, since 2026-09-27. On a phone it takes its own line under the name and scrolls
+   sideways if it has to; from 720px it sits beside the name. The app you are in is the one in the
+   foreground colour with a rule under it; the others are muted, so the row reads as a place marker
+   and not as six equal buttons. */
+.site-header-in { flex-wrap: wrap; column-gap: 24px; row-gap: 0; }
+.site-header-in .appnav {
+  display: flex;
+  gap: 18px;
+  flex: 1 1 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-top: -6px;
+}
+.site-header-in .appnav::-webkit-scrollbar { display: none; }
+.site-header-in .appnav a { color: var(--muted-foreground); flex: none; letter-spacing: 0.1em; }
+.site-header-in .appnav a.on { color: var(--foreground); background: linear-gradient(var(--foreground), var(--foreground)) left bottom / 100% 2px no-repeat; }
+@media (min-width: 720px) {
+  .site-header-in { flex-wrap: nowrap; }
+  .site-header-in .appnav { flex: 0 1 auto; margin-top: 0; }
 }
 
 /* ---- a write that did not land ----

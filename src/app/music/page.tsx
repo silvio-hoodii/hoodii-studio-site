@@ -1,4 +1,5 @@
-import { getSummary, getRecentPlays, getLatestTop, getMostPlayed } from '@/lib/music/db';
+import { getSummary, getRecentPlays, getLatestTop, getListening } from '@/lib/music/db';
+import { AlbumWall, ArtistBars, ListeningClock, MinutesPerDay } from './Charts';
 import { getAccessToken, getNowPlaying, TIME_RANGES, RANGE_LABEL, type NowPlaying } from '@/lib/music/spotify';
 import { timeAgo } from '@/lib/format';
 
@@ -56,17 +57,16 @@ function Play(p: { playedAt: string; trackName: string; trackUrl: string | null;
 }
 
 /* How many plays stay open. Thirty is a couple of days of listening. */
-const OPEN_PLAYS = 30;
 
 function daysSince(iso: string): number {
   return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
 }
 
 export default async function MusicPage() {
-  const [summary, recent, mostPlayed] = await Promise.all([
+  const [summary, recent, listening] = await Promise.all([
     getSummary(),
     getRecentPlays(60),
-    getMostPlayed(8),
+    getListening(60),
   ]);
   const [topTracks, topArtists, now] = await Promise.all([
     Promise.all(TIME_RANGES.map((r) => getLatestTop('track', r))),
@@ -155,7 +155,30 @@ export default async function MusicPage() {
         )}
       </div>
 
-      {/* ---------------------------------------------------------------- Spotify's charts */}
+      {/* ---------------------------------------------------------------- pictures, 2026-09-27
+          His ask: "just lists of songs ... something more graphic". The lists below are folded, not
+          deleted; the pictures come first. All of it from our own collected plays. */}
+      {listening.totalMinutes > 0 && (
+        <>
+          <h2 className="sec">When I listen</h2>
+          <p className="stat">
+            <span className="tnum">{Math.round(listening.totalMinutes / 60)}</span> hours in the last {listening.days} days
+          </p>
+          <ListeningClock clock={listening.clock} />
+
+          <h2 className="sec">Every day</h2>
+          <MinutesPerDay perDay={listening.perDay} />
+
+          <h2 className="sec">On repeat</h2>
+          <AlbumWall albums={listening.albums} />
+
+          <h2 className="sec">Most played</h2>
+          <ArtistBars artists={listening.artists} />
+        </>
+      )}
+
+      <details className="more">
+        <summary>Spotify&apos;s charts</summary>
 
       <h2 className="sec">Top tracks</h2>
       <div className="ranges all-external">
@@ -211,73 +234,16 @@ export default async function MusicPage() {
         })}
       </div>
 
-      {/* ---------------------------------------------------------------- our own record */}
+      </details>
 
-      {summary.plays > 0 && (
-        <>
-          <h2 className="sec">
-            Most played
-            {/* The date, not a day count. A count derived here floors to "1 day" while the stat
-              * line above says "since 2026-08-09", and two true statements that look like a
-              * contradiction are worse than one plain fact. */}
-            <span className="qual">
-              {summary.since
-                ? `, only what has been collected since ${summary.since.slice(0, 10)}`
-                : ', only what has been collected so far'}
-            </span>
-          </h2>
-          {/* Explicitly NOT "top". This counts only what the poller caught, over a window that is
-            * currently short, and conflating it with Spotify's charts above would be the same class
-            * of mistake as a hub row describing an app it had not read. */}
-          <div className="ranges two">
-            <section className="range">
-              <h3 className="rlabel">artists</h3>
-              <ol className="chart">
-                {mostPlayed.artists.map((a, i) => (
-                  <li key={a.name}>
-                    <span className="rank tnum">{i + 1}</span>
-                    <span className="cname">{a.name}</span>
-                    <span className="cdetail tnum">{a.plays} play{a.plays === 1 ? '' : 's'}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-            <section className="range">
-              <h3 className="rlabel">tracks</h3>
-              <ol className="chart">
-                {mostPlayed.tracks.map((t, i) => (
-                  <li key={t.name}>
-                    <span className="rank tnum">{i + 1}</span>
-                    <span className="cname">{t.name}</span>
-                    <span className="cdetail tnum">{t.plays} play{t.plays === 1 ? '' : 's'}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          </div>
-        </>
-      )}
-
-      <h2 className="sec">Recently played</h2>
-      {recent.length > 0 ? (
-        <>
-          <div className="plays all-external">{recent.slice(0, OPEN_PLAYS).map(Play)}</div>
-          {/* Bounded before it needs to be. The table holds fifty rows today because Spotify hands
-              back fifty at a time, so this fold does nothing yet; the day the collector has been
-              running for a month it is the difference between a page and a scroll. Native
-              <details>, so the older plays stay in the document and cost no JavaScript. */}
-          {recent.length > OPEN_PLAYS && (
-            <details className="more">
-              <summary>{recent.length - OPEN_PLAYS} older plays</summary>
-              <div className="plays all-external">{recent.slice(OPEN_PLAYS).map(Play)}</div>
-            </details>
-          )}
-        </>
-      ) : (
-        <p className="empty">
-          Nothing collected yet.
-        </p>
-      )}
+      <details className="more">
+        <summary>Recently played</summary>
+        {recent.length > 0 ? (
+          <div className="plays all-external">{recent.map(Play)}</div>
+        ) : (
+          <p className="empty">Nothing collected yet.</p>
+        )}
+      </details>
 
     </div>
   );

@@ -130,9 +130,9 @@ const DEFAULT_PATHS = [
      a real page again as of 2026-09-12, which is the only reason its entry is not a fourth.
      A dish page is added because it is where the recipe link and the note box live, and no
      `[id]` route on this site had ever been measured. */
-  '/kitchen', '/kitchen/shop', '/kitchen/californiaroll',
-  '/french', '/curio', '/music',
-  '/reading', '/reading/shelf', '/reading/want', '/reading/finished',
+  '/kitchen', '/kitchen/californiaroll',
+  '/curio', '/music',
+  '/reading', '/reading/finished',
   /* THE FOUR CASE STUDIES WERE HERE until 2026-09-15, when /work was deleted. Worth keeping the
      history: this list said `/work` until 2026-08-28 and THERE WAS NO `/work` ROUTE, so it measured
      the 404 page and the old readiness gate passed it as a surface for as long as the list existed. */
@@ -143,7 +143,7 @@ const DEFAULT_PATHS = [
      failure this list already records twice above (`/work`, and the two wrong swim sub-tabs).
      They are one route as of 2026-09-04. `?to=` is carried because the eyebrow and the exit link
      are both derived from it, so the bare path renders a page with one fewer control on it. */
-  '/login', '/login?to=/reading/shelf',
+  '/login', '/login?to=/reading',
   /* Not a route anyone navigates to on purpose, and it renders a code plus a copy control on a
      phone, which is the only reason it is here rather than left out. */
   '/callback',

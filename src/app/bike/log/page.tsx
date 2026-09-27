@@ -69,7 +69,7 @@ export default async function BikeLogPage() {
         {/* THERE IS NO FORM. Corrected 2026-08-28 (12-run-bike B2). This said "the resistance form on
             the bike page writes the one thing the watch cannot see, and it has not been used", while
             /bike said the opposite one tap away: "Somewhere to type them is the next thing to land
-            here." What shipped on 2026-08-27 is POST /bike/api/ride, gated and linted, with zero
+            here." What shipped on 2026-08-27 was POST /bike/api/ride (deleted unused 2026-09-27), with zero
             callers anywhere in src.
 
             A false "you lack this" costs him a look. A false "you have this" sends him to the other

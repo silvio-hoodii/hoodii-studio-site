@@ -80,7 +80,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/kitchen/find', '/reading/shelf', '/reading/want'],
+        disallow: ['/kitchen/find', '/reading/shelf', '/reading/want'], // all three redirect now; the Disallow costs nothing and keeps old links out
       },
       { userAgent: AI_TRAINING_CRAWLERS, disallow: '/' },
     ],
