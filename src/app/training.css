@@ -1590,3 +1590,31 @@
   text-underline-offset: 3px;
 }
 .training .alt-chip:hover { color: var(--foreground); }
+
+/* ---- a bar per session (2026-09-27) ---- */
+.training .sbars { margin: 14px 0 6px; color: var(--foreground); }
+.training .sbars svg { display: block; width: 100%; max-width: 520px; height: auto; }
+.training .sbars .sv { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
+.training .sbars .sd { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
+.training .sbars figcaption {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-top: 2px;
+}
+
+/* ---- the swim ladder as a staircase (2026-09-27) ---- */
+.training .ladder-track { margin: 14px 0 8px; color: var(--foreground); }
+.training .ladder-track svg { display: block; width: 100%; max-width: 520px; height: auto; }
+.training .ladder-track rect.off { fill: currentColor; opacity: 0.22; }
+.training .ladder-track rect.on { fill: var(--signal); }
+.training .ladder-track .lv,
+.training .ladder-track .lw { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
+.training .ladder-track line.goal { stroke: currentColor; stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.7; }
+.training .ladder-track line.you { stroke: currentColor; stroke-width: 1.5; }
+.training .ladder-track figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
+.training .ladder-track figcaption i { display: inline-block; width: 16px; height: 0; margin-right: 6px; vertical-align: 3px; border-top: 1.5px solid var(--foreground); }
+.training .ladder-track figcaption i.k-goal { border-top-style: dashed; opacity: 0.7; }
+.training .ladder-track .lwk { margin-left: auto; }

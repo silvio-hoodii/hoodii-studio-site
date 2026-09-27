@@ -182,6 +182,12 @@ export default function RecentSessions({
         </>
       )}
 
+      <SessionBars sessions={chrono} kind={kind} />
+
+      {/* The table is the record and stays one tap away; the bars above are the glance. His ask,
+          2026-09-27: "more graphic stuff instead of just walls of text". */}
+      <details className="fold">
+        <summary>Every session, as a table</summary>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -211,6 +217,51 @@ export default function RecentSessions({
           </tbody>
         </table>
       </div>
+      </details>
     </div>
+  );
+}
+
+/* How much each session was, one bar per session, oldest on the left, the value printed on the bar.
+   Minutes for lifting and cycling, distance for swimming and running: the quantity the session is
+   planned in. A session with no reading gets a hairline, not a gap, so the count still matches. */
+const AMOUNT: Record<string, { of: (s: SessionDetail) => number | null; fmt: (n: number) => string; label: string }> = {
+  swimming: { of: (s) => s.distanceM, fmt: (n) => `${Math.round(n)}`, label: 'metres' },
+  treadmill: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(1), label: 'km' },
+  running: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(1), label: 'km' },
+  strength: { of: (s) => s.minutes, fmt: (n) => `${Math.round(n)}`, label: 'minutes' },
+};
+
+function SessionBars({ sessions, kind }: { sessions: SessionDetail[]; kind: SessionKind }) {
+  const a = AMOUNT[kind] ?? { of: (s: SessionDetail) => s.minutes, fmt: (n: number) => `${Math.round(n)}`, label: 'minutes' };
+  const vals = sessions.map((s) => a.of(s));
+  const max = Math.max(1, ...vals.map((v) => v ?? 0));
+  const n = sessions.length;
+  const W = 340;
+  const H = 90;
+  const gap = 6;
+  const bw = (W - gap * (n - 1)) / n;
+  return (
+    <figure className="sbars">
+      <svg viewBox={`0 0 ${W} ${H + 16}`} role="img" aria-label={`${a.label} per session, oldest first`}>
+        {sessions.map((s, i) => {
+          const v = vals[i];
+          const h = v ? Math.max(2, (v / max) * (H - 14)) : 1;
+          const x = i * (bw + gap);
+          const last = i === n - 1;
+          return (
+            <g key={s.uuid}>
+              <rect x={x} y={H - h} width={bw} height={h} rx="1.5" fill="currentColor" opacity={last ? 1 : 0.45} />
+              {v != null && v > 0 && (
+                <text x={x + bw / 2} y={H - h - 4} textAnchor="middle" className="sv">{a.fmt(v)}</text>
+              )}
+            </g>
+          );
+        })}
+        <text x={0} y={H + 13} className="sd">{shortDate(sessions[0]!.date)}</text>
+        <text x={W} y={H + 13} textAnchor="end" className="sd">{shortDate(sessions[n - 1]!.date)}</text>
+      </svg>
+      <figcaption>{a.label}</figcaption>
+    </figure>
   );
 }

@@ -11,6 +11,10 @@ import { useEffect } from 'react';
  * Once per tab per app, not per render, so a client-side hop back and forth does not inflate it. */
 export default function Track({ app }: { app: string }) {
   useEffect(() => {
+    /* Production only. A local `pnpm start` talks to the SAME database, so on 2026-09-27 the
+       screenshot runs of a working session were being counted as his opens. Only the real domain
+       counts; everything else is a test. */
+    if (location.hostname !== 'hoodii.studio') return;
     const key = `opened:${app}`;
     try {
       if (sessionStorage.getItem(key)) return;

@@ -14,6 +14,7 @@ import { getShelves } from '@/lib/reading/goodreads';
 import { BarSpark, DayStrip, LineSpark } from '@/components/Spark';
 import Track from '@/components/Track';
 import HubQuiz from './HubQuiz';
+import UseStrip from './UseStrip';
 import './hub.css';
 import './curio/curio.css';
 
@@ -430,6 +431,8 @@ export default async function Home() {
       <div className="rows">
         {rows.map((r) => <RowView key={r.label} r={r} />)}
       </div>
+
+      <UseStrip />
 
       {/* The same row /curio and /music carry, minus the link home, because this is home. Brixel was
         * in here once and should not have been: this row is how to reach me, and a company is not a

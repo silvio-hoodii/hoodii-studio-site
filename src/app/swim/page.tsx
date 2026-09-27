@@ -284,6 +284,55 @@ function swimDays(s: SwimSummary[]): { date: string; metres: number; longestM: n
   return [...byDay.values()].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
 }
 
+/* The ladder as a staircase, since 2026-09-27 ("more graphic stuff instead of just walls of text").
+ * One step per rung, height = the continuity piece, the rung he is on in --signal (true right now),
+ * the 1,000 m goal as a dashed line and his real longest unbroken piece of the last ten swim days as
+ * a solid one, so the gap between the plan and the pool is the picture.
+ *
+ * The step height is read out of the rung's text, because plan.json states each piece as a sentence.
+ * The FIRST distance of 300 m or more is the piece ("500 m, then 300 m" is 500; "Add 100 m a fortnight
+ * until the piece is 1,000 m" is 1,000). A rung whose text yields none is drawn at no height rather
+ * than guessed, and if no rung parses the picture is not drawn at all: the table below still is. */
+function pieceMetres(text: string): number | null {
+  for (const m of text.matchAll(/(\d[\d,]*)\s*m\b/g)) {
+    const n = Number(m[1]!.replace(/,/g, ''));
+    if (n >= 300) return n;
+  }
+  return null;
+}
+
+function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: number | null; on: boolean }[]; longest: number }) {
+  if (!steps.some((s) => s.metres)) return null;
+  const W = 340;
+  const H = 150;
+  const top = 1100;
+  const y = (m: number) => H - (m / top) * (H - 10);
+  const n = steps.length;
+  const bw = W / n;
+  return (
+    <figure className="ladder-track">
+      <svg viewBox={`0 0 ${W} ${H + 18}`} role="img"
+        aria-label={`The ladder from ${steps[0]?.metres ?? ''} m to ${GOAL_M} m; your longest recent piece is ${longest} m`}>
+        {steps.map((st, i) => st.metres ? (
+          <g key={st.weeks}>
+            <rect x={i * bw + 2} y={y(st.metres)} width={bw - 4} height={H - y(st.metres)} rx="1.5"
+              className={st.on ? 'on' : 'off'} />
+            <text x={i * bw + bw / 2} y={y(st.metres) - 4} textAnchor="middle" className="lv">{st.metres}</text>
+            <text x={i * bw + bw / 2} y={H + 13} textAnchor="middle" className="lw">{st.weeks}</text>
+          </g>
+        ) : null)}
+        <line x1="0" x2={W} y1={y(GOAL_M)} y2={y(GOAL_M)} className="goal" />
+        {longest > 0 && <line x1="0" x2={W} y1={y(longest)} y2={y(longest)} className="you" />}
+      </svg>
+      <figcaption>
+        <span><i className="k-goal" />goal {GOAL_M.toLocaleString('en-CA')} m</span>
+        {longest > 0 && <span><i className="k-you" />your longest lately {longest} m</span>}
+        <span className="lwk">weeks</span>
+      </figcaption>
+    </figure>
+  );
+}
+
 function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBaseline | null; year: SwimYear | null }) {
   const rung = currentRung(plan, baseline);
   /* Derived since 2026-09-11. The typed line said "about 1,000 m every time" while three of his
@@ -315,6 +364,16 @@ function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBasel
         </p>
       )}
       <p className="lede">{plan.structure.note}</p>
+      <LadderTrack
+        steps={plan.structure.ladder.map((st) => ({
+          weeks: st.weeks,
+          metres: pieceMetres(resolvePiece(st.piece, baseline?.metres ?? null)),
+          on: rung?.weeks === st.weeks,
+        }))}
+        longest={longest}
+      />
+      <details className="fold">
+        <summary>The ladder, week by week</summary>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -341,6 +400,7 @@ function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBasel
           </tbody>
         </table>
       </div>
+      </details>
       <details className="src wk">
         <summary>{plan.structure.calibration.name}</summary>
         <div className="src-body">

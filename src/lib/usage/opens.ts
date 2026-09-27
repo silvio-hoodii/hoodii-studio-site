@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { today } from '@/lib/day';
+import { daysAgo, today } from '@/lib/day';
 
 /* His own app opens, one row per day per app. See content/usage/schema.sql for why this exists. */
 const DATABASE_URL = process.env.GYM_DATABASE_URL || process.env.KITCHEN_DATABASE_URL;
@@ -19,4 +19,14 @@ export async function recordOpen(app: App): Promise<void> {
   await sql`
     insert into app_open (day, app) values (${today()}, ${app})
     on conflict (day, app) do update set opens = app_open.opens + 1, last_at = now()`;
+}
+
+export interface OpenRow { day: string; app: string; opens: number }
+
+/* The last `days` days of his opens, oldest first. For the strip on the index. */
+export async function getOpens(days = 30): Promise<OpenRow[]> {
+  const rows = (await sql`
+    select to_char(day, 'YYYY-MM-DD') as day, app, opens from app_open
+     where day > ${daysAgo(days)} order by day`) as OpenRow[];
+  return rows;
 }

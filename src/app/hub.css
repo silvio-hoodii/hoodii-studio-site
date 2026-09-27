@@ -229,3 +229,10 @@
   .idx .hubq { grid-template-columns: 1fr; gap: 8px; }
 }
 .idx .hubq + hr { margin-top: 0; }
+
+/* Which apps he opened (UseStrip.tsx), his device only. Same label column as the rows. */
+.idx .usestrip { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0 16px; padding: 18px 0; border-bottom: 1px solid var(--border); color: var(--foreground); }
+.idx .usestrip svg { display: block; width: 100%; max-width: 420px; height: auto; }
+.idx .usestrip .ul { font-family: var(--font-mono), ui-monospace, monospace; font-size: 7px; fill: var(--muted-foreground); }
+.idx .usestrip .ukey { font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); margin-top: 6px; }
+@media (max-width: 460px) { .idx .usestrip { grid-template-columns: 1fr; gap: 8px; } }
