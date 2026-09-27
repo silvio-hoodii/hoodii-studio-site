@@ -1,5 +1,6 @@
 'use client';
 
+import { timeAgo } from '@/lib/format';
 import { useEffect, useState } from 'react';
 
 type Np = { title?: string; artist?: string; url?: string; isPlaying?: boolean; playedAt?: string };
@@ -43,12 +44,3 @@ export default function NowPlaying() {
   );
 }
 
-/** Same shape as the server helper it replaces, kept local so this component has no server deps. */
-function timeAgo(iso: string): string {
-  const mins = Math.floor((Date.now() - Date.parse(iso)) / 60_000);
-  if (!Number.isFinite(mins) || mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
-}

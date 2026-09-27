@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getDish, cookRows, type ListItem } from '@/lib/kitchen/cookbook';
+import { getDish, cookRows, hostOf, type ListItem } from '@/lib/kitchen/cookbook';
 import { shortDate } from '@/lib/format';
 import NoteBox from '../NoteBox';
 
@@ -52,10 +52,13 @@ function Item(it: ListItem, i: number) {
 
 export default async function DishPage({ params }: Params) {
   const { id } = await params;
-  const d = await getDish(id);
+  /* Both reads at once: cookRows is keyed by the dish ID, and getDish is cached, so the metadata
+     call above costs nothing extra. */
+  const [d, cooks] = await Promise.all([getDish(id), cookRows(id)]);
   if (!d) notFound();
-  const cooks = await cookRows(d.name);
-  const host = new URL(d.sourceUrl).hostname.replace(/^www\./, '');
+  const host = hostOf(d.sourceUrl);
+  const groups = LIST_GROUPS.map(([key, label]) => [key, label, d.list.filter((it) => groupOf(it.need) === key)] as const)
+    .filter(([, , items]) => items.length > 0);
 
   return (
     <div className="wrap">
@@ -91,16 +94,14 @@ export default async function DishPage({ params }: Params) {
 
       <h2 className="sec">Shopping list</h2>
       {d.list.length === 0 ? (
-        <p className="empty">No list yet. It gets built in a session, with the store links.</p>
+        <p className="empty">No list yet.</p>
       ) : (
         /* GROUPED BY `need` SINCE 2026-09-27. The one-list page did this grouping and this page did
            not, so when /kitchen/shop was deleted this became the list he shops from while still
            printing things he owns in the same run as things to buy. An item with no valid `need` is
            not guessed at in either direction: it gets its own group. */
         <>
-          {LIST_GROUPS.map(([key, label]) => {
-            const items = d.list.filter((it) => groupOf(it.need) === key);
-            if (!items.length) return null;
+          {groups.map(([key, label, items]) => {
             const body = <ul className="list">{items.map(Item)}</ul>;
             return key === 'owned' ? (
               <details className="more" key={key}>
@@ -109,7 +110,8 @@ export default async function DishPage({ params }: Params) {
               </details>
             ) : (
               <div key={key}>
-                {LIST_GROUPS.length > 1 && <h3 className="lgroup">{label}</h3>}
+                {/* A heading only when there is more than one group to tell apart. */}
+                {groups.length > 1 && <h3 className="lgroup">{label}</h3>}
                 {body}
               </div>
             );
@@ -143,7 +145,7 @@ export default async function DishPage({ params }: Params) {
       )}
 
       <h2 className="sec">How did it go</h2>
-      <NoteBox dish={d.name} />
+      <NoteBox id={d.id} dish={d.name} />
     </div>
   );
 }

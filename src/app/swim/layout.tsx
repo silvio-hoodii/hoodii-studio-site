@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function SwimLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="training">
+    <div className="training measure-data">
       <SiteHeader app="Swim" />
       <TrainingNav />
       {children}

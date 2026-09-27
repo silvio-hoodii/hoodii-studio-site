@@ -69,3 +69,9 @@ jobs:
       # verify.mjs prints the omission in its own closing lines, so a green run here cannot be
       # misread as a green build.
       - run: node scripts/verify.mjs --no-build
+
+      # THE TEN BUILD GATES, which `--no-build` above skips: gen-tokens --check, the four lints, the
+      # three content validators and lint-probe-routes all ran only inside `pnpm build`, so until
+      # 2026-09-27 CI ran none of them. None needs a database. `pnpm gates` is the same list the
+      # build runs, declared once in package.json.
+      - run: pnpm gates

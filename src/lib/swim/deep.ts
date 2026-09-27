@@ -88,15 +88,6 @@ export interface SwolfPoint {
   avgStrokes: number;
 }
 
-/** How the SWOLF above compares with the figure Samsung stored per session, where both exist.
- *  Reported, not assumed. */
-export interface SwolfAgreement {
-  sessions: number;
-  within1: number;
-  avgAbsDiff: number;
-  maxDiff: number;
-}
-
 export interface RestPoint {
   date: string;
   /** Share of the session spent not swimming, 0 to 100. FLOORED AT 0, because a handful of sessions
@@ -205,24 +196,8 @@ export interface PieceSession {
   pieces: Piece[];
 }
 
-export interface LengthCoverage {
-  rows: number;
-  sessions: number;
-  firstDate: string;
-  lastDate: string;
-  /** Rows outside the plausible band, excluded from every figure on the page. */
-  excludedRows: number;
-  /** Sessions in `health_swim_session` that have no per-length detail at all. */
-  sessionsWithoutLengths: number;
-  /** Lengths carrying a per-length rest reading, and the year it starts. */
-  rowsWithRest: number;
-  restFirstYear: string | null;
-}
-
 export interface DeepSwim {
-  coverage: LengthCoverage;
   swolf: SwolfPoint[];
-  swolfAgreement: SwolfAgreement;
   rest: RestPoint[];
   weightPace: WeightPacePoint[];
   weightBands: WeightBand[];
@@ -268,36 +243,6 @@ async function swolfHistory(): Promise<SwolfPoint[]> {
       avgStrokes: Math.round(avgStrokes * 10) / 10,
     };
   });
-}
-
-/** This file's SWOLF against the one Samsung stored, on the sessions carrying both. */
-async function swolfAgreement(): Promise<SwolfAgreement> {
-  const rows = await sql`
-    with mine as (
-      select session_uuid,
-             avg(duration_ms) / 1000.0 + avg(stroke_count) as swolf
-      from health_swim_length
-      where stroke_type = 'Freestyle'
-        and duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}
-        and stroke_count > 0
-      group by session_uuid
-      having count(*) >= ${MIN_LENGTHS_FOR_SWOLF}
-    )
-    select count(*) as sessions,
-           count(*) filter (where abs(mine.swolf - d.avg_swolf) < 1) as within1,
-           avg(abs(mine.swolf - d.avg_swolf)) as avg_abs,
-           max(abs(mine.swolf - d.avg_swolf)) as max_diff
-    from mine
-    join health_session_detail d on d.uuid = mine.session_uuid
-    where d.avg_swolf is not null and d.avg_swolf > 0
-  `;
-  const r = (rows[0] ?? {}) as Record<string, unknown>;
-  return {
-    sessions: num(r.sessions),
-    within1: num(r.within1),
-    avgAbsDiff: Math.round(num(r.avg_abs) * 100) / 100,
-    maxDiff: Math.round(num(r.max_diff) * 10) / 10,
-  };
 }
 
 /** Work to rest, per session. Rest is the LARGER of two readings.
@@ -793,49 +738,11 @@ export async function getSwimYear(): Promise<SwimYear> {
   return { summaries, pieces };
 }
 
-/** What the mirror holds, including what this page threw away. */
-async function coverage(): Promise<LengthCoverage> {
-  const rows = await sql`
-    select
-      (select count(*) from health_swim_length) as rows_all,
-      (select count(distinct session_uuid) from health_swim_length) as sessions,
-      (select min(((session_start_time::timestamp at time zone 'UTC')
-                    at time zone 'America/Edmonton')::date)::text
-         from health_swim_length where session_start_time is not null) as first_date,
-      (select max(((session_start_time::timestamp at time zone 'UTC')
-                    at time zone 'America/Edmonton')::date)::text
-         from health_swim_length where session_start_time is not null) as last_date,
-      (select count(*) from health_swim_length
-         where duration_ms not between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) as excluded_rows,
-      (select count(*) from health_swim_session s
-         where not exists (select 1 from health_swim_length l where l.session_uuid = s.uuid))
-        as sessions_without_lengths,
-      (select count(*) from health_swim_length
-         where coalesce(rest_recorded_ms, rest_after_ms) > 0) as rows_with_rest,
-      (select min(left(((session_start_time::timestamp at time zone 'UTC')
-                         at time zone 'America/Edmonton')::date::text, 4))
-         from health_swim_length where coalesce(rest_recorded_ms, rest_after_ms) > 0) as rest_first_year
-  `;
-  const r = (rows[0] ?? {}) as Record<string, unknown>;
-  return {
-    rows: num(r.rows_all),
-    sessions: num(r.sessions),
-    firstDate: String(r.first_date).slice(0, 10),
-    lastDate: String(r.last_date).slice(0, 10),
-    excludedRows: num(r.excluded_rows),
-    sessionsWithoutLengths: num(r.sessions_without_lengths),
-    rowsWithRest: num(r.rows_with_rest),
-    restFirstYear: r.rest_first_year == null ? null : String(r.rest_first_year),
-  };
-}
-
 /** One call, one round of queries, for the whole deep-dive page. */
 export async function getDeepSwim(): Promise<DeepSwim> {
-  const [cov, sw, agree, rest, weightPace, proximity, strokes, gaps, pieces, years, records] =
+  const [sw, rest, weightPace, proximity, strokes, gaps, pieces, years, records] =
     await Promise.all([
-      coverage(),
       swolfHistory(),
-      swolfAgreement(),
       restHistory(),
       weightAgainstPace(),
       proximityCohorts(),
@@ -846,9 +753,7 @@ export async function getDeepSwim(): Promise<DeepSwim> {
       distanceRecords(),
     ]);
   return {
-    coverage: cov,
     swolf: sw,
-    swolfAgreement: agree,
     rest,
     weightPace,
     weightBands: bandByWeight(weightPace),

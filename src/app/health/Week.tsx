@@ -1,5 +1,6 @@
 import { KIND_LABEL, SLOT_LABEL, type TrainingWeek } from '@/lib/gym/week';
-import { shortDate } from '@/lib/format';
+import { daysAgoText, shortDate } from '@/lib/format';
+import { today } from '@/lib/day';
 
 /* THE WEEK. Moved here from /gym/conditioning's Overview tab on 2026-08-27, unchanged.
  *
@@ -31,6 +32,12 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
   const { actual, rule } = week;
   const over = actual.overRule;
   const lastKnown = [...actual.days].reverse().find((d) => d.known);
+  /* DAYS SINCE THE LAST TRAINED DAY, counted from today. It printed "more than a day ago" for any
+     zero run, including a rest today after training yesterday, which is one day ago. */
+  const lastTrained = [...actual.days].reverse().find((d) => d.trained);
+  const sinceTrained = lastTrained
+    ? Math.round((Date.parse(`${today()}T12:00:00Z`) - Date.parse(`${lastTrained.date}T12:00:00Z`)) / 86_400_000)
+    : null;
 
   return (
     <div className={`standing${over ? ' over' : ''}`}>
@@ -54,7 +61,11 @@ export function RunStanding({ week }: { week: TrainingWeek }) {
         <div className="ex-meta">
           {actual.currentRun > 1 && actual.currentRunFrom
             ? `${shortDate(actual.currentRunFrom)} to ${shortDate(lastKnown?.date ?? actual.currentRunFrom)}. `
-            : actual.currentRun === 0 ? 'Last session was more than a day ago. ' : ''}
+            : actual.currentRun === 0
+              ? sinceTrained != null
+                ? `Last session ${daysAgoText(sinceTrained)}. `
+                : 'No session in the last four weeks. '
+              : ''}
           {actual.longestRun > actual.currentRun && actual.longestRunFrom && actual.longestRunTo && (
             <>
               Longest in the last four weeks was {actual.longestRun}, {shortDate(actual.longestRunFrom)}{' '}
@@ -138,7 +149,9 @@ export function ActualDays({ week }: { week: TrainingWeek }) {
               {!d.known ? (
                 <span className="quiet">no data yet</span>
               ) : d.trained ? (
-                kinds
+                /* A day the app logged and the watch did not see is trained with no session, and
+                   rendered as a blank cell until 2026-09-27. */
+                kinds || 'lifting (logged)'
               ) : (
                 <span className="quiet">rest</span>
               )}

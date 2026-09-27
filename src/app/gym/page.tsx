@@ -1,4 +1,4 @@
-import { loadProgram, loadWarmups, loadCooldowns, loadExtraSuggestions } from '@/lib/gym/program';
+import { loadProgram, loadWarmups, loadCooldowns, loadExtraSuggestions, loadMovements } from '@/lib/gym/program';
 import { computeFillOptions } from '@/lib/gym/fill';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getNotes, countNotes, getLoggedHistory, getLastSessionSummary } from '@/lib/gym/db';
@@ -16,30 +16,57 @@ export default async function GymHome() {
   /* `streak` comes from week.ts rather than from computeNextUp, as of 2026-08-26. It used to be a
      field on nextUp counted off this app's own log, while a second, watch-based count of the same
      name sat one click away on the conditioning page. There is one now, and it sees both. */
-  const [program, warmups, cooldowns, extraSuggestions, nextUp, notes] = await Promise.all([
+  /* ONE WAVE, since 2026-09-27. None of these reads depends on another, and the page used to wait
+     on about seven round trips in a row: three inside computeNextUp, then the log and the counts,
+     then the lifting history, then two for the last session. Each now costs one query and they all
+     go at once.
+
+     THE LAST FIVE SESSIONS (getGymLog), added 2026-08-27 on his ruling: `gym_session` had been
+     written on every session since 2026-05-25 and displayed by nothing. FIVE, and the count of the
+     rest is on screen beside them, because a cap that does not say it is a cap is finding 37.
+
+     The last-session summary is for the strip under the day title. His words, 2026-09-06: "I don't
+     even know what I did last session." */
+  const [
+    program, warmups, cooldowns, extraSuggestions, movements,
+    nextUp, notes, logRows, logTotal, noteCount, loggedHistory, lastSession,
+  ] = await Promise.all([
     loadProgram(),
     loadWarmups(),
     loadCooldowns(),
     loadExtraSuggestions(),
+    loadMovements().catch(() => null),
     computeNextUp(today()),
     getNotes({ limit: 20 }),
+    getGymLog(5),
+    countGymLog(),
+    countNotes(),
+    getLoggedHistory(),
+    getLastSessionSummary(),
   ]);
-  /* THE LAST FIVE SESSIONS, added 2026-08-27 on his ruling. `gym_session` had been written on every
-     session since 2026-05-25 and displayed by nothing at all: he asked "where is the history of
-     sessions in the app" and the honest answer was that the app had kept one for three months and
-     never shown him a row.
-
-     FIVE, and the count of the rest is on screen beside them. A cap that does not say it is a cap is
-     finding 37 in the audit (the notes list silently holds 20). */
-  const [logRows, logTotal, noteCount] = await Promise.all([getGymLog(5), countGymLog(), countNotes()]);
 
   /* WHAT COULD RIDE IN EACH EMPTY REST, computed on the server so the 103-variant catalogue and the
      whole of equipment.json stay out of the phone's bundle. See src/lib/gym/fill.ts for why this
-     is a control he operates rather than another partner an agent picked. */
-  const fillOptions = await computeFillOptions(await getLoggedHistory());
-  /* What he did last time, for the strip under the day title. His words, 2026-09-06: "I don't even
-     know what I did last session." */
-  const lastSession = await getLastSessionSummary();
+     is a control he operates rather than another partner an agent picked. No database read. */
+  const fillOptions = await computeFillOptions(loggedHistory);
+
+  /* THE EXERCISE NAME FOR A NOTE, not its id. The programme first (slots and their alternatives),
+     then the catalogue for an id the programme no longer carries. The id is the last resort. */
+  const exerciseName = new Map<string, string>();
+  for (const mv of Object.values(movements?.movements ?? {})) {
+    for (const v of mv.variants) {
+      exerciseName.set(v.id, v.name);
+      for (const al of v.aliases ?? []) if (!exerciseName.has(al)) exerciseName.set(al, v.name);
+    }
+  }
+  for (const d of Object.values(program.days)) {
+    for (const block of d.blocks) {
+      for (const ex of block.exercises) {
+        exerciseName.set(ex.id, ex.name);
+        for (const al of ex.alts ?? []) exerciseName.set(al.id, al.name);
+      }
+    }
+  }
   /* COUNTED IN THE DATABASE, NOT IN THE ARRAY. `getNotes` caps at 20 and `notes.filter(...)` could
      only ever see what survived the cap, so an unhandled note older than the twentieth would vanish
      from the count with nothing on screen admitting it. Finding 37. */
@@ -132,9 +159,6 @@ export default async function GymHome() {
               {noteCount.total > notes.length ? `, newest ${notes.length} shown` : ''})
             </span>
           </summary>
-          <p className="ex-cue">
-            A note marked &ldquo;acted on&rdquo; means someone changed something because of it.
-          </p>
           {/* `note-row`, NOT `ex`. See training.css: `.ex` is what the probe harness selects to find
               today's exercises, and reusing it here made its cardNames() return 28 things on a
               10-exercise day. Every test still passed, which is what makes it worth a comment. */}
@@ -148,11 +172,11 @@ export default async function GymHome() {
                     the page, which is all 37 rows today, and null RENDERS NOTHING: a line saying the
                     app does not know something, on 37 rows, is the wall of text he has objected to
                     three times. The kind is not printed: he chose it, he does not need it read back
-                    at him, and the id is the half that answers "which one was this about". */}
+                    at him, and the exercise is the half that answers "which one was this about". */}
                 <div className="note-meta">
                   {shortDate(n.date)}
                   {n.day_title ? ` · ${n.day_title}` : ''}
-                  {n.exercise_id ? ` · ${n.exercise_id}` : ''}
+                  {n.exercise_id ? ` · ${exerciseName.get(n.exercise_id) ?? n.exercise_id}` : ''}
                   {n.handled ? ' · acted on' : ''}
                 </div>
               </div>

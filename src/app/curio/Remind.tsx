@@ -91,7 +91,11 @@ export default function Remind() {
   const test = async () => {
     setNote(null);
     const r = await fetch('/curio/api/push/test', { method: 'POST' }).catch(() => null);
-    setNote(r?.ok ? 'Sent. It should show on this device in a few seconds.' : 'The test did not send.');
+    const j = r?.ok ? await r.json().catch(() => null) : null;
+    if (j && Number(j.removed) > 0) setState('off');
+    setNote(!r?.ok ? 'The test did not send.'
+      : Array.isArray(j?.failed) && j.failed.length ? `The test did not send: ${String(j.failed[0]?.error ?? j.failed[0] ?? 'refused')}`
+      : 'Test sent.');
   };
 
   if (state === 'unsupported' || state === 'checking') return null;

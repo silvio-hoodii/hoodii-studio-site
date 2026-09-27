@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { finishSession } from '@/lib/gym/db';
 
 export const runtime = 'nodejs';
@@ -18,6 +19,7 @@ export async function POST(req: Request) {
       day: b.day ?? null,
       status: b.status === 'cutshort' ? 'cutshort' : 'finished',
     });
+    revalidatePath('/');
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });

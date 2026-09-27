@@ -43,19 +43,25 @@ export function fill(text: string, peak: PeakHr | null): string | null {
   return /\{PEAK_[A-Z_]+\}/.test(out) ? null : out;
 }
 
-/** Fill every string field on one cue.
+/** Fill every string field on one cue, or return null to drop the cue.
  *
- *  A field that cannot be filled falls back to its ORIGINAL text rather than to null, and that is a
- *  different decision from `fill`'s. `fill` guards a whole line the page can simply not render. A cue
- *  has REQUIRED fields (`name`, `cue`, `test`), so nulling one produces a cue with no instruction in
- *  it, which is worse than a cue with a brace in it: a missing instruction is invisible and a visible
- *  brace is a bug report. In practice neither happens, because `content/gym/validate.mjs` refuses a
- *  placeholder this module does not know how to fill. */
-export function fillCue<T extends Cue>(cue: T, peak: PeakHr | null): T {
-  const out = { ...cue };
-  for (const k of ['name', 'cue', 'test', 'why', 'grounding', 'quote'] as const) {
-    const v = (out as Record<string, unknown>)[k];
-    if (typeof v === 'string') (out as Record<string, unknown>)[k] = fill(v, peak) ?? v;
+ *  THE SAME REFUSAL AS `fill`, since 2026-09-27. It fell back to the ORIGINAL text on a field it could
+ *  not fill, which put the literal "{PEAK_BPM}" into the stop rule on /bike whenever the database had
+ *  no reading. Now an optional field that cannot be filled is dropped, and a required field (`name`,
+ *  `cue`, `test`) that cannot be filled drops the whole cue: a card with a hole in its instruction is
+ *  not a card. The caller filters the nulls out. */
+export function fillCue<T extends Cue>(cue: T, peak: PeakHr | null): T | null {
+  const out = { ...cue } as Record<string, unknown>;
+  for (const k of ['name', 'cue', 'test'] as const) {
+    const v = out[k];
+    if (typeof v !== 'string') continue;
+    const filled = fill(v, peak);
+    if (filled == null) return null;
+    out[k] = filled;
   }
-  return out;
+  for (const k of ['why', 'grounding', 'quote'] as const) {
+    const v = out[k];
+    if (typeof v === 'string') out[k] = fill(v, peak);
+  }
+  return out as T;
 }

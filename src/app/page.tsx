@@ -1,6 +1,6 @@
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getTrainingStreak } from '@/lib/gym/week';
-import { today } from '@/lib/day';
+import { dayOf, today } from '@/lib/day';
 import { daysAgoText, shortDate } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
 import { splitName } from '@/lib/gym/program-shared';
@@ -13,6 +13,7 @@ import { getSwimFrontRow, getSwimHistory } from '@/lib/swim/db';
 import { getShelves } from '@/lib/reading/goodreads';
 import { BarSpark, DayStrip, LineSpark } from '@/components/Spark';
 import Track from '@/components/Track';
+import Readout from '@/components/Readout';
 import HubQuiz from './HubQuiz';
 import UseStrip from './UseStrip';
 import './hub.css';
@@ -21,7 +22,7 @@ import './curio/curio.css';
 /* ISR. Added 2026-08-22 at 60 seconds after Active CPU passed the Hobby allowance, raised to 600
  * on 2026-08-25 after measuring what it was actually costing.
  *
- * This is the front door and it makes ten data calls per render, so it took the full weight of
+ * This is the front door and it makes six row functions' worth of database calls per render, so it took the full weight of
  * every crawler. force-dynamic meant one render per request forever; at 60s a thousand bot hits
  * cost about sixteen renders instead of a thousand. It does NOT reintroduce the build-time
  * staleness problem AGENTS.md warns about: ISR regenerates against Neon, it does not bake at build.
@@ -46,8 +47,8 @@ import './curio/curio.css';
  * that fight: Active CPU is ~0.6 CPU-hr/month against a Hobby allowance of 4. But Neon moved to
  * pay-as-you-go (Launch v3, $0.106/CU-hour, nothing included) and bills something else entirely,
  * and by THAT meter this one line was 76.6% of every database call the account made: 22,260 of
- * 29,051 in 7.6 days, because each regeneration runs all ten row functions, which fan out to about
- * thirty round trips.
+ * 29,051 in 7.6 days, because each regeneration runs every row function, which fan out to about
+ * twenty-five round trips.
  *
  * NEON DOES NOT BILL QUERIES, IT BILLS WALL TIME AWAKE, and the compute cannot sleep for 300
  * seconds after the last one. On Launch that 300 is fixed and cannot be configured; 60 seconds is
@@ -71,7 +72,12 @@ import './curio/curio.css';
  * which is a class of problem rather than a number to tune. Calling revalidatePath('/') from the
  * write routes and dropping this to a daily safety net would mean the index regenerates only when
  * something it shows actually changed, inside a wake his own write already paid for. */
-export const revalidate = 3600;
+/* SIX HOURS, WITH ON-DEMAND REGENERATION, since 2026-09-27. The gym write routes, the kitchen note
+ * route and the music cron call revalidatePath('/') when they change what this page shows, and the
+ * two laptop pipelines call /api/revalidate (scripts/revalidate.mjs) after they write to Neon. The
+ * timer is the safety net now, not the mechanism, and at 21600 the arithmetic above gives 1.4%
+ * awake instead of 8.3%. */
+export const revalidate = 21600;
 
 /* Declared here rather than in the root layout, where it would be inherited by every route and
  * would tell a crawler the whole site is a duplicate of this page. */
@@ -118,9 +124,13 @@ async function gymRow(): Promise<Row> {
       getLiftingAdherence(28),
     ]);
     /* The last four weeks as squares: lifted, rested, or not reported yet. */
-    const strip = adherence.days.map((d) => (!d.known ? 'unknown' : d.trained ? 'on' : 'off') as 'on' | 'off' | 'unknown');
-    const lifted = adherence.days.filter((d) => d.trained).length;
-    const viz = <DayStrip days={strip} label={`${lifted} of the last ${strip.length} days trained`} />;
+    /* A day the app logged is a day trained, whether or not the watch export has reached it. It
+       drew as a rest day between Sunday exports until 2026-09-27. */
+    const on = (d: { trained: boolean; logged: boolean }) => d.trained || d.logged;
+    const strip = adherence.days.map((d) => (!d.known ? 'unknown' : on(d) ? 'on' : 'off') as 'on' | 'off' | 'unknown');
+    const lifted = adherence.days.filter(on).length;
+    const dayLabels = adherence.days.map((d) => `${shortDate(d.date)}, ${!d.known ? 'not synced yet' : on(d) ? 'trained' : 'rest'}`);
+    const viz = <DayStrip days={strip} labels={dayLabels} label={`${lifted} of the last ${strip.length} days trained`} />;
     const day = program.days[nextUp.nextDay];
     const next = day ? splitName(day) : nextUp.nextDay;
     const since = nextUp.daysSince;
@@ -132,7 +142,7 @@ async function gymRow(): Promise<Row> {
       label: 'Gym',
       line:
         since != null && since > 1 ? (
-          <>Last trained <span className="live tnum">{daysAgoText(since)}</span>, next up {next}</>
+          <>Last lifted <span className="live tnum">{daysAgoText(since)}</span>, next up {next}</>
         ) : (
           /* "Lower B" is a name, not a number: it had .tnum on it, and --signal, which globals
              reserves for a value that is true right now. /gym renders the same string in plain grey
@@ -147,8 +157,7 @@ async function gymRow(): Promise<Row> {
       viz,
     };
   } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Gym', line: 'Two sessions, alternated, logged between sets', href: '/gym' };
+    return { label: 'Gym', line: <span className="quiet">did not load</span>, href: '/gym' };
   }
 }
 
@@ -168,8 +177,9 @@ async function healthRow(): Promise<Row> {
      * scale to fix a laptop. */
     const [summary, sync, series] = await Promise.all([getBodyCompSummary(), getSyncLiveness(), getBodyCompSeries(120)]);
     if (!summary.latest?.kg) throw new Error('no readings');
-    const kgs = series.map((p) => Number(p.kg)).filter((v) => Number.isFinite(v));
-    const viz = <LineSpark values={kgs} label={`Weight over the last 120 days, ${kgs.length} readings`} />;
+    const read = series.filter((p) => Number.isFinite(Number(p.kg)));
+    const kgs = read.map((p) => Number(p.kg));
+    const viz = <LineSpark values={kgs} minSpan={3} labels={read.map((p) => `${shortDate(String(p.date).slice(0, 10))}, ${Number(p.kg).toFixed(1)} kg`)} label={`Weight over the last 120 days, ${kgs.length} readings`} />;
 
     /* `.live` is reserved for a value that is true right now, so a reading two weeks old must not
      * wear it, and neither must one arriving through a pipeline that has stopped. */
@@ -202,8 +212,7 @@ async function healthRow(): Promise<Row> {
       viz,
     };
   } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Health', line: 'Weight and lifting attendance', href: '/health' };
+    return { label: 'Health', line: <span className="quiet">did not load</span>, href: '/health' };
   }
 }
 
@@ -212,7 +221,8 @@ async function healthRow(): Promise<Row> {
  * reading, off the same cached feed /reading uses, so it costs no database call at all. */
 async function readingRow(): Promise<Row | null> {
   try {
-    const { current, read } = await getShelves();
+    const { current, read, ok } = await getShelves();
+    if (!ok) return { label: 'Reading', line: <span className="quiet">Goodreads did not answer</span>, href: '/reading' };
     const now = current[0];
     if (!now && !read.length) return null;
     return {
@@ -226,7 +236,7 @@ async function readingRow(): Promise<Row | null> {
       ) : undefined,
     };
   } catch {
-    return { label: 'Reading', line: 'What I am reading', href: '/reading' };
+    return { label: 'Reading', line: <span className="quiet">did not load</span>, href: '/reading' };
   }
 }
 
@@ -235,7 +245,9 @@ async function swimRow(): Promise<Row> {
     const [s, hist] = await Promise.all([getSwimFrontRow(), getSwimHistory(120)]);
     if (!s.lastDate) throw new Error('nothing synced');
     /* The last twelve swims as bars, oldest first. The store orders newest first. */
-    const swims = [...hist.sessions].sort((a, b) => (a.date < b.date ? -1 : 1)).filter((x) => (x.distanceM ?? 0) > 0).slice(-12).map((x) => x.distanceM ?? 0);
+    const swimRows = [...hist.sessions].sort((a, b) => (a.date < b.date ? -1 : 1)).filter((x) => (x.distanceM ?? 0) > 0).slice(-12);
+    const swims = swimRows.map((x) => x.distanceM ?? 0);
+    const swimLabels = swimRows.map((x) => `${shortDate(x.date)}, ${Math.round(x.distanceM ?? 0)} m`);
 
     /* THIS ROW USED TO COUNT POOLS. It read "N Calgary pools with lane swim open right now", off
        six scrapers and a nightly mirror, and all of that was deleted on 2026-08-26 along with the
@@ -260,11 +272,10 @@ async function swimRow(): Promise<Row> {
       ),
       sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0).toLocaleString('en-CA')} m`,
       href: '/swim',
-      viz: <BarSpark values={swims} label={`Distance of the last ${swims.length} swims`} />,
+      viz: <BarSpark values={swims} labels={swimLabels} label={`Distance of the last ${swims.length} swims`} />,
     };
   } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Swim', line: 'Where I am in the water, and the plan to swim 1,000 m unbroken', href: '/swim' };
+    return { label: 'Swim', line: <span className="quiet">did not load</span>, href: '/swim' };
   }
 }
 
@@ -274,13 +285,12 @@ async function curioRow(): Promise<Row> {
     if (!s.items) throw new Error('nothing synced');
     return {
       label: 'Curio',
-      line: <><span className="live tnum">{s.items}</span> things I looked up</>,
+      line: <><span className="live tnum">{s.items}</span> questions answered</>,
       sub: s.latestQuestion ?? `${s.digests} mornings`,
       href: '/curio',
     };
   } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Curio', line: 'Questions I wondered about, answered and kept', href: '/curio' };
+    return { label: 'Curio', line: <span className="quiet">did not load</span>, href: '/curio' };
   }
 }
 
@@ -309,7 +319,7 @@ async function musicRow(): Promise<Row> {
         label: 'Music',
         line: 'The collector has stopped, so plays are being lost',
         sub: s.liveness.lastOkAt
-          ? `last good run ${s.liveness.lastOkAt.slice(0, 10)}`
+          ? `last good run ${dayOf(s.liveness.lastOkAt)}`
           : 'it has never completed a run',
         href: '/music',
       };
@@ -335,7 +345,7 @@ async function musicRow(): Promise<Row> {
       line: (
         <>
           <span className="live tnum">{s.plays}</span> plays collected
-          {s.since ? ` since ${shortDate(s.since.slice(0, 10))}` : ''}
+          {s.since ? ` since ${shortDate(dayOf(s.since))}` : ''}
         </>
       ),
       sub:
@@ -346,8 +356,7 @@ async function musicRow(): Promise<Row> {
       viz,
     };
   } catch {
-    // A database hiccup must not take the front door down with it.
-    return { label: 'Music', line: 'What I listen to, and a history Spotify does not keep', href: '/music' };
+    return { label: 'Music', line: <span className="quiet">did not load</span>, href: '/music' };
   }
 }
 
@@ -368,7 +377,8 @@ function RowView({ r }: { r: Row }) {
       <div className="body">
         <div className="line">{r.line}</div>
         {r.sub && <div className="sub">{r.sub}</div>}
-        {r.viz && <div className="viz">{r.viz}</div>}
+        {/* Readout: tap a bar for its value, and the picture draws in on first sight. */}
+        {r.viz && <Readout className="viz">{r.viz}</Readout>}
       </div>
       {/* An app on this domain gets →, somebody else’s website gets ↗. */}
       <div className="arrow">{r.href && !r.off ? (r.external ? '↗' : '→') : '·'}</div>
@@ -408,7 +418,7 @@ export default async function Home() {
   };
 
   return (
-    <div className="idx">
+    <div className="idx measure-data">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
       <div className="top">
         <h1>Silvio Neyra</h1>

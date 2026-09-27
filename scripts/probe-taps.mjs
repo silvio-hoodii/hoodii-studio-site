@@ -512,8 +512,13 @@ for (const path of PATHS) {
    * One control and forty characters is the floor now. An unpainted document produces zero and
    * zero, which is the only thing this needs to separate: a 404 or a challenge never reaches here.
    * The floor is deliberately far below every real page rather than just below the shortest one,
-   * so adding a terser page later does not re-tune it. */
-  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 40 && (x?.skeleton ?? 0) === 0;
+   * so adding a terser page later does not re-tune it.
+   *
+   * AND IT HAD TO BE RE-TUNED ONCE ANYWAY, 2026-09-27: /login lost its explanatory sentence to the
+   * page-text rule and painted 29 characters against a floor of 40, so the probe printed a FAIL
+   * about a page that had rendered completely. Twenty now. Zero is still the only thing an
+   * unpainted document produces. */
+  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 20 && (x?.skeleton ?? 0) === 0;
   let m = null;
   let prev = null;
   let stable = false;

@@ -80,8 +80,9 @@ export function Trace({
 }
 
 /* PER LENGTH, which is the chart he actually asked for. One bar per length of the pool, height is
- * how long it took. A rest between lengths is drawn as a gap, so the SHAPE of the swim, the pieces
- * and where he stopped, is visible without reading a single number. */
+ * how long it took. The length before a rest is drawn faded (`.before-rest`, opacity in
+ * training.css), so the SHAPE of the swim, the pieces and where he stopped, is visible without
+ * reading a single number. */
 export function LengthBars({ lengths, poolLength }: { lengths: LengthRow[]; poolLength: number | null }) {
   if (!lengths?.length) return null;
   const H = 68;
@@ -117,7 +118,7 @@ export function LengthBars({ lengths, poolLength }: { lengths: LengthRow[]; pool
         })}
       </svg>
       <div className="trace-foot">
-        Taller is slower. A notch under a bar is a stop.
+        Taller is slower. A faded bar ends in a stop.
       </div>
     </div>
   );
@@ -155,7 +156,7 @@ export function SessionStats({ s }: { s: SessionDetail }) {
     if (s.avgCadence) items.push({ k: 'Cadence', v: `${Math.round(s.avgCadence)} spm` });
     if (s.maxCadence) items.push({ k: 'Peak cadence', v: `${Math.round(s.maxCadence)} spm` });
   }
-  if (s.avgHr) items.push({ k: 'Heart rate', v: `${s.avgHr} avg, ${s.maxHr} max` });
+  if (s.avgHr) items.push({ k: 'Heart rate', v: s.maxHr != null ? `${s.avgHr} avg, ${s.maxHr} max` : `${s.avgHr} avg` });
   if (s.kind === 'strength' && s.pctEasy != null) items.push({ k: 'Under 110 bpm', v: `${Math.round(s.pctEasy)}%` });
 
   if (!items.length) return null;

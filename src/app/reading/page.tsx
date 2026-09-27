@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { getShelves, GOODREADS_PROFILE, type Book } from '@/lib/reading/goodreads';
-import { shortDate } from '@/lib/format';
 
 /* Revalidates with the feeds (FEED_TTL in goodreads.ts), so a book added on Goodreads shows here the
    same day. A literal because Next reads route config statically. */
@@ -37,8 +36,10 @@ function Cover({ b, big = false }: { b: Book; big?: boolean }) {
   );
 }
 
+/* The year he finished it. A book with no read date is "Undated", never filed under the year it
+   was added; getShelves sorts those last, so that heading comes after every dated year. */
 function year(b: Book): string {
-  return (b.readAt ?? b.addedAt ?? '').slice(0, 4) || 'Undated';
+  return b.readAt?.slice(0, 4) || 'Undated';
 }
 
 export default async function ReadingPage() {
@@ -64,11 +65,8 @@ export default async function ReadingPage() {
                 <div className="eyebrow">Reading now</div>
                 <div className="nt">{b.title}</div>
                 <div className="na">{b.author}</div>
-                <div className="nm tnum">
-                  {b.pages && <>{b.pages} pages</>}
-                  {b.pages && b.addedAt && <span className="dot">·</span>}
-                  {b.addedAt && <>since {shortDate(b.addedAt)}</>}
-                </div>
+                {/* No "since": Goodreads dates when the book went on the shelf, not when he started it. */}
+                {b.pages && <div className="nm tnum">{b.pages} pages</div>}
               </div>
             </div>
           ))}

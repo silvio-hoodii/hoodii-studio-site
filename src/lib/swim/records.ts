@@ -1,6 +1,7 @@
 import 'server-only';
 import { sql } from './db';
 import { LENGTH_MIN_MS, LENGTH_MAX_MS } from './deep';
+import { median } from '../health/fmt';
 
 /* DISTANCES THE WATCH DOES NOT KEEP, derived from the individual lengths. THIS YEAR ONLY.
  *
@@ -119,12 +120,6 @@ interface Window {
   stops: { atM: number; restS: number }[];
 }
 
-const median = (xs: number[]): number | null => {
-  if (!xs.length) return null;
-  const s = [...xs].sort((a, b) => a - b);
-  const m = s.length >> 1;
-  return s.length % 2 ? (s[m] as number) : (((s[m - 1] as number) + (s[m] as number)) / 2);
-};
 
 /** Every contiguous run of in-band FREESTYLE lengths summing to exactly `targetM`.
  *

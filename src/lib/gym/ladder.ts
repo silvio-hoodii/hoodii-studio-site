@@ -56,8 +56,6 @@ export function ladderFor(id: string): number[] | null {
   return IMPLEMENT_BY_ID.get(id) === 'dumbbell' && DUMBBELLS.length ? DUMBBELLS : null;
 }
 
-/** Exported for the tests and for check-ladder, which reports on the rack itself. */
-export const dumbbellLadder = (): number[] => DUMBBELLS;
 
 /* ---- `progression: "fixed"`, resolved the same way and for the same reason ---------------------
  *

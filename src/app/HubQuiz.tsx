@@ -1,7 +1,7 @@
 'use client';
 
 import type { QuizCard } from '@/lib/curio/today';
-import { Quiz } from './curio/Today';
+import { Quiz } from './curio/Quiz';
 import { useToday } from './curio/today-cache';
 
 /* Today's Curio questions, answered on the index without opening /curio. His ask, 2026-09-27: "maybe

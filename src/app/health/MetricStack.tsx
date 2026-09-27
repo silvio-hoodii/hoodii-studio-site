@@ -1,6 +1,7 @@
 'use client';
 
-import { Fragment, useRef, useState, useEffect } from 'react';
+import { Fragment, useRef, useState } from 'react';
+import { useMeasuredWidth } from './useMeasuredWidth';
 
 /* EVERY BODY NUMBER ON ONE TIMELINE, WITH ONE CROSSHAIR THROUGH ALL OF THEM.
  *
@@ -46,21 +47,6 @@ const PAD_L = 4;
 const PAD_R = 6;
 const PAD_V = 7;
 
-function useWidth(ref: React.RefObject<HTMLDivElement | null>): number {
-  const [w, setW] = useState(600);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const ro = new ResizeObserver((e) => {
-      const next = e[0]?.contentRect.width ?? 0;
-      if (next > 0) setW(Math.round(next));
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [ref]);
-  return w;
-}
-
 const fmt = (v: number, d: number) =>
   v.toLocaleString('en-CA', { minimumFractionDigits: d, maximumFractionDigits: d });
 
@@ -70,7 +56,7 @@ function monthLabel(t: number): string {
 
 export function MetricStack({ series }: { series: StackSeries[] }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const W = useWidth(wrapRef);
+  const W = useMeasuredWidth(wrapRef);
   const [atT, setAtT] = useState<number | null>(null);
 
   const usable = series.filter((s) => s.points.length >= 2);

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { syncMusic } from '@/lib/music/sync';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +29,14 @@ export async function GET(req: NextRequest) {
   }
 
   const result = await syncMusic();
+
+  /* /music is ISR at 3600 and the hub row reads the same tables, so a good run regenerates both
+   * rather than waiting out the hour. Neon bills awake time with a 5-minute floor, which is why
+   * the pages are not on a short window instead. */
+  if (result.ok) {
+    revalidatePath('/music');
+    revalidatePath('/');
+  }
 
   /* A failed sync returns 500 on purpose. Vercel surfaces failing crons, and the entire point of
    * this build is that a dead Spotify token must not look like silence. */

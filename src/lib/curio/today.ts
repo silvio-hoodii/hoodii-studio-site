@@ -122,11 +122,12 @@ export async function gradeCard(id: string, knew: boolean): Promise<void> {
   const [prev] = (await sql`select box, due from curio_review where item_id = ${id}`) as Array<{
     box: number; due: unknown;
   }>;
-  const next = grade(
-    prev ? { box: prev.box, due: prev.due instanceof Date ? prev.due.toISOString().slice(0, 10) : String(prev.due) } : null,
-    knew,
-    day,
-  );
+  const prevDue = prev ? (prev.due instanceof Date ? prev.due.toISOString().slice(0, 10) : String(prev.due)) : null;
+  /* NOT DUE, NOT GRADED. The device paints its saved copy of the day first, so a card graded on
+     the phone in the morning can be dealt again from the laptop's copy; a second "knew it" would
+     jump it two boxes. A grade on a card that is already scheduled past today is a no-op. */
+  if (prevDue && prevDue > day) return;
+  const next = grade(prev ? { box: prev.box, due: prevDue as string } : null, knew, day);
   await sql`
     insert into curio_review (item_id, box, due, first_seen, last_grade, reviews, updated_at)
     values (${id}, ${next.box}, ${next.due}, ${day}, ${knew ? 'knew' : 'missed'}, 1, now())

@@ -1,6 +1,7 @@
-/* The Spotify fetcher. Both the public API route (src/app/api/spotify/route.ts) and the RSC root
- * page call it: same code path, same response shape, so the server-rendered snapshot hands off
- * cleanly to the client-side polling.
+/* The Spotify fetcher behind the public API route (src/app/api/spotify/route.ts), its only caller;
+ * src/components/NowPlaying.tsx fetches that route from the browser on the index and on /music.
+ * It swallows errors on purpose, which is why src/lib/music/spotify.ts, the collector's client,
+ * exists separately and throws (see AGENTS.md, the /music failure mode).
  *
  * THE PSN HALF IS GONE, 2026-09-04, E5 and section F of that day's audit. `PSN_NPSSO` had been
  * expired for months, /api/psn and /api/psn-image had zero callers, nothing on the site rendered a

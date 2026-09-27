@@ -15,14 +15,6 @@
 /* The masthead that used to sit here was a copy of the hub's. It is now one shared component
    mounted from the layout, the same one every other surface uses. */
 
-.curio .blurb {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--muted-foreground);
-  max-width: 52ch;
-  margin: 14px 0 0;
-}
-
 .curio .stat {
   font-family: var(--font-mono);
   font-size: 12.5px;
@@ -188,9 +180,6 @@
   /* A grid item does not shrink below its own content by default, and one long question with no
      spaces in it would push the second column off the page. */
   .curio .lrow { min-width: 0; }
-  /* The empty state lives inside the same wrapper so the section keeps its rule, which makes it a
-     grid item too. It is a sentence, not a row, so it spans. */
-  .curio .ledger > .empty { grid-column: 1 / -1; }
 }
 
 
@@ -376,6 +365,12 @@
 /* ---- games ---- */
 
 .curio .ggroup + .ggroup { margin-top: 22px; }
+/* The groups two across on a wide screen, where one list of forty rows is a scroll. */
+@media (min-width: 1024px) {
+  .curio .games { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 44px; }
+  .curio .ggroup + .ggroup { margin-top: 0; }
+  .curio .ggroup { margin-bottom: 22px; min-width: 0; }
+}
 
 .curio .ggroup h3 {
   font-size: 14px;

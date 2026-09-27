@@ -10,9 +10,12 @@ import { getRecentSessions, mmss, type SessionDetail } from '@/lib/gym/session';
 import { BarChart } from '../health/HealthCharts';
 import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
+import SubNav from '@/components/training/SubNav';
+import { median } from '@/lib/health/fmt';
 import { Trace } from '@/components/training/SessionCharts';
 import Prose from '@/components/training/Prose';
 import Cues from '@/components/training/Cues';
+import Readout from '@/components/Readout';
 import { shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
 import type { SwimPlan, SwimCoaching, SwimTeaching } from '@/lib/swim/types';
@@ -38,30 +41,6 @@ const LONG_PIECE_M = 300;
 
 /** The distance in plan.json's goal, which the Plan tab counts his swim days against. */
 const GOAL_M = 1000;
-
-function SubNav({ sub }: { sub: string }) {
-  return (
-    <div className="subtabs">
-      {SUB_TABS.map((t) => (
-        <Link
-          key={t.id}
-          href={t.id === 'now' ? '/swim' : `/swim?s=${t.id}`}
-          className={`subtab${sub === t.id ? ' on' : ''}`}
-          aria-current={sub === t.id ? 'page' : undefined}
-        >
-          {t.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function median(xs: number[]): number | null {
-  if (!xs.length) return null;
-  const s = [...xs].sort((a, b) => a - b);
-  const m = s.length >> 1;
-  return s.length % 2 ? (s[m] as number) : ((s[m - 1] as number) + (s[m] as number)) / 2;
-}
 
 function mean(xs: number[]): number {
   return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0;
@@ -146,6 +125,49 @@ function LastSwims({ rows }: { rows: SwimSummary[] }) {
   );
 }
 
+/* The last ten swims as bars, oldest first, since 2026-09-27: the distance swum as the bar and the
+   longest unbroken piece inside it in full ink, so how much of each swim was one piece is the
+   picture. Tap a bar for the date, the metres, the piece and the stops. The table stays, folded. */
+function SwimBars({ rows }: { rows: SwimSummary[] }) {
+  if (rows.length < 2) return null;
+  const max = Math.max(1, ...rows.map((r) => r.metres));
+  const n = rows.length;
+  const W = 340;
+  const H = 96;
+  const gap = 6;
+  const bw = (W - gap * (n - 1)) / n;
+  const hOf = (m: number) => Math.max(2, (m / max) * (H - 14));
+  return (
+    <figure className="swimbars">
+      <Readout>
+      <svg viewBox={`0 0 ${W} ${H + 16}`} role="img"
+        aria-label={`The last ${n} swims: metres swum, with the longest unbroken piece of each drawn inside`}>
+        {rows.map((r, i) => {
+          const x = i * (bw + gap);
+          const h = hOf(r.metres);
+          const hp = hOf(r.longestM);
+          const last = i === n - 1;
+          return (
+            <g key={r.uuid} data-r={`${shortDate(r.date)}, ${r.metres.toLocaleString('en-CA')} m, longest piece ${r.longestM} m, ${r.stops} ${r.stops === 1 ? 'stop' : 'stops'}`}>
+              <rect x={x} y={0} width={bw} height={H} fill="transparent" />
+              <rect className="vbar swum" style={{ ['--i' as string]: i }} x={x} y={H - h} width={bw} height={h} rx="1.5" />
+              <rect className={`vbar piece${last ? ' now' : ''}`} style={{ ['--i' as string]: i }} x={x} y={H - hp} width={bw} height={hp} rx="1.5" />
+              <text x={x + bw / 2} y={H - h - 4} textAnchor="middle" className="sv">{r.metres}</text>
+            </g>
+          );
+        })}
+        <text x={0} y={H + 13} className="sd">{shortDate(rows[0]!.date)}</text>
+        <text x={W} y={H + 13} textAnchor="end" className="sd">{shortDate(rows[n - 1]!.date)}</text>
+      </svg>
+      </Readout>
+      <figcaption>
+        <span><i className="k-swum" />swum, m</span>
+        <span><i className="k-piece" />longest unbroken piece</span>
+      </figcaption>
+    </figure>
+  );
+}
+
 function Toward1000({ year, baseline, plan }: { year: SwimYear; baseline: SwimBaseline | null; plan: SwimPlan }) {
   const s = year.summaries;
   if (!s.length) return null;
@@ -192,17 +214,28 @@ function Toward1000({ year, baseline, plan }: { year: SwimYear; baseline: SwimBa
           </div>
         )}
       </div>
-      <p className="ex-meta" style={{ marginTop: 14 }}>
-        Longest unbroken piece, every swim in {today().slice(0, 4)}
-      </p>
-      <BarChart points={s.map((x) => ({ date: x.date, value: x.longestM }))} unit="m" />
+      <div className="two">
+        <div>
+          <p className="ex-meta" style={{ marginTop: 14 }}>
+            Longest unbroken piece, every swim in {today().slice(0, 4)}
+          </p>
+          <BarChart points={s.map((x) => ({ date: x.date, value: x.longestM }))} unit="m" />
+        </div>
+        <div>
+          <p className="ex-meta" style={{ marginTop: 14 }}>The last {last.length} swims</p>
+          <SwimBars rows={last} />
+        </div>
+      </div>
       {lastLongest != null && lastStops != null && prevLongest != null && prevStops != null && (
         <p className="ex-cue" style={{ marginTop: 10 }}>
           Your last {last.length} swims: a typical longest piece of <b>{lastLongest} m</b> and{' '}
           <b>{lastStops} stops</b>. The {before.length} before: {prevLongest} m and {prevStops}.
         </p>
       )}
-      <LastSwims rows={[...last].reverse()} />
+      <details className="fold">
+        <summary>The last {last.length}, as a table</summary>
+        <LastSwims rows={[...last].reverse()} />
+      </details>
     </div>
   );
 }
@@ -311,12 +344,14 @@ function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: numbe
   const bw = W / n;
   return (
     <figure className="ladder-track">
+      <Readout>
       <svg viewBox={`0 0 ${W} ${H + 18}`} role="img"
         aria-label={`The ladder from ${steps[0]?.metres ?? ''} m to ${GOAL_M} m; your longest recent piece is ${longest} m`}>
         {steps.map((st, i) => st.metres ? (
-          <g key={st.weeks}>
+          <g key={st.weeks} data-r={`weeks ${st.weeks}: ${st.metres.toLocaleString('en-CA')} m unbroken${st.on ? ', this week' : ''}`}>
+            <rect x={i * bw + 2} y={0} width={bw - 4} height={H} fill="transparent" />
             <rect x={i * bw + 2} y={y(st.metres)} width={bw - 4} height={H - y(st.metres)} rx="1.5"
-              className={st.on ? 'on' : 'off'} />
+              className={`vbar ${st.on ? 'on' : 'off'}`} style={{ ['--i' as string]: i }} />
             <text x={i * bw + bw / 2} y={y(st.metres) - 4} textAnchor="middle" className="lv">{st.metres}</text>
             <text x={i * bw + bw / 2} y={H + 13} textAnchor="middle" className="lw">{st.weeks}</text>
           </g>
@@ -324,6 +359,7 @@ function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: numbe
         <line x1="0" x2={W} y1={y(GOAL_M)} y2={y(GOAL_M)} className="goal" />
         {longest > 0 && <line x1="0" x2={W} y1={y(longest)} y2={y(longest)} className="you" />}
       </svg>
+      </Readout>
       <figcaption>
         <span><i className="k-goal" />goal {GOAL_M.toLocaleString('en-CA')} m</span>
         {longest > 0 && <span><i className="k-you" />your longest lately {longest} m</span>}
@@ -452,7 +488,7 @@ function HowTab({ plan, year, recent }: { plan: SwimPlan; year: SwimYear; recent
           <div className="ex-cue">{plan.pullBuoyRule}</div>
         </div>
       </div>
-      <Cues cues={plan.cues ?? []} note={plan.cuesNote} heading="In the water" intro="" />
+      <Cues cues={plan.cues ?? []} heading="In the water" />
     </div>
   );
 }
@@ -629,7 +665,7 @@ export default async function SwimPage({
     <div className="wrap">
       <h1>Swim</h1>
 
-      <SubNav sub={sub} />
+      <SubNav base="/swim" tabs={SUB_TABS} sub={sub} bare="now" />
 
       {sub === 'now' && year && standards && pbs && (
         <>

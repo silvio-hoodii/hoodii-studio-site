@@ -24,8 +24,15 @@ function day(v: unknown): string {
 
 /* ---------------------------------------------------------------- writes */
 
+/* THE SATURATION WARNING'S MARK, shared by the writer (sync.ts) and the reader (getSummary), so the
+ * two cannot drift. music_sync has no column for it and the warning lives in `error` beside any
+ * top-snapshot failures, so the page alarms on this phrase only, never on "the run had a warning".
+ * Every saturated row already stored carries it. */
+export const SATURATION_MARK = 'full 50-item maximum';
+
 /**
- * Insert plays, ignoring any we already hold.
+ * Insert plays, ignoring any we already hold. ONE statement for the whole batch (unnest over column
+ * arrays), not fifty round trips.
  *
  * `on conflict (played_at) do nothing` is the dedupe the whole design rests on, and it is why the
  * poller can be run twice in a row, or run against an overlapping window, without corrupting the
@@ -33,40 +40,50 @@ function day(v: unknown): string {
  * noise, "3 new" is the signal that the window is not sliding past us.
  */
 export async function insertPlays(rows: PlayRow[]): Promise<number> {
-  let added = 0;
-  for (const r of rows) {
-    const res = await sql`
-      insert into music_play
-        (played_at, track_id, track_name, artist_name, album_name, album_image, track_url,
-         duration_ms, context_type)
-      values
-        (${r.playedAt}, ${r.trackId}, ${r.trackName}, ${r.artistName}, ${r.albumName},
-         ${r.albumImage}, ${r.trackUrl}, ${r.durationMs}, ${r.contextType})
-      on conflict (played_at) do nothing
-      returning played_at`;
-    added += res.length;
-  }
-  return added;
+  if (rows.length === 0) return 0;
+  const res = await sql`
+    insert into music_play
+      (played_at, track_id, track_name, artist_name, album_name, album_image, track_url,
+       duration_ms, context_type)
+    select * from unnest(
+      ${rows.map((r) => r.playedAt)}::timestamptz[],
+      ${rows.map((r) => r.trackId)}::text[],
+      ${rows.map((r) => r.trackName)}::text[],
+      ${rows.map((r) => r.artistName)}::text[],
+      ${rows.map((r) => r.albumName)}::text[],
+      ${rows.map((r) => r.albumImage)}::text[],
+      ${rows.map((r) => r.trackUrl)}::text[],
+      ${rows.map((r) => r.durationMs)}::integer[],
+      ${rows.map((r) => r.contextType)}::text[])
+    on conflict (played_at) do nothing
+    returning played_at`;
+  return res.length;
 }
 
-/** Snapshot one (kind, range) pair for one day. Re-running the same day overwrites, so a second
- *  run never produces a half-old half-new chart. */
-export async function replaceTop(
-  capturedOn: string,
-  kind: 'track' | 'artist',
-  range: TimeRange,
-  rows: TopRow[],
-): Promise<number> {
-  await sql`
-    delete from music_top
-     where captured_on = ${capturedOn} and kind = ${kind} and time_range = ${range}`;
-  for (const r of rows) {
-    await sql`
-      insert into music_top (captured_on, kind, time_range, rank, spotify_id, name, detail, image, url)
-      values (${capturedOn}, ${kind}, ${range}, ${r.rank}, ${r.spotifyId}, ${r.name},
-              ${r.detail}, ${r.image}, ${r.url})`;
-  }
-  return rows.length;
+export interface TopSnapshot { kind: 'track' | 'artist'; range: TimeRange; rows: TopRow[] }
+
+/** Snapshot every (kind, range) pair for one day in ONE transaction: a delete and a multi-row insert
+ *  per pair. Re-running the same day overwrites, so a second run never produces a half-old half-new
+ *  chart, and a failure part way leaves the previous snapshot whole. */
+export async function replaceTops(capturedOn: string, snaps: TopSnapshot[]): Promise<number> {
+  if (snaps.length === 0) return 0;
+  await sql.transaction(
+    snaps.flatMap(({ kind, range, rows }) => [
+      sql`
+        delete from music_top
+         where captured_on = ${capturedOn} and kind = ${kind} and time_range = ${range}`,
+      sql`
+        insert into music_top (captured_on, kind, time_range, rank, spotify_id, name, detail, image, url)
+        select ${capturedOn}::date, ${kind}, ${range}, u.* from unnest(
+          ${rows.map((r) => r.rank)}::integer[],
+          ${rows.map((r) => r.spotifyId)}::text[],
+          ${rows.map((r) => r.name)}::text[],
+          ${rows.map((r) => r.detail)}::text[],
+          ${rows.map((r) => r.image)}::text[],
+          ${rows.map((r) => r.url)}::text[]) as u`,
+    ]),
+  );
+  return snaps.reduce((n, s) => n + s.rows.length, 0);
 }
 
 export async function recordSync(e: {
@@ -87,6 +104,12 @@ export async function newestPlayedAtMs(): Promise<number | undefined> {
 
 /* ---------------------------------------------------------------- reads */
 
+/* THE PRIMARY ARTIST, wherever plays are counted by artist. spotify.ts stores every credited artist
+ * joined with ", " ("A, B"), so grouping on the raw column counted each collaboration as an artist
+ * of its own. The first name is the lead credit. The stored data is unchanged. Known gap: an artist
+ * whose own name contains ", " is cut at the comma. Inlined as SQL text in each query below because
+ * a tagged-template fragment would be sent as a bound string parameter, not as SQL. */
+
 export interface Play {
   playedAt: string; trackName: string; artistName: string;
   albumName: string | null; albumImage: string | null; trackUrl: string | null;
@@ -94,29 +117,19 @@ export interface Play {
 
 export interface Liveness {
   lastOkAt: string | null;
+  /** The newest failure since the last success. */
   lastError: string | null;
-  lastErrorAt: string | null;
-  /** Hours since the last SUCCESSFUL run. null when there has never been one. */
-  hoursSinceOk: number | null;
   /** True when the collector has not succeeded recently enough to outrun the 50-item window. */
   stale: boolean;
-  /** THE WARNING FROM THE LAST SUCCESSFUL RUN, and the reason this field exists.
+  /** THE NEWEST SATURATED RUN IN THE LAST 7 DAYS, and the reason this field exists.
    *
-   * `src/lib/music/sync.ts` detects the one loss mode this app cannot recover from: a run that
-   * returned the full 50-item maximum means listening outran the poll interval and plays between
-   * runs are gone from everywhere, not just from here. It writes that sentence into
-   * `music_sync.error` with `ok: true`, because the run itself succeeded.
-   *
-   * Until 2026-08-28 `getLiveness` read `error` only from `ok = false` rows. So the detection
-   * existed, the row existed, the cron returned 200, Vercel showed a healthy job, and the exact
-   * event the whole three-a-day schedule is built to prevent looked like a quiet evening on every
-   * surface a human looks at. Found by 05-small-apps M1: this is the half-extracted-export class,
-   * a partial capture presenting as a complete one.
-   *
-   * Null when the last successful run had nothing to say. */
-  lastOkWarning: string | null;
-  /** When that run happened, so the notice can date itself. */
-  lastOkWarningAt: string | null;
+   * A successful run that returned the full 50-item maximum means listening outran the poll interval
+   * and the plays between runs are gone from everywhere. sync.ts writes that sentence into
+   * `music_sync.error` with `ok: true`, because the run itself succeeded. Until 2026-08-28 nothing
+   * read it (05-small-apps M1: a partial capture presenting as a complete one). Until 2026-09-27 the
+   * page read the LAST run's whole warning string, so the notice fired on any top-snapshot failure
+   * and cleared on the next clean run. Now it matches SATURATION_MARK and holds for 7 days. */
+  lostPlaysAt: string | null;
 }
 
 export interface MusicSummary {
@@ -138,53 +151,36 @@ export interface MusicSummary {
  * three times a day, so 36 hours is several missed runs rather than one late one. */
 const STALE_HOURS = 36;
 
-export async function getLiveness(): Promise<Liveness> {
-  /* THE NEWEST SUCCESSFUL RUN, with its warning. One query instead of two, because the row that
-   * carries `ran_at` is the row that carries the sentence about it. */
-  const [ok] = (await sql`
-    select ran_at, error from music_sync where ok = true order by ran_at desc limit 1`) as Array<{
-    ran_at: unknown; error: string | null;
-  }>;
-  /* THE NEWEST FAILURE SINCE THE LAST SUCCESS, and the `and ran_at >` clause is the whole point.
-   *
-   * It selected the newest `ok = false` row EVER, unbounded. So when staleness fired because runs
-   * had simply stopped arriving, the alarm printed whatever went wrong in July as the explanation
-   * for why nothing has run since. An already-recovered failure offered as a current cause is worse
-   * than no cause, because it sends the reader to fix a thing that is not broken. 05-small-apps M4.
-   *
-   * `coalesce(..., '-infinity')` so a table that has NEVER succeeded still surfaces its failures
-   * rather than comparing against null and returning nothing. */
-  const [bad] = (await sql`
-    select ran_at, error from music_sync
-    where ok = false
-      and ran_at > coalesce((select max(ran_at) from music_sync where ok = true), '-infinity'::timestamptz)
-    order by ran_at desc limit 1`) as Array<{
-    ran_at: unknown; error: string | null;
-  }>;
-
-  const lastOkAt = ok?.ran_at ? iso(ok.ran_at) : null;
-  const hoursSinceOk = lastOkAt ? (Date.now() - new Date(lastOkAt).getTime()) / 3_600_000 : null;
-
-  return {
-    lastOkAt,
-    lastError: bad?.error ?? null,
-    lastErrorAt: bad?.ran_at ? iso(bad.ran_at) : null,
-    lastOkWarning: ok?.error ?? null,
-    lastOkWarningAt: lastOkAt,
-    // Never having run counts as stale. An empty table is not a healthy one.
-    stale: hoursSinceOk === null || hoursSinceOk > STALE_HOURS,
-    hoursSinceOk,
-  };
-}
-
+/** Counts and liveness in ONE round trip: two statements in one transaction. */
 export async function getSummary(): Promise<MusicSummary> {
-  const [counts] = (await sql`
-    select count(*)::int                     as plays,
-           count(distinct artist_name)::int  as artists,
-           count(distinct track_id)::int     as tracks,
-           min(played_at)                    as since,
-           max(played_at)                    as latest
-      from music_play`) as Array<{ plays: number; artists: number; tracks: number; since: unknown; latest: unknown }>;
+  const [[counts], [live]] = (await sql.transaction([
+    sql`
+      select count(*)::int                                          as plays,
+             count(distinct split_part(artist_name, ', ', 1))::int  as artists,
+             count(distinct track_id)::int                          as tracks,
+             min(played_at)                                         as since,
+             max(played_at)                                         as latest
+        from music_play`,
+    /* THE NEWEST FAILURE SINCE THE LAST SUCCESS, and the `ran_at >` bound is the whole point: an
+     * unbounded "newest failure ever" printed July's already-recovered error as the reason nothing
+     * had run since (05-small-apps M4). `coalesce(..., '-infinity')` so a table that has NEVER
+     * succeeded still surfaces its failures. */
+    sql`
+      select (select max(ran_at) from music_sync where ok) as last_ok_at,
+             (select error from music_sync
+               where not ok
+                 and ran_at > coalesce((select max(ran_at) from music_sync where ok), '-infinity'::timestamptz)
+               order by ran_at desc limit 1) as last_error,
+             (select max(ran_at) from music_sync
+               where ok and ran_at > now() - interval '7 days'
+                 and position(${SATURATION_MARK} in coalesce(error, '')) > 0) as lost_at`,
+  ])) as [
+    Array<{ plays: number; artists: number; tracks: number; since: unknown; latest: unknown }>,
+    Array<{ last_ok_at: unknown; last_error: string | null; lost_at: unknown }>,
+  ];
+
+  const lastOkAt = live?.last_ok_at ? iso(live.last_ok_at) : null;
+  const hoursSinceOk = lastOkAt ? (Date.now() - new Date(lastOkAt).getTime()) / 3_600_000 : null;
 
   return {
     plays: counts?.plays ?? 0,
@@ -192,7 +188,13 @@ export async function getSummary(): Promise<MusicSummary> {
     tracks: counts?.tracks ?? 0,
     since: counts?.since ? iso(counts.since) : null,
     latest: counts?.latest ? iso(counts.latest) : null,
-    liveness: await getLiveness(),
+    liveness: {
+      lastOkAt,
+      lastError: live?.last_error ?? null,
+      // Never having run counts as stale. An empty table is not a healthy one.
+      stale: hoursSinceOk === null || hoursSinceOk > STALE_HOURS,
+      lostPlaysAt: live?.lost_at ? iso(live.lost_at) : null,
+    },
   };
 }
 
@@ -215,38 +217,37 @@ export async function getRecentPlays(limit = 60): Promise<Play[]> {
 
 export interface Tally { name: string; plays: number }
 
-/** Most-played from OUR OWN collected history, which is a different claim from Spotify's "top"
- *  and must never be labelled as the same thing. This one only knows what the poller caught. */
-export async function getMostPlayed(limit = 10): Promise<{ artists: Tally[]; tracks: Tally[] }> {
-  const artists = (await sql`
-    select artist_name as name, count(*)::int as plays
-      from music_play group by artist_name order by plays desc, name limit ${limit}`) as Tally[];
-  const tracks = (await sql`
-    select track_name as name, count(*)::int as plays
-      from music_play group by track_name order by plays desc, name limit ${limit}`) as Tally[];
-  return { artists, tracks };
-}
-
 export interface TopEntry {
   rank: number; name: string; detail: string | null; image: string | null; url: string | null;
 }
 
-/** The latest snapshot for one (kind, range). Empty until the poller has run once. */
-export async function getLatestTop(kind: 'track' | 'artist', range: TimeRange): Promise<{
-  capturedOn: string | null; entries: TopEntry[];
-}> {
-  const [latest] = (await sql`
-    select max(captured_on) as day from music_top where kind = ${kind} and time_range = ${range}`) as
-    Array<{ day: unknown }>;
-  if (!latest?.day) return { capturedOn: null, entries: [] };
+export interface TopSnap { capturedOn: string | null; entries: TopEntry[] }
 
-  const capturedOn = day(latest.day);
-  const entries = (await sql`
-    select rank, name, detail, image, url
-      from music_top
-     where kind = ${kind} and time_range = ${range} and captured_on = ${capturedOn}
-     order by rank`) as TopEntry[];
-  return { capturedOn, entries };
+/** The latest snapshot of every (kind, range), in ONE query. A pair never captured comes back with
+ *  capturedOn null and no entries. */
+export async function getLatestTops(): Promise<Record<'track' | 'artist', Record<TimeRange, TopSnap>>> {
+  const rows = (await sql`
+    select t.kind, t.time_range, t.captured_on, t.rank, t.name, t.detail, t.image, t.url
+      from music_top t
+      join (select kind, time_range, max(captured_on) as day
+              from music_top group by kind, time_range) l
+        on l.kind = t.kind and l.time_range = t.time_range and l.day = t.captured_on
+     order by t.kind, t.time_range, t.rank`) as Array<TopEntry & {
+    kind: 'track' | 'artist'; time_range: TimeRange; captured_on: unknown;
+  }>;
+  const empty = (): Record<TimeRange, TopSnap> => ({
+    short_term: { capturedOn: null, entries: [] },
+    medium_term: { capturedOn: null, entries: [] },
+    long_term: { capturedOn: null, entries: [] },
+  });
+  const out = { track: empty(), artist: empty() };
+  for (const r of rows) {
+    const snap = out[r.kind]?.[r.time_range];
+    if (!snap) continue;
+    snap.capturedOn = day(r.captured_on);
+    snap.entries.push({ rank: r.rank, name: r.name, detail: r.detail, image: r.image, url: r.url });
+  }
+  return out;
 }
 
 /* ---- the pictures on /music (2026-09-27) ---------------------------------------------------------
@@ -269,23 +270,35 @@ export function spotifyImage(url: string | null, size: 64 | 300 | 640): string |
 }
 
 export interface Listening {
+  /** The window the clock, the wall and the bars cover: 60 days, or fewer while the table is younger. */
   days: number;
   /** minutes[weekday 0=Mon..6=Sun][hour 0..23] */
   clock: number[][];
+  /** One entry per day, oldest first: the last 30 days, or every day since the first play. */
   perDay: { day: string; minutes: number }[];
   albums: { name: string; artist: string; image: string | null; plays: number }[];
   artists: Tally[];
   totalMinutes: number;
 }
 
-export async function getListening(days = 60): Promise<Listening> {
-  const [clockRows, dayRows, albumRows, artistRows] = (await sql.transaction([
+/* MINUTES ARE TRACK LENGTHS. Spotify's recently-played gives the track's duration and no listened
+ * time, so a skip counts as the whole track. The page labels them "track" minutes for that reason.
+ *
+ * THE WINDOW IS CAPPED AT THE COLLECTED DAYS. Collection began 2026-08-11, so "the last 60 days"
+ * was a claim about days the table does not hold. `days` is 60 or the whole days since the first
+ * play, whichever is smaller, and the page prints it. */
+export async function getListening(maxDays = 60): Promise<Listening> {
+  const [firstRows, clockRows, dayRows, albumRows, artistRows] = (await sql.transaction([
+    sql`
+      select min(played_at) as first,
+             to_char(min(played_at) at time zone 'America/Edmonton', 'YYYY-MM-DD') as first_day
+        from music_play`,
     sql`
       select extract(isodow from played_at at time zone 'America/Edmonton')::int as dow,
              extract(hour   from played_at at time zone 'America/Edmonton')::int as hour,
              sum(coalesce(duration_ms, 0))::float / 60000 as minutes
         from music_play
-       where played_at > now() - make_interval(days => ${days})
+       where played_at > now() - make_interval(days => ${maxDays})
        group by 1, 2`,
     sql`
       select to_char(played_at at time zone 'America/Edmonton', 'YYYY-MM-DD') as day,
@@ -293,22 +306,32 @@ export async function getListening(days = 60): Promise<Listening> {
         from music_play
        where played_at > now() - make_interval(days => 30)
        group by 1 order by 1`,
+    /* By album AND primary artist: two albums that share a title ("Greatest Hits") are different
+     * records. No album id is stored, so this pair is the key. */
     sql`
-      select album_name as name, min(artist_name) as artist, max(album_image) as image, count(*)::int as plays
+      select album_name as name, split_part(artist_name, ', ', 1) as artist,
+             max(album_image) as image, count(*)::int as plays
         from music_play
-       where played_at > now() - make_interval(days => ${days}) and album_name is not null
-       group by album_name order by plays desc, name limit 15`,
+       where played_at > now() - make_interval(days => ${maxDays}) and album_name is not null
+       group by 1, 2 order by plays desc, name limit 15`,
+    /* The primary artist: see THE PRIMARY ARTIST at the top of the reads. */
     sql`
-      select artist_name as name, count(*)::int as plays
+      select split_part(artist_name, ', ', 1) as name, count(*)::int as plays
         from music_play
-       where played_at > now() - make_interval(days => ${days})
-       group by artist_name order by plays desc, name limit 8`,
+       where played_at > now() - make_interval(days => ${maxDays})
+       group by 1 order by plays desc, name limit 8`,
   ])) as [
+    Array<{ first: unknown; first_day: string | null }>,
     Array<{ dow: number; hour: number; minutes: number }>,
     Array<{ day: string; minutes: number }>,
     Array<{ name: string; artist: string; image: string | null; plays: number }>,
     Tally[],
   ];
+
+  const first = firstRows[0]?.first ? new Date(iso(firstRows[0].first)).getTime() : null;
+  const days = first === null
+    ? 0
+    : Math.min(maxDays, Math.max(1, Math.ceil((Date.now() - first) / 86_400_000)));
 
   const clock = Array.from({ length: 7 }, () => Array<number>(24).fill(0));
   let totalMinutes = 0;
@@ -318,14 +341,17 @@ export async function getListening(days = 60): Promise<Listening> {
     totalMinutes += r.minutes;
   }
 
-  /* Every one of the last 30 days, zeros included: a day with no music is part of the picture. */
+  /* Every day of the window, zeros included: a day with no music is part of the picture. A day
+   * before the first play is not a day with no music, so it is not drawn. */
   const byDay = new Map(dayRows.map((r) => [r.day, r.minutes]));
   const perDay: { day: string; minutes: number }[] = [];
   const todayCal = today();
+  const firstDay = firstRows[0]?.first_day ?? todayCal;
   for (let i = 29; i >= 0; i--) {
     const d = new Date(`${todayCal}T12:00:00Z`);
     d.setUTCDate(d.getUTCDate() - i);
     const key = d.toISOString().slice(0, 10);
+    if (key < firstDay) continue;
     perDay.push({ day: key, minutes: byDay.get(key) ?? 0 });
   }
 

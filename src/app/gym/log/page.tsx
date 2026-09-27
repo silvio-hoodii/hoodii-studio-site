@@ -184,7 +184,7 @@ export default async function GymLogPage() {
           <strong>{unlogged} of these {rows.length}</strong> have no sets logged. <strong>Easy</strong> is
           the percent of the session under 110 bpm.
           {total > rows.length
-            ? ` ${total - rows.length} older sessions are in the export and not on this screen.`
+            ? ` Newest ${rows.length} of ${total}.`
             : ''}
         </p>
       </div>

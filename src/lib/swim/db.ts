@@ -319,6 +319,7 @@ export async function getSwimFrontRow(): Promise<SwimFrontRow> {
         select session_uuid, min(session_start_time) as st from health_swim_length group by 1
       ) l on l.session_uuid = s.uuid
       left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
+      where s.distance_m > 0
       order by 1 desc
       limit 1
     `,

@@ -1,6 +1,6 @@
 import 'server-only';
-import { getLastRotationRow, getSessionDay } from './db';
-import { sql } from '../health/db';
+import { getRotationState } from './db';
+import { loadProgram } from './program';
 import { ROTATION } from './program-shared';
 import type { DayKey } from './types';
 
@@ -37,13 +37,46 @@ export interface NextUp {
    *  rotation. The page says so, because silently re-offering the same day reads as a bug. */
   cutShort: boolean;
   /** Lifting sessions the WATCH recorded after the last logged rotation session, on dates the app
-   *  has nothing for and that are not Saturdays. Each advances the rotation by one. The page prints
+   *  has nothing for and not on a weekday scheduled for a session outside the rotation (none today;
+   *  see `excludedIsodow`). Each advances the rotation by one. The page prints
    *  the count and the dates, because a guess he cannot see is a guess he cannot correct. */
   assumedFromWatch: number;
   assumedDates: string[];
 }
 
-/** Rolling "what's next": A and B alternate; C is Saturday.
+const ISODOW: Record<string, number> = {
+  monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 7,
+};
+
+/* WHICH WEEKDAYS A WATCH SESSION DOES NOT COUNT AS A ROTATION STEP, read off the programme.
+ *
+ * This was a literal `isodow <> 6` from 2026-09-04, when Saturday was Session C and C was not a
+ * rotation step. C was retired on 2026-09-06 and the literal stayed, so a Saturday lift the watch
+ * saw and the app did not was silently dropped from the rotation count. The rule it encoded is
+ * "a weekday scheduled for a session outside the rotation", so that is what this derives: the
+ * `scheduledOn` days of every programme day not in ROTATION. With A and B the whole programme,
+ * the list is empty and no weekday is excluded. If a non-rotation session ever returns with a
+ * scheduled day, the exclusion comes back with it and nobody has to remember to restore a literal. */
+async function excludedIsodow(): Promise<number[]> {
+  try {
+    const program = await loadProgram();
+    const out = new Set<number>();
+    for (const [key, day] of Object.entries(program.days ?? {})) {
+      if ((ROTATION as string[]).includes(key)) continue;
+      for (const w of day?.scheduledOn ?? []) {
+        const n = ISODOW[String(w).toLowerCase()];
+        if (n) out.add(n);
+      }
+    }
+    return [...out];
+  } catch {
+    /* A programme that will not load excludes nothing: counting a watch session is the smaller
+       error than dropping one. */
+    return [];
+  }
+}
+
+/** Rolling "what's next": A and B alternate.
  *
  * READS THE APP'S LOG AND THE WATCH, since 2026-09-03. Until then it read the app only, on the
  * argument that only the app knows WHICH session was performed. True, and it made the answer wrong
@@ -53,19 +86,19 @@ export interface NextUp {
  * know if the session that I'm doing is the right one."
  *
  * With two rotation sessions the inference is honest: a lifting session the watch saw and the app
- * did not is one step of the rotation, whichever it was. Saturdays are excluded from that count
- * since 2026-09-04, because Saturday is Session C and C is not a rotation step. The count and dates
- * are returned so the card can say what was assumed, and the tabs let him override it in one tap.
+ * did not is one step of the rotation, whichever it was. The count and dates are returned so the
+ * card can say what was assumed, and the tabs let him override it in one tap.
  *
- * SESSION C IS OFFERED ON SATURDAY, and only then. It is outside the rotation on purpose: the
- * rotation answers "which lifting session", and C is not one. On any other day the answer is A or
- * B. If he opens the app on a Saturday having already logged C, `todayDay` carries that.
+ * NO SESSION OUTSIDE THE ROTATION SINCE 2026-09-06, when Session C (Saturday) was folded into A and
+ * B. See `excludedIsodow` below for what replaced the Saturday exclusion.
  *
  * THE LAYOFF RESET IS GONE with the four-session week. It sent him to Session A after seven days
  * without a LOGGED session, which is the bug above wearing a different name. Two rotation sessions
  * have no "start of the cycle" to reset to: after any gap the next session is simply the other one. */
 export async function computeNextUp(today: string): Promise<NextUp> {
-  const lastRow = await getLastRotationRow([...ROTATION]);
+  /* ONE QUERY, since 2026-09-27. Was three in a row. The programme read is a local file. */
+  const state = await getRotationState([...ROTATION], today, await excludedIsodow());
+  const lastRow = state.last;
 
   let lastDay: DayKey | null = null;
   let lastDate: string | null = null;
@@ -90,20 +123,9 @@ export async function computeNextUp(today: string): Promise<NextUp> {
   }
 
   /* Watch sessions after the last logged rotation date, on dates the app has no session for, not on
-     a Saturday. `date` on both tables is the local Calgary date. Today is excluded: a session in
-     progress right now is `todayDay`'s business, and the watch export is manual so it never has
-     today's data anyway. */
-  const watchRows = (await sql`
-    select distinct w.date::text as date
-    from health_watch_session w
-    where w.kind = 'strength'
-      and w.date > ${lastDate ?? '1970-01-01'}
-      and w.date < ${today}
-      and extract(isodow from w.date::date) <> 6
-      and not exists (select 1 from gym_session g where g.date = w.date)
-    order by w.date
-  `) as unknown as { date: string }[];
-  const assumedDates = watchRows.map((r) => r.date);
+     an excluded weekday. Today is excluded: a session in progress right now is `todayDay`'s
+     business, and the watch export is manual so it never has today's data anyway. */
+  const assumedDates = state.watchDates;
   const assumedFromWatch = assumedDates.length;
 
   const rotationNext: DayKey = ROTATION[(base + assumedFromWatch) % ROTATION.length]!;
@@ -111,7 +133,7 @@ export async function computeNextUp(today: string): Promise<NextUp> {
      whatever that is... fold"); the jumps and bounds are primers inside the two sessions now. The
      rotation is the whole schedule: whichever of A and B he did not do last. */
   const nextDay: DayKey = rotationNext;
-  const todayDay = (await getSessionDay(today)) as DayKey | null;
+  const todayDay = state.todayDay as DayKey | null;
 
   return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
 }

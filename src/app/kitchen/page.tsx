@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { cookRatings, listDishes, lastCooked } from '@/lib/kitchen/cookbook';
+import { cookMarks, hostOf, listDishes } from '@/lib/kitchen/cookbook';
 import { shortDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
  * chat, and in his words "it's usually an agent that helps me out". The kitchen also left the front
  * page the same day; dish pages stay because sessions send him their links. */
 export default async function KitchenPage() {
-  const [dishes, cooked, ratings] = await Promise.all([listDishes(), lastCooked(), cookRatings()]);
+  const [dishes, marks] = await Promise.all([listDishes(), cookMarks()]);
 
   return (
     <div className="wrap">
@@ -32,7 +32,8 @@ export default async function KitchenPage() {
       ) : (
         <ul className="dishes">
           {dishes.map((d) => {
-            const last = cooked[d.name];
+            const m = marks[d.name];
+            const last = m?.last;
             return (
               <li key={d.id}>
                 <Link href={`/kitchen/${d.id}`}>
@@ -42,13 +43,13 @@ export default async function KitchenPage() {
                   )}
                   {/* One mark per rated cook, oldest first: filled nailed it, grey fine, hollow went
                       wrong. How often and how well, at a glance, without opening the dish. */}
-                  {(ratings[d.name]?.length ?? 0) > 0 && (
-                    <span className="cooks" aria-label={`cooked ${ratings[d.name]!.length === 1 ? 'once' : `${ratings[d.name]!.length} times`}: ${ratings[d.name]!.join(', ')}`}>
-                      {ratings[d.name]!.map((r, i) => <i key={i} className={r} />)}
+                  {m && (
+                    <span className="cooks" aria-label={`cooked ${m.ratings.length === 1 ? 'once' : `${m.ratings.length} times`}: ${m.ratings.join(', ')}`}>
+                      {m.ratings.map((r, i) => <i key={i} className={r} />)}
                     </span>
                   )}
                   <span className="dmeta">
-                    {d.publisher ?? new URL(d.sourceUrl).hostname.replace(/^www\./, '')}
+                    {d.publisher ?? hostOf(d.sourceUrl)}
                     {' · '}
                     <span className="nw">{last ? `last cooked ${last.length === 10 ? shortDate(last) : last}` : 'not cooked yet'}</span>
                   </span>

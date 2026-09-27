@@ -1,27 +1,27 @@
 import Link from 'next/link';
 import {
-  getBodyCompSeries,
   getBodyCompSummary,
   getLiftingAdherence,
   getLiftDays,
   getSyncLiveness,
-  getWatchComposition,
 } from '@/lib/health/db';
-import { getYearBody } from '@/lib/health/year';
+import { getWeightTabBody } from '@/lib/health/year';
 import YearLifts from '@/components/training/YearLifts';
-import { splitOf, sameSourcePair } from '@/lib/health/split';
+import SubNav from '@/components/training/SubNav';
+import AdherenceStrip from '@/components/training/AdherenceStrip';
+import { splitOf, sameSourcePair, splitClause } from '@/lib/health/split';
 import { loadConditioning, loadProgram, loadMovements, splitName } from '@/lib/gym/program';
 import { computeCoverage } from '@/lib/gym/coverage.mts';
 import { getTrainingWeek } from '@/lib/gym/week';
 import { getRecentSessions } from '@/lib/gym/session';
-import { AdherenceStrip, LineChart } from './HealthCharts';
+import { LineChart } from './HealthCharts';
 import { RunStanding, PlanWeek, ActualDays } from './Week';
 import Volume from './Volume';
 import { YearRangeSentence, YearRangeDates } from './YearRange';
 import LastSession from '@/components/training/LastSession';
 import RecentSessions from '@/components/training/RecentSessions';
 import { daysAgoText, shortDate } from '@/lib/format';
-import { today } from '@/lib/day';
+import { today, daysAgo } from '@/lib/day';
 
 /* THE INDEX. Rebuilt 2026-08-27, Phase C.
  *
@@ -72,23 +72,6 @@ const TABS = [
   { id: 'volume', label: 'Volume' },
 ] as const;
 
-function SubNav({ sub }: { sub: string }) {
-  return (
-    <div className="subtabs">
-      {TABS.map((t) => (
-        <Link
-          key={t.id}
-          href={`/health?s=${t.id}`}
-          className={`subtab${sub === t.id ? ' on' : ''}`}
-          aria-current={sub === t.id ? 'page' : undefined}
-        >
-          {t.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek: number } | null): string {
   if (!t) return 'not enough history';
   const sign = (n: number) => (n > 0 ? '+' : '');
@@ -106,56 +89,60 @@ export default async function HealthPage({
      the kind of half-change that ships looking correct. One declaration, two behaviours. */
   const sub = TABS.find((t) => t.id === sp.s)?.id ?? (TABS[0] as (typeof TABS)[number]).id;
 
-  /* One query per thing the OPEN tab actually draws. The body charts are four reads and the week is
-     a session scan; running both on every tap would put work in front of a page he opens between
-     sets. The sync liveness row is the exception and runs everywhere, because "the mirror stopped"
-     invalidates whichever tab he is looking at. */
-  const sync = await getSyncLiveness();
-  const needWeek = sub === 'now' || sub === 'plan';
-  const [conditioning, program] = needWeek
-    ? await Promise.all([loadConditioning(), loadProgram()])
-    : [null, null];
-  const week = conditioning && program ? await getTrainingWeek(program, conditioning) : null;
+  /* ONE WAVE PER TAB, as few as the dependencies allow. Only the open tab's reads run: the body
+     charts and the week scan together would put work in front of a page he opens between sets. The
+     sync liveness row runs on every tab, because "the mirror stopped" invalidates whichever one he
+     is looking at, but it waits for nothing and nothing waits for it.
 
-  /* THE VOLUME TAB READS TWO JSON FILES OFF DISK AND NOTHING ELSE. No Neon round trip, because this
-     is what the PROGRAMME asks of him rather than what he did, and the arithmetic is the same code
-     scripts/gym-coverage.mjs runs. Two implementations of one computation drift silently, and this
-     is a number he will quote back. */
-  const volume = sub === 'volume' ? await (async () => {
-    const [prog, movements] = await Promise.all([loadProgram(), loadMovements()]);
-    const coverage = computeCoverage(prog, movements);
-    return {
-      coverage,
-      dayLabels: coverage.dayOrder.map((k) => {
-        const d = prog.days[k as keyof typeof prog.days];
-        return d ? splitName(d) : k;
-      }),
-    };
-  })() : null;
-  const recentLifts = sub === 'now' ? await getRecentSessions('strength', 10) : [];
+     Until 2026-09-27 this was a chain: sync, then the plan files, then the week, then the recent
+     lifts, then adherence, each awaiting the one before. The week is the only real dependency (it
+     needs the two plan files), so it is chained onto their promise and everything else starts at
+     once. */
+  const WEIGHT_DAYS = 120;
+  const yearStart = `${today().slice(0, 4)}-01-01`;
+  const needWeek = sub === 'now' || sub === 'plan';
+  const planP = needWeek ? Promise.all([loadConditioning(), loadProgram()]) : null;
+
+  const [sync, plan, week, recentLifts, adherence, volume, weightTab] = await Promise.all([
+    getSyncLiveness(),
+    planP,
+    planP ? planP.then(([c, p]) => getTrainingWeek(p, c)) : null,
+    sub === 'now' ? getRecentSessions('strength', 10) : [],
+    /* ATTENDANCE IS TRAINING, NOT BODY COMPOSITION, so it is read on the Now tab. */
+    sub === 'now' ? getLiftingAdherence(30) : null,
+    /* THE VOLUME TAB READS TWO JSON FILES OFF DISK AND NOTHING ELSE. No Neon round trip, because
+       this is what the PROGRAMME asks of him rather than what he did, and the arithmetic is the
+       same code scripts/gym-coverage.mjs runs. */
+    sub === 'volume'
+      ? Promise.all([loadProgram(), loadMovements()]).then(([prog, movements]) => {
+          const coverage = computeCoverage(prog, movements);
+          return {
+            coverage,
+            dayLabels: coverage.dayOrder.map((k) => {
+              const d = prog.days[k as keyof typeof prog.days];
+              return d ? splitName(d) : k;
+            }),
+          };
+        })
+      : null,
+    /* ONE READ OF BODY COMPOSITION FOR THE WHOLE TAB. It was three: getBodyCompSeries(120),
+       getBodyCompSeries(year to date) and the year's readings inside getYearBody, the same rows cut
+       three ways. getWeightTabBody returns the year headline (the same buildBody /health/deep uses,
+       so the two pages cannot print different answers), the per-day series and the watch-only
+       rows from one query. */
+    sub === 'weight'
+      ? Promise.all([getBodyCompSummary(), getWeightTabBody(WEIGHT_DAYS), getLiftDays(yearStart)])
+      : null,
+  ]);
+  const conditioning = plan?.[0] ?? null;
   const lastLift = recentLifts[0] ?? null;
 
-  /* ONE read of the series, four charts off it. It used to call getBodyCompSeries TWICE for two
-     charts, which was two identical round trips to Neon, and `fat_kg` and `lean_kg` were already in
-     every row it fetched and had never been drawn. Counting round trips rather than work is the
-     lesson /reading/shelf paid for: this site's entire external-API bill is Neon. */
-  const yearStart = `${today().slice(0, 4)}-01-01`;
-  const yearDays = Math.round((Date.parse(`${today()}T12:00:00Z`) - Date.parse(`${yearStart}T12:00:00Z`)) / 86_400_000) + 1;
-  const [bodySummary, comp, watchComp, yearBody, yearSeries, liftDays] =
-    sub === 'weight'
-      ? await Promise.all([
-          getBodyCompSummary(),
-          getBodyCompSeries(120),
-          getWatchComposition(120),
-          /* THE YEAR, ON THE TAB HE OPENS. He asked for it by name on 2026-08-28: "the main number
-             that I want to see is the difference between the highest weight that I've had this year
-             and the lowest." It is computed by the same function /health/deep uses, not by a second
-             copy here, so the two pages cannot print different answers. */
-          getYearBody(),
-          getBodyCompSeries(yearDays),
-          getLiftDays(yearStart),
-        ])
-      : [null, null, null, null, null, null];
+  const [bodySummary, bodyRead, liftDays] = weightTab ?? [null, null, null];
+  const windowFrom = daysAgo(WEIGHT_DAYS);
+  const comp = bodyRead ? bodyRead.perDay.filter((r) => r.date >= windowFrom) : null;
+  const yearSeries = bodyRead ? bodyRead.perDay.filter((r) => r.date >= yearStart) : null;
+  const watchComp = bodyRead?.watch ?? null;
+  const yearBody = bodyRead?.body ?? null;
   const seriesOf = (key: 'kg' | 'bf_pct' | 'fat_kg' | 'lean_kg') =>
     (comp ?? []).filter((r) => r[key] != null).map((r) => ({ date: r.date, value: r[key] as number }));
   const weightSeries = seriesOf('kg');
@@ -190,10 +177,6 @@ export default async function HealthPage({
         return s ? { ...s, from: a.date, to: b.date, source: a.source } : null;
       })()
     : null;
-  /* ATTENDANCE IS TRAINING, NOT BODY COMPOSITION, so it is read on the Now tab. It sat next to the
-     weight charts for as long as /health was only about weight, and the tab split is what made that
-     visible: nothing about a 30-cell trained/rested strip answers "what is my body doing". */
-  const adherence = sub === 'now' ? await getLiftingAdherence(30) : null;
 
   const days = adherence?.days ?? [];
   const trainedCount = days.filter((d) => d.trained).length;
@@ -206,7 +189,7 @@ export default async function HealthPage({
     <div className="wrap">
       <h1>Body and the week</h1>
 
-      <SubNav sub={sub} />
+      <SubNav base="/health" tabs={TABS} sub={sub} />
 
       {/* Two different things can be wrong here and they used to share one sentence.
         *
@@ -222,12 +205,10 @@ export default async function HealthPage({
         <div className="stale">
           <span className="k">Not syncing</span>
           {sync.lastOkAt
-            ? `The mirror behind this page last updated ${daysAgoText(Math.floor((sync.hoursSince ?? 0) / 24))}.`
-            : 'The mirror behind this page has never recorded a successful update.'}{' '}
-          Everything below is whatever it held at that point. Upload a Samsung Health export to
-          Drive and tell a session.
-          {/* It said "Run node content/health/sync.mjs in hoodii-studio-site" until 2026-09-15. He
-              does not run commands, and that one is only the last step: HOODII/CLAUDE.md names
+            ? `Last update ${daysAgoText(Math.floor((sync.hoursSince ?? 0) / 24))}.`
+            : 'Never updated.'}
+          {/* Only the label and the date, since 2026-09-27. The rest was plumbing ("the mirror
+              behind this page") and an instruction he already knows: HOODII/CLAUDE.md names
               run-health-sync.ps1 as the whole job, run by the agent he tells. */}
           {sync.lastError && <span className="why">{sync.lastError}</span>}
         </div>
@@ -392,8 +373,10 @@ export default async function HealthPage({
                         and a +0.4 kg/wk regain would have rendered in the same colour as progress.
                         A colour that means "good" whichever way the number moves means nothing.
                         08-ux-ui and 05-small-apps H2. */}
+                    {/* The reading's own date, as the Body fat tile carries, then the change from this
+                        reading to a same-instrument reading at least 30 days earlier. */}
                     <div className={`stat-d${(bodySummary.trend30?.kg ?? 0) < 0 ? ' down' : ''}`}>
-                      {trendLine(bodySummary.trend30)}
+                      {shortDate(bodySummary.latest.date)}, {trendLine(bodySummary.trend30)}
                     </div>
                   </div>
                   {bodySummary.latest.bf_pct != null && (
@@ -449,14 +432,10 @@ export default async function HealthPage({
                   <span className="tnum">{split.dFat > 0 ? '+' : ''}{split.dFat.toFixed(1)}</span> of that
                   was fat and <span className="tnum">{split.dLean > 0 ? '+' : ''}{split.dLean.toFixed(1)}</span> was
                   lean
-                  {split.fatShare != null && `, so ${split.fatShare}% of the change was fat`}
-                  {/* The case the percentage could not express, and it is the good one. Said in words
-                      because "119% of the change was fat" is what the arithmetic produced here and it
-                      is not a sentence about anything. */}
-                  {split.fatShare == null && split.leanOpposed && split.dKg < 0
-                    && `, so all of the loss was fat and the lean line ${split.dLean > 0 ? 'went up' : 'held'}`}
-                  {split.fatShare == null && split.leanOpposed && split.dKg > 0
-                    && `, so the gain was not fat and the fat line ${split.dFat < 0 ? 'went down' : 'held'}`}
+                  {/* SHARED WITH /health/deep, `splitClause` in src/lib/health/split.ts. This page's own
+                      copy said "the gain was not fat" on a gain with lean falling, when weight = fat +
+                      lean means the gain was more than all fat. */}
+                  {splitClause(split)}
                   .
                   {/* TWO SENTENCES WERE HERE UNTIL 2026-09-15: "Both readings are watch readings.
                       Both figures come from that same reading, so they add up by construction rather
@@ -476,23 +455,10 @@ export default async function HealthPage({
                   <LineChart points={leanSeries} unit="kg" decimals={1} />
                 </figure>
               </div>
-              {/* THE CAVEAT THAT OUTRANKS THE SPLIT. Neither of those two lines is measured. Both
-                  are inferred from a bioimpedance reading, a small current through the body, and
-                  that reading moves with hydration. A kilo off the lean line across a few weeks is
-                  as likely to be water as muscle, and the set log is the better witness. */}
-              {/* THE SENTENCE HE QUOTED, cut 2026-09-09: "neither line is measured directly, small
-                  current, whatever ... that's not an insight, that's just blur." Its twin on
-                  /health/deep went first; this is the one he was actually looking at when he said
-                  it, and it outlived that fix by two hours because the sweep was holding this file
-                  while the strength pass read it.
-
-                  Two sentences of provenance gone, two of instruction kept. That both lines are
-                  inferred from bioimpedance is now SHOWN on the shared-timeline chart on
-                  /health/deep, where lean mass, body water and resting burn are visibly one curve. */}
-              <p className="ex-cue">
-                A kilo off the lean line across a few weeks is as likely to be water as muscle. If
-                the weights on the bar went up over the same period, the muscle did not leave.
-              </p>
+              {/* The lean-mass-can-be-water caveat was here until 2026-09-27, with its twin on
+                  /health/deep: a caveat about the instrument (bioimpedance moves with hydration),
+                  not a fact about him. The shared-timeline chart on /health/deep shows lean mass,
+                  body water and resting burn as one curve. */}
             </div>
           )}
 

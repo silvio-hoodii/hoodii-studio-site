@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function BikeLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="training">
+    <div className="training measure-data">
       <SiteHeader app="Bike" />
       <TrainingNav />
       {children}

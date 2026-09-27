@@ -15,21 +15,12 @@ import type { Cue } from '@/lib/gym/types';
  * Nothing was deleted from the content files. `why`, `quote`, `grounding`, `url`, `confidence`,
  * `sharedWith` and `cuesNote` are still there and still checked by the validators, because they
  * are the research record a later session reads before changing a cue. They are just not the page. */
-/** "coaching:kick-origin" to "the Coach me tab". The key is a data pointer; this is the sentence. */
-export function sharedLabel(key: string): string {
-  const file = key.split(':')[0];
-  return file === 'coaching' ? 'the Coach me tab' : file === 'teaching' ? 'the Coach them tab' : file ?? key;
-}
-
 export default function Cues({
   cues,
   heading,
 }: {
   cues: Cue[];
-  /** Accepted and ignored: the "what was thrown out" essay no longer renders. See the header. */
-  note?: string | null;
   heading?: string;
-  intro?: string;
 }) {
   if (!cues?.length) return null;
   return (

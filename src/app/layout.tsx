@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import './globals.css'
-import { cn } from '@/lib/utils'
 import { LIGHT, DARK } from '@/lib/tokens.generated'
 
 /* Not Inter and not Geist, both of which are their own tell. Plex is a commissioned typeface with
@@ -17,9 +16,12 @@ const plexSans = IBM_Plex_Sans({
   display: 'swap',
 })
 
+/* Two mono faces, not three, since 2026-09-27: the 500 file was 10 KB preloaded on every page for
+   three rules, which now name 400 or 600 outright. Sans is a variable font, so its one file covers
+   all three weights. */
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '600'],
   variable: '--font-plex-mono',
   display: 'swap',
 })
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
    * 2026-08-14 this led with "Twelve years bridging business and technology" for recruiters. That
    * went on 2026-09-15 with the portfolio sections of the front page, and the apps lead now. */
   description:
-    'Small software for an audience of one. A cookbook of dishes I actually cook, a lifting log, and French flashcards from book pages I worked.',
+    'Small software for an audience of one. My lifting log, my swimming, the questions I looked up, what I listen to and what I read.',
   /* The image is not named here on purpose: `src/app/opengraph-image.tsx` is picked up by file
    * convention and Next fills in the url, width, height and type, which is four fewer strings to
    * keep in sync with a file. */
@@ -56,7 +58,7 @@ export const metadata: Metadata = {
     url: 'https://hoodii.studio',
     title: 'Silvio Neyra',
     description:
-      'Small software for an audience of one. A cookbook of dishes I actually cook, a lifting log, and French flashcards from book pages I worked.',
+      'Small software for an audience of one. My lifting log, my swimming, the questions I looked up, what I listen to and what I read.',
   },
   twitter: { card: 'summary_large_image' },
 }
@@ -91,7 +93,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn('antialiased', plexSans.variable, plexMono.variable)}>
+    <html lang="en" className={`antialiased ${plexSans.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   )

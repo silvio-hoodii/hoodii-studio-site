@@ -162,14 +162,15 @@ export function sessionVerdict(s: SessionDetail): string | null {
  * normal day is a stop rule he learns to ignore, which is worse than not having one.
  *
  * SO IT IS DERIVED AND CAN NEVER AGAIN NAME A NUMBER HE HAS PASSED. The page interpolates this rather
- * than carrying a figure, and the same query that produces the number produces the count above it, so
- * a page can assert "nothing above this" and be checkable.
+ * than carrying a figure: it is the maximum, so nothing is above it by construction.
  *
  * WHICH ANCHOR THE PRESCRIPTION SHOULD USE IS HIS CALL, NOT THIS FUNCTION'S. `kind` is returned
  * because it matters: the single highest reading is a wrist sensor in a swimming pool, which is the
  * least trustworthy case there is, and 85 to 95 percent of 201 is a real intensity increase for a
- * beginner. `excludeSwimming` exists so the option can be priced rather than argued about. The
- * question is parked as an `open` row on the bike block in conditioning.json.
+ * beginner. The question is parked as an `open` row on the bike block in conditioning.json.
+ *
+ * `sessionsAbove` and the `excludeSwimming` option were removed on 2026-09-27: the count was a second
+ * query that returned 0 by construction, and neither had a reader.
  */
 export interface PeakHr {
   /** The highest single reading, whatever produced it. */
@@ -178,30 +179,20 @@ export interface PeakHr {
   date: string;
   /** What activity it came from, because that decides how much to trust it. */
   kind: string;
-  /** How many sessions have exceeded `bpm`. Always 0 by construction: the point is that a page can
-   *  print it and a verification step can check it, rather than the reader taking the word "highest"
-   *  on trust. That is the whole defect this replaces. */
-  sessionsAbove: number;
 }
 
-export async function getPeakHr(opts: { excludeSwimming?: boolean } = {}): Promise<PeakHr | null> {
-  const exclude = opts.excludeSwimming ? ['swimming'] : [];
+export async function getPeakHr(): Promise<PeakHr | null> {
   const rows = await sql`
     select date, kind, max_hr from health_session_detail
-    where max_hr is not null and not (kind = any(${exclude}))
+    where max_hr is not null
     order by max_hr desc, start_time desc
     limit 1
   `;
   const top = rows[0] as { date: unknown; kind: string; max_hr: number } | undefined;
   if (!top) return null;
-  const aboveRows = await sql`
-    select count(*)::int n from health_session_detail
-    where max_hr is not null and not (kind = any(${exclude})) and max_hr > ${top.max_hr}
-  `;
   return {
     bpm: top.max_hr,
     date: top.date instanceof Date ? top.date.toISOString().slice(0, 10) : String(top.date).slice(0, 10),
     kind: top.kind,
-    sessionsAbove: (aboveRows[0] as { n: number }).n,
   };
 }

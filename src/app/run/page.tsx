@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { loadConditioning } from '@/lib/gym/program';
 import { getRecentSessions } from '@/lib/gym/session';
 import LastSession from '@/components/training/LastSession';
+import SubNav from '@/components/training/SubNav';
 import RecentSessions from '@/components/training/RecentSessions';
 import Cues from '@/components/training/Cues';
 
@@ -29,23 +30,6 @@ const SUB_TABS = [
   { id: 'how', label: 'How' },
 ] as const;
 
-function SubNav({ sub }: { sub: string }) {
-  return (
-    <div className="subtabs">
-      {SUB_TABS.map((t) => (
-        <Link
-          key={t.id}
-          href={`/run?s=${t.id}`}
-          className={`subtab${sub === t.id ? ' on' : ''}`}
-          aria-current={sub === t.id ? 'page' : undefined}
-        >
-          {t.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 export default async function RunPage({
   searchParams,
 }: {
@@ -66,7 +50,7 @@ export default async function RunPage({
     <div className="wrap">
       <h1>Run</h1>
 
-      <SubNav sub={sub} />
+      <SubNav base="/run" tabs={SUB_TABS} sub={sub} />
 
       {sub === 'now' && (
         <>
@@ -156,7 +140,7 @@ export default async function RunPage({
       {sub === 'how' && (
         <div className="exgroup">
           <div className="exgroup-label">How to run</div>
-          <Cues cues={c.run.cues ?? []} note={c.run.cuesNote} />
+          <Cues cues={c.run.cues ?? []} />
         </div>
       )}
     </div>

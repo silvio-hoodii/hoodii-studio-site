@@ -33,7 +33,10 @@ export interface LogColumn<T> {
   num?: boolean;
 }
 
-export default function SessionLog<T extends { date: string }>({
+/* A row is keyed by its session `uuid` where the caller has one: two runs on one date are two rows,
+ * and a date key made React treat them as one. The combined gym log merges on date, so it keys by
+ * date. */
+export default function SessionLog<T extends { date: string; uuid?: string }>({
   rows,
   columns,
   total,
@@ -101,7 +104,7 @@ export default function SessionLog<T extends { date: string }>({
           ))}
         </div>
         {rows.map((r) => (
-          <div className="log-row" key={r.date} role="row">
+          <div className="log-row" key={r.uuid ?? r.date} role="row">
             <span className="log-date" role="cell">{fmt(r.date)}</span>
             {columns.map((c) => {
               const v = c.cell(r);

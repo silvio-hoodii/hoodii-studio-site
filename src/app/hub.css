@@ -56,12 +56,6 @@
   opacity: 0.85;
 }
 
-.idx hr.thin {
-  border-top-color: var(--border);
-  opacity: 1;
-  margin: 0;
-}
-
 /* ---- rows ---- */
 
 .idx .rows { margin: 0; }
@@ -121,9 +115,6 @@
 .idx a.row:hover .arrow { color: var(--foreground); transform: translateX(2px); }
 .idx a.row:hover .label { text-decoration: underline; text-underline-offset: 3px; }
 
-.idx .row.off { color: var(--muted-foreground); }
-.idx .row.off .label { color: var(--muted-foreground); }
-.idx .row.off .arrow { opacity: 0.35; }
 
 /* ---- sections ----
  *
@@ -191,6 +182,8 @@
  * is a glance, the page behind the row is where to look properly. */
 .idx .viz { margin-top: 10px; color: var(--foreground); line-height: 0; }
 .idx .viz .spark { display: block; overflow: visible; }
+/* Two drawings per spark (Spark.tsx); the phone shows the small one, the board the large one. */
+.idx .viz .spark-l { display: none; }
 .idx .vcover {
   width: 40px;
   aspect-ratio: 2 / 3;
@@ -205,6 +198,42 @@
   object-fit: cover;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+}
+
+/* ---- the board (2026-09-27) ----
+ *
+ * "the website looks like its on for mobile, so when on desktop is only at the center". Below 720
+ * nothing here applies and the rows are the phone's list, unchanged. From 720 the rows sit two
+ * across; from 1024, where `.measure-data` widens the column to 1120, three across, so the six
+ * apps are one screen with their pictures at a size worth looking at. Each row keeps its own
+ * bottom rule, and the grid stretches the rows of a line to one height so those rules line up. */
+@media (min-width: 720px) {
+  .idx .rows {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 40px;
+  }
+  .idx .row {
+    grid-template-columns: minmax(0, 1fr) 1.25rem;
+    grid-template-rows: auto 1fr;
+    align-content: start;
+    gap: 6px 12px;
+    padding: 20px 0 24px;
+  }
+  .idx .row .label { grid-column: 1 / -1; }
+  .idx .row .body { min-width: 0; }
+  .idx .viz { margin-top: 14px; }
+  .idx .viz .spark-s { display: none; }
+  .idx .viz .spark-l { display: block; }
+  .idx .vcover { width: 64px; }
+  .idx .vcovers { gap: 6px; }
+  .idx .vcovers img { width: 46px; height: 46px; }
+}
+@media (min-width: 1024px) {
+  .idx .rows { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 44px; }
+  .idx .row { padding: 22px 0 28px; }
+  .idx .body .line { font-size: 17px; }
+  .idx .vcovers img { width: 50px; height: 50px; }
 }
 
 /* Today's Curio card, on the index for a signed-in device only. It sits above the rows with the same
@@ -232,7 +261,16 @@
 
 /* Which apps he opened (UseStrip.tsx), his device only. Same label column as the rows. */
 .idx .usestrip { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0 16px; padding: 18px 0; border-bottom: 1px solid var(--border); color: var(--foreground); }
-.idx .usestrip svg { display: block; width: 100%; max-width: 420px; height: auto; }
-.idx .usestrip .ul { font-family: var(--font-mono), ui-monospace, monospace; font-size: 7px; fill: var(--muted-foreground); }
+/* One row per app: a label column and thirty cells. The cell is sized by the row's width, so the
+   strip fills whatever column it lands in without scaling any text. */
+.idx .usestrip .ugrid { display: flex; flex-direction: column; gap: 3px; max-width: 560px; }
+.idx .usestrip .urow { display: grid; grid-template-columns: 4.2rem repeat(30, minmax(0, 1fr)); gap: 2px; align-items: center; }
+.idx .usestrip .ul { font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
+.idx .usestrip .urow i { display: block; aspect-ratio: 1; border-radius: 1px; background: currentColor; }
+.idx .usestrip .urow .u0 { opacity: 0; }
+.idx .usestrip .urow .u1 { opacity: 0.08; }
+.idx .usestrip .urow .u2 { opacity: 0.45; }
+.idx .usestrip .urow .u3 { opacity: 0.7; }
+.idx .usestrip .urow .u4 { opacity: 1; }
 .idx .usestrip .ukey { font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); margin-top: 6px; }
 @media (max-width: 460px) { .idx .usestrip { grid-template-columns: 1fr; gap: 8px; } }

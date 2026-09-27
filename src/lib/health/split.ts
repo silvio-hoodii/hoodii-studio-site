@@ -97,3 +97,17 @@ export function sameSourcePair<T extends { source: string; fat_kg: number | null
   }
   return null;
 }
+
+/* THE CLAUSE AFTER THE THREE DELTAS, ONE FUNCTION FOR BOTH PAGES. /health and /health/deep each wrote
+ * their own, and /health/deep's lacked the direction guard: on a weight GAIN with lean mass going the
+ * other way it printed "more than all of the loss came off fat" about a gain. One sentence, one set
+ * of guards. Returns '' when nothing true can be added. */
+export function splitClause(s: Split): string {
+  if (s.fatShare != null) return `, so ${s.fatShare}% of the change was fat`;
+  if (!s.leanOpposed) return '';
+  if (s.dKg < 0) return `, so all of the loss was fat and the lean line ${s.dLean > 0 ? 'went up' : 'held'}`;
+  /* Weight up with lean down or flat means fat rose by at least the whole gain (weight = fat + lean).
+     /health's own copy of this clause said "the gain was not fat", which is the opposite. */
+  if (s.dKg > 0) return `, so all of the gain was fat and the lean line ${s.dLean < 0 ? 'went down' : 'held'}`;
+  return '';
+}

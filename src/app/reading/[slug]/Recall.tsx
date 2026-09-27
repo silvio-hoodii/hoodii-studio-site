@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import type { Card, Pack } from '@/lib/reading/types';
-import { cardKindLabel } from '@/lib/reading/types';
+import { cardKindLabel, unitLabel } from '@/lib/reading/types';
 
 /* The recall deck: one card at a time, you say whether you knew it, and the miss report tells you
  * which stretch of the book to re-read.
@@ -89,7 +89,7 @@ export default function Recall({ pack }: { pack: Pack }) {
   };
 
   const done = at >= order.length;
-  const unit = pack.unit === 'part' ? 'part' : 'ch';
+  const unit = unitLabel(pack);
 
   /* Only the sections you actually missed something in, grouped, with the recap for each. That
      grouping is the whole reason the packs carry sections at all: "you missed four" is a score, and

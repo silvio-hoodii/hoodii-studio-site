@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Today as TodayData, QuizCard, SaveCard } from '@/lib/curio/today';
 import Remind from './Remind';
+import { post, Quiz } from './Quiz';
 import { forgetCard, forgetSave, useToday } from './today-cache';
 
 /* The top of /curio: a few questions to recall, then one saved link to keep or drop.
@@ -16,32 +17,13 @@ import { forgetCard, forgetSave, useToday } from './today-cache';
  * Recall first, THEN the answer. A card that shows the answer straight away is the email again,
  * which is the thing he stopped opening. */
 
-export async function post(path: string, body: unknown): Promise<boolean> {
-  try {
-    const r = await fetch(path, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    return r.ok;
-  } catch {
-    return false;
-  }
-}
-
 export default function Today() {
   const load = useToday();
 
   if (load.state === 'loading') return <section className="today" aria-busy="true" />;
-  if (load.state === 'locked') {
-    return (
-      <section className="today">
-        <p className="empty">
-          <a href="/login?to=/curio">Sign in</a>{' '}for today&apos;s questions.
-        </p>
-      </section>
-    );
-  }
+  /* A stranger sees nothing, as the index card already does: "sign in for today's questions" on a
+     public page was an invitation to nobody. */
+  if (load.state === 'locked') return null;
   if (load.state === 'error') {
     return (
       <section className="today">
@@ -65,74 +47,13 @@ function Cards({ data }: { data: TodayData }) {
   );
 }
 
-export function Quiz({ cards, heading = 'Today' }: { cards: QuizCard[]; heading?: string | null }) {
-  const [at, setAt] = useState(0);
-  const [shown, setShown] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const card = cards[at];
-
-  const answer = async (knew: boolean) => {
-    if (!card || busy) return;
-    setBusy(true);
-    const ok = await post('/curio/api/grade', { id: card.id, knew });
-    setBusy(false);
-    /* Only advance on a stored grade. Moving on after a failed write would show the card as done
-       here while it stays due in the database, and it would come back tomorrow with no trace. */
-    if (!ok) return setFailed(true);
-    setFailed(false);
-    forgetCard(card.id);
-    setShown(false);
-    setAt((i) => i + 1);
-  };
-
-  return (
-    <div className="tblock">
-      {heading && <h2 className="sec">{heading}</h2>}
-      {!card ? (
-        <p className="done">Done for today.</p>
-      ) : (
-        <div className="qcard">
-          <div className="qmeta tnum">
-            {at + 1} of {cards.length}
-            {card.isNew && <span className="qnew">new</span>}
-          </div>
-          <p className="qq">{card.question}</p>
-          {!shown ? (
-            <div className="acts">
-              <button type="button" className="primary" onClick={() => setShown(true)}>
-                Show answer
-              </button>
-            </div>
-          ) : (
-            <>
-              <p className="qa">
-                {card.answer}{' '}
-                {card.sourceUrl && (
-                  <a href={card.sourceUrl} target="_blank" rel="noreferrer">source</a>
-                )}
-                {card.unchecked && <span className="unverified">not checked yet</span>}
-              </p>
-              <div className="acts">
-                <button type="button" disabled={busy} onClick={() => answer(false)}>
-                  Didn&apos;t know
-                </button>
-                <button type="button" className="primary" disabled={busy} onClick={() => answer(true)}>
-                  Knew it
-                </button>
-              </div>
-            </>
-          )}
-          {failed && <p className="err">Not saved. Try again.</p>}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Saves({ saves, kept: keptIn, pile }: { saves: SaveCard[]; kept: SaveCard[]; pile?: TodayData['pile'] }) {
+function Saves({ saves, kept: keptIn, pile: pileIn }: { saves: SaveCard[]; kept: SaveCard[]; pile?: TodayData['pile'] }) {
   const [at, setAt] = useState(0);
   const [kept, setKept] = useState(keptIn);
+  /* The pile counts move with every verdict here, so the bar and "Kept, N" cannot disagree. */
+  const [pile, setPile] = useState(pileIn);
+  const move = (verdict: 'keep' | 'drop', dir: 1 | -1) =>
+    setPile((p) => p && ({ ...p, [verdict === 'keep' ? 'kept' : 'dropped']: p[verdict === 'keep' ? 'kept' : 'dropped'] + dir, left: p.left - dir }));
   const [last, setLast] = useState<{ card: SaveCard; verdict: 'keep' | 'drop' } | null>(null);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -147,6 +68,7 @@ function Saves({ saves, kept: keptIn, pile }: { saves: SaveCard[]; kept: SaveCar
     setFailed(false);
     forgetSave(card.id, verdict);
     setLast({ card, verdict });
+    move(verdict, 1);
     if (verdict === 'keep') setKept((k) => [card, ...k]);
     setAt((i) => i + 1);
   };
@@ -159,6 +81,7 @@ function Saves({ saves, kept: keptIn, pile }: { saves: SaveCard[]; kept: SaveCar
     if (!ok) return setFailed(true);
     setFailed(false);
     if (last.verdict === 'keep') setKept((k) => k.filter((c) => c.id !== last.card.id));
+    move(last.verdict, -1);
     setAt((i) => i - 1);
     setLast(null);
   };

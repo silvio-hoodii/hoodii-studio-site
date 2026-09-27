@@ -40,6 +40,7 @@ export const DEFAULT_RETURN_TO = '/';
  *     evil.example in every current browser while passing a naive `startsWith('//')` check.
  *   - a control character or whitespace anywhere, which is how the two checks above get smuggled
  *     past a parser that strips them later (`/\tevil.example`, `/ /evil.example`).
+ *   - `/login` itself, with or without a query or a sub-path.
  */
 export function safeReturnTo(to: unknown, fallback: string = DEFAULT_RETURN_TO): string {
   if (typeof to !== 'string' || to.length === 0) return fallback;
@@ -63,6 +64,16 @@ export function safeReturnTo(to: unknown, fallback: string = DEFAULT_RETURN_TO):
     const code = to.charCodeAt(i);
     if (code <= 0x20 || code === 0x7f) return fallback;
   }
+  /* Not the login page itself. `to=/login?bad=1` sent a CORRECT password to a page that printed
+     "Not that one.", and a login that returns to a login is a loop whatever the query says. The path
+     is cut at the first ? or # by index, keeping this function free of regexes. */
+  let end = to.length;
+  for (const mark of ['?', '#']) {
+    const at = to.indexOf(mark);
+    if (at !== -1 && at < end) end = at;
+  }
+  const path = to.slice(0, end);
+  if (path === '/login' || path.startsWith('/login/')) return fallback;
   return to;
 }
 

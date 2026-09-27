@@ -3,7 +3,7 @@ import 'server-only';
 import {
   getAccessToken, getRecentlyPlayed, getTopTracks, getTopArtists, TIME_RANGES,
 } from './spotify';
-import { insertPlays, replaceTop, recordSync, newestPlayedAtMs } from './db';
+import { insertPlays, replaceTops, recordSync, newestPlayedAtMs, SATURATION_MARK, type TopSnapshot } from './db';
 
 /* The accumulator.
  *
@@ -58,7 +58,7 @@ export async function syncMusic(): Promise<SyncResult> {
      * alarms. */
     if (newest !== undefined && playsAdded >= 50) {
       warnings.push(
-        'this run added the full 50-item maximum, so listening outran the poll interval and some ' +
+        `this run added the ${SATURATION_MARK}, so listening outran the poll interval and some ` +
           'plays were almost certainly lost. Consider a fourth daily cron.',
       );
     }
@@ -66,18 +66,30 @@ export async function syncMusic(): Promise<SyncResult> {
     /* `today()`, not `toISOString().slice(0,10)`. This runs on a Vercel cron in UTC, so the
        evening run stamped every top-tracks snapshot with TOMORROW's date in Calgary. */
     const capturedOn = today();
-    for (const range of TIME_RANGES) {
-      try {
+    /* All six top charts fetched at once, then written in ONE transaction. A range whose fetch
+     * fails is skipped with a warning and keeps its previous snapshot. */
+    const fetched = await Promise.allSettled(
+      TIME_RANGES.map(async (range) => {
         const [tracks, artists] = await Promise.all([
           getTopTracks(token, range),
           getTopArtists(token, range),
         ]);
-        topsAdded += await replaceTop(capturedOn, 'track', range, tracks);
-        topsAdded += await replaceTop(capturedOn, 'artist', range, artists);
-      } catch (err) {
-        // Collected, not thrown: the plays above are already safe and that is what matters.
-        warnings.push(`top snapshot for ${range} failed: ${err instanceof Error ? err.message : String(err)}`);
-      }
+        return [
+          { kind: 'track', range, rows: tracks },
+          { kind: 'artist', range, rows: artists },
+        ] as TopSnapshot[];
+      }),
+    );
+    const snaps: TopSnapshot[] = [];
+    fetched.forEach((f, i) => {
+      if (f.status === 'fulfilled') snaps.push(...f.value);
+      // Collected, not thrown: the plays above are already safe and that is what matters.
+      else warnings.push(`top snapshot for ${TIME_RANGES[i]} failed: ${f.reason instanceof Error ? f.reason.message : String(f.reason)}`);
+    });
+    try {
+      topsAdded = await replaceTops(capturedOn, snaps);
+    } catch (err) {
+      warnings.push(`top snapshot write failed: ${err instanceof Error ? err.message : String(err)}`);
     }
 
     await recordSync({ ok: true, playsAdded, topsAdded, error: warnings.join(' | ') || null });

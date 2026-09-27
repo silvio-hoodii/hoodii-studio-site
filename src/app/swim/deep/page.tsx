@@ -6,12 +6,13 @@ import {
   type DistanceStanding,
 } from '@/lib/swim/level';
 import { LineChart } from '../../health/HealthCharts';
+import { when } from '@/lib/health/fmt';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Swim, the whole record',
-  description: 'Eight years of individual lengths: stroke efficiency, personal bests, and what the data cannot say.',
+  description: 'Every length on record: stroke efficiency and personal bests.',
   alternates: { canonical: '/swim/deep' },
   robots: { index: false, follow: false },
 };
@@ -37,22 +38,6 @@ export const metadata: Metadata = {
  * it is the one with a confound big enough that it gets stated before the numbers rather than after.
  * The limits go last, in full, because a page this confident about eight years of data has to say
  * where the data stops. */
-
-/** "6 Jun 2025". WITH THE YEAR, which is why `shortDate` from lib/format is not used here.
- *
- *  That helper renders "Jun 6" and is right everywhere it is already used, because every other
- *  training surface shows the last ninety days. This page spans 2018 to 2026, and the best stroke
- *  efficiency on it is three years old: "Jun 6" against a last swim of "Aug 25" reads as ten weeks
- *  ago rather than fifteen months. Noon UTC for the same reason lib/format does it, so a date-only
- *  string cannot land on the previous day in a western timezone. */
-function when(iso: string): string {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
-}
 
 /** Pace in seconds to "1:48". Whole seconds, matching /swim's own `msToPace`: a pace is a rate and
  *  hundredths on a rate computed over a whole session imply precision the wall clock lacks. */
@@ -152,7 +137,7 @@ function Progression({
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        How the personal bests got there <span className="tag">(Samsung&rsquo;s own top times)</span>
+        How the personal bests got there
       </div>
       {withHistory.map((s) => {
         const oldest = s.history[s.history.length - 1]!;

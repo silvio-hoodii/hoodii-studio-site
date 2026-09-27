@@ -104,7 +104,9 @@ that it scrolls.** Drive a real wheel or CDP touch event.
 
 - **Framework.** Next 16 (Turbopack) + React 19 + TS strict, `noUncheckedIndexedAccess` on.
 - **Data.** Neon Postgres via `@neondatabase/serverless` (HTTP, no pooling problem on Vercel).
-- **Styling.** shadcn tokens in `globals.css` are the system. Per-surface CSS (`hub.css`,
+- **Styling.** The tokens in `globals.css` are the system (they began as shadcn's variable names; the
+  `shadcn` package, `clsx` and `tailwind-merge` were removed on 2026-09-27 because nothing used them
+  at runtime). Per-surface CSS (`hub.css`,
   `kitchen/kitchen.css`) is scoped under a root class and **must consume the tokens, never hardcode
   a colour.** Fonts are IBM Plex Sans and Mono. Two files are shared rather than per-surface:
   `src/app/training.css` (root class `.training`, used by ALL FIVE training routes since
@@ -123,6 +125,31 @@ plumbing, not the paint.**
   `proxy`; do not recreate `middleware.ts`.
 - **No.** Sanity. i18n. `@hoodii/ui`. Analytics. An auth SaaS (see below).
 
+**DESKTOP IS A GRID, THE PHONE IS A COLUMN, since 2026-09-27.** His words: *"the website looks like
+its on for mobile, so when on desktop is only at the center"*. Below 720 nothing changed: every page
+is the one reading column (`--measure: 680px`), and the 390px screenshots must not move. Above 1024,
+a surface that opts into `.measure-data` gets 1120px, and the surfaces that are pictures use it:
+the index runs its six app rows as a board (two across from 720, three from 1024, `hub.css`),
+/music pairs its pictures (`.board` in `music.css`), /swim pairs its two swim charts (`.two` in
+`training.css`), /health pairs its body charts (`.pair`), /reading fills the row with covers, the
+Curio games and the kitchen list run two columns. /gym stays one column on purpose: it is a form he
+fills at the rack. **A chart with text inside its viewBox keeps its `max-width`** (520 or 560):
+scaled to 1120 its 9px labels were 30px. The index sparks are drawn TWICE at two intrinsic sizes
+(`Spark.tsx`, `.spark-s` / `.spark-l`) and CSS shows one, because scaling the phone drawing made a
+1.5px stroke 4px wide. Screenshot at 390 AND 1440 (`WIDTH=1440 node scripts/shoot.mjs ...`) before
+calling a layout change done, **against a local `pnpm start`, never the live domain**: a run of a
+dozen pages trips firewall rule 4 after about seven loads and every shot after that is the Vercel
+checkpoint page (it happened on 2026-09-27, 33 of 38 shots), and a signed-in shot on the live domain
+counts as one of his opens in `app_open`.
+
+**THE PICTURES ARE DYNAMIC THROUGH ONE CLIENT COMPONENT, `src/components/Readout.tsx`.** Every chart
+stays server-rendered SVG. Wrapped in `<Readout>`, any mark carrying `data-r="..."` shows that text
+on tap or hover (a phone never shows an SVG `<title>`), and on first sight the wrapper adds `.in`,
+under which `.vbar` grows from its base and `.vline` (a path with `pathLength="1"`) draws itself in.
+No JavaScript, no class, no animation: the static picture is the fallback, and
+`prefers-reduced-motion` switches it off. Inside a link (the index rows) a tap on a mark does not
+navigate; a tap beside it does.
+
 **No auth product until there is more than one user.** Better Auth and Clerk solve accounts, OAuth
 and password resets, none of which exist here. The cookie in `proxy.ts` gates per route, which is
 exactly what a mixed public/private site needs. Vercel's Deployment Protection is the wrong tool: it
@@ -139,7 +166,7 @@ always lose to the thing that exists.
 
 | Route | What | Writes gated |
 |---|---|---|
-| `/` | The hub index. Rows show real state, never a link label, and **since 2026-09-27 each carries a word-sized picture** (`src/components/Spark.tsx`: gym day strip, weight line, swim bars, album covers, book cover) and a signed-in device gets today's Curio card above the rows (`HubQuiz.tsx`). Six rows: Gym, Health, Swim, Curio, Music, Reading | n/a |
+| `/` | The hub index, ISR six hours **and regenerated on demand**: the gym write routes, the kitchen note route and the music cron call `revalidatePath('/')`, and the two laptop pipelines call `/api/revalidate`. Rows show real state, never a link label, and **since 2026-09-27 each carries a word-sized picture** (`src/components/Spark.tsx`: gym day strip, weight line, swim bars, album covers, book cover) and a signed-in device gets today's Curio card above the rows (`HubQuiz.tsx`). Six rows: Gym, Health, Swim, Curio, Music, Reading | n/a |
 | `/kitchen` | A cookbook: dishes he chose, each with the publisher's recipe link, a shopping list and his notes. **Off the front page and out of the header since 2026-09-27**: he asks for dishes in chat ("it's usually an agent that helps me out"), the ask box had 0 rows ever and was deleted with `/kitchen/api/inbox`. Dish pages stay because sessions send him their links. Read `KitchenOS/README.md`. Neon: `dish`, `inbox` (still read by the SessionStart hook), `cook_log` | yes (`/kitchen/api/note`) |
 | ~~`/kitchen/shop`~~ | **Deleted 2026-09-27 on the usage audit**: 0 ticks and 0 extras ever. 307s to /kitchen. The per-dish list stays on the dish page | n/a |
 | `/gym` | Lifting log + a note box, and lifting ONLY since 2026-08-27. **TWO SESSIONS, A AND B, ALTERNATING, EVERY BLOCK A PAIR, since 2026-09-06, on his word ("Just ship"), and the week is FROZEN until 2026-10-05**: `content/gym/program.json` carries `goal` (his words) and `frozen` (a structural hash `validate.mjs` refuses to let drift without his quoted words). Session C was folded into A and B; the calf raise is gone; the barbell bench is a tracked main lift again. Read `HealthOS/knowledge/PROPOSAL-2026-09-06-WHY-THREE-MONTHS-GOT-NOWHERE-AND-THE-FIX.md` before proposing any change to the week: it holds his five rulings, the log evidence (he completes 52.7% of prescribed sets and skips rather than improvises), and his ruling on gates, that a gate may enforce his rulings, his gym's layout and code correctness, and may never enforce a paper. The per-muscle gate and the per-lift strength gate are both gone and are not coming back. Lifting log + a note box. The notes are READABLE from the page as of the same day, collapsed at the bottom with the count of unanswered ones in the summary; `gym_note` was write-only from the web before that. `content/gym/` + `gym_*` tables | yes |
@@ -150,12 +177,14 @@ always lose to the thing that exists.
 | `/health` | **THE TRAINING INDEX since 2026-08-27**, and the Overview tab of the dead conditioning page lives here. **FOUR sub-tabs, and Weight is the first and the default since 2026-08-28**, on his complaint: "as soon as I go in, it starts talking about 2 days in a row and the length of the sessions. It doesn't make sense." The hub row for this route shows his weight, so the number he tapped and the first thing he saw were about different subjects. Weight (the YEAR HEADLINE first, peak reading to lowest with the span and the rate, linking to /health/deep; then the last weigh-in, seven of the eight body-composition columns, the fat/lean split, watch-only muscle and water), Now (days in a row, the recovery caveat, last lift, the last ten lifts trended, what actually happened over a fortnight, attendance behind a tap), Plan (the planned week, how the four disciplines fit, the rest rule, when things happen), Volume (weekly fractional sets per muscle with a column per day, per lift behind a tap, and the pairings that cost the lift in front of them). The default is read off `TABS[0]`, not a literal, so reordering the chips cannot leave the landing tab behind. Volume answers a question he asked three times and got a document for three times, so /gym carries a one-line link to it under the finish buttons | n/a |
 | `/health/deep` | **THE YEAR SO FAR, since 2026-08-28.** The whole of the current calendar year in one page: the weight range as a headline number, the weight and fat lines, where the kilos came off, all seven other body-composition columns (**including `bmi`, populated on every row of `health_body_comp`, mirrored on every sync run and read by nothing in this repo until now**, 09-health P2-8), attendance by discipline and by month, the longest break, last year for scale, every lift logged on two or more days with its change, and all four swim personal bests against what stood before them. Then a limits section. A ROUTE and not a fifth sub-tab, the same call /swim/deep made: the chip row has no wrap and no scroll, and this is read on the sofa rather than at the rack. Source: `src/lib/health/year.ts`, two round trips, **every figure derived and none typed**, the year itself off `today()`. It shares `getYearBody()` with the Weight tab so the two cannot print different headlines | no writes |
 | ~~`/french`~~ | **Deleted 2026-09-27 on the usage audit**: 0 cards and 0 reviews ever on the web. 307s to /. LanguageOS on the laptop is untouched, and the `french_*` tables are kept | n/a |
-| `/curio` | **A DAILY QUIZ SINCE 2026-09-27**, on his word: the morning email had stopped being opened ("I don't want to read from an email ... maybe a shorter text and more interactive"). Top: `Today.tsx`, fetched in the browser and shown only to a signed-in device: up to two new questions plus due reviews, recall then reveal then *knew it* / *didn't*, spaced on a Leitner ladder (`src/lib/curio/spacing.ts`, tests in `verify.mjs`); then ONE saved ReadLater link at a time with keep / drop; then the morning-reminder switch. Below: `content/curio/games.json` (learning games, every URL fetched when added), then the old mornings and ledger, folded. Page stays ISR 3600 because the private part is client-fetched. Grades in `curio_review`, pile in `curio_save`, pushed and pulled by `content/curio/sync-saves.mjs` (verdicts go back into the vault notes as `verdict:`), both run nightly from `ReadLaterOS/run-readlater.ps1` along with `sync.mjs` | yes, `/curio/api/*`, **reads gated too** |
+| `/curio` | **A DAILY QUIZ SINCE 2026-09-27**, on his word: the morning email had stopped being opened ("I don't want to read from an email ... maybe a shorter text and more interactive"). Top: `Today.tsx`, fetched in the browser and shown only to a signed-in device: up to two new questions plus due reviews, recall then reveal then *knew it* / *didn't*, spaced on a Leitner ladder (`src/lib/curio/spacing.ts`, tests in `verify.mjs`); then ONE saved ReadLater link at a time with keep / drop; then the morning-reminder switch. Below: `content/curio/games.json` (learning games, every URL fetched when added), and one line linking to the archive. Page stays ISR 3600 because the private part is client-fetched. The quiz alone is `Quiz.tsx`, which the index card mounts. Grades in `curio_review`, pile in `curio_save`, pushed and pulled by `content/curio/sync-saves.mjs` (verdicts go back into the vault notes as `verdict:`), both run nightly from `ReadLaterOS/run-readlater.ps1` along with `sync.mjs` | yes, `/curio/api/*`, **reads gated too** |
+| `/curio/archive` | **The mornings and the one-line ledger, off /curio since 2026-09-27.** Folded under the quiz they printed every answer the quiz asks him to recall, and cost every visit two round trips and the whole ledger twice over (HTML plus hydration data). ISR 3600, indexable, one link from /curio | no writes |
+| `/api/revalidate` | POST, bearer `CRON_SECRET`, body `{paths: [...]}` from an allow-list. Regenerates cached pages on demand; `scripts/revalidate.mjs` calls it from `HealthOS/sync/run-health-sync.ps1` and `ReadLaterOS/run-readlater.ps1` after they write to Neon. See "What costs money" | bearer |
 | `/curio/api/*` | today (GET), grade, save, push, push/test. **The only prefix where GETs need the cookie**: `curio_save` is his unfiltered reading pile, which `schema.sql` has kept off public surfaces since /curio was built | **cookie, all methods** |
 | `/api/curio/remind` | Cron, 15:00 UTC daily. Sends the first due question as a phone notification to every `curio_push` row; sends nothing on a day with nothing due. `CRON_SECRET` like `/api/music/sync`. Private key `VAPID_PRIVATE_KEY` (Vercel production, sensitive, so it reads back blank: test with the page's *Send a test* button, never with `env pull`); public key in `src/lib/curio/push-key.ts` | bearer |
 | `/sw.js` | The service worker for those notifications, served from a route because there is no `public/`. Shows and opens; caches nothing | n/a |
 | `/me/api/open` | One open of an app by HIM: `Track.tsx` in `SiteHeader` and the index beacons it, the proxy 401s everyone without the cookie, so every `app_open` row (day, app, opens) is him. Built because the 2026-09-27 audit could not separate his visits from crawlers in Vercel's log. **Read this table before the next usage audit.** Counts only on the hoodii.studio hostname: a local `pnpm start` shares the database and its screenshot runs were being counted as his opens. `GET /me/api/opens` feeds the Opened strip on the index (`UseStrip.tsx`) | **cookie, all methods** |
-| `/music` | **Pictures first since 2026-09-27** ("just lists of songs ... something more graphic"): a weekday-by-hour listening grid, minutes per day, an album wall sized by plays, most-played artists as bars, all from `getListening()` in one transaction. Spotify's charts and recent plays are folded below. Plus a listening history that only exists because a cron writes it | no writes |
+| `/music` | **Pictures first since 2026-09-27** ("just lists of songs ... something more graphic"): a weekday-by-hour listening grid, track minutes per day, an album wall sized by plays, most-played artists as bars (grouped on the primary artist, the name before the first comma), all from `getListening()` in one transaction, two to a line above 1024. Spotify's charts and recent plays are folded below. **ISR 3600 since 2026-09-27, regenerated by the sync route**: it was force-dynamic with 17 database round trips and a Spotify token mint on every request, listed in the sitemap. Now-playing is the client component `NowPlaying.tsx` off `/api/spotify`, as on the index. "Minutes" are track lengths per play (a skip counts the whole track), so the labels say track minutes | no writes |
 | `/swim` | **His own swimming, since 2026-08-26.** Five sub-tabs on the same `?s=` idiom: Now (last session drawn, tier ladder, personal bests, 90-day history, and a link to `/swim/deep`), Plan (the ten-week continuity ladder), How, Coach me, Coach them. **Five and not six: the chips end at 317px of a 390px screen and `.subtabs` has neither wrap nor scroll, so the deep dive is a route.** The Calgary pool schedule that used to be here is DELETED, along with six scrapers, the `HOODII-SwimOS-Daily` task and the four `swim_*` tables; backup at `_archive/SwimOS-2026-08-26/`. Sources: `content/swim/*.json` and `health_swim_pb` / `health_swim_session` / `health_session_detail` in Neon | `/swim/api/baseline` only |
 | `/swim/deep` | **The whole record, since 2026-08-27.** The only thing that reads `health_swim_length`, 19,327 lengths back to 2018. Stroke efficiency over time, PB progression out of `standingFor()`'s `history` array, weight against pace, swimming after lifting, work to rest, stroke mix, the last session split at the walls he stopped at, season gaps, and a limits section. `noindex`. Read `src/lib/swim/deep.ts` before adding a figure: its header records the three data traps that produced wrong answers here | no writes |
 | `/swim/api/baseline` | The one number the swim ladder is measured from. Every rung reads "your number plus 100 m" and for a month there was nowhere to put it. Writes `gym_swim_baseline` (the table keeps its `gym_` prefix on purpose), a history not a value, and records whether the pull buoy was out. Was `/gym/api/swim-baseline` | **cookie** |
@@ -168,7 +197,7 @@ always lose to the thing that exists.
 | `/reading/finished` | Recall decks (titled Recall since 2026-09-27) + a debrief for books already finished. Static data, `content/reading/packs/*.json` | no writes |
 | `/reading/[slug]` | One book's recall deck, off `/reading/finished` | no writes |
 | `/callback` | Shows a Spotify auth code so re-auth needs no local server. Never exchanges it | n/a |
-| `/login` | **ONE login route since 2026-09-04**, replacing `/kitchen/login`, `/gym/login`, `/health/login` and `/french/login`, which were four near-identical forms for one cookie and one password. Each guarded its redirect with its own app's prefix, so a correct password entered from `/reading/shelf` landed in the kitchen (A3). The guard is `safeReturnTo` in `src/lib/return-to.ts`: same-origin, no app names in it, 40 cases in `return-to.test.ts`. The eyebrow is derived from `?to=`. All four old paths 307 here | public |
+| `/login` | **ONE login route since 2026-09-04**, replacing `/kitchen/login`, `/gym/login`, `/health/login` and `/french/login`, which were four near-identical forms for one cookie and one password. Each guarded its redirect with its own app's prefix, so a correct password entered from `/reading/shelf` landed in the kitchen (A3). The guard is `safeReturnTo` in `src/lib/return-to.ts`: same-origin, no app names in it, never `/login` itself, 45 cases in `return-to.test.ts`. The eyebrow is derived from `?to=`. All four old paths 307 here | public |
 
 **`/music` has a failure mode none of the others have.** Its history is unrecoverable: Spotify
 returns the last 50 plays and nothing else, so anything the cron misses is gone from everywhere, not
@@ -183,76 +212,21 @@ quiet evening. That is why `src/lib/music/spotify.ts` exists as a separate clien
 why every run writes a `music_sync` row, and why `/music` and the hub row both shout when the last
 successful run is over 36 hours old. Do not add a catch that returns a default to that file.
 
-**The scoring was rebuilt on 2026-08-21 and every reading surface now reads ONE pool.** It used
-to be five separately-scored corpora, each with its own ceiling (nonfiction and genre topped out
-near 1.5 off three or four source lists, canon reached 10.8 off thirteen), and `refill.mjs` blended
-those incomparable numbers into one ten-book queue behind eight variety quotas. Seven of the ten
-scored under 4 while The Grapes of Wrath sat outside it. The quotas are gone, only the two anti-slog
-caps remain, and `ReadingOS/scripts/lib/score.mjs` holds the whole formula in one readable table:
-per-source weights, same-prize deduplication, rank inside a ranked list, and winner detection for
-the archives that list winners and nominees together. **Do not add a score constant anywhere else.**
-
-**Refreshing reading data**, from `ReadingOS/` then here:
-
-```
-node scripts/ingest.mjs all            # THE one that ranks. After any source change.
-node scripts/build-shelf-finder.mjs    # sections, per-section tiers, ownership flags
-node scripts/enrich-openlibrary.mjs    # covers, descriptions, pages. Cached, so re-runs are free
-node scripts/refill.mjs                # only if the queue should re-rank
-cd ../hoodii-studio-site
-node content/reading/sync-shelf.mjs && node content/reading/sync-catalog.mjs && node content/reading/sync.mjs
-```
-
-Neon updates immediately; no redeploy for data-only changes. `refill.mjs` re-ranks rather than
-tops up: an unread book has no tenure, but anything he has STARTED or OWNS is pinned.
-
-**That sequence was a data-loss bug on 2026-08-26 and it was the only P0 the full-site audit found.**
-`enrich-openlibrary.mjs` with no flag walks the browse tier, 778 books today, and wrote that straight
-over `data/all/enrichment.json`, which holds 6,569 from an earlier `--all` run. The next
-`sync-shelf.mjs` would then have pushed roughly 5,100 books' covers, descriptions and reader ratings
-to null, with every step logging success and nothing noticing until the shelf was opened in a shop.
-**The documented command was the loaded gun.**
-
-Fixed at the write, not in this document: `enrich-openlibrary.mjs` now MERGES its run into the file,
-which makes a shrink unrepresentable rather than merely refused, and both it and `ingest.mjs` go
-through `ReadingOS/scripts/lib/guard-regen.mjs`, whose contract is stated in the same words as
-`HealthOS/guard-regen.mjs`: **a regeneration may not shrink an accumulated artifact.** `--force`
-overrides and says so; the old file is kept at `<path>.prev` either way. Regression suite:
-`node scripts/lib/guard-regen.test.mjs` in `ReadingOS/`, 12 cases, watched refusing in both
-directions. It is not in this repo's `verify.mjs` because it is not in this repo.
-
-**Two guards in that pipeline exist because they caught something.** `sync-shelf.mjs` throws on an
-unmapped section label rather than silently dropping the books (it fired the day Spanish was added,
-which would otherwise have put 156 books in no section). `fetch-award-sources.mjs` refuses to write
-a source whose parse dropped more rows than it kept, because a half-read award list under-credits
-every book it missed while looking like full coverage.
-
-**`/reading`'s queue is ISR at 300 seconds, and it was `force-dynamic` until commit `8963763`.**
-That commit ("Cache six pages: Active CPU passed the Hobby allowance") made the change deliberately
-and left a good in-file comment; this paragraph was not updated and said force-dynamic for five days,
-which meant a session obeying this document would have "restored" the exact request-time cost the
-commit removed. Corrected 2026-08-28 (04-reading P2-2). **A doc that describes the code as it used to
-be is instructions for a regression.**
-
-Five minutes of lag is not staleness here: the mirror is pushed by hand (`refill.mjs` and/or
-`acquire.mjs` in `ReadingOS/`, then `node content/reading/sync.mjs`), both deliberate acts, and Neon
-updates immediately with no redeploy. What ISR must not become is a build-time bake: without any
-directive Next prerenders the page once and never looks at the mirror again, which was caught
-2026-08-20 by reading the build's own route table (`ƒ` vs `○`) rather than assuming a page that
-fetches from a DB is dynamic by default. It is not. **Check the route table whenever you change a
-rendering mode on this repo.**
-
-The green `.verdict.now` badge is the one case that earns `--signal` on this page: a copy on the
-shelf at Westbrook or Central today, not just "BORROW NOW" system-wide, which is a different and
-much less useful fact. **It is gated on liveness since 2026-08-28**: the sync is hand-run and a hold
-moves daily, so past one day the badge keeps its label, loses the colour, and prints the date it was
-checked. `homeBranchNowStale` in `src/lib/reading/queue-db.ts` is the flag, and it is separate from
-`stale` (seven days, the whole mirror) because the two answer different questions on different clocks.
+**READING IS GOODREADS AND NOTHING ELSE, since 2026-09-27.** `src/lib/reading/goodreads.ts` reads
+his public shelf feeds (paged, dates read straight from the string so an evening entry keeps its
+day, a failed fetch THROWS so Next keeps serving the last good page). The ReadingOS mirror that used
+to feed `/reading` (`content/reading/sync*.mjs`, `apply-schema.mjs`, `schema.sql`, nine `reading_*`
+tables, the scoring, the shelf and want pages, the walled paths) is deleted from this repo; the
+ReadingOS folder in HOODII is untouched and its tables still exist in Neon with nothing reading them.
+What remains under `content/reading/` is `validate.mjs` and `packs/`, the recall decks on
+`/reading/finished`. The nine paragraphs this file carried about the mirror (the refresh sequence,
+the data-loss guard, the ISR-300 queue, `.verdict.now`, `homeBranchNowStale`) described code that
+no longer exists and are gone with it; the history is in git before this date.
 
 **THE KITCHEN WAS REBUILT AS A COOKBOOK ON 2026-09-05, and every paragraph this file used to carry
 about recipe cards, `validate.mjs`, `SOURCING.md`, `import.mjs`, `render.mjs`, `probe-kitchen.mjs`,
 `kitchen-notes.mjs` and the stock fold describes code that no longer exists.** Read
-`KitchenOS/README.md` for what it is now: `dish`, `inbox` and `cook_log` in Neon, two pages and three
+`KitchenOS/README.md` for what it is now: `dish`, `inbox` and `cook_log` in Neon, two pages and two
 API routes under `src/app/kitchen/`, and `src/lib/kitchen/cookbook.ts`. The page never renders a
 publisher's text; it links to it. The reasoning for the rebuild is in
 `KitchenOS/WHERE-THINGS-LIVE.md`; the retired code is in git history and the retired data in
@@ -620,8 +594,9 @@ accumulates things a reader has to work out are dead.
   `src/lib/auth-server.ts` is the server-component half, and **`scripts/lint-auth.mjs` fails the build
   on a second copy of either.** Its first live run found a THIRD copy the audit had missed, in
   `src/app/french/page.tsx`, where an unset secret showed every anonymous visitor the edit controls.
-  The cookie is SET in two places only, `src/lib/login-server.ts` (the four login forms) and
-  `/kitchen/api/unlock` (the inline unlock), and both are in that linter's allowlist by name.
+  The cookie is SET in one place, `src/lib/login-server.ts`; `/kitchen/api/unlock` (the inline
+  unlock) calls `signInWithPassword` there since 2026-09-27 rather than carrying its own copy, so
+  only the two lib files are in that linter's allowlist.
 - **THE 44px TAP FLOOR IS MEASURED NOW: `node scripts/probe-taps.mjs <base-url>`.** 36 surfaces at
   390px, every sub-tab of every route, checking three geometric things in one visit: every control
   against the floor, horizontal overflow, and whether the nav chip row still fits. Its first full run
@@ -922,7 +897,7 @@ if the database ever moves, this line moves with it.
 
 ## What costs money, and the gate that is NOT in this repo
 
-**Four Vercel firewall rules protect this site and none of them are visible in these files.**
+**Three Vercel firewall rules protect this site and none of them are visible in these files.**
 Read them with `vercel firewall overview` and `vercel firewall rules list` before concluding that
 something is unprotected, and re-read them before adding a filter page.
 
@@ -930,7 +905,7 @@ something is unprotected, and re-read them before adding a filter page.
 |---|---|---|
 | 1 | Block AI training crawlers | UA regex, deny. meta-externalagent, GPTBot, ClaudeBot, Bytespider and friends |
 | 2 | Unlocked device bypass | A request carrying the `kos` cookie skips rules 3 and 4 |
-| 3 | Filter surface cost gate | **FOUR paths**, not three: the live rule is `^/(reading/(shelf\|want)\|kitchen/(find\|want))`. This row said three until 2026-09-05 and omitted `/kitchen/want`, which was challenged the whole time. The 2026-09-04 audit copied the three from here and `src/lib/walled.ts` copied them from the audit, so six `<Link>` elements prefetched a 429 on every visit. **Run `node scripts/check-firewall.mjs`** rather than trusting this row: it reads the live rule and diffs it against `WALLED_PATHS` |
+| 3 | ~~Filter surface cost gate~~ | **REMOVED 2026-09-27.** It challenged `^/(reading/(shelf\|want)\|kitchen/(find\|want))`, four paths that were all deleted and 307 somewhere real; under the challenge the redirect could not run, so an old link got a 34 KB checkpoint page instead of /reading. `src/lib/walled.ts` and `WalledLink.tsx` went with it. Any future filter page with crawlable `<Link>` state gets a rule of its own, stated here |
 | 4 | Document burst limit | 150 non-`/_next/` requests per minute per IP, then a challenge |
 
 **Rule 1 names the actual culprit, identified 2026-08-25 from `vercel.request.count` grouped by
@@ -962,10 +937,13 @@ of the three disallowed paths were the two most-requested routes on the site. Ke
 still speaks to crawlers that do honour it, but never count it as protection. After publishing the
 rules, function invocations went from 2.37 req/s to 0.02 req/s with zero on all three paths.
 
-**Rule 3 is the one that matters for code you have not written yet.** `/kitchen/find` was caught
-with this shape on 2026-08-20 and `/reading/shelf` shipped the same shape on 2026-08-21, so naming
-paths one at a time loses. Any page that renders on every request, exposes its filter state as
-crawlable `<Link>` hrefs, and needs no cookie is a combinatorial URL space someone will walk.
+**The shape rule 3 guarded is the one that matters for code you have not written yet.** `/kitchen/find`
+was caught with this shape on 2026-08-20 and `/reading/shelf` shipped the same shape on 2026-08-21,
+so naming paths one at a time loses. Any page that renders on every request, exposes its filter
+state as crawlable `<Link>` hrefs, and needs no cookie is a combinatorial URL space someone will
+walk. No such page exists today, which is why the rule is gone; the day one ships, it gets a rule
+and `scripts/check-firewall.mjs` (which now fails only if a challenged path serves a live route)
+gets its path.
 
 **Two numbers to reason with before optimising anything here.** Vercel bills Active CPU only while
 code runs, and Provisioned Memory for an instance's whole lifetime *including* time spent waiting

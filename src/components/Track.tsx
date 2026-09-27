@@ -15,10 +15,13 @@ export default function Track({ app }: { app: string }) {
        screenshot runs of a working session were being counted as his opens. Only the real domain
        counts; everything else is a test. */
     if (location.hostname !== 'hoodii.studio') return;
-    const key = `opened:${app}`;
+    /* Once per app per DAY. It was once per tab lifetime, so a tab left open on the phone for a
+       week recorded its first day only, and a blank day is exactly what the Opened strip asks him
+       to question. The day is the device's own; the row's day is stamped by the server. */
+    const key = `opened:${app}:${new Date().toLocaleDateString('en-CA')}`;
     try {
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, '1');
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, '1');
     } catch { /* storage blocked: count anyway */ }
     const body = JSON.stringify({ app });
     if (!navigator.sendBeacon?.('/me/api/open', new Blob([body], { type: 'application/json' }))) {

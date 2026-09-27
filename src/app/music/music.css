@@ -3,12 +3,6 @@
  * Same system as the hub and /curio: tokens only, never a hardcoded colour, rules instead of
  * cards, near-zero radius, --signal reserved for a value that is true right now.
  *
- * No album art, deliberately. Spotify hands back a cover URL for every track and it is stored in
- * music_play, so this is reversible in an afternoon. But a grid of full-colour covers is the one
- * thing that would visibly break a monochrome system built on purpose, and it would make this the
- * only page on the site that looks like every other music page. The data is kept; the decision is
- * to not render it.
- *
  * Three-column charts collapse to one column on a phone. That is the only breakpoint here.
  */
 
@@ -20,14 +14,6 @@
 
 /* The masthead that used to sit here was a copy of the hub's, which made three different header
    idioms across seven surfaces. It is now one shared component mounted from the layout. */
-
-.music .blurb {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--muted-foreground);
-  max-width: 56ch;
-  margin: 14px 0 0;
-}
 
 .music .stat {
   font-family: var(--font-mono);
@@ -71,7 +57,10 @@
   word-break: break-word;
 }
 
-/* ---- now playing ---- */
+/* ---- now playing ----
+ * src/components/NowPlaying.tsx, the hub footer's client component, fetched in the browser so the
+ * page can be ISR. Its classes (.np, .eq, .npk) are styled here for /music; hub.css styles them
+ * under .idx. */
 
 .music .np {
   display: flex;
@@ -81,17 +70,10 @@
   margin-top: 22px;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--border);
+  font-size: 15px;
 }
 
-.music .npdot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--signal);
-  align-self: center;
-}
-
-.music .nplabel {
+.music .np .npk {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.13em;
@@ -99,28 +81,20 @@
   color: var(--signal);
 }
 
-/* `.off`, not `.quiet`: `.quiet` is now a global aside style with its own size and line height,
-   and this is a modifier on a label that already has both. */
-.music .nplabel.off { color: var(--muted-foreground); }
+.music .np a { color: inherit; font-weight: 600; text-decoration: none; }
+.music .np a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.music .nptrack { font-size: 16px; font-weight: 600; }
-.music .nptrack a { color: inherit; text-decoration: none; }
-.music .nptrack a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.music .npartist { font-size: 14px; color: var(--muted-foreground); }
+.music .np .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 9px; align-self: center; }
+.music .np .eq i { width: 2px; background: var(--signal); animation: music-eq 1.1s ease-in-out infinite; }
+.music .np .eq i:nth-child(1) { height: 4px; }
+.music .np .eq i:nth-child(2) { height: 9px; animation-delay: 0.18s; }
+.music .np .eq i:nth-child(3) { height: 6px; animation-delay: 0.36s; }
+@keyframes music-eq { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .music .np .eq i { animation: none; } }
 
 /* ---- section headings ---- */
 
 /* .sec is declared once in globals.css. */
-
-/* The qualifier that keeps "most played" from reading as "top of all time". It is part of the
- * heading rather than a footnote because a footnote is a thing you can miss. */
-.music .sec .qual {
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: none;
-  opacity: 0.8;
-}
-
 
 /* ---- charts ---- */
 
@@ -129,8 +103,6 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 26px 22px;
 }
-
-.music .ranges.two { grid-template-columns: repeat(2, 1fr); }
 
 .music .rlabel {
   font-family: var(--font-mono);
@@ -205,8 +177,7 @@
 /* The footer is `.site-footer` in globals.css, mounted from the layout like the header. */
 
 @media (max-width: 640px) {
-  .music .ranges,
-  .music .ranges.two { grid-template-columns: 1fr; gap: 22px; }
+  .music .ranges { grid-template-columns: 1fr; gap: 22px; }
   .music .play { grid-template-columns: 4.6rem 1fr; gap: 0 12px; }
 }
 
@@ -302,6 +273,19 @@
   background: var(--background);
   color: var(--foreground);
   border-radius: var(--radius-sm);
+}
+
+/* Two pictures to a line above 1024, where the column is 1120: the clock beside the days, the wall
+   beside the artists. Each half is a section carrying its own `.sec` heading, so the reading order
+   on a phone (one column, top to bottom) is the source order. */
+@media (min-width: 1024px) {
+  .music .board { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 44px; }
+  .music .board > section { min-width: 0; }
+  .music .clock,
+  .music .bars,
+  .music .wall,
+  .music .abars { max-width: none; }
+  .music .wall { grid-template-columns: repeat(6, 1fr); }
 }
 
 .music .abars { list-style: none; padding: 0; margin: 12px 0 0; max-width: 560px; }

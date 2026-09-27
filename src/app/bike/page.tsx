@@ -3,6 +3,7 @@ import { loadConditioning } from '@/lib/gym/program';
 import { getPeakHr, getRecentSessions } from '@/lib/gym/session';
 import { fill, fillCue } from '@/lib/gym/hr-anchor';
 import LastSession from '@/components/training/LastSession';
+import SubNav from '@/components/training/SubNav';
 import RecentSessions from '@/components/training/RecentSessions';
 import Cues from '@/components/training/Cues';
 
@@ -22,23 +23,6 @@ const SUB_TABS = [
   { id: 'plan', label: 'Plan' },
   { id: 'how', label: 'How' },
 ] as const;
-
-function SubNav({ sub }: { sub: string }) {
-  return (
-    <div className="subtabs">
-      {SUB_TABS.map((t) => (
-        <Link
-          key={t.id}
-          href={`/bike?s=${t.id}`}
-          className={`subtab${sub === t.id ? ' on' : ''}`}
-          aria-current={sub === t.id ? 'page' : undefined}
-        >
-          {t.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
 
 export default async function BikePage({
   searchParams,
@@ -60,17 +44,18 @@ export default async function BikePage({
      ABOVE 175, higher than anything you have ever recorded", a threshold he passes routinely. A stop
      rule that fires on a normal day is one he learns to ignore.
      
-     `fill` returns null rather than a default when the database has nothing, and the render below drops
-     the line instead of printing a placeholder or a fallback number. A default here would put a typed
-     figure back into the sentence that exists because a typed figure was wrong, which is the
-     catch-and-return-a-default this repo forbids in lib/music/spotify.ts. */
+     With no peak on record, `fill` returns null and the How hard line below is not rendered, and
+     `fillCue` returns null for any cue whose name, cue or test carries a placeholder, so that cue is
+     filtered out rather than printed with "{PEAK_BPM}" in it. Neither falls back to a typed number:
+     that would put a typed figure back into the sentence that exists because a typed figure was
+     wrong, the catch-and-return-a-default this repo forbids in lib/music/spotify.ts. */
   const peak = sub === 'plan' || sub === 'how' ? await getPeakHr() : null;
 
   return (
     <div className="wrap">
       <h1>Bike</h1>
 
-      <SubNav sub={sub} />
+      <SubNav base="/bike" tabs={SUB_TABS} sub={sub} />
 
       {sub === 'now' && (
         <>
@@ -149,8 +134,9 @@ export default async function BikePage({
         <div className="exgroup">
           <div className="exgroup-label">How to ride</div>
           <Cues
-            cues={(c.bike.cues ?? []).map((cue) => fillCue(cue, peak))}
-            note={c.bike.cuesNote ? (fill(c.bike.cuesNote, peak) ?? c.bike.cuesNote) : c.bike.cuesNote}
+            cues={(c.bike.cues ?? [])
+              .map((cue) => fillCue(cue, peak))
+              .filter((cue): cue is NonNullable<typeof cue> => cue != null)}
           />
         </div>
       )}

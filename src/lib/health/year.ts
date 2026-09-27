@@ -1,6 +1,7 @@
 import 'server-only';
 import { sql } from './db';
-import { today } from '../day';
+import { today, daysAgo } from '../day';
+import type { BodyCompPoint, WatchCompPoint } from './types';
 import { splitOf, sameSourcePair, type Split } from './split';
 import { loadMovements, loadProgram } from '../gym/program';
 
@@ -275,17 +276,60 @@ const METRICS: { key: keyof Reading; label: string; unit: string; decimals: numb
  *  `src/lib/gym/coverage.mts` already won for the Volume tab. One round trip. */
 export async function getYearBody(): Promise<YearBody | null> {
   const year = Number(today().slice(0, 4));
-  const from = `${year}-01-01`;
-  const to = `${year}-12-31`;
+  const { readings, instrument } = await readBody(`${year}-01-01`);
+  return buildBody(year, readings.filter((r) => r.date <= `${year}-12-31`), instrument);
+}
 
+/** EVERYTHING THE WEIGHT TAB DRAWS, FROM ONE READ. It fetched body composition three times: a
+ *  120-day series, a year-to-date series, and the year's readings inside getYearBody. All three are
+ *  the same rows cut three ways, so they are one query now and the cuts happen here.
+ *
+ *  `perDay` is one reading per date, Watch preferred, the rule getBodyCompSeries applies; `watch` is
+ *  Watch rows carrying skeletal muscle, the rule getWatchComposition applies. Both reach back to
+ *  whichever is earlier, `days` ago or 1 January, so the caller can cut either window from them. */
+export async function getWeightTabBody(days: number): Promise<{
+  body: YearBody | null;
+  perDay: BodyCompPoint[];
+  watch: WatchCompPoint[];
+}> {
+  const year = Number(today().slice(0, 4));
+  const yearFrom = `${year}-01-01`;
+  const windowFrom = daysAgo(days);
+  const { readings, instrument } = await readBody(windowFrom < yearFrom ? windowFrom : yearFrom);
+
+  const byDate = new Map<string, Reading>();
+  for (const r of readings) {
+    const had = byDate.get(r.date);
+    if (!had || (had.source !== 'Watch' && r.source === 'Watch')) byDate.set(r.date, r);
+  }
+  const perDay: BodyCompPoint[] = [...byDate.values()].map((r) => ({
+    date: r.date, source: r.source, kg: r.kg, bf_pct: r.bf_pct, fat_kg: r.fat_kg, lean_kg: r.lean_kg,
+  }));
+  const watch: WatchCompPoint[] = readings
+    .filter((r) => r.source === 'Watch' && r.skm_kg != null && r.date >= windowFrom)
+    .map((r) => ({ date: r.date, skm_kg: r.skm_kg, water_kg: r.water_kg, bmr_cal: r.bmr_cal }));
+
+  return {
+    body: buildBody(year, readings.filter((r) => r.date >= yearFrom && r.date <= `${year}-12-31`), instrument),
+    perDay,
+    watch,
+  };
+}
+
+/** Every body reading from `from` on, both instruments, and the instrument comparison. One round
+ *  trip, in date order. */
+async function readBody(from: string): Promise<{
+  readings: Reading[];
+  instrument: { days: number; worst_kg: number | null; worst_fat: number | null }[];
+}> {
   /* `readOnly` is not decoration on a page that must never write: /health has no write path at all
      and this keeps it that way at the driver rather than by convention. */
   const [comp, instrument] = await sql.transaction(
     [
       sql`select date, source, kg, bf_pct, fat_kg, lean_kg, skm_kg, water_kg, bmr_cal, bmi
           from health_body_comp
-          where kg is not null and date >= ${from} and date <= ${to}
-          order by date asc`,
+          where kg is not null and date >= ${from}
+          order by date asc, source asc`,
 
       /* The two instruments, measured against each other rather than quoted from an audit. Every day
          carrying both a Scale and a Watch reading, across the WHOLE table and not just this year:
@@ -301,11 +345,10 @@ export async function getYearBody(): Promise<YearBody | null> {
     { readOnly: true },
   );
 
-  return buildBody(
-    year,
-    comp as unknown as Reading[],
-    instrument as unknown as { days: number; worst_kg: number | null; worst_fat: number | null }[],
-  );
+  return {
+    readings: comp as unknown as Reading[],
+    instrument: instrument as unknown as { days: number; worst_kg: number | null; worst_fat: number | null }[],
+  };
 }
 
 export async function getYearReview(): Promise<YearReview> {
@@ -324,53 +367,31 @@ export async function getYearReview(): Promise<YearReview> {
     getYearBody(),
     sql.transaction(
       [
-        /* A TRAINING DAY IS THE UNION OF THE WATCH AND THE APP, in all four of these, and it was
-           the watch alone until 2026-09-09. The cross-discipline pass found six days in 2026 that
-           `gym_set` records as lifts with no watch row at all, so this section counted 134 training
-           days against a true 140, and the caption above it promised that "a session you never
-           opened an app for still counts", which reads as completeness.
+        /* ONE UNION FOR ALL FOUR FIGURES, since 2026-09-27: the discipline table, the month table,
+           the day count and last year's comparison all read these rows and nothing else. They were
+           four queries with three definitions. The discipline table counted an app-only lifting day
+           as a session and the month table counted it as zero sessions, so the two totals disagreed;
+           last year's line was the watch alone.
 
-           The cause is BACKFILL, not the watch dropping sessions: the strength pass checked each of
-           the six and only 2026-06-03 was logged at the rack, the rest typed 2 to 25 days later. The
-           days are real training days either way, which is why they are counted.
+           A TRAINING DAY IS THE UNION OF THE WATCH AND THE APP, and it was the watch alone until
+           2026-09-09. The cross-discipline pass found six days in 2026 that `gym_set` records as
+           lifts with no watch row at all (2026-05-25, 05-30, 06-03, 07-15, 07-21, 09-08). The cause
+           is BACKFILL, not the watch dropping sessions: only 2026-06-03 was logged at the rack, the
+           rest typed 2 to 25 days later. The days are real training days either way.
 
-           `app_only` is the shape used four times below: a date `gym_set` holds that the watch does
-           not. Sessions and MINUTES stay the watch's, because an app-logged day has no duration
-           anywhere; a day is added, a fabricated session length is not. Undercounting his training
-           is the direction this pipeline has already been wrong in, and inventing minutes to make a
-           total look complete would be the other one. */
-        sql`with app_only as (
-              select distinct g.date from gym_set g
-               where g.done = true and g.reps > 0
-                 and g.date >= ${from} and g.date <= ${to}
-                 and not exists (select 1 from health_watch_session w where w.date = g.date)
-            )
-            select kind, count(*)::int as sessions, count(distinct date)::int as days,
-                   coalesce(sum(minutes), 0)::int as minutes, max(date) as last
-              from health_watch_session
-             where date >= ${from} and date <= ${to}
-             group by kind
+           An app-only day is a date `gym_set` holds and the watch does not, and it enters as ONE
+           strength session with ZERO minutes: a day and a session are added, a fabricated session
+           length is not. Undercounting his training is the direction this pipeline has already been
+           wrong in, and inventing minutes to make a total look complete would be the other one. */
+        sql`select w.date, w.kind, coalesce(w.minutes, 0)::int as minutes
+              from health_watch_session w
+             where w.date >= ${lastFrom} and w.date <= ${to}
             union all
-            select 'strength-app-only', count(*)::int, count(*)::int, 0, max(date) from app_only
-            having count(*) > 0`,
-
-        sql`with days as (
-              select date, 1 as sessions, coalesce(minutes, 0) as minutes
-                from health_watch_session where date >= ${from} and date <= ${to}
-              union all
-              select g.date, 0, 0 from (select distinct date from gym_set
-                     where done = true and reps > 0 and date >= ${from} and date <= ${to}) g
-               where not exists (select 1 from health_watch_session w where w.date = g.date)
-            )
-            select substring(date, 1, 7) as month, count(distinct date)::int as days,
-                   sum(sessions)::int as sessions, sum(minutes)::int as minutes
-              from days group by 1 order by 1`,
-
-        sql`select date from health_watch_session where date >= ${from} and date <= ${to}
-            union
-            select date from gym_set
-             where done = true and reps > 0 and date >= ${from} and date <= ${to}
-            order by date`,
+            select g.date, 'strength', 0
+              from (select distinct date from gym_set
+                     where done = true and reps > 0 and date >= ${lastFrom} and date <= ${to}) g
+             where not exists (select 1 from health_watch_session w where w.date = g.date)
+            order by 1`,
 
         /* THE HORIZON IS THE LAST DAY ANYTHING KNOWS ABOUT, not the last day the watch does. On
            2026-09-09 the watch stopped at Sep 7 while gym_set held Sep 8, and the streak sentence on
@@ -380,10 +401,6 @@ export async function getYearReview(): Promise<YearReview> {
               (select max(date) from health_watch_session),
               (select max(date) from gym_set where done = true and reps > 0)
             ) as horizon`,
-
-        sql`select count(*)::int as sessions, count(distinct date)::int as days,
-                   coalesce(sum(minutes), 0)::int as minutes
-            from health_watch_session where date >= ${lastFrom} and date <= ${lastTo}`,
 
         sql`select count(*)::int as sets, count(distinct date)::int as days, min(date) as log_start
             from gym_set
@@ -417,30 +434,43 @@ export async function getYearReview(): Promise<YearReview> {
     ),
   ]);
 
-  const [byKind, byMonth, trainedDays, horizonRow, lastYearRow, setRows, liftRows, pbRows] = rest;
+  const [sessionRows, horizonRow, setRows, liftRows, pbRows] = rest;
 
-  const dates = (trainedDays as unknown as { date: string }[]).map((r) => r.date);
-  const months = byMonth as unknown as MonthCount[];
-  /* FOLD THE APP-ONLY DAYS INTO STRENGTH, rather than letting them stand as a kind. They are lifts;
-     the watch simply did not see them. Days are added, sessions are added, MINUTES are not, because
-     an app-logged day has no duration recorded anywhere and a table that invents one to look
-     complete is the failure this union exists to fix, pointed the other way. If strength has no
-     watch row at all in a year, the fold creates the row so the days are not silently dropped. */
-  const rawKinds = byKind as unknown as (Discipline & { kind: string })[];
-  const appOnly = rawKinds.find((d) => d.kind === 'strength-app-only');
-  const disciplines: Discipline[] = rawKinds.filter((d) => d.kind !== 'strength-app-only');
-  if (appOnly) {
-    const strength = disciplines.find((d) => d.kind === 'strength');
-    if (strength) {
-      strength.days += appOnly.days;
-      strength.sessions += appOnly.sessions;
-      if (appOnly.last > strength.last) strength.last = appOnly.last;
-    } else {
-      disciplines.push({ ...appOnly, kind: 'strength' });
-    }
-    disciplines.sort((a, b) => b.sessions - a.sessions);
+  const all = sessionRows as unknown as { date: string; kind: string; minutes: number }[];
+  const thisYear = all.filter((r) => r.date >= from);
+  const lastYearRows = all.filter((r) => r.date >= lastFrom && r.date <= lastTo);
+
+  const dates = [...new Set(thisYear.map((r) => r.date))].sort();
+
+  const kinds = new Map<string, { sessions: number; days: Set<string>; minutes: number; last: string }>();
+  const monthMap = new Map<string, { days: Set<string>; sessions: number; minutes: number }>();
+  for (const r of thisYear) {
+    const k = kinds.get(r.kind) ?? { sessions: 0, days: new Set<string>(), minutes: 0, last: r.date };
+    k.sessions++;
+    k.days.add(r.date);
+    k.minutes += r.minutes;
+    if (r.date > k.last) k.last = r.date;
+    kinds.set(r.kind, k);
+    const ym = r.date.slice(0, 7);
+    const m = monthMap.get(ym) ?? { days: new Set<string>(), sessions: 0, minutes: 0 };
+    m.days.add(r.date);
+    m.sessions++;
+    m.minutes += r.minutes;
+    monthMap.set(ym, m);
   }
-  const ly = (lastYearRow as unknown as { sessions: number; days: number; minutes: number }[])[0] ?? null;
+  const disciplines: Discipline[] = [...kinds.entries()]
+    .map(([kind, k]) => ({ kind, sessions: k.sessions, days: k.days.size, minutes: k.minutes, last: k.last }))
+    .sort((a, b) => b.sessions - a.sessions);
+  const months: MonthCount[] = [...monthMap.entries()]
+    .sort(([a], [b]) => (a < b ? -1 : 1))
+    .map(([month, m]) => ({ month, days: m.days.size, sessions: m.sessions, minutes: m.minutes }));
+  const ly = lastYearRows.length
+    ? {
+        sessions: lastYearRows.length,
+        days: new Set(lastYearRows.map((r) => r.date)).size,
+        minutes: lastYearRows.reduce((n, r) => n + r.minutes, 0),
+      }
+    : null;
 
   const training: YearTraining = {
     disciplines,
@@ -451,7 +481,7 @@ export async function getYearReview(): Promise<YearReview> {
     firstDay: dates[0] ?? '',
     horizon: (horizonRow as unknown as { horizon: string | null }[])[0]?.horizon ?? null,
     longestGap: longestGap(dates),
-    lastYear: ly && ly.sessions > 0 ? ly : null,
+    lastYear: ly,
   };
 
   return {

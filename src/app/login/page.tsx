@@ -26,7 +26,7 @@ export const metadata = { robots: { index: false, follow: false } };
  * so a CORRECT password landed him in the kitchen, two apps away from the book he was saving.
  * /swim, /bike, /run and /reading never had login pages of their own and all borrowed the
  * kitchen's, so every one of them was broken the same way. The guard is now `safeReturnTo` in
- * `src/lib/return-to.ts`: same-origin, no app names in it, 40 cases in `return-to.test.ts`. A new
+ * `src/lib/return-to.ts`: same-origin, no app names in it, cases in `return-to.test.ts`. A new
  * gated app needs no edit here, which is the property the four prefix checks did not have.
  *
  * WHY IT IS NOT INSIDE AN APP SEGMENT. It cannot be: it serves every app, so any parent it sat
@@ -63,9 +63,6 @@ export default async function Login({
           own, which is why the shelf never got one. */}
       {label && <div className="eyebrow">{label}</div>}
       <h1>Locked</h1>
-      <p>
-        This one is just for you. One password for the whole site, and this device stays signed in.
-      </p>
       <form action={signIn}>
         <input
           type="password"

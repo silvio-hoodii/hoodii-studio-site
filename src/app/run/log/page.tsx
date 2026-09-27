@@ -28,7 +28,8 @@ export const metadata: Metadata = {
  *
  * SO CADENCE IS MOSTLY BLANK HERE, and that is the honest rendering: the column exists because
  * cadence IS measured indoors and is the one real piece of form feedback available, and it is null on
- * every row older than the detail table. The caption says so rather than the blanks implying zero. */
+ * every row older than the detail table (2026-04-25). The caption gives the count rather than the
+ * blanks implying zero. */
 
 export default async function RunLogPage() {
   const KINDS = ['treadmill', 'running'];
@@ -46,7 +47,7 @@ export default async function RunLogPage() {
         <Link href="/run">Back to the plan</Link>
       </p>
       <p className="lede quiet" style={{ marginTop: 4 }}>
-        {total} sessions the watch recorded, treadmill and outdoors together
+        {total} sessions, treadmill and outdoors together
         {span.first ? `, back to ${span.first}` : ''}.
       </p>
 
@@ -59,7 +60,7 @@ export default async function RunLogPage() {
           { head: 'Time', num: true, cell: (r) => (r.minutes != null ? `${r.minutes}m` : null) },
           { head: 'Cadence', num: true, cell: (r) => (r.avgCadence != null ? String(r.avgCadence) : null) },
         ]}
-        caption={`Cadence is on ${withCadence} of these ${rows.length} rows. It comes from the per-second detail, which only reaches back to 2026-04-25, so every older session has a date and a duration and nothing else.`}
+        caption={`Cadence on ${withCadence} of ${rows.length}.`}
         emptyNote="The watch has recorded no runs."
       />
     </div>

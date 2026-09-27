@@ -1,6 +1,6 @@
 import 'server-only';
 import { neon } from '@neondatabase/serverless';
-import type { AdherenceDay, BodyCompPoint, BodyCompSummary, TrendDelta, WatchCompPoint } from './types';
+import type { AdherenceDay, BodyCompPoint, BodyCompSummary, TrendDelta } from './types';
 import { today, daysAgo } from '../day';
 
 // Same underlying Neon database as Kitchen/Gym (health_ prefix keeps the tables apart), see
@@ -23,26 +23,8 @@ const daysBetween = (a: string, b: string): number => Math.round((Date.parse(b) 
  * surface you read it on. */
 export const STALE_AFTER_DAYS = 14;
 
-/* THE SMOOTHING WINDOW, IN DAYS, and it must equal the one in
- * HealthOS/server/publish-current.mjs, which is canonical for every number about his body. Named
- * rather than inlined so the two can be compared by grep instead of by reading two files in two
- * repos and hoping. */
-export const SMOOTH_WINDOW_DAYS = 30;
-
-/** Shift a YYYY-MM-DD by whole days. Noon UTC so a date-only string cannot fall to the previous
- *  day, the same guard every other date helper in this repo uses. */
-function shiftDays(iso: string, delta: number): string {
-  const d = new Date(`${iso}T12:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + delta);
-  return d.toISOString().slice(0, 10);
-}
-
-function median(values: number[]): number | null {
-  if (!values.length) return null;
-  const s = [...values].sort((a, b) => a - b);
-  const m = s.length >> 1;
-  return s.length % 2 ? (s[m] as number) : (((s[m - 1] as number) + (s[m] as number)) / 2);
-}
+/** How far back the Weight tile's delta reaches, in days. */
+const TREND_DAYS = 30;
 
 /** Weight/body-fat series for the trend chart, one point per day, Watch preferred over Scale. */
 export async function getBodyCompSeries(days = 120): Promise<BodyCompPoint[]> {
@@ -61,87 +43,60 @@ export async function getBodyCompSeries(days = 120): Promise<BodyCompPoint[]> {
   return rows as unknown as BodyCompPoint[];
 }
 
-/** Skeletal muscle, total body water and BMR. WATCH ROWS ONLY, and the filter is the point.
- *
- *  A Scale reading carries weight, body fat, fat mass and lean mass and nothing else: 102 scale rows
- *  in this table, none of them with a skeletal-muscle figure. Selecting across both sources would
- *  draw a line from one watch reading to the next straight through a scale day, inventing the value
- *  in between. Filtering here rather than in the page means no caller can forget. */
-export async function getWatchComposition(days = 120): Promise<WatchCompPoint[]> {
-  const cutoff = isoDaysAgo(days);
-  const rows = await sql`
-    select date, skm_kg, water_kg, bmr_cal
-    from health_body_comp
-    where source = 'Watch' and skm_kg is not null and date >= ${cutoff}
-    order by date asc
-  `;
-  return rows as unknown as WatchCompPoint[];
-}
+/* getWatchComposition, the Watch-only read of skeletal muscle, water and BMR, lived here until
+ * 2026-09-27. The Weight tab takes the same rows from getWeightTabBody in ./year.ts, with the same
+ * Watch-only filter, so it had no caller left. */
 
-/** Latest reading + smoothed trend, same method as HealthOS/server/publish-current.mjs: a median
- *  of the last 5 Watch readings so one dry morning cannot bend the reported rate. */
+/** The newest reading, and the change from the newest reading at least 30 days before it.
+ *
+ *  THE DELTA IS MEASURED FROM THE NUMBER IT SITS UNDER, since 2026-09-27. It was a smoothed median
+ *  of recent Watch readings against a prior that could come off the Scale, so the tile printed
+ *  latest.kg and a delta taken from a different number against a different instrument. Now both ends
+ *  are single readings and the prior shares the latest reading's source. One round trip: the latest
+ *  row and its same-source prior come back from one statement. */
 export async function getBodyCompSummary(): Promise<BodyCompSummary> {
-  const latestRows = await sql`
-    select date, source, kg, bf_pct, fat_kg, lean_kg from health_body_comp
-    where kg is not null
-    order by date desc, (source = 'Watch') desc limit 1
-  `;
-  const latest = (latestRows[0] as BodyCompPoint | undefined) ?? null;
-  if (!latest) {
-    return { latest: null, smoothedKg: null, trend30: null, daysSinceLatest: null, stale: false };
+  const rows = (await sql`
+    with l as (
+      select date, source, kg, bf_pct, fat_kg, lean_kg from health_body_comp
+      where kg is not null
+      order by date desc, (source = 'Watch') desc limit 1
+    )
+    select 'latest' as role, l.date, l.source, l.kg, l.bf_pct, l.fat_kg, l.lean_kg from l
+    union all
+    select 'prior' as role, p.date, p.source, p.kg, null, null, null
+      from l cross join lateral (
+        select h.date, h.source, h.kg from health_body_comp h
+        where h.kg is not null and h.source = l.source
+          and h.date <= to_char(l.date::date - ${TREND_DAYS}::int, 'YYYY-MM-DD')
+        order by h.date desc limit 1
+      ) p
+  `) as unknown as (BodyCompPoint & { role: string })[];
+  const pick = (role: string): BodyCompPoint | null => {
+    const r = rows.find((x) => x.role === role);
+    if (!r) return null;
+    const { role: _role, ...point } = r;
+    void _role;
+    return point;
+  };
+  const latest = pick('latest');
+  if (!latest || latest.kg == null) {
+    return { latest: null, trend30: null, daysSinceLatest: null, stale: false };
   }
 
-  /* How old the newest reading is. This store was filled by a one-shot migration with no recurring
-   * sync behind it, so "as of 2026-08-09" would have rendered as current weight indefinitely. */
+  /* How old the newest reading is, so a weight months old never renders as current. */
   const daysSinceLatest = Math.max(0, daysBetween(latest.date, today()));
   const stale = daysSinceLatest > STALE_AFTER_DAYS;
 
-  /* THE 30-DAY FLOOR IS THE WHOLE POINT AND IT WAS MISSING, until 2026-09-09. The comment above
-     says "same method as HealthOS/server/publish-current.mjs" and it was not: that file caps the
-     smoothing window at `date >= date(latest, '-30 days')` and this one had no floor at all, so it
-     took the last five Watch readings however far back they sat.
-
-     Two consequences, and the second is the bad one. The site printed "+0.2 kg" where CURRENT.md,
-     which is canonical for every number about his body, printed "+0.4 kg" for the same anchor and
-     the same span. And the fifth reading it reached for was 2026-08-06, which is THE ROW THE 31-DAY
-     TREND COMPARES AGAINST: the smoothed endpoint contained its own baseline, which drags any delta
-     toward zero and makes a regain look smaller than it is. Flattering, and therefore the expensive
-     direction.
-
-     Measured on the live store the day this was fixed: 5 readings back to 2026-08-06 with a median
-     of 104.90, against the canonical 4 readings back to 2026-08-09 with a median of 105.05. */
-  const recentRows = await sql`
-    select kg from health_body_comp
-    where kg is not null and source = 'Watch' and date <= ${latest.date}
-      and date >= ${shiftDays(latest.date, -SMOOTH_WINDOW_DAYS)}
-    order by date desc limit 5
-  `;
-  const recentKg = (recentRows as unknown as { kg: number }[]).map((r) => r.kg);
-  const smoothedKg = recentKg.length ? median(recentKg) : latest.kg;
-
-  const trendAt = async (days: number): Promise<TrendDelta | null> => {
-    // latest.date may not be today (measurement lag): the lookback is relative to latest.date, not now.
-    const target = new Date(Date.parse(latest.date) - days * 86400000).toISOString().slice(0, 10);
-    const priorRows = await sql`
-      select date, kg from health_body_comp
-      where kg is not null and date <= ${target}
-      order by date desc, (source = 'Watch') desc limit 1
-    `;
-    const prior = priorRows[0] as { date: string; kg: number } | undefined;
-    if (!prior) return null;
+  const prior = pick('prior');
+  let trend30: TrendDelta | null = null;
+  if (prior?.kg != null) {
     const spanDays = daysBetween(prior.date, latest.date);
-    if (spanDays < 7 || smoothedKg == null) return null;
-    const kgDelta = +(smoothedKg - prior.kg).toFixed(1);
-    return { fromDate: prior.date, spanDays, kg: kgDelta, perWeek: +((kgDelta / spanDays) * 7).toFixed(2) };
-  };
-
-  /* THIRTY DAYS ONLY. `trendAt(90)` ran here too, in a Promise.all beside this one, and nothing has
-     ever rendered its result: it was born unused in ad68575 on 2026-08-11 and stayed that way, so
-     removing it is not undoing anybody's decision (checked with `git log -S trend90 --all`, one
-     commit, the one that added it). It was one Neon round trip per weight-tab render buying nothing,
-     and Neon is this site's entire External API Requests bill. 05-small-apps H4, audit theme T11. */
-  const trend30 = await trendAt(30);
-  return { latest, smoothedKg, trend30, daysSinceLatest, stale };
+    if (spanDays >= 7) {
+      const kgDelta = +(latest.kg - prior.kg).toFixed(1);
+      trend30 = { fromDate: prior.date, spanDays, kg: kgDelta, perWeek: +((kgDelta / spanDays) * 7).toFixed(2) };
+    }
+  }
+  return { latest, trend30, daysSinceLatest, stale };
 }
 
 export interface SyncLiveness {
@@ -191,8 +146,8 @@ export async function getSyncLiveness(): Promise<SyncLiveness> {
  * does not exist: this is one Neon database and the table prefixes are what keep the surfaces
  * apart, so the read moved to the page that needs it rather than the table moving anywhere. */
 
-/** Per-day training attendance for the last N days: watch-detected ("trained") vs logged in the gym
- *  app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than
+/** Per-day training attendance for the last N days: trained (a watch session or a logged lift) vs
+ *  logged in the gym app ("logged"). Reads gym_set directly (same Postgres database, gym_ tables) rather than
  *  duplicating that state: the "trained but unlogged" gap is exactly what CURRENT.md already
  *  surfaces, computed the same way: attendance from the watch, load from the app.
  *
@@ -237,7 +192,11 @@ export async function getLiftingAdherence(days = 30): Promise<{ days: AdherenceD
     const isLogged = logged.has(date);
     out.push({
       date,
-      trained: trained.has(date),
+      /* A LOGGED LIFT IS A TRAINED DAY, the rule `actualBlock` in src/lib/gym/week.ts uses for
+         "Days in a row" and "What actually happened" on the same tab. Until 2026-09-27 this strip
+         was watch-only, so a lift the watch missed was a rest cell under a count that called it
+         trained. `logged` still marks the hole-punch. */
+      trained: trained.has(date) || isLogged,
       logged: isLogged,
       known: isLogged || (horizon != null && date <= horizon),
     });

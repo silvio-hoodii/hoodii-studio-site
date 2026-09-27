@@ -13,6 +13,9 @@ import type { NextConfig } from "next";
  * it is step 1 of the operator checklist for exactly that reason.
  */
 const nextConfig: NextConfig = {
+  /* One header fewer on every response, and one fewer thing telling a scanner what to try. */
+  poweredByHeader: false,
+
   /* `/favicon.ico` is a convention older than the `<link rel="icon">` tag and plenty of crawlers,
    * link-preview bots and feed readers still request it blindly at the site root.
    *

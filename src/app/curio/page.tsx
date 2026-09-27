@@ -1,5 +1,5 @@
-import { getDigests, getItems, getSummary } from '@/lib/curio/db';
-import type { CurioDigest, CurioItem } from '@/lib/curio/db';
+import Link from 'next/link';
+import { getSummary } from '@/lib/curio/db';
 import Today from './Today';
 import gamesJson from '../../../content/curio/games.json';
 
@@ -17,74 +17,6 @@ export const metadata = {
   description: 'Questions I wondered about, answered and kept.',
   alternates: { canonical: '/curio' },
 };
-
-/* The point of this page, in his words: the thing that arrives by email, "here as a way to
- * navigate it". So the archive is the page. Every morning's digest is two written-out answers,
- * and those paragraphs are the actual content; the ledger row is only a one-line summary of one.
- * Reading the ledger instead would be reading the index and calling it the book.
- *
- * The recall lane is deliberately not rendered. It is the same items coming back on a spacing
- * schedule, so on a page where everything is present at once it is pure duplication. The lane
- * only means something in an inbox, where you cannot scroll back.
- *
- * The ReadLater pile is not here either, and that one is not a taste call. See
- * content/curio/schema.sql.
- */
-
-function Flavor({ kind }: { kind: string }) {
-  return <span className={`flav flav-${kind}`}>{kind}</span>;
-}
-
-/* One morning. Lifted out so the open list and the folded one cannot drift apart. */
-function Morning(d: CurioDigest) {
-  return (
-    <article key={d.day} className="digest">
-      <div className="dday tnum">{d.day}</div>
-      <div className="dbody">
-        {d.opener && <p className="opener">{d.opener}</p>}
-        {d.fresh.map((f, i) => (
-          <div className="item" key={`${d.day}-${i}`}>
-            <h3>{f.headline}</h3>
-            <p>{f.body}</p>
-            {f.source && (
-              <a className="src" href={f.source} target="_blank" rel="noreferrer">
-                source
-              </a>
-            )}
-          </div>
-        ))}
-      </div>
-    </article>
-  );
-}
-
-/* One ledger row, shared by the open list and the folded one. */
-function Row(it: CurioItem) {
-  return (
-    <div className="lrow" key={it.id}>
-      <div className="lq">
-        {it.question} <Flavor kind={it.flavor} />
-      </div>
-      <div className="la">
-        {it.answer}{' '}
-        {it.sourceUrl && (
-          <a href={it.sourceUrl} target="_blank" rel="noreferrer">source</a>
-        )}
-        {/* `verify` MEANS NOBODY HAS CHECKED IT YET. Per CuriosityOS/README.md a row is marked
-            Source=verify when the claim is numeric, dated or a myth-correction, and the weekly
-            digest job checks it before sending. Until 2026-08-28 `sourceKind` was selected and
-            rendered nowhere, so an unchecked row published on a public page indistinguishable from a
-            verified one (05-small-apps C4). On a page whose whole subject is settled facts, that is
-            the one label that has to be visible. */}
-        {it.sourceKind === 'verify' && (
-          <span className="unverified">
-            not checked yet
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
 
 /* One game or app off content/curio/games.json. The name is the link; what it teaches sits under
    it, the way the hub's rows carry a second line. */
@@ -112,7 +44,7 @@ function Game(g: GameItem) {
 }
 
 export default async function CurioPage() {
-  const [summary, digests, items] = await Promise.all([getSummary(), getDigests(), getItems()]);
+  const summary = await getSummary();
 
   return (
     <div className="curio">
@@ -133,29 +65,13 @@ export default async function CurioPage() {
         ))}
       </div>
 
-      {/* The mornings and the one-line ledger stay, folded. The morning email is paused (the
-          scheduled task is disabled, not deleted), so the three-day "no morning since" warning
-          that used to sit here would now fire forever about a choice rather than a failure, and
-          it went with the change. */}
-      <h2 className="sec">Archive</h2>
-      <div className="stat">
-        <span className="tnum">{summary.items}</span> answered
-        <span className="dot">·</span>
-        <span className="tnum">{summary.digests}</span> mornings
-        {summary.latestDay && <><span className="dot">·</span>latest {summary.latestDay}</>}
-      </div>
-      {digests.length > 0 && (
-        <details className="more">
-          <summary>The mornings</summary>
-          <div className="digests">{digests.map(Morning)}</div>
-        </details>
-      )}
-      {items.length > 0 && (
-        <details className="more">
-          <summary>Everything, in one line each</summary>
-          <div className="ledger">{items.map(Row)}</div>
-        </details>
-      )}
+      {/* THE MORNINGS AND THE LEDGER ARE A ROUTE OF THEIR OWN since 2026-09-27, /curio/archive. Folded
+          under the quiz they still shipped every answer twice (HTML plus hydration data, about 83 KB
+          for the ledger alone) and two extra database round trips on the page he opens daily, and a
+          page whose top asks him to recall an answer had every answer printed lower down. */}
+      <p className="stat">
+        <Link href="/curio/archive"><span className="tnum">{summary.items}</span> questions answered, <span className="tnum">{summary.digests}</span> mornings &rarr;</Link>
+      </p>
     </div>
   );
 }

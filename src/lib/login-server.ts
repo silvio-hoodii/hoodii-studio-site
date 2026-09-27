@@ -18,13 +18,13 @@ import { AUTH_COOKIE } from './auth';
  *         page redirects as though the login worked. Nothing then writes, and nothing says why.
  *
  * Both are gone here, and the reason they are gone from ONE file rather than fixed in four is law 1:
- * four copies of a credential check is four places for the next one to drift. `/kitchen/api/unlock`
- * stays separate on purpose, because it answers JSON to a fetch mid-cook rather than redirecting a
- * form, but it now shares this delay constant.
+ * four copies of a credential check is four places for the next one to drift. `/kitchen/api/unlock`,
+ * which answers JSON to a fetch mid-write rather than redirecting a form, calls this too since
+ * 2026-09-27; it had carried a fifth copy of these lines.
  */
 
-/** The deliberate wait on a wrong password. Shared with `/kitchen/api/unlock`. */
-export const WRONG_PASSWORD_DELAY_MS = 600;
+/** The deliberate wait on a wrong password. */
+const WRONG_PASSWORD_DELAY_MS = 600;
 
 export type LoginOutcome = 'ok' | 'wrong' | 'not-configured';
 

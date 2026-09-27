@@ -1,47 +1,27 @@
 #!/usr/bin/env node
-/* DOES `src/lib/walled.ts` STILL MATCH THE REAL FIREWALL?
+/* DOES FIREWALL RULE 3 STILL CHALLENGE A PATH THAT SERVES A PAGE?
  *
  *   node scripts/check-firewall.mjs
  *
- * WHY THIS EXISTS, and it is the shortest possible case for a mechanism. `WALLED_PATHS` is a copy
- * of configuration that lives in Vercel and not in this repo. Its own header said so, at length,
- * and argued the copy was worth having because the alternative was no mechanism at all.
+ * Rule 3 of the off-repo Vercel firewall puts an edge challenge on a filter-surface regex. Until
+ * 2026-09-27 this script diffed it against `WALLED_PATHS` in src/lib/walled.ts, the list that made
+ * `WalledLink` drop prefetching on links to challenged paths (a prefetch the edge answers with 429).
+ * Every walled path was then a deleted route (/kitchen/find, /kitchen/want, /reading/shelf,
+ * /reading/want), the list and component had 0 importers, and both were removed.
  *
- * THE COPY WAS WRONG WITHIN HOURS OF BEING WRITTEN. It shipped on 2026-09-04 with three paths,
- * copied from that day's audit, which had copied them from AGENTS.md's firewall table. The live
- * rule has FOUR:
- *
- *     path re "^/(reading/(shelf|want)|kitchen/(find|want))"
- *
- * `/kitchen/want` was challenged the whole time and appeared in none of the three documents, so six
- * <Link> elements kept prefetching a 429, including "check it against the kitchen" on every
- * external row of /kitchen. It was found by sweeping the live site and getting a 429 on a path all
- * three documents said was fine. Three copies of a fact, all wrong together, which is what copies
- * do.
+ * So the question flipped. If the live rule challenges a path that has a page under src/app again,
+ * links to it will prefetch a 429 on every visit and the prefetch guard has to come back. This
+ * script reads the live rule and fails in that case. When no challenged path has a route, it says
+ * rule 3 protects nothing, which is a decision for a person (keep it as a bot fence on the 307s, or
+ * delete it), not for this script.
  *
  * NOT A BUILD GATE, and that is deliberate. It needs the network and a logged-in Vercel CLI, and
- * `pnpm build` runs on a machine that has neither. A gate that cannot run in the place it is wired
- * into is worse than no gate: it either fails every build or gets an exception that swallows it.
- * So this is the thing a person runs when touching the firewall or the walled list, and the header
- * of `src/lib/walled.ts` points at it by name.
- *
- * It exits 1 on a mismatch so it can be added to a scheduled check later if that is ever wanted.
+ * `pnpm build` runs on a machine that has neither. Run it when touching the firewall or adding a
+ * route whose path the rule's regex could match.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
-
-const WALLED_LIB = join(process.cwd(), 'src', 'lib', 'walled.ts');
-
-/* ---- what the repo believes ------------------------------------------------------------------ */
-
-const src = readFileSync(WALLED_LIB, 'utf8');
-const m = src.match(/export const WALLED_PATHS = \[([^\]]*)\]/);
-if (!m) {
-  console.error('FAIL  could not find WALLED_PATHS in src/lib/walled.ts.');
-  process.exit(1);
-}
-const declared = [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]).sort();
 
 /* ---- what Vercel is actually enforcing -------------------------------------------------------- */
 
@@ -75,10 +55,8 @@ const challengeRules = (config.rules || []).filter(
 );
 
 if (!challengeRules.length) {
-  console.error('FAIL  no enabled challenge rule found in the live firewall.');
-  console.error('      Either rule 3 was removed, in which case delete WalledLink and its two lint');
-  console.error('      rules along with it, or this script is looking in the wrong place.');
-  process.exit(1);
+  console.log('No enabled challenge rule in the live firewall: rule 3 is gone, nothing to check.');
+  process.exit(0);
 }
 
 /* Pull the path patterns out of every challenge rule's conditions and turn each into the set of
@@ -149,29 +127,30 @@ function expand(pattern) {
 
 const live = [...livePaths].sort();
 
-/* ---- compare ---------------------------------------------------------------------------------- */
+/* ---- compare against the routes in this repo ------------------------------------------------- */
 
-const missing = live.filter((p) => !declared.includes(p));
-const extra = declared.filter((p) => !live.includes(p));
+/* A challenged prefix "serves a page" when src/app holds a directory for it with a page.tsx or a
+   route.ts anywhere at or under it. Route groups and dynamic segments are not in any challenged
+   path today, so a literal directory walk is the whole check. */
+function servesSomething(prefix) {
+  const dir = join(process.cwd(), 'src', 'app', ...prefix.split('/').filter(Boolean));
+  return existsSync(join(dir, 'page.tsx')) || existsSync(join(dir, 'route.ts'));
+}
+
+const serving = live.filter(servesSomething);
 
 console.log('-'.repeat(70));
 console.log('live firewall challenges :', live.join(', ') || '(none)');
-console.log('src/lib/walled.ts says   :', declared.join(', ') || '(none)');
+console.log('of those, serving a page :', serving.join(', ') || '(none)');
 console.log('-'.repeat(70));
 
-if (!missing.length && !extra.length) {
-  console.log(`They agree. ${live.length} path(s).`);
+if (!serving.length) {
+  console.log(`Rule 3 protects nothing in this repo: all ${live.length} challenged path(s) are deleted routes.`);
   process.exit(0);
 }
 
-if (missing.length) {
-  console.error(`FAIL  challenged live but NOT in WALLED_PATHS: ${missing.join(', ')}`);
-  console.error('      Links to these prefetch a 429 on every visit, and neither lint rule can see');
-  console.error('      them because both read that list. Add them to src/lib/walled.ts.');
-}
-if (extra.length) {
-  console.error(`FAIL  in WALLED_PATHS but NOT challenged live: ${extra.join(', ')}`);
-  console.error('      Harmless to visitors, but it suppresses prefetching on a page that would');
-  console.error('      benefit from it, and it makes the list untrustworthy in the other direction.');
-}
+console.error(`FAIL  the edge challenges live route(s): ${serving.join(', ')}`);
+console.error('      A <Link> to these prefetches a 429 on every visit. Either narrow rule 3, or give');
+console.error('      those links prefetch={false} and a lint rule that keeps it (see git history for');
+console.error('      src/components/WalledLink.tsx and scripts/lint-probe-routes.mjs, 2026-09-27).');
 process.exit(1);

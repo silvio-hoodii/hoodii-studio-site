@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getSwimRecords, type DerivedRecord } from '@/lib/swim/records';
 import { getSwimPbs, fmtTime, type PbRow } from '@/lib/swim/level';
+import { shortDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,9 +43,6 @@ export const metadata: Metadata = {
 
 const DISTANCES = [400, 800, 1000, 1500];
 
-/** The four the watch keeps, so the page can say which rows it did not have to derive. */
-const WATCH_DISTANCES = new Set([100, 200, 400, 1500]);
-
 /** Pace per 100 m, in m:ss. NOT `fmtTime`, which keeps hundredths: a derived pace is a sum of
  *  rounded length durations divided by a distance, and printing "1:52.35" claims a precision the
  *  input never had. Caught by reading the rendered table, where it sat next to `mmss` times and
@@ -65,12 +63,8 @@ function mmss(ms: number | null): string {
   return `${m}:${String(t % 60).padStart(2, '0')}`;
 }
 
-function when(iso: string | null): string {
-  if (!iso) return '';
-  const [, m, d] = iso.split('-');
-  const month = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][Number(m)];
-  return `${Number(d)} ${month}`;
-}
+/** A date on this one-year page, or nothing. The shared `shortDate`, not a fourth local format. */
+const onDate = (iso: string | null): string => (iso ? shortDate(iso) : '');
 
 /* ---------------------------------------------------------------------------------------------
  * THE 1,000, first, because it is the thing he asked for and the thing the plan is built on.
@@ -100,17 +94,17 @@ function TheThousand({ r, year }: { r: DerivedRecord | undefined; year: number }
         <div>
           <div className="stat-k">Best</div>
           <div className="stat-v">{mmss(r.bestWallMs)}</div>
-          <div className="stat-d">{when(r.bestWallOn)}, wall clock</div>
+          <div className="stat-d">{onDate(r.bestWallOn)}, wall clock</div>
         </div>
         <div>
           <div className="stat-k">Swimming only</div>
           <div className="stat-v">{mmss(r.bestSwimmingMs)}</div>
-          <div className="stat-d">{when(r.bestSwimmingOn)}, rest removed</div>
+          <div className="stat-d">{onDate(r.bestSwimmingOn)}, rest removed</div>
         </div>
         <div>
           <div className="stat-k">Typical rest inside</div>
           <div className="stat-v">{mmss(r.medianRestMs)}</div>
-          <div className="stat-d">across 39 walls</div>
+          <div className="stat-d">across {r.wallSwims} {r.wallSwims === 1 ? 'swim' : 'swims'}</div>
         </div>
       </div>
       {/* "The gap between the first two tiles IS the rest" stood here until 2026-09-11, and it was
@@ -135,7 +129,7 @@ function Closest({ r }: { r: DerivedRecord | undefined }) {
       <div className="exlist">
         <div className="ex">
           <div className="ex-name">
-            {when(r.leastRestOn)}: {mmss(r.leastRestWallMs)} with {mmss(r.leastRestMs)} of stopping
+            {onDate(r.leastRestOn)}: {mmss(r.leastRestWallMs)} with {mmss(r.leastRestMs)} of stopping
           </div>
           <div className="ex-cue">
             {stops.length === 0 ? (
@@ -195,15 +189,14 @@ function DerivedCards({ recs, year }: { recs: DerivedRecord[]; year: number }) {
             <div className="tier-head">
               <span className="tier-name">
                 <span className="tnum">{r.distanceM.toLocaleString('en-CA')}</span> m
-                {WATCH_DISTANCES.has(r.distanceM) && <span className="tag"> watch keeps it too</span>}
               </span>
               <span className="tier-time tnum">{mmss(r.bestWallMs)}</span>
             </div>
             <div className="ex-cue">
               <b>Best.</b> Wall clock <span className="tnum">{mmss(r.bestWallMs)}</span>
-              {r.bestWallOn && <> on {when(r.bestWallOn)}</>}, {per100(r.bestWallMs, r.distanceM)} per
+              {r.bestWallOn && <> on {onDate(r.bestWallOn)}</>}, {per100(r.bestWallMs, r.distanceM)} per
               100 m. Swimming only <span className="tnum">{mmss(r.bestSwimmingMs)}</span>
-              {r.bestSwimmingOn && <>, on {when(r.bestSwimmingOn)}</>}.
+              {r.bestSwimmingOn && <>, on {onDate(r.bestSwimmingOn)}</>}.
             </div>
             <div className="ex-cue">
               <b>Typical.</b> <span className="tnum">{mmss(r.medianWallMs)}</span>
@@ -243,7 +236,7 @@ function WatchRecords({ pbs, year }: { pbs: PbRow[]; year: number }) {
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        What the watch keeps <span className="tag">({year}, Samsung&rsquo;s own records)</span>
+        What the watch keeps <span className="tag">({year})</span>
       </div>
       <div className="tierlist">
         {distances.map((dist) => {
@@ -260,7 +253,7 @@ function WatchRecords({ pbs, year }: { pbs: PbRow[]; year: number }) {
               {/* NO PACE ON THE 100, because over 100 m the pace per 100 m IS the time and printing
                   "1:38.71 ... 1:39 per 100 m" is the same number twice in two precisions. */}
               <div className="ex-cue">
-                {when(best.achievedOn)}
+                {onDate(best.achievedOn)}
                 {dist !== 100 && <>, {per100(best.durationMs, dist)} per 100 m</>}
                 {list.length > 1 && (
                   <>

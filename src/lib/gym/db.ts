@@ -207,15 +207,6 @@ export class SetConflict extends Error {
   constructor(message: string) { super(message); this.name = 'SetConflict'; }
 }
 
-/** Most recent prior session (strictly before `beforeDate`) with real logged work for this exercise.
- *  estimated=false is load-bearing (see HealthOS db.mjs): progression must only walk back to a
- *  session whose numbers were actually typed, not recalled/backfilled, or a real gap gets silently
- *  smoothed over instead of triggering the probe branch in progression.ts. */
-/* `= any(ids)` AND NOT `= exerciseId`, since 2026-08-28. See src/lib/gym/equivalent-ids.ts: one
- * exercise can hold two ids in this table, because a swap to an ALT logs the alt's id and some alts
- * are aliases of the slot's own variant. The calf raise had twelve bodyweight sets under one id and
- * three sets at 180 to 210 lb under the other, and this query read only the first, so the card
- * offered him about 5 lb for a machine he had loaded to 210 the night before. */
 /* AN OFF-PLAN SET IS APPENDED, AND THE SERVER DECIDES WHERE. Added 2026-08-28 for 10-gym P0-1.
  *
  * THE DEFECT. `logExtra` in GymClient derived the set index from `extraLog`, a piece of React state
@@ -298,44 +289,74 @@ export async function appendOffPlanSet(s: {
  * name is alarming and the content is a compile-time constant with no input in it; the alternative
  * is writing this condition out four times, which is how one table came to have two definitions of
  * "this exercise's history" in the first place. */
-const PERFORMED = sql.unsafe('(done = true or (reps is not null and reps > 0))');
+const PERFORMED_SQL = '(done = true or (reps is not null and reps > 0))';
+const PERFORMED = sql.unsafe(PERFORMED_SQL);
 
-export async function getLastSession(exerciseId: string, beforeDate: string): Promise<SessionSets | null> {
-  const ids = await equivalentIds(exerciseId);
-  const rows = await sql`
-    select date from gym_set
-    where exercise_id = any(${ids}) and date < ${beforeDate} and ${PERFORMED}
-      and reps is not null and reps > 0 and coalesce(estimated, false) = false
-    order by date desc limit 1
-  `;
-  const row = rows[0] as { date: string } | undefined;
-  if (!row) return null;
-  const sets = await setsForExDate(ids, row.date);
-  return { date: row.date, sets };
-}
+/* ONE DEFINITION OF AN EXERCISE'S HISTORY, for everything progression reads: the suggestion, the
+ * stall and deload window, and the trend line drawn from the same rows.
+ *
+ * Until 2026-09-27 there were two. `getLastSession` excluded `estimated` rows and
+ * `getRecentSessions` did not, so the stall window and the sparkline ran through recalled numbers
+ * the suggestion itself refused, and `recent[0]` was not always `last`. `estimated = true` means
+ * recalled rather than typed at the rack (54 backfilled rows, see AGENTS.md), and progression must
+ * never walk back to one. The date filter and the set filter are the same clause, so a date cannot
+ * qualify on its measured sets and then bring its recalled ones along. Same `sql.unsafe` reasoning
+ * as PERFORMED above: a compile-time constant with no input in it. */
+const HISTORY = sql.unsafe(
+  `(${PERFORMED_SQL} and reps is not null and reps > 0 and coalesce(estimated, false) = false)`,
+);
 
-/* Takes the resolved id LIST rather than a single id, so a caller cannot accidentally reintroduce
- * the split by passing the raw slot id to the second half of a two-step read. */
-async function setsForExDate(ids: string[], date: string): Promise<SetRow[]> {
-  const rows = await sql`
-    select weight, reps from gym_set
-    where exercise_id = any(${ids}) and date = ${date} and ${PERFORMED} and reps is not null and reps > 0
-    order by set_idx asc
-  `;
-  return rows as unknown as SetRow[];
-}
-
-/** Last N training dates for an exercise (newest first) with sets, powers the stall-detection window. */
-export async function getRecentSessions(exerciseId: string, beforeDate: string, n = 3): Promise<SessionSets[]> {
-  const ids = await equivalentIds(exerciseId);
-  const rows = await sql`
-    select distinct date from gym_set
-    where exercise_id = any(${ids}) and date < ${beforeDate} and ${PERFORMED} and reps is not null and reps > 0
-    order by date desc limit ${n}
-  `;
-  const dates = rows as unknown as { date: string }[];
-  const out: SessionSets[] = [];
-  for (const { date } of dates) out.push({ date, sets: await setsForExDate(ids, date) });
+/** The last `n` training dates (newest first) with their sets, for EVERY requested exercise at once.
+ *
+ *  ONE ROUND TRIP for the whole day. `/gym/api/plan` used to call a last-session read (two queries)
+ *  and a recent-sessions read (one, then one more per date, in sequence) per exercise, which was
+ *  about 110 queries per load of the page for rows it then fetched twice: `last` is `recent[0]`.
+ *
+ *  Each requested id is expanded to its equivalent ids first (src/lib/gym/equivalent-ids.ts, which
+ *  reads files, not the database), and the pairs travel as two parallel arrays so one set can count
+ *  toward two requested exercises that share an id. */
+export async function getExerciseHistories(
+  exerciseIds: string[],
+  beforeDate: string,
+  n: number,
+): Promise<Map<string, SessionSets[]>> {
+  const out = new Map<string, SessionSets[]>();
+  const uniq = [...new Set(exerciseIds)];
+  if (!uniq.length) return out;
+  const families = await Promise.all(uniq.map(async (id) => [id, await equivalentIds(id)] as const));
+  const reqs: string[] = [];
+  const members: string[] = [];
+  for (const [id, ids] of families) {
+    out.set(id, []);
+    for (const m of ids) { reqs.push(id); members.push(m); }
+  }
+  const rows = (await sql`
+    with fam as (
+      select * from unnest(${reqs}::text[], ${members}::text[]) as f(req, member)
+    ),
+    hist as (
+      select f.req, g.date, g.set_idx, g.exercise_id, g.weight, g.reps
+        from gym_set g
+        join fam f on g.exercise_id = f.member
+       where g.date < ${beforeDate} and ${HISTORY}
+    ),
+    ranked as (
+      select req, date, dense_rank() over (partition by req order by date desc) as rk
+        from (select distinct req, date from hist) d
+    )
+    select h.req, h.date, h.weight, h.reps
+      from hist h
+      join ranked r on r.req = h.req and r.date = h.date
+     where r.rk <= ${n}
+     order by h.req, h.date desc, h.set_idx asc, h.exercise_id asc
+  `) as unknown as { req: string; date: string; weight: number | null; reps: number | null }[];
+  for (const r of rows) {
+    const list = out.get(r.req);
+    if (!list) continue;
+    let cur = list[list.length - 1];
+    if (!cur || cur.date !== r.date) { cur = { date: r.date, sets: [] }; list.push(cur); }
+    cur.sets.push({ weight: r.weight, reps: r.reps });
+  }
   return out;
 }
 
@@ -406,18 +427,53 @@ export async function getSessionDay(date: string): Promise<string | null> {
   return row?.day ?? null;
 }
 
-/** The most recent logged session whose day is one of `keys`, since 2026-09-04. The rotation is A
- *  and B; Session C (Saturday) is logged in the same table and must not count as a rotation step,
- *  so cycle.ts asks for the last A-or-B row rather than the last row. */
-export async function getLastRotationRow(keys: string[]): Promise<{ date: string; day: string | null; status: string | null } | null> {
+/** EVERYTHING THE ROTATION NEEDS, IN ONE ROUND TRIP. Was three queries in a row (the last rotation
+ *  row, then the watch dates after it, then today's session), which the hub and /gym both waited on.
+ *
+ *  `last`: the most recent logged session whose day is one of `keys` and that holds real work.
+ *  `todayDay`: the day already recorded against `today`, if any.
+ *  `watchDates`: lifting sessions the watch saw after `last`, before today, on dates the app has no
+ *  session for, and not on an ISO weekday in `excludedIsodow` (see cycle.ts for where that comes
+ *  from). `date` is the local Calgary date text on both tables. */
+export async function getRotationState(
+  keys: string[],
+  today: string,
+  excludedIsodow: number[],
+): Promise<{
+  last: { date: string; day: string | null; status: string | null } | null;
+  todayDay: string | null;
+  watchDates: string[];
+}> {
   const rows = await sql`
-    select s.date, s.day, s.status from gym_session s
-    where s.day = any(${keys})
-      and exists (select 1 from gym_set g where g.date = s.date and ${PERFORMED} and g.reps is not null and g.reps > 0)
-    order by s.date desc
-    limit 1
+    with last as (
+      select s.date, s.day, s.status from gym_session s
+      where s.day = any(${keys})
+        and exists (select 1 from gym_set g where g.date = s.date and ${PERFORMED} and g.reps is not null and g.reps > 0)
+      order by s.date desc
+      limit 1
+    )
+    select
+      (select row_to_json(l) from last l) as last,
+      (select t.day from gym_session t where t.date = ${today} order by t.day limit 1) as today_day,
+      coalesce((
+        select array_agg(x.date order by x.date) from (
+          select distinct w.date from health_watch_session w
+          where w.kind = 'strength'
+            and w.date > coalesce((select l.date from last l), '1970-01-01')
+            and w.date < ${today}
+            and not (extract(isodow from w.date::date)::int = any(${excludedIsodow}::int[]))
+            and not exists (select 1 from gym_session g where g.date = w.date)
+        ) x
+      ), '{}') as watch_dates
   `;
-  return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
+  const r = rows[0] as
+    | { last: { date: string; day: string | null; status: string | null } | null; today_day: string | null; watch_dates: string[] | null }
+    | undefined;
+  return {
+    last: r?.last ?? null,
+    todayDay: r?.today_day ?? null,
+    watchDates: r?.watch_dates ?? [],
+  };
 }
 
 /** WHAT HE DID LAST TIME, for the top of the page. Added 2026-09-06 on his words: "I don't
@@ -427,23 +483,33 @@ export async function getLastRotationRow(keys: string[]): Promise<{ date: string
  *  Until today nothing above the first exercise said which session he did last or when. The only
  *  record was a table BELOW the finish button, showing dashes for every duration and three retired
  *  session names. This returns the most recent session with real logged work, and for each exercise
- *  in it the heaviest set (and the reps at that weight), in the order he first logged them. Two
- *  round trips, no derived claims, nothing typed. */
+ *  in it the heaviest set (and the reps at that weight), in the order he first logged them. One
+ *  round trip, no derived claims, nothing typed. */
 export interface LastSessionSummary {
   date: string;
   day: string | null;
   lifts: { id: string; name: string; weight: number | null; reps: number | null }[];
 }
 export async function getLastSessionSummary(): Promise<LastSessionSummary | null> {
-  const row = await getLastTrainingRow();
-  if (!row) return null;
+  /* ONE ROUND TRIP. The session row and its sets used to be two queries in a row. */
   const rows = await sql`
-    select exercise_id, exercise_name, weight, reps, logged_at from gym_set
-    where date = ${row.date} and ${PERFORMED} and reps is not null and reps > 0
-    order by (logged_at is null) asc, logged_at asc, id asc
+    with d as (
+      select max(date) as date from gym_set where ${PERFORMED} and reps is not null and reps > 0
+    ),
+    s as (
+      select gs.date, gs.day from gym_session gs join d on gs.date = d.date limit 1
+    )
+    select s.date as s_date, s.day as s_day, g.exercise_id, g.exercise_name, g.weight, g.reps
+      from s
+      join gym_set g on g.date = s.date
+     where ${PERFORMED} and g.reps is not null and g.reps > 0
+     order by (g.logged_at is null) asc, g.logged_at asc, g.id asc
   `;
+  const all = rows as unknown as { s_date: string; s_day: string | null; exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[];
+  const head = all[0];
+  if (!head) return null;
   const byId = new Map<string, { id: string; name: string; weight: number | null; reps: number | null }>();
-  for (const r of rows as unknown as { exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[]) {
+  for (const r of all) {
     const cur = byId.get(r.exercise_id);
     const w = r.weight == null ? null : Number(r.weight);
     const reps = r.reps == null ? null : Number(r.reps);
@@ -454,16 +520,7 @@ export async function getLastSessionSummary(): Promise<LastSessionSummary | null
     const sameWeightMoreReps = (w ?? -1) === (cur.weight ?? -1) && (reps ?? 0) > (cur.reps ?? 0);
     if (heavier || sameWeightMoreReps) { cur.weight = w; cur.reps = reps; }
   }
-  return { date: row.date, day: row.day, lifts: [...byId.values()] };
-}
-
-/** Rolling schedule: the most recent date with real logged work, and its program day. */
-export async function getLastTrainingRow(): Promise<{ date: string; day: string | null; status: string | null } | null> {
-  const rows = await sql`
-    select date, day, status from gym_session
-    where date = (select max(date) from gym_set where ${PERFORMED} and reps is not null and reps > 0)
-  `;
-  return (rows[0] as { date: string; day: string | null; status: string | null } | undefined) ?? null;
+  return { date: head.s_date, day: head.s_day, lifts: [...byId.values()] };
 }
 
 /* `getTrainingDates` was here and is GONE, 2026-08-26. It existed to power a consecutive-day streak

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useMeasuredWidth } from './useMeasuredWidth';
 
 /* Charts for the Health surface, hand-built inline SVG per the workspace `dataviz` skill rather
  * than a charting dependency (this repo takes no chart lib, same zero-dependency posture as
@@ -43,22 +44,6 @@ const PAD_R = 12;
 const PAD_T = 16;
 const PAD_B = 24;
 
-function useMeasuredWidth(ref: React.RefObject<HTMLDivElement | null>): number {
-  const [w, setW] = useState(W_FALLBACK);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const next = entries[0]?.contentRect.width ?? 0;
-      // Rounded, so a fractional resize does not re-render the chart on every pixel of a drag.
-      if (next > 0) setW(Math.round(next));
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [ref]);
-  return w;
-}
-
 function niceTicks(min: number, max: number, count = 3): number[] {
   if (min === max) return [min];
   const span = max - min;
@@ -81,7 +66,7 @@ export function LineChart({
   decimals?: number;
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const W = useMeasuredWidth(wrapRef);
+  const W = useMeasuredWidth(wrapRef, W_FALLBACK);
   const [hover, setHover] = useState<{ i: number; x: number; y: number } | null>(null);
 
   if (points.length < 2) {
@@ -191,7 +176,7 @@ export interface BarPoint {
 
 export function BarChart({ points, unit }: { points: BarPoint[]; unit: string }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const W = useMeasuredWidth(wrapRef);
+  const W = useMeasuredWidth(wrapRef, W_FALLBACK);
   const [hover, setHover] = useState<number | null>(null);
 
   if (!points.length) {
@@ -254,84 +239,6 @@ export function BarChart({ points, unit }: { points: BarPoint[]; unit: string })
           <div className="t-value tnum">{(points[hover] as BarPoint).value.toFixed(0)} {unit}</div>
         </div>
       )}
-    </div>
-  );
-}
-
-export interface AdherenceCell {
-  date: string;
-  trained: boolean;
-  logged: boolean;
-  known: boolean;
-}
-
-export function AdherenceStrip({ days, today }: {
-  days: AdherenceCell[];
-  /** Today in Calgary, computed on the server by `src/lib/day.ts`.
-   *
-   * It was `new Date().toISOString().slice(0, 10)` in here: UTC, in a browser, against day cells the
-   * server built with the Calgary formatter. From about 18:00 Calgary the UTC date is tomorrow, no
-   * cell matched, and the ring marking today silently disappeared every evening. Found by
-   * 05-small-apps H3. This is the same class `src/lib/day.ts` was written for on 2026-08-14, in the
-   * one component that had not been moved onto it, because it runs on the client where that file's
-   * `today()` reads the browser's clock rather than Calgary's. Passing it down is the fix; calling
-   * `today()` here would only be right for a phone that happens to be in Alberta. */
-  today: string;
-}) {
-  const todayStr = today;
-  return (
-    <div>
-      <div className="strip">
-        {days.map((d) => {
-          const cls = ['strip-cell'];
-          if (!d.known) cls.push('unknown');
-          if (d.trained) cls.push('trained');
-          if (d.logged) cls.push('logged');
-          // Needs its own outline: .logged alone paints a background-coloured dot on an unfilled
-          // cell, which is nothing at all.
-          if (d.logged && !d.trained) cls.push('logged-only');
-          /* An empty cell used to mean "rest" whether he rested or the export simply had not
-             reached that day, which turned a stalled sync into a month of claimed rest days.
-
-             `logged && !trained` is the fourth case and it was falling through to "rest": a day he
-             logged a full session in the gym app but the watch export has no strength row for.
-             2026-08-04 is exactly that day, and it rendered pixel-identical to a rest day with an
-             aria-label saying "rest", because .logged draws a hole punched in a filled cell and
-             the cell underneath was not filled. Both the picture and the screen reader asserted a
-             rest day on a day he trained. Found by an adversarial pass on 2026-08-14. */
-          const state = d.trained && d.logged
-            ? 'trained + logged'
-            : d.trained
-              ? 'trained, not logged'
-              : d.logged
-                ? 'logged in the app, the watch has no session for it'
-                : !d.known
-                  ? 'no data, the watch export has not reached this day'
-                  : 'rest';
-          const label = `${d.date}: ${state}`;
-          return (
-            <button
-              key={d.date}
-              type="button"
-              className={cls.join(' ')}
-              style={d.date === todayStr ? { borderColor: 'var(--signal)' } : undefined}
-              title={label}
-              aria-label={label}
-            />
-          );
-        })}
-      </div>
-      <div className="strip-legend">
-        <span className="key"><span className="swatch" /> rest</span>
-        <span className="key"><span className="swatch trained" /> trained</span>
-        <span className="key"><span className="swatch trained logged" /> trained + logged</span>
-        {days.some((d) => d.logged && !d.trained) && (
-          <span className="key"><span className="swatch logged-only" /> logged, watch missed it</span>
-        )}
-        {days.some((d) => !d.known) && (
-          <span className="key"><span className="swatch unknown" /> no data</span>
-        )}
-      </div>
     </div>
   );
 }

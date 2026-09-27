@@ -31,7 +31,8 @@ if (!url || !outPath) {
 }
 
 const PORT = Number(process.env.CDP_PORT || 9222);
-const WIDTH = 390;
+// WIDTH=1440 for a desktop shot; 390 is the phone he uses and stays the default.
+const WIDTH = Number(process.env.WIDTH || 390);
 
 async function httpJson(path, method = 'GET') {
   const res = await fetch(`http://127.0.0.1:${PORT}${path}`, { method });
@@ -79,7 +80,7 @@ try {
   await send('Page.enable');
   await send('Runtime.enable');
   await send('Emulation.setDeviceMetricsOverride', {
-    width: WIDTH, height: Number(height), deviceScaleFactor: 2, mobile: true,
+    width: WIDTH, height: Number(height), deviceScaleFactor: 2, mobile: WIDTH < 800,
   });
 
   // THEME=light|dark forces prefers-color-scheme. Every surface here is theme-aware and the

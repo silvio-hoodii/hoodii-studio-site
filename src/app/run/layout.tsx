@@ -21,7 +21,7 @@ export const metadata: Metadata = {
    * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
    * src/app/kitchen/layout.tsx. */
   title: { default: 'Run', template: '%s · Silvio Neyra' },
-  description: 'My running: the ten-week walk-to-run build, what the belt should read, and how to run it.',
+  description: 'My running: the walk-to-run build, what the belt should read, and how to run it.',
   /* NOINDEX, matching /gym and /health, which carry the same kind of thing: his own training and
    * his own numbers. /swim is currently indexable and this route did NOT copy that, deliberately.
    * Two sibling routes disagreeing about whether a training log belongs in a search index is worth
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 
 export default function RunLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="training">
+    <div className="training measure-data">
       <SiteHeader app="Run" />
       <TrainingNav />
       {children}

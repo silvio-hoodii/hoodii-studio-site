@@ -1,6 +1,6 @@
 import { today } from '@/lib/day';
 import { NextResponse } from 'next/server';
-import { getLastSession, getRecentSessions } from '@/lib/gym/db';
+import { getExerciseHistories } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
 import { ladderFor, hasFixedReps } from '@/lib/gym/ladder';
 
@@ -48,35 +48,40 @@ export async function POST(req: Request) {
     const date = b?.date || today();
     const exercises: PlanExerciseIn[] = Array.isArray(b?.exercises) ? b.exercises : [];
 
-    const out = await Promise.all(
-      exercises.map(async (ex) => {
-        const last = await getLastSession(ex.id, date);
-        /* Eight, not three. Three is all the stall detector needs and it is what this asked for
-           until now, but the client draws a trend from the same rows and three points is not a
-           trend. `suggest` still looks at the window it always did, so nothing about the
-           progression logic changes with the number here. */
-        const recent = await getRecentSessions(ex.id, date, 8);
-        const suggestion = suggest(last, {
-          type: ex.type || 'weighted',
-          targetReps: ex.targetReps,
-          increment: ex.increment,
-          rangeWidth: ex.rangeWidth,
-          assistance: ex.assistance,
-          /* DERIVED HERE, NOT SENT. Twice now a field the client sent, `PlanInput` declared and
-             this interface omitted was dropped in the middle with nothing to notice: `rangeWidth`
-             sat dead for five days and `assistance` was added in the same commit that documented
-             the hazard. The rack is a fact about the building, identical for every caller, and
-             `movements.json` already knows which lifts are dumbbells. So the seam that keeps
-             failing is removed rather than widened: nothing about the ladder crosses the wire. */
-          ladder: ladderFor(ex.id),
-          fixedReps: hasFixedReps(ex.id),
-          repSuffix: ex.repSuffix,
-          today: date,
-          recent: recent.slice(0, 3),
-        });
-        return { id: ex.id, last, suggestion, recent };
-      }),
-    );
+    /* ONE QUERY FOR THE WHOLE DAY, since 2026-09-27. This used to read each exercise's last session
+       and then its recent sessions separately, about 110 queries per load, and the first was always
+       the head of the second. One definition of the history now serves both, so the stall window,
+       the trend line and the suggestion all see the same measured sets and none of the recalled
+       ones (see HISTORY in src/lib/gym/db.ts).
+
+       Eight sessions, not three. Three is all the stall detector needs, but the client draws a trend
+       from the same rows and three points is not a trend. `suggest` still looks at the window it
+       always did, so nothing about the progression logic changes with the number here. */
+    const histories = await getExerciseHistories(exercises.map((ex) => ex.id), date, 8);
+
+    const out = exercises.map((ex) => {
+      const recent = histories.get(ex.id) ?? [];
+      const last = recent[0] ?? null;
+      const suggestion = suggest(last, {
+        type: ex.type || 'weighted',
+        targetReps: ex.targetReps,
+        increment: ex.increment,
+        rangeWidth: ex.rangeWidth,
+        assistance: ex.assistance,
+        /* DERIVED HERE, NOT SENT. Twice now a field the client sent, `PlanInput` declared and
+           this interface omitted was dropped in the middle with nothing to notice: `rangeWidth`
+           sat dead for five days and `assistance` was added in the same commit that documented
+           the hazard. The rack is a fact about the building, identical for every caller, and
+           `movements.json` already knows which lifts are dumbbells. So the seam that keeps
+           failing is removed rather than widened: nothing about the ladder crosses the wire. */
+        ladder: ladderFor(ex.id),
+        fixedReps: hasFixedReps(ex.id),
+        repSuffix: ex.repSuffix,
+        today: date,
+        recent: recent.slice(0, 3),
+      });
+      return { id: ex.id, last, suggestion, recent };
+    });
 
     return NextResponse.json({ ok: true, date, exercises: out });
   } catch (e) {

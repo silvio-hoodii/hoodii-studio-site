@@ -4,7 +4,7 @@ import SurfaceLoading from '@/components/SurfaceLoading';
  * for why this exists and why it asserts no heading text.
  *
  * `reading` is the class this segment's page puts its content in. 5 rows stands in for
- * the ten queued books and their acquisition status.
+ * the current book and the cover grids.
  */
 export default function Loading() {
   return <SurfaceLoading wrap="reading" rows={5} />;

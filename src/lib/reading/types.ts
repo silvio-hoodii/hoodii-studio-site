@@ -32,11 +32,10 @@ export interface Pack {
   author: string;
   slug: string;
   year: number;
-  /** `part` on the six books whose spine is five parts, `chapter` on the one with real chapters. */
+  /** `part` for a book whose spine is parts, `chapter` for one with real chapters. */
   unit: 'chapter' | 'part';
   kind: 'novel' | 'nonfiction' | 'memoir';
   total_chapters: number;
-  generated: string;
   finished_on: string | null;
   sections: Section[];
   cards: Card[];
@@ -48,7 +47,6 @@ export interface Pack {
     prompts: string[];
   };
   context: string[];
-  sources: string[];
 }
 
 export const kindLabel: Record<Pack['kind'], string> = {

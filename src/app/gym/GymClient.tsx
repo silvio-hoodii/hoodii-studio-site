@@ -80,13 +80,18 @@ interface PendingWrite {
 
 /* The top set of a session, which is the one number worth putting on a line.
  *
- * Weight first, reps as the tie-break, and reps alone when there is no weight: a bodyweight or
- * timed exercise progresses by count and would otherwise draw a flat line at zero. */
-function topSet(sets: { weight: number | null; reps: number | null }[]): number | null {
+ * ONE UNIT PER LINE, decided across the sessions and not per session, since 2026-09-27. Deciding it
+ * per session let one line join a 45 lb point to a 12-rep point whenever a lift had some sessions
+ * with a weight and some without. Weighted if ANY session carries a weight; the sessions in the
+ * other unit are dropped from the line rather than plotted on the wrong scale. Reps alone only when
+ * no session has a weight: a bodyweight or timed exercise progresses by count and would otherwise
+ * draw a flat line at zero. */
+const hasWeight = (sets: { weight: number | null }[]) => sets.some((s) => s.weight != null && s.weight > 0);
+
+function topSet(sets: { weight: number | null; reps: number | null }[], weighted: boolean): number | null {
   let best: number | null = null;
-  const weighted = sets.some((s) => s.weight != null && s.weight > 0);
   for (const s of sets) {
-    const v = weighted ? s.weight : s.reps;
+    const v = weighted ? (s.weight != null && s.weight > 0 ? s.weight : null) : s.reps;
     if (v == null) continue;
     if (best == null || v > best) best = v;
   }
@@ -102,10 +107,13 @@ function topSet(sets: { weight: number | null; reps: number | null }[]): number 
  *
  * It only appears from three sessions on. Two points is a line between two points, not a trend, and
  * a chart on an exercise he has done once is decoration on a screen he already found cluttered. */
-function Trend({ recent }: { recent: LastSession[] }) {
+function Trend({ recent, countUnit }: { recent: LastSession[]; countUnit: string }) {
+  const weighted = recent.some((s) => hasWeight(s.sets));
+  const unit = weighted ? 'lb' : countUnit;
   const points = [...recent]
     .reverse()
-    .map((s) => topSet(s.sets))
+    .filter((s) => !weighted || hasWeight(s.sets))
+    .map((s) => topSet(s.sets, weighted))
     .filter((v): v is number => v != null);
   if (points.length < 3) return null;
 
@@ -129,7 +137,7 @@ function Trend({ recent }: { recent: LastSession[] }) {
         height={H}
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`last ${points.length} sessions, ${first} to ${latest}`}
+        aria-label={`last ${points.length} sessions, ${first} to ${latest} ${unit}`}
       >
         <path d={d} />
         <circle cx={lastX} cy={lastY} r={2.5} />
@@ -144,8 +152,8 @@ function Trend({ recent }: { recent: LastSession[] }) {
           the notes list's silent 20-row cap: a cap that does not say it is a cap. */}
       <span className="trend-n tnum">
         {points.every((v) => v === points[0])
-          ? `held at ${latest}`
-          : `${first} to ${latest}`} over the last {points.length}
+          ? `held at ${latest} ${unit}`
+          : `${first} to ${latest} ${unit}`} over the last {points.length}
       </span>
     </span>
   );
@@ -934,8 +942,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * having lost its place, which is the bug this feature exists to prevent. */}
       {nextUp.cutShort && !nextUp.todayDay && (
         <p className="lede" style={{ marginTop: 6 }}>
-          You cut {program.days[nextUp.nextDay]?.title ?? 'the last session'} short on {nextUp.lastDate},
-          so it comes round again rather than the next day in the rotation.
+          You cut {program.days[nextUp.nextDay]?.title ?? 'the last session'} short on {nextUp.lastDate}.
         </p>
       )}
 
@@ -1083,7 +1090,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                 {ex.whyHere
                   ? <div className="ex-why">{ex.whyHere}</div>
                   : (ex.open?.some((q) => q.topic === 'placement')
-                    ? <div className="ex-why quiet">No reason recorded yet, a question about this is open.</div>
+                    ? <div className="ex-why quiet">Placement question open</div>
                     : null)}
                 {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
                      "Walls of text again why do I need all this, just leave the cue and thats it,
@@ -1131,7 +1138,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                       ? `${p.suggestion.weight} lb × ${p.suggestion.reps}${repSuffix(eff.reps)}`
                       : `× ${p.suggestion.reps}${repSuffix(eff.reps)}`}
                     <span className="ex-suggest-why">{p.suggestion.reason}</span>
-                    {p.recent && <Trend recent={p.recent} />}
+                    {p.recent && <Trend recent={p.recent} countUnit={eff.timed ? 's' : 'reps'} />}
                   </div>
                 )}
 
@@ -1316,9 +1323,6 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                           refused later. The old tool got this backwards and recommended three
                           pairings the gate rejects; its own header records why that is worse than
                           suggesting nothing. */}
-                      <p className="fill-hint quiet">
-                        Anything here can be done at the {lead.name} without moving.
-                      </p>
                       {offer.map((c) => (
                         <button className="fill-opt" key={c.id} onClick={() => chooseFill(key, c)}>
                           <div className="fill-opt-name">{c.name}</div>
@@ -1515,7 +1519,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         {finished ? (
           <p className="lede">
             Session saved. {totals.done}/{totals.total} sets logged.
-            {endingRef.current === 'cutshort' && ' Cut short, so this day comes round again next time rather than the next one.'}
+            {endingRef.current === 'cutshort' && ' Cut short.'}
           </p>
         ) : (
           <>

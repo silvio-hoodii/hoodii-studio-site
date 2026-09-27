@@ -33,7 +33,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="reading pack">
-      <p className="eyebrow">Finished</p>
+      {p.finished_on && <p className="eyebrow">Finished</p>}
       <h1>{p.book}</h1>
       <p className="by">
         {p.author} · {p.year} · {p.total_chapters} {p.unit}s
@@ -105,13 +105,6 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
         </div>
       )}
 
-      {/* Bare `raw/...` paths are dropped. Every pack lists at least one, pointing at the fetched
-          evidence in the ReadingOS repo, which is where the pages were saved and where they stay:
-          it is 48 MB of scraped HTML and it does not belong in a public site repo. Printing that
-          path to a reader is worse than printing nothing, because it reads as a citation and
-          resolves to nothing they can open. Five of the seven packs have only that, so the sentence
-          has to stand on its own. */}
-      <p className="src">Card grades are kept on this device only; clearing browser data resets them.</p>
     </div>
   );
 }

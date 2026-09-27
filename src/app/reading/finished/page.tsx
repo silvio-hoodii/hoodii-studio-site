@@ -7,10 +7,8 @@ export const metadata = {
   alternates: { canonical: '/reading/finished' },
 };
 
-/* Was /reading itself until 2026-08-20, when the live queue moved in and took the front page.
- * Moving here rather than duplicating: every line is still counted off content/reading/packs at
- * render, for the reason the original comment gave -- a written-down count drifts, a computed one
- * cannot. */
+/* Every count here is read off content/reading/packs at render: a written-down count drifts, a
+ * computed one cannot. */
 export default async function ReadingFinished() {
   const packs = await allPacks();
   const cards = packs.reduce((n, p) => n + p.cards.length, 0);

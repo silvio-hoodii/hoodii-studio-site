@@ -57,6 +57,14 @@ eq('a space smuggling a host', safeReturnTo('/ /evil.example'), DEFAULT_RETURN_T
 eq('a NUL byte', safeReturnTo('/kitchen' + NUL + '.evil.example'), DEFAULT_RETURN_TO);
 eq('a leading space before the slash', safeReturnTo(' /kitchen'), DEFAULT_RETURN_TO);
 
+/* ---- must REJECT: the login page itself ------------------------------------------------------- */
+
+eq('the login page, which printed "Not that one." to a correct password', safeReturnTo('/login?bad=1&to=%2Fkitchen'), DEFAULT_RETURN_TO);
+eq('the bare login page', safeReturnTo('/login'), DEFAULT_RETURN_TO);
+eq('the login page with a fragment', safeReturnTo('/login#x'), DEFAULT_RETURN_TO);
+eq('a login sub-path', safeReturnTo('/login/x'), DEFAULT_RETURN_TO);
+eq('a path that only starts with the word', safeReturnTo('/loginfo'), '/loginfo');
+
 /* ---- must REJECT: not a usable value at all --------------------------------------------------- */
 
 eq('an empty string', safeReturnTo(''), DEFAULT_RETURN_TO);

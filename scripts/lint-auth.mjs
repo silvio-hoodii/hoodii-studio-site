@@ -41,7 +41,6 @@ const rel = (p) => relative(ROOT, p).split(sep).join('/');
 const MAY_READ_SECRET = new Map([
   ['src/lib/auth.ts', 'the one comparison, fail-closed'],
   ['src/lib/login-server.ts', 'the one place a login form sets the cookie'],
-  ['src/app/kitchen/api/unlock/route.ts', 'the inline unlock: answers JSON to a fetch mid-cook'],
 ]);
 
 /* Same list, for the cookie NAME. `AUTH_COOKIE` is exported from src/lib/auth.ts so nothing else

@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * two answers to one question. */
     { url: 'https://hoodii.studio', changeFrequency: 'weekly', priority: 1 },
     { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
+    /* The mornings and the ledger, off /curio since 2026-09-27: this is where the answers live now. */
+    { url: 'https://hoodii.studio/curio/archive', changeFrequency: 'weekly', priority: 0.6 },
     { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
 
     /* Two apps that used to be someone else's subdomain, moved here 2026-08-16. The individual
@@ -25,7 +27,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * is not true of a training log. The schedule was deleted that day and the page became his own
      * swimming: a tier ladder, a ten-week plan and two coaching handbooks, all of which change when
      * he changes them. `weekly` is the honest answer now. */
-    { url: 'https://hoodii.studio/swim', changeFrequency: 'weekly', priority: 0.6 },
+    /* /swim left this list on 2026-09-27: it renders on every request (its tabs are a query string),
+       so a crawler working through the sitemap woke the database for it. It is still linked from
+       the index and the header. */
     { url: 'https://hoodii.studio/reading', changeFrequency: 'monthly', priority: 0.6 },
 
     /* The /work case studies were listed here until 2026-09-15, when they were deleted along with

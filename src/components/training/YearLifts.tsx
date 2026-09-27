@@ -3,6 +3,8 @@
  * against each other. No causal claim is drawn or written: they are two records on one clock.
  * Server-rendered SVG, monochrome, the latest weight marked. */
 
+import Readout from '@/components/Readout';
+
 export default function YearLifts({ from, to, weights, lifts }: {
   from: string;
   to: string;
@@ -27,6 +29,7 @@ export default function YearLifts({ from, to, weights, lifts }: {
     .filter((d) => d >= from && d <= to);
   return (
     <figure className="yearlifts">
+      <Readout>
       <svg viewBox={`0 0 ${W} ${tickTop + 22}`} role="img"
         aria-label={`Weight from ${from} to ${to}, ${lifts.length} lifting days marked below it`}>
         {months.map((d) => (
@@ -37,14 +40,21 @@ export default function YearLifts({ from, to, weights, lifts }: {
             </text>
           </g>
         ))}
-        <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        <polyline className="vline" pathLength={1} points={pts} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
         <circle cx={x(last.date)} cy={y(last.kg)} r="2.8" fill="currentColor" />
         <text x={2} y={y(hi) + 3} className="mlab">{hi.toFixed(1)}</text>
         <text x={2} y={y(lo) - 2} className="mlab">{lo.toFixed(1)}</text>
         {lifts.map((d) => (
-          <rect key={d} x={x(d) - 0.6} y={tickTop} width={1.4} height={8} fill="currentColor" opacity="0.7" />
+          <rect key={d} x={x(d) - 0.6} y={tickTop} width={1.4} height={8} fill="currentColor" opacity="0.7" data-r={`lifted ${d}`} />
         ))}
+        {/* One hit column per reading, so a tap along the line reads the nearest weight. */}
+        {weights.map((w, i) => {
+          const x0 = i === 0 ? 0 : (x(weights[i - 1]!.date) + x(w.date)) / 2;
+          const x1 = i === weights.length - 1 ? W : (x(w.date) + x(weights[i + 1]!.date)) / 2;
+          return <rect key={w.date} x={x0} y={0} width={Math.max(0, x1 - x0)} height={tickTop} fill="transparent" data-r={`${w.date}, ${w.kg.toFixed(1)} kg`} />;
+        })}
       </svg>
+      </Readout>
       <figcaption>
         <span><i className="k-line" />weight, kg</span>
         <span><i className="k-tick" />{lifts.length} lifting days</span>

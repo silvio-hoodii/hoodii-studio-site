@@ -32,12 +32,6 @@ export function timeAgo(iso: string, now: number = Date.now()): string {
  *
  *  NAME THE DEADLINE, DO NOT DESCRIBE A MOOD, which DESIGN.md states. The negative branch existed in
  *  neither copy originally, so arugula three days past its use-by rendered as "today". */
-export function dueInText(days: number | null | undefined): string {
-  if (days == null) return '';
-  if (days < 0) return `${-days} d past its best`;
-  if (days === 0) return 'today';
-  return `${days} d left`;
-}
 
 /** 2026-08-14 -> "Aug 14". The year is never in question on MOST windows this site draws: a 28-day
  *  training block, a 14-day strip, the date on a session that happened this month.

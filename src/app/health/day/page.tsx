@@ -5,6 +5,7 @@ import {
   type DailyReview, type ScrapsRow, type MonthPoint,
 } from '@/lib/health/daily';
 import { LineChart } from '../HealthCharts';
+import { when } from '@/lib/health/fmt';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,11 +36,10 @@ export const metadata: Metadata = {
  * NOTHING BELOW IS TYPED, AND ON 2026-09-09 THAT SENTENCE WAS FALSE IN SEVEN PLACES. It was written
  * about the charts and the tables, all of which were derived, while the Limits section, whose entire
  * subject is that an undeclared number goes wrong quietly, was built out of typed ones. One had
- * already gone wrong. The figures now come from `limits` in src/lib/health/daily.ts with everything
- * else, and `scripts/lint-typed-figures.mjs` fails the build on a two-digit run left in the rendered
- * text of this file, so the claim is a gate rather than a promise. The one deliberate exception is
- * the sentence in READS saying what each column is for, which is a fact about English rather than
- * about his data.
+ * already gone wrong. Every figure now comes from src/lib/health/daily.ts, and
+ * `scripts/lint-typed-figures.mjs` fails the build on a two-digit run left in the rendered text of
+ * this file, so the claim is a gate rather than a promise. The Limits section and the `limits` block
+ * that fed it are gone (2026-09-15 and 2026-09-27); their derivations are in git history.
  *
  * THE HONESTY THIS PAGE IS BUILT AROUND. Its headline number read ZERO four weeks before the worst
  * stretch in the record, and the 10th percentile, which is the obvious fix, read 5,944 then against
@@ -48,11 +48,6 @@ export const metadata: Metadata = {
  * showed the green light without that would be teaching him to trust a light that was green on the
  * way down. */
 
-function when(iso: string): string {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
-    day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC',
-  });
-}
 
 function monthName(mm: string): string {
   return new Date(`2000-${mm}-01T12:00:00Z`).toLocaleDateString('en-CA', { month: 'short', timeZone: 'UTC' });
@@ -92,7 +87,7 @@ function Headline({ r }: { r: DailyReview }) {
 }
 
 /* ------------------------------------------------------------------------------------------------
- * THE FLOOR MOVED, NOT THE CEILING. The single most useful thing in this table.
+ * BAD DAYS AGAINST GOOD DAYS. The heading is derived from the same comparison as the sentence.
  * ---------------------------------------------------------------------------------------------- */
 function FloorNotCeiling({ r }: { r: DailyReview }) {
   if (!r.compare) return null;
@@ -109,10 +104,13 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
   const floorLift = ratio(first.p10, last.p10);
   const ceilLift = ratio(first.p90, last.p90);
   const floorWon = floorLift != null && ceilLift != null && floorLift > ceilLift;
+  /* THE HEADING FOLLOWS THE SAME BOOLEAN, since 2026-09-27. It read "The floor moved, not the
+     ceiling" whatever the numbers said, above a sentence that could say the opposite. */
+  const heading = floorWon ? 'The floor moved further than the ceiling' : 'Bad days and good days';
 
   return (
     <div className="section">
-      <div className="section-head"><h2>The floor moved, not the ceiling</h2></div>
+      <div className="section-head"><h2>{heading}</h2></div>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -151,8 +149,11 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
             Your good days grew by{' '}
             <span className="tnum">{ceilLift == null ? '-' : `${ceilLift.toFixed(1)}x`}</span>. Your
             bad days grew by <span className="tnum">{floorLift == null ? '-' : `${floorLift.toFixed(1)}x`}</span>.
-            What changed this year is not that you go harder when you go. It is that you stopped
-            having days that were nothing.
+            {/* Only when the table shows it: a bad day in the newest month clears the floor. It
+                was asserted ("you stopped having days that were nothing") whatever the p10 said. */}
+            {last.p10 >= FLOOR_STEPS && (
+              <> A bad day now clears {FLOOR_STEPS.toLocaleString('en-CA')} steps.</>
+            )}
           </>
         ) : (
           <>
@@ -179,7 +180,7 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
  * conditional on the number, because at two or three hours the same figure argues the other way and
  * the sentence has to follow it. */
 /* SubFloorWereReal was here until 2026-09-15: a paragraph arguing that the low-step days were real
- * days and not the phone left in a drawer. Provenance. The check it printed is r.limits.subFloor. */
+ * days and not the phone left in a drawer. Provenance. */
 
 function monthLabelFull(ym: string): string {
   return new Date(`${ym}-01T12:00:00Z`).toLocaleDateString('en-CA', {
@@ -247,7 +248,9 @@ function NotTheWeather({ r }: { r: DailyReview }) {
 
   return (
     <div className="section">
-      <div className="section-head"><h2>It is not just the summer</h2></div>
+      {/* A LABEL, since 2026-09-27. "It is not just the summer" was a conclusion; the sentence under
+          the table states each year's best and worst month, which is the evidence either way. */}
+      <div className="section-head"><h2>Month by month, each year</h2></div>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -306,10 +309,6 @@ function Stairs({ r }: { r: DailyReview }) {
               HealthOS/server/import-daily-movement.mjs, which exits non-zero on a disagreement. */}
         </div>
       </div>
-      <p className="ex-cue">
-        It measures your staircase as much as your legs. A move, or a building with a lift, would
-        change this number without anything about you changing.
-      </p>
     </div>
   );
 }
@@ -334,7 +333,8 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
   const swing = lo && hi && lo.p50 > 0 ? hi.p50 / lo.p50 : null;
   return (
     <div className="section">
-      <div className="section-head"><h2>On a day you do not train, it arrives in scraps</h2></div>
+      {/* A LABEL, since 2026-09-27: "it arrives in scraps" was a conclusion the table can contradict. */}
+      <div className="section-head"><h2>On days you do not train</h2></div>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
@@ -372,24 +372,13 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
         Those <span className="tnum">{n0(latest.medianActiveMin)}</span> active minutes arrive a few
         at a time.
       </p>
-      <p className="ex-cue">
-        {/* "has not responded to anything" until 2026-09-09, which the table above disproves: the
-            stretch fell from 21 minutes to 16 and the rest-day active minutes roughly halved. What
-            is true is the COMPARISON, and the sentence above now prints both sides of it, so this
-            one only has to name the consequence. Same failure as the drawer sentence and as the
-            /swim/deep claim its own table disproved: a paragraph that describes the table beside it
-            has to be recomputed when the table moves, or it has to stop making the claim. */}
-        {/* THE SECOND SENTENCE WENT, 2026-09-09. It read "It is a description, not a prescription:
-            the week is frozen and this is not a proposal to change it." That sentence was addressed
-            to an AGENT, not to him: it is a guard against a future session reading this section as
-            a reason to change the programme. He does not need to be told the page is not proposing
-            something. The guard is the same either way and lives here now.
+      {/* "Against that swing it has barely shifted, which makes it the one thing on the page nobody
+          has tried yet" was here until 2026-09-27: a conclusion typed beside a table that shows the
+          stretch moving. The contrast is printed above, both sides derived.
 
-            THE GUARD: the programme is frozen until 2026-10-05. Nothing in this section may become
-            a proposal to add a walk, a step target, or anything else to the week. */}
-        Against that swing it has barely shifted, which makes it the one thing on the page nobody
-        has tried yet.
-      </p>
+          THE GUARD, which is for agents and not for him: the programme is frozen until 2026-10-05.
+          Nothing in this section may become a proposal to add a walk, a step target, or anything
+          else to the week. */}
     </div>
   );
 }

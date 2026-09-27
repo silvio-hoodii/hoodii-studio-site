@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { logCook } from '@/lib/kitchen/cookbook';
 
 export const runtime = 'nodejs';
@@ -22,6 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: `note over ${MAX_NOTE} characters` }, { status: 400 });
     }
     await logCook({ dish, rating, note });
+    /* The index is ISR; regenerate it so his own write shows there at once. */
+    revalidatePath('/');
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });

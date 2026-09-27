@@ -47,21 +47,13 @@ export default async function CallbackPage({
         <>
           <p className="lede">Authorised. Copy this code and paste it back into the session.</p>
           <pre className="box">{code}</pre>
-          <p className="note">
-            Single use, and it expires in about ten minutes. It is useless on its own: exchanging it
-            needs the client secret, which is not in this page or this repo. Nothing was stored
-            here.
-          </p>
+          <p className="note">Expires in about ten minutes.</p>
         </>
       )}
 
       {!code && !error && (
         <>
           <p className="lede">Nothing to do here.</p>
-          <p className="note">
-            This page only means something as the destination of a Spotify authorise link, which
-            arrives carrying <code>?code=</code>.
-          </p>
         </>
       )}
 

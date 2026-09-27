@@ -1,6 +1,7 @@
 import { mmss, type SessionDetail, type SessionKind } from '@/lib/gym/session';
 import { shortDate } from '@/lib/format';
 import { Trace } from './SessionCharts';
+import Readout from '@/components/Readout';
 
 /* THE LAST N SESSIONS, not just the last one. Phase D, 2026-08-27.
  *
@@ -163,19 +164,12 @@ export default function RecentSessions({
           />
           <p className="ex-cue">
             {trend.note}
-            {points.length < chrono.length && (
-              <>
-                {' '}Drawn from {points.length} of these {chrono.length} sessions: the rest did not
-                record it.
-              </>
-            )}
+            {points.length < chrono.length && <> {points.length} of {chrono.length}.</>}
             {nearlyFlat && (
               <>
                 {' '}The whole range here is {Math.round(Math.min(...points) * 10) / 10} to{' '}
                 {Math.round(Math.max(...points) * 10) / 10}
-                {trend.unit ? ` ${trend.unit}` : ''}, about {Math.round(spread * 100)}%. The chart
-                fills its height whatever the spread, so that shape is small movement magnified,
-                not a trend.
+                {trend.unit ? ` ${trend.unit}` : ''}, about {Math.round(spread * 100)}%.
               </>
             )}
           </p>
@@ -243,6 +237,7 @@ function SessionBars({ sessions, kind }: { sessions: SessionDetail[]; kind: Sess
   const bw = (W - gap * (n - 1)) / n;
   return (
     <figure className="sbars">
+      <Readout>
       <svg viewBox={`0 0 ${W} ${H + 16}`} role="img" aria-label={`${a.label} per session, oldest first`}>
         {sessions.map((s, i) => {
           const v = vals[i];
@@ -250,8 +245,9 @@ function SessionBars({ sessions, kind }: { sessions: SessionDetail[]; kind: Sess
           const x = i * (bw + gap);
           const last = i === n - 1;
           return (
-            <g key={s.uuid}>
-              <rect x={x} y={H - h} width={bw} height={h} rx="1.5" fill="currentColor" opacity={last ? 1 : 0.45} />
+            <g key={s.uuid} data-r={`${shortDate(s.date)}, ${v != null && v > 0 ? `${a.fmt(v)} ${a.label}` : 'not recorded'}`}>
+              <rect x={x} y={0} width={bw} height={H} fill="transparent" />
+              <rect className="vbar" style={{ ['--i' as string]: i }} x={x} y={H - h} width={bw} height={h} rx="1.5" fill="currentColor" opacity={last ? 1 : 0.45} />
               {v != null && v > 0 && (
                 <text x={x + bw / 2} y={H - h - 4} textAnchor="middle" className="sv">{a.fmt(v)}</text>
               )}
@@ -261,6 +257,7 @@ function SessionBars({ sessions, kind }: { sessions: SessionDetail[]; kind: Sess
         <text x={0} y={H + 13} className="sd">{shortDate(sessions[0]!.date)}</text>
         <text x={W} y={H + 13} textAnchor="end" className="sd">{shortDate(sessions[n - 1]!.date)}</text>
       </svg>
+      </Readout>
       <figcaption>{a.label}</figcaption>
     </figure>
   );

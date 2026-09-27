@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { appendOffPlanSet, upsertSet, SetConflict } from '@/lib/gym/db';
 
 export const runtime = 'nodejs';
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
       });
       /* The index comes back so the client can render what it actually wrote rather than what it
        * guessed, which is the whole point of moving the decision here. */
+      revalidatePath('/');
       return NextResponse.json({ ok: true, setIdx });
     }
 
@@ -70,6 +72,9 @@ export async function POST(req: Request) {
        * already prescribes, so a fill set and a prescribed set can never share a key space. */
       fillFor: typeof b.fillFor === 'string' && b.fillFor ? b.fillFor : null,
     });
+    /* The index shows this session's state (next up, the streak, the day strip); it regenerates on
+       the write that changed it rather than on the hour. */
+    revalidatePath('/');
     return NextResponse.json({ ok: true });
   } catch (e) {
     /* A refused overwrite is the client's to stop retrying, so it gets its own status. See

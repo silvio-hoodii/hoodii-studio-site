@@ -1,5 +1,8 @@
 @import 'tailwindcss';
-@import "shadcn/tailwind.css";
+/* `@import "shadcn/tailwind.css"` was here until 2026-09-27. It defined data-state variants and
+   accordion keyframes that no file in src used (0 matches in the built CSS), and it made a
+   32-dependency CLI a production dependency of a site that owns every line of its own CSS. Run
+   `npx shadcn` by hand on the rare day a primitive is wanted. The tokens below are ours. */
 
 /* DARK MODE IS THE OS SETTING, NOT A CLASS, since 2026-09-04.
  *
@@ -299,9 +302,8 @@ h1 {
  * out again.
  */
 
-/* The mono uppercase label, the site's signature element. `.count` is the same thing carrying a
-   bottom margin, which is why it is one rule and not two. */
-.site-label,
+/* The mono uppercase label, the site's signature element, as the heading count above a list.
+   (`.site-label` shared this rule until 2026-09-27 and had 0 uses.) */
 .count {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
@@ -416,7 +418,7 @@ h1 {
 .stat-v {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 26px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
@@ -705,8 +707,60 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
  * Declared after .measure-wide so /music, which is both, resolves to this above 1024. */
 @media (min-width: 1024px) {
   .measure-data {
-    --measure: 960px;
+    /* 1120, up from 960, since 2026-09-27: "the website looks like its on for mobile, so when on
+       desktop is only at the center". 960 was a wider phone column; 1120 is what lets the index run
+       three app tiles across, /music put two pictures side by side, and /reading fill a row with
+       ten covers. Still one value, still declared once. */
+    --measure: 1120px;
   }
+}
+
+/* ---- a readout on a picture (src/components/Readout.tsx) ----
+ *
+ * The label that appears over a mark you tap or hover. HTML beside the SVG, never text inside the
+ * viewBox. `--card` and a hairline rather than a shadow: the site draws no shadows anywhere. */
+.readout { position: relative; }
+.readout-tip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  margin-top: -6px;
+  padding: 5px 8px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  z-index: 5;
+}
+/* A mark that has something to say gets a pointer so a mouse can find it. */
+.readout [data-r] { cursor: pointer; }
+
+/* ---- a picture that draws itself in ----
+ *
+ * Only under `.readout.in`, which the wrapper adds on first sight, so a chart that arrives without
+ * JavaScript is simply drawn. `.vbar` grows from its baseline; `.vline` is a polyline or path with
+ * pathLength="1", so one dash covers its whole length whatever the geometry. The stagger reads the
+ * bar's index off a custom property the chart sets inline. */
+.readout.in .vbar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: vbar 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 18ms);
+}
+.readout.in .vline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: vline 1100ms ease-out forwards;
+}
+@keyframes vbar { from { transform: scaleY(0); } }
+@keyframes vline { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .readout.in .vbar,
+  .readout.in .vline { animation: none; stroke-dashoffset: 0; }
 }
 
 .site-header-in {

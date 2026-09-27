@@ -52,6 +52,15 @@ export interface GymLogRow {
   pctEasy: number | null;
 }
 
+/* THE SETS NUMERATOR, in the same scope as its denominator. `sets_prescribed` counts the day's
+ * programme, so the count beside it must too: off-plan and fill sets (`off_plan = true`, written by
+ * upsertSet) were counted and a row could read 14/12. And a set is performed when it is ticked OR has
+ * reps typed, the PERFORMED rule in ./db.ts; `done = true` alone left typed-but-unticked sets out.
+ * A compile-time constant with no input in it, the same construction as PERFORMED there. */
+const ON_PLAN_PERFORMED = sql.unsafe(
+  '(s.done = true or (s.reps is not null and s.reps > 0)) and s.reps is not null and s.reps > 0 and coalesce(s.off_plan, false) = false',
+);
+
 /** The app's own record, newest first. */
 export async function getGymLog(limit = 5, offset = 0): Promise<GymLogRow[]> {
   const rows = await sql`
@@ -63,9 +72,9 @@ export async function getGymLog(limit = 5, offset = 0): Promise<GymLogRow[]> {
       g.sets_prescribed,
       round(extract(epoch from (g.finished_at - g.started_at)) / 60)::int as page_open_min,
       (select count(*)::int from gym_set s
-         where s.date = g.date and s.done = true and s.reps is not null and s.reps > 0) as sets_logged,
+         where s.date = g.date and ${ON_PLAN_PERFORMED}) as sets_logged,
       (select count(distinct s.exercise_id)::int from gym_set s
-         where s.date = g.date and s.done = true and s.reps is not null and s.reps > 0) as exercises,
+         where s.date = g.date and ${ON_PLAN_PERFORMED}) as exercises,
       (select sum(coalesce(w.minutes, 0))::int from health_watch_session w
          where w.date = g.date and w.kind = 'strength') as watch_minutes,
       (select round(avg(d.pct_easy))::int from health_session_detail d
@@ -172,7 +181,7 @@ export async function getCombinedLog(limit = 100): Promise<CombinedRow[]> {
     with app as (
       select g.date, g.day, g.day_title, g.sets_prescribed,
         (select count(*)::int from gym_set s
-           where s.date = g.date and s.done = true and s.reps is not null and s.reps > 0) as sets_logged
+           where s.date = g.date and ${ON_PLAN_PERFORMED}) as sets_logged
       from gym_session g
     ),
     watch as (
@@ -222,12 +231,15 @@ export async function countCombinedLog(): Promise<number> {
  * ------------------------------------------------------------------------------------------- */
 
 export interface WatchLogRow {
+  /** The session's own identity: the per-second detail's uuid where it exists, else the watch's
+   *  (start_time, kind) key. Two sessions can share a date, so the date is not a key. */
+  uuid: string;
   date: string;
   kind: string;
   minutes: number | null;
   distanceM: number | null;
   avgHr: number | null;
-  /** Only where health_session_detail reached this date. Null is common and honest. */
+  /** Only where health_session_detail holds this session. Null is common and honest. */
   pctEasy: number | null;
   avgCadence: number | null;
   /** True when the per-second detail exists for this session, so a page can say which rows are
@@ -237,25 +249,30 @@ export interface WatchLogRow {
 
 /** `kinds` is a list because the watch splits what a person calls one activity: running outdoors and
  *  treadmill are separate kinds, and both are "running" to him. Same reasoning as
- *  getRecentSessions in ./session.ts, which maps 'treadmill' to ['treadmill','running']. */
+ *  getRecentSessions in ./session.ts, which maps 'treadmill' to ['treadmill','running'].
+ *
+ *  JOINED ON THE SESSION, NOT THE DATE, since 2026-09-27. It averaged every detail row of the same
+ *  date and kind into each watch row, so two runs on one day printed the same blended distance and
+ *  heart rate twice. `health_session_detail` and `health_watch_session` share (start_time, kind),
+ *  checked against Neon: every detail row for running, treadmill and cycling matches one watch row. */
 export async function getWatchLog(kinds: string[], limit = 5, offset = 0): Promise<WatchLogRow[]> {
   const rows = await sql`
     select
+      coalesce(d.uuid, w.start_time || '|' || w.kind) as uuid,
       w.date, w.kind, coalesce(w.minutes, 0)::int as minutes,
-      (select round(avg(d.distance_m))::int from health_session_detail d
-         where d.date = w.date and d.kind = w.kind) as distance_m,
-      (select round(avg(d.avg_hr))::int from health_session_detail d
-         where d.date = w.date and d.kind = w.kind) as avg_hr,
-      (select round(avg(d.pct_easy))::int from health_session_detail d
-         where d.date = w.date and d.kind = w.kind) as pct_easy,
-      (select round(avg(d.avg_cadence))::int from health_session_detail d
-         where d.date = w.date and d.kind = w.kind) as avg_cadence
+      round(d.distance_m)::int as distance_m,
+      d.avg_hr,
+      round(d.pct_easy)::int as pct_easy,
+      round(d.avg_cadence)::int as avg_cadence,
+      (d.uuid is not null) as has_detail
     from health_watch_session w
+    left join health_session_detail d on d.start_time = w.start_time and d.kind = w.kind
     where w.kind = any(${kinds})
     order by w.date desc, w.start_time desc
     limit ${limit} offset ${offset}
   `;
   return (rows as unknown as Record<string, unknown>[]).map((r) => ({
+    uuid: String(r.uuid),
     date: String(r.date).slice(0, 10),
     kind: String(r.kind),
     minutes: r.minutes == null ? null : Number(r.minutes),
@@ -263,7 +280,7 @@ export async function getWatchLog(kinds: string[], limit = 5, offset = 0): Promi
     avgHr: r.avg_hr == null ? null : Number(r.avg_hr),
     pctEasy: r.pct_easy == null ? null : Number(r.pct_easy),
     avgCadence: r.avg_cadence == null ? null : Number(r.avg_cadence),
-    hasDetail: r.avg_hr != null,
+    hasDetail: Boolean(r.has_detail),
   }));
 }
 

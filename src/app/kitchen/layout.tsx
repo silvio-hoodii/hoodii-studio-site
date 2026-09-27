@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function KitchenLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="kos">
+    <div className="kos measure-data">
       <SiteHeader app="Kitchen" />
       {children}
       <SiteFooter standalone />

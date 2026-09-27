@@ -77,7 +77,7 @@ export default function Image() {
           {/* Kept under about 88 characters so it holds one line at this size. It wrapped to a
             * two-word orphan at 100, which is the sort of thing only rendering it shows. */}
           <div style={{ display: 'flex', fontSize: 24, color: MUTED, letterSpacing: 1 }}>
-            A cookbook of dishes I actually cook, a lifting log, French flashcards from real pages
+            A lifting log, my swimming, the questions I looked up, what I listen to and read
           </div>
         </div>
       </div>

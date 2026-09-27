@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import { sql } from './db';
 import { dayOf } from '../day';
 
@@ -48,12 +49,6 @@ export interface CookRow {
   note: string | null;
 }
 
-export interface InboxRow {
-  id: string;
-  at: string;
-  text: string;
-}
-
 interface DishRecord {
   id: string;
   name: string;
@@ -87,37 +82,49 @@ export async function listDishes(): Promise<Dish[]> {
   return rows.map(toDish);
 }
 
-export async function getDish(id: string): Promise<Dish | null> {
+/* `cache()` so generateMetadata and the page share one read per request instead of two. */
+export const getDish = cache(async (id: string): Promise<Dish | null> => {
   const rows = (await sql`select * from dish where id = ${id}`) as DishRecord[];
   return rows[0] ? toDish(rows[0]) : null;
-}
+});
 
-/** The last time each dish was cooked, by display name. A row with no step index is a debrief. */
-export async function lastCooked(): Promise<Record<string, string>> {
+/* WHAT COUNTS AS A COOK, in one place: a debrief row (no step index) WITH A RATING. A row with only
+ * a note is a note, not a cook. "last cooked" used to count note rows while the marks beside it did
+ * not, so a dish could read "last cooked yesterday" with no mark for yesterday. */
+const RATED = ['nailed', 'fine', 'wrong'];
+
+/** Per dish, by display name: every rated cook oldest first (nailed, fine or wrong) and the day of
+ *  the newest. One scan of cook_log for the dish list. */
+export async function cookMarks(): Promise<Record<string, { ratings: string[]; last: string }>> {
   const rows = (await sql`
-    select dish, max(at) as at from cook_log where step is null group by dish
-  `) as { dish: string; at: Date }[];
-  const out: Record<string, string> = {};
-  for (const r of rows) out[r.dish] = dayOf(r.at);
+    select dish, rating, at from cook_log
+     where step is null and rating = any(${RATED})
+     order by at`) as { dish: string; rating: string; at: Date }[];
+  const out: Record<string, { ratings: string[]; last: string }> = {};
+  for (const r of rows) {
+    const m = (out[r.dish] ??= { ratings: [], last: '' });
+    m.ratings.push(r.rating);
+    m.last = dayOf(r.at);
+  }
   return out;
 }
 
-/** Every rated cook per dish, oldest first: nailed, fine or wrong. A row with no rating is a note,
- *  not a cook, and is left out. For the marks on the dish list, 2026-09-27. */
-export async function cookRatings(): Promise<Record<string, string[]>> {
-  const rows = (await sql`
-    select dish, rating from cook_log
-     where step is null and rating in ('nailed', 'fine', 'wrong')
-     order by at`) as { dish: string; rating: string }[];
-  const out: Record<string, string[]> = {};
-  for (const r of rows) (out[r.dish] ??= []).push(r.rating);
-  return out;
+/** Every debrief row for one dish, newest first. Keyed by the dish ID through a subquery, so the
+ *  page can run this beside getDish instead of waiting for the name. */
+/** The publisher's host for display, or the raw string when a row's URL does not parse, so one bad
+ *  row cannot 500 the whole list. */
+export function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
 }
 
-export async function cookRows(dishName: string): Promise<CookRow[]> {
+export async function cookRows(dishId: string): Promise<CookRow[]> {
   const rows = (await sql`
     select id, at, rating, note from cook_log
-    where dish = ${dishName} and step is null
+    where dish = (select name from dish where id = ${dishId}) and step is null
     order by at desc
   `) as { id: string; at: Date; rating: string | null; note: string | null }[];
   return rows.map((r) => ({ id: String(r.id), at: dayOf(r.at), rating: r.rating || null, note: r.note || null }));
@@ -128,11 +135,4 @@ export async function logCook(e: { dish: string; rating?: string; note?: string 
     insert into cook_log (dish, rating, note)
     values (${e.dish}, ${e.rating ?? ''}, ${e.note ?? ''})
   `;
-}
-
-export async function openInbox(): Promise<InboxRow[]> {
-  const rows = (await sql`
-    select id, at, text from inbox where handled = false order by at desc
-  `) as { id: string; at: Date; text: string }[];
-  return rows.map((r) => ({ id: String(r.id), at: dayOf(r.at), text: r.text }));
 }

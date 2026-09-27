@@ -44,14 +44,6 @@
 }
 /* .lede, .tnum and .live are declared once in globals.css. */
 
-.health .divider { margin: 0; }
-
-/* The button is declared once in globals.css. This surface wrote out the primary variant and no
-   base rule at all, so the one button it owned, on the old /health/login, was styled and nothing
-   else would have been. That page is gone as of 2026-09-04 (four login pages became /login), so
-   this surface now owns no button at all and the rule below is the only thing left of that note. */
-.health .changes { font-size: 13px; color: var(--destructive); }
-
 /* ---- section ---- */
 .health .section { margin-top: 40px; }
 .health .section-head {
@@ -112,9 +104,9 @@
    The cell's size, gap and corner come from `.strip` in globals.css, shared with /french. What is
    this surface's own is what the fills MEAN. */
 .health .strip-cell {
-  /* These are buttons, so they take the shared button rule's padding. The cells are 16px square
-     with border-box sizing, which hides it, but a padded 16px button is an accident waiting for
-     the day one of them gets a label. */
+  /* Spans since 2026-09-27, when they stopped being handler-less buttons. A button is border-box by
+     default and a span is not, so the sizing is stated or every cell grows to 18px. */
+  box-sizing: border-box;
   padding: 0;
   border: 1px solid var(--border);
   background: var(--background);
@@ -133,16 +125,6 @@
   border-style: dashed;
   border-color: var(--border-strong);
 }
-/* Logged in the gym app, with no watch session behind it. Outlined rather than filled: he was
-   there, but the attendance source that this strip is built from did not see it. */
-.health .strip-cell.logged-only,
-.health .strip-legend .swatch.logged-only {
-  background: var(--background);
-  border: 2px solid var(--muted-foreground);
-}
-.health .strip-cell.logged-only::after,
-.health .strip-legend .swatch.logged-only::after { content: none; }
-
 .health .strip-cell.logged::after {
   content: '';
   position: absolute;
@@ -218,7 +200,7 @@
 .health .yearline-n {
   font-family: var(--font-mono);
   font-size: clamp(46px, 13vw, 68px);
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
@@ -226,7 +208,7 @@
 }
 .health .yearline-u {
   font-size: 0.4em;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--muted-foreground);
   margin-left: 4px;
@@ -242,7 +224,7 @@
 .health .yearline-span {
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--muted-foreground);
   white-space: nowrap;
 }

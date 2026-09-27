@@ -10,6 +10,10 @@
  * surface that owns charting on this site, and moving a working client component to prove a point
  * about naming is churn. What is shared here is the paint, not the plumbing.
  *
+ * ONE SELECTOR PER RULE, `.training`, since 2026-09-27. Every rule was written twice as
+ * `.health X, .training X`, and /health's layout carries `.training` as well, so the first half never
+ * matched anything the second did not.
+ *
  * NOT MOVED, on purpose: `.pair`, `.chartfig` and `.chart-cap`. Those arrange TWO charts side by
  * side against each other, which only /health does. They stay in health.css. */
 
@@ -18,18 +22,18 @@
    600-unit box scaled into whatever width it lands in, which is shorter than 160 on a phone; the
    reservation is what keeps everything below from jumping when the measured version replaces it.
    See the header comment in HealthCharts.tsx. */
-.health .chart-wrap, .training .chart-wrap { position: relative; width: 100%; min-height: 160px; }
-.health .chart-wrap svg, .training .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.training .chart-wrap { position: relative; width: 100%; min-height: 160px; }
+.training .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
 
-.health .chart-line, .training .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.health .chart-axis, .training .chart-axis { stroke: var(--border); stroke-width: 1; }
-.health .chart-axis-label, .training .chart-axis-label {
+.training .chart-line { fill: none; stroke: var(--foreground); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.training .chart-axis { stroke: var(--border); stroke-width: 1; }
+.training .chart-axis-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
   fill: var(--muted-foreground);
 }
-.health .chart-endpoint, .training .chart-endpoint { fill: var(--signal); stroke: var(--background); stroke-width: 2; }
-.health .chart-endpoint-label, .training .chart-endpoint-label {
+.training .chart-endpoint { fill: var(--signal); stroke: var(--background); stroke-width: 2; }
+.training .chart-endpoint-label {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 600;
@@ -43,14 +47,14 @@
   stroke-width: 3px;
   stroke-linejoin: round;
 }
-.health .chart-crosshair, .training .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
-.health .chart-crosshair.on, .training .chart-crosshair.on { opacity: 0.6; }
-.health .chart-hit, .training .chart-hit { fill: transparent; cursor: crosshair; }
+.training .chart-crosshair { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0; pointer-events: none; }
+.training .chart-crosshair.on { opacity: 0.6; }
+.training .chart-hit { fill: transparent; cursor: crosshair; }
 
-.health .chart-bar, .training .chart-bar { fill: var(--muted-foreground); }
-.health .chart-bar:hover, .health .chart-bar.hot, .training .chart-bar:hover, .training .chart-bar.hot { fill: var(--foreground); }
+.training .chart-bar { fill: var(--muted-foreground); }
+.training .chart-bar:hover, .training .chart-bar.hot { fill: var(--foreground); }
 
-.health .tooltip, .training .tooltip {
+.training .tooltip {
   position: absolute;
   pointer-events: none;
   background: var(--card);
@@ -65,14 +69,14 @@
   transition: opacity 80ms ease;
   z-index: 5;
 }
-.health .tooltip.on, .training .tooltip.on { opacity: 1; }
-.health .tooltip .t-date, .training .tooltip .t-date {
+.training .tooltip.on { opacity: 1; }
+.training .tooltip .t-date {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--muted-foreground);
   margin-bottom: 2px;
 }
-.health .tooltip .t-value, .training .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+.training .tooltip .t-value { font-weight: 600; font-variant-numeric: tabular-nums; }
 
 /* ---- MetricStack: every body number on one timeline -------------------------------------------
  *
@@ -84,55 +88,55 @@
  * Colours come from the tokens only. `--signal` appears on exactly one thing, the newest reading
  * while nothing is being scrubbed, which is this site's rule for it: a value true right now.
  */
-.health .mstack, .training .mstack { margin: 0 0 18px; }
+.training .mstack { margin: 0 0 18px; }
 
-.health .mstack-head, .training .mstack-head {
+.training .mstack-head {
   display: flex; align-items: baseline; gap: 10px;
   padding-bottom: 6px; border-bottom: 1px solid var(--border);
 }
-.health .mstack-date, .training .mstack-date {
+.training .mstack-date {
   font-size: 0.85rem; font-weight: 600; letter-spacing: 0.01em;
 }
-.health .mstack-reset, .training .mstack-reset {
+.training .mstack-reset {
   margin-left: auto; background: none; border: 1px solid var(--border);
   color: var(--muted-foreground); font: inherit; font-size: 0.7rem;
   padding: 2px 8px; cursor: pointer; min-height: 24px;
 }
 
 /* The whole stack is one pointer surface: a drag anywhere scrubs every row at once. */
-.health .mstack-rows, .training .mstack-rows { cursor: crosshair; }
+.training .mstack-rows { cursor: crosshair; }
 
-.health .mstack-row, .training .mstack-row {
+.training .mstack-row {
   display: grid;
   grid-template-columns: 8.5rem 1fr;
   grid-template-areas: 'label value' 'chart chart';
   align-items: baseline;
   padding-top: 6px;
 }
-.health .mstack-label, .training .mstack-label {
+.training .mstack-label {
   grid-area: label; font-size: 0.75rem; color: var(--muted-foreground);
 }
-.health .mstack-v, .training .mstack-v {
+.training .mstack-v {
   grid-area: value; text-align: right; font-size: 0.95rem; font-weight: 600;
 }
-.health .mstack-v .live, .training .mstack-v .live { color: var(--signal); }
-.health .mstack-u, .training .mstack-u {
+.training .mstack-v .live { color: var(--signal); }
+.training .mstack-u {
   font-size: 0.68rem; font-weight: 400; color: var(--muted-foreground); margin-left: 3px;
 }
-.health .mstack-svg, .training .mstack-svg {
+.training .mstack-svg {
   grid-area: chart; width: 100%; height: 46px; display: block;
 }
 
 /* A derived row is the same drawing at lower contrast: it is real data, just not a second
  * measurement, and dimming says that without spending a sentence on it. */
-.health .mstack-row.is-derived .mstack-line, .training .mstack-row.is-derived .mstack-line {
+.training .mstack-row.is-derived .mstack-line {
   stroke: var(--muted-foreground); stroke-width: 1.5;
 }
-.health .mstack-row.is-derived .mstack-label, .training .mstack-row.is-derived .mstack-label {
+.training .mstack-row.is-derived .mstack-label {
   opacity: 0.75;
 }
 
-.health .mstack-split, .training .mstack-split {
+.training .mstack-split {
   margin: 10px 0 6px;
   padding-top: 6px;
   border-top: 1px solid var(--border);
@@ -140,24 +144,24 @@
   color: var(--muted-foreground);
 }
 
-.health .mstack-line, .training .mstack-line {
+.training .mstack-line {
   fill: none; stroke: var(--foreground); stroke-width: 2;
   stroke-linejoin: round; stroke-linecap: round;
 }
-.health .mstack-grid, .training .mstack-grid { stroke: var(--border); stroke-width: 1; }
-.health .mstack-cross, .training .mstack-cross { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0.7; }
-.health .mstack-dot, .training .mstack-dot { fill: var(--foreground); }
-.health .mstack-row.is-derived .mstack-dot, .training .mstack-row.is-derived .mstack-dot {
+.training .mstack-grid { stroke: var(--border); stroke-width: 1; }
+.training .mstack-cross { stroke: var(--muted-foreground); stroke-width: 1; opacity: 0.7; }
+.training .mstack-dot { fill: var(--foreground); }
+.training .mstack-row.is-derived .mstack-dot {
   fill: var(--muted-foreground);
 }
 
 /* One axis under the lot. Seven stacked date axes is six repetitions of one fact and 120px of a
  * 390px screen. */
-.health .mstack-axis, .training .mstack-axis {
+.training .mstack-axis {
   position: relative; height: 1.1rem; margin-top: 6px;
   border-top: 1px solid var(--border);
 }
-.health .mstack-tick, .training .mstack-tick {
+.training .mstack-tick {
   position: absolute; top: 2px; transform: translateX(-50%);
   font-size: 0.62rem; color: var(--muted-foreground); white-space: nowrap;
 }
@@ -165,4 +169,4 @@
 /* A latest set below the lift's own peak this year. Muted rather than red: the site colours nothing
  * as failure, and on a cut a lighter bar is often the plan. It marks "this is not your best", which
  * the Change column cannot say because it measures first to latest. */
-.health .off-peak, .training .off-peak { color: var(--muted-foreground); }
+.training .off-peak { color: var(--muted-foreground); }

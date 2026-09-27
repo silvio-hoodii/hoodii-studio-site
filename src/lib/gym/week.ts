@@ -1,6 +1,6 @@
 import 'server-only';
 import { sql } from '../health/db';
-import { today, dayOf, daysAgo } from '../day';
+import { dayOf, daysAgo } from '../day';
 import { loadConditioning } from './program';
 import type { Conditioning, Program } from './types';
 
@@ -22,10 +22,9 @@ import type { Conditioning, Program } from './types';
  * what he is drifting from. So both, side by side, which is the only shape in which the drift is
  * visible.
  *
- * WHAT THIS DELIBERATELY DOES NOT CLAIM. It is arithmetic on load, not a recovery measurement.
- * `recovery` below carries how many days since sleep and HRV were last recorded, and on the day this
- * was written that was six, because the watch is worn all day and taken off at night. A page that
- * printed "you are recovered" off session counts would be inventing a measurement it does not have.
+ * WHAT THIS DELIBERATELY DOES NOT CLAIM. It is arithmetic on load, not a recovery measurement: he
+ * does not wear the watch to sleep, so there is no sleep or HRV to read. The `recovery` block that
+ * carried their freshness fed nothing on any page and was deleted on 2026-09-27.
  */
 
 export type WeekdayKey =
@@ -76,17 +75,10 @@ export interface ActualDay {
   overRule: boolean;
 }
 
-export interface RecoveryFreshness {
-  metric: string;
-  lastSeen: string | null;
-  daysSince: number | null;
-}
-
 export interface TrainingWeek {
   rule: {
     maxConsecutive: number;
     text: string;
-    decidedOn: string;
   };
   plan: {
     days: PlannedDay[];
@@ -106,23 +98,7 @@ export interface TrainingWeek {
     /** True when the current run has passed the rule. */
     overRule: boolean;
   };
-  /** Sleep and HRV, the only measurements that could turn this arithmetic into an observation. */
-  recovery: {
-    metrics: RecoveryFreshness[];
-    /** The freshest of them, which is the generous reading. */
-    daysSinceAny: number | null;
-    /** Nothing recorded in over two days means the rule is running on load alone. */
-    dark: boolean;
-  };
 }
-
-/* Two days, not the fourteen CURRENT.md uses for a body measurement. A weigh-in three days old is
- * still roughly true; last night either was or was not recorded, and a rest-day rule that leans on
- * a five-night-old HRV reading is leaning on nothing. */
-const RECOVERY_DARK_AFTER_DAYS = 2;
-
-const daysBetween = (a: string, b: string): number =>
-  Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
 
 /** Which weekday a YYYY-MM-DD Calgary date falls on. Parsed as noon UTC so no offset can shift it. */
 export function weekdayOf(date: string): WeekdayKey {
@@ -344,32 +320,14 @@ export async function getTrainingWeek(
   days = 28,
 ): Promise<TrainingWeek> {
   const maxConsecutive = conditioning.week?.restRule?.maxConsecutive ?? 3;
-  const [block, recoveryRows] = await Promise.all([
-    actualBlock(days, maxConsecutive),
-    sql`select metric, last_seen from health_recovery order by metric`,
-  ]);
   const {
     days: out, currentRun, currentRunFrom, longestRun, longestRunFrom, longestRunTo, horizon,
-  } = block;
-  const now = today();
-
-  const metrics: RecoveryFreshness[] = (
-    recoveryRows as unknown as { metric: string; last_seen: string | null }[]
-  ).map((r) => ({
-    metric: r.metric,
-    lastSeen: r.last_seen,
-    daysSince: r.last_seen ? daysBetween(r.last_seen, now) : null,
-  }));
-  const freshest = metrics
-    .map((m) => m.daysSince)
-    .filter((n): n is number => n != null)
-    .sort((a, b) => a - b)[0];
+  } = await actualBlock(days, maxConsecutive);
 
   return {
     rule: {
       maxConsecutive,
       text: conditioning.week?.restRule?.rule ?? `Never more than ${maxConsecutive} training days in a row.`,
-      decidedOn: conditioning.week?.restRule?.decidedOn ?? '',
     },
     plan: plannedWeek(program, conditioning),
     actual: {
@@ -381,14 +339,6 @@ export async function getTrainingWeek(
       longestRunTo,
       horizon,
       overRule: currentRun > maxConsecutive,
-    },
-    recovery: {
-      metrics,
-      daysSinceAny: freshest ?? null,
-      /* No rows at all is also dark, and is the more likely state on a fresh database. Saying
-         "recovery data is dark" when the table is empty is true; saying nothing would let the page
-         imply the rule was checked against a measurement. */
-      dark: freshest == null || freshest > RECOVERY_DARK_AFTER_DAYS,
     },
   };
 }

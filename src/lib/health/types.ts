@@ -28,7 +28,7 @@ export interface WatchCompPoint {
 
 export interface BodyCompSummary {
   latest: BodyCompPoint | null;
-  smoothedKg: number | null;
+  /** Newest reading against the newest same-source reading at least 30 days before it. */
   trend30: TrendDelta | null;
   /* Days between the newest reading and today. The store was filled once, by a migration script
    * that has no recurring counterpart, so without this the page would render "as of 2026-08-09"

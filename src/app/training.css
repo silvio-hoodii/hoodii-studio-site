@@ -46,8 +46,6 @@
 .training h2 { font-size: 17px; line-height: 1.3; font-weight: 600; margin: 0; }
 /* .lede, .count, .quiet, .live and .tnum are declared once in globals.css. */
 
-.training .divider { margin: 22px 0 0; }
-
 /* ---- day tabs ---- */
 .training .tabs { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
 /* 44px, the site's tap floor. These were 35: four day tabs, at the top of the page he opens with
@@ -73,10 +71,6 @@
 .training .tab.on,
 .training .surf-tab.on { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
 
-/* ---- budget selector ---- */
-.training .budgets { display: flex; gap: 6px; margin-top: 14px; }
-/* These are `.chip` now, declared once in globals.css and shared with the kitchen's filters. */
-
 /* ---- progress ---- */
 .training .progress-row {
   display: flex;
@@ -88,32 +82,11 @@
   margin-top: 16px;
 }
 
-/* THE STREAK IS A FOLD WHOSE CLOSED STATE COSTS NOTHING. Added 2026-08-27.
- *
- * It has to sit inside `.progress-row`, which is a mono 12px flex strip, and it has to be exactly as
- * tall closed as the plain span it replaced, or fixing an undated number would have cost height on
- * the page he had just told me was too tall. Inherits everything from the row; no margins, no
- * padding, no border, no disclosure triangle. `.src` and `.cuefold` are the block-level folds and
- * both carry their own box, which is why this is a third name and not a reuse.
- *
- * `list-style: none` plus the WebKit pseudo-element: the marker needs killing in both engines, and
- * the marker is the whole reason a naive `details` here would be a pixel taller than the span. */
+/* The streak fold (`.streakfold`) that shared this row was deleted unused on 2026-09-27. */
 /* The sets counter is the other child of the same flex row, and it wrapped to "0/42 / sets" the
  * moment the fold opened and took the width. Caught by looking at the open state, which is a state
  * no measurement of the closed page would ever have reached. */
 .training .progress-row > span:first-child { white-space: nowrap; }
-.training .streakfold > summary { list-style: none; cursor: pointer; }
-.training .streakfold > summary::-webkit-details-marker { display: none; }
-.training .streakfold > summary { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; }
-.training .streakfold > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-.training .streak-body {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.5;
-  text-align: left;
-  margin-top: 6px;
-  max-width: 46ch;
-}
 
 /* ---- THE SESSION LOG. Added 2026-08-27, Decision 7. ----
  *
@@ -396,18 +369,6 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.training .swap-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-.training .swap-opt {
-  text-align: left;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  padding: 10px 12px;
-  background: var(--background);
-  cursor: pointer;
-}
-.training .swap-opt:hover { border-color: var(--foreground); }
-.training .swap-opt-name { font-weight: 600; font-size: 14.5px; }
-.training .swap-opt-cue { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
 .training .swapped-note { font-family: var(--font-mono); font-size: 12px; color: var(--signal); margin-top: 4px; }
 
 /* ---- rest timer bar. Sticky rather than fixed-overlay, same reasoning as .kos .rail. ---- */
@@ -480,17 +441,6 @@
 .training .warm-item .cue { font-size: 13.5px; color: var(--muted-foreground); margin-top: 2px; }
 
 /* ---- controls ---- */
-.training .nav {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  background: var(--background);
-  border-top: 1px solid var(--border);
-  padding: 12px var(--pad) calc(12px + env(safe-area-inset-bottom));
-  display: flex;
-  gap: 8px;
-  max-width: var(--measure);
-  margin: 0 auto;
-}
 /* The button is declared once in globals.css. All that is left here is the one thing that is
    this surface's own: the primary action sits in a fixed bottom bar and shares its width. */
 .training button.primary, .training .btn.primary { flex: 1; }
@@ -741,26 +691,6 @@
 .training a.ex:hover .ex-name { text-decoration: underline; }
 .training a.ex:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 
-/* ---- technique cues ----
-   The confidence badge is rendered rather than hidden. "convention" means nobody has studied it and
-   saying so out loud is what makes the "evidence" rows worth anything. Monochrome by default; only
-   `contested` gets a colour, because that is the one that should make him pause. */
-.training .conf {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 2px 5px;
-  border: 1px solid var(--border-strong);
-  color: var(--muted-foreground);
-  vertical-align: 2px;
-  margin-left: 6px;
-  white-space: nowrap;
-}
-.training .conf.evidence { color: var(--foreground); border-color: var(--foreground); }
-.training .conf.contested { color: var(--destructive); border-color: var(--destructive); }
-
 /* The test is the operative half of a cue, so it gets a rule down its side rather than being a
    third paragraph of grey. */
 .training .cue-test {
@@ -820,17 +750,6 @@
 }
 .training details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 .training details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-/* The ordinal on the swim self-checks. Muted and narrow: it is a position in a list of twelve, not
-   a value, so it must not read louder than the name beside it. Fixed width so twelve names start
-   on one vertical line rather than stepping right at 10. */
-.training details.cue > summary .cue-n {
-  flex: 0 0 auto;
-  min-width: 18px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted-foreground);
-}
 .training .cue-name { flex: 1; min-width: 0; }
 .training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
 
@@ -865,7 +784,7 @@
 .training .standing-n .big {
   font-size: 34px;
   line-height: 1;
-  font-weight: 650;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .training .standing.over .standing-n .big { color: var(--destructive); }
@@ -943,7 +862,7 @@
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
-.training .ad-row.over .ad-run { color: var(--destructive); font-weight: 650; }
+.training .ad-row.over .ad-run { color: var(--destructive); font-weight: 600; }
 .training .ad-flag { margin-left: 3px; }
 .training .ad-legend { margin-top: 10px; }
 
@@ -1010,68 +929,15 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The label that carries the honesty. A sourced tier and a tier somebody invented must not look
-   the same, so the sourced one is drawn in ink and ours is drawn as an outline: present, readable,
-   and visibly a different kind of thing. --signal is NOT used, because it is reserved for a value
-   that is true right now, and a tier boundary is not that. */
-.training .prov {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-}
-.training .prov.sourced { background: var(--foreground); color: var(--background); }
-/* Published by somebody real, but not the governing body. Drawn between the two: a solid outline
-   like `sourced`, in the quieter ink of `constructed`. */
-.training .prov.third-party {
-  border: 1px solid var(--muted-foreground);
-  color: var(--muted-foreground);
-}
-.training .prov.sourced-other-course {
-  border: 1px solid var(--foreground);
-  color: var(--foreground);
-}
-.training .prov.constructed,
-.training .prov.capability {
-  border: 1px dashed var(--muted-foreground);
-  color: var(--muted-foreground);
-}
-
-/* A date or unit riding along beside a number, quieter than it without becoming unreadable. This
-   is an inline span, so it must NOT use .quiet, which is a monospace block treatment. */
-.training .quiet-inline {
-  font-size: 11.5px;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-}
-
-/* The link that lets him check a tier's number. A 44px row, not a 15px line of text: this is the
-   control that makes "sourced" mean anything, and on the first build it was the smallest tap target
-   on the page. */
-.training .tier-src {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 12.5px;
-  color: var(--muted-foreground);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.training .tier-src:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-
 /* The level ladder: one column per distance, sized to fit 390px without scrolling sideways. */
 .training .level-table { font-size: 12px; }
 .training .level-table th, .training .level-table td { padding-right: 8px; }
 .training .level-table td { color: var(--muted-foreground); }
 .training .level-table td:first-child { color: var(--foreground); }
-.training .level-table td.met { color: var(--foreground); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-.training .level-table tr.you td { color: var(--foreground); font-weight: 700; border-top: 1px solid var(--foreground); }
+.training .level-table td.met { color: var(--foreground); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.training .level-table tr.you td { color: var(--foreground); font-weight: 600; border-top: 1px solid var(--foreground); }
 /* The ladder row he is on this week. */
-.training .plan-table tr.now td { font-weight: 700; color: var(--foreground); }
+.training .plan-table tr.now td { font-weight: 600; color: var(--foreground); }
 
 /* ---- sub-tabs ----
  *
@@ -1195,29 +1061,6 @@
 }
 .training .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-/* ---- what to look for ----
- *
- * The triage table on the Teach tab: what he SEES on the left, what he SAYS on the right. Two
- * columns because that is the actual shape of the moment, somebody swims a length and asks what to
- * work on. On a phone it stacks, with the observation quiet and the thing to say in full ink,
- * because the thing to say is the thing he reads out loud. */
-.training .lookfor { border-top: 1px solid var(--border); margin-top: 10px; }
-.training .lf {
-  border-bottom: 1px solid var(--border);
-  padding: 10px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.training .lf-see {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted-foreground);
-}
-.training .lf-say { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
-
 /* ---- the swim baseline input ----
  *
  * The slot for the one number the whole ladder is measured from. 44px controls throughout: this is
@@ -1276,7 +1119,6 @@
  * asked for, the app cannot see them, and every completion number since has been measuring the plan
  * against itself. Reuses the note box's own metrics so it reads as part of the same footer. */
 .training .extra-box { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--border); }
-.training .extra-hint { margin: 2px 0 10px; }
 .training .extra-name {
   width: 100%; padding: 10px 12px; font: inherit; font-size: 15px;
   color: var(--foreground); background: var(--background);
@@ -1554,7 +1396,6 @@
 .training .fill-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .training .fill-name { font-weight: 600; font-size: 15px; }
 .training .fill-head .tag { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted-foreground); }
-.training .fill-why { font-size: 12.5px; margin: 2px 0 8px; }
 
 /* ---- what he did last time, 2026-09-06 ---------------------------------------------------------
  * One line under the day title. His words: "I don't even know what I did last session." Mono like
@@ -1628,3 +1469,26 @@
 .training .yearlifts figcaption i { display: inline-block; margin-right: 6px; background: var(--foreground); vertical-align: 2px; }
 .training .yearlifts .k-line { width: 14px; height: 1.6px; }
 .training .yearlifts .k-tick { width: 1.5px; height: 9px; vertical-align: -1px !important; opacity: 0.7; }
+
+/* The last ten swims (SwimBars on /swim): the swim as a faint bar, its longest unbroken piece inside
+   it in full ink, the newest piece in --signal because it is the number the ladder is measured from
+   right now. */
+.training .swimbars { margin: 10px 0 6px; color: var(--foreground); }
+.training .swimbars svg { display: block; width: 100%; max-width: 520px; height: auto; }
+.training .swimbars rect.swum { fill: currentColor; opacity: 0.18; }
+.training .swimbars rect.piece { fill: currentColor; opacity: 0.85; }
+.training .swimbars rect.piece.now { fill: var(--signal); opacity: 1; }
+.training .swimbars .sv,
+.training .swimbars .sd { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
+.training .swimbars figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 4px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
+.training .swimbars figcaption i { display: inline-block; width: 12px; height: 10px; margin-right: 6px; vertical-align: -1px; background: var(--foreground); border-radius: 1.5px; }
+.training .swimbars figcaption i.k-swum { opacity: 0.18; }
+.training .swimbars figcaption i.k-piece { opacity: 0.85; }
+
+/* Two blocks side by side on the wide column (1120 above 1024), for the training pages that opted
+   into it. The charts with text inside the viewBox keep their max-width: scaled to 1120 their 9px
+   labels were 30px, which is the class of defect HealthCharts.tsx's header describes. */
+@media (min-width: 1024px) {
+  .training .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 44px; align-items: start; }
+  .training .two > * { min-width: 0; }
+}

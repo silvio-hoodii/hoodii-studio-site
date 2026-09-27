@@ -4,8 +4,9 @@
  * first build did `await fetch(...)` then set "sent" unconditionally, `fetch` does not reject on an
  * HTTP status, and three notes he typed at the stove were discarded while the screen said saved.
  *
- * Returns 'ok', 'locked' (the cookie is missing, show the password field in place), or a reason. */
-export type WriteResult = 'ok' | 'locked' | 'offline' | `http-${number}`;
+ * Returns 'ok', 'locked' (the cookie is missing, SaveBlocked shows the password field in place),
+ * 'offline', or the server's own reason ("note over 5000 characters"), falling back to the status. */
+export type WriteResult = 'ok' | 'locked' | 'offline' | (string & {});
 
 export async function postJson(url: string, body: unknown): Promise<WriteResult> {
   let res: Response;
@@ -20,18 +21,9 @@ export async function postJson(url: string, body: unknown): Promise<WriteResult>
   }
   if (res.ok) return 'ok';
   if (res.status === 401) return 'locked';
-  return `http-${res.status}`;
-}
-
-export async function unlock(pw: string): Promise<boolean> {
-  try {
-    const res = await fetch('/kitchen/api/unlock', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pw }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+  const reason = await res
+    .json()
+    .then((j: { error?: unknown }) => (typeof j?.error === 'string' ? j.error : ''))
+    .catch(() => '');
+  return reason || `failed ${res.status}`;
 }

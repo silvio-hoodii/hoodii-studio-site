@@ -26,14 +26,11 @@ export interface CurioDigest {
 
 export interface CurioItem {
   id: string;
-  logged: string;
   question: string;
   answer: string;
   flavor: string;
   sourceKind: string;
   sourceUrl: string | null;
-  status: string;
-  sentCount: number;
 }
 
 export interface CurioSummary {
@@ -83,23 +80,19 @@ export async function getDigests(): Promise<CurioDigest[]> {
 
 export async function getItems(): Promise<CurioItem[]> {
   const rows = (await sql`
-    select id, logged, question, answer, flavor, source_kind, source_url, status,
-           coalesce(array_length(sent_dates, 1), 0)::int as sent_count
+    select id, question, answer, flavor, source_kind, source_url
       from curio_items
      where status <> 'retired'
      order by logged desc, question`) as Array<{
-    id: string; logged: unknown; question: string; answer: string; flavor: string;
-    source_kind: string; source_url: string | null; status: string; sent_count: number;
+    id: string; question: string; answer: string; flavor: string;
+    source_kind: string; source_url: string | null;
   }>;
   return rows.map((r) => ({
     id: r.id,
-    logged: day(r.logged),
     question: r.question,
     answer: r.answer,
     flavor: r.flavor,
     sourceKind: r.source_kind,
     sourceUrl: r.source_url,
-    status: r.status,
-    sentCount: r.sent_count,
   }));
 }

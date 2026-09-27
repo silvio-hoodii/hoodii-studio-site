@@ -60,7 +60,7 @@ export default async function BikeLogPage() {
           { head: 'Avg HR', num: true, cell: (r) => (r.avgHr != null ? String(r.avgHr) : null) },
           { head: 'Easy', num: true, cell: (r) => (r.pctEasy != null ? `${r.pctEasy}%` : null) },
         ]}
-        caption="Heart rate and percent-under-110 come from the per-second detail, which reaches back only to 2026-04-25. Every older row is a date and a duration, which is all the watch kept."
+        caption={`Heart rate on ${rows.filter((r) => r.avgHr != null).length} of ${rows.length}.`}
         emptyNote="The watch has recorded no rides."
       />
 

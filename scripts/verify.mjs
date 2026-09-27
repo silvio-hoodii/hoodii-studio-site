@@ -254,12 +254,7 @@ const GATES = [
    * cannot signal a regression. Same contract as the two dated baselines. */
   ['gym-order', process.execPath, ['scripts/gym-order.mjs']],
 
-  /* THE ARITHMETIC BEHIND BOTH OF THOSE, watched refusing in both directions. 31 cases, including
-   * Pelland's own worked example. Restoring the max-based tier lookup fails 10 of them and restoring
-   * the direct-vs-fractional units bug fails 2. Neither bug was visible to any other gate here,
-   * because both numbers are plausible set counts and the wrong one is simply smaller. */
-  ['gym-coverage-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/coverage.test.ts']],
-
+  /* The coverage suite runs once, above, as `coverage-tests`; a second entry here ran it twice. */
   ['gym-coverage', process.execPath, ['scripts/gym-coverage.mjs']],
   ['gym-catalogue', process.execPath, ['scripts/gym-catalogue.mjs']],
 ];

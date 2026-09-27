@@ -191,32 +191,3 @@ export async function getTopArtists(token: string, range: TimeRange, limit = 20)
       : [],
   );
 }
-
-export interface NowPlaying {
-  trackName: string;
-  artistName: string;
-  albumImage: string | null;
-  url: string | null;
-}
-
-/** null means genuinely nothing playing. A dead token throws instead, which is the entire point. */
-export async function getNowPlaying(token: string): Promise<NowPlaying | null> {
-  const res = await fetch(`${API}/me/player/currently-playing`, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: 'no-store',
-  });
-  // 204 is Spotify's "nothing is playing", and it has no body to parse.
-  if (res.status === 204) return null;
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new SpotifyApiError(`currently-playing failed (${res.status}): ${body.slice(0, 200)}`, res.status);
-  }
-  const data = (await res.json()) as { is_playing?: boolean; item?: SpotifyTrack };
-  if (!data.is_playing || !data.item?.name) return null;
-  return {
-    trackName: data.item.name,
-    artistName: artistsOf(data.item),
-    albumImage: data.item.album?.images?.[0]?.url ?? null,
-    url: data.item.external_urls?.spotify ?? null,
-  };
-}

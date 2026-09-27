@@ -115,7 +115,7 @@ export default function SaveBlocked({
     <div className={cls} role="alert">
       <span className="k">This device cannot save</span>
       <p>
-        Unlock this device once and it stays unlocked for a year. Nothing you entered was lost.{waiting}
+        Nothing you entered was lost.{waiting}
       </p>
       <div className="row">
         <input

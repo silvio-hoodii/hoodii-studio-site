@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getYearReview, type YearBody, type YearTraining, type YearStrength, type Pb } from '@/lib/health/year';
-import { LineChart } from '../HealthCharts';
 import { YearRangeSentence, YearRangeDates } from '../YearRange';
 import { MetricStack } from '../MetricStack';
 import { KIND_LABEL } from '@/lib/gym/week';
+import { splitClause } from '@/lib/health/split';
+import { when } from '@/lib/health/fmt';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,18 +38,6 @@ export const metadata: Metadata = {
  * where those kilos came off, then everything else the scale records, then attendance, then the
  * weights on the bar, then the swim. The limits go last and in full, because a page this confident
  * about a year has to say where the year's record actually starts. */
-
-/** "13 Feb 2026". With the year, unlike `shortDate` in lib/format, for the same reason /swim/deep
- *  spells it out: this page reaches back eleven months and "13 Feb" beside "24 Aug" reads as one
- *  season. Noon UTC so a date-only string cannot land on the previous day. */
-function when(iso: string): string {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-CA', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
-}
 
 function monthLabel(ym: string): string {
   return new Date(`${ym}-01T12:00:00Z`).toLocaleDateString('en-CA', {
@@ -137,7 +126,7 @@ function WhereItWent({ body }: { body: YearBody }) {
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        Where it came off <span className="tag">({when(splitFrom.date)} to {when(splitTo.date)})</span>
+        {split.dKg < 0 ? 'Where it came off' : 'Where it went'} <span className="tag">({when(splitFrom.date)} to {when(splitTo.date)})</span>
       </div>
       <div className="exlist">
         <div className="ex" data-slot="year-split">
@@ -145,29 +134,17 @@ function WhereItWent({ body }: { body: YearBody }) {
             Weight <span className="live tnum">{signed(split.dKg)} kg</span>,{' '}
             fat mass <span className="tnum">{signed(split.dFat)} kg</span>,{' '}
             lean mass <span className="tnum">{signed(split.dLean)} kg</span>
-            {/* The share is printed only when it IS a share. src/lib/health/split.ts carries the
-                whole argument: the same clause used to print 119% over the window the Weight tab
-                displays, and 233% over one in 2025, because a ratio of two deltas stops being a
-                share the moment lean mass moves the other way. */}
-            {split.fatShare != null && (
-              <>, so <span className="tnum">{split.fatShare}%</span> of it was fat</>
-            )}
-            {split.fatShare == null && split.leanOpposed && ', so more than all of the loss came off fat'}
+            {/* SHARED WITH THE WEIGHT TAB, `splitClause` in src/lib/health/split.ts, which carries
+                the whole argument and the direction guard this copy lacked: it called a gain a loss.
+                The share is printed only when it IS a share. */}
+            {splitClause(split)}
             .
           </div>
         </div>
       </div>
-      {/* CUT FROM 338 CHARACTERS TO ONE ACTIONABLE SENTENCE, 2026-09-09, on his ruling. Three of
-          the four sentences here were provenance: that neither line is measured, that both are
-          computed from body fat percent, that they therefore add to the weight. He named this
-          paragraph specifically: "that's not an insight, that's just blur that doesn't help me in
-          any way." The provenance is now VISIBLE instead, in the shared-timeline chart above, where
-          lean mass, body water and resting burn are plainly the same curve. What survives is the
-          only half he can act on. */}
-      <p className="ex-cue">
-        A lean-mass drop of a kilo over a few weeks can be water. If the weights on the bar went up
-        over the same months, the muscle did not leave.
-      </p>
+      {/* The lean-mass-can-be-water caveat was here until 2026-09-27, cut with its twin on the
+          Weight tab: a caveat about the instrument, not a fact about him. The shared-timeline chart
+          above shows lean mass, body water and resting burn as one curve. */}
     </div>
   );
 }
@@ -285,20 +262,6 @@ function Training({ training, year }: { training: YearTraining; year: number }) 
           </tbody>
         </table>
       </div>
-      {/* DELETED, 2026-09-09. Provenance and a design justification, neither of which he can act
-          on, and the first clause is now KNOWN TO BE WRONG in the direction that matters: "read
-          straight off the watch, so a session you never opened an app for still counts" reads as a
-          guarantee of completeness, and this table misses the six days in 2026 that gym_set records
-          as lifts with no watch row (2026-05-25, 05-30, 06-03, 07-15, 07-21, 09-08), so it counts
-          134 training days against a true 140.
-
-          THE COUNT IS NOT FIXED HERE YET, deliberately: the same union defect was fixed in
-          src/lib/health/daily.ts the same day, and this one touches the discipline table, the month
-          table and the longest gap at once. It is being done once, with the strength pass's numbers,
-          rather than twice. The longest gap is unaffected either way, checked: 29 days on both
-          definitions. Removing the sentence that OVERSTATES completeness is not the fix and is not
-          being counted as one. */}
-
       <div className="exgroup-label" style={{ marginTop: 22 }}>
         By month <span className="tag">({months.length})</span>
       </div>

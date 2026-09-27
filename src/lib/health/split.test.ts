@@ -24,7 +24,7 @@
  * THE NUMBERS ARE HIS. Every fixture is a real row out of `health_body_comp`, because a fixture
  * invented to suit the fix only proves the fix agrees with itself.
  */
-import { splitOf, sameSourcePair } from './split.ts';
+import { splitOf, sameSourcePair, splitClause } from './split.ts';
 
 let failed = 0;
 
@@ -201,6 +201,23 @@ const src = (date: string, source: string, fat: number | null, lean: number | nu
     pair != null && pair[0].date === '2026-06-23' && pair[1].date === '2026-08-24',
     'the first usable reading, not the first row',
   );
+}
+
+/* ---- the sentence ---------------------------------------------------------------------------- */
+
+/* A loss with lean rising: the good case, said in words. */
+{
+  const s = splitOf(r(108.0, 35.1, 72.9), r(103.7, 29.98, 73.72));
+  const c = s ? splitClause(s) : null;
+  check('a loss with lean rising says all of it was fat', c, c === ', so all of the loss was fat and the lean line went up', 'the loss clause');
+}
+
+/* A GAIN with lean falling. weight = fat + lean, so fat rose by more than the gain. /health/deep
+   called this a loss, and /health said "the gain was not fat", which is the opposite of true. */
+{
+  const s = splitOf(r(103.7, 29.98, 73.72), r(106.0, 33.0, 73.0));
+  const c = s ? splitClause(s) : null;
+  check('a gain with lean falling says the gain was fat, never a loss', c, c === ', so all of the gain was fat and the lean line went down', 'the gain clause');
 }
 
 console.log(failed ? `\n${failed} FAILED` : '\nall split cases pass');
