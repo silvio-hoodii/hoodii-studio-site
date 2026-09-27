@@ -43,7 +43,7 @@ export default async function KitchenPage() {
                   {/* One mark per rated cook, oldest first: filled nailed it, grey fine, hollow went
                       wrong. How often and how well, at a glance, without opening the dish. */}
                   {(ratings[d.name]?.length ?? 0) > 0 && (
-                    <span className="cooks" aria-label={`cooked ${ratings[d.name]!.length} times: ${ratings[d.name]!.join(', ')}`}>
+                    <span className="cooks" aria-label={`cooked ${ratings[d.name]!.length === 1 ? 'once' : `${ratings[d.name]!.length} times`}: ${ratings[d.name]!.join(', ')}`}>
                       {ratings[d.name]!.map((r, i) => <i key={i} className={r} />)}
                     </span>
                   )}
