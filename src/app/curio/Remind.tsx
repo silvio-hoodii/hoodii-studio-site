@@ -34,9 +34,22 @@ export default function Remind() {
       queueMicrotask(() => setState('blocked'));
       return;
     }
+    /* THE BROWSER'S WORD IS NOT THE SERVER'S. A subscription the push service answered 404 or 410
+       for is deleted from the server while the browser still holds it, so "on" here could mean no
+       row at all. Re-POSTing on mount is an upsert: it re-creates a deleted row and changes nothing
+       when the row is there. Best effort, and the switch does not wait for it. */
     registration()
       .then((reg) => reg.pushManager.getSubscription())
-      .then((sub) => setState(sub ? 'on' : 'off'))
+      .then((sub) => {
+        if (sub) {
+          fetch('/curio/api/push', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(sub.toJSON()),
+          }).catch(() => {});
+        }
+        setState(sub ? 'on' : 'off');
+      })
       .catch(() => setState('off'));
   }, []);
 
@@ -88,14 +101,31 @@ export default function Remind() {
     }
   };
 
+  /* The route answers for THIS device (`thisDevice`) and counts the rest, so a failure on another
+     phone no longer reads as a failure here, and a removal elsewhere no longer flips this switch. */
   const test = async () => {
     setNote(null);
-    const r = await fetch('/curio/api/push/test', { method: 'POST' }).catch(() => null);
-    const j = r?.ok ? await r.json().catch(() => null) : null;
-    if (j && Number(j.removed) > 0) setState('off');
-    setNote(!r?.ok ? 'The test did not send.'
-      : Array.isArray(j?.failed) && j.failed.length ? `The test did not send: ${String(j.failed[0]?.error ?? j.failed[0] ?? 'refused')}`
-      : 'Test sent.');
+    const reg = await registration().catch(() => null);
+    const sub = reg ? await reg.pushManager.getSubscription().catch(() => null) : null;
+    const r = await fetch('/curio/api/push/test', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ endpoint: sub?.endpoint ?? null }),
+    }).catch(() => null);
+    const j = (r ? await r.json().catch(() => null) : null) as {
+      sent?: number; failed?: string[]; thisDevice?: string; error?: string;
+    } | null;
+    if (!j || j.error) return setNote('The test did not send.');
+    const sent = Number(j.sent ?? 0);
+    const failed = Array.isArray(j.failed) ? j.failed.length : 0;
+    const devices = (n: number) => `${n} ${n === 1 ? 'device' : 'devices'}`;
+    if (j.thisDevice === 'removed') {
+      setState('off');
+      return setNote('This device had expired. Turn reminders on again.');
+    }
+    if (j.thisDevice === 'failed') return setNote(`The test did not reach this device. Sent to ${devices(sent)}.`);
+    if (sent === 0) return setNote('The test did not send.');
+    setNote(failed ? `Sent to ${devices(sent)}, failed on ${failed}.` : `Test sent to ${devices(sent)}.`);
   };
 
   if (state === 'unsupported' || state === 'checking') return null;

@@ -1,8 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
-export const dynamic = 'force-dynamic';
-
 /* ON-DEMAND REGENERATION FOR THE PAGES THE LAPTOP WRITES TO, since 2026-09-27.
  *
  * The index and /music are cached and regenerate on a timer, and the timer was the Neon bill: the
@@ -10,8 +8,9 @@ export const dynamic = 'force-dynamic';
  * whether or not anything changed. The writes that happen INSIDE this repo (a gym set, a kitchen
  * note, the music cron) call revalidatePath themselves now. Two pipelines write to Neon from the
  * laptop and cannot: the health mirror (HealthOS/sync/run-health-sync.ps1) and the Curio sync
- * (ReadLaterOS/run-readlater.ps1). They call this instead, through scripts/revalidate.mjs, and the
- * index regenerates inside the wake their own writes already paid for.
+ * (ReadLaterOS/run-readlater.ps1). They call this instead, through scripts/revalidate.mjs. A
+ * revalidatePath from a route handler MARKS the page stale and the next request rebuilds it, so
+ * the script fetches the page right after, inside the wake their own writes already paid for.
  *
  * Bearer CRON_SECRET, the same token the crons use. Anything without it is refused; a refused call
  * costs one function invocation and no database time. */

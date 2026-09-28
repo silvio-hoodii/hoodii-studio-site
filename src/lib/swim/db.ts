@@ -312,19 +312,28 @@ export async function getSwimFrontRow(): Promise<SwimFrontRow> {
        this into "last swim N days ago", so a date a day late makes the number a day small. Ordering
        is on the derived date too, because the newest raw date and the newest real swim are not
        always the same row once 94 of 475 are shifted. */
+    /* CANDIDATES FIRST. Deriving the local date for every session grouped the whole lengths table
+       (about 19,000 rows) to find one row. The derived date moves a session by at most one day
+       from its raw date, so the newest real swim is among the newest few raw rows; those get the
+       join, and the lengths lookup is one indexed probe each. */
     sql`
       select ${sql.unsafe(SWIM_LOCAL_DATE)}::text as date, s.distance_m
-      from health_swim_session s
-      left join (
-        select session_uuid, min(session_start_time) as st from health_swim_length group by 1
-      ) l on l.session_uuid = s.uuid
+      from (
+        select uuid, date, distance_m from health_swim_session
+        where distance_m > 0 order by date desc limit 5
+      ) s
+      left join lateral (
+        select min(session_start_time) as st from health_swim_length where session_uuid = s.uuid
+      ) l on true
       left join health_session_detail d on d.uuid = s.uuid and d.kind = 'swimming'
-      where s.distance_m > 0
-      order by 1 desc
+      order by 1 desc, s.distance_m desc
       limit 1
     `,
+    /* `distance_m desc` breaks a tie between two sessions on one day: the watch logs a 100 m
+       fragment beside the real swim now and then, and without the tiebreak "Last swim" was
+       whichever row Postgres happened to return first (it was showing 950 m by luck). */
     sql`
-      select count(*) as total, max(distance_m) filter (where distance_m > 0) as longest
+      select count(*) filter (where distance_m > 0) as total, max(distance_m) filter (where distance_m > 0) as longest
       from health_swim_session
     `,
   ]);

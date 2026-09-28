@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import type { Today as TodayData, QuizCard, SaveCard } from '@/lib/curio/today';
+import type { Today as TodayData, SaveCard } from '@/lib/curio/today';
 import Remind from './Remind';
 import { post, Quiz } from './Quiz';
-import { forgetCard, forgetSave, useToday } from './today-cache';
+import { forgetSave, useToday } from './today-cache';
 
 /* The top of /curio: a few questions to recall, then one saved link to keep or drop.
  *

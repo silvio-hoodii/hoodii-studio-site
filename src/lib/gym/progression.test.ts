@@ -34,8 +34,10 @@ import { suggest } from './progression.ts';
 import type { LastSession, PlanInput, Suggestion } from './progression.ts';
 
 let failed = 0;
+let ran = 0;
 
 function check(name: string, got: Suggestion, want: (s: Suggestion) => boolean, expected: string) {
+  ran++;
   if (want(got)) {
     console.log(`ok    ${name}`);
     return;
@@ -212,11 +214,14 @@ check(
   + 'his 10 is the thing being corrected: "I never knew 3 reps was a thing"',
 );
 
+/* WAS "the card says WHY it is three", asserting the reason named sets and speed. The four-kinds rule
+ * in AGENTS.md (2026-09-15) cut the why off the card: it is a method explanation, and the block `why`
+ * and the comment in progression.ts carry it. The card states the count and its unit. */
 check(
-  'box jump: the card says WHY it is three, because the bare number is what he read as a floor',
+  'box jump: the card states the count and nothing else',
   suggest(session('2026-08-27', 3, null, 10), plan({ type: 'bodyweight', targetReps: 3, fixedReps: true })),
-  (s) => /SETS/.test(s.reason) && /fast/.test(s.reason),
-  'a reason naming sets as the lever and speed as the point',
+  (s) => s.reason === '3 a set.',
+  '"3 a set." (it carried a sentence about leaving the floor fast)',
 );
 
 check(
@@ -268,9 +273,8 @@ check(
     type: 'weighted', targetReps: 12, rangeWidth: 8, increment: 5, ladder: RACK,
     recent: [session('2026-09-03', 3, 20, 20), session('2026-08-30', 3, 20, 16)],
   })),
-  (s) => s.weight === 20 && s.reps === 20,
-  '20 lb again at 20 reps: 25 lb is a 25% jump this range does not bank, and taking it is the loop '
-    + 'that kept the overhead press flat all year',
+  (s) => s.weight === 20 && s.reps === 20 && s.reason === 'Do 20 at 20 once more, then 25.',
+  '20 lb again at 20 reps, worded as the instruction only: "Do 20 at 20 once more, then 25."',
 );
 
 check(
@@ -326,6 +330,115 @@ check(
   '170: the gap probe is unchanged where he had made the range, or the fix has deleted the feature',
 );
 
+/* ---- the 2026-09-27 audit, run against this engine with edge cases -------------------------------
+ * Each case is the audit's own input. Where the fix lives outside the engine (the assisted flag, the
+ * cable increment) the case supplies what the plan route now derives and asserts what the engine does
+ * with it. */
+
+const DB = [5, 7.5, 10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+const logged = (date: string, rows: [number | null, number][]): LastSession =>
+  ({ date, sets: rows.map(([weight, reps]) => ({ weight, reps })) });
+const TODAY = '2026-09-27';
+
+check(
+  'a weighted lift logged with no weight asks for the weight, not "at null"',
+  suggest(logged('2026-09-20', [[null, 8], [null, 8], [null, 8]]), { targetReps: 8, rangeWidth: 2, today: TODAY, recent: [] }),
+  (s) => s.weight === null && s.reason === 'First time: log your working weight.',
+  '"First time: log your working weight." (it printed "Got 8/8/8 at null: hold, build to 10")',
+);
+
+check(
+  'a weighted lift with no weight after a long gap does not say "Start at 0"',
+  suggest(logged('2026-08-01', [[null, 8], [null, 8]]), { targetReps: 8, today: TODAY, recent: [] }),
+  (s) => s.weight === null && s.reason === 'First time: log your working weight.',
+  'the first-time line (it printed "Start at 0")',
+);
+
+check(
+  'a weight of 0 on a weighted lift is no weight',
+  suggest(logged('2026-08-01', [[0, 10], [0, 10]]), { targetReps: 8, today: TODAY, recent: [] }),
+  (s) => s.weight === null && /First time/.test(s.reason),
+  'the first-time line, not a probe from 0',
+);
+
+check(
+  'the heaviest dumbbell at the top of the range holds at the top, never fewer reps at the same weight',
+  suggest(logged('2026-09-20', [[90, 20], [90, 20], [90, 20]]), {
+    targetReps: 12, rangeWidth: 8, ladder: DB, today: TODAY,
+    recent: [logged('2026-09-20', [[90, 20], [90, 20], [90, 20]]), logged('2026-09-13', [[90, 20], [90, 20]])],
+  }),
+  (s) => s.weight === 90 && s.reps === 20 && !/up to/.test(s.reason),
+  '90 x 20, held (it printed "up to 90, the top of the rack" with reps back to 12)',
+);
+
+check(
+  'an assisted lift never deloads, because less counterweight is harder',
+  suggest(logged('2026-09-20', [[40, 6], [40, 6], [40, 6]]), {
+    targetReps: 6, rangeWidth: 2, assistance: true, today: TODAY,
+    recent: [logged('2026-09-20', [[40, 6], [40, 6], [40, 6]]), logged('2026-09-16', [[40, 6], [40, 6]]), logged('2026-09-12', [[40, 7], [40, 6]])],
+  }),
+  (s) => s.weight === 40 && !/deload/i.test(s.reason),
+  '40, hold and build (a "deload" to 35 is a HARDER set on this machine)',
+);
+
+check(
+  'the lightest counterweight holds, and never says "take 0 lb off"',
+  suggest(logged('2026-09-20', [[10, 8], [10, 8], [10, 8]]), {
+    targetReps: 6, rangeWidth: 2, assistance: true, increment: 10, today: TODAY,
+    recent: [logged('2026-09-20', [[10, 8], [10, 8], [10, 8]])],
+  }),
+  (s) => s.weight === 10 && s.reps === 8 && !/take 0/.test(s.reason),
+  '10 x 8, held',
+);
+
+check(
+  'a logged warm-up set does not drag the suggestion down to it',
+  suggest(logged('2026-09-20', [[95, 5], [135, 8]]), { targetReps: 8, rangeWidth: 2, today: TODAY, recent: [] }),
+  (s) => s.weight === 135,
+  '135, the work weight (a tie went to the lighter 95)',
+);
+
+check(
+  'a stall in older sessions does not deload a lift he has since moved up on',
+  suggest(logged('2026-09-24', [[125, 8]]), {
+    targetReps: 8, rangeWidth: 4, today: TODAY,
+    recent: [logged('2026-09-24', [[125, 8]]), logged('2026-09-20', [[115, 8], [115, 8]]), logged('2026-09-16', [[115, 8], [115, 8]]), logged('2026-09-12', [[115, 9], [115, 8]])],
+  }),
+  (s) => s.weight === 125 && !/deload/i.test(s.reason),
+  '125, hold (it said deload to 105 the week he moved to 125)',
+);
+
+check(
+  'a timed hold steps by 5 seconds and is not told to add a rep',
+  suggest(logged('2026-09-20', [[null, 20], [null, 25]]), { targetReps: 30, type: 'timed', repSuffix: 's/side', today: TODAY, recent: [] }),
+  (s) => s.reps === 25 && !/rep/.test(s.reason) && /5 s/.test(s.reason),
+  '25 s, "add 5 s" (it said "add a rep" and asked for 21)',
+);
+
+check(
+  'a bodyweight lift below the range still adds one rep',
+  suggest(logged('2026-09-20', [[null, 3], [null, 4]]), { targetReps: 10, type: 'bodyweight', today: TODAY, recent: [] }),
+  (s) => s.reps === 4 && /add a rep/.test(s.reason),
+  '4, one above his worst set',
+);
+
+check(
+  'a working weight he could not make the range at is never stepped up',
+  suggest(logged('2026-09-20', [[185, 3], [185, 3], [165, 8]]), { targetReps: 6, rangeWidth: 4, today: TODAY, recent: [] }),
+  (s) => s.weight != null && s.weight <= 185,
+  '185 or less: he made 3 reps there',
+);
+
+check(
+  'a cable stack given its 2.5 lb step moves by 2.5',
+  suggest(logged('2026-09-20', [[102.5, 10], [102.5, 10], [102.5, 10]]), {
+    targetReps: 8, rangeWidth: 2, increment: 2.5, today: TODAY,
+    recent: [logged('2026-09-20', [[102.5, 10], [102.5, 10], [102.5, 10]]), logged('2026-09-13', [[102.5, 10], [102.5, 10]])],
+  }),
+  (s) => s.weight === 105,
+  '105 (with the default 5 it asked for 110, a pin two steps up)',
+);
+
 console.log('-'.repeat(70));
-console.log(`28 cases, ${failed} failed`);
+console.log(`${ran} cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);

@@ -231,20 +231,6 @@
  * lowercase, which is the distinction doing the actual work. The opacity was buying nothing that
  * the case change was not already buying, at the cost of legibility. */
 .training .exgroup-label .tag { text-transform: none; letter-spacing: normal; }
-/* "optional" on every accessory block. Boxed rather than just dimmer, because the point is that it
-   is a STATE of the block and not an aside: the main lifts are the session and these are not. Kept
-   monochrome. --signal is reserved for a value that is true right now, and "optional" is neither. */
-.training .exgroup-label .tag.opt {
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 1px 5px;
-  margin-left: 7px;
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.85;
-  white-space: nowrap;
-}
 /* Where he is, and how much is left, on a page that is six screens long. Full ink, because it is
    the one part of the label that is a value rather than a name. */
 .training .exgroup-n {
@@ -282,7 +268,8 @@
  * 390px, which is the only width that counts here: 6 partner rows per day, one to two lines each. */
 .training .ex-why { font-size: 13.5px; line-height: 1.5; color: var(--muted-foreground); margin: -2px 0 8px; }
 
-.training .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; }
+/* max-width: on the 1120 column a cue ran 150 characters a line. */
+.training .ex-cue { font-size: 14.5px; line-height: 1.55; color: var(--muted-foreground); margin-bottom: 10px; max-width: 62ch; }
 .training .ex-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted-foreground); margin: 4px 0; }
 
 /* ---- notes he has written ----
@@ -751,7 +738,7 @@
 .training details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 .training details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
 .training .cue-name { flex: 1; min-width: 0; }
-.training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
+.training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; max-width: 62ch; }
 
 /* ---- the integrated week ----
  *
@@ -1372,7 +1359,6 @@
    not: "also this text is useless" was about a box whose placeholder already said what it was for.
    This list is 20 to 40 exercise names with no visible reason for being those ones, and the fact
    that every one can be done without walking away from the lift is the whole point of it. */
-.training .fill-hint { font-size: 12.5px; line-height: 1.45; margin: 0 0 4px; }
 .training .fill-opt {
   text-align: left;
   border: 1px solid var(--border-strong);

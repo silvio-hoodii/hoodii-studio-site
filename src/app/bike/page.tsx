@@ -15,9 +15,8 @@ export const dynamic = 'force-dynamic';
  * same `?s=` parameter names, so an old ?p=bike&s=how bookmark keeps its meaning through the
  * redirect in next.config.ts.
  *
- * NOTHING ON THIS PAGE WRITES A RIDE YET, and POST /bike/api/ride is live and gated. The form is
- * Phase D. That order was deliberate: the write route shipped first so its two gates could be built
- * and broken on purpose, rather than bolted on after a form made them urgent. */
+ * NOTHING ON THIS PAGE WRITES A RIDE. The write route that once waited for a form was deleted unused
+ * on 2026-09-27; the watch rows are the whole record. */
 const SUB_TABS = [
   { id: 'now', label: 'Now' },
   { id: 'plan', label: 'Plan' },
@@ -45,8 +44,8 @@ export default async function BikePage({
      rule that fires on a normal day is one he learns to ignore.
      
      With no peak on record, `fill` returns null and the How hard line below is not rendered, and
-     `fillCue` returns null for any cue whose name, cue or test carries a placeholder, so that cue is
-     filtered out rather than printed with "{PEAK_BPM}" in it. Neither falls back to a typed number:
+     `fillCue` cuts the sentence that carries the placeholder, so the stop rule keeps its knee, chest
+     and head rules and loses only the heart-rate one. Neither falls back to a typed number:
      that would put a typed figure back into the sentence that exists because a typed figure was
      wrong, the catch-and-return-a-default this repo forbids in lib/music/spotify.ts. */
   const peak = sub === 'plan' || sub === 'how' ? await getPeakHr() : null;
@@ -86,10 +85,8 @@ export default async function BikePage({
               thing to land here." sat here until 2026-09-15: a promise three weeks old about a form
               that does not exist. The route behind it was deleted unused on 2026-09-27. */}
           <RecentSessions sessions={recent} kind="cycling" />
-          {/* THE BLOCK ABOVE SAYS "the only one the watch has ever recorded" AND THAT IS FALSE.
-              It reads health_session_detail, which holds one cycling row. The watch holds 76, back
-              to 2021. Correcting the block itself is finding 54 and needs its own ruling; this link
-              at least gives him the real number in the meantime. */}
+          {/* The block above reads health_session_detail, which holds few cycling rows; the log
+              reads health_watch_session, which holds every ride back to 2021. */}
           <p className="ex-cue" style={{ marginTop: 14 }}>
             <Link href="/bike/log">Every ride on record</Link>
           </p>
@@ -132,7 +129,6 @@ export default async function BikePage({
 
       {sub === 'how' && (
         <div className="exgroup">
-          <div className="exgroup-label">How to ride</div>
           <Cues
             cues={(c.bike.cues ?? [])
               .map((cue) => fillCue(cue, peak))

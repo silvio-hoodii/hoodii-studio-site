@@ -72,10 +72,13 @@ const TABS = [
   { id: 'volume', label: 'Volume' },
 ] as const;
 
-function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek: number } | null): string {
+function trendLine(t: { fromDate: string; spanDays: number; kg: number; perWeek: number; basisKg: number; basisN: number } | null): string {
   if (!t) return 'not enough history';
   const sign = (n: number) => (n > 0 ? '+' : '');
-  return `vs ${shortDate(t.fromDate)} (${t.spanDays} d): ${sign(t.kg)}${t.kg} kg, ${sign(t.perWeek)}${t.perWeek} kg/wk`;
+  /* The basis is named because it is not the number on the tile: HealthOS measures the change from
+     a median of recent readings, and this line prints the same change CURRENT.md does. */
+  const basis = t.basisN >= 2 ? `median of ${t.basisN}, ${t.basisKg} kg, ` : '';
+  return `${basis}vs ${shortDate(t.fromDate)} (${t.spanDays} d): ${sign(t.kg)}${t.kg} kg, ${sign(t.perWeek)}${t.perWeek} kg/wk`;
 }
 
 export default async function HealthPage({

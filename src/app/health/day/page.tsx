@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 /* THE TITLE CARRIES NO YEAR, and the h1 below derives one. A `Metadata` export is evaluated
    without a database round trip, so a year in it would have to be typed, and the first day in the
    store is the one figure on this page most likely to move: an older export, a re-parse, or a
-   dropped partial day all shift it. The h1 takes it from the coverage query with everything else. */
+   dropped partial day all shift it. The h1 takes it from the first month the charts draw. */
 export const metadata: Metadata = {
   title: 'Every day the phone recorded',
   description: 'The phone-borne record: steps, active minutes, stairs, and the days that were nothing.',
@@ -39,14 +39,8 @@ export const metadata: Metadata = {
  * already gone wrong. Every figure now comes from src/lib/health/daily.ts, and
  * `scripts/lint-typed-figures.mjs` fails the build on a two-digit run left in the rendered text of
  * this file, so the claim is a gate rather than a promise. The Limits section and the `limits` block
- * that fed it are gone (2026-09-15 and 2026-09-27); their derivations are in git history.
- *
- * THE HONESTY THIS PAGE IS BUILT AROUND. Its headline number read ZERO four weeks before the worst
- * stretch in the record, and the 10th percentile, which is the obvious fix, read 5,944 then against
- * 6,091 now. Neither warned. So the caveat is not a footnote here, it is the second thing on the
- * page, and it prints the December window's own figures rather than describing them. A page that
- * showed the green light without that would be teaching him to trust a light that was green on the
- * way down. */
+ * that fed it are gone (2026-09-15 and 2026-09-27); their derivations are in git history. The
+ * caveat block about the December window went with them. */
 
 
 function monthName(mm: string): string {
@@ -73,14 +67,12 @@ function Headline({ r }: { r: DailyReview }) {
           <span className="yearline-span">({when(now.from)} to {when(now.to)})</span>
         </div>
         <p className="ex-cue">
-          Of the {now.days} days, {now.belowFloor} contained almost no walking. The median day was{' '}
+          {/* "Of the N days, M contained almost no walking" was here until 2026-09-27: a conclusion
+              for any day under the floor, and a repeat of the count and the rule right above. */}
+          The median day was{' '}
           <span className="tnum">{n0(now.p50)}</span> steps and{' '}
           <span className="tnum">{n0(now.activeMinP50)}</span> active minutes.
         </p>
-        {/* THE CAVEAT IS PART OF THE HEADLINE BLOCK ON PURPOSE. It is the finding, not a hedge.
-            THE CLAIM IS SCOPED TO ONE EVENT AND NOT TO ALL TIME. It read "has never predicted the
-            next four", which is a universal built on a single window: there is one collapse in this
-            record, so the evidence supports "it did not see that one coming" and nothing wider. */}
       </div>
     </div>
   );
@@ -106,6 +98,10 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
   const floorWon = floorLift != null && ceilLift != null && floorLift > ceilLift;
   /* THE HEADING FOLLOWS THE SAME BOOLEAN, since 2026-09-27. It read "The floor moved, not the
      ceiling" whatever the numbers said, above a sentence that could say the opposite. */
+  const moved = (x: number) => {
+    const t = x.toFixed(1);
+    return t === '1.0' ? 'held level' : x > 1 ? `grew ${t}x` : `fell to ${t}x`;
+  };
   const heading = floorWon ? 'The floor moved further than the ceiling' : 'Bad days and good days';
 
   return (
@@ -143,27 +139,19 @@ function FloorNotCeiling({ r }: { r: DailyReview }) {
           </tbody>
         </table>
       </div>
-      <p className="ex-cue">
-        {floorWon ? (
-          <>
-            Your good days grew by{' '}
-            <span className="tnum">{ceilLift == null ? '-' : `${ceilLift.toFixed(1)}x`}</span>. Your
-            bad days grew by <span className="tnum">{floorLift == null ? '-' : `${floorLift.toFixed(1)}x`}</span>.
-            {/* Only when the table shows it: a bad day in the newest month clears the floor. It
-                was asserted ("you stopped having days that were nothing") whatever the p10 said. */}
-            {last.p10 >= FLOOR_STEPS && (
-              <> A bad day now clears {FLOOR_STEPS.toLocaleString('en-CA')} steps.</>
-            )}
-          </>
-        ) : (
-          <>
-            Your good days grew by{' '}
-            <span className="tnum">{ceilLift == null ? '-' : `${ceilLift.toFixed(1)}x`}</span> and
-            your bad days by <span className="tnum">{floorLift == null ? '-' : `${floorLift.toFixed(1)}x`}</span>,
-            so this year the ceiling moved at least as far as the floor.
-          </>
-        )}
-      </p>
+      {/* THE VERB COMES FROM THE RATIO, since 2026-09-27. Both branches said "grew" whatever the
+          ratio, so a fall printed as "grew by 0.8x", and the fallback claimed the ceiling had moved
+          at least as far when neither ratio existed. Hidden when either ratio is missing. */}
+      {floorLift != null && ceilLift != null && (
+        <p className="ex-cue">
+          Your good days <span className="tnum">{moved(ceilLift)}</span>. Your bad days{' '}
+          <span className="tnum">{moved(floorLift)}</span>.
+          {/* Only when the table shows it: a bad day in the newest month clears the floor. */}
+          {floorWon && last.p10 >= FLOOR_STEPS && (
+            <> A bad day now clears {FLOOR_STEPS.toLocaleString('en-CA')} steps.</>
+          )}
+        </p>
+      )}
     </div>
   );
 }
@@ -360,7 +348,7 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
         </table>
       </div>
       <p className="ex-cue">
-        On days with no recorded workout, your longest unbroken stretch of movement is{' '}
+        On a typical rest day your longest unbroken stretch of movement is{' '}
         <span className="tnum">{n0(latest.medianLongestMin)} minutes</span>, against{' '}
         <span className="tnum">{n0(first.medianLongestMin)}</span> in {first.year}.
         {swing != null && lo && hi && (
@@ -368,9 +356,7 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
             <span className="tnum">{n0(lo.p50)}</span> to{' '}
             <span className="tnum">{n0(hi.p50)}</span>, a swing of{' '}
             <span className="tnum">{swing.toFixed(1)}x</span>.</>
-        )}{' '}
-        Those <span className="tnum">{n0(latest.medianActiveMin)}</span> active minutes arrive a few
-        at a time.
+        )}
       </p>
       {/* "Against that swing it has barely shifted, which makes it the one thing on the page nobody
           has tried yet" was here until 2026-09-27: a conclusion typed beside a table that shows the
@@ -393,8 +379,7 @@ function Scraps({ rows, months }: { rows: ScrapsRow[]; months: MonthPoint[] }) {
 export default async function DayPage() {
   const r = await getDailyReview();
 
-  const steps = r.coverage.find((c) => c.column === 'steps');
-  const startYear = steps?.from.slice(0, 4) ?? null;
+  const startYear = r.months[0]?.month.slice(0, 4) ?? null;
 
   /* `.wrap` and nothing else. The layout above already supplies `.training health measure-data`,
      the site header and the training nav; repeating those classes here would nest the surface
@@ -415,7 +400,7 @@ export default async function DayPage() {
       <Scraps rows={r.scraps} months={r.months} />
 
       <p className="ex-cue">
-        <Link href="/health">Back to training</Link> · <Link href="/health/deep">The year so far</Link>
+        <Link href="/health/deep">The year so far</Link>
       </p>
     </div>
   );

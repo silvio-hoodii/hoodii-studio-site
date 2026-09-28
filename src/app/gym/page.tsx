@@ -1,9 +1,10 @@
 import { loadProgram, loadWarmups, loadCooldowns, loadExtraSuggestions, loadMovements } from '@/lib/gym/program';
 import { computeFillOptions } from '@/lib/gym/fill';
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getNotes, countNotes, getLoggedHistory, getLastSessionSummary } from '@/lib/gym/db';
+import { getNotes, countNotes, getLoggedHistory, getLastSessionSummary, getCarriedSession } from '@/lib/gym/db';
 import { splitName } from '@/lib/gym/program-shared';
-import type { DayKey } from '@/lib/gym/types';
+import { barbellIds, variantType } from '@/lib/gym/ladder';
+import type { DayKey, Program } from '@/lib/gym/types';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
 import { today } from '@/lib/day';
@@ -27,23 +28,52 @@ export default async function GymHome() {
 
      The last-session summary is for the strip under the day title. His words, 2026-09-06: "I don't
      even know what I did last session." */
+  const now = today();
   const [
     program, warmups, cooldowns, extraSuggestions, movements,
-    nextUp, notes, logRows, logTotal, noteCount, loggedHistory, lastSession,
+    nextUp, notes, logRows, logTotal, noteCount, loggedHistory, lastSession, carried,
   ] = await Promise.all([
     loadProgram(),
     loadWarmups(),
     loadCooldowns(),
     loadExtraSuggestions(),
     loadMovements().catch(() => null),
-    computeNextUp(today()),
+    computeNextUp(now),
     getNotes({ limit: 20 }),
     getGymLog(5),
     countGymLog(),
     countNotes(),
     getLoggedHistory(),
     getLastSessionSummary(),
+    getCarriedSession(now),
   ]);
+
+  /* THE DATE THIS LOAD'S SESSION IS WRITTEN UNDER, decided once, here, since 2026-09-27. Today, unless
+     yesterday's session is still open and was written to in the last three hours: a reload at 00:30
+     in the middle of a session begun at 23:40 stays on the 23:40 date. The boundary and why it is
+     three hours are on `getCarriedSession` in db.ts. GymClient holds this for the life of the page,
+     so a tab left open across midnight keeps its date too. */
+  const carriedDay = carried?.day && carried.day in program.days ? (carried.day as DayKey) : null;
+  const sessionDate = carried && carriedDay ? carried.date : now;
+  const nextUpForPage = carried && carriedDay ? { ...nextUp, todayDay: carriedDay } : nextUp;
+
+  /* EVERY ALTERNATIVE GETS ITS OWN KIND OF SET, from the catalogue and its own prescription, before
+     the programme reaches the phone. An alt carried no `timed` or `bodyweight`, so the swap inherited
+     the slot's: a Hollow Hold in place of the hanging knee raise got a reps box. See `variantType` in
+     ladder.ts. A copy, never the cached programme object. */
+  const programForPage: Program = {
+    ...program,
+    days: Object.fromEntries(Object.entries(program.days).map(([k, d]) => [k, {
+      ...d,
+      blocks: d.blocks.map((b) => ({
+        ...b,
+        exercises: b.exercises.map((e) => (e.alts ? {
+          ...e,
+          alts: e.alts.map((a) => { const t = variantType(a); return t ? { ...a, ...t } : a; }),
+        } : e)),
+      })),
+    }])) as Program['days'],
+  };
 
   /* WHAT COULD RIDE IN EACH EMPTY REST, computed on the server so the 103-variant catalogue and the
      whole of equipment.json stay out of the phone's bundle. See src/lib/gym/fill.ts for why this
@@ -90,7 +120,11 @@ export default async function GymHome() {
         * The hub row at src/app/page.tsx still carries the one-line version, which is where a
         * description of the app belongs: on the page that indexes it, for someone deciding whether
         * to open it. Not inside it. */}
-      <GymClient program={program} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions} nextUp={nextUp} fillOptions={fillOptions} lastSession={lastSession} />
+      <GymClient
+        program={programForPage} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions}
+        nextUp={nextUpForPage} fillOptions={fillOptions} lastSession={lastSession}
+        sessionDate={sessionDate} barbellIds={barbellIds()}
+      />
 
       {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he
         * reads the page in: do the session, glance at what the last few looked like, then write a

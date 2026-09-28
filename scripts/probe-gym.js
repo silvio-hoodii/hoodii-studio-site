@@ -45,6 +45,14 @@
  * Some tests reload the page. After a reload the harness is gone, so re-eval the file and call the
  * named test: `__probe.run('swapSurvivesReload:after')`. `run()` with no argument runs everything
  * that does not need a reload and tells you which ones it skipped.
+ *
+ * THE PAGE REPLAYS ITS RETRY QUEUE ON MOUNT since 2026-09-27, out of localStorage, BEFORE anything
+ * evaluated after load can patch fetch. So a queued probe write left in localStorage would be posted
+ * to the real store by the next load of /gym in that browser. scripts/run-probe-gym.mjs therefore
+ * installs this file with Page.addScriptToEvaluateOnNewDocument, so every load is stubbed from its
+ * first byte, refuses to run if the origin already holds a queue it did not write, and clears the
+ * queue keys when it ends. `run()` clears them too. Driving this file by hand, clear `gym:queue:*`
+ * from localStorage before you close the tab.
  */
 (() => {
   /* EVERY write route under /gym/api, /swim/api AND /bike/api must be listed here. A route missing from this
@@ -122,15 +130,27 @@
      with every test still green. See exSelectorMeansExercise below, which is the gate. */
   const cardNames = () => $$('.ex[data-slot]').map((e) => text($('.ex-name', e)));
 
-  const state = {
+  /* ON window, since 2026-09-27, so a second evaluation of this file (the driver installs it at
+     document start AND evaluates it after load) shares one record of calls and one fetch patch. */
+  const state = window.__probeState || (window.__probeState = {
     calls: [],
-    mode: 'ok', // 'ok' | 'locked' | 'offline'
+    mode: 'ok', // 'ok' | 'locked' | 'offline' | 'conflict' (409) | 'error' (500)
     unlockOk: true,
     patched: false,
+    /* True when this file ran before the page's own scripts, which is the only state in which a
+       replay on mount is caught by the stub. The reload test refuses to run without it. */
+    startedAtDocumentStart: document.readyState === 'loading',
     /* When set, the session READ is answered from here instead of the network. The only way to
        exercise "resume a swap somebody logged on another device" without writing to his real log. */
     sessionRows: null,
-  };
+    /* The session read can be slowed (ms) or failed (500), to watch the page before it has the
+       server's sets and after it could not get them. */
+    sessionDelay: 0,
+    sessionFail: false,
+    /* ONE-SHOT ANSWERS for the fake server, consumed in order by the first write whose URL contains
+       `route`: { route, status?, delay? }. A delay lets one response land after a later one. */
+    plan: [],
+  });
 
   function install() {
     if (state.patched) return 'already installed';
@@ -142,19 +162,38 @@
         state.calls.push({ url, body: '(password withheld)', at: state.calls.length, mode: state.mode });
         return new Response('{"ok":true}', { status: state.unlockOk ? 200 : 401, headers: { 'content-type': 'application/json' } });
       }
-      if (post && url.includes('/gym/api/session') && state.sessionRows) {
-        state.calls.push({ url, body: '(session read, answered from fixture)', at: state.calls.length, mode: state.mode });
-        return new Response(JSON.stringify({ ok: true, sets: state.sessionRows }), {
-          status: 200, headers: { 'content-type': 'application/json' },
-        });
+      if (post && url.includes('/gym/api/session') && (state.sessionRows || state.sessionDelay || state.sessionFail)) {
+        if (state.sessionDelay) await sleep(state.sessionDelay);
+        if (state.sessionFail) {
+          state.calls.push({ url, body: '(session read, failed on purpose)', at: state.calls.length, mode: state.mode, status: 500 });
+          return new Response('{"ok":false}', { status: 500, headers: { 'content-type': 'application/json' } });
+        }
+        if (state.sessionRows) {
+          state.calls.push({ url, body: '(session read, answered from fixture)', at: state.calls.length, mode: state.mode });
+          return new Response(JSON.stringify({ ok: true, sets: state.sessionRows }), {
+            status: 200, headers: { 'content-type': 'application/json' },
+          });
+        }
+        return real(input, init);
       }
       const isWrite = post && WRITE_ROUTES.some((r) => url.includes(r));
       if (!isWrite) return real(input, init);
       let body = null;
       try { body = JSON.parse(init.body); } catch { body = init?.body ?? null; }
-      state.calls.push({ url, body, at: state.calls.length, mode: state.mode });
-      if (state.mode === 'offline') throw new TypeError('probe: simulated network failure');
-      const status = state.mode === 'locked' ? 401 : 200;
+      const call = { url, body, at: state.calls.length, mode: state.mode, sentAt: performance.now() };
+      state.calls.push(call);
+      const i = state.plan.findIndex((p) => url.includes(p.route));
+      const once = i >= 0 ? state.plan.splice(i, 1)[0] : null;
+      if (once?.delay) await sleep(once.delay);
+      if (state.mode === 'offline' && !once?.status) {
+        call.status = 'network';
+        call.respondedAt = performance.now();
+        throw new TypeError('probe: simulated network failure');
+      }
+      const status = once?.status
+        ?? (state.mode === 'locked' ? 401 : state.mode === 'conflict' ? 409 : state.mode === 'error' ? 500 : 200);
+      call.status = status;
+      call.respondedAt = performance.now();
       return new Response(JSON.stringify({ ok: status === 200 }), {
         status,
         headers: { 'content-type': 'application/json' },
@@ -169,6 +208,62 @@
   function since() {
     const mark = state.calls.length;
     return () => state.calls.slice(mark);
+  }
+
+  /* THE BOXES ARE DISABLED UNTIL THE SESSION READ ANSWERS, since 2026-09-27, and `.tabs` says which
+     state the page is in. Every test waits for it, or a test that types first finds no enabled box
+     and reports an app defect that is really a slow read. */
+  const settled = () => waitFor(() => ($('.tabs')?.dataset.session ?? 'ready') !== 'loading', 10000);
+
+  /* Leave no owed write behind for the next test: with the server answering ok, press the banner's
+     own retry. A queue left from an earlier test is laid over the server's answer on every hydrate,
+     which would make a fixture read back the wrong number. */
+  async function drain() {
+    const prevMode = state.mode;
+    state.mode = 'ok';
+    for (let i = 0; i < 3 && $('.save-blocked'); i++) {
+      const b = $$('button', $('.save-blocked')).find((x) => /try again/i.test(text(x)));
+      if (!b) break;
+      b.click();
+      await waitFor(() => !$('.save-blocked'), 2000);
+    }
+    state.mode = prevMode;
+  }
+
+  /* Leave the tab and come back, which re-runs the session read. */
+  async function rehydrate() {
+    const tabs = $$('.tab');
+    const here = tabs.find((t) => t.classList.contains('on'));
+    const away = tabs.find((t) => !t.classList.contains('on'));
+    if (!here || !away) return false;
+    away.click();
+    await settled();
+    here.click();
+    await settled();
+    await sleep(100);
+    return true;
+  }
+
+  /* A card that logs a weight, addressed by slot so it can be found again after a re-render. */
+  function weightedCard() {
+    for (const c of $$('.ex[data-slot]')) {
+      if ($('.swapped-note', c)) continue;
+      const row = $('.set-row', c);
+      const w = row && $$('input', row)[0];
+      if (w && !w.disabled && !/BW/.test(w.placeholder)) return c;
+    }
+    return null;
+  }
+  const cardBySlot = (slot) => $$('.ex[data-slot]').find((e) => e.dataset.slot === slot) || null;
+  const firstInputs = (c) => $$('input', $('.set-row', c));
+
+  function clearQueueKeys() {
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('gym:queue:')) localStorage.removeItem(k);
+      }
+    } catch { /* nothing to clear */ }
   }
 
   /* Every test returns {pass, detail}. `detail` carries what was OBSERVED, not a restatement of the
@@ -601,7 +696,14 @@
       // Put it back, and clear this device's memory of it, so only the log can bring it back.
       revert.click();
       await sleep(350);
-      try { localStorage.removeItem(`gym:swaps:${new Date().toISOString().slice(0, 10)}`); } catch {}
+      /* Every swap key, not one built from the UTC date: the page keys swaps by its Calgary session
+         date, which differs from the UTC one every evening. */
+      try {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('gym:swaps:')) localStorage.removeItem(k);
+        }
+      } catch {}
       const namesWhenReverted = cardNames();
 
       state.sessionRows = [
@@ -656,6 +758,60 @@
       };
     },
 
+    /* THE RETRY QUEUE SURVIVES A RELOAD (LD2), in two halves like swapSurvivesReload.
+     *
+     * :before writes a set with the server offline, so it is queued and mirrored to localStorage.
+     * The driver then reloads. The page replays the queue ON MOUNT, before anything evaluated after
+     * load could patch fetch, so this refuses to run unless this file was installed at document start
+     * (scripts/run-probe-gym.mjs does it with Page.addScriptToEvaluateOnNewDocument): otherwise the
+     * replay would reach the real store. :after asserts the replay posted the same set, and clears
+     * the queue keys whatever happened. */
+    async 'queueSurvivesReload:before'() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      if (!state.startedAtDocumentStart) {
+        return { pass: false, detail: 'REFUSED: this file was not installed at document start, so the replay after the reload would go to the real store. Run it through scripts/run-probe-gym.mjs.' };
+      }
+      await drain();
+      clearQueueKeys();
+      const c = weightedCard();
+      if (!c) return { pass: false, detail: 'no weighted card' };
+      const [w] = firstInputs(c);
+      state.mode = 'offline';
+      type(w, '77'); blur(w);
+      await sleep(300);
+      let stored = null;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('gym:queue:')) stored = { key: k, value: localStorage.getItem(k) };
+        }
+      } catch {}
+      const ok = !!stored && /"weight":77/.test(stored.value || '');
+      sessionStorage.setItem('__probeQueue', JSON.stringify({ eff: c.dataset.eff, weight: 77 }));
+      return {
+        pass: ok,
+        detail: { storedKey: stored?.key ?? null, holdsTheSet: ok, next: 'reload, re-eval, run queueSurvivesReload:after' },
+      };
+    },
+
+    async 'queueSurvivesReload:after'() {
+      const raw = sessionStorage.getItem('__probeQueue');
+      if (!raw) { clearQueueKeys(); return { pass: false, detail: 'no :before was recorded in this tab' }; }
+      const { eff, weight } = JSON.parse(raw);
+      const replayed = await waitFor(() => state.calls.find((c) => c.url.includes('/gym/api/set')
+        && c.body?.exerciseId === eff && c.body?.weight === weight), 6000);
+      let left = 0;
+      try {
+        for (let i = 0; i < localStorage.length; i++) if ((localStorage.key(i) || '').startsWith('gym:queue:')) left++;
+      } catch {}
+      clearQueueKeys();
+      sessionStorage.removeItem('__probeQueue');
+      return {
+        pass: !!replayed && replayed.status === 200 && left === 0,
+        detail: { replayedOnMount: !!replayed, status: replayed?.status ?? null, queueKeysLeftAfterReplay: left },
+      };
+    },
+
     /* ---- filling an empty rest, 2026-09-05 ------------------------------------------------------
      *
      * The control answering the most-repeated complaint in the note log: six notes over twelve days
@@ -670,9 +826,11 @@
 
     async fillOffersOnlyLegalPartners() {
       const t = $('.fill-toggle');
-      /* NO SOLO BLOCK IS THE DESIGNED STATE since 2026-09-06: every block is a pair, so the control has
-         nothing to offer and does not render. That is a pass, not a missing feature. The cases below
-         still exercise the control whenever a solo block exists (a swap can produce one). */
+      /* NO FILLABLE BLOCK IS THE DESIGNED STATE since 2026-09-06: every lifting block is a pair, and
+         the one solo block of each session, the jump primer, is never filled (fill.ts skips role
+         primer since 2026-09-27; before that this comment said "every block is a pair" while the
+         control was showing on both primers). No control is a pass, not a missing feature. The cases
+         below still exercise it whenever a solo lifting block exists. */
       if (!t) return { pass: true, detail: 'every block is paired, nothing to fill; control correctly absent' };
       t.click();
       const list = await waitFor(() => $('.fill-list'));
@@ -694,13 +852,18 @@
       const groups = $$('.exgroup');
       if (!groups.length) return { pass: false, detail: 'no blocks rendered' };
       const wrong = [];
+      const onPrimer = [];
       for (const g of groups) {
         const n = $$('.ex[data-slot]', g).length;
         if (n >= 2 && $('.fill-toggle', g)) wrong.push(text($('.exgroup-label', g)));
+        /* A primer's rest is recovery for the next jump. `data-role` is on every day block. */
+        if (g.dataset.role === 'primer' && $('.fill-toggle', g)) onPrimer.push(text($('.exgroup-label', g)));
       }
       return {
-        pass: wrong.length === 0,
-        detail: wrong.length ? { offeredOnAPairedBlock: wrong } : { blocks: groups.length, ok: 'no paired block offers to be filled' },
+        pass: wrong.length === 0 && onPrimer.length === 0,
+        detail: wrong.length || onPrimer.length
+          ? { offeredOnAPairedBlock: wrong, offeredOnAPrimer: onPrimer }
+          : { blocks: groups.length, primers: groups.filter((g) => g.dataset.role === 'primer').length, ok: 'no paired block and no primer offers to be filled' },
       };
     },
 
@@ -817,6 +980,261 @@
       };
     },
 
+    /* ---- the 2026-09-27 audit: saves that lost data, and the fake server's other answers ---------
+     *
+     * LD1: a blur is not a save. An empty box tapped and left posted nulls over a set already logged.
+     * LD6: two quick saves of one set could land out of order. L16/L17: a refused or waiting value
+     * must not sit on screen as if it were the server's. Each drains the queue first, because a value
+     * owed from an earlier test is laid over every hydrate and would make a fixture read back wrong. */
+
+    async emptyBlurDoesNotPost() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const row = $$('.set-row').find((r) => {
+        const [w, rp] = $$('input', r);
+        return w && rp && !w.disabled && !rp.disabled && w.value === '' && rp.value === '';
+      });
+      if (!row) return { pass: false, detail: 'no empty set row with both boxes enabled' };
+      const [w, rp] = $$('input', row);
+      const grab = since();
+      blur(w); blur(rp); blur(w);
+      await sleep(300);
+      const posted = grab().filter((c) => c.url.includes('/gym/api/set'));
+      return {
+        pass: posted.length === 0,
+        detail: { posts: posted.length, bodies: posted.map((c) => c.body), exercise: text($('.ex-name', row.closest('.ex'))) },
+      };
+    },
+
+    async unchangedBlurDoesNotPostAndAChangeDoes() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      /* THE CARD'S LAST SET ROW, not its first. Earlier tests type into the first row of the first
+         weighted card, and a value the app asked for and has not seen confirmed is laid over every
+         hydrate (L17), which is correct app behaviour and made this read back an earlier test's
+         number instead of the fixture's. The last row is touched by nothing before this. The queue is
+         drained and its storage cleared too, so nothing owed can ride in. */
+      await drain();
+      clearQueueKeys();
+      const c0 = weightedCard();
+      if (!c0) return { pass: false, detail: 'no weighted card' };
+      const slot = c0.dataset.slot;
+      const eff = c0.dataset.eff;
+      const idx = $$('.set-row', c0).length;
+      const FIX = 137;
+      state.sessionRows = [
+        { exercise_id: eff, exercise_name: 'x', set_idx: idx, weight: FIX, reps: 5, done: false, swapped_from: null, off_plan: false, fill_for: null },
+      ];
+      if (!(await rehydrate())) { state.sessionRows = null; return { pass: false, detail: 'need two tabs' }; }
+      const lastW = () => { const rows = $$('.set-row', cardBySlot(slot)); return rows[idx - 1] ? $$('input', rows[idx - 1])[0] : null; };
+      const shown = await waitFor(() => (lastW()?.value === String(FIX) ? String(FIX) : null), 5000);
+      state.sessionRows = null;
+      const w = lastW();
+      const valueAfterRehydrate = w?.value ?? null;
+      if (!w) return { pass: false, detail: { problem: 'the row vanished after rehydrate', slot, idx } };
+      const grab = since();
+      blur(w);
+      await sleep(300);
+      const afterBlur = grab().filter((x) => x.url.includes('/gym/api/set')).length;
+      type(w, String(FIX + 5)); blur(w);
+      await sleep(300);
+      const sets = grab().filter((x) => x.url.includes('/gym/api/set'));
+      return {
+        pass: shown === String(FIX) && afterBlur === 0 && sets.length === 1
+          && sets[0].body.weight === FIX + 5 && sets[0].body.setIdx === idx,
+        detail: {
+          fixture: FIX, setIdx: idx, valueAfterRehydrate, postsOnUnchangedBlur: afterBlur,
+          postsAfterChange: sets.length, sent: sets[0]?.body?.weight ?? null, sentSetIdx: sets[0]?.body?.setIdx ?? null,
+        },
+      };
+    },
+
+    async inputsWaitForTheSessionRead() {
+      state.sessionDelay = 900;
+      const tabs = $$('.tab');
+      const away = tabs.find((t) => !t.classList.contains('on'));
+      if (!away) { state.sessionDelay = 0; return { pass: false, detail: 'need two tabs' }; }
+      away.click();
+      await sleep(120);
+      const flag = $('.tabs')?.dataset.session;
+      const inputs = $$('.set-row input');
+      const enabledWhileLoading = inputs.filter((i) => !i.disabled).length;
+      await settled();
+      state.sessionDelay = 0;
+      const enabledAfter = $$('.set-row input').filter((i) => !i.disabled).length;
+      return {
+        pass: flag === 'loading' && inputs.length > 0 && enabledWhileLoading === 0 && enabledAfter > 0,
+        detail: { flagWhileLoading: flag, inputs: inputs.length, enabledWhileLoading, enabledAfter },
+      };
+    },
+
+    async aFailedSessionReadIsSaid() {
+      state.sessionFail = true;
+      const tabs = $$('.tab');
+      const away = tabs.find((t) => !t.classList.contains('on'));
+      if (!away) { state.sessionFail = false; return { pass: false, detail: 'need two tabs' }; }
+      away.click();
+      const said = await waitFor(() => $('.read-failed'), 4000);
+      const flag = $('.tabs')?.dataset.session;
+      const enabled = $$('.set-row input').filter((i) => !i.disabled).length;
+      state.sessionFail = false;
+      const again = said && $$('button', said).find((b) => /load again/i.test(text(b)));
+      if (again) again.click();
+      const cleared = await waitFor(() => !$('.read-failed') && $('.tabs')?.dataset.session === 'ready', 6000);
+      return {
+        pass: !!said && flag === 'failed' && enabled > 0 && !!cleared,
+        detail: { said: text(said), flag, enabledAfterFailure: enabled, clearedByLoadAgain: !!cleared },
+      };
+    },
+
+    async twoQuickSavesLandInOrder() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = weightedCard();
+      if (!c) return { pass: false, detail: 'no weighted card' };
+      const [w] = firstInputs(c);
+      state.plan.push({ route: '/gym/api/set', delay: 600 });
+      const grab = since();
+      type(w, '61'); blur(w);
+      await sleep(80);
+      type(w, '62'); blur(w);
+      await sleep(200);
+      const whileFirstOut = grab().filter((x) => x.url.includes('/gym/api/set')).length;
+      await waitFor(() => grab().filter((x) => x.url.includes('/gym/api/set')).length >= 2 && grab().every((x) => x.respondedAt), 3000);
+      const sets = grab().filter((x) => x.url.includes('/gym/api/set'));
+      const [a, b] = sets;
+      return {
+        pass: whileFirstOut === 1 && sets.length === 2 && a.body.weight === 61 && b.body.weight === 62
+          && b.sentAt >= a.respondedAt && w.value === '62',
+        detail: {
+          inFlightWhileTheFirstWasOut: whileFirstOut, posts: sets.length,
+          order: sets.map((x) => x.body.weight), secondSentAfterFirstAnswered: b ? b.sentAt >= a.respondedAt : null,
+          onScreen: w.value,
+        },
+      };
+    },
+
+    async aRefusedSetGoesBackToTheServerValue() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c0 = weightedCard();
+      if (!c0) return { pass: false, detail: 'no weighted card' };
+      const slot = c0.dataset.slot;
+      state.sessionRows = [
+        { exercise_id: c0.dataset.eff, exercise_name: 'x', set_idx: 1, weight: 100, reps: 5, done: false, swapped_from: null, off_plan: false, fill_for: null },
+      ];
+      await rehydrate();
+      state.sessionRows = null;
+      const [w] = firstInputs(cardBySlot(slot));
+      await waitFor(() => w.value === '100', 3000);
+      state.plan.push({ route: '/gym/api/set', status: 409 });
+      type(w, '120'); blur(w);
+      const back = await waitFor(() => (w.value === '100' ? w.value : null), 3000);
+      const banner = text($('.save-blocked'));
+      const retry = $('.save-blocked') && $$('button', $('.save-blocked')).find((b) => /try again/i.test(text(b)));
+      if (retry) retry.click();
+      const cleared = await waitFor(() => !$('.save-blocked'), 3000);
+      return {
+        pass: back === '100' && /another card/i.test(banner || '') && !!cleared,
+        detail: { valueAfter409: w.value, banner, bannerClearedByTryAgain: !!cleared },
+      };
+    },
+
+    async aServerErrorIsQueuedNotDropped() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = weightedCard();
+      if (!c) return { pass: false, detail: 'no weighted card' };
+      const [w] = firstInputs(c);
+      state.mode = 'error';
+      type(w, '71'); blur(w);
+      await sleep(300);
+      const banner = text($('.save-blocked'));
+      state.mode = 'ok';
+      const grab = since();
+      await drain();
+      const resent = grab().filter((x) => x.url.includes('/gym/api/set') && x.body.weight === 71 && x.status === 200).length;
+      return {
+        pass: /500/.test(banner || '') && /1 set/.test(banner || '') && resent === 1 && w.value === '71',
+        detail: { banner, resentAndLanded: resent, onScreen: w.value },
+      };
+    },
+
+    async waitingValuesSurviveATabSwitch() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c0 = weightedCard();
+      if (!c0) return { pass: false, detail: 'no weighted card' };
+      const slot = c0.dataset.slot;
+      const [w0] = firstInputs(c0);
+      state.mode = 'locked';
+      type(w0, '130'); blur(w0);
+      await sleep(250);
+      /* The server still says 40: the 130 never landed. */
+      state.sessionRows = [
+        { exercise_id: c0.dataset.eff, exercise_name: 'x', set_idx: 1, weight: 40, reps: 5, done: false, swapped_from: null, off_plan: false, fill_for: null },
+      ];
+      await rehydrate();
+      state.sessionRows = null;
+      const [w] = firstInputs(cardBySlot(slot));
+      const shown = w.value;
+      state.mode = 'ok';
+      await drain();
+      return {
+        pass: shown === '130',
+        detail: { serverSaid: 40, waiting: 130, onScreenAfterTabSwitch: shown },
+      };
+    },
+
+    /* ---- the three controls nothing drove, 2026-09-27 (U2) ---- */
+
+    async offPlanBoxSendsOffPlan() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const name = $('.extra-name');
+      const [wt, rp] = $$('.extra-num');
+      const add = $$('.extra-row button').find((b) => /add set/i.test(text(b)));
+      if (!name || !rp || !add) return { pass: false, detail: 'no off-plan box' };
+      type(name, 'Probe Knee Raise'); type(wt, ''); type(rp, '10');
+      await sleep(100);
+      const grab = since();
+      add.click();
+      await sleep(400);
+      const posted = grab().filter((c) => c.url.includes('/gym/api/set'));
+      const b = posted[0]?.body;
+      const listed = $$('.extra-item').some((e) => /Probe Knee Raise/.test(text(e)));
+      /* `offPlan: true` is what routes the write to the append and stamps `off_plan`, which the
+         store's overwrite guard compares (LD3). No `setIdx`: the server picks it. */
+      return {
+        pass: posted.length === 1 && b?.offPlan === true && b?.exerciseId === 'probe-knee-raise' && b?.reps === 10
+          && !('setIdx' in (b || {})) && listed,
+        detail: { posts: posted.length, body: b, listedOnScreen: listed },
+      };
+    },
+
+    async oneMoreSetAddsARowThatSaves() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = $$('.ex[data-slot]').find((e) => $('.add-set', e));
+      if (!c) return { pass: false, detail: 'no "+ one more set" control' };
+      const slot = c.dataset.slot;
+      const before = $$('.set-row', c).length;
+      $('.add-set', c).click();
+      await sleep(200);
+      const card2 = cardBySlot(slot);
+      const rows = $$('.set-row', card2);
+      const after = rows.length;
+      const last = rows[rows.length - 1];
+      const [, reps] = $$('input', last);
+      const grab = since();
+      type(reps, '7'); blur(reps);
+      await sleep(300);
+      const posted = grab().filter((x) => x.url.includes('/gym/api/set'));
+      return {
+        pass: after === before + 1 && posted.length === 1 && posted[0].body.setIdx === after && posted[0].body.reps === 7,
+        detail: { rowsBefore: before, rowsAfter: after, sentSetIdx: posted[0]?.body?.setIdx ?? null },
+      };
+    },
+
     /* ---- refusal and recovery ---- */
 
     async refusedWriteRaisesTheBanner() {
@@ -881,6 +1299,29 @@
       await sleep(350);
       const label = text($('.timer-label'));
       return { pass: (label || '').startsWith(shown), detail: { nameOnScreen: shown, timerSays: label } };
+    },
+
+    /* "RAN OUT OF TIME" SENDS THE OTHER ENDING, and a finish the server has no session for is SAID.
+       The fake server answers the finish 409, which is what /gym/api/finish now returns when no
+       session row exists for that date and day (L1). The page used to print "Session saved." over an
+       update that touched nothing; it must say nothing is logged, and must not land a finish, so
+       finishPostsExactlyOnce still counts one. */
+    async ranOutOfTimeSendsCutShortAndA409IsSaid() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      state.mode = 'ok';
+      const btn = $$('button.ghost').find((b) => /ran out of time/i.test(text(b)));
+      if (!btn) return { pass: false, detail: 'no "Ran out of time" button (session already saved?)' };
+      state.plan.push({ route: '/gym/api/finish', status: 409 });
+      const grab = since();
+      btn.click();
+      await sleep(700);
+      const fin = grab().filter((c) => c.url.includes('/gym/api/finish'));
+      const line = text($('.finish-blocked'));
+      const claimsSaved = /session saved/i.test(document.body.innerText);
+      return {
+        pass: fin.length === 1 && fin[0].body?.status === 'cutshort' && /no set is logged/i.test(line || '') && !claimsSaved,
+        detail: { finishPosts: fin.length, sentStatus: fin[0]?.body?.status ?? null, lineUnderButton: line, claimsSaved },
+      };
     },
 
     /* Builds its own precondition rather than inheriting one, the same way
@@ -1067,16 +1508,25 @@
       };
     },
 
+    /* EXACTLY ONE LANDED FINISH across a full run, since 2026-09-27. It passed on any number of posts
+       as long as their bodies matched, so a finish sent three times read green. Refused attempts
+       (401, 409, no network) are counted separately: they are the tests above doing their job.
+       Meaningful only after unlockingFlushesEverythingAndFinishes, which is the one test that lands
+       a finish; run by name alone it reports 0 and fails. */
     async finishPostsExactlyOnce() {
       const all = finishes();
+      const landed = all.filter((c) => c.status === 200);
       return {
-        pass: all.length <= 1 || new Set(all.map((c) => JSON.stringify(c.body))).size === 1,
-        detail: { finishCalls: all.length, bodies: all.map((c) => c.body) },
+        pass: landed.length === 1,
+        detail: { landedFinishes: landed.length, attempts: all.length, bodies: landed.map((c) => c.body) },
       };
     },
   };
 
-  const NEEDS_RELOAD = new Set(['swapSurvivesReload:before', 'swapSurvivesReload:after']);
+  const NEEDS_RELOAD = new Set([
+    'swapSurvivesReload:before', 'swapSurvivesReload:after',
+    'queueSurvivesReload:before', 'queueSurvivesReload:after',
+  ]);
 
   /* CAN THIS PAGE EVEN PRODUCE A BLUR? Asked before any test runs, and the answer is measured, not
    * assumed.
@@ -1140,11 +1590,16 @@
     const out = {};
     for (const n of names) {
       try {
+        await settled();
         out[n] = await tests[n]();
       } catch (e) {
         out[n] = { pass: false, detail: { threw: String(e && e.stack ? e.stack.split('\n')[0] : e) } };
       }
     }
+    /* Nothing this run queued may outlive it: the next load of /gym in this browser would replay it,
+       and a load the driver did not stub would send it to the real store. The :before half of the
+       reload pair is the one exception, because its whole point is a queue that survives. */
+    if (only !== 'queueSurvivesReload:before') clearQueueKeys();
     const failed = Object.entries(out).filter(([, v]) => !v.pass).map(([k]) => k);
     return JSON.stringify({
       ran: names.length,
@@ -1155,6 +1610,6 @@
     });
   }
 
-  window.__probe = { install, run, canBlur, tests, state, helpers: { type, blur, text, card, cardNames, waitFor, sleep, $, $$ } };
+  window.__probe = { install, run, canBlur, tests, state, clearQueueKeys, helpers: { type, blur, text, card, cardNames, waitFor, sleep, settled, drain, $, $$ } };
   return install();
 })();

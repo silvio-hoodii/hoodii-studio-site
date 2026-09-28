@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * he changes them. `weekly` is the honest answer now. */
     /* /swim left this list on 2026-09-27: it renders on every request (its tabs are a query string),
        so a crawler working through the sitemap woke the database for it. It is still linked from
-       the index and the header. */
+       the index and from the training chips on every training page. */
     { url: 'https://hoodii.studio/reading', changeFrequency: 'monthly', priority: 0.6 },
 
     /* The /work case studies were listed here until 2026-09-15, when they were deleted along with

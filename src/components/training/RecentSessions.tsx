@@ -57,7 +57,7 @@ const TREND: Partial<
     label: 'Cadence',
     unit: 'spm',
     of: (s) => s.avgCadence,
-    floor: 170,
+    /* No floor: a fixed 170 contradicted the step-rate cue, whose target is his own baseline x 1.05. */
     note: 'Higher is better.',
   },
   strength: {

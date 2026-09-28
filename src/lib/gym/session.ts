@@ -148,32 +148,32 @@ export function sessionVerdict(s: SessionDetail): string | null {
   return null;
 }
 
-/* THE HIGHEST HEART RATE HIS WATCH HAS EVER RECORDED, derived, because it was typed and it was wrong.
+/* THE TOP OF HIS RECORDED HEART-RATE RANGE, derived, because it was typed and it was wrong.
  *
  * `content/gym/conditioning.json` asserted in five rendered strings that his highest recorded heart
- * rate is 175. Live: `select max(max_hr) from health_session_detail` returns 201, and 23 of his 60
- * swims with a reading exceed 175. Six swims tie at exactly 175, which is almost certainly where the
- * number came from: 175 is a MODE, not a maximum. Found by the 2026-08-28 /run and /bike audit
- * (12-run-bike B1) and verified independently by the orchestrator before anything was changed.
+ * rate is 175. 175 was a MODE, not a maximum: six swims tie there and many beat it. Found by the
+ * 2026-08-28 /run and /bike audit (12-run-bike B1).
  *
- * THE COST WAS NOT CREDIBILITY, IT WAS A STOP RULE THAT FIRES ROUTINELY. Cue 7 on /bike?s=how is the
- * only stop rule anywhere in the week, and it read "HEART RATE ABOVE 175, higher than anything you
- * have ever recorded". He has beaten it on 23 of his last 60 swims. A stop rule that goes off on a
- * normal day is a stop rule he learns to ignore, which is worse than not having one.
+ * THE COST WAS A STOP RULE THAT FIRES ROUTINELY. The stop rule on /bike?s=how is the only one in the
+ * week. A stop rule that goes off on a normal day is one he learns to ignore.
  *
- * SO IT IS DERIVED AND CAN NEVER AGAIN NAME A NUMBER HE HAS PASSED. The page interpolates this rather
- * than carrying a figure: it is the maximum, so nothing is above it by construction.
+ * THE SECOND-HIGHEST DISTINCT SESSION MAX, NOT THE MAX, since 2026-09-27. The single highest reading
+ * is one wrist-sensor value inside one swim, which is the least trustworthy case there is (checked
+ * 2026-09-27: 203 on a swim, then 201, 195, 194). Taking the second distinct value drops one spike and
+ * still sits above everything but that spike, so the stop rule still cannot name a number he routinely
+ * passes.
  *
- * WHICH ANCHOR THE PRESCRIPTION SHOULD USE IS HIS CALL, NOT THIS FUNCTION'S. `kind` is returned
- * because it matters: the single highest reading is a wrist sensor in a swimming pool, which is the
- * least trustworthy case there is, and 85 to 95 percent of 201 is a real intensity increase for a
- * beginner. The question is parked as an `open` row on the bike block in conditioning.json.
+ * WHY health_session_detail AND NOT health_watch_session. The watch-session table goes back to 2019
+ * but carries no max heart rate at all (its columns are minutes, calories and avg_hr, checked against
+ * information_schema 2026-09-27). The detail table is the only one with a per-session max, and it
+ * starts 2026-02-21. So this is the top of the range since then, not of his life, and the page does
+ * not say "ever".
  *
- * `sessionsAbove` and the `excludeSwimming` option were removed on 2026-09-27: the count was a second
- * query that returned 0 by construction, and neither had a reader.
+ * WHICH ANCHOR THE PRESCRIPTION SHOULD USE IS HIS CALL, NOT THIS FUNCTION'S. The question is parked
+ * as an `open` row on the bike block in conditioning.json.
  */
 export interface PeakHr {
-  /** The highest single reading, whatever produced it. */
+  /** The second-highest distinct per-session max: the top of the range with one spike dropped. */
   bpm: number;
   /** When, so a page can date the claim instead of asserting it. */
   date: string;
@@ -182,10 +182,18 @@ export interface PeakHr {
 }
 
 export async function getPeakHr(): Promise<PeakHr | null> {
+  /* The newest session carrying the second-highest distinct max. With only one distinct value on
+     record there is no spike to drop and that value is used. */
   const rows = await sql`
+    with tops as (
+      select distinct max_hr from health_session_detail
+      where max_hr is not null
+      order by max_hr desc
+      limit 2
+    )
     select date, kind, max_hr from health_session_detail
-    where max_hr is not null
-    order by max_hr desc, start_time desc
+    where max_hr = (select min(max_hr) from tops)
+    order by start_time desc
     limit 1
   `;
   const top = rows[0] as { date: unknown; kind: string; max_hr: number } | undefined;

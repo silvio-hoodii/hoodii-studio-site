@@ -698,8 +698,9 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
  * Above it, every route was the same phone column standing in a void on a 1440px screen (audit
  * finding F21). The surfaces that lost something to that are the ones whose content is rows,
  * charts and dates rather than sentences: the dish menu, the listening history, the body charts,
- * the curio ledger. Reading surfaces do NOT opt in, on purpose. The hub, a dish page and the gym
- * log keep the narrow column, because a wider void with intent beats a stretched paragraph.
+ * the curio ledger. Since 2026-09-27 the index, the dish pages and the reading pages opt in too,
+ * each with a grid of its own; /gym and its log keep the narrow column, because a form he fills at
+ * the rack is one column, and a wider void with intent beats a stretched paragraph.
  *
  * One value, not one per surface. Twelve date formats and three h1 clamps are what the last pass
  * spent its time undoing, and a second breakpoint width would be the same mistake with a new name.
@@ -742,16 +743,17 @@ a[target='_blank']:not(.row):not([aria-hidden='true'])::after {
 /* ---- a picture that draws itself in ----
  *
  * Only under `.readout.in`, which the wrapper adds on first sight, so a chart that arrives without
- * JavaScript is simply drawn. `.vbar` grows from its baseline; `.vline` is a polyline or path with
+ * JavaScript is simply drawn. `.still` is added too when the chart was already on screen at
+ * hydration: the server drawing was complete, and animating it then meant a collapse and a regrow. `.vbar` grows from its baseline; `.vline` is a polyline or path with
  * pathLength="1", so one dash covers its whole length whatever the geometry. The stagger reads the
  * bar's index off a custom property the chart sets inline. */
-.readout.in .vbar {
+.readout.in:not(.still) .vbar {
   transform-box: fill-box;
   transform-origin: bottom;
   animation: vbar 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 18ms);
 }
-.readout.in .vline {
+.readout.in:not(.still) .vline {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: vline 1100ms ease-out forwards;

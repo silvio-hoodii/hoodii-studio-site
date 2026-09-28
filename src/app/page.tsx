@@ -1,5 +1,4 @@
 import { computeNextUp } from '@/lib/gym/cycle';
-import { getTrainingStreak } from '@/lib/gym/week';
 import { dayOf, today } from '@/lib/day';
 import { daysAgoText, shortDate } from '@/lib/format';
 import { loadProgram } from '@/lib/gym/program';
@@ -14,6 +13,7 @@ import { getShelves } from '@/lib/reading/goodreads';
 import { BarSpark, DayStrip, LineSpark } from '@/components/Spark';
 import Track from '@/components/Track';
 import Readout from '@/components/Readout';
+import Ago from '@/components/Ago';
 import HubQuiz from './HubQuiz';
 import UseStrip from './UseStrip';
 import './hub.css';
@@ -72,11 +72,13 @@ import './curio/curio.css';
  * which is a class of problem rather than a number to tune. Calling revalidatePath('/') from the
  * write routes and dropping this to a daily safety net would mean the index regenerates only when
  * something it shows actually changed, inside a wake his own write already paid for. */
-/* SIX HOURS, WITH ON-DEMAND REGENERATION, since 2026-09-27. The gym write routes, the kitchen note
- * route and the music cron call revalidatePath('/') when they change what this page shows, and the
- * two laptop pipelines call /api/revalidate (scripts/revalidate.mjs) after they write to Neon. The
- * timer is the safety net now, not the mechanism, and at 21600 the arithmetic above gives 1.4%
- * awake instead of 8.3%. */
+/* SIX HOURS, WITH ON-DEMAND REGENERATION, since 2026-09-27. The gym write routes and the music cron
+ * call revalidatePath('/') when they change what this page shows, and the two laptop pipelines call
+ * /api/revalidate (scripts/revalidate.mjs) after they write to Neon. revalidatePath from a route
+ * handler MARKS the page stale; the next request rebuilds it, which is why revalidate.mjs fetches
+ * the page right after, inside the wake the pipeline's own writes paid for. The timer is the
+ * safety net now, not the mechanism, and at 21600 the arithmetic above gives 1.4% awake instead
+ * of 8.3%. */
 export const revalidate = 21600;
 
 /* Declared here rather than in the root layout, where it would be inherited by every route and
@@ -107,9 +109,7 @@ interface Row {
   label: string;
   line: React.ReactNode;
   sub?: React.ReactNode;
-  href?: string;
-  external?: boolean;
-  off?: boolean;
+  href: string;
   /* A word-sized picture of the same fact, since 2026-09-27 ("more graphic stuff instead of just
      walls of text"). See src/components/Spark.tsx. */
   viz?: React.ReactNode;
@@ -117,11 +117,10 @@ interface Row {
 
 async function gymRow(): Promise<Row> {
   try {
-    const [nextUp, program, streak, adherence] = await Promise.all([
+    const [nextUp, program, adherence] = await Promise.all([
       computeNextUp(today()),
       loadProgram(),
-      getTrainingStreak(),
-      getLiftingAdherence(28),
+      getLiftingAdherence(28, 'strength'),
     ]);
     /* The last four weeks as squares: lifted, rested, or not reported yet. */
     /* A day the app logged is a day trained, whether or not the watch export has reached it. It
@@ -129,8 +128,18 @@ async function gymRow(): Promise<Row> {
     const on = (d: { trained: boolean; logged: boolean }) => d.trained || d.logged;
     const strip = adherence.days.map((d) => (!d.known ? 'unknown' : on(d) ? 'on' : 'off') as 'on' | 'off' | 'unknown');
     const lifted = adherence.days.filter(on).length;
-    const dayLabels = adherence.days.map((d) => `${shortDate(d.date)}, ${!d.known ? 'not synced yet' : on(d) ? 'trained' : 'rest'}`);
-    const viz = <DayStrip days={strip} labels={dayLabels} label={`${lifted} of the last ${strip.length} days trained`} />;
+    /* THE STREAK, off the same 28 days. It was getTrainingStreak(), which ran the same three
+       queries a second time (2026-09-27 index audit, SLOW 34): the run length at the last day the
+       record reaches, with a day the app logged counting as trained, which is the rule actualBlock
+       in src/lib/gym/week.ts applies on /health. */
+    let run = 0;
+    let streakRun = 0;
+    for (const d of adherence.days) {
+      run = on(d) ? run + 1 : 0;
+      if (d.known) streakRun = run;
+    }
+    const dayLabels = adherence.days.map((d) => `${shortDate(d.date)}, ${!d.known ? 'not synced yet' : on(d) ? 'lifted' : 'no lift'}`);
+    const viz = <DayStrip days={strip} labels={dayLabels} label={`${lifted} of the last ${strip.length} days lifted`} />;
     const day = program.days[nextUp.nextDay];
     const next = day ? splitName(day) : nextUp.nextDay;
     const since = nextUp.daysSince;
@@ -142,22 +151,23 @@ async function gymRow(): Promise<Row> {
       label: 'Gym',
       line:
         since != null && since > 1 ? (
-          <>Last lifted <span className="live tnum">{daysAgoText(since)}</span>, next up {next}</>
+          <>Last lifted <span className="live tnum">{nextUp.lastDate ? <Ago date={nextUp.lastDate} text={daysAgoText(since)} /> : daysAgoText(since)}</span>, next up {next}</>
         ) : (
           /* "Lower B" is a name, not a number: it had .tnum on it, and --signal, which globals
              reserves for a value that is true right now. /gym renders the same string in plain grey
              one click away. Nothing in this branch is a live number, so nothing is green. */
           <>Next up <b>{next}</b></>
         ),
-      /* The streak here and the streak on the week page are now the same number out of the same
-         function. Until 2026-08-26 this row counted only days the app logged, so a swim or a run
-         the watch recorded advanced the count one click away and not here. */
-      sub: streak.run > 0 ? `${streak.run}-day streak` : 'logged between sets',
+      /* The same rule the week page applies (a swim or a run the watch recorded counts, and so
+         does a lift the app logged), computed above from the days this row already fetched. */
+      sub: streakRun > 1 ? `${streakRun} lifting days in a row` : undefined,
       href: '/gym',
       viz,
     };
-  } catch {
-    return { label: 'Gym', line: <span className="quiet">did not load</span>, href: '/gym' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Gym row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
@@ -186,7 +196,7 @@ async function healthRow(): Promise<Row> {
     if (sync.stale) {
       return {
         label: 'Health',
-        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
+        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured <Ago date={summary.latest.date} text={daysAgoText(summary.daysSinceLatest ?? 0)} /></>,
         sub: 'the watch sync has stopped',
         href: '/health',
         viz,
@@ -195,7 +205,7 @@ async function healthRow(): Promise<Row> {
     if (summary.stale) {
       return {
         label: 'Health',
-        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured {daysAgoText(summary.daysSinceLatest ?? 0)}</>,
+        line: <>Weight <span className="tnum">{summary.latest.kg.toFixed(1)} kg</span>, last measured <Ago date={summary.latest.date} text={daysAgoText(summary.daysSinceLatest ?? 0)} /></>,
         sub: `no measurement since ${summary.latest.date}`,
         href: '/health',
         viz,
@@ -207,12 +217,14 @@ async function healthRow(): Promise<Row> {
          14-day stale line, so a nine-day-old weight wore the colour reserved for a value true right
          now, beside a raw ISO date. The age now reads the same way it does in the two branches above. */
       line: <>Weight <span className={(summary.daysSinceLatest ?? 0) <= 1 ? 'live tnum' : 'tnum'}>{summary.latest.kg.toFixed(1)} kg</span></>,
-      sub: `last measured ${daysAgoText(summary.daysSinceLatest ?? 0)}`,
+      sub: <>last measured <Ago date={summary.latest.date} text={daysAgoText(summary.daysSinceLatest ?? 0)} /></>,
       href: '/health',
       viz,
     };
-  } catch {
-    return { label: 'Health', line: <span className="quiet">did not load</span>, href: '/health' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Health row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
@@ -235,8 +247,10 @@ async function readingRow(): Promise<Row | null> {
         <img className="vcover" src={now.cover} alt="" loading="lazy" />
       ) : undefined,
     };
-  } catch {
-    return { label: 'Reading', line: <span className="quiet">did not load</span>, href: '/reading' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Reading row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
@@ -267,15 +281,17 @@ async function swimRow(): Promise<Row> {
       label: 'Swim',
       line: (
         <>
-          Last swim <b className="tnum">{Math.round(s.lastDistanceM ?? 0)} m</b>, {daysAgoText(days)}
+          Last swim <b className="tnum">{Math.round(s.lastDistanceM ?? 0)} m</b>, <Ago date={s.lastDate} text={daysAgoText(days)} />
         </>
       ),
       sub: `${s.totalSessions} sessions, longest ${Math.round(s.longestDistanceM ?? 0).toLocaleString('en-CA')} m`,
       href: '/swim',
       viz: <BarSpark values={swims} labels={swimLabels} label={`Distance of the last ${swims.length} swims`} />,
     };
-  } catch {
-    return { label: 'Swim', line: <span className="quiet">did not load</span>, href: '/swim' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Swim row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
@@ -289,8 +305,10 @@ async function curioRow(): Promise<Row> {
       sub: s.latestQuestion ?? `${s.digests} mornings`,
       href: '/curio',
     };
-  } catch {
-    return { label: 'Curio', line: <span className="quiet">did not load</span>, href: '/curio' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Curio row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
@@ -355,20 +373,13 @@ async function musicRow(): Promise<Row> {
       href: '/music',
       viz,
     };
-  } catch {
-    return { label: 'Music', line: <span className="quiet">did not load</span>, href: '/music' };
+  } catch (e) {
+    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
+       six hours. A failed regeneration keeps the last good copy on screen instead. */
+    throw new Error(`Music row: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
 
-const STATIC_ROWS: Row[] = [
-  /* Swim used to sit here, hand-written, pointing at swim.hoodii.studio. It became a real route on
-   * 2026-08-16 and its row has been DERIVED ever since, which is the actual fix for the drift this
-   * list kept producing. What it derives FROM changed on 2026-08-26, when the pool schedule was
-   * deleted and /swim became his own swimming: see swimRow() above. */
-  /* Theories was here, pointing at theoryos-review.vercel.app, which renders nothing but its own
-   * title. A link to an empty page is worse than no link and breaks the honest-states rule below.
-   * The app still exists and is untouched; it is just not advertised until it has content. */
-];
 
 function RowView({ r }: { r: Row }) {
   const inner = (
@@ -380,17 +391,11 @@ function RowView({ r }: { r: Row }) {
         {/* Readout: tap a bar for its value, and the picture draws in on first sight. */}
         {r.viz && <Readout className="viz">{r.viz}</Readout>}
       </div>
-      {/* An app on this domain gets →, somebody else’s website gets ↗. */}
-      <div className="arrow">{r.href && !r.off ? (r.external ? '↗' : '→') : '·'}</div>
+      <div className="arrow">&rarr;</div>
     </>
   );
 
-  if (!r.href) return <div className="row off">{inner}</div>;
-  return (
-    <a className="row" href={r.href} {...(r.external ? { target: '_blank', rel: 'noreferrer' } : {})}>
-      {inner}
-    </a>
-  );
+  return <a className="row" href={r.href}>{inner}</a>;
 }
 
 export default async function Home() {
@@ -399,7 +404,7 @@ export default async function Home() {
   const [gym, health, swim, curio, music, reading] = await Promise.all([
     gymRow(), healthRow(), swimRow(), curioRow(), musicRow(), readingRow(),
   ]);
-  const rows = [gym, health, swim, curio, music, reading, ...STATIC_ROWS].filter(
+  const rows = [gym, health, swim, curio, music, reading].filter(
     (r): r is Row => r !== null,
   );
 

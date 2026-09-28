@@ -9,10 +9,16 @@ import { VAPID_PUBLIC_KEY } from './push-key';
  * The VAPID subject is the site's URL rather than an email address: push services only need a way
  * to reach the sender, and a URL leaks nothing. */
 
+export type SendOutcome = 'sent' | 'removed' | 'failed';
+
 export interface SendResult {
+  /** How many subscriptions there were to send to, so "sent 0" can be told apart from "nobody". */
+  total: number;
   sent: number;
   removed: number;
   failed: string[];
+  /** Per endpoint. Server-side only: the routes answer for one named device, never list them. */
+  outcomes: Map<string, SendOutcome>;
 }
 
 export async function saveSubscription(sub: webpush.PushSubscription): Promise<void> {
@@ -35,12 +41,13 @@ export async function sendToAll(title: string, body: string, url: string): Promi
     endpoint: string; sub: webpush.PushSubscription | string;
   }>;
   const payload = JSON.stringify({ title, body, url });
-  const out: SendResult = { sent: 0, removed: 0, failed: [] };
+  const out: SendResult = { total: subs.length, sent: 0, removed: 0, failed: [], outcomes: new Map() };
   for (const s of subs) {
     const sub = typeof s.sub === 'string' ? (JSON.parse(s.sub) as webpush.PushSubscription) : s.sub;
     try {
       await webpush.sendNotification(sub, payload, { TTL: 60 * 60 * 12 });
       out.sent += 1;
+      out.outcomes.set(s.endpoint, 'sent');
       await sql`update curio_push set last_ok = now(), last_error = null where endpoint = ${s.endpoint}`;
     } catch (e) {
       const code = (e as { statusCode?: number }).statusCode;
@@ -50,9 +57,11 @@ export async function sendToAll(title: string, body: string, url: string): Promi
       if (code === 404 || code === 410) {
         await removeSubscription(s.endpoint);
         out.removed += 1;
+        out.outcomes.set(s.endpoint, 'removed');
       } else {
         const msg = `${code ?? ''} ${String((e as Error).message ?? e)}`.trim();
         out.failed.push(msg);
+        out.outcomes.set(s.endpoint, 'failed');
         await sql`update curio_push set last_error = ${msg} where endpoint = ${s.endpoint}`;
       }
     }

@@ -389,7 +389,7 @@ export async function getYearReview(): Promise<YearReview> {
             union all
             select g.date, 'strength', 0
               from (select distinct date from gym_set
-                     where done = true and reps > 0 and date >= ${lastFrom} and date <= ${to}) g
+                     where (done = true or reps > 0) and reps > 0 and date >= ${lastFrom} and date <= ${to}) g
              where not exists (select 1 from health_watch_session w where w.date = g.date)
             order by 1`,
 

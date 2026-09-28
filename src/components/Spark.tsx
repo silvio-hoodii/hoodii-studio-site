@@ -19,12 +19,15 @@ interface Common {
    thing and the gap between two readings is not. `labels`, when given, is one readout per point. */
 /* Two drawings per spark, a phone one and a desktop one, and hub.css shows one of them per
    breakpoint. Scaling the phone drawing with CSS made a 1.5px stroke 4px wide on the index board,
-   because everything in an SVG scales with its box; two sizes is the class removed. */
+   because everything in an SVG scales with its box; two sizes is the class removed. Both carry the
+   label: the hidden one is display:none, which a screen reader skips on its own. The desktop
+   drawing is 300 wide, under the narrowest tile body (about 310 at three across), and hub.css caps
+   it at 100% as the safety net. */
 export function LineSpark(props: Common & { values: number[]; labels?: string[]; minSpan?: number }) {
   return (
     <>
       <LineSparkAt {...props} />
-      <LineSparkAt {...props} width={320} height={72} big />
+      <LineSparkAt {...props} width={300} height={72} big />
     </>
   );
 }
@@ -46,7 +49,7 @@ function LineSparkAt({ values, labels, width = 132, height = 36, label, big = fa
   /* One invisible hit column per point, so a tap anywhere along the line reads the nearest value. */
   const colW = (width - pad * 2) / (values.length - 1);
   return (
-    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label} aria-hidden={big || undefined}>
+    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
       <polyline className="vline" pathLength={1} points={pts} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" opacity="0.55" />
       <circle cx={x(values.length - 1)} cy={y(last)} r={big ? 3.2 : 2.6} fill="currentColor" />
       {labels && labels.map((t, i) => (
@@ -62,7 +65,7 @@ export function BarSpark(props: Common & { values: number[]; labels?: string[] }
   return (
     <>
       <BarSparkAt {...props} />
-      <BarSparkAt {...props} width={320} height={72} big />
+      <BarSparkAt {...props} width={300} height={72} big />
     </>
   );
 }
@@ -72,7 +75,7 @@ function BarSparkAt({ values, labels, width = 132, height = 36, label, big = fal
   const gap = 2;
   const bw = Math.max(2, (width - gap * (values.length - 1)) / values.length);
   return (
-    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label} aria-hidden={big || undefined}>
+    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
       {values.map((v, i) => {
         const h = Math.max(1.5, (v / hi) * (height - 2));
         const last = i === values.length - 1;
@@ -100,11 +103,11 @@ export function DayStrip(props: { days: ('on' | 'off' | 'unknown')[]; labels?: s
 }
 function DayStripAt({ days, labels, label, big = false }: { days: ('on' | 'off' | 'unknown')[]; labels?: string[]; label: string; big?: boolean }) {
   if (!days.length) return null;
-  const s = big ? 12 : 8;
-  const gap = big ? 4 : 3;
+  const s = big ? 9 : 8;
+  const gap = big ? 2 : 3;
   const width = days.length * (s + gap) - gap;
   return (
-    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={s + 2} viewBox={`0 0 ${width} ${s + 2}`} role="img" aria-label={label} aria-hidden={big || undefined}>
+    <svg className={big ? 'spark spark-l' : 'spark spark-s'} width={width} height={s + 2} viewBox={`0 0 ${width} ${s + 2}`} role="img" aria-label={label}>
       {days.map((d, i) => (
         <rect key={i} x={i * (s + gap) + 0.5} y={1} width={s - 1} height={s - 1} rx="1"
           data-r={labels?.[i]}

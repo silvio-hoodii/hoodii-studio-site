@@ -106,12 +106,6 @@ export interface ScrapsRow {
   pctWith30: number;
 }
 
-export interface CoverageRow {
-  column: string;
-  from: string;
-  days: number;
-}
-
 export interface DailyReview {
   /** The last complete 28 days, anchored on the newest complete day rather than on today. */
   now: DayWindow;
@@ -122,7 +116,6 @@ export interface DailyReview {
   season: SeasonRow[];
   seasonYears: string[];
   scraps: ScrapsRow[];
-  coverage: CoverageRow[];
   /** Newest complete day in the store, and how stale that makes the page. */
   newest: string | null;
   daysBehind: number | null;
@@ -237,11 +230,6 @@ export async function getDailyReview(): Promise<DailyReview> {
              and not exists (select 1 from gym_set g where g.date = d.date)
            group by 1 order by 1`,
 
-      /* WHERE THE STEPS RECORD STARTS, for the page's h1. Counted, never typed. The six other
-         columns this query used to count fed a coverage table deleted on 2026-09-15. */
-      sql`select 'steps' as column, min(date) as from_date, count(*)::int as days
-            from health_daily where not partial and steps is not null`,
-
       /* FLOORS. Half-independent of steps (r = 0.56), the metric that moved furthest, and the one
          nobody has ever seen: activity.day_summary's own floor_count died in October 2024 and the
          per-climb events replaced it, verified equal on all 296 days both exist. */
@@ -255,9 +243,11 @@ export async function getDailyReview(): Promise<DailyReview> {
     ]),
   ]);
 
-  const [wNow, months, season, scraps, coverage, floors] = rows as [
+  /* No coverage query since 2026-09-27: the h1 took its year from the first steps row (2019) while
+     the charts start in 2022, so it now takes the year from `months`, the rows the charts draw. */
+  const [wNow, months, season, scraps, floors] = rows as [
     Record<string, unknown>[], Record<string, unknown>[], Record<string, unknown>[],
-    Record<string, unknown>[], Record<string, unknown>[], Record<string, unknown>[],
+    Record<string, unknown>[], Record<string, unknown>[],
   ];
 
   const seasonYears = [...new Set(season.map((r) => String(r.yr)))].sort();
@@ -301,11 +291,6 @@ export async function getDailyReview(): Promise<DailyReview> {
       medianLongestMin: Number(r.longest),
       medianActiveMin: Number(r.active),
       pctWith30: Math.round(Number(r.pct30)),
-    })),
-    coverage: coverage.map((r) => ({
-      column: String(r.column),
-      from: String(r.from_date),
-      days: Number(r.days),
     })),
     newest: newestDate,
     daysBehind: newestDate ? daysBetween(newestDate, today()) : null,

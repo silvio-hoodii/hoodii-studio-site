@@ -71,9 +71,16 @@ export default function Recall({ pack }: { pack: Pack }) {
   const byId = useMemo(() => new Map(pack.cards.map((c) => [c.id, c])), [pack.cards]);
   const card: Card | undefined = byId.get(order[at] ?? '');
 
-  const graded = Object.keys(grades).length;
-  const got = Object.values(grades).filter((g) => g === 'got').length;
-  const missedIds = Object.entries(grades).filter(([, g]) => g === 'missed').map(([id]) => id);
+  /* ONLY GRADES FOR CARDS THIS PACK STILL HAS, since 2026-09-27. A card removed from the pack kept
+     its stored grade, so it counted in the score and in "Redo the N I missed", and the redo run
+     landed on an id with no card behind it. */
+  const live = Object.entries(grades).filter(([id]) => byId.has(id));
+  const graded = live.length;
+  const got = live.filter(([, g]) => g === 'got').length;
+  const missedIds = live.filter(([, g]) => g === 'missed').map(([id]) => id);
+  /* "Right so far" is THIS run: the cards already passed in `order`, each graded in this run. The
+     stored total also held earlier visits, so the count started above zero on a fresh run. */
+  const gotThisRun = order.slice(0, at).filter((id) => grades[id] === 'got').length;
 
   const grade = (g: Grade) => {
     if (!card) return;
@@ -169,7 +176,7 @@ export default function Recall({ pack }: { pack: Pack }) {
     <div className="deck">
       <div className="prog">
         <span className="tnum">{at + 1}</span> of <span className="tnum">{order.length}</span>
-        {graded > 0 && <span className="sofar">{got} right so far</span>}
+        {at > 0 && <span className="sofar">{gotThisRun} right so far</span>}
       </div>
 
       {card && (

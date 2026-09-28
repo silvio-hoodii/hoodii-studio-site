@@ -132,7 +132,7 @@
       "sec": "s4",
       "kind": "why",
       "q": "Watanabe develops feelings for Midori while still visiting Naoko. Does the book judge him for it?",
-      "a": "It does not let him off, and it does not condemn him either. Worth saying where you land: he is honest about the overlap and cruel to nobody deliberately, and both women are hurt anyway."
+      "a": "It does not let him off, and it does not condemn him either. Worth saying where you land: he is open about the overlap and cruel to nobody deliberately, and both women are hurt anyway."
     },
     {
       "id": "n12",
@@ -161,7 +161,7 @@
   ],
   "talk": {
     "short": "A man of thirty-seven hears a Beatles song on a plane and it drops him back into being twenty in Tokyo, caught between two women: one the fragile girlfriend of his best friend who killed himself, the other a blunt, funny classmate who is entirely alive to the present. It is a book about how you carry other people's deaths and whether you are allowed to go on living afterwards.",
-    "if_pressed": "It is Murakami's realist novel, with none of the surreal machinery he is usually known for, which is exactly why it sold as it did. The structure matters: it is a memory, so it is elegiac even in the funny parts, and the ending withholds resolution on purpose. The final exchange is the whole book compressed into a question about location.",
+    "if_pressed": "It is Murakami's realist novel, with none of the surreal machinery he is usually known for, which is exactly why it sold as it did. The structure matters: it is a memory, so it is elegiac even in the funny parts, and the ending deliberately withholds resolution. The final exchange is the whole book compressed into a question about location.",
     "arguments": [
       {
         "q": "Is Midori the right answer or the easy one?",

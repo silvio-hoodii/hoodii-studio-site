@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSessionDay, getSessionForHydrate } from '@/lib/gym/db';
+import { getSessionForHydrate } from '@/lib/gym/db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,8 +11,9 @@ export async function POST(req: Request) {
     const b = await req.json();
     if (!b?.date) return NextResponse.json({ ok: false, error: 'date required' }, { status: 400 });
     const date = String(b.date);
-    const [day, sets] = await Promise.all([getSessionDay(date), getSessionForHydrate(date)]);
-    return NextResponse.json({ ok: true, date, day, sets });
+    /* No `day` in the answer since 2026-09-27: nothing on the page read it. */
+    const sets = await getSessionForHydrate(date);
+    return NextResponse.json({ ok: true, date, sets });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
   }

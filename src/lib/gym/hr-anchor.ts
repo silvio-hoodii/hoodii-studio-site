@@ -20,8 +20,8 @@ import type { Cue } from './types';
  *   typed figure was wrong. That is the same shape as the catch-and-return-a-default this repo forbids
  *   in `src/lib/music/spotify.ts`, where a dead token and a quiet evening became indistinguishable.
  *
- * So: when the database has no reading, `resolve` returns null and the CALLER renders the honest empty
- * state instead of the sentence. A page that cannot say the true thing says nothing.
+ * So: when the database has no reading, `fill` returns null and the CALLER leaves the sentence out.
+ * A page that cannot say the true thing says nothing. `fillCue` cuts only the sentence, not the card.
  *
  * `lintPlaceholders` is the other half. It is called by `content/gym/validate.mjs`, so a new
  * placeholder nobody wired up fails the build rather than shipping as literal braces.
@@ -43,19 +43,30 @@ export function fill(text: string, peak: PeakHr | null): string | null {
   return /\{PEAK_[A-Z_]+\}/.test(out) ? null : out;
 }
 
+/** Drop every sentence that still carries a `{PEAK_*}` placeholder. Null when nothing is left. */
+function dropUnfilled(text: string): string | null {
+  const kept = text.split(/(?<=[.!?])\s+/).filter((sentence) => !/\{PEAK_[A-Z_]+\}/.test(sentence));
+  return kept.length ? kept.join(' ') : null;
+}
+
 /** Fill every string field on one cue, or return null to drop the cue.
  *
- *  THE SAME REFUSAL AS `fill`, since 2026-09-27. It fell back to the ORIGINAL text on a field it could
- *  not fill, which put the literal "{PEAK_BPM}" into the stop rule on /bike whenever the database had
- *  no reading. Now an optional field that cannot be filled is dropped, and a required field (`name`,
- *  `cue`, `test`) that cannot be filled drops the whole cue: a card with a hole in its instruction is
- *  not a card. The caller filters the nulls out. */
+ *  A REQUIRED FIELD LOSES THE SENTENCE, NOT THE CARD, since 2026-09-27. The first refusal dropped the
+ *  whole cue when `name`, `cue` or `test` held a placeholder it could not fill, and the one cue that
+ *  carries one is the stop rule on /bike: with no peak on record the knee, chest and head rules
+ *  vanished with the heart-rate one. Now, with no peak, the sentences holding a placeholder are cut
+ *  and the rest renders. The literal braces still never print, and no typed number stands in. A
+ *  required field left empty by the cut still drops the cue.
+ *
+ *  So a sentence that carries `{PEAK_BPM}` must stand alone: the text around it must not count the
+ *  items or point back at it, because it may not be there. An optional field that cannot be filled
+ *  is dropped. The caller filters the nulls out. */
 export function fillCue<T extends Cue>(cue: T, peak: PeakHr | null): T | null {
   const out = { ...cue } as Record<string, unknown>;
   for (const k of ['name', 'cue', 'test'] as const) {
     const v = out[k];
     if (typeof v !== 'string') continue;
-    const filled = fill(v, peak);
+    const filled = fill(v, peak) ?? (peak ? null : dropUnfilled(v));
     if (filled == null) return null;
     out[k] = filled;
   }

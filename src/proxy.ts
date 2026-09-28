@@ -52,12 +52,12 @@ export function proxy(req: NextRequest) {
    * until 2026-08-28, which with the env var unset is `undefined === undefined` and admits every
    * anonymous request to every write route on a repo whose route list is public. See
    * `src/lib/auth.ts` for the full account; the one thing to know here is that a second copy of
-   * this comparison anywhere fails `scripts/lint-auth-compare.mjs`. */
+   * this comparison anywhere fails `scripts/lint-auth.mjs`. */
   const authed = cookieAuthorises(req.cookies.get(AUTH_COOKIE)?.value);
 
   /* The unlock route is how a device BECOMES authorised, so it cannot require being authorised.
-   * Added 2026-08-11 with the inline unlock: /kitchen/login still exists, but a write that fails
-   * mid-cook now offers the password field in place rather than sending him off to find a page. */
+   * Added 2026-08-11 with the inline unlock: a write that fails mid-cook offers the password field
+   * in place rather than sending him off to find a page (/kitchen/login itself redirects to /login). */
   if (pathname === '/kitchen/api/unlock') return NextResponse.next();
 
   /* Two routes that READ but are shaped as POSTs, because both take a body the URL cannot carry:
@@ -130,9 +130,12 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/kitchen/:path*',
-    '/gym/:path*',
-    '/health/:path*',
+    /* API prefixes only, since 2026-09-27. The three were '/kitchen/:path*', '/gym/:path*' and
+       '/health/:path*', which ran this proxy on every page view of three apps to consult
+       GATED_PAGES, an empty list since 2026-08-11. Re-gating a page means adding its prefix to
+       GATED_PAGES AND to this list; the branch above is kept so that is two lines, not a rewrite. */
+    '/kitchen/api/:path*',
+    '/gym/api/:path*',
     /* Only the API, not the pages: /swim is public like every other page on this site. */
     '/swim/api/:path*',
     /* Reads AND writes, see the /curio/api block above. */

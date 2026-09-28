@@ -147,7 +147,12 @@ export async function upsertSession(opts: {
  *  Direct port of HealthOS db.mjs upsertSet / the ON CONFLICT shape, same reasoning: only a real
  *  value change should look "dirty" to anything downstream that watches for changes. */
 export async function upsertSet(s: SetInput) {
-  if (s.date && s.day !== undefined) {
+  /* A SESSION ROW ONLY FOR A SET HE DID, since 2026-09-27: reps typed, or the tick. It was created on
+     every write, so tapping into a box on the OTHER tab and away (an empty blur, a stray weight)
+     stamped a session for that day, and the rotation, which reads gym_session, moved as if he had
+     trained it. Same definition of "did it" as PERFORMED below. */
+  const performed = !!s.done || (num(s.reps) ?? 0) > 0;
+  if (s.date && s.day !== undefined && performed) {
     await upsertSession({
       date: s.date,
       day: s.day,
@@ -184,7 +189,8 @@ export async function upsertSet(s: SetInput) {
          query. That is exactly how this file failed to compile the first time.) */
       fill_for      = excluded.fill_for,
       off_plan      = excluded.off_plan
-    where coalesce(gym_set.fill_for, '') = coalesce(excluded.fill_for, '')
+    where (coalesce(gym_set.fill_for, '') = coalesce(excluded.fill_for, '')
+           and coalesce(gym_set.off_plan, false) = coalesce(excluded.off_plan, false))
        or (gym_set.reps is null and gym_set.weight is null)
     returning set_idx
   `;
@@ -195,7 +201,13 @@ export async function upsertSet(s: SetInput) {
      row with his numbers in it under one card is never overwritten by another card. Zero rows back
      means it was refused, and the route turns that into a 409 the client does not retry. This is the
      same asymmetry appendOffPlanSet was built on: a duplicate he can see is a nuisance, a set silently
-     overwritten is not recoverable. */
+     overwritten is not recoverable.
+
+     SAME KIND MEANS `off_plan` TOO, since 2026-09-27. The clause compared `fill_for` alone, and an
+     off-plan set and a card set both have it null. So "Dead Bug" typed into the off-plan box on a day
+     whose card had nothing logged was appended as set 1, and the card's own set 1 then passed the
+     clause, overwrote his numbers and flipped `off_plan` to false: the off-plan set was gone and
+     nothing said so. Comparing both columns makes that overwrite unrepresentable. */
   if (!rows.length) {
     throw new SetConflict(`${s.exerciseId} set ${s.setIdx} on ${s.date} already holds a set logged under a different card`);
   }
@@ -249,6 +261,12 @@ export async function appendOffPlanSet(s: {
   exerciseId: string; exerciseName: string | null;
   weight: number | null; reps: number | null;
 }): Promise<number> {
+  /* THE SESSION ROW, which this function never wrote. With the session row now created only by a
+     performed set (upsertSet above), a session of nothing but off-plan work would have had none, and
+     Finish would have been refused with "nothing logged". An off-plan set with reps is a set he did. */
+  if (s.date && (num(s.reps) ?? 0) > 0) {
+    await upsertSession({ date: s.date, day: s.day, dayTitle: s.dayTitle, setsPrescribed: await prescribedSetsFor(s.day) });
+  }
   const rows = await sql`
     insert into gym_set (date, day, exercise_id, exercise_name, set_idx, weight, reps, done, logged_at, off_plan)
     select ${s.date}, ${s.day}, ${s.exerciseId}, ${s.exerciseName},
@@ -371,12 +389,17 @@ export async function getExerciseHistories(
  * `cutshort` records what actually happened, and `computeNextUp` re-offers the same day rather than
  * moving on. Nothing is lost and nothing has to be remembered: he does not have to work out that
  * pressing Finish costs him the day, and he does not have to hunt for a way to repeat it. */
-export async function finishSession(opts: { date: string; day?: string | null; status?: 'finished' | 'cutshort' }) {
+/** Returns how many session rows it changed. Zero means there was no session for that date and day
+ *  (nothing performed was logged under it), and the route answers 409 rather than "ok": the page
+ *  printed "Session saved." over an update that touched nothing. */
+export async function finishSession(opts: { date: string; day?: string | null; status?: 'finished' | 'cutshort' }): Promise<number> {
   const status = opts.status === 'cutshort' ? 'cutshort' : 'finished';
-  await sql`
+  const rows = await sql`
     update gym_session set status = ${status}, finished_at = now()
     where date = ${opts.date} and day = ${opts.day ?? null}
+    returning id
   `;
+  return rows.length;
 }
 
 /** A date's logged sets (with done + suggestion) to rehydrate an in-progress session on another device.
@@ -388,7 +411,7 @@ export async function finishSession(opts: { date: string; day?: string | null; s
  *  index moved to the server; this is what stops the LIST lying about what he logged. */
 export async function getSessionForHydrate(date: string) {
   return sql`
-    select exercise_id, exercise_name, set_idx, weight, reps, done, suggested_weight, suggested_reps,
+    select exercise_id, exercise_name, set_idx, weight, reps, done,
            swapped_from, coalesce(off_plan, false) as off_plan, fill_for
     from gym_set where date = ${date} order by exercise_id, set_idx
   `;
@@ -404,12 +427,14 @@ export async function getSessionForHydrate(date: string) {
  *  ONE ROUND TRIP for every id at once, and `mode()` rather than `max`: the working weight is the
  *  one he used MOST across the set, so a heavy top single does not become "what you were doing".
  *  Same definition as `workingWeight` in progression.ts, computed in Postgres because this asks it
- *  of the whole table. Counting round trips rather than work is the billing rule in AGENTS.md. */
+ *  of the whole table, including the tie-break: `mode()` returns the first value in its sort order,
+ *  so `order by weight desc` breaks a tie toward the heavier weight, as workingWeight does. Counting
+ *  round trips rather than work is the billing rule in AGENTS.md. */
 export async function getLoggedHistory(): Promise<Map<string, { sets: number; weight: number | null }>> {
   const rows = await sql`
     select exercise_id,
            count(*)::int as sets,
-           mode() within group (order by weight) filter (where weight is not null) as weight
+           mode() within group (order by weight desc) filter (where weight is not null) as weight
       from gym_set
      where ${PERFORMED} and reps is not null and reps > 0
      group by exercise_id
@@ -421,10 +446,46 @@ export async function getLoggedHistory(): Promise<Map<string, { sets: number; we
   return out;
 }
 
-export async function getSessionDay(date: string): Promise<string | null> {
-  const rows = await sql`select day from gym_session where date = ${date} order by day limit 1`;
-  const row = rows[0] as { day: string | null } | undefined;
-  return row?.day ?? null;
+/* `getSessionDay` WAS HERE and is gone, 2026-09-27: the session route returned its answer and the
+ * page never read it. */
+
+/** THE SESSION A PAGE LOAD BELONGS TO, when that is not today's date. Added 2026-09-27 for a session
+ *  that crosses midnight.
+ *
+ *  The page stamped every write with `today()` read on each render, so a session begun at 23:40 wrote
+ *  its first sets under one date and its last under the next: two half sessions, and the rotation
+ *  counted both. The page now fixes the date once per load. This decides which date that is.
+ *
+ *  THE BOUNDARY. Yesterday's session is carried into today only when all three hold:
+ *   - its row is still open (`status = 'active'`, no `finished_at`), so Finish and Ran out of time
+ *     both end it;
+ *   - today has no session row of its own, so a session he has already started today wins;
+ *   - something happened on it within the last three hours: its latest set, or its start if no set
+ *     carries a time.
+ *  The third clause is the one that matters, because an open row alone means little: five sessions
+ *  in the table were never finished (2026-09-10 to 2026-09-23) and stay 'active' forever. Three hours
+ *  is longer than any gap between two sets of one session in his log (his longest session with sets,
+ *  2026-09-21, ran 3 h 40 min from first write to Finish, with no gap between sets near three hours)
+ *  and shorter than the gap between an evening session and a morning one. So a reload at 00:30
+ *  during a session that began at 23:40 keeps the 23:40 date, and opening the page the next evening
+ *  starts a new session. */
+export async function getCarriedSession(today: string): Promise<{ date: string; day: string | null } | null> {
+  const rows = await sql`
+    select s.date, s.day
+      from gym_session s
+     where s.status = 'active'
+       and s.finished_at is null
+       and s.date::date = ${today}::date - 1
+       and not exists (select 1 from gym_session t where t.date = ${today})
+       and greatest(
+             s.started_at,
+             (select max(g.logged_at) from gym_set g where g.date = s.date and g.day is not distinct from s.day)
+           ) > now() - interval '3 hours'
+     order by s.started_at desc nulls last
+     limit 1
+  `;
+  const r = rows[0] as { date: string; day: string | null } | undefined;
+  return r ? { date: r.date, day: r.day } : null;
 }
 
 /** EVERYTHING THE ROTATION NEEDS, IN ONE ROUND TRIP. Was three queries in a row (the last rotation
@@ -444,17 +505,31 @@ export async function getRotationState(
   todayDay: string | null;
   watchDates: string[];
 }> {
+  /* THREE READS NARROWED, 2026-09-27, all for one defect: a session row with no work of its own
+     moved the rotation. Rows like that exist (a stray blur on the other tab created one until the
+     same date; see upsertSet), and a date can hold a session of each day.
+
+     `last` requires performed sets under the SAME day, not merely on the same date: a real session A
+     and a stray session B on one date made B the last session and offered A again.
+     `today_day` is the day whose latest performed set is newest, not the first key alphabetically,
+     and a row with no performed set is not today's session at all.
+     The watch dates skip a date only when the app logged performed work on it, not when any session
+     row exists there. */
   const rows = await sql`
     with last as (
       select s.date, s.day, s.status from gym_session s
       where s.day = any(${keys})
-        and exists (select 1 from gym_set g where g.date = s.date and ${PERFORMED} and g.reps is not null and g.reps > 0)
+        and exists (select 1 from gym_set g where g.date = s.date and g.day = s.day and ${PERFORMED} and g.reps is not null and g.reps > 0)
       order by s.date desc
       limit 1
     )
     select
       (select row_to_json(l) from last l) as last,
-      (select t.day from gym_session t where t.date = ${today} order by t.day limit 1) as today_day,
+      (select t.day from gym_session t
+        where t.date = ${today}
+          and exists (select 1 from gym_set g where g.date = t.date and g.day = t.day and ${PERFORMED})
+        order by (select max(g.logged_at) from gym_set g where g.date = t.date and g.day = t.day and ${PERFORMED}) desc nulls last, t.day
+        limit 1) as today_day,
       coalesce((
         select array_agg(x.date order by x.date) from (
           select distinct w.date from health_watch_session w
@@ -462,7 +537,7 @@ export async function getRotationState(
             and w.date > coalesce((select l.date from last l), '1970-01-01')
             and w.date < ${today}
             and not (extract(isodow from w.date::date)::int = any(${excludedIsodow}::int[]))
-            and not exists (select 1 from gym_session g where g.date = w.date)
+            and not exists (select 1 from gym_set g where g.date = w.date and ${PERFORMED})
         ) x
       ), '{}') as watch_dates
   `;
@@ -491,18 +566,25 @@ export interface LastSessionSummary {
   lifts: { id: string; name: string; weight: number | null; reps: number | null }[];
 }
 export async function getLastSessionSummary(): Promise<LastSessionSummary | null> {
-  /* ONE ROUND TRIP. The session row and its sets used to be two queries in a row. */
+  /* ONE ROUND TRIP. The session row and its sets used to be two queries in a row.
+
+     THE SESSION IS THE ONE HOLDING THE LATEST SET, since 2026-09-27. It took the newest date and then
+     `limit 1` of whatever session rows that date had, in no order, and joined every set on the date
+     whatever its day: two sessions on one date printed one day's name over both days' lifts. The
+     head is now the newest performed set (date, then logged_at) and its own day, and only that day's
+     sets are read. HISTORY, not PERFORMED, is the filter, so this line reads the same sets the
+     suggestion and the trend line do and never a recalled one. */
   const rows = await sql`
-    with d as (
-      select max(date) as date from gym_set where ${PERFORMED} and reps is not null and reps > 0
-    ),
-    s as (
-      select gs.date, gs.day from gym_session gs join d on gs.date = d.date limit 1
+    with head as (
+      select date, day from gym_set
+       where ${HISTORY}
+       order by date desc, logged_at desc nulls last, id desc
+       limit 1
     )
-    select s.date as s_date, s.day as s_day, g.exercise_id, g.exercise_name, g.weight, g.reps
-      from s
-      join gym_set g on g.date = s.date
-     where ${PERFORMED} and g.reps is not null and g.reps > 0
+    select h.date as s_date, h.day as s_day, g.exercise_id, g.exercise_name, g.weight, g.reps
+      from head h
+      join gym_set g on g.date = h.date and g.day is not distinct from h.day
+     where ${HISTORY}
      order by (g.logged_at is null) asc, g.logged_at asc, g.id asc
   `;
   const all = rows as unknown as { s_date: string; s_day: string | null; exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[];

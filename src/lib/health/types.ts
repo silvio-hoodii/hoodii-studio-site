@@ -43,6 +43,10 @@ export interface TrendDelta {
   spanDays: number;
   kg: number;
   perWeek: number;
+  /** The endpoint the delta is measured from: the median of the last few Watch readings (HealthOS's
+   *  method, so this site and CURRENT.md print the same change), and how many readings made it. */
+  basisKg: number;
+  basisN: number;
 }
 
 /* SwimPoint and SwimSummary left this file on 2026-08-26. They are SwimSessionRow and SwimHistory

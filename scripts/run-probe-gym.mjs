@@ -29,6 +29,14 @@
  * land in his real training log. This driver adds nothing to that protection and must never be
  * given a way to bypass it.
  *
+ * AND SINCE 2026-09-27 IT INSTALLS THE PATCH AT DOCUMENT START. The page replays its retry queue out
+ * of localStorage on mount, before anything evaluated after load could patch fetch, so a load
+ * patched late would post a leftover queued write to the real store. `Page.addScriptToEvaluateOnNewDocument`
+ * runs probe-gym.js ahead of the page's own scripts on every navigation and reload. Before that, the
+ * driver opens a page on the origin that runs no app code and REFUSES if a `gym:queue:` key is
+ * already there, because that is his own unsent work and clearing or replaying it into the stub
+ * would lose it. It clears the queue keys the probe leaves on the way out.
+ *
  * Requires Chrome listening on 127.0.0.1:9222. Exits non-zero if any test fails, so it can gate.
  */
 import { readFileSync } from 'node:fs';
@@ -143,6 +151,25 @@ try {
   /* The flag whose absence cost a week. See the header. */
   await send('Emulation.setFocusEmulationEnabled', { enabled: true });
 
+  /* A QUEUE ALREADY ON THIS ORIGIN IS HIS, and the run stops. Read from a route that answers without
+     rendering the app (a GET on a POST-only API route), so nothing replays while we look. */
+  events.length = 0;
+  await send('Page.navigate', { url: `${BASE}/gym/api/plan` });
+  await waitForLoad();
+  const foreign = await evaluate(
+    `(() => { try { return Object.keys(localStorage).filter((k) => k.startsWith('gym:queue:')); } catch { return []; } })()`,
+  ).catch(() => []);
+  if (Array.isArray(foreign) && foreign.length) {
+    console.error(`REFUSING TO RUN: ${BASE} already holds unsent gym writes in this browser (${foreign.join(', ')}).`);
+    console.error('They are his, from a real session. Open /gym in this browser, let it send them, then run the probe.');
+    ws.close();
+    await httpJson(`/json/close/${tab.id}`).catch(() => {});
+    process.exit(1);
+  }
+
+  /* Every document from here on is stubbed before its first script runs. */
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: SRC });
+
   events.length = 0;
   await send('Page.navigate', { url: `${BASE}/gym` });
   await waitForLoad();
@@ -179,17 +206,21 @@ try {
      ever done that, which is why the swap-resets-on-reload defect he found by training on
      2026-08-14 had a test that was never executed. sessionStorage survives the reload; localStorage
      is cleared before :before and not between the halves. */
-  if (ONLY === 'swapSurvivesReload') {
-    const before = JSON.parse(await evaluate(`__probe.run('swapSurvivesReload:before')`, 120_000));
-    console.log(`:before  ${before.failed.length ? 'FAIL' : 'pass'}  ${JSON.stringify(before.results['swapSurvivesReload:before']?.detail ?? null)}`);
+  /* `queueSurvivesReload` is the second pair, 2026-09-27: :before queues a set with the server
+     offline, the reload makes the page replay it on mount, :after asserts the replay was caught by
+     the stub installed at document start. */
+  if (ONLY === 'swapSurvivesReload' || ONLY === 'queueSurvivesReload') {
+    const before = JSON.parse(await evaluate(`__probe.run('${ONLY}:before')`, 120_000));
+    console.log(`:before  ${before.failed.length ? 'FAIL' : 'pass'}  ${JSON.stringify(before.results[`${ONLY}:before`]?.detail ?? null)}`);
     events.length = 0;
     await send('Page.reload');
     await waitForLoad();
     await new Promise((r) => setTimeout(r, 1800));
     await evaluate(`${SRC}\n; typeof __probe`);
-    const after = JSON.parse(await evaluate(`__probe.run('swapSurvivesReload:after')`, 120_000));
-    console.log(`:after   ${after.failed.length ? 'FAIL' : 'pass'}  ${JSON.stringify(after.results['swapSurvivesReload:after']?.detail ?? null)}`);
+    const after = JSON.parse(await evaluate(`__probe.run('${ONLY}:after')`, 120_000));
+    console.log(`:after   ${after.failed.length ? 'FAIL' : 'pass'}  ${JSON.stringify(after.results[`${ONLY}:after`]?.detail ?? null)}`);
     exitCode = before.failed.length || after.failed.length ? 1 : 0;
+    await evaluate('window.__probe && window.__probe.clearQueueKeys(); 1').catch(() => {});
     ws.close();
     await httpJson(`/json/close/${tab.id}`).catch(() => {});
     process.exit(exitCode);
@@ -218,6 +249,9 @@ try {
   console.error('FAILED:', e.message);
   exitCode = 1;
 } finally {
+  /* Nothing the probe queued may outlive the run in this browser: the next unstubbed load of /gym
+     here would send it to the real store. */
+  await evaluate('window.__probe && window.__probe.clearQueueKeys(); 1').catch(() => {});
   ws.close();
   await httpJson(`/json/close/${tab.id}`).catch(() => {});
 }

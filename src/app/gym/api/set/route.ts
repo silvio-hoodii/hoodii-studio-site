@@ -15,17 +15,23 @@ export async function POST(req: Request) {
     /* OFF-PLAN SETS ARE APPENDED AND THE SERVER PICKS THE INDEX. Added 2026-08-28 for 10-gym P0-1.
      *
      * The client used to count them in React state that is never rehydrated, so a reload restarted
-     * the counter at 1 and the upsert below REPLACED the set he had already logged. It could also
-     * overwrite a PRESCRIBED set, because the off-plan datalist offers every catalogue name including
-     * exercises prescribed that same day.
+     * the counter at 1 and the upsert below REPLACED the set he had already logged. The index is now
+     * the max for that (date, exercise_id) plus one, so an append never lands on a row that exists.
      *
-     * Handled before the `setIdx` check on purpose: an off-plan request must not carry one, and a
-     * client that sends one is a client that has gone back to counting. See appendOffPlanSet. */
+     * THE OTHER DIRECTION WAS STILL OPEN until 2026-09-27, and this comment said it was closed. The
+     * off-plan id is slugged from the typed name, so "Dead Bug" is the prescribed dead-bug id, and
+     * on a day whose card had nothing logged the append took set 1. The card's own set 1 then went
+     * through the upsert below and overwrote it, because the store compared only `fill_for` and both
+     * rows had none. `upsertSet` now compares `off_plan` as well and refuses (409) a card write onto
+     * an off-plan row with numbers in it. See the WHERE clause in db.ts.
+     *
+     * Handled before the `setIdx` check on purpose: an off-plan request carries no index, and the
+     * server's is the only one used. */
     if (b?.offPlan) {
       if (!b?.date || !b?.exerciseId) {
         return NextResponse.json({ ok: false, error: 'date and exerciseId required' }, { status: 400 });
       }
-      const setIdx = await appendOffPlanSet({
+      await appendOffPlanSet({
         date: String(b.date),
         day: b.day ?? null,
         dayTitle: b.dayTitle ?? null,
@@ -34,10 +40,10 @@ export async function POST(req: Request) {
         weight: b.weight ?? null,
         reps: b.reps ?? null,
       });
-      /* The index comes back so the client can render what it actually wrote rather than what it
-       * guessed, which is the whole point of moving the decision here. */
+      /* NO `setIdx` IN THE ANSWER, 2026-09-27. It was returned so the client could render the index it
+       * wrote, and the client never read it: the off-plan list shows names and numbers, not indices. */
       revalidatePath('/');
-      return NextResponse.json({ ok: true, setIdx });
+      return NextResponse.json({ ok: true });
     }
 
     if (!b?.date || !b?.exerciseId || b?.setIdx == null) {

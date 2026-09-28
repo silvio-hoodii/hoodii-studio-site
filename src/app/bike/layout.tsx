@@ -6,10 +6,6 @@ import TrainingNav from '@/components/training/TrainingNav';
 
 /* THE BIKE SURFACE. Promoted out of /gym/conditioning?p=bike on 2026-08-27.
  *
- * This route already existed as an API before it had a page: POST /bike/api/ride shipped earlier the
- * same day so the write gate around it could be built and broken on purpose while somebody was
- * looking. Route handlers are not wrapped by a layout, so nothing here touches it.
- *
  * Nothing on the page is new writing. The Norwegian 4x4 protocol, the how-hard bands and all seven
  * cues are the same content/gym/conditioning.json this rendered from as a query parameter. */
 

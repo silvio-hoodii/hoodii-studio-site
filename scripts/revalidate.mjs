@@ -35,7 +35,13 @@ if (!token) {
   process.exit(0);
 }
 const NAMES = { index: '/', music: '/music', curio: '/curio', archive: '/curio/archive', reading: '/reading' };
-const paths = process.argv.slice(2).map((a) => NAMES[a] ?? a);
+const args = process.argv.slice(2);
+const unknown = args.filter((a) => !(a in NAMES));
+if (unknown.length) {
+  console.error(`revalidate: unknown page name(s) ${unknown.join(', ')}; use ${Object.keys(NAMES).join(', ')}`);
+  process.exit(1);
+}
+const paths = args.map((a) => NAMES[a]);
 let status = 0;
 let text = '';
 try {
@@ -50,4 +56,18 @@ try {
   text = String(e);
 }
 console.log(`revalidate: ${status} ${text.slice(0, 200)}`);
-process.exit(status >= 200 && status < 300 ? 0 : 1);
+if (!(status >= 200 && status < 300)) process.exit(1);
+/* The route MARKS a page stale; Next rebuilds it on the next request. That request is this one,
+   so the rebuild runs now, inside the wake the pipeline's own writes just paid for, rather than
+   whenever a crawler next arrives after the database has gone back to sleep. */
+let done;
+try { done = JSON.parse(text).revalidated ?? []; } catch { done = []; }
+const asked = paths.length ? paths : ['/'];
+if (done.length < asked.length) {
+  console.error(`revalidate: asked for ${asked.join(' ')}, the site accepted ${done.join(' ') || 'nothing'}`);
+  process.exit(1);
+}
+for (const p of done) {
+  const r = await fetch(`${SITE}${p}`, { headers: { 'user-agent': 'hoodii-revalidate' } }).catch(() => null);
+  console.log(`revalidate: fetched ${p} ${r ? r.status : 'failed'}`);
+}

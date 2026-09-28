@@ -36,6 +36,7 @@ export default function SaveBlocked({
   onRetry,
   loginHref,
   sticky = false,
+  kept = 'screen',
 }: {
   /** 'locked' (401), 'offline' (never reached the server), or `failed ${status}`. */
   err: string;
@@ -46,6 +47,12 @@ export default function SaveBlocked({
   loginHref: string;
   /** Pins the banner to the top of the viewport, for a page long enough to scroll away from it. */
   sticky?: boolean;
+  /** Where what he entered is held until it saves, which decides the sentence the banner may say.
+   *  'device' only when the caller mirrors its queue to storage that outlives the tab (the gym
+   *  does, since 2026-09-27). 'screen' otherwise: the input still holds it, and a closed tab loses
+   *  it. The banner said "Nothing you entered was lost" on every page, including the gym's, whose
+   *  queue was a ref that a phone discarding the tab took with it. */
+  kept?: 'device' | 'screen';
 }) {
   const [pw, setPw] = useState('');
   const [busy, setBusy] = useState(false);
@@ -54,6 +61,9 @@ export default function SaveBlocked({
   /* No count when there is nothing countable. A refused finish queues no sets, and the first
    * version still printed "1 set waiting to be saved" over a queue that held no set at all. */
   const waiting = queued > 0 ? ` ${queued} ${noun}${queued === 1 ? '' : 's'} waiting to be saved.` : '';
+  const held = kept === 'device'
+    ? 'It is kept on this device until it saves.'
+    : 'It stays on this screen until it saves.';
   const cls = `save-blocked${sticky ? ' stick' : ''}`;
 
   async function retry() {
@@ -100,7 +110,7 @@ export default function SaveBlocked({
                  numbers with the other card's. Say which so he knows where to look. */
               ? 'That exercise already has sets logged today under another card, so this one was not written over them.'
               : `The server refused it (${err}).`}{' '}
-          {err === 'conflict' ? 'Log it as one more set on the card that has it.' : 'Nothing you entered was lost.'}{waiting}
+          {err === 'conflict' ? 'Log it as one more set on the card that has it.' : held}{waiting}
         </p>
         <div className="row">
           <button type="button" className="primary" disabled={busy} onClick={() => void retry()}>
@@ -115,7 +125,7 @@ export default function SaveBlocked({
     <div className={cls} role="alert">
       <span className="k">This device cannot save</span>
       <p>
-        Nothing you entered was lost.{waiting}
+        {held}{waiting}
       </p>
       <div className="row">
         <input
@@ -132,7 +142,7 @@ export default function SaveBlocked({
           {busy ? 'Unlocking…' : 'Unlock and save'}
         </button>
       </div>
-      {wrong && <p className="wrong">Not that one. Nothing was lost, try again.</p>}
+      {wrong && <p className="wrong">Not that one. Try again.</p>}
       <p className="alt">
         Or do it on <Link href={loginHref} target="_blank">the login page</Link> and come back.
       </p>

@@ -2,7 +2,7 @@ import { today } from '@/lib/day';
 import { NextResponse } from 'next/server';
 import { getExerciseHistories } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
-import { ladderFor, hasFixedReps } from '@/lib/gym/ladder';
+import { ladderFor, hasFixedReps, isAssisted, incrementFor } from '@/lib/gym/ladder';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -30,12 +30,10 @@ interface PlanExerciseIn {
    *  shipped five days ago: nothing was wrong with the fix, it never arrived. A field silently
    *  dropped by a type is not a check anyone can run, which is why check-ladder exists. */
   rangeWidth?: number;
-  /** Same hazard as `rangeWidth` above, so it is listed here in the same commit that introduces it.
-   *  Counterweight rather than load: the assisted pull-up gets HARDER as this number falls, and the
-   *  engine added an increment until 2026-08-28 while the card's own cue told him to take assistance
-   *  off. A field the client sends, `PlanInput` declares and this interface omits is dropped in the
-   *  middle with nothing to notice, which is exactly how the ladder fix sat dead for five days. */
-  assistance?: boolean;
+  /* NO `assistance` ANY MORE, 2026-09-27. It crossed the wire from the client, which read it off the
+   * slot, and no slot or alt in the week carries it: the assisted pull-up arrived here as a normal
+   * lift and progressed UPWARD, more help every session. It is derived below from the catalogue, the
+   * way the ladder is, so there is no field left to drop. */
 }
 
 /** Last-session + a suggested target for each of today's prescribed lifts. */
@@ -65,9 +63,12 @@ export async function POST(req: Request) {
       const suggestion = suggest(last, {
         type: ex.type || 'weighted',
         targetReps: ex.targetReps,
-        increment: ex.increment,
+        /* The slot's own `increment` when program.json sets one; otherwise the implement's step
+           (2.5 on a cable stack, the measured step on a counterweight machine), derived here for the
+           same reason as the ladder below. Undefined falls through to the engine default of 5. */
+        increment: ex.increment ?? incrementFor(ex.id),
         rangeWidth: ex.rangeWidth,
-        assistance: ex.assistance,
+        assistance: isAssisted(ex.id),
         /* DERIVED HERE, NOT SENT. Twice now a field the client sent, `PlanInput` declared and
            this interface omitted was dropped in the middle with nothing to notice: `rangeWidth`
            sat dead for five days and `assistance` was added in the same commit that documented

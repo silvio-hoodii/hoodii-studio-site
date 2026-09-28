@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getWatchLog, countWatchLog, watchLogSpan } from '@/lib/gym/log';
+import { logDate } from '@/lib/format';
 import SessionLog from '@/components/training/SessionLog';
 
 export const dynamic = 'force-dynamic';
@@ -44,11 +45,11 @@ export default async function RunLogPage() {
     <div className="wrap">
       <h1>Running, the whole record</h1>
       <p className="lede">
-        <Link href="/run">Back to the plan</Link>
+        <Link href="/run?s=plan">Back to the plan</Link>
       </p>
       <p className="lede quiet" style={{ marginTop: 4 }}>
         {total} sessions, treadmill and outdoors together
-        {span.first ? `, back to ${span.first}` : ''}.
+        {span.first ? `, back to ${logDate(span.first)}` : ''}.
       </p>
 
       <SessionLog

@@ -24,6 +24,29 @@ export const dynamic = 'force-dynamic';
  * Plain links with a query param rather than client state, for the reason the kitchen filters and
  * the swim tabs give: it works before hydration, it survives a reload standing at a treadmill, and
  * every view is a URL he can bookmark. */
+/* THE CONSOLE CHECK IS DERIVED FROM THE CLOCK AND THE BELT, since 2026-09-27. `consoleCheck` and
+ * `runKm` in conditioning.json are typed for 8.0 and 5.0 km/h, and the cues tell him to drop the belt
+ * 0.5 km/h on a fail, after which the typed figures are simply wrong. Computing them from the session
+ * string and `beltSettings` keeps the numbers true for the speeds the page states, and the line says
+ * which speed it assumes, so a lowered belt reads as a different case rather than a failed run. The
+ * page cannot know the belt he actually set, so it does not pretend to. */
+const KM_PER_MILE = 1.609344;
+function segSeconds(session: string, what: 'walk' | 'run'): number | null {
+  let total = 0;
+  for (const m of session.matchAll(/(\d+):(\d{2})\s+(walk|run)/g)) {
+    if (m[3] === what) total += Number(m[1]) * 60 + Number(m[2]);
+  }
+  return total > 0 ? total : null;
+}
+function consoleLine(session: string, runKmh: number, walkKmh: number): string | null {
+  const run = segSeconds(session, 'run');
+  const walk = segSeconds(session, 'walk');
+  if (run == null || walk == null || !(runKmh > 0) || !(walkKmh > 0)) return null;
+  const runKm = (run / 3600) * runKmh;
+  const km = runKm + (walk / 3600) * walkKmh;
+  return `At ${runKmh.toFixed(1)} km/h the console should read ${km.toFixed(2)} km, or ${(km / KM_PER_MILE).toFixed(2)} miles, ${Number(runKm.toFixed(2))} km of it running.`;
+}
+
 const SUB_TABS = [
   { id: 'now', label: 'Now' },
   { id: 'plan', label: 'Plan' },
@@ -45,6 +68,8 @@ export default async function RunPage({
      the last session and a separate getLastSession call would be the same row fetched twice. */
   const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
   const lastSession = recent[0] ?? null;
+  const runKmh = parseFloat(c.run.beltSettings.run);
+  const walkKmh = parseFloat(c.run.beltSettings.walk);
 
   return (
     <div className="wrap">
@@ -83,7 +108,6 @@ export default async function RunPage({
             <div className="ex">
               <div className="ex-name">How hard</div>
               <div className="ex-cue">{c.run.howHard.primary}</div>
-              <div className="ex-cue">{c.run.howHard.startingSpeed}</div>
               <div className="ex-cue">{c.run.howHard.secondary}</div>
             </div>
             {/* THE BELT, IN BOTH UNITS. Above the table on purpose: the two numbers he dials in are
@@ -118,9 +142,9 @@ export default async function RunPage({
                     <td className="tnum">{w.week}</td>
                     <td>
                       {w.session}
-                      <div className="quiet">
-                        Console should read {w.consoleCheck}, {w.runKm} km of it running.
-                      </div>
+                      {consoleLine(w.session, runKmh, walkKmh) && (
+                        <div className="quiet">{consoleLine(w.session, runKmh, walkKmh)}</div>
+                      )}
                       {w.note && <div className="quiet">{w.note}</div>}
                     </td>
                     <td className="tnum">{w.clockTotal}</td>
@@ -139,7 +163,6 @@ export default async function RunPage({
 
       {sub === 'how' && (
         <div className="exgroup">
-          <div className="exgroup-label">How to run</div>
           <Cues cues={c.run.cues ?? []} />
         </div>
       )}

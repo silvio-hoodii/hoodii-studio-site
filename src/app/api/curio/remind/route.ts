@@ -24,8 +24,25 @@ export async function GET(req: NextRequest) {
     const first = t.quiz[0];
     if (!first && t.saves.length === 0) return NextResponse.json({ ok: true, skipped: 'nothing today' });
     const body = first ? first.question : 'One saved link to keep or drop.';
-    const r = await sendToAll('Curio', body, '/curio');
-    return NextResponse.json({ ok: r.failed.length === 0, ...r }, { status: r.failed.length ? 500 : 200 });
+    /* The per-endpoint map stays on the server; the response carries the counts. */
+    const { total, sent, removed, failed } = await sendToAll('Curio', body, '/curio');
+    const r = { total, sent, removed, failed };
+    /* NOTHING TO SEND TO IS NOT A FAILURE, AND NOTHING DELIVERED IS. This returned ok with sent 0 in
+       both cases, so a run whose every subscription had expired or errored read as healthy. */
+    if (r.total === 0) return NextResponse.json({ ok: true, noSubscribers: true, ...r });
+    if (r.sent === 0) {
+      const reason = r.failed.length
+        ? `every send failed (${r.failed.length} of ${r.total})`
+        : `every subscription had expired and was removed (${r.removed})`;
+      return NextResponse.json({ ok: false, reason, ...r }, { status: 500 });
+    }
+    if (r.failed.length) {
+      return NextResponse.json(
+        { ok: false, reason: `sent to ${r.sent}, failed on ${r.failed.length}`, ...r },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ ok: true, ...r });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
   }

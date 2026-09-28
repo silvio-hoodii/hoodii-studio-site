@@ -131,6 +131,11 @@ export async function computeFillOptions(
     const taken = prescribedToday(day);
 
     day.blocks.forEach((block, bi) => {
+      /* NOT ON A PRIMER, since 2026-09-27. The jump that opens each session is a solo block with a
+         60 s rest, so it passed both tests below and got a "Do something in the 60s rest?" control.
+         A primer's rest is recovery for the next jump, and a jump done tired is a slow one: filling
+         it defeats the block. */
+      if (block.role === 'primer') return;
       if (block.exercises.length !== 1) return;
       const lead = block.exercises[0] as Exercise;
       if (restSecondsOf(lead.rest) < MIN_FILLABLE_REST_SECONDS) return;

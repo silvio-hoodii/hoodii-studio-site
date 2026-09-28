@@ -100,10 +100,10 @@ export function restSeconds(rest: string | undefined): number {
  * If a page ever wants a prescribed duration again, derive it from `restSeconds` and the real
  * distribution in health_watch_session rather than resurrecting this. git history has it. */
 
-export const PLATE_IDS = new Set([
-  'bb-back-squat', 'front-squat', 'romanian-deadlift', 'bench-press', 'bb-ohp', 'bb-row',
-  'good-morning', 'bb-hip-thrust', 'paused-back-squat',
-]);
+/* NO PLATE_IDS, 2026-09-27. A hand-typed list of barbell ids lived here and named `bench-press` and
+ * `bb-ohp` while the week's ids are `bb-bench-press` and `bb-overhead-press`, so plate math never
+ * showed on either. Which lifts are barbell lifts is in the catalogue (`implement`); `barbellIds` in
+ * ladder.ts reads it on the server and the page passes the list in. */
 const BAR = 45;
 const PLATES = [45, 35, 25, 10, 5, 2.5];
 
@@ -121,9 +121,10 @@ export function plateMath(w: number | string | null | undefined): string | null 
   return out.length ? `${out.join(' + ')} per side` : 'empty bar';
 }
 
-/** bar x10, 50% x5, 70% x3, and (>=185 lb target) 85% x1. Only shown for barbell main lifts loaded
- *  heavy enough (>=95 lb target) that a ramp is worth the time. Ported from gym.html's inline ramp
- *  block in render(). */
+/** bar x10, 50% x5, 70% x3, and (>=185 lb target) 85% x1. For barbell main lifts loaded heavy
+ *  enough (>=95 lb target) that a ramp is worth the time. This function does not know the implement:
+ *  the CALLER checks it is a barbell lift, or a cable row gets "bar x10". Ported from gym.html's
+ *  inline ramp block in render(). */
 export function warmupRamp(targetWeight: number | null): string | null {
   if (targetWeight == null || targetWeight < 95) return null;
   const r5 = (w: number) => Math.max(BAR, Math.round(w / 5) * 5);
@@ -134,7 +135,10 @@ export function warmupRamp(targetWeight: number | null): string | null {
 
 // ---- swap resolution ----
 
-/** The exercise as actually being performed today, given a swap map of { originalId: Alt }. */
+/** The exercise as actually being performed today, given a swap map of { originalId: Alt }.
+ *  Every field the alt does not carry comes from the slot. The alt's `timed` and `bodyweight` are
+ *  filled in from the catalogue on the server (`variantType` in ladder.ts, applied in page.tsx), so
+ *  a hold swapped in for a rep exercise does not inherit a reps box. */
 export function effectiveExercise(ex: Exercise, swap: Alt | undefined): Exercise {
   return swap ? ({ ...ex, ...swap } as Exercise) : ex;
 }

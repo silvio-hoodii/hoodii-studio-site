@@ -47,7 +47,8 @@ export interface PlanInput {
    *
    *  Absent for the barbell (plates make any multiple of 5 reachable, and `PLATES` in
    *  program-shared.ts already tells him which to load) and for the cable stacks, whose 2.5 lb pin
-   *  positions the single increment already describes correctly. */
+   *  positions a single `increment` describes; the plan route derives that 2.5 from the implement
+   *  (`incrementFor` in ladder.ts), because no slot in program.json sets one. */
   ladder?: number[] | null;
   /** The rep count is a CEILING SET BY A PERSON and the engine may not move it, in either
    *  direction. True for the two plyometric primers.
@@ -99,6 +100,10 @@ export interface Suggestion {
  *
  * content/gym/validate.mjs computes this for every logged exercise and fails the build on a gap. */
 const RANGE_WIDTH = 2;
+const FIRST_TIME = 'First time: log your working weight.';
+/** Timed holds step by five seconds, not by one: a one-second step is inside the error of counting
+ *  it, and "add a rep" is the wrong word for a hold. */
+const TIMED_STEP = 5;
 const GAP_DAYS = 21;
 
 const r1 = (n: number) => Math.round(n * 10) / 10;
@@ -145,7 +150,11 @@ function stepTo(target: number, increment: number, ladder?: number[] | null): nu
 }
 
 /** The weight actually worked at: the most-used weight across working sets. Drops a heavy top
- *  single (e.g. 185x3) in favour of the real work weight (145x8x8). Tie-break: the lower weight. */
+ *  single (e.g. 185x3) in favour of the real work weight (145x8x8). Tie-break: the HEAVIER weight,
+ *  since 2026-09-27. It was the lighter one, so a logged warm-up set (95x5 then 135x8) made 95 the
+ *  working weight and the card suggested a load he had only ramped through. A tie between two work
+ *  weights is a session that climbed, and the heavier one is where it ended. `getLoggedHistory` in
+ *  db.ts breaks its `mode()` tie the same way. */
 export function workingWeight(sets: SetRecord[]): number | null {
   const counts = new Map<number, number>();
   for (const s of sets) {
@@ -156,7 +165,7 @@ export function workingWeight(sets: SetRecord[]): number | null {
   let best: number | null = null;
   let bestN = -1;
   for (const [w, n] of counts) {
-    if (n > bestN || (n === bestN && best !== null && w < best)) {
+    if (n > bestN || (n === bestN && best !== null && w > best)) {
       best = w;
       bestN = n;
     }
@@ -242,12 +251,23 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     return {
       weight: null,
       reps: bottom,
-      reason: `${unit}, on purpose: this trains how fast you leave the floor, and a tired rep is a slow one. More work means more SETS, not more reps.`,
+      /* The unit and nothing else, on the four-kinds rule in AGENTS.md. Why a jump is three reps is
+       * in the comment above and in the block `why`, not on the card. */
+      reason: `${unit}.`,
     };
   }
 
   if (sets.length === 0) {
-    return { weight: null, reps: bottom, reason: 'First time: log your working weight.' };
+    return { weight: null, reps: bottom, reason: FIRST_TIME };
+  }
+
+  /* A WEIGHTED LIFT LOGGED WITHOUT A WEIGHT IS A FIRST TIME for the arithmetic, since 2026-09-27.
+   * Reps typed with the weight box empty (or 0) reached the branches below as a working weight of
+   * null, and the card printed "Got 8/8/8 at null: hold" or, after a gap, "Start at 0". There is no
+   * load to build on, so the card asks for the one number it needs. */
+  if (type === 'weighted') {
+    const w0 = workingWeight(sets);
+    if (w0 == null || w0 === 0) return { weight: null, reps: bottom, reason: FIRST_TIME };
   }
 
   // Long logging gap: probe one step above the old baseline instead of assuming continuity.
@@ -256,7 +276,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     if (gap > GAP_DAYS) {
       if (type === 'timed') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
-        return { weight: null, reps: best + 2, reason: `Last log ${gap}d ago, probe: old best +2s, see where you are.` };
+        return { weight: null, reps: best + TIMED_STEP, reason: `Last log ${gap}d ago, probe: old best +${TIMED_STEP} s, see where you are.` };
       }
       if (type === 'bodyweight') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
@@ -292,6 +312,8 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   if (type === 'bodyweight' || type === 'timed') {
     const repsList = sets.map((s) => s.reps ?? 0);
     const minReps = Math.min(...repsList);
+    const timed = type === 'timed';
+    const u = timed ? ' s' : '';
     if (minReps >= top) {
       /* NEVER SUGGEST FEWER THAN HE ALREADY DID. This read `reps: top`, so once he passed the top of
        * the range the card asked him to go BACKWARDS, and the app wrote the number into his log:
@@ -310,14 +332,24 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       return {
         weight: null,
         reps: Math.max(top, minReps),
-        reason: `Hit ${repsList.join('/')}, past the top of the range: hold here, or add load and drop back to ${bottom}.`,
+        reason: `Hit ${repsList.join('/')}${u}, past the top of the range: hold here, or add load and drop back to ${bottom}${u}.`,
+      };
+    }
+    /* WORDED PER TYPE, since 2026-09-27. A hold was told to "add a rep", and stepped by one second. */
+    if (timed) {
+      return {
+        weight: null,
+        reps: Math.min(minReps + TIMED_STEP, top),
+        reason: `Got ${repsList.join('/')} s: add ${TIMED_STEP} s where you can.`,
       };
     }
     return { weight: null, reps: Math.min(minReps + 1, top), reason: `Got ${repsList.join('/')}: add a rep where you can.` };
   }
 
   // ---- weighted: double progression on the working weight ----
-  const ww = workingWeight(sets);
+  /* Never null here: the no-weight case returned FIRST_TIME above. */
+  const ww = workingWeight(sets) as number;
+  const assisted = plan.assistance === true;
   const workSets = sets.filter((s) => s.weight === ww);
   const repsAtWork = workSets.map((s) => s.reps ?? 0);
   const minReps = Math.min(...repsAtWork);
@@ -348,7 +380,17 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   const rec = recAll
     ? recAll.filter((sess) => (sess.sets || []).filter((s) => (s.reps ?? 0) > 0).length >= MIN_SETS_FOR_A_SESSION)
     : null;
-  if (rec && rec.length >= 3) {
+  /* TWO EXEMPTIONS, both 2026-09-27.
+   *
+   * An ASSISTED lift never deloads here. The deload takes ten percent off the number, and on a
+   * counterweight machine less of the number is a HARDER set, so a stall answered "deload to 35"
+   * made the next session heavier, the opposite of what a deload is for.
+   *
+   * And a stall read off OLDER sessions does not outrank a heavier recent one. `rec` drops a session
+   * with one logged set, so 125x8 on Thursday vanished from the window and three older sessions at
+   * 115 read as a stall: the card said "deload to 105" the week he moved up. When the latest
+   * session's working weight is above the stalled weight, he is not stalled. */
+  if (rec && rec.length >= 3 && !assisted) {
     const last3 = rec.slice(0, 3).map((sess) => {
       const ss = (sess.sets || []).filter((s) => (s.reps ?? 0) > 0);
       const w = workingWeight(ss);
@@ -359,7 +401,8 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     const noProgress =
       last3[0]!.min != null && last3[1]!.min != null && last3[2]!.min != null
       && last3[0]!.min! <= last3[1]!.min! && last3[1]!.min! <= last3[2]!.min!;
-    if (sameW && noProgress && last3[0]!.min! < top && last3[0]!.w != null) {
+    const movedUpSince = last3[0]!.w != null && ww > last3[0]!.w;
+    if (sameW && noProgress && !movedUpSince && last3[0]!.min! < top && last3[0]!.w != null) {
       const dl = stepTo(last3[0]!.w! * 0.9, increment, ladder);
       /* The reason carries its own evidence. "Stalled 3 sessions" is not something he can judge;
        * "3 sessions (3, 2 and 2 sets logged)" is, and it is the sentence that would have made the
@@ -373,7 +416,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     }
   }
 
-  if (minReps >= top && ww != null) {
+  if (minReps >= top) {
     /* HOLD ONE MORE SESSION WHEN THE RANGE DOES NOT EARN THE RUNG. See rungIsEarned above.
      *
      * Assistance lifts are exempt: the number goes DOWN there, so "the next rung demands a bigger
@@ -387,7 +430,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
      * A caller that supplies no `recent` at all is not saying "no history", it is saying it is not
      * answering that question, so the hold does not apply and the old behaviour stands. Only the plan
      * route supplies it, and it always does. */
-    const nextRung = plan.assistance === true ? null : stepUp(ww, increment, ladder);
+    const nextRung = assisted ? null : stepUp(ww, increment, ladder);
     if (
       recAll != null
       && nextRung != null
@@ -397,7 +440,9 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       return {
         weight: ww,
         reps: top,
-        reason: `Hit ${wd} at ${ww}. ${nextRung} lb is a ${Math.round(((nextRung - ww) / ww) * 100)}% jump and this rep range does not earn it, so do ${top} again at ${ww} once more, then take it.`,
+        /* The instruction only, on the four-kinds rule. The percentage and why the range does not
+           earn the jump are in the comment on rungIsEarned. */
+        reason: `Do ${top} at ${ww} once more, then ${nextRung}.`,
       };
     }
     /* AN ASSISTANCE LIFT PROGRESSES DOWNWARD, and until 2026-08-28 nothing in the engine knew that.
@@ -418,13 +463,26 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
      * Floored at one increment: a counterweight of zero is an unassisted pull-up, which is a
      * different exercise and a milestone he should reach on purpose rather than by the card silently
      * arriving there. */
-    const assisted = plan.assistance === true;
     const next = assisted
       ? Math.max(increment, stepDown(ww, increment, ladder))
       : stepUp(ww, increment, ladder);
+    /* NO STEP LEFT, since 2026-09-27. At the heaviest dumbbell `stepUp` returns the same weight,
+     * and this branch printed "up to 90, the top of the rack" with the reps reset to the bottom of
+     * the range: the same load for fewer reps, a step backwards dressed as progress. The lightest
+     * counterweight did the same ("take 0 lb off, down to 10"). With nowhere to go, he holds the
+     * weight at the top of the range. */
+    if (assisted ? next >= ww : next <= ww) {
+      return {
+        weight: ww,
+        reps: top,
+        reason: assisted
+          ? `Hit ${wd} at ${ww}, the least assistance here: hold at ${top}.`
+          : `Hit ${wd} at ${ww}, the heaviest on the rack: hold at ${top}.`,
+      };
+    }
     const reason = assisted
       ? `Hit ${wd} at ${ww}: take ${r1(ww - next)} lb of assistance off, down to ${next}.`
-      : `Hit ${wd} at ${ww}: up to ${next}${next === ww ? ', the top of the rack' : `, +${r1(next - ww)} lb`}.`;
+      : `Hit ${wd} at ${ww}: up to ${next}, +${r1(next - ww)} lb.`;
     return { weight: next, reps: bottom, reason };
   }
   const goal = minReps < bottom ? bottom : top;

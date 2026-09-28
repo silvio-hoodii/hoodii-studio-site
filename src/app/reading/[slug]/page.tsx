@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { allPacks, getPack, unitLabel } from '@/lib/reading/packs';
 import Recall from './Recall';
@@ -33,14 +34,20 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="reading pack">
-      {p.finished_on && <p className="eyebrow">Finished</p>}
+      <Link className="eyebrow" href="/reading/finished">&larr; Recall{p.finished_on ? ', finished' : ''}</Link>
       <h1>{p.book}</h1>
       <p className="by">
-        {p.author} · {p.year} · {p.total_chapters} {p.unit}s
+        {p.author} · {p.year}
       </p>
 
+      {/* Two columns above 1024 (reading.css `.two`): the deck and the pieces on the left, how to
+          talk about it on the right. */}
+      <div className="two">
+      <div className="side">
       <h2 className="sec">Do you still have it</h2>
       <Recall pack={p} />
+      </div>
+      <div>
 
       <h2 className="sec">The whole thing, in {p.sections.length} pieces</h2>
       {/* The count is read off the data. The template this came from had the word "six" hardcoded
@@ -104,6 +111,8 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           </ul>
         </div>
       )}
+      </div>
+      </div>
 
     </div>
   );

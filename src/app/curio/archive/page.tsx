@@ -73,7 +73,7 @@ export default async function CurioArchivePage() {
     <div className="curio">
       <h1>Curio archive</h1>
       <div className="stat">
-        <span className="tnum">{summary.items}</span> answered
+        <span className="tnum">{items.length}</span> answered
         <span className="dot">&middot;</span>
         <span className="tnum">{summary.digests}</span> mornings
       </div>

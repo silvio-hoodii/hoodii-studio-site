@@ -321,3 +321,14 @@
 .kos .cooks i.nailed { background: var(--foreground); }
 .kos .cooks i.fine { background: color-mix(in srgb, var(--foreground) 40%, transparent); border-color: color-mix(in srgb, var(--foreground) 40%, transparent); }
 .kos .cooks i.wrong { background: transparent; }
+
+/* The dish page above 1024: the shopping list beside the notes. On the phone the source order is
+   the reading order. */
+@media (min-width: 1024px) {
+  .kos .two { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 44px; align-items: start; }
+  .kos .two > * { min-width: 0; }
+  /* The aside and the notes share the right column; the list takes the left. */
+  .kos .two .side { grid-column: 2; grid-row: 1; position: sticky; top: 16px; }
+  .kos .two section { grid-column: 1; grid-row: 1 / span 2; }
+  .kos .two .side-notes { grid-column: 2; grid-row: 2; }
+}

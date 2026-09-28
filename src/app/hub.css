@@ -182,8 +182,10 @@
  * is a glance, the page behind the row is where to look properly. */
 .idx .viz { margin-top: 10px; color: var(--foreground); line-height: 0; }
 .idx .viz .spark { display: block; overflow: visible; }
-/* Two drawings per spark (Spark.tsx); the phone shows the small one, the board the large one. */
-.idx .viz .spark-l { display: none; }
+/* Two drawings per spark (Spark.tsx); the phone shows the small one, the board the large one. The
+   cap is the safety net for a tile narrower than the drawing; Tailwind's reset caps img and video
+   but not svg. */
+.idx .viz .spark-l { display: none; max-width: 100%; height: auto; }
 .idx .vcover {
   width: 40px;
   aspect-ratio: 2 / 3;

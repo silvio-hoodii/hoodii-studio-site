@@ -81,7 +81,8 @@
   color: var(--signal);
 }
 
-.music .np a { color: inherit; font-weight: 600; text-decoration: none; }
+/* 44px: the track is a link to Spotify and a control someone aims at; it measured 22.5px. */
+.music .np a { color: inherit; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .music .np a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .music .np .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 9px; align-self: center; }

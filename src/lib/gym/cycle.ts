@@ -8,9 +8,9 @@ function dateDiffDays(a: string, b: string): number {
   return Math.round((Date.parse(a + 'T00:00:00Z') - Date.parse(b + 'T00:00:00Z')) / 86400000);
 }
 
+/* NO `today` AND NO `lastDay`, 2026-09-27: nothing read either. The hub reads `lastDate` and
+ * `daysSince`, /gym reads the rest. */
 export interface NextUp {
-  today: string;
-  lastDay: DayKey | null;
   lastDate: string | null;
   daysSince: number | null;
   nextDay: DayKey;
@@ -100,14 +100,13 @@ export async function computeNextUp(today: string): Promise<NextUp> {
   const state = await getRotationState([...ROTATION], today, await excludedIsodow());
   const lastRow = state.last;
 
-  let lastDay: DayKey | null = null;
   let lastDate: string | null = null;
   let daysSince: number | null = null;
   let cutShort = false;
   let base = 0; // index into ROTATION of the session the rotation would offer from the app log alone
 
   if (lastRow?.date) {
-    lastDay = lastRow.day as DayKey | null;
+    const lastDay = lastRow.day as DayKey | null;
     lastDate = lastRow.date;
     daysSince = dateDiffDays(today, lastDate);
     const idx = lastDay ? ROTATION.indexOf(lastDay) : -1;
@@ -135,5 +134,5 @@ export async function computeNextUp(today: string): Promise<NextUp> {
   const nextDay: DayKey = rotationNext;
   const todayDay = state.todayDay as DayKey | null;
 
-  return { today, lastDay, lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
+  return { lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
 }

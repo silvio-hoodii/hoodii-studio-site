@@ -65,6 +65,11 @@ export default async function DishPage({ params }: Params) {
       <p className="eyebrow">Dish</p>
       <h1>{d.name}</h1>
 
+      {/* Two columns above 1024 (kitchen.css `.two`): the list he shops from on the left; the recipe
+          link, the facts, the notes and the box in a sticky aside on the right. One column, in the
+          order the aside comes first, on the phone. */}
+      <div className="two">
+      <aside className="side">
       <a className="recipe-link" href={d.sourceUrl} target="_blank" rel="noreferrer">
         <span className="k">Open the recipe</span>
         <span className="v">{d.publisher ?? host}</span>
@@ -88,10 +93,10 @@ export default async function DishPage({ params }: Params) {
             </dd>
           </>
         )}
-        <dt>Added</dt>
-        <dd className="tnum">{d.addedAt.length === 10 ? shortDate(d.addedAt) : d.addedAt}</dd>
       </dl>
 
+      </aside>
+      <section>
       <h2 className="sec">Shopping list</h2>
       {d.list.length === 0 ? (
         <p className="empty">No list yet.</p>
@@ -119,6 +124,8 @@ export default async function DishPage({ params }: Params) {
         </>
       )}
 
+      </section>
+      <div className="side-notes">
       <h2 className="sec">Notes</h2>
       {d.notes.length === 0 && cooks.length === 0 ? (
         <p className="empty">Nothing yet.</p>
@@ -126,13 +133,13 @@ export default async function DishPage({ params }: Params) {
         <ul className="notes">
           {d.notes.map((n, i) => (
             <li key={`n${i}`}>
-              <span className="when tnum">{n.at}</span>
+              <span className="when tnum">{n.at.length === 10 ? shortDate(n.at) : n.at}</span>
               <p>{n.text}</p>
             </li>
           ))}
           {cooks.map((c) => (
             <li key={c.id}>
-              <span className="when tnum">{c.at}</span>
+              <span className="when tnum">{c.at.length === 10 ? shortDate(c.at) : c.at}</span>
               <p>
                 {c.rating && RATING_LABEL[c.rating] && (
                   <span className={`rating rating-${c.rating}`}>{RATING_LABEL[c.rating]}</span>
@@ -146,6 +153,8 @@ export default async function DishPage({ params }: Params) {
 
       <h2 className="sec">How did it go</h2>
       <NoteBox id={d.id} dish={d.name} />
+      </div>
+      </div>
     </div>
   );
 }

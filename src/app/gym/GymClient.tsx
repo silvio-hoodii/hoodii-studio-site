@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
-import { today } from '@/lib/day';
+import { shortDate } from '@/lib/format';
 import type {
   Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem, FillOptions, FillCandidate,
 } from '@/lib/gym/types';
@@ -10,7 +10,7 @@ import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
   DAY_ORDER, exType, findExercise, repSuffix,
-  parseTargetReps, restSeconds, effectiveExercise, PLATE_IDS, plateMath, warmupRamp, splitName,
+  parseTargetReps, restSeconds, effectiveExercise, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kinds';
 
@@ -35,10 +35,15 @@ interface Props {
   extraSuggestions: string[];
   nextUp: NextUp;
   /** What could legally ride in each empty rest, keyed `${dayKey}:${blockIndex}`, computed on the
-   *  server by src/lib/gym/fill.ts. Only blocks that are one exercise with a rest of 60s or more get
-   *  an entry, so `fillOptions[key]` being undefined is the test for "this block is not fillable"
-   *  and no second flag can disagree with it. */
+   *  server by src/lib/gym/fill.ts. Only blocks that are one exercise with a rest of 60s or more, and
+   *  not a primer, get an entry, so `fillOptions[key]` being undefined is the test for "this block is
+   *  not fillable" and no second flag can disagree with it. */
   fillOptions: FillOptions;
+  /** The date every write from this page load goes under, decided once on the server (today, or an
+   *  open session carried across midnight; see `getCarriedSession` in db.ts). */
+  sessionDate: string;
+  /** Ids whose implement is a barbell, from the catalogue: where plate math and the ramp apply. */
+  barbellIds: string[];
   /** The most recent session with logged work and the heaviest set of each lift in it. Rendered
    *  under the day title. His words, 2026-09-06: "I don't even know what I did last session." */
   lastSession: { date: string; day: string | null; lifts: { id: string; name: string; weight: number | null; reps: number | null }[] } | null;
@@ -50,14 +55,13 @@ interface Props {
 }
 
 /* No `rir`. It was declared here, sent on every POST as null, stored in a column, and never once
- * filled: 396 logged sets, 0 with a value, because no input for it was ever built. The progression
- * engine declares the field in its own type and reads it nowhere.
+ * filled: 396 logged sets, 0 with a value, because no input for it was ever built.
  *
  * Removed rather than given an input. A third box on every set row is real friction on a phone in a
  * gym, and building the capture ahead of any demand for it is what left 1,359 French cards with one
- * review. The gym_set column stays, so nothing historical is lost and adding this back later is a
- * form field and a payload key. The RIR guide stays on the page too: it teaches the idea, which is
- * useful whether or not anything records it. */
+ * review. The gym_set column was dropped on 2026-08-27 and the RIR guide went the same day (see the
+ * note above SetRow in src/lib/gym/db.ts); adding either back is a migration, a form field and a
+ * payload key. */
 interface SetEntry {
   weight: string;
   reps: string;
@@ -77,6 +81,33 @@ interface PendingWrite {
   url: string;
   body: unknown;
 }
+
+/* THE RETRY QUEUE LIVES IN localStorage TOO, since 2026-09-27, one key per session date.
+ *
+ * It was a ref, so a phone that discarded the tab (which a phone does to a backgrounded tab, and the
+ * reason the queue exists at all) took every unsent set with it, while the banner said "Nothing you
+ * entered was lost". Every change to the queue is mirrored here, and the page replays whatever it
+ * finds on mount. Each body carries its own date, so a queue left from yesterday lands under
+ * yesterday. */
+const QUEUE_PREFIX = 'gym:queue:';
+const bodyDate = (body: unknown): string => String((body as { date?: unknown })?.date ?? 'undated');
+
+/* What the server holds for one set, as a comparable string. Numbers, not the typed text, so "42"
+ * and "42.0" are the same set. */
+const sigOf = (weight: unknown, reps: unknown, done: unknown): string => {
+  const n = (v: unknown) => (v === '' || v == null ? '' : String(Number(v)));
+  return `${n(weight)}|${n(reps)}|${done ? 1 : 0}`;
+};
+const EMPTY_SIG = sigOf('', '', false);
+const entryFromSig = (sig: string): SetEntry => {
+  const [weight = '', reps = '', done = '0'] = sig.split('|');
+  return { weight, reps, done: done === '1' };
+};
+/** A set counts as done if he ticked it or typed reps into it. The SAME rule as PERFORMED in
+ *  src/lib/gym/db.ts, which is what the history and the session log count, so the page's
+ *  "12/15 sets" and the log's row for the same session cannot disagree. */
+const performed = (s: SetEntry | undefined): boolean =>
+  !!s && (s.done || (s.reps !== '' && Number(s.reps) > 0));
 
 /* The top set of a session, which is the one number worth putting on a line.
  *
@@ -146,7 +177,7 @@ function Trend({ recent, countUnit }: { recent: LastSession[]; countUnit: string
           disagreeing. Only the genuinely unchanging series gets called held; a series that ended
           where it started but moved in between says so and lets the line show the shape. */}
       {/* "over the last 8", not "over 8". The window is HARD-CAPPED at 8 in
-          src/app/gym/api/plan/route.ts (`getRecentSessions(ex.id, date, 8)`) and the caption said
+          src/app/gym/api/plan/route.ts (`getExerciseHistories(..., date, 8)`) and the caption said
           "over 8" as if that were every session on record. On a lift he has done thirty times it
           read as a complete history of it. Finding 42 of the 2026-08-27 audit, and the same class as
           the notes list's silent 20-row cap: a cap that does not say it is a cap. */}
@@ -167,11 +198,30 @@ function Trend({ recent, countUnit }: { recent: LastSession[]; countUnit: string
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
 
-export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession }: Props) {
+export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession, sessionDate, barbellIds }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
   const [activeDay, setActiveDay] = useState<DayKey>(nextUp.todayDay ?? nextUp.nextDay);
+  /* FIXED FOR THE LIFE OF THE PAGE, since 2026-09-27. It was `today()` on every render, so a session
+   * that crossed midnight Calgary wrote its first sets under one date and the rest under the next,
+   * and a reload at 00:30 opened an empty day. The server decides the date once per load (today, or
+   * yesterday's session if it is still open and was written to in the last three hours; see
+   * `getCarriedSession` in db.ts) and every write of this session carries it. Calgary, from
+   * lib/day.ts, not the phone's timezone. */
+  const [date] = useState(sessionDate);
+  /* WHETHER THE BOXES SHOW WHAT THE SERVER HOLDS YET, since 2026-09-27. Before the session read
+     returns every box is empty, and an empty box tapped and left used to post nulls over a set
+     already logged. So the set inputs are disabled while this is 'loading', and a failed read is
+     said on screen instead of being swallowed. */
+  const [sessionRead, setSessionRead] = useState<'loading' | 'ready' | 'failed'>('loading');
+  const [readNonce, setReadNonce] = useState(0);
+  const selectDay = (k: DayKey) => {
+    if (k === activeDay) return;
+    setSessionRead('loading');
+    setActiveDay(k);
+  };
+  const barbell = useMemo(() => new Set(barbellIds), [barbellIds]);
   /* EXTRA SETS, since 2026-09-04, on his note #48: "Add set option to each?" A card prescribes a
      count and he sometimes does one more; until now the only place for that fourth set was the
      off-plan box, which files it as a different exercise. This adds a row to THIS exercise, logged
@@ -228,9 +278,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * SUBSTITUTED and had nowhere to record. The app could only ever see its own plan, so the plan
    * was the only thing it could measure against, and reality had no way in.
    *
-   * OFF-PLAN IS DERIVED, NEVER STORED. A row whose exercise_id is not in that day's blocks is
-   * off-plan by definition. No column, no migration, no flag to go stale, and it stays correct when
-   * the programme changes underneath old rows. */
+   * OFF-PLAN IS STORED since 2026-08-28: `gym_set.off_plan`, written by the server on every append
+   * through this box (and on every fill set). This comment said it was derived and had no column;
+   * it has one, and the store's overwrite guard reads it. */
   const [extraName, setExtraName] = useState('');
   const [extraWeight, setExtraWeight] = useState('');
   const [extraReps, setExtraReps] = useState('');
@@ -243,17 +293,33 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * fires from an onBlur and must not depend on having re-rendered since the last one; the count
    * is state because the banner shows it. */
   const pendingRef = useRef<Map<string, PendingWrite>>(new Map());
+  /* ONE WRITE IN FLIGHT PER KEY, since 2026-09-27. Two quick saves of one set went out together and
+     could land out of order, so the older value won. `inflightRef` holds the chain for a key and
+     `latestRef` the newest body waiting on it: a write that arrives while another is out waits, then
+     sends whatever is newest, and a write whose body was already sent by an earlier link sends
+     nothing. */
+  const inflightRef = useRef<Map<string, Promise<boolean>>>(new Map());
+  const latestRef = useRef<Map<string, PendingWrite>>(new Map());
+  /* What the server has confirmed for each set, and what was last asked of it. A blur posts only
+     when the box differs from the newer of the two, so an empty box tapped and left posts nothing. */
+  const confirmedRef = useRef<Map<string, string>>(new Map());
+  const requestedRef = useRef<Map<string, string>>(new Map());
+  /* Why the last write failed, so the line under the finish button can say the true thing. */
+  const lastFailRef = useRef<string | null>(null);
+  const [queueKept, setQueueKept] = useState(true);
   /* Only the SETS, not the finish. The banner counts what it can name, and the first version passed
    * the whole queue size next to the word "set": pressing Finish on a locked device with nothing
    * typed produced "1 set waiting to be saved" over a queue holding one finish and no sets. A
    * component built to stop the UI asserting unconfirmed things must not assert one itself. */
   const [pendingSets, setPendingSets] = useState(0);
   const [saveErr, setSaveErr] = useState<string | null>(null);
-  const [finishBlocked, setFinishBlocked] = useState(false);
+  const [finishBlocked, setFinishBlocked] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [notesSaved, setNotesSaved] = useState(0);
   /* Every note is its own queue key. A set upserts on (date, exercise, index) so re-typing corrects
-   * it; two notes on one evening are two separate things he said and neither replaces the other. */
+   * it; two notes on one evening are two separate things he said and neither replaces the other.
+   * The key carries the time as well as the counter, because the counter restarts on a reload while
+   * a queued note from before the reload is replayed under its old key. */
   const noteSeq = useRef(0);
 
   /* ---- the per-exercise capture, added 2026-08-31 ------------------------------------------------
@@ -293,15 +359,47 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   const finishLandedRef = useRef(false);
   const countSets = () => [...pendingRef.current.keys()].filter((k) => k.startsWith('set:')).length;
 
-  /* The one place a write leaves this component.
-   *
-   * Was: `void postJson(...).catch(() => {})` for every set and `await ... .catch(() => {})` for
-   * the finish, which is why a locked phone logged a whole session into nothing and then said
-   * "Session saved." Returning a boolean rather than throwing is deliberate: every caller has to
-   * decide what to render, and a promise nobody awaited is exactly how this got shipped. */
-  const write = useCallback(async (key: string, url: string, body: unknown): Promise<boolean> => {
+  /* Mirrors the queue into localStorage, one key per date. Returns nothing; `queueKept` records
+     whether the mirror worked, because the banner's sentence depends on it. */
+  const persistQueue = useCallback(() => {
+    try {
+      const byDate = new Map<string, PendingWrite[]>();
+      for (const p of pendingRef.current.values()) {
+        const d = bodyDate(p.body);
+        byDate.set(d, [...(byDate.get(d) ?? []), p]);
+      }
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(QUEUE_PREFIX) && !byDate.has(k.slice(QUEUE_PREFIX.length))) localStorage.removeItem(k);
+      }
+      for (const [d, list] of byDate) localStorage.setItem(QUEUE_PREFIX + d, JSON.stringify(list));
+      setQueueKept(true);
+    } catch {
+      setQueueKept(false);
+    }
+  }, []);
+
+  /* A set the server refused (409) goes back to what the server last confirmed for it, so the box
+     never shows a number that is not saved. Only for this page's own date. */
+  const revertSet = useCallback((key: string) => {
+    requestedRef.current.delete(key);
+    const [, d, effId, idxStr] = key.split(':');
+    if (d !== date || !effId || idxStr == null) return;
+    const idx = Number(idxStr);
+    const back = entryFromSig(confirmedRef.current.get(key) ?? EMPTY_SIG);
+    setSets((prev) => {
+      const arr = prev[effId] ? [...prev[effId]!] : [];
+      arr[idx] = back;
+      return { ...prev, [effId]: arr };
+    });
+  }, [date]);
+
+  /* One POST, and what its answer means for the queue. Called only through `write` below. */
+  const sendNow = useCallback(async (key: string, url: string, body: unknown): Promise<boolean> => {
     const queue = (reason: string) => {
       pendingRef.current.set(key, { key, url, body });
+      persistQueue();
+      lastFailRef.current = reason;
       setPendingSets(countSets());
       setSaveErr(reason);
       return false;
@@ -312,28 +410,68 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      /* 409 IS NOT RETRIED. The server refuses a set that would overwrite a row of the other kind
-         (a fill over a prescribed set, or the reverse), and retrying it forever with the banner up is
-         a queue that can never drain. It is dropped, and the banner says what happened instead of
-         "failed 409". Every other failure keeps the old behaviour: queue and retry. */
+      /* 409 IS NOT RETRIED. For a set, the server refused to overwrite a row of the other kind (a
+         fill, an off-plan set, or a prescribed set), and retrying it forever with the banner up is a
+         queue that can never drain. It is dropped, the box goes back to the server's value, and the
+         banner says what happened. For a finish, it means no session is logged under that date and
+         day: nothing to retry, and the line under the button says so. Every other failure keeps the
+         old behaviour: queue and retry. */
       if (r.status === 409) {
         pendingRef.current.delete(key);
+        persistQueue();
         setPendingSets(countSets());
+        if (key.startsWith('finish:')) {
+          lastFailRef.current = 'nothing';
+          finishWantedRef.current = false;
+          return false;
+        }
+        lastFailRef.current = 'conflict';
+        if (key.startsWith('set:')) revertSet(key);
         setSaveErr('conflict');
         return false;
       }
       if (!r.ok) return queue(r.status === 401 ? 'locked' : `failed ${r.status}`);
       pendingRef.current.delete(key);
+      persistQueue();
       // Recorded here rather than at the call site, so a finish that goes out inside a queue flush
-      // counts as landed and is never posted a second time.
-      if (key.startsWith('finish:')) finishLandedRef.current = true;
+      // counts as landed and is never posted a second time. THIS page's finish only: a replayed
+      // finish for another date must not stop today's from being sent.
+      if (key === `finish:${date}`) finishLandedRef.current = true;
+      if (key.startsWith('set:')) {
+        const b = body as { weight?: unknown; reps?: unknown; done?: unknown };
+        const sig = sigOf(b.weight, b.reps, b.done);
+        confirmedRef.current.set(key, sig);
+        if (requestedRef.current.get(key) === sig) requestedRef.current.delete(key);
+      }
       setPendingSets(countSets());
       if (pendingRef.current.size === 0) setSaveErr(null);
       return true;
     } catch {
       return queue('offline');
     }
-  }, []);
+  }, [persistQueue, revertSet, date]);
+
+  /* The one place a write leaves this component.
+   *
+   * Was: `void postJson(...).catch(() => {})` for every set and `await ... .catch(() => {})` for
+   * the finish, which is why a locked phone logged a whole session into nothing and then said
+   * "Session saved." Returning a boolean rather than throwing is deliberate: every caller has to
+   * decide what to render, and a promise nobody awaited is exactly how this got shipped. */
+  const write = useCallback((key: string, url: string, body: unknown): Promise<boolean> => {
+    latestRef.current.set(key, { key, url, body });
+    const prev = inflightRef.current.get(key);
+    const link = (async (): Promise<boolean> => {
+      const before = prev ? await prev : null;
+      const next = latestRef.current.get(key);
+      // An earlier link already sent the newest body for this key: report how that went.
+      if (!next) return before ?? true;
+      latestRef.current.delete(key);
+      return sendNow(next.key, next.url, next.body);
+    })();
+    inflightRef.current.set(key, link);
+    void link.finally(() => { if (inflightRef.current.get(key) === link) inflightRef.current.delete(key); });
+    return link;
+  }, [sendNow]);
 
   /* Send everything queued. Each attempt re-queues itself on failure, so a partial flush leaves the
    * banner up with an honest count rather than silently dropping the rest. */
@@ -342,14 +480,48 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     for (const p of [...pendingRef.current.values()]) {
       if (!(await write(p.key, p.url, p.body))) allOk = false;
     }
+    /* Nothing left owed and nothing failed: the banner goes. After a 409 the queue is already empty
+       and "Try again" used to leave the conflict notice up with nothing to try. */
+    if (allOk && pendingRef.current.size === 0) setSaveErr(null);
     return allOk;
   }, [write]);
 
   const day: Day = program.days[activeDay];
-  /* Calgary, from lib/day.ts, not the phone's timezone. This used getTimezoneOffset() and so
-   * stamped a workout with wherever the phone thought it was, while the hub counted days-since in
-   * Calgary. Two answers to "what day is it" on one dish of data. */
-  const date = today();
+
+  /* REPLAY WHAT A DISCARDED TAB LEFT OWED, once, on mount. Every entry carries its own date. Loaded
+     into the queue and sent through the same `write`, so a replayed set is chained, confirmed and
+     reverted like any other. */
+  useEffect(() => {
+    let found = false;
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith(QUEUE_PREFIX)) continue;
+        const list = JSON.parse(localStorage.getItem(k) || '[]') as PendingWrite[];
+        for (const p of Array.isArray(list) ? list : []) {
+          if (!p || typeof p.key !== 'string' || typeof p.url !== 'string') continue;
+          pendingRef.current.set(p.key, p);
+          if (p.key.startsWith('set:')) {
+            const b = p.body as { weight?: unknown; reps?: unknown; done?: unknown };
+            requestedRef.current.set(p.key, sigOf(b.weight, b.reps, b.done));
+          }
+          found = true;
+        }
+      }
+    } catch { /* private mode, a full disk: nothing to replay */ }
+    if (!found) return;
+    const ownFinish = pendingRef.current.get(`finish:${date}`);
+    void (async () => {
+      await retryPending();
+      /* THIS session's finish was owed and has now landed: the page says so rather than offering
+         the button again. */
+      if (ownFinish && finishLandedRef.current) {
+        endingRef.current = (ownFinish.body as { status?: string })?.status === 'cutshort' ? 'cutshort' : 'finished';
+        setFinished(true);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* The whole day, always. See the note on the deleted budget state above: the list is the plan
      and what he ticks is the session. */
@@ -434,7 +606,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
     postJson('/gym/api/session', { date })
       .then((data) => {
-        if (cancelled || !data.sets) return;
+        if (cancelled) return;
+        if (!Array.isArray(data.sets)) { setSessionRead('failed'); applySwaps({}); return; }
+        setSessionRead('ready');
         const rows = data.sets as {
           exercise_id: string; exercise_name: string | null; set_idx: number;
           weight: number | null; reps: number | null;
@@ -509,8 +683,24 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             };
             next[s.exercise_id] = arr;
           }
+          /* WAITING VALUES WIN OVER THE SERVER'S ANSWER, since 2026-09-27. A set typed, refused and
+             queued is not in the table yet, so switching tabs and back showed the older number from
+             the server and then replayed the newer one under it. Anything asked of the server and not
+             yet confirmed is laid over what it returned. */
+          for (const [key, sig] of requestedRef.current) {
+            const [, d, effId, idxStr] = key.split(':');
+            if (d !== date || !effId || idxStr == null) continue;
+            const arr = next[effId] ? [...next[effId]!] : [];
+            arr[Number(idxStr)] = entryFromSig(sig);
+            next[effId] = arr;
+          }
           return next;
         });
+        /* What the server holds, per set, for the blur check. Card rows only: an off-plan row has no
+           box on a card. */
+        for (const s of rows.filter((r) => !r.off_plan || (r.fill_for && fillIds.has(r.exercise_id)))) {
+          confirmedRef.current.set(`set:${date}:${s.exercise_id}:${s.set_idx - 1}`, sigOf(s.weight, s.reps, s.done));
+        }
         const fromLog: Record<string, Alt> = {};
         for (const s of rows) {
           if (!s.swapped_from) continue;
@@ -520,10 +710,16 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         }
         applySwaps(fromLog);
       })
-      .catch(() => { if (!cancelled) applySwaps({}); });
+      .catch(() => {
+        if (cancelled) return;
+        /* SAID, NOT SWALLOWED. The boxes are enabled again so an offline session can still be
+           logged, and an empty box left alone still posts nothing, because nothing is confirmed. */
+        setSessionRead('failed');
+        applySwaps({});
+      });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeDay]);
+  }, [activeDay, readNonce]);
 
   /* ---- suggestions, for whatever is on screen right now ----
    *
@@ -579,7 +775,15 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * `exercise_id: box-jump` next to `exercise_name: "Broad Jump"`, a row that contradicts itself. */
   function autosave(slotId: string, eff: Exercise, idx: number, entry: SetEntry, fillFor?: string) {
     const p = plan[eff.id];
-    void write(`set:${date}:${eff.id}:${idx}`, '/gym/api/set', {
+    const key = `set:${date}:${eff.id}:${idx}`;
+    /* ONLY A CHANGE IS SAVED, since 2026-09-27. Every blur posted, so an empty box tapped and left
+       wrote nulls over a set already logged: before the session read returned, after it failed, or
+       on a second device. The box is compared with what was last asked of the server for this set,
+       or failing that what the server confirmed, or failing that an empty set. */
+    const sig = sigOf(entry.weight, entry.reps, entry.done);
+    if (sig === (requestedRef.current.get(key) ?? confirmedRef.current.get(key) ?? EMPTY_SIG)) return;
+    requestedRef.current.set(key, sig);
+    void write(key, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
       exerciseId: eff.id, exerciseName: eff.name, setIdx: idx + 1,
       weight: entry.weight === '' ? null : Number(entry.weight),
@@ -621,6 +825,8 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
      * queue exactly the way the index used to collapse them in the table. */
     void write(`extra:${date}:${id}:${Date.now()}`, '/gym/api/set', {
       date, day: activeDay, dayTitle: day.title,
+      /* `offPlan: true` is what routes this to the append and stamps `off_plan`, which the store's
+         overwrite guard compares. Without it a card write could take this row. */
       exerciseId: id, exerciseName: name, offPlan: true,
       weight: extraWeight === '' ? null : Number(extraWeight),
       reps: extraReps === '' ? null : Number(extraReps),
@@ -635,7 +841,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   async function saveNote() {
     const body = note.trim();
     if (!body) return;
-    const ok = await write(`note:${date}:${noteSeq.current++}`, '/gym/api/note', {
+    const ok = await write(`note:${date}:${Date.now()}:${noteSeq.current++}`, '/gym/api/note', {
       date, day: activeDay, dayTitle: day.title, body,
     });
     if (ok) {
@@ -660,7 +866,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   async function saveExerciseNote(openId: string, exerciseId: string) {
     const body = exNoteBody.trim();
     if (!body) return;
-    const ok = await write(`note:${date}:${noteSeq.current++}`, '/gym/api/note', {
+    const ok = await write(`note:${date}:${Date.now()}:${noteSeq.current++}`, '/gym/api/note', {
       date, day: activeDay, dayTitle: day.title, body,
       exerciseId, kind: exNoteKind,
     });
@@ -720,6 +926,11 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   /** Every exercise id currently filling a rest today. Read by the swap pickers so an alt that is a
    *  live fill cannot also be swapped in. */
   const fillIdsNow = new Set(Object.values(fills).map((f) => f.id));
+  /** Every exercise id EFFECTIVE on this day right now: each slot, or the alt swapped into it. Read by
+   *  the swap chips and the fill list. On Session A the front squat, reverse lunge and walking lunge
+   *  are alternatives on two blocks, and offering one on the second card while the first was already
+   *  doing it put two cards on one (date, exercise, set) key, each writing the other's rows. */
+  const effIdsNow = new Set(blocks.flatMap((b) => b.exercises.map((e) => effOf(e).id)));
 
   function persistSwaps(next: Record<string, Alt>) {
     try {
@@ -756,7 +967,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         if (!ex.log) continue;
         const eff = effOf(ex);
         let d = 0;
-        for (let i = 0; i < eff.sets; i++) if (getSet(eff.id, i).done) d++;
+        for (let i = 0; i < eff.sets; i++) if (performed(getSet(eff.id, i))) d++;
         if (isPrimer) { primer += eff.sets; primerDone += d; }
         else { total += eff.sets; done += d; }
       }
@@ -784,18 +995,28 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     finishWantedRef.current = true;
     endingRef.current = status;
     if (pendingRef.current.size > 0 && !(await retryPending())) {
-      setFinishBlocked(true);
+      setFinishBlocked(lastFailRef.current ?? 'offline');
       return false;
     }
     if (!finishLandedRef.current) {
       if (!(await write(`finish:${date}`, '/gym/api/finish', { date, day: activeDay, status: endingRef.current }))) {
-        setFinishBlocked(true);
+        setFinishBlocked(lastFailRef.current ?? 'offline');
         return false;
       }
     }
-    setFinishBlocked(false);
+    setFinishBlocked(null);
     setFinished(true);
     return true;
+  }
+
+  /* THE LINE UNDER THE FINISH BUTTONS, worded from what actually went wrong. It always blamed the
+     lock, including when the phone had no signal and when there was nothing logged to finish. */
+  function notFinishedText(reason: string): string {
+    if (reason === 'locked') return 'Not finished: this device is locked. Unlock it in the notice at the top and it will finish on its own.';
+    if (reason === 'offline') return 'Not finished: no connection. Tap Try again at the top when you have signal.';
+    if (reason === 'nothing') return 'Not finished: no set is logged for this session yet.';
+    if (reason === 'conflict') return 'Not finished: a set was refused. See the notice at the top.';
+    return `Not finished: the server refused it (${reason}). Tap Try again at the top.`;
   }
 
   /* What the banner's retry means depends on how far he had got. If he was only entering sets, send
@@ -817,24 +1038,33 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * around. He worked that out from the screen on 2026-08-15 without seeing the code: "I also think
    * 2 is a superset. It's just that it doesn't have that line or I have no idea really if it's a
    * superset." He was right, and the fix was the data model, not the CSS. */
-  function howToRun(block: { pairing: string; exercises: unknown[] }): string | null {
+  /* ONCE A DAY, since 2026-09-27. Every paired block in the week is 'fill', so the same sentence sat
+   * on all eight of them; it is said on the first and the bracket carries it after that.
+   *
+   * The 'alternate' branch is gone (no block uses it since 2026-09-06). validate.mjs still accepts
+   * the value, so an 'alternate' block would now get NO line rather than the sequence line, which is
+   * the wrong instruction for it. Restore the branch with the first block that uses it. */
+  const firstFillIdx = blocks.findIndex((b) => b.pairing === 'fill' && b.exercises.length >= 2);
+  function howToRun(block: { pairing: string; exercises: unknown[] }, bi: number): string | null {
     if (block.exercises.length < 2) return null;
-    if (block.pairing === 'alternate') return 'Superset: alternate the two, rest once after both.';
     /* Added 2026-08-21. Eleven of the thirteen paired blocks were a real lift plus a band, plank,
      * bridge or carry, and this line used to call them supersets. He said they were not, and he was
      * right. This says the true thing, and it is the one instruction on the page that makes the
      * session SHORTER rather than longer: the rest is being spent either way. */
     if (block.pairing === 'fill') {
-      return 'Do the second one during the first one’s rest.';
+      return bi === firstFillIdx ? 'Do the second one during the first one’s rest.' : null;
     }
-    return 'Finish all sets of the first, then start the second.';
+    if (block.pairing === 'sequence') return 'Finish all sets of the first, then start the second.';
+    return null;
   }
 
   return (
     <>
-      <div className="tabs">
+      {/* `data-session` says whether the boxes below show the server's sets yet. The probe waits on
+          it before typing, because the inputs are disabled until it is 'ready' or 'failed'. */}
+      <div className="tabs" data-session={sessionRead}>
         {DAY_ORDER.map((k) => (
-          <button key={k} className={`tab${k === activeDay ? ' on' : ''}`} onClick={() => setActiveDay(k)}>
+          <button key={k} className={`tab${k === activeDay ? ' on' : ''}`} onClick={() => selectDay(k)}>
             {splitName(program.days[k])}
           </button>
         ))}
@@ -942,21 +1172,33 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * having lost its place, which is the bug this feature exists to prevent. */}
       {nextUp.cutShort && !nextUp.todayDay && (
         <p className="lede" style={{ marginTop: 6 }}>
-          You cut {program.days[nextUp.nextDay]?.title ?? 'the last session'} short on {nextUp.lastDate}.
+          You cut {program.days[nextUp.nextDay] ? splitName(program.days[nextUp.nextDay]) : 'the last session'} short
+          {nextUp.lastDate ? ` on ${shortDate(nextUp.lastDate)}` : ''}.
         </p>
       )}
 
       {/* THE WATCH COUNTS TOO, since 2026-09-03. Between May and August the watch recorded 72 lifting
         * sessions and this app logged 37, and the rotation read only the app, so a week trained
         * without logging sent him back to Session A. His words that night: "I don't even know if the
-        * session that I'm doing is the right one." The app genuinely could not tell. Now an unlogged
-        * session the watch saw advances the rotation, and this line says so, because a guess he
-        * cannot see is a guess he cannot correct. The tabs above are the correction. */}
+        * session that I'm doing is the right one." Now an unlogged session the watch saw advances the
+        * rotation, and this line names the dates, because a guess he cannot see is a guess he cannot
+        * correct. The tabs above are the correction.
+        *
+        * THE FACT, NOT THE ARGUMENT, since 2026-09-27 (the four-kinds rule). It was two sentences
+        * explaining the rotation, and it named `day`, the tab ON SCREEN, as the session "offered":
+        * after one tap on the other tab it named the wrong session. No session name now, so it cannot. */}
       {nextUp.assumedFromWatch > 0 && !nextUp.todayDay && (
         <p className="lede" style={{ marginTop: 6 }}>
-          The watch saw {nextUp.assumedFromWatch === 1 ? 'a lifting session' : `${nextUp.assumedFromWatch} lifting sessions`} you
-          did not log ({nextUp.assumedDates.join(', ')}), so the rotation assumes you did{' '}
-          {nextUp.assumedFromWatch === 1 ? 'that one' : 'those'} and offers {splitName(day)}. If that is wrong, tap the other tab.
+          Watch lift{nextUp.assumedFromWatch === 1 ? '' : 's'} not logged: {nextUp.assumedDates.map(shortDate).join(', ')}.
+        </p>
+      )}
+
+      {sessionRead === 'failed' && (
+        <p className="lede read-failed" style={{ marginTop: 6, color: 'var(--destructive)' }}>
+          Today&apos;s logged sets did not load.{' '}
+          <button type="button" className="swap-revert" onClick={() => { setSessionRead('loading'); setReadNonce((n) => n + 1); }}>
+            Load again
+          </button>
         </p>
       )}
 
@@ -969,6 +1211,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           queued={pendingSets}
           onRetry={retryAll}
           loginHref="/login?to=/gym"
+          kept={queueKept ? 'device' : 'screen'}
           sticky
         />
       )}
@@ -1011,17 +1254,16 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * in. The bracket wraps the EXERCISES rather than the whole block, so it groups the two
         * things that are actually tied instead of swallowing the label as well. */}
       {blocks.map((block, bi) => (
-        <div className={`exgroup${block.pairing === 'alternate' || block.pairing === 'fill' ? ' tied' : ''}`} key={bi}>
+        /* `data-role` is for the probe, which asserts no primer offers a fill. */
+        <div className={`exgroup${block.pairing === 'fill' && block.exercises.length >= 2 ? ' tied' : ''}`} key={bi} data-role={block.role}>
           <div className="exgroup-label">
             <span className="exgroup-n tnum">{bi + 1}/{blocks.length}</span>
-            {block.label} <span className="tag">{block.tag}</span>
-            {/* THE SPINE, SAID OUT LOUD. The main lifts are what the session is; everything after
-              * them is optional and always was, but nothing on screen said so, so a session cut
-              * short read as a session failed. Derived from `role` rather than a second flag that
-              * could disagree with it. */}
-            {block.role === 'accessory' && <span className="tag opt">optional</span>}
+            {block.label}
+            {/* NO `block.tag` and no "optional" tag, 2026-09-27: no block carries a tag, and no block
+              * has had role 'accessory' since 2026-09-06, so both rendered nothing. types.ts and
+              * validate.mjs still accept the keys. */}
           </div>
-          {howToRun(block) && <div className="exgroup-how">{howToRun(block)}</div>}
+          {howToRun(block, bi) && <div className="exgroup-how">{howToRun(block, bi)}</div>}
           {/* WHY THIS BLOCK IS HERE, behind a tap. He said the programme reads as arbitrary because
             * he had never seen the evidence file, and judged this the highest-value change in the
             * whole audit: a programme he does not believe is one he stops finishing. Collapsed,
@@ -1035,9 +1277,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             const swap = swaps[ex.id];
             const eff = effOf(ex);
             const p = plan[eff.id];
-            const showPlate = PLATE_IDS.has(eff.id);
+            const isBarbell = barbell.has(eff.id);
+            const showPlate = isBarbell;
             const targetW = p?.suggestion.weight ?? null;
-            const ramp = block.role === 'main' && targetW != null ? warmupRamp(targetW) : null;
+            /* A barbell lift only: "bar x10" on a cable row or a machine press is an instruction he
+               cannot follow. */
+            const ramp = block.role === 'main' && isBarbell && targetW != null ? warmupRamp(targetW) : null;
             return (
               /* The slot in the program and the exercise actually filling it. They differ only
                  after a swap, which is exactly when everything here has gone wrong before, and the
@@ -1087,11 +1332,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                     partners were in that state. A line that says nothing is known, on a card where
                     something is known, is the reach failure this whole feature exists to fix, and it
                     was being produced by the branch meant to prevent it. */}
-                {ex.whyHere
-                  ? <div className="ex-why">{ex.whyHere}</div>
-                  : (ex.open?.some((q) => q.topic === 'placement')
-                    ? <div className="ex-why quiet">Placement question open</div>
-                    : null)}
+                {/* THE PLACEMENT LINE IS GONE, 2026-09-27: no exercise carries an `open` question, so
+                    "Placement question open" could not render. `whyHere` is what renders. */}
+                {ex.whyHere ? <div className="ex-why">{ex.whyHere}</div> : null}
                 {/* THE CUE FOLDS. He has said this twice, and the second time in his own words:
                      "Walls of text again why do I need all this, just leave the cue and thats it,
                      it can even be hidden" (gym_note #12, 2026-08-25), after the same complaint on
@@ -1152,35 +1395,44 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                           <input
                             type="number" inputMode="decimal" placeholder={eff.bodyweight ? 'BW' : 'lb'}
                             value={entry.weight}
-                            disabled={!!eff.bodyweight}
+                            disabled={!!eff.bodyweight || sessionRead === 'loading'}
                             onChange={(e) => updateSet(eff.id, i, { weight: e.target.value })}
                             onBlur={() => autosave(ex.id, eff, i, getSet(eff.id, i))}
                           />
                           <input
                             type="number" inputMode="decimal" placeholder={eff.timed ? 's' : 'reps'}
                             value={entry.reps}
+                            disabled={sessionRead === 'loading'}
                             onChange={(e) => updateSet(eff.id, i, { reps: e.target.value })}
                             onBlur={() => autosave(ex.id, eff, i, getSet(eff.id, i))}
                           />
                           <button
                             type="button" aria-label="mark set done"
                             className={`done-toggle${entry.done ? ' on' : ''}`}
+                            disabled={sessionRead === 'loading'}
                             onClick={() => toggleDone(ex.id, eff, i)}
                           />
                         </div>
                       );
                     })}
+                    {/* ONE MORE ROW THAN IS ON SCREEN NOW, since 2026-09-27. It added one to a counter
+                        that the row count took the max of, so on a card whose log already held more
+                        sets than the prescription (a fourth set logged, then a reload) the tap changed
+                        nothing on screen. */}
                     <button
                       type="button"
                       className="swap-toggle add-set"
-                      onClick={() => setExtraSets((p) => ({ ...p, [eff.id]: (p[eff.id] ?? 0) + 1 }))}
+                      onClick={() => setExtraSets((p) => {
+                        const onScreen = Math.max(eff.sets + (p[eff.id] ?? 0), sets[eff.id]?.length ?? 0);
+                        return { ...p, [eff.id]: onScreen + 1 - eff.sets };
+                      })}
                     >
                       + one more set
                     </button>
                   </div>
                 )}
 
-                {ex.alts && ex.alts.some((a) => a.id !== eff.id && !fillIdsNow.has(a.id)) && (
+                {ex.alts && ex.alts.some((a) => !effIdsNow.has(a.id) && !fillIdsNow.has(a.id)) && (
                   <div className="ex-swap">
                     {/* THE ALTERNATIVES ARE VISIBLE, since 2026-09-06, as a row of names under the
                         sets. They sat behind "Not available? Pick alternative" and he read the one
@@ -1191,13 +1443,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                         the ten cards do not grow a paragraph each (his note #12). Tapping one swaps
                         it in; the cue for the new lift then shows under "How to do it" as before.
 
-                        AN ALT THAT IS CURRENTLY FILLING A REST IS NOT OFFERED. Swapping to it would
-                        put two cards on one (date, exercise_id, set_idx) key space. The other
-                        direction is filtered in the fill list; the server refuses what slips
-                        through both. */}
+                        AN ALT THAT IS CURRENTLY FILLING A REST, OR ALREADY ON ANOTHER CARD, IS NOT
+                        OFFERED. Swapping to it would put two cards on one (date, exercise_id, set_idx)
+                        key space. `effIdsNow` includes this card's own exercise. The other direction
+                        is filtered in the fill list; the server refuses what slips through both. */}
                     <div className="alt-chips">
                       <span className="alt-chips-k">or</span>
-                      {ex.alts.filter((a) => a.id !== eff.id && !fillIdsNow.has(a.id)).map((a) => (
+                      {ex.alts.filter((a) => !effIdsNow.has(a.id) && !fillIdsNow.has(a.id)).map((a) => (
                         <button className="alt-chip" key={a.id} onClick={() => swapExercise(ex.id, a)} title={a.cue}>
                           {a.name}
                         </button>
@@ -1302,7 +1554,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                anything he has already appended through the off-plan box is hidden from the list, so
                a fill cannot share a key with either. See fill.ts for why alts are offered at all. */
             const takenNow = new Set<string>([
-              ...blocks.flatMap((b) => b.exercises.map((e) => effOf(e).id)),
+              ...effIdsNow,
               ...extraLog.map((e) => e.id),
               ...Object.values(fills).map((f) => f.id),
             ]);
@@ -1363,12 +1615,14 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                         <input
                           type="number" inputMode="decimal" placeholder="lb"
                           value={entry.weight}
+                          disabled={sessionRead === 'loading'}
                           onChange={(e) => updateSet(chosen.id, i, { weight: e.target.value })}
                           onBlur={() => autosave(chosen.id, asEx, i, getSet(chosen.id, i), lead.id)}
                         />
                         <input
                           type="number" inputMode="decimal" placeholder="reps"
                           value={entry.reps}
+                          disabled={sessionRead === 'loading'}
                           onChange={(e) => updateSet(chosen.id, i, { reps: e.target.value })}
                           onBlur={() => autosave(chosen.id, asEx, i, getSet(chosen.id, i), lead.id)}
                         />
@@ -1483,7 +1737,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
       <div className="exgroup">
         <div className="exgroup-label">
-          Note <span className="tag">(anything worth telling me)</span>
+          Note
         </div>
         {/* NO INSTRUCTIONS ON THE NOTE BOX. Removed 2026-08-27 on his ruling, and do not restore.
           *
@@ -1509,7 +1763,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           </button>
           {notesSaved > 0 && (
             <span className="quiet">
-              {notesSaved} note{notesSaved === 1 ? '' : 's'} saved today
+              {notesSaved} note{notesSaved === 1 ? '' : 's'} saved
             </span>
           )}
         </div>
@@ -1543,9 +1797,8 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             {/* Said at the button, not only in the banner at the top of the page. He pressed a
               * thing down here, so this is where "it did not work" has to appear. */}
             {finishBlocked && (
-              <p className="lede" style={{ color: 'var(--destructive)' }}>
-                Not finished. The server refused it, so this session is not recorded yet. Unlock
-                this device in the notice at the top of the page and it will finish on its own.
+              <p className="lede finish-blocked" style={{ color: 'var(--destructive)' }}>
+                {notFinishedText(finishBlocked)}
               </p>
             )}
           </>
@@ -1564,12 +1817,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         <a href="/health?s=volume">How the two sessions add up, muscle by muscle</a>
       </p>
 
-      {/* THE SECOND POINTER, 2026-09-27, and the reason is the same one: reach. /gym is the one page
-        * he opens every training day, and Curio's daily questions were built to be answered in about
-        * the length of a rest. One line, same place, same size as the one above. */}
-      <p className="ex-cue">
-        <a href="/curio">Today&apos;s questions</a>
-      </p>
+      {/* NO CURIO LINK, 2026-09-27. It was added the same day as a second pointer off the lifting
+        * form; the header already links Curio, and a link to another app is not one of the four
+        * kinds of text this page keeps. */}
 
       <div className={`timer-bar${timer ? '' : ' off'}`}>
         <div>

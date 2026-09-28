@@ -94,16 +94,20 @@ export const getDish = cache(async (id: string): Promise<Dish | null> => {
 const RATED = ['nailed', 'fine', 'wrong'];
 
 /** Per dish, by display name: every rated cook oldest first (nailed, fine or wrong) and the day of
- *  the newest. One scan of cook_log for the dish list. */
+ *  the newest debrief of any kind. One scan of cook_log for the dish list.
+ *
+ *  `last` takes an unrated row too. Two dishes he cooked and wrote about without tapping a rating
+ *  ("went great", "the first dish that went right") read "not cooked yet" for a morning on
+ *  2026-09-27 when this required a rating for both. A note is a cook; only the mark needs a rating. */
 export async function cookMarks(): Promise<Record<string, { ratings: string[]; last: string }>> {
   const rows = (await sql`
     select dish, rating, at from cook_log
-     where step is null and rating = any(${RATED})
-     order by at`) as { dish: string; rating: string; at: Date }[];
+     where step is null
+     order by at`) as { dish: string; rating: string | null; at: Date }[];
   const out: Record<string, { ratings: string[]; last: string }> = {};
   for (const r of rows) {
     const m = (out[r.dish] ??= { ratings: [], last: '' });
-    m.ratings.push(r.rating);
+    if (r.rating && RATED.includes(r.rating)) m.ratings.push(r.rating);
     m.last = dayOf(r.at);
   }
   return out;

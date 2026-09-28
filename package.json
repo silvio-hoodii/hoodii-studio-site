@@ -20,7 +20,8 @@
     "gen:tokens": "node scripts/gen-tokens.mjs",
     "test": "node scripts/verify.mjs",
     "verify": "node scripts/verify.mjs",
-    "gates": "node scripts/gen-tokens.mjs --check && node scripts/lint-prose.mjs && node scripts/lint-page-text.mjs && node scripts/lint-classnames.mjs && node scripts/lint-auth.mjs && node scripts/lint-tokens.mjs && node content/gym/validate.mjs && node content/swim/validate.mjs && node content/reading/validate.mjs && node scripts/lint-probe-routes.mjs"
+    "gates": "node scripts/gen-tokens.mjs --check && node scripts/lint-prose.mjs && node scripts/lint-page-text.mjs && node scripts/lint-classnames.mjs && node scripts/lint-auth.mjs && node scripts/lint-tokens.mjs && node scripts/lint-dead-css.mjs --selftest && node content/gym/validate.mjs && node content/swim/validate.mjs && node content/reading/validate.mjs && node scripts/lint-probe-routes.mjs",
+    "lint:deadcss": "node scripts/lint-dead-css.mjs --selftest"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

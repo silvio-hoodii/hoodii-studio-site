@@ -8,12 +8,12 @@ import { LIGHT } from '@/lib/tokens.generated';
  * fights for room against, so this is not a badge, it is 60 vertical pixels back on the surface he
  * uses at the stove.
  *
- * AND NOT A SERVICE WORKER, deliberately. Every page here is a live mirror of a store that changes
- * during the day: the stock, the cook log, the training week. A cached `/kitchen` served from a
- * worker is Law 2 in a new shape ("never deploy over someone who is following the instructions
- * right now"), except worse, because a stale cook screen has no version to pin and no way to tell
- * him it is stale. The manifest gets the icon and the standalone window, which is what was missing.
- * Offline was not.
+ * NO CACHING SERVICE WORKER, deliberately. There IS a worker, `/sw.js` (src/app/sw.js/route.ts),
+ * but it only shows and opens Curio notifications and caches nothing. Every page here is a live
+ * mirror of a store that changes during the day. A cached `/kitchen` served from a worker is Law 2
+ * in a new shape ("never deploy over someone who is following the instructions right now"), except
+ * worse, because a stale cook screen has no version to pin and no way to tell him it is stale. The
+ * manifest gets the icon and the standalone window, which is what was missing. Offline was not.
  *
  * `start_url` is '/' rather than '/kitchen'. The hub is the front door and the shortcuts below are
  * how the four daily apps get reached in one tap, which keeps a single installed icon rather than

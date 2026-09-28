@@ -27,6 +27,7 @@ export default async function ReadingFinished() {
         <span className="tnum">{cards}</span> cards
       </p>
 
+      <div className="bks">
       {packs.map((p) => (
         <Link className="bk" href={`/reading/${p.slug}`} key={p.slug}>
           <span className="bt">{p.book}</span>
@@ -36,6 +37,7 @@ export default async function ReadingFinished() {
           </span>
         </Link>
       ))}
+      </div>
 
     </div>
   );

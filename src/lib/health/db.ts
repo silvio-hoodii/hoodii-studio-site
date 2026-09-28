@@ -47,13 +47,15 @@ export async function getBodyCompSeries(days = 120): Promise<BodyCompPoint[]> {
  * 2026-09-27. The Weight tab takes the same rows from getWeightTabBody in ./year.ts, with the same
  * Watch-only filter, so it had no caller left. */
 
-/** The newest reading, and the change from the newest reading at least 30 days before it.
+/** The newest reading, and the change over the last 30 days measured the way HealthOS measures it.
  *
- *  THE DELTA IS MEASURED FROM THE NUMBER IT SITS UNDER, since 2026-09-27. It was a smoothed median
- *  of recent Watch readings against a prior that could come off the Scale, so the tile printed
- *  latest.kg and a delta taken from a different number against a different instrument. Now both ends
- *  are single readings and the prior shares the latest reading's source. One round trip: the latest
- *  row and its same-source prior come back from one statement. */
+ *  HEALTHOS OWNS EVERY BODY NUMBER (HOODII/CLAUDE.md), and its rate of loss is computed from a
+ *  SMOOTHED endpoint: the median of up to five Watch readings in the 30 days before the newest one,
+ *  against the newest same-source reading at least 30 days earlier. For a morning on 2026-09-27
+ *  this rewrite measured latest-minus-prior instead and printed +0.5 kg under a CURRENT.md that said
+ *  +0.9 kg, the flattering direction. The tile still prints the latest reading; the trend line
+ *  names its basis ("median of 4, 104.6 kg") so the two numbers are visibly different facts.
+ *  One round trip: the latest row, its smoothing window and its prior come back from one statement. */
 export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   const rows = (await sql`
     with l as (
@@ -66,10 +68,18 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
     select 'prior' as role, p.date, p.source, p.kg, null, null, null
       from l cross join lateral (
         select h.date, h.source, h.kg from health_body_comp h
-        where h.kg is not null and h.source = l.source
+        where h.kg is not null and h.source = 'Watch'
           and h.date <= to_char(l.date::date - ${TREND_DAYS}::int, 'YYYY-MM-DD')
         order by h.date desc limit 1
       ) p
+    union all
+    select 'recent' as role, r.date, r.source, r.kg, null, null, null
+      from l cross join lateral (
+        select h.date, h.source, h.kg from health_body_comp h
+        where h.kg is not null and h.source = 'Watch'
+          and h.date >= to_char(l.date::date - ${TREND_DAYS}::int, 'YYYY-MM-DD') and h.date <= l.date
+        order by h.date desc limit 5
+      ) r
   `) as unknown as (BodyCompPoint & { role: string })[];
   const pick = (role: string): BodyCompPoint | null => {
     const r = rows.find((x) => x.role === role);
@@ -88,12 +98,20 @@ export async function getBodyCompSummary(): Promise<BodyCompSummary> {
   const stale = daysSinceLatest > STALE_AFTER_DAYS;
 
   const prior = pick('prior');
+  const recent = rows.filter((x) => x.role === 'recent' && x.kg != null).map((x) => Number(x.kg)).sort((a, b) => a - b);
+  const mid = recent.length >> 1;
+  const smoothed = recent.length >= 2
+    ? { kg: recent.length % 2 ? recent[mid]! : (recent[mid - 1]! + recent[mid]!) / 2, n: recent.length }
+    : { kg: latest.kg, n: 1 };
   let trend30: TrendDelta | null = null;
   if (prior?.kg != null) {
     const spanDays = daysBetween(prior.date, latest.date);
     if (spanDays >= 7) {
-      const kgDelta = +(latest.kg - prior.kg).toFixed(1);
-      trend30 = { fromDate: prior.date, spanDays, kg: kgDelta, perWeek: +((kgDelta / spanDays) * 7).toFixed(2) };
+      const kgDelta = +(smoothed.kg - prior.kg).toFixed(1);
+      trend30 = {
+        fromDate: prior.date, spanDays, kg: kgDelta, perWeek: +((kgDelta / spanDays) * 7).toFixed(2),
+        basisKg: +smoothed.kg.toFixed(1), basisN: smoothed.n,
+      };
     }
   }
   return { latest, trend30, daysSinceLatest, stale };
@@ -170,11 +188,16 @@ export async function getSyncLiveness(): Promise<SyncLiveness> {
  *
  *  The function keeps its name for one release rather than being renamed in the same commit as a
  *  behaviour change: two things to review at once is how a rename gets read as a no-op. */
-export async function getLiftingAdherence(days = 30): Promise<{ days: AdherenceDay[]; horizon: string | null }> {
+export async function getLiftingAdherence(days = 30, kind?: 'strength'): Promise<{ days: AdherenceDay[]; horizon: string | null }> {
   const cutoff = isoDaysAgo(days);
   const [trainedRows, loggedRows, horizonRows] = await Promise.all([
-    sql`select distinct date from health_watch_session where date >= ${cutoff}`,
-    sql`select distinct date from gym_set where done = true and reps is not null and reps > 0 and date >= ${cutoff}`,
+    /* Any discipline for /health (his ruling, 09-health P1-3); lifting only for the gym row on the
+       index, which says "Last lifted" above it and drew swim days as lifting days until 2026-09-27. */
+    kind
+      ? sql`select distinct date from health_watch_session where date >= ${cutoff} and kind = ${kind}`
+      : sql`select distinct date from health_watch_session where date >= ${cutoff}`,
+    /* A performed set is done OR typed, the rule src/lib/gym/log.ts applies (ON_PLAN_PERFORMED). */
+    sql`select distinct date from gym_set where (done = true or (reps is not null and reps > 0)) and reps is not null and reps > 0 and date >= ${cutoff}`,
     /* How far the watch export has actually reached, across every kind of session and not just
      * strength: a swim on the 9th is proof the sync ran that day, an absence of strength rows is
      * not. Past this date the strip knows nothing, and it now says so instead of drawing a rest

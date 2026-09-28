@@ -55,8 +55,10 @@ export default function LastSession({ s, noun = 'session', insight = null }: {
       {isSwim && s.series.lengths && (
         <LengthBars lengths={s.series.lengths} poolLength={s.poolLength} />
       )}
+      {/* NO LINE AT 170, since 2026-09-27. The step-rate cue sets the target at his own measured
+          baseline times 1.05, so a fixed rule at 170 contradicted the one cue that sets it. */}
       {isRun && s.series.cadence && (
-        <Trace values={s.series.cadence} label="Cadence" unit="spm" floor={170} />
+        <Trace values={s.series.cadence} label="Cadence" unit="spm" />
       )}
       {/* BELT SPEED, stored on every run the watch ever recorded and drawn by nothing until
           2026-08-27. This is the chart that shows the walk and run blocks as blocks: the plan is

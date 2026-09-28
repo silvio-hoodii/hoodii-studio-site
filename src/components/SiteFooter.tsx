@@ -6,11 +6,10 @@ import Link from 'next/link';
  * row. /curio and /music had a single "Back to the index" link, which the header above them had
  * already been doing since it shipped. The other four surfaces just stopped.
  *
- * The three that had one are the three that are indexed, and that part was right: a stranger
- * arrives on /curio from a search result and reaches the bottom of the archive, and until now the
- * only thing there was a way back to a page they had not come from. The address is what the moment
- * calls for. The four app surfaces are noindex and have an audience of one, so a contact row at the
- * bottom of his own lifting log would be furniture.
+ * Every surface now renders the same footer, contact row included: each layout mounts this with
+ * `standalone` and nothing turns the row off. A stranger arriving on /curio from a search result
+ * reaches the bottom of the archive and finds a way to reach him, not only a way back to a page they
+ * had not come from. On the noindex app pages the same row is simply there.
  *
  * The home link stays as well as the header's. The header is 5,000px up on /curio.
  */

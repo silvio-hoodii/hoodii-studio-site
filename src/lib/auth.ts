@@ -19,7 +19,7 @@
  * not validate the instance. A fixed comparison in proxy.ts leaves the class representable, because
  * anything else that wants to know "is this Silvio" writes the comparison again. `wantByUrl` needed
  * exactly that the same day (audit theme T1). So there is one function, it is fail-closed, and
- * `scripts/lint-auth-compare.mjs` fails the build on a second implementation of it.
+ * `scripts/lint-auth.mjs` fails the build on a second implementation of it.
  *
  * NO IMPORTS IN THIS FILE, deliberately. `src/proxy.ts` runs in the Edge runtime and cannot reach
  * `next/headers` or node builtins. The server-side reader that needs the cookie jar lives in

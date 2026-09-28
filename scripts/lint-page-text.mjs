@@ -25,7 +25,7 @@
  *   node scripts/lint-page-text.mjs             # exits 1 on any finding
  *   node scripts/lint-page-text.mjs --selftest  # runs first on every invocation anyway
  */
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
@@ -58,6 +58,16 @@ const CONTENT = [
   ['content/swim/coaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:do|check|name)$/],
   ['content/swim/teaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:say|show|watch|see)$|^\.beforeYouStart\.body$/],
   ['content/curio/games.json', /^\.groups\[\d+\]\.(?:name|items\[\d+\]\.(?:name|learn|do))$/],
+  /* Every reading pack, one entry per file so a new pack is scanned without an edit here. What
+     /reading/[slug] and its recall deck render: section titles and recaps, everything under talk,
+     the context lines, and each card's question and answer. */
+  ...readdirSync(join(ROOT, 'content/reading/packs'))
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => [
+      `content/reading/packs/${f}`,
+      /^\.(?:sections\[\d+\]\.(?:title|recap)|talk\..+|context\[\d+\]|cards\[\d+\]\.(?:q|a))$/,
+    ]),
 ];
 
 function jsonStrings(obj, path = '', out = []) {

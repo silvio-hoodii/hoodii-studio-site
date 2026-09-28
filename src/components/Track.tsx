@@ -15,12 +15,18 @@ export default function Track({ app }: { app: string }) {
        screenshot runs of a working session were being counted as his opens. Only the real domain
        counts; everything else is a test. */
     if (location.hostname !== 'hoodii.studio') return;
-    /* Once per app per DAY. It was once per tab lifetime, so a tab left open on the phone for a
-       week recorded its first day only, and a blank day is exactly what the Opened strip asks him
-       to question. The day is the device's own; the row's day is stamped by the server. */
-    const key = `opened:${app}:${new Date().toLocaleDateString('en-CA')}`;
+    /* Once per app per HOUR. It was once per tab lifetime, so a tab left open on the phone for a
+       week recorded its first day only; then once per day, which made the strip's "opened more
+       than once" shades unreachable from one device. An hour is one visit: a reload in the same
+       minute is not a second open, coming back after lunch is. Older keys are pruned as it goes. */
+    const now = new Date();
+    const key = `opened:${app}:${now.toLocaleDateString('en-CA')}:${now.getHours()}`;
     try {
       if (localStorage.getItem(key)) return;
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(`opened:${app}:`) && k !== key) localStorage.removeItem(k);
+      }
       localStorage.setItem(key, '1');
     } catch { /* storage blocked: count anyway */ }
     const body = JSON.stringify({ app });
