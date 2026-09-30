@@ -12,7 +12,7 @@
  * `timeZone: 'UTC'` on the formatter and reported 1:12 pm as 6:12 am on this laptop, which is the
  * same bug one layer up.
  */
-import { clockOf, localDayOf } from './day.ts';
+import { clockOf, localDayOf, dayOf } from './day.ts';
 
 const cases: [string | null, string | null, string][] = [
   ['2026-09-07 13:12:01-06:00', '1:12 p.m.', 'the machines he did not do'],
@@ -33,5 +33,18 @@ const day = localDayOf('2026-09-07 21:30:00-06:00');
 const dayOk = day === '2026-09-07';
 if (!dayOk) bad++;
 console.log(`${dayOk ? 'PASS' : 'FAIL'}  late-evening local day stays the 7th -> ${day}`);
+/* ALBERTA'S 2026 TIME CHANGE. These must pass on OLD tz data too (Vercel reported 2026a on
+   2026-09-30): old data falls back on 2026-11-01 and reads 00:30 on 1 December as 23:30 on the 30th.
+   Checked on Node 22.22.2 (tzdata 2025c) and 22.23.3 (2026c) when written. */
+for (const [iso, want, label] of [
+  ['2025-12-01T06:30:00Z', '2025-11-30', 'history: 23:30 MST on 30 Nov 2025'],
+  ['2026-11-01T07:59:00Z', '2026-11-01', 'a minute before the switch'],
+  ['2026-12-01T06:30:00Z', '2026-12-01', 'winter 2026 is UTC-6: 00:30 on 1 Dec, not the 30th'],
+] as const) {
+  const got = dayOf(iso);
+  const ok = got === want;
+  if (!ok) bad++;
+  console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}: ${iso} -> ${got}`);
+}
 console.log(bad ? `${bad} FAILED` : 'all passed');
 process.exit(bad ? 1 : 0);

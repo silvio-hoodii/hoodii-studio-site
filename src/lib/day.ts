@@ -10,8 +10,8 @@
  * 2026-08-14, when the row started publishing "Last trained N d ago" and the number went up by one
  * every evening at six.
  *
- * America/Edmonton, not a fixed offset: it is the zone Alberta actually observes, so the DST
- * changes take care of themselves. en-CA formats as YYYY-MM-DD, which is the shape everything
+ * America/Edmonton for history, and a fixed UTC-6 from 2026-11-01, when Alberta stops changing
+ * its clocks (see the note above dayOf). en-CA formats as YYYY-MM-DD, which is the shape everything
  * downstream compares as a string.
  */
 export const CALGARY = 'America/Edmonton';
@@ -21,16 +21,23 @@ export const CALGARY = 'America/Edmonton';
  * hand-rolled `getTimezoneOffset()` version inside GymClient that used the CLIENT's timezone and
  * not Calgary at all. Two of them agreed by coincidence; the third stamped every workout with
  * whatever zone the phone happened to be in. */
-const FMT = new Intl.DateTimeFormat('en-CA', {
-  timeZone: CALGARY,
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-});
+/* ALBERTA'S 2026 TIME CHANGE, AND WHY THE ZONE IS NOT JUST 'America/Edmonton' ANY MORE.
+ * Alberta's Official Time Act (June 2026): no fall-back on 2026-11-01, UTC-6 all year. IANA has it
+ * from tzdata 2026c, but a runtime carries whatever tz data it shipped with, and on 2026-09-30
+ * Vercel's Node 22.x reported tzdata 2026a, which falls back and reads Calgary an hour early from
+ * November. So the zone is picked per instant: the tz database for history (every version agrees on
+ * the past), a fixed UTC-6 ('Etc/GMT+6', POSIX sign inverted) from the switch on. Same helper as
+ * versatile-cpa/src/lib/firm-zone.ts and hoodii-platform's shop date-utils; each repo deploys on its
+ * own, so each carries its copy. */
+export const ALBERTA_TIME_FROM = Date.UTC(2026, 10, 1, 8, 0, 0);
+const DAY_OPTS = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+const FMT_BEFORE = new Intl.DateTimeFormat('en-CA', { ...DAY_OPTS, timeZone: CALGARY });
+const FMT_AFTER = new Intl.DateTimeFormat('en-CA', { ...DAY_OPTS, timeZone: 'Etc/GMT+6' });
 
 /** Which calendar day, in Calgary, an instant fell on. Returns YYYY-MM-DD. */
 export function dayOf(instant: Date | string | number = new Date()): string {
-  return FMT.format(instant instanceof Date ? instant : new Date(instant));
+  const d = instant instanceof Date ? instant : new Date(instant);
+  return (+d >= ALBERTA_TIME_FROM ? FMT_AFTER : FMT_BEFORE).format(d);
 }
 
 export function today(): string {
