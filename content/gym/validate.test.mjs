@@ -1187,6 +1187,51 @@ const CASES = [
     mutate: (p) => { p.$comment = Array.from({ length: 31 }, (_, i) => `line ${i}`); },
     expect: '$comment is 31 lines',
   },
+  /* THE RUN PLAN, 2026-10-04. An adversary showed the rest-rule check read only assignedDays, so a run
+     on a Wednesday or a Sunday in run.weeks passed. The gate now reads every plan week; these cases
+     hold it there. */
+  {
+    name: 'a Wednesday run in the plan breaks the rest rule and is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[0].runs[0].day = 'wednesday'; },
+    expect: 'days in a row',
+  },
+  {
+    name: 'a Sunday run beside the Saturday run breaks the rest rule and is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[2].runs[1].day = 'sunday'; },
+    expect: 'days in a row',
+  },
+  {
+    name: 'a week 1 of 20 km is refused against his current week',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[0].runs[0].km = 20; },
+    expect: 'more than 10% over his current week',
+  },
+  {
+    name: 'a run day that is not a weekday name is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[0].runs[0].day = 'Sat'; },
+    expect: 'not a weekday name',
+  },
+  {
+    name: 'a week growing more than 10% is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[1].runs[0].km = 5.6; },
+    expect: 'more than 10% over week 1',
+  },
+  {
+    name: 'a lift-day run longer than half the week is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.run.weeks[2].runs[1].km = 3.0; c.run.weeks[2].runs[0].km = 3.6; },
+    expect: 'more than half',
+  },
+  {
+    name: 'a run slot back in assignedDays is refused',
+    file: 'conditioning.json',
+    mutate: (c) => { c.week.assignedDays.eveningRun = ['tuesday']; },
+    expect: 'is back',
+  },
   {
     name: 'a variant-level muscle override without confirmedBy is refused',
     file: 'movements.json',

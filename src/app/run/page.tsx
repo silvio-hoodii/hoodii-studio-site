@@ -5,6 +5,9 @@ import LastSession from '@/components/training/LastSession';
 import SubNav from '@/components/training/SubNav';
 import RecentSessions from '@/components/training/RecentSessions';
 import Cues from '@/components/training/Cues';
+import type { ConditioningWeek } from '@/lib/gym/types';
+import { runWeekAt, SHORT_DAY } from '@/lib/gym/run-week';
+import { today } from '@/lib/day';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,27 +27,33 @@ export const dynamic = 'force-dynamic';
  * Plain links with a query param rather than client state, for the reason the kitchen filters and
  * the swim tabs give: it works before hydration, it survives a reload standing at a treadmill, and
  * every view is a URL he can bookmark. */
-/* THE CONSOLE CHECK IS DERIVED FROM THE CLOCK AND THE BELT, since 2026-09-27. `consoleCheck` and
- * `runKm` in conditioning.json are typed for 8.0 and 5.0 km/h, and the cues tell him to drop the belt
- * 0.5 km/h on a fail, after which the typed figures are simply wrong. Computing them from the session
- * string and `beltSettings` keeps the numbers true for the speeds the page states, and the line says
- * which speed it assumes, so a lowered belt reads as a different case rather than a failed run. The
- * page cannot know the belt he actually set, so it does not pretend to. */
-const KM_PER_MILE = 1.609344;
-function segSeconds(session: string, what: 'walk' | 'run'): number | null {
-  let total = 0;
-  for (const m of session.matchAll(/(\d+):(\d{2})\s+(walk|run)/g)) {
-    if (m[3] === what) total += Number(m[1]) * 60 + Number(m[2]);
-  }
-  return total > 0 ? total : null;
+/* OUTDOORS SINCE 2026-10-04. Each week is a list of runs, each a WATCH distance: his rule the same
+ * evening is that a distance on this page is the number his watch shows, the session total with any
+ * walking in it, never a running-only figure, in km to two decimals as the watch prints it. Minutes
+ * are DERIVED from that distance and `run.pace.sessionSecPerKm`, a [low, high] range from two of his
+ * own sessions, never typed, so a distance edit cannot leave a stale time beside it. A range, not one
+ * number, because how much he walks decides it. content/gym/validate.mjs holds the 10% weekly cap,
+ * the rest rule for every week, and the lift-day cap. */
+function mins(km: number, secPerKm: number): number {
+  return Math.round((km * secPerKm) / 60);
 }
-function consoleLine(session: string, runKmh: number, walkKmh: number): string | null {
-  const run = segSeconds(session, 'run');
-  const walk = segSeconds(session, 'walk');
-  if (run == null || walk == null || !(runKmh > 0) || !(walkKmh > 0)) return null;
-  const runKm = (run / 3600) * runKmh;
-  const km = runKm + (walk / 3600) * walkKmh;
-  return `At ${runKmh.toFixed(1)} km/h the console should read ${km.toFixed(2)} km, or ${(km / KM_PER_MILE).toFixed(2)} miles, ${Number(runKm.toFixed(2))} km of it running.`;
+function range(lo: number, hi: number): string {
+  return lo === hi ? `about ${lo} min` : `about ${lo} to ${hi} min`;
+}
+function weekFigures(w: ConditioningWeek, [lo, hi]: [number, number]) {
+  const runs = w.runs.map((r) => ({ ...r, lo: mins(r.km, lo), hi: mins(r.km, hi) }));
+  return {
+    runs,
+    lo: runs.reduce((a, r) => a + r.lo, 0),
+    hi: runs.reduce((a, r) => a + r.hi, 0),
+  };
+}
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function longDate(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  const wd = new Date(Date.UTC(y ?? 0, (m ?? 1) - 1, d ?? 1, 12)).getUTCDay();
+  const name = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][wd];
+  return `${name} ${d} ${MONTH[(m ?? 1) - 1]}`;
 }
 
 const SUB_TABS = [
@@ -68,8 +77,18 @@ export default async function RunPage({
      the last session and a separate getLastSession call would be the same row fetched twice. */
   const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
   const lastSession = recent[0] ?? null;
-  const runKmh = parseFloat(c.run.beltSettings.run);
-  const walkKmh = parseFloat(c.run.beltSettings.walk);
+  const span = c.run.pace.sessionSecPerKm;
+  const at = runWeekAt(c.run.startsOn, today(), c.run.weeks.length);
+  /* Where he is in the plan, a fact about him: before the start it names the start day. */
+  const where = at.before
+    ? `Week 1 starts ${longDate(c.run.startsOn)}.`
+    : at.after
+      ? `The ${c.run.weeks.length} weeks are done. Reassess before going on.`
+      : `This is week ${at.week} of ${c.run.weeks.length}.`;
+  const counts = c.run.weeks.map((w) => w.runs.length);
+  const lo = Math.min(...counts);
+  const hi = Math.max(...counts);
+  const perWeek = lo === hi ? `${hi}x a week` : `${lo} to ${hi} runs a week`;
 
   return (
     <div className="wrap">
@@ -84,7 +103,7 @@ export default async function RunPage({
               there is no article to get wrong rather than branching on the digit: 8, 11 and 18 all
               take "an" and the next edit to the plan would have reintroduced it. */}
           <p className="lede">
-            {c.run.surface}, {c.run.sessionsPerWeek}x a week, over {c.run.weeks.length} weeks.
+            {c.run.surface}, {perWeek}, over {c.run.weeks.length} weeks. {where}
           </p>
           <LastSession s={lastSession} />
           <RecentSessions sessions={recent} kind="treadmill" />
@@ -100,7 +119,7 @@ export default async function RunPage({
       {sub === 'plan' && (
         <div className="exgroup">
           <div className="exgroup-label">
-            {c.run.title} <span className="tag">({c.run.surface}, {c.run.sessionsPerWeek}x/week)</span>
+            {c.run.title} <span className="tag">({c.run.surface}, {perWeek})</span>
           </div>
           {/* `why` (the trial behind the plan) and `whyTheClockNotTheConsole` rendered here until
               2026-09-15. Both are still in conditioning.json. AGENTS.md, "Page text". */}
@@ -110,18 +129,10 @@ export default async function RunPage({
               <div className="ex-cue">{c.run.howHard.primary}</div>
               <div className="ex-cue">{c.run.howHard.secondary}</div>
             </div>
-            {/* THE BELT, IN BOTH UNITS. Above the table on purpose: the two numbers he dials in are
-                the first thing he needs standing at the treadmill, and the unit test is what stops
-                the whole table being read wrong. */}
-            <div className="ex">
-              <div className="ex-name">The belt</div>
-              <div className="ex-meta">
-                Run at <b className="nowrap">{c.run.beltSettings.run}</b> Walk at{' '}
-                <b className="nowrap">{c.run.beltSettings.walk}</b>
-              </div>
-              <div className="ex-cue">{c.run.beltSettings.theUnitTest}</div>
-            </div>
+            {/* The Pace block that stood here (8:00 per km, a pace check) was DELETED 2026-10-04 on
+                review: pace never kept him easy, the talk test and the 140 did. run.howHard.$why. */}
           </div>
+          <p className="ex-cue">{where}</p>
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
@@ -131,25 +142,30 @@ export default async function RunPage({
                     so it belongs under the session as a quiet line, not in a column of its own. */}
                 <tr>
                   <th className="tnum">Week</th>
-                  {/* "On the clock" leads, because the clock IS the prescription now. */}
-                  <th className="wide">On the clock</th>
+                  {/* Each run: day, watch distance, minutes. Total is the week's minutes. */}
+                  <th className="wide">Runs</th>
                   <th className="tnum">Total</th>
                 </tr>
               </thead>
               <tbody>
-                {c.run.weeks.map((w) => (
-                  <tr key={w.week}>
-                    <td className="tnum">{w.week}</td>
-                    <td>
-                      {w.session}
-                      {consoleLine(w.session, runKmh, walkKmh) && (
-                        <div className="quiet">{consoleLine(w.session, runKmh, walkKmh)}</div>
-                      )}
-                      {w.note && <div className="quiet">{w.note}</div>}
-                    </td>
-                    <td className="tnum">{w.clockTotal}</td>
-                  </tr>
-                ))}
+                {c.run.weeks.map((w) => {
+                  const f = weekFigures(w, span);
+                  return (
+                    <tr key={w.week} className={w.week === at.week && !at.after ? 'now' : undefined}>
+                      <td className="tnum">{w.week}</td>
+                      <td>
+                        {f.runs.map((r) => (
+                          <div key={r.day}>
+                            {SHORT_DAY[r.day] ?? r.day} {r.km.toFixed(2)} km
+                            <div className="quiet">{range(r.lo, r.hi)}</div>
+                          </div>
+                        ))}
+                        {w.note && <div className="quiet">{w.note}</div>}
+                      </td>
+                      <td className="tnum">{f.lo === f.hi ? f.lo : `${f.lo} to ${f.hi}`} min</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

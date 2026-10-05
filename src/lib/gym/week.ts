@@ -1,6 +1,7 @@
 import 'server-only';
 import { sql } from '../health/db';
-import { dayOf, daysAgo } from '../day';
+import { dayOf, daysAgo, today } from '../day';
+import { runWeekAt } from './run-week';
 import { loadConditioning } from './program';
 import type { Conditioning, Program } from './types';
 
@@ -107,9 +108,19 @@ export function weekdayOf(date: string): WeekdayKey {
 }
 
 /** The plan, from program.json plus conditioning.json's slot assignments. No copy of the split. */
-export function plannedWeek(program: Program, conditioning: Conditioning): TrainingWeek['plan'] {
+export function plannedWeek(
+  program: Program,
+  conditioning: Conditioning,
+  onDate: string = today(),
+): TrainingWeek['plan'] {
   const liftDays = program.days as Record<string, { title?: string; scheduledOn?: string[] | string } | undefined>;
   const assigned = conditioning.week?.assignedDays ?? {};
+  /* THE RUNS COME FROM THE RUN PLAN'S CURRENT WEEK, not from assignedDays, since 2026-10-04. The
+     plan has one run in weeks 1 and 2 and two from week 3, so a fixed weekday list would show a
+     Tuesday run on /health two weeks before /run asks for it. One source, read by both pages. */
+  const runs = conditioning.run.weeks;
+  const at = runWeekAt(conditioning.run.startsOn, onDate, runs.length);
+  const runDays = new Set((runs[at.week - 1]?.runs ?? []).map((r) => r.day));
 
   /* THE INDEX IS BUILT FROM `scheduledOn`, and this line used to be `liftDays[weekday]`.
    *
@@ -134,6 +145,7 @@ export function plannedWeek(program: Program, conditioning: Conditioning): Train
     const slots = Object.entries(assigned)
       .filter(([k, v]) => !k.startsWith('$') && k !== 'why' && Array.isArray(v) && v.includes(weekday))
       .map(([k]) => k);
+    if (runDays.has(weekday)) slots.unshift(liftKey ? 'runAfterLift' : 'run');
     return {
       weekday,
       liftKey,
@@ -374,7 +386,10 @@ export const SLOT_LABEL: Record<string, string> = {
      walk-run follows Session B. `saturdayRow` LEFT 2026-09-06 with Session C, which was folded into A
      and B; the validator compares this list against week.assignedDays in both directions. */
   eveningSwim: 'evening swim',
-  eveningRun: 'evening walk-run',
+  /* DERIVED, not assignedDays keys: plannedWeek adds these from the run plan's current week, and
+     validate.mjs exempts them from the both-directions comparison by name (DERIVED_SLOTS). */
+  run: 'run',
+  runAfterLift: 'short run after the lift',
 };
 
 export { dayOf };

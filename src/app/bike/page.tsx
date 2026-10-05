@@ -108,7 +108,7 @@ export default async function BikePage({
             <div className="ex">
               <div className="ex-name">{c.bike.protocol.name}</div>
               <div className="ex-meta">{c.bike.protocol.structure}</div>
-              <div className="ex-cue">{c.bike.protocol.shortVersion}</div>
+              <div className="ex-cue">{c.bike.protocol.next}</div>
             </div>
             <div className="ex">
               <div className="ex-name">How hard</div>

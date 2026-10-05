@@ -221,8 +221,8 @@ export default function RecentSessions({
    planned in. A session with no reading gets a hairline, not a gap, so the count still matches. */
 const AMOUNT: Record<string, { of: (s: SessionDetail) => number | null; fmt: (n: number) => string; label: string }> = {
   swimming: { of: (s) => s.distanceM, fmt: (n) => `${Math.round(n)}`, label: 'metres' },
-  treadmill: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(1), label: 'km' },
-  running: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(1), label: 'km' },
+  treadmill: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(2), label: 'km' },
+  running: { of: (s) => (s.distanceM ? s.distanceM / 1000 : null), fmt: (n) => n.toFixed(2), label: 'km' },
   strength: { of: (s) => s.minutes, fmt: (n) => `${Math.round(n)}`, label: 'minutes' },
 };
 

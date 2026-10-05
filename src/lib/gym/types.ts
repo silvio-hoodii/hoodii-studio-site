@@ -265,18 +265,12 @@ export interface Program {
  *  diffable. */
 type Prose = string | string[];
 
-/** `session` is a sequence of CLOCK TIMES, not distances, since 2026-08-21. He ran 3.1x the week-1
- *  prescription on 2026-08-19 at a speed that was entirely correct, because the distance target
- *  lived on a treadmill console he does not trust and believes is in miles. A clock cannot be in the
- *  wrong unit, so `consoleCheck` is an after-the-fact confirmation in BOTH units and never the
- *  target. Every one of these strings is computed in the patch script from the belt speeds and the
- *  original Bertelsen doses, never typed. */
+/** One week of the outdoor run, since 2026-10-04: a list of runs, each a day label and a WATCH
+ *  distance (the session total, walks included: his rule, 2026-10-04). The page derives minutes
+ *  from `run.pace.sessionSecPerKm`; validate.mjs caps weekly growth at 10%. */
 export interface ConditioningWeek {
   week: number;
-  runKm: number;
-  session: string;
-  clockTotal: string;
-  consoleCheck: string;
+  runs: { day: string; km: number }[];
   note?: string;
 }
 
@@ -362,15 +356,16 @@ export interface Conditioning {
   run: {
     title: string;
     surface: string;
-    sessionsPerWeek: number;
     startedFrom: string;
+    /** Monday of week 1, YYYY-MM-DD. /run and /health count the plan week from it. */
+    startsOn: string;
+    /** His current weekly watch distance, km. validate.mjs opens the plan within 10% of it. */
+    currentWeekKm: number;
     why: Prose;
-    howHard: { primary: string; secondary: string; startingSpeed: string };
-    /** The two belt settings in km/h AND mph, plus the one-off test that tells him which unit his
-     *  console is in. Both units, because being right in either beats being right in the one he
-     *  turns out not to have. */
-    beltSettings: { run: string; walk: string; theUnitTest: string; whyBothUnits: string };
-    whyTheClockNotTheConsole: Prose;
+    howHard: { primary: string; secondary: string };
+    /** [low, high] seconds per km for a whole easy session, walks included, from two of his runs.
+     *  The page turns each run's distance into a minute range with it. */
+    pace: { sessionSecPerKm: [number, number] };
     weeks: ConditioningWeek[];
     rules: string[];
   cues?: Cue[];
@@ -381,8 +376,9 @@ export interface Conditioning {
     title: string;
     surface: string;
     sessionsPerWeek: number;
+    startedFrom: string;
     why: Prose;
-    protocol: { name: string; structure: string; totalMinutes: number; shortVersion: string; evidenceNote: string };
+    protocol: { name: string; structure: string; totalMinutes: number; next: string; evidenceNote: string };
     howHard: { hardPiece: string; heartRate: string; easyPiece: string };
     rules: string[];
   cues?: Cue[];
