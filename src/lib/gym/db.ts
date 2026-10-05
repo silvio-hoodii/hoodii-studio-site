@@ -2,6 +2,8 @@ import 'server-only';
 import { neon } from '@neondatabase/serverless';
 import { equivalentIds } from './equivalent-ids';
 import { asNoteKind, type NoteKind } from './note-kinds';
+import excludedSets from '../../../content/gym/excluded-sets.json';
+import { excludedSetIds } from './excluded-sets';
 
 // Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables, see
 // content/gym/schema.sql. GYM_DATABASE_URL is the self-documenting name for this module, but the
@@ -324,6 +326,11 @@ const HISTORY = sql.unsafe(
   `(${PERFORMED_SQL} and reps is not null and reps > 0 and coalesce(estimated, false) = false)`,
 );
 
+/* SETS PROGRESSION MAY NOT BUILD ON, by gym_set id, since 2026-10-04: content/gym/excluded-sets.json says
+ * which and why. Applied in getExerciseHistories only, so the log page and /health still show every row
+ * he typed. See src/lib/gym/excluded-sets.ts. */
+const EXCLUDED_SET_IDS = excludedSetIds(excludedSets);
+
 /** The last `n` training dates (newest first) with their sets, for EVERY requested exercise at once.
  *
  *  ONE ROUND TRIP for the whole day. `/gym/api/plan` used to call a last-session read (two queries)
@@ -357,6 +364,7 @@ export async function getExerciseHistories(
         from gym_set g
         join fam f on g.exercise_id = f.member
        where g.date < ${beforeDate} and ${HISTORY}
+         and not (g.id = any(${EXCLUDED_SET_IDS}::bigint[]))
     ),
     ranked as (
       select req, date, dense_rank() over (partition by req order by date desc) as rk

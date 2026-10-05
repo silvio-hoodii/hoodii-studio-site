@@ -91,6 +91,18 @@ const FRESH_BLOCKS = 2;
  * lacks a fresh slot; everything else is reported so the trade is visible rather than hidden. */
 const PRIORITY = new Set(['squat', 'hinge']);
 
+/* SINGLE LEG IS REPORTED, NOT REQUIRED, since 2026-10-04. The rebuild on his words that evening ("rebuild
+ * everything based on what I can do") sized each session to 80 minutes at his measured pace, which holds
+ * three pairs a session. Every pair slot is spoken for by his own rulings or the coverage floors, and a
+ * single-leg lift can only partner an upper-body lead, so it had no slot left. The Bulgarian split squat
+ * it replaces was the last block of Session A and was done on 2 of 7 dates. His 2026-09-06
+ * proposal (HealthOS/knowledge/PROPOSAL-2026-09-06-...md, section 2) classed this file's priority-pattern
+ * rule as an agent training opinion to turn into a report, and he shipped it. The step-up and the split squat stay one tap away as alternatives. Absence is
+ * printed as a note, so the trade stays visible. */
+const MAY_BE_ABSENT = new Map([
+  ['singleLeg', 'no slot left at 80 minutes; the step-up and split squat are alternatives under the hip thrust and the front squat (2026-10-04).'],
+]);
+
 const fresh = {};      // pattern -> [{day, block, exercise}]
 const anywhere = {};   // pattern -> count of appearances
 for (const key of Object.keys(PATTERNS)) { fresh[key] = []; anywhere[key] = 0; }
@@ -130,7 +142,9 @@ for (const [key, p] of Object.entries(PATTERNS)) {
   const f = fresh[key];
   const where = f.length ? f.map((x) => `${x.day.slice(0, 3)} b${x.block}`).join(', ') : '';
   console.log(p.label.padEnd(38) + String(anywhere[key]).padStart(12) + String(f.length).padStart(13) + `   ${where}`);
-  if (anywhere[key] === 0) {
+  if (anywhere[key] === 0 && MAY_BE_ABSENT.has(key)) {
+    notes.push(`${p.label} is not in the week. Accepted: ${MAY_BE_ABSENT.get(key)}`);
+  } else if (anywhere[key] === 0) {
     findings.push(`${p.label} does not appear in the week at all.`);
   } else if (f.length === 0 && PRIORITY.has(key)) {
     findings.push(`${p.label} appears ${anywhere[key]} time(s) and NEVER in the first ${FRESH_BLOCKS} blocks of any day. `
@@ -168,7 +182,7 @@ console.log('100% the upper body has no fresh slot anywhere, which is what the c
 console.log('');
 console.log('-'.repeat(96));
 if (!findings.length) {
-  console.log(`GREEN. Every pattern is in the week and every priority pattern gets a fresh slot.`);
+  console.log(`GREEN. Every required pattern is in the week and every priority pattern gets a fresh slot.`);
   process.exit(0);
 }
 console.log(`${findings.length} finding(s):\n`);
