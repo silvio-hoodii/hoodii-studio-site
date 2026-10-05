@@ -92,8 +92,28 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
     }
   }
   if (!plan.structure?.ladder?.length) fail('plan.json', 'structure.ladder is empty, so the plan prescribes nothing');
-  for (const s of plan.structure?.ladder || []) {
-    if (!s.weeks || !s.piece || !s.rest) fail('plan.json', `a ladder rung needs weeks, piece and rest, got ${JSON.stringify(s)}`);
+  /* THE RUNGS ARE NUMBERS SINCE 2026-10-04, because src/lib/swim/ladder.ts reads them to decide from his
+   * laps whether a rung is met, and the page prints `piece` and `rest`. The words and the numbers must
+   * say the same thing, or the page asks for one swim and gates on another. */
+  {
+    const L = plan.structure?.ladder || [];
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(plan.structure?.ladderFrom || ''))) fail('plan.json', 'structure.ladderFrom must be a YYYY-MM-DD day: it is the first day whose swims count toward a rung');
+    if (!Number.isInteger(plan.structure?.advanceAfter) || plan.structure.advanceAfter < 1) fail('plan.json', 'structure.advanceAfter must be a whole number of swims, 1 or more');
+    L.forEach((s, i) => {
+      const where = `plan.json/ladder rung ${i + 1}`;
+      if (!s.piece || !s.rest) fail(where, `a rung needs piece and rest, got ${JSON.stringify(s)}`);
+      if ('weeks' in s) fail(where, 'weeks is gone since 2026-10-04: a rung advances on his laps, not on the calendar');
+      if (!Number.isInteger(s.firstM) || s.firstM <= 0 || s.firstM > 1000) fail(where, `firstM must be whole metres up to 1,000, got ${JSON.stringify(s.firstM)}`);
+      const last = i === L.length - 1;
+      if (last ? s.standS !== null : !(Number.isInteger(s.standS) && s.standS >= 0)) fail(where, last ? 'the last rung is the goal: standS must be null (no stop)' : `standS must be whole seconds, got ${JSON.stringify(s.standS)}`);
+      if (last && s.firstM !== 1000) fail(where, 'the last rung must be 1,000 m, the goal');
+      if (!String(s.piece).includes(`${s.firstM.toLocaleString('en-CA')} m`)) fail(where, `piece "${s.piece}" does not print firstM = ${s.firstM}`);
+      if (s.standS != null && !String(s.rest).includes(`${s.standS} s`)) fail(where, `rest "${s.rest}" does not print standS = ${s.standS}`);
+      const prev = L[i - 1];
+      if (prev && (s.firstM < prev.firstM || (s.standS != null && prev.standS != null && s.standS > prev.standS) || (s.firstM === prev.firstM && s.standS === prev.standS))) {
+        fail(where, 'each rung must ask more than the one below it: a longer first piece or a shorter stop, never less of either');
+      }
+    });
   }
   /* THE SEVEN CUES ON THE HOW TAB WERE GATED BY NOTHING UNTIL 2026-09-02, and they are the ones he
    * follows in the water. `checkGroundedCues` at the bottom of this file is called on coaching.json
@@ -481,8 +501,8 @@ function checkQuotesAgainstSources() {
      US Masters only: the ladder is his own training, the same family as Coach me. */
   for (const r of plan.structure?.ladder || []) {
     for (const q of r.$quotes || []) {
-      if (!/^usms-/.test(String(q.source || ''))) fail(`plan.json/ladder ${r.weeks}`, `quotes "${q.source}"; a ladder rung may quote US Masters Swimming only (a usms-* capture)`);
-      items.push(['plan.json', `ladder ${r.weeks}`, q.source, q.text]);
+      if (!/^usms-/.test(String(q.source || ''))) fail(`plan.json/ladder ${r.firstM} m`, `quotes "${q.source}"; a ladder rung may quote US Masters Swimming only (a usms-* capture)`);
+      items.push(['plan.json', `ladder ${r.firstM} m / ${r.standS ?? 0} s`, q.source, q.text]);
     }
   }
 

@@ -150,6 +150,9 @@ const GATES = [
    * strings, so "salted   BUTTER" beat "Salted butter" and the row rendered under the sloppier of
    * the two names. */
   ['curio-spacing-tests', process.execPath, ['--experimental-strip-types', 'src/lib/curio/spacing.test.ts']],
+  /* THE SWIM LADDER MOVES ON HIS LAPS, NOT THE CALENDAR. Added 2026-10-04: the calendar version kept
+   * climbing while he met the asked piece in 1 of 18 swims. Cases are his real Oct 4 and Sep 26 swims. */
+  ['swim-ladder-tests', process.execPath, ['--experimental-strip-types', 'src/lib/swim/ladder.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which
