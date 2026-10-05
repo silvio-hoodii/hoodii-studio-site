@@ -17,7 +17,7 @@
       "date": "2026-09-28",
       "weight": 60,
       "reps": 7,
-      "why": "Logged under the barbell RDL at 60 to 68 lb on a day his working weight there was 175 (175x6/8/6 on 2026-09-21), on a lift he had worked at 165 to 225 for six weeks. WHAT HE ACTUALLY DID IS UNCONFIRMED: 68 is not a dumbbell on his rack (65, 70), so it is not simply a dumbbell RDL per hand; it could be plates per side, or a typo. The question was put to him on 2026-10-04. Until he answers, the engine does not build on it: it read the rows as a two-thirds drop and offered 68, then 65."
+      "why": "Logged under the barbell RDL at 60 to 68 lb on a day his working weight there was 175 (175x6/8/6 on 2026-09-21), on a lift he had worked at 165 to 225 for six weeks. A TYPO, his answer on 2026-10-04: a dumbbell reading is impossible, and with about 60 numbers typed a session a slipped key is expected. The true weights are unknown, so the rows stay excluded rather than corrected. The engine had read them as a two-thirds drop and offered 68, then 65; the 2026-10-01 rows below followed that number. The ghost prefill shipped the same day cuts the typing that produced it."
     },
     {
       "id": 1688,
@@ -41,7 +41,7 @@
       "date": "2026-10-01",
       "weight": 65,
       "reps": 8,
-      "why": "Typed at 65 lb after the card suggested 68 off the 2026-09-28 rows above, so this session follows their number rather than measuring the barbell RDL. Same unconfirmed reading as 1685, same question to him."
+      "why": "Typed at 65 lb after the card suggested 68 off the 2026-09-28 rows above, so this session follows their number rather than measuring the barbell RDL. Excluded with 1685, whose typo it inherited."
     },
     {
       "id": 1819,
