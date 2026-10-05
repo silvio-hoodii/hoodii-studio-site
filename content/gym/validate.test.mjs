@@ -817,8 +817,8 @@ const CASES = [
       const ex = Object.values(p.days)
         .flatMap((d) => d.blocks || [])
         .flatMap((b) => b.exercises || [])
-        .find((e) => typeof e.cue === 'string' && e.zone === 'cable' && e.station);
-      if (!ex) throw new Error('no cable slot with a cue to mutate; repoint this case');
+        .find((e) => typeof e.cue === 'string' && ((e.zone === 'cable' && e.station) || e.id === 'smith-hip-thrust'));
+      if (!ex) throw new Error('no cable or Smith slot with a cue to mutate; repoint this case');
       ex.cue = 'ONE dumbbell held in both hands, cupping the top end like a mug. ' + ex.cue;
     },
     expect: 'opens by naming a dumbbell',
@@ -1119,11 +1119,12 @@ const CASES = [
          partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
          at 45s still leave room for three sets of six presses, so the only thing that changes is the
          hash, which is the one thing this case is about. */
-      const acc = p.days.b.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-overhead-press' && (b.exercises || []).length === 2);
-      if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
-      acc.exercises.reverse();
-      const [first, second] = acc.exercises;
-      second.whyHere = first.whyHere; delete first.whyHere;
+      /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
+         structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
+         the bench rest), so the only thing this changes is the hash. */
+      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no bench pair to change; repoint this case');
+      acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
     },
     expect: 'WEEK IS FROZEN',
@@ -1143,16 +1144,29 @@ const CASES = [
          partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
          at 45s still leave room for three sets of six presses, so the only thing that changes is the
          hash, which is the one thing this case is about. */
-      const acc = p.days.b.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-overhead-press' && (b.exercises || []).length === 2);
-      if (!acc) throw new Error('no two-exercise main block after the opener; repoint this case');
-      acc.exercises.reverse();
-      // whyHere belongs to the LAST exercise of a block; keep the pair legal after the swap.
-      const [first, second] = acc.exercises;
-      second.whyHere = first.whyHere; delete first.whyHere;
+      /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
+         structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
+         the bench rest), so the only thing this changes is the hash. */
+      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no bench pair to change; repoint this case');
+      acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
       p.frozen.changes.push({ on: '2026-09-04', hisWords: 'swap the two shoulder exercises around please, the fly first', hash: structuralHash(p.days) });
     },
     expect: null,
+  },
+  {
+    /* THE BYPASS THE ADVERSARY FOUND, 2026-10-04: change the week AND rewrite daysHash to match, with no
+       words anywhere. The old gate only compared daysHash with the file's hash, so this passed. */
+    name: 'a structural change that also rewrites daysHash, with no words for it, is refused',
+    keepFreeze: true,
+    mutate: (p) => {
+      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      if (!acc) throw new Error('no bench pair to change; repoint this case');
+      acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
+      p.frozen.daysHash = structuralHash(p.days);
+    },
+    expect: 'no entry in frozen.changes carries that hash',
   },
   {
     name: 'a main lift with two sets is refused',
@@ -1283,7 +1297,12 @@ for (const c of CASES) {
        block). Without this line those cases would fail on the freeze rather than on the rule they
        exercise, which is the cascade this suite already learned to avoid once with `.tab`. The two
        freeze cases opt out with `keepFreeze`, so the gate itself is still watched in both directions. */
-    if (!c.file && !c.keepFreeze && doc.frozen) doc.frozen.daysHash = structuralHash(doc.days);
+    /* And, since 2026-10-04, a changes entry for that hash: the gate now requires daysHash to be a week
+       his words accepted, so a re-stamp without one would fail every case on the freeze. */
+    if (!c.file && !c.keepFreeze && doc.frozen) {
+      doc.frozen.daysHash = structuralHash(doc.days);
+      doc.frozen.changes = [...(doc.frozen.changes || []), { on: '2026-10-04', hisWords: 'fixture words: the suite re-stamps the freeze for a case about another rule', hash: doc.frozen.daysHash }];
+    }
     writeFileSync(file, JSON.stringify(doc, null, 2));
 
     /* A SECOND FILE, for the rules that live across two of them. Added 2026-08-28 with the

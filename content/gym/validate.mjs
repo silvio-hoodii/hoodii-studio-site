@@ -1943,7 +1943,25 @@ if (process.argv.includes('--print-hash')) {
   if (!fz || typeof fz !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(String(fz.until)) || typeof fz.daysHash !== 'string') {
     fail('program.json', '"frozen" must carry { until: YYYY-MM-DD, daysHash, changes: [] }. The week is frozen between rebuilds on purpose; see the $why on that field.');
   } else {
-    const today = new Date().toISOString().slice(0, 10);
+    /* HIS DATE, NOT UTC, since 2026-10-04. `toISOString()` is UTC, so after 18:00 in Calgary this gate
+     * read tomorrow's date and offered tomorrow as the "on" of a change he made tonight. Same rule as
+     * src/lib/day.ts (`dayOf`), copied rather than imported because this file runs under plain node
+     * in `pnpm gates`: the tz database's America/Edmonton up to the Alberta switch, fixed UTC-6 from
+     * 2026-11-01 08:00 UTC. If day.ts changes, change this with it. */
+    const ALBERTA_TIME_FROM = Date.UTC(2026, 10, 1, 8, 0, 0);
+    const now = new Date();
+    const today = new Intl.DateTimeFormat('en-CA', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      timeZone: +now >= ALBERTA_TIME_FROM ? 'Etc/GMT+6' : 'America/Edmonton',
+    }).format(now);
+    /* daysHash ITSELF NEEDS HIS WORDS, since 2026-10-04. The check below compares daysHash with the
+     * file's hash, so an edit that ALSO rewrote daysHash passed with no words anywhere. Whatever week
+     * daysHash names has to be one he said something about, at least eight words, on a dated entry. */
+    const anchor = (Array.isArray(fz.changes) ? fz.changes : []).find((c) => c && c.hash === fz.daysHash && words(c.hisWords) >= 8 && /^\d{4}-\d{2}-\d{2}$/.test(String(c.on)));
+    if (!anchor) {
+      fail('program.json', `frozen.daysHash is ${fz.daysHash} and no entry in frozen.changes carries that hash with his words (at least eight) and a date. `
+        + 'Moving daysHash is accepting a week, and only his words accept a week. Add { "on", "hisWords", "hash" } for it, and quote the same words in the commit.');
+    }
     const okChange = (Array.isArray(fz.changes) ? fz.changes : []).find((c) => c && c.hash === hash && words(c.hisWords) >= 8 && /^\d{4}-\d{2}-\d{2}$/.test(String(c.on)));
     if (fz.daysHash !== hash && today < fz.until && !okChange) {
       fail('program.json', `the WEEK IS FROZEN until ${fz.until} and its structure changed: frozen.daysHash is ${fz.daysHash}, the file now hashes to ${hash}. `

@@ -89,6 +89,8 @@ const GATES = [
    * `--experimental-strip-types` because it imports the .ts directly. No build step, no tsx
    * dependency, same reasoning as `coverage.mts` being .mts. */
   ['progression-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/progression.test.ts']],
+  /* The ids progression skips (content/gym/excluded-sets.json), on his real RDL rows, and that db.ts still reads them. */
+  ['excluded-sets-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/excluded-sets.test.ts']],
   /* THE BODY-COMPOSITION SPLIT'S SUITE. Added 2026-08-28, the day the rule it guards was fixed.
    *
    * Two defects, both live on /health until that day. The fat share was `(dFat / dKg) * 100` through

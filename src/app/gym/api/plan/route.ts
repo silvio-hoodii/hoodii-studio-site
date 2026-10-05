@@ -2,7 +2,7 @@ import { today } from '@/lib/day';
 import { NextResponse } from 'next/server';
 import { getExerciseHistories } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
-import { ladderFor, hasFixedReps, isAssisted, incrementFor } from '@/lib/gym/ladder';
+import { ladderFor, hasFixedReps, isAssisted, incrementFor, firstWeightFor } from '@/lib/gym/ladder';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -77,6 +77,7 @@ export async function POST(req: Request) {
            failing is removed rather than widened: nothing about the ladder crosses the wire. */
         ladder: ladderFor(ex.id),
         fixedReps: hasFixedReps(ex.id),
+        firstWeight: firstWeightFor(ex.id),
         repSuffix: ex.repSuffix,
         today: date,
         recent: recent.slice(0, 3),

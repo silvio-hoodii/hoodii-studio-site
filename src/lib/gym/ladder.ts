@@ -98,6 +98,22 @@ const FIXED_REPS: Set<string> = (() => {
 /** True when the rep count on this lift is a ceiling a person set and the engine may not move it. */
 export const hasFixedReps = (id: string): boolean => FIXED_REPS.has(id);
 
+/* THE FIRST WEIGHT, read off the slot like FIXED_REPS above, since 2026-10-04. A slot with no history
+ * may carry `firstWeight: { weight, say }` and the card shows that number the first time, instead of
+ * a blank box. Derived here, never sent by the client, for the same seam reason as the ladder. */
+const FIRST_WEIGHT: Map<string, { weight: number; say: string }> = (() => {
+  const out = new Map<string, { weight: number; say: string }>();
+  const prog = program as { days: Record<string, { blocks: { exercises: { id: string; firstWeight?: { weight: number; say: string } }[] }[] }> };
+  for (const day of Object.values(prog.days)) {
+    for (const b of day.blocks) {
+      for (const e of b.exercises) if (e.firstWeight && !out.has(e.id)) out.set(e.id, e.firstWeight);
+    }
+  }
+  return out;
+})();
+
+export const firstWeightFor = (id: string): { weight: number; say: string } | null => FIRST_WEIGHT.get(id) ?? null;
+
 /* ---- COUNTERWEIGHT, derived from the machine, 2026-09-27 ------------------------------------------
  *
  * THE ASSISTED PULL-UP WAS PROGRESSING UPWARD. The engine has handled `assistance: true` since
