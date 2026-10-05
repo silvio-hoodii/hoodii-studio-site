@@ -99,8 +99,14 @@ const PRIORITY = new Set(['squat', 'hinge']);
  * proposal (HealthOS/knowledge/PROPOSAL-2026-09-06-...md, section 2) classed this file's priority-pattern
  * rule as an agent training opinion to turn into a report, and he shipped it. The step-up and the split squat stay one tap away as alternatives. Absence is
  * printed as a note, so the trade stays visible. */
+/* THE OVERHEAD PRESS JOINED IT the same evening, after an adversary review: sized so 3 in 4 of his
+ * days land at or under 80 minutes, the week holds six partner slots and seven candidates. The side
+ * delts went back to the lateral raise he did on 5 of 7 Session A dates rather than resting on a
+ * standing press he had last done 31 days earlier, and the front delts get 5 fractional sets a week
+ * from the bench and the push-ups, over the coverage floor. */
 const MAY_BE_ABSENT = new Map([
   ['singleLeg', 'no slot left at 80 minutes; the step-up and split squat are alternatives under the hip thrust and the front squat (2026-10-04).'],
+  ['shoulderPress', 'no slot left at 80 minutes; side delts are on the lateral raise, front delts get the bench and push-ups (2026-10-04).'],
 ]);
 
 const fresh = {};      // pattern -> [{day, block, exercise}]

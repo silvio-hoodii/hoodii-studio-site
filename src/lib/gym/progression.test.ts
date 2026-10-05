@@ -65,10 +65,27 @@ check(
 );
 
 check(
-  'farmer carry: 130 seconds done, never suggest 42',
-  suggest(session('2026-08-25', 2, 55, 130), plan({ type: 'timed', targetReps: 40 })),
+  'an UNLOADED hold: 130 seconds done, never suggest 42',
+  suggest(session('2026-08-25', 2, null, 130), plan({ type: 'timed', targetReps: 40 })),
   (s) => s.reps >= 130,
   'reps at or above 130 (the card printed 42 after the unit fix)',
+);
+
+/* HIS REAL CARRY, 2026-10-04: 50 lb a hand for 125 s twice on 2026-09-29, prescription 40 s. The card
+   read "x 125s" with no weight. A loaded hold past the top earns the next dumbbell and the clock resets,
+   which is the weighted lifts' double progression. */
+check(
+  'farmer carry at 50 lb for 125 s: the next dumbbell, back to 40 s',
+  suggest(session('2026-09-29', 2, 50, 125), plan({ type: 'timed', targetReps: 40, ladder: [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90], today: '2026-10-05' })),
+  (s) => s.weight === 55 && s.reps === 40,
+  '55 lb x 40 s (it printed x 125s with no weight)',
+);
+
+check(
+  'a loaded hold inside the range shows its load and adds 5 s',
+  suggest(session('2026-09-29', 2, 50, 30), plan({ type: 'timed', targetReps: 40, today: '2026-10-05' })),
+  (s) => s.weight === 50 && s.reps === 35,
+  '50 lb x 35 s: the load stays on the card, the clock moves',
 );
 
 check(
@@ -323,11 +340,63 @@ check(
   '165 x 6: the heaviest weight he hit six or more at. The card said 190 x 6 above a 185 x 3',
 );
 
+/* THE UPWARD PROBE WAS REMOVED ON 2026-10-04, on his 2026-09-01 ruling (form over heavier). This case
+   used to assert the step up; it now asserts the hold, and the next one is his real press. */
 check(
-  'a long gap after a session inside the range still probes one step up',
+  'a long gap after a session inside the range starts where he was, no step up',
   suggest(session('2026-08-04', 3, 165, 8), plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-09-06' })),
-  (s) => s.weight === 170,
-  '170: the gap probe is unchanged where he had made the range, or the fix has deleted the feature',
+  (s) => s.weight === 165 && s.reps === 6,
+  '165 x 6: the weight he left at',
+);
+
+check(
+  'standing DB press, 32 days after 60x9/9: the card offers 60, not 65',
+  suggest({ date: '2026-09-03', sets: [{ weight: 60, reps: 9 }, { weight: 60, reps: 9 }] },
+    plan({ type: 'weighted', targetReps: 8, rangeWidth: 4, today: '2026-10-05', ladder: [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90] })),
+  (s) => s.weight === 60,
+  '60 (it printed "probe: 60 up one step to 65", above his seated 60x6/7/6 of 2026-09-28)',
+);
+
+/* ---- the working weight of a ramp ---------------------------------------------------------------- */
+/* HIS REAL BENCH, 2026-10-03: 135x12, 155x9, 175x5, range 6 to 10. Every weight once, so the old
+   heavier tie-break made 175 the working weight and the card asked for 175 x 6, his estimated max. */
+const OCT3_BENCH: LastSession = { date: '2026-10-03', sets: [{ weight: 135, reps: 12 }, { weight: 155, reps: 9 }, { weight: 175, reps: 5 }] };
+check(
+  'bench 135x12, 155x9, 175x5: the working weight is 155, not the single top set',
+  suggest(OCT3_BENCH, plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-10-05', recent: [OCT3_BENCH] })),
+  (s) => s.weight === 155 && s.reps === 10,
+  '155 x 10: hold 155, build from his 9 (it printed 175 x 6)',
+);
+
+check(
+  'a weight done for two sets still beats a heavier single set',
+  suggest({ date: '2026-10-03', sets: [{ weight: 155, reps: 8 }, { weight: 155, reps: 7 }, { weight: 175, reps: 6 }] },
+    plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-10-05' })),
+  (s) => s.weight === 155,
+  '155: two sets at 155 are the work, one set at 175 is a top single',
+);
+
+check(
+  'a ramp where nothing reached the range keeps the heaviest',
+  suggest({ date: '2026-10-03', sets: [{ weight: 165, reps: 5 }, { weight: 185, reps: 3 }] },
+    plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-10-05' })),
+  (s) => s.weight === 185,
+  '185 held, the old behaviour where no set made the range',
+);
+
+/* ---- the first weight of a lift he has never logged ---------------------------------------------- */
+check(
+  'a slot with a first weight shows it the first time',
+  suggest(null, plan({ type: 'weighted', targetReps: 10, firstWeight: { weight: 70, say: 'First time: 70 lb.' } })),
+  (s) => s.weight === 70 && s.reps === 10 && s.reason === 'First time: 70 lb.',
+  '70 x 10 with the slot\'s own sentence',
+);
+
+check(
+  'a first weight is ignored once there is history',
+  suggest(session('2026-10-01', 3, 80, 10), plan({ type: 'weighted', targetReps: 10, rangeWidth: 4, today: '2026-10-05', firstWeight: { weight: 70, say: 'First time: 70 lb.' } })),
+  (s) => s.weight === 80,
+  '80, his own log',
 );
 
 /* ---- the 2026-09-27 audit, run against this engine with edge cases -------------------------------

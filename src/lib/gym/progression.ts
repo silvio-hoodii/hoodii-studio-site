@@ -69,6 +69,11 @@ export interface PlanInput {
   /** Whatever `reps` in program.json carries after its leading number: "/side", "/leg", "s/side".
    *  Only used to build a sentence he reads; the arithmetic is on the count alone. */
   repSuffix?: string;
+  /** The weight to put on the card the FIRST time a lift is logged, and the sentence that says so,
+   *  from the slot's `firstWeight` in program.json (derived in ladder.ts, never sent by the client).
+   *  Added 2026-10-04 for the Smith hip thrust: "First time: log your working weight" left the one
+   *  number he needed under a collapsed "How to do it". */
+  firstWeight?: { weight: number; say: string } | null;
 }
 
 export interface Suggestion {
@@ -155,13 +160,23 @@ function stepTo(target: number, increment: number, ladder?: number[] | null): nu
  *  working weight and the card suggested a load he had only ramped through. A tie between two work
  *  weights is a session that climbed, and the heavier one is where it ended. `getLoggedHistory` in
  *  db.ts breaks its `mode()` tie the same way. */
-export function workingWeight(sets: SetRecord[]): number | null {
+export function workingWeight(sets: SetRecord[], bottom?: number): number | null {
   const counts = new Map<number, number>();
   for (const s of sets) {
     if (s.weight == null) continue;
     counts.set(s.weight, (counts.get(s.weight) || 0) + 1);
   }
   if (counts.size === 0) return null;
+  /* EVERY WEIGHT ONCE, since 2026-10-04: a ramp, not a working weight. His bench on 2026-10-03 was
+   * 135x12, 155x9, 175x5, three weights one set each, and the heavier tie-break below made 175 the
+   * working weight, so the card asked for 175 x 6 off one set of 5: his estimated max, three times.
+   * When no weight was repeated, the working weight is the heaviest one he took into the rep range
+   * (155 for 9 here). Only when nothing reached the range does the heaviest stand. A weight done for
+   * two or more sets still beats any single set, which the mode below already guarantees. */
+  if (bottom != null && Math.max(...counts.values()) === 1) {
+    const inRange = sets.filter((s) => s.weight != null && (s.reps ?? 0) >= bottom).map((s) => s.weight as number);
+    if (inRange.length) return Math.max(...inRange);
+  }
   let best: number | null = null;
   let bestN = -1;
   for (const [w, n] of counts) {
@@ -210,12 +225,12 @@ function rungIsEarned(ww: number, next: number, bottom: number, top: number): bo
 
 /** Did the session BEFORE the last one also finish at the top of the range, at the same weight?
  *  `recent[0]` is the same session as `last`, so the second entry is the one that answers this. */
-function toppedPreviousSession(recent: LastSession[] | null | undefined, ww: number, top: number): boolean {
+function toppedPreviousSession(recent: LastSession[] | null | undefined, ww: number, top: number, bottom: number): boolean {
   const prev = recent?.[1];
   if (!prev) return false;
   const ss = (prev.sets || []).filter((x) => (x.reps ?? 0) > 0);
   if (!ss.length) return false;
-  if (workingWeight(ss) !== ww) return false;
+  if (workingWeight(ss, bottom) !== ww) return false;
   const reps = ss.filter((x) => x.weight === ww).map((x) => x.reps ?? 0);
   return reps.length > 0 && Math.min(...reps) >= top;
 }
@@ -258,6 +273,9 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   }
 
   if (sets.length === 0) {
+    if (plan.firstWeight && type === 'weighted') {
+      return { weight: plan.firstWeight.weight, reps: bottom, reason: plan.firstWeight.say };
+    }
     return { weight: null, reps: bottom, reason: FIRST_TIME };
   }
 
@@ -266,7 +284,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
    * null, and the card printed "Got 8/8/8 at null: hold" or, after a gap, "Start at 0". There is no
    * load to build on, so the card asks for the one number it needs. */
   if (type === 'weighted') {
-    const w0 = workingWeight(sets);
+    const w0 = workingWeight(sets, bottom);
     if (w0 == null || w0 === 0) return { weight: null, reps: bottom, reason: FIRST_TIME };
   }
 
@@ -282,7 +300,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
         return { weight: null, reps: best + 1, reason: `Last log ${gap}d ago, probe: old best +1 rep, see where you are.` };
       }
-      const ww = workingWeight(sets) ?? 0;
+      const ww = workingWeight(sets, bottom) ?? 0;
       /* NO UPWARD PROBE FROM A WEIGHT HE COULD NOT HIT THE RANGE AT. Added 2026-09-06, found on his
        * real bench: last logged 2026-08-04 as 185x3, 185x3, 165x8 against a range of 6 to 10. The
        * working weight is 185 (two sets), so this branch printed "probe: 185 up one step to 190" on
@@ -303,8 +321,12 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
           reason: `Last log ${gap}d ago, and ${ww} was below the range then (${repsAtWw.join('/')}). Start at ${hold}, where you last made ${bottom}+, adjust live.`,
         };
       }
-      const next = stepUp(ww, increment, ladder);
-      return { weight: next, reps: bottom, reason: `Last log ${gap}d ago, probe: ${ww} up one step to ${next}, adjust live.` };
+      /* NO UPWARD PROBE AT ALL, since 2026-10-04. After a gap he starts where he was. His ruling,
+       * 2026-09-01: "I'm more worried on like keeping my form and maybe improving on that than going
+       * heavier." The standing dumbbell press is the case that found it: 32 days since its last
+       * standing set at 60, the card offered 65, while his last press of any kind (seated, 2026-09-28)
+       * was 60 for 6 and 7. This engine cannot see another id's sets, so it may not climb past this one. */
+      return { weight: ww, reps: bottom, reason: `Last log ${gap}d ago: start at ${ww}, where you were, adjust live.` };
     }
   }
 
@@ -314,6 +336,18 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     const minReps = Math.min(...repsList);
     const timed = type === 'timed';
     const u = timed ? ' s' : '';
+    /* A LOADED HOLD IS DOUBLE PROGRESSION TOO, since 2026-10-04. The farmer carry card read "x 125s"
+     * against a prescription of 40 s at a heavier dumbbell, because this branch never looked at the
+     * weight: past the top it held the seconds and left the load to him. When the sets carry a weight,
+     * the top of the range earns the next dumbbell and the clock goes back to the bottom, exactly as a
+     * weighted lift does. The card shows the load either way. A hold with no weight is unchanged. */
+    const load = timed ? workingWeight(sets) : null;
+    if (timed && load != null && load > 0 && minReps >= top) {
+      const next = stepUp(load, increment, ladder);
+      if (next > load) {
+        return { weight: next, reps: bottom, reason: `Held ${repsList.join('/')} s at ${load}: up to ${next}, back to ${bottom} s.` };
+      }
+    }
     if (minReps >= top) {
       /* NEVER SUGGEST FEWER THAN HE ALREADY DID. This read `reps: top`, so once he passed the top of
        * the range the card asked him to go BACKWARDS, and the app wrote the number into his log:
@@ -338,7 +372,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     /* WORDED PER TYPE, since 2026-09-27. A hold was told to "add a rep", and stepped by one second. */
     if (timed) {
       return {
-        weight: null,
+        weight: load != null && load > 0 ? load : null,
         reps: Math.min(minReps + TIMED_STEP, top),
         reason: `Got ${repsList.join('/')} s: add ${TIMED_STEP} s where you can.`,
       };
@@ -348,7 +382,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
 
   // ---- weighted: double progression on the working weight ----
   /* Never null here: the no-weight case returned FIRST_TIME above. */
-  const ww = workingWeight(sets) as number;
+  const ww = workingWeight(sets, bottom) as number;
   const assisted = plan.assistance === true;
   const workSets = sets.filter((s) => s.weight === ww);
   const repsAtWork = workSets.map((s) => s.reps ?? 0);
@@ -393,7 +427,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   if (rec && rec.length >= 3 && !assisted) {
     const last3 = rec.slice(0, 3).map((sess) => {
       const ss = (sess.sets || []).filter((s) => (s.reps ?? 0) > 0);
-      const w = workingWeight(ss);
+      const w = workingWeight(ss, bottom);
       const reps = ss.filter((s) => s.weight === w).map((s) => s.reps ?? 0);
       return { w, min: reps.length ? Math.min(...reps) : null, sets: ss.length };
     });
@@ -435,7 +469,7 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       recAll != null
       && nextRung != null
       && !rungIsEarned(ww, nextRung, bottom, top)
-      && !toppedPreviousSession(recAll, ww, top)
+      && !toppedPreviousSession(recAll, ww, top, bottom)
     ) {
       return {
         weight: ww,

@@ -1,8 +1,8 @@
 {
   "$comment": [
     "REBUILT 2026-10-04 on his words: \"rebuild everything based on what I can do ... I want it to be grounded\", and \"1b\" (a glute exercise in Session B, keep the front squat).",
-    "Sized to his measured pace (31.8 + 2.51 min a set, 17 sessions), so each session fits 80 minutes with the warm-up: A 16 lifting sets, B 17, plus 2 jump sets each.",
-    "Three pairs a session, every block a pair, legs and glutes in the blocks he reaches. Out of the prescription: Bulgarian split squat, lat pulldown, the barbell overhead press as a lead, lateral raise, dead bug, overhead tricep extension. The first three are one tap away as alternatives; no single-leg lift fits three pairs (scripts/gym-order.mjs reports it).",
+    "Sized so 3 in 4 of his real days land at or under 80 minutes with the warm-up (fit 31.8 + 2.51 min a set, 75th-percentile residual +6.9): Session A 16 sets, Session B 15, jump sets included.",
+    "Three pairs a session, every block a pair, legs and glutes in the blocks he reaches. Out of the prescription: Bulgarian split squat, lat pulldown, the overhead press, dead bug, overhead tricep extension. The split squat and pulldown are one tap away as alternatives; scripts/gym-order.mjs reports the missing single-leg and overhead-press patterns.",
     "Every changed number carries its reason in a $ field beside it ($dose, $start, $why, $time). HealthOS/knowledge/REVIEW-2026-10-04-PROGRAMME.md is the evidence record."
   ],
   "goal": {
@@ -53,7 +53,7 @@
     "decided": "Glutes written into the goal 2026-10-04 from his words that evening; the rest is the 2026-09-06 candidate wording. HIS to confirm or change.",
     "assumptions": [
       "Bench on the barbell: already the live prescription, moves in 5 lb steps. His call to move back to dumbbells.",
-      "Sized 2026-10-04 to what he finishes: 16 and 17 lifting sets plus 2 jump sets, about 75 and 78 minutes including the warm-up at his measured pace (days.*.$time). Supersedes the 2026-09-04 \"1 FULL\" choice of 85 to 90 minutes, on his 80-minute ruling and his 2026-10-04 \"rebuild everything based on what I can do\".",
+      "Sized 2026-10-04 so 3 in 4 of his real days land at or under 80 minutes including the warm-up: Session A 16 sets, Session B 15, jump sets counted like any set (days.*.$time). Supersedes the 2026-09-04 \"1 FULL\" choice of 85 to 90 minutes, on his 80-minute ruling and his 2026-10-04 \"rebuild everything based on what I can do\".",
       "Swim in the evening after the lift, his choice 2026-09-04, reversing the 2026-09-03 morning ruling. The swim goal in content/swim/plan.json is re-anchored to one swim rather than the morning slot.",
       "Walk-run after Session B (Tuesday, Friday), before the swim where there is one; the easy row after Session C. The bike is unscheduled, kept as a page."
     ]
@@ -63,7 +63,7 @@
   },
   "frozen": {
     "until": "2026-11-01",
-    "daysHash": "703972ca35a92980",
+    "daysHash": "9e89714e1f88ab66",
     "changes": [
       {
         "on": "2026-09-06",
@@ -74,8 +74,8 @@
       {
         "on": "2026-10-04",
         "hisWords": "rebuild everything based on what I can do, and the workouts time-wise is mostly programming, whatever you put there I'll do but I want it to be grounded",
-        "hash": "703972ca35a92980",
-        "what": "Sized to his measured pace: three pairs a session, 16 and 17 lifting sets plus 2 jump sets, about 75 and 78 minutes. Smith hip thrust added to Session B (his \"1b\"), standing dumbbell press in its rest. Split squat, pulldown, lateral raise, dead bug and tricep extension out; the farmer carry into the front squat rest; curls into the bench rest. daysHash moved to this week and until re-set to 2026-11-01, four weeks, the same span the 2026-09-06 lock ran."
+        "hash": "9e89714e1f88ab66",
+        "what": "Sized so 3 in 4 of his real days land at or under 80 minutes: Session A 16 sets, Session B 15, jump sets included. Smith hip thrust added to Session B (his \"1b\"), curls in its rest. Lateral raise kept in the bench rest. Split squat, pulldown, overhead press, dead bug and tricep extension out; the farmer carry into the front squat rest. daysHash moved to this week and until re-set to 2026-11-01, four weeks, the same span the 2026-09-06 lock ran. (The branch first carried hash 703972ca35a92980 for a 16 + 2 / 17 + 2 version that never shipped; this entry replaces it.)"
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -238,7 +238,7 @@
             {
               "id": "hanging-knee-raise",
               "name": "Hanging Knee Raise",
-              "sets": 3,
+              "sets": 2,
               "reps": "10",
               "rest": "45s",
               "zone": "rack",
@@ -283,15 +283,16 @@
                   "reps": "30s/side"
                 }
               ],
-              "whyHere": "your own pairing from 3 September, and they add no time"
+              "whyHere": "your own pairing from 3 September, and they add no time",
+              "$dose": "2 sets, was 3: time, on the 3-in-4 rule ($time). Abs stay at 5 fractional sets a week with the carry, over the floor of 4."
             }
           ]
         },
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Bench, curls in the rest",
-          "why": "The barbell bench, the press you asked to keep track of, in the rack while you are still there after the squat. The curls ride in its rest because the dumbbells travel to the rack and biceps do nothing in a bench press. The low-incline dumbbell press you have been doing is the first alternative, one tap.",
+          "label": "Bench, lateral raises in the rest",
+          "why": "The barbell bench, the press you asked to keep track of, in the rack while you are still there after the squat. The lateral raises ride in its rest because the dumbbells travel to the rack and the side of the shoulder does nothing in a bench press. The low-incline dumbbell press you have been doing is the first alternative, one tap.",
           "exercises": [
             {
               "id": "bb-bench-press",
@@ -311,7 +312,7 @@
                   "name": "DB Incline Press",
                   "zone": "benchDb",
                   "station": "bench",
-                  "cue": "Bench one or two notches up from flat, a dumbbell in each hand. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Your history here is 65 to 75 lb.",
+                  "cue": "Bench one or two notches up from flat, a dumbbell in each hand. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Last time you did 60 for three sets of 8.",
                   "formerIds": [
                     "db-bench-press"
                   ]
@@ -324,47 +325,40 @@
                   "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
                 }
               ],
-              "$start": "Epley e1RM 209 from 165x8 on 2026-09-06; 2026-10-03 was 135x12, 155x9, 175x5 (e1RM 201 and 204). Start 160 for 3x6 to 10 (Epley: 174 for 6, 157 for 10).",
+              "$start": "Epley e1RM 209 from 165x8 on 2026-09-06; 2026-10-03 was 135x12, 155x9, 175x5. Every weight once that day, so the engine now takes the heaviest weight he took into the range, 155 for 9, and the card offers 155 x 10 (e1RM 207), not 175 x 6.",
               "$cue": "Dropped \"Start at 135 and find the weight over two sessions\" on 2026-10-04: he has worked it at 155 to 175 since, so the sentence was false."
             },
             {
-              "id": "bicep-curl",
-              "name": "DB Biceps Curl",
-              "zone": "rack",
-              "station": null,
-              "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly.",
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
               "sets": 2,
-              "reps": "10",
+              "reps": "12",
               "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
               "log": true,
+              "cue": "Standing, a dumbbell in each hand at your sides, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if pouring from two jugs. Lower about twice as slowly as you lifted. Success: your shoulders do not rise toward your ears, and you can stop the weight dead at the top. If either fails, go lighter.",
               "progression": "weight",
-              "rangeWidth": 6,
+              "rangeWidth": 8,
               "alts": [
                 {
-                  "id": "db-hammer-curl",
-                  "name": "DB Hammer Curl",
-                  "sets": 3,
-                  "reps": "10",
-                  "rest": "45s",
+                  "id": "kb-lateral-raise",
+                  "name": "KB Lateral Raise",
                   "zone": "benchDb",
                   "station": null,
-                  "log": true,
-                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
-                  "progression": "weight",
-                  "rangeWidth": 5
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone."
                 },
                 {
-                  "id": "incline-db-curl",
-                  "name": "Incline DB Curl",
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
                   "zone": "benchDb",
                   "station": "bench",
-                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave."
                 }
               ],
-              "whyHere": "biceps do nothing in a bench press",
-              "$dose": "2 sets a session, 4 a week: the only direct biceps work once the pulldown and Session B curls leave. Without it biceps get only the row synergist credit, 3 fractional sets a week, under the 4-set floor in Pelland 2026 that gym-coverage.mjs gates.",
-              "$start": "35x8/8/8 on 2026-10-01, 40x10-12 in September. Start 35 for 2x10 to 16.",
-              "$rangeWidth": "6, was 5: check-ladder.mjs on 2026-10-04 read his working weight as 35 lb, where 10 to 15 banks an Epley 52.5 and the 40 lb dumbbell demands 53.3. 10 to 16 banks 53.7, so the top of the range earns the next dumbbell."
+              "whyHere": "the side of the shoulder does nothing in a bench press",
+              "$dose": "2 sets: back in the bench rest because he did it on 5 of 7 Session A dates (REVIEW-2026-10-04). It is the only side-delt work in the week now (4 fractional sets, the floor), and it rests on a lift he does rather than on a press he had not done in 31 days.",
+              "$start": "17.5x17/17/20 on 2026-10-03, 20x15 on 2026-08-25. The card reads his log."
             }
           ]
         },
@@ -440,7 +434,7 @@
             {
               "id": "db-reverse-fly",
               "name": "DB Reverse Fly",
-              "sets": 2,
+              "sets": 1,
               "reps": "12",
               "rest": "45s",
               "zone": "benchDb",
@@ -466,18 +460,20 @@
                 }
               ],
               "whyHere": "they are the back-of-the-shoulder work you asked for as posture",
-              "$dose": "2 sets, was 3: time. Rear delts stay at 7 fractional sets a week with the row synergist credit, over the 4-set floor; posture work is his 2026-09-04 ruling.",
+              "$dose": "1 set, was 3 then 2: time, on the 3-in-4 rule ($time). Rear delts stay at 5 fractional sets a week with the row synergist credit, over the floor of 4.",
               "$start": "15x15/15/15 on 2026-10-03, 20x12 on 2026-09-23. Start 15 for 2x12 to 19."
             }
           ]
         }
       ],
       "$time": {
-        "liftingSets": 16,
-        "jumpSets": 2,
-        "estimateMin": 75,
-        "fit": "31.8 + 2.51 x 16 = 72, plus 2 jump sets at 1.5 = 75. Median-rate check: 16 x 4.24 = 68, plus 3 = 71.",
-        "how": "Theil-Sen fit of watch strength minutes (warm-up, walking and phone included) against performed sets (done or reps typed), 17 sessions 2026-08-27 to 2026-10-03 with 8+ sets and 20+ watch minutes: minutes = 31.8 + 2.51 x sets. Median rate on the same sessions is 4.24 min a set, which gives the same answer within 3 minutes. Jump sets are 3 reps on a 60 s rest and are added at 1.5 min each. Script: scratchpad lifting/pace.mjs, read-only."
+        "sets": 16,
+        "jumpSetsIncluded": 2,
+        "allowanceMin": 0,
+        "fitMin": 72.1,
+        "fitPlus75thMin": 78.9,
+        "daysAtOrUnder80": "13 of 17 (76%)",
+        "how": "Theil-Sen fit, 17 sessions 2026-08-27 to 2026-10-03 with 8+ performed sets and 20+ watch minutes, every set counted the same, jump sets included: minutes = 31.8 + 2.51 x sets. Residuals of that fit: median 0.0, 75th percentile +6.9, 90th +16.3. A card is sized so fit + allowance + 6.9 is at or under 80, which is 3 in 4 of his real days at or under 80. Script: scratchpad lifting/pace2.mjs, read-only."
       }
     },
     "b": {
@@ -732,7 +728,7 @@
             {
               "id": "farmer-carry",
               "name": "Farmer Carry",
-              "sets": 2,
+              "sets": 1,
               "reps": "40s",
               "rest": "45s",
               "zone": "rack",
@@ -775,15 +771,15 @@
                 }
               ],
               "whyHere": "it is the carry you asked for on 15 August",
-              "$dose": "2 sets of 40 s, was 3 in the last block of Session A, which he reached on 2 of 7 dates. Moved into the front squat rest so the carry he asked for lands in a block he reaches. He has carried 50 lb a hand for 125 to 130 s (2026-08-25, 2026-09-29), past the range, so the cue rule applies: go heavier, 55 to 60 lb a hand."
+              "$dose": "1 set of 40 s, was 2: the least-done item in the week (last block of Session A, done on 2 of 7 dates), cut first on the 3-in-4 rule. It stays in the week, twice, in a block he reaches. The card offers 55 lb a hand: he held 50 for 125 s, past the top, and a loaded hold now earns the next dumbbell (progression.ts)."
             }
           ]
         },
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Hip thrust, presses in the rest",
-          "why": "The glute lift, on the Smith so the bar runs on rails while you find the position. The standing dumbbell press rides in its rest because the dumbbells travel and a press uses nothing a hip thrust does.",
+          "label": "Hip thrust, curls in the rest",
+          "why": "The glute lift, on the Smith so the bar runs on rails while you find the position. The curls ride in its rest because the dumbbells travel and biceps do nothing in a hip thrust.",
           "exercises": [
             {
               "id": "smith-hip-thrust",
@@ -794,12 +790,12 @@
               "zone": "smith",
               "station": "smith",
               "log": true,
-              "cue": "DRAFT, tell the note box what is wrong with it. Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps. Start at 70 lb, your weighted bridge from June.",
+              "cue": "DRAFT, tell the note box what is wrong with it. Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps.",
               "progression": "weight",
               "rangeWidth": 4,
               "$cueSource": "Drafted from the alt-cues.json draft of 2026-09-01, itself from the methods section of HealthOS/knowledge/sources/plotkin-2023-hip-thrust.html: tibia perpendicular and femur parallel at the top, brief contact with the ground at the bottom, about 1 s up and 2 s down, feet 1 to 1.5 shoulder widths. Cut to 80 words. Labelled DRAFT until he has used it.",
               "$why": "His 2026-10-04 19:31 \"1b\": one glute exercise in Session B, Smith hip thrust or the 45-degree back extension, about 10 minutes, keep the front squat. Krause Neto 2025 (PMC12018462): \"when emphasizing GMax hypertrophy at the expense of other muscle groups, single exercises, such as the barbell hip thrust, should be prioritized\". The Smith is legal here: one station, his own zone after the rack, and a dumbbell partner carried to it.",
-              "$start": "No hip thrust with a weight in the log. Conservative start from his weighted glute bridge, 70x10/10/10 on 2026-06-01, the nearest loaded hip extension he has typed (bb-hip-thrust on 2026-06-03 has reps and no weight). 3x10 to 14 at 70; rangeWidth 4 closes the 5 lb ladder from 50 lb up (banked w x 1.467 >= demanded (w+5) x 1.333).",
+              "$start": "No hip thrust with a weight in the log. Conservative start from his weighted glute bridge, 70x10/10/10 on 2026-06-01. The Smith bar's own weight is unknown (not in equipment.json), so the card says plates and he logs plates; the number stays comparable with itself. rangeWidth 4 closes the 5 lb ladder from 50 lb up.",
               "alts": [
                 {
                   "id": "back-extension",
@@ -824,63 +820,65 @@
                   "sets": 3,
                   "reps": "12/side"
                 }
-              ]
+              ],
+              "needsFloor": true,
+              "firstWeight": {
+                "weight": 70,
+                "say": "First time: 70 lb of plates, not counting the Smith bar. Log the plates."
+              },
+              "$floor": "needsFloor: he sits on the floor with his upper back on a bench. The smith zone's floor is an ASSUMPTION in equipment.json (floorConfidence unknown); confirm it on the first session."
             },
             {
-              "id": "db-overhead-press",
-              "name": "Standing DB Overhead Press",
-              "sets": 4,
-              "reps": "8",
-              "rest": "45s",
+              "id": "bicep-curl",
+              "name": "DB Biceps Curl",
               "zone": "smith",
               "station": null,
+              "cue": "Standing, dumbbells, elbows still at your sides, no swinging. Squeeze at the top, lower slowly.",
+              "sets": 1,
+              "reps": "10",
+              "rest": "45s",
               "log": true,
-              "cue": "Standing, no bench. Dumbbells at shoulder height, palms forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs stay down and your lower back does not arch. Press straight up until the arms lock out with the dumbbells over the middle of your head, not in front of your face. Lower under control. Success: you can hold the lockout still for a second. If your back arches to start the rep, go lighter.",
               "progression": "weight",
-              "rangeWidth": 4,
-              "whyHere": "a press uses nothing a hip thrust does",
-              "$dose": "4 sets, a partner rather than a lead: the overhead press keeps its place in the week inside the hip thrust rest, at no extra stop. Four because it is now the only side-delt work (secondary credit 0.5 x 4 x 2 = 4.0 a week, Pelland 2026 floor 4) and the only vertical press. rangeWidth 4 closes the dumbbell ladder (60 x 1.4 = 84 >= 65 x 1.267 = 82.3).",
-              "$start": "60x10/10/10 on 2026-09-01 and 60x9/9 on 2026-09-03 standing; 60x7 seated 2026-09-28; best 65x7/8/8 on 2026-07-24. Epley e1RM 80. Start 60 for 4x8 to 12. The card will offer 65 as a probe because the last standing set is over 21 days old; take 60 if the first set at 65 stops short of 8.",
+              "rangeWidth": 6,
               "alts": [
                 {
-                  "id": "bb-overhead-press",
-                  "name": "BB Overhead Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Standing, bar in the rack at upper-chest height, grip just outside your shoulders. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs do not flare and your lower back does not arch. Press straight up, moving your head back out of the way, until the arms lock out over the middle of your head. Lower under control. If your back arches to start the rep, go lighter."
-                },
-                {
-                  "id": "machine-shoulder-press",
-                  "name": "Machine Shoulder Press",
-                  "zone": "machines",
-                  "station": "shoulder-press",
-                  "cue": "Set the seat so the handles start at about shoulder height, not above your ears. Press up until your arms are straight without shrugging, and come back down slowly until the handles are level with your shoulders again. Stop the set when your lower back starts arching off the pad."
-                },
-                {
-                  "id": "half-kneeling-sa-press",
-                  "name": "Half-Kneeling Single-Arm Press",
+                  "id": "db-hammer-curl",
+                  "name": "DB Hammer Curl",
+                  "sets": 3,
+                  "reps": "10",
+                  "rest": "45s",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "One knee down, the other foot forward, one dumbbell in the hand on the SAME side as the down knee. Press it straight overhead without letting your ribs flare or your body lean away. Much lighter than the two-dumbbell version."
+                  "log": true,
+                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
+                  "progression": "weight",
+                  "rangeWidth": 5
                 },
                 {
-                  "id": "db-seated-ohp",
-                  "name": "Seated DB Overhead Press",
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
                   "zone": "benchDb",
                   "station": "bench",
-                  "cue": "Bench upright, back supported. Takes the lower back out of it entirely."
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
                 }
-              ]
+              ],
+              "whyHere": "biceps do nothing in a hip thrust",
+              "$dose": "1 set a session, 2 a week: with the row synergist credit, biceps sit at 5 fractional sets, over the floor of 4 that gym-coverage.mjs gates. In the hip thrust rest because the bench rest went back to the lateral raise.",
+              "$start": "35x8/8/8 on 2026-10-01, 40x10-12 in September. The card reads his log.",
+              "$rangeWidth": "6, was 5: check-ladder.mjs on 2026-10-04 read his working weight as 35 lb, where 10 to 15 banks an Epley 52.5 and the 40 lb dumbbell demands 53.3. 10 to 16 banks 53.7, so the top of the range earns the next dumbbell."
             }
           ]
         }
       ],
       "$time": {
-        "liftingSets": 17,
-        "jumpSets": 2,
-        "estimateMin": 78,
-        "fit": "31.8 + 2.51 x 17 = 74.5, plus 2 jump sets at 1.5 = 78. Median-rate check: 17 x 4.24 = 72, plus 3 = 75.",
-        "how": "Theil-Sen fit of watch strength minutes (warm-up, walking and phone included) against performed sets (done or reps typed), 17 sessions 2026-08-27 to 2026-10-03 with 8+ sets and 20+ watch minutes: minutes = 31.8 + 2.51 x sets. Median rate on the same sessions is 4.24 min a set, which gives the same answer within 3 minutes. Jump sets are 3 reps on a 60 s rest and are added at 1.5 min each. Script: scratchpad lifting/pace.mjs, read-only."
+        "sets": 15,
+        "jumpSetsIncluded": 2,
+        "allowanceMin": 3,
+        "allowanceWhy": "first Smith hip thrust set-up (bar height, pad, bench behind) and picking up and walking the carry dumbbells",
+        "fitMin": 72.5,
+        "fitPlus75thMin": 79.4,
+        "daysAtOrUnder80": "13 of 17 (76%)",
+        "how": "Theil-Sen fit, 17 sessions 2026-08-27 to 2026-10-03 with 8+ performed sets and 20+ watch minutes, every set counted the same, jump sets included: minutes = 31.8 + 2.51 x sets. Residuals of that fit: median 0.0, 75th percentile +6.9, 90th +16.3. A card is sized so fit + allowance + 6.9 is at or under 80, which is 3 in 4 of his real days at or under 80. Script: scratchpad lifting/pace2.mjs, read-only."
       }
     }
   }
