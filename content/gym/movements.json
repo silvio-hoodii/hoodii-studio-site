@@ -918,6 +918,15 @@
           "loadable": false
         },
         {
+          "id": "band-assisted-pullup",
+          "name": "Band-Assisted Pull-Up",
+          "implement": "band",
+          "zone": "rack",
+          "station": "rack-pullup-bar",
+          "loadable": false,
+          "note": "Added 2026-10-04 for Upper 2: his log has no unassisted pull-up, only the machine at 40 lb of assistance for 5. A band looped on the rack's own bar keeps it beside the overhead press. Source for the set-up, fetched 2026-10-04, https://www.nasm.org/resource-center/exercise-library/band-assisted-pull-up: \"Loop a resistance band around the bar and place your feet or knees on the band to receive assistance.\" Progressed by reps with the same band; the band itself is not recorded."
+        },
+        {
           "id": "pullup-smith-bar",
           "name": "Pull-Up (Smith section bar)",
           "implement": "bodyweight",

@@ -523,6 +523,12 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       : `Hit ${wd} at ${ww}: up to ${next}, +${r1(next - ww)} lb.`;
     return { weight: next, reps: bottom, reason };
   }
-  const goal = minReps < bottom ? bottom : top;
+  /* ONE MORE REP THAN HIS BEST SET, since 2026-10-04. This read `minReps < bottom ? bottom : top`,
+   * so 8/8/8 on a pulldown in an 8 to 12 range put 12 on the card and prefilled it: four reps a set
+   * in one session. And 6/6/5 on the row asked for 8. The weight holds; the target is his best set
+   * plus one, never past the top of the range. The weight moves only from the branch above, when
+   * every working set reached the top. */
+  const best = Math.max(...repsAtWork);
+  const goal = Math.min(top, best + 1);
   return { weight: ww, reps: goal, reason: `Got ${wd} at ${ww}: hold, build to ${goal}.` };
 }

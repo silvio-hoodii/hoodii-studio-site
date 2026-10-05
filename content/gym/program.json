@@ -60,7 +60,7 @@
       "Four sessions on four weekdays, Mon Lower 1, Tue Upper 1, Thu Lower 2, Fri Upper 2. The rotation follows what he did, not the calendar: a missed day is the next session, never skipped.",
       "Sized to 16 sets so a typical day is about 72 minutes at his measured pace and about 3 in 4 days stay at or under 80 (days.*.$time).",
       "Bench and row share one rack and one bar: a plate change between them (equipment.json, rack sharedInOneWindow).",
-      "Pull-up on the rack bar: his log has no unassisted pull-up, so the first session finds his number; the assisted machine and the pulldown are the alternatives.",
+      "Band-assisted pull-up on the rack bar: his log has no unassisted pull-up (only the machine, 40 lb of assistance for 5), so the band takes part of his weight and the first session finds his number. The assisted machine and the pulldown are one tap away.",
       "Swim in the evening after the lift, his choice 2026-09-04. The Saturday run stays; the second run from run-plan week 3 follows Upper 1 on Tuesday."
     ]
   },
@@ -70,7 +70,7 @@
   },
   "frozen": {
     "until": "2026-11-01",
-    "daysHash": "e875d99405668d93",
+    "daysHash": "1e50ff8b4b0cb348",
     "changes": [
       {
         "on": "2026-09-06",
@@ -87,8 +87,8 @@
       {
         "on": "2026-10-04",
         "hisWords": "I need this to be the best programming possible. You have access to everything ... every single thing in this repo has been done by agents, so it's not like I invented a rule ... if you're saying there's a rule that doesn't allow me to do X or Y, I don't really care because the agent before you decided that. So you should be able to either think about something better or just do shit.",
-        "hash": "e875d99405668d93",
-        "what": "Four sessions (Lower 1, Upper 1, Lower 2, Upper 2) on Mon, Tue, Thu, Fri, 16 sets each, every block a pair. Legs and glutes first, step-ups and a Smith hip thrust in Lower 1, Bulgarian split squat and Copenhagen plank in Lower 2, chest twice (bench, incline) plus push-ups, overhead press twice, pull-ups added."
+        "hash": "1e50ff8b4b0cb348",
+        "what": "Four sessions (Lower 1, Upper 1, Lower 2, Upper 2) on Mon, Tue, Thu, Fri, 16 sets each, every block a pair. Legs and glutes first, step-ups and a Smith hip thrust in Lower 1, Bulgarian split squat and Copenhagen plank in Lower 2, chest twice (bench, incline) plus push-ups, overhead press twice, band-assisted pull-ups added."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -1164,7 +1164,7 @@
           "role": "main",
           "pairing": "alternate",
           "label": "Overhead press and pull-up",
-          "why": "The barbell overhead press in the rack, and pull-ups on the bar on top of the same rack, taking turns.",
+          "why": "The barbell overhead press in the rack, and band-assisted pull-ups on the bar on top of the same rack, taking turns.",
           "exercises": [
             {
               "id": "bb-overhead-press",
@@ -1189,19 +1189,19 @@
               ]
             },
             {
-              "id": "pullup",
-              "name": "Pull-Up",
+              "id": "band-assisted-pullup",
+              "name": "Band-Assisted Pull-Up",
               "sets": 3,
               "reps": "6",
               "rest": "90s",
               "zone": "rack",
               "station": "rack-pullup-bar",
               "log": true,
-              "cue": "The bar on top of the rack. Hang with straight arms, hands a little wider than your shoulders. Pull your elbows down toward your ribs until your chin is over the bar, then lower all the way to straight arms. No swinging. If you get fewer than 6 clean reps, stop there and type what you got.",
+              "cue": "First try. Loop a band over the bar on top of the rack, pull one end through the other, and put one knee in the loop. Hands a little wider than your shoulders. Pull your elbows down toward your ribs until your chin is over the bar, then lower slowly to straight arms. Do what you can and type the reps. Same band every time; when 10 is easy, use a lighter band.",
               "progression": "reps",
               "bodyweight": true,
               "rangeWidth": 4,
-              "whyHere": "pull-ups on the bar on top of the same rack",
+              "whyHere": "band-assisted pull-ups on the bar on top of the same rack",
               "alts": [
                 {
                   "id": "assisted-pullup",

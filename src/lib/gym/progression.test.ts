@@ -522,6 +522,42 @@ check(
   '105 (with the default 5 it asked for 110, a pin two steps up)',
 );
 
+/* ---- one more rep than his best set, 2026-10-04, on his real rows ---------------------------------
+ * The engine asked for the TOP of the range after any in-range session: 8/8/8 on the pulldown in an
+ * 8 to 12 range became 12, and 6/6/5 on the row became 8. It now holds the weight and asks for his
+ * best set plus one, capped at the top. */
+const ON = '2026-10-05';
+check(
+  'pulldown 180 x 8/8/8 in 8 to 12 asks 180 x 9, not 12',
+  suggest(logged('2026-09-28', [[180, 8], [180, 8], [180, 8]]), { targetReps: 8, rangeWidth: 4, increment: 2.5, today: ON, recent: [logged('2026-09-28', [[180, 8], [180, 8], [180, 8]])] }),
+  (s) => s.weight === 180 && s.reps === 9,
+  '180 x 9',
+);
+check(
+  'row 175 x 6/6/5 in 8 to 10 asks 175 x 7, not 8',
+  suggest(logged('2026-10-03', [[175, 6], [175, 6], [175, 5]]), { targetReps: 8, rangeWidth: 2, today: ON, recent: [logged('2026-10-03', [[175, 6], [175, 6], [175, 5]])] }),
+  (s) => s.weight === 175 && s.reps === 7,
+  '175 x 7',
+);
+check(
+  'reverse fly 15 x 15/15/15 in 12 to 20 asks 15 x 16, not 20',
+  suggest(logged('2026-10-03', [[15, 15], [15, 15], [15, 15]]), { targetReps: 12, rangeWidth: 8, ladder: DB, today: ON, recent: [logged('2026-10-03', [[15, 15], [15, 15], [15, 15]])] }),
+  (s) => s.weight === 15 && s.reps === 16,
+  '15 x 16',
+);
+check(
+  'lateral raise 17.5 x 17/17/20 in 12 to 20 asks 17.5 x 20, never past the top',
+  suggest(logged('2026-10-03', [[17.5, 17], [17.5, 17], [17.5, 20]]), { targetReps: 12, rangeWidth: 8, ladder: DB, today: ON, recent: [logged('2026-10-03', [[17.5, 17], [17.5, 17], [17.5, 20]])] }),
+  (s) => s.weight === 17.5 && s.reps === 20,
+  '17.5 x 20 (best 20 plus one, capped at the top of 20)',
+);
+check(
+  'every set at the top still moves the weight up',
+  suggest(logged('2026-10-03', [[180, 12], [180, 12], [180, 12]]), { targetReps: 8, rangeWidth: 4, increment: 2.5, today: ON }),
+  (s) => s.weight === 182.5 && s.reps === 8,
+  '182.5 x 8',
+);
+
 console.log('-'.repeat(70));
 console.log(`${ran} cases, ${failed} failed`);
 process.exit(failed ? 1 : 0);
