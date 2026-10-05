@@ -760,6 +760,38 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     return sets[effId]?.[idx] ?? { weight: '', reps: '', done: false };
   }
 
+  /* ---- THE GHOST, restored 2026-10-04 ----
+   *
+   * His decision, 2026-06-01 (HealthOS/knowledge/gym-ux-decisions.md, Phase 1): an empty box shows
+   * the number it would hold if he did the set as suggested, in muted italic, and ticking the set
+   * commits it. Set 1 shows the engine's suggestion; set 2 on shows what he entered or accepted in
+   * the nearest set above, because the second set of a lift is almost always the first one again.
+   * It shipped in the laptop app and was lost in the 2026-08-10 port, which left him typing every
+   * number from blank, and left a tick on an untouched set saving `done` with no weight and no
+   * reps: a set progression cannot read (see HISTORY in src/lib/gym/db.ts).
+   *
+   * The ghost is the input's PLACEHOLDER, never its value. A placeholder cannot be mistaken for a
+   * logged number by the code (nothing reads it, nothing posts it on blur) and the first keystroke
+   * replaces it with no select-all dance. Only `commitGhosts` turns it into data, and only on a tick.
+   * '' means there is nothing to suggest. */
+  function ghostFor(id: string, idx: number, field: 'weight' | 'reps', suggested: number | null | undefined): string {
+    const arr = sets[id] ?? [];
+    for (let i = idx - 1; i >= 0; i--) {
+      const v = arr[i]?.[field];
+      if (v !== undefined && v !== '') return v;
+    }
+    return suggested != null ? String(suggested) : '';
+  }
+
+  /** The set as it will be saved when ticked: every box he did not type takes its ghost. A box he
+   *  typed in is his and is never replaced. A disabled weight box (bodyweight) has no ghost. */
+  function commitGhosts(id: string, idx: number, entry: SetEntry, sugg: Suggestion | undefined, weighted: boolean): SetEntry {
+    const out = { ...entry };
+    if (weighted && out.weight === '') out.weight = ghostFor(id, idx, 'weight', sugg?.weight);
+    if (out.reps === '') out.reps = ghostFor(id, idx, 'reps', sugg?.reps);
+    return out;
+  }
+
   function updateSet(effId: string, idx: number, patch: Partial<SetEntry>) {
     setSets((prev) => {
       const arr = prev[effId] ? [...prev[effId]!] : [];
@@ -887,8 +919,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     setExNoteBody('');
   }
 
+  /* A TICK ACCEPTS THE GHOST. Un-ticking keeps the numbers: they are his now, and clearing them would
+     make an accidental double tap cost him the set. */
   function toggleDone(slotId: string, eff: Exercise, idx: number) {
-    const entry = { ...getSet(eff.id, idx), done: !getSet(eff.id, idx).done };
+    const cur = getSet(eff.id, idx);
+    const entry = cur.done
+      ? { ...cur, done: false }
+      : { ...commitGhosts(eff.id, idx, cur, plan[eff.id]?.suggestion, !eff.bodyweight), done: true };
     updateSet(eff.id, idx, entry);
     autosave(slotId, eff, idx, entry);
     if (entry.done) startTimer(eff.name, restSeconds(eff.rest));
@@ -931,6 +968,22 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    *  are alternatives on two blocks, and offering one on the second card while the first was already
    *  doing it put two cards on one (date, exercise, set) key, each writing the other's rows. */
   const effIdsNow = new Set(blocks.flatMap((b) => b.exercises.map((e) => effOf(e).id)));
+
+  /* THE ONE HINT, on the first lift that has a suggestion and no set done yet. Once per page, not
+     per card: it teaches the tick, and ten copies of it would be the wall of text note #12 asked to
+     remove. When every suggested lift has a set in it, it is gone. */
+  const hintSlot = (() => {
+    for (const b of blocks) {
+      for (const e of b.exercises) {
+        if (!e.log) continue;
+        const eff = effOf(e);
+        if (!plan[eff.id]?.suggestion) continue;
+        if ((sets[eff.id] ?? []).some(performed)) continue;
+        return e.id;
+      }
+    }
+    return null;
+  })();
 
   function persistSwaps(next: Record<string, Alt>) {
     try {
@@ -1389,18 +1442,27 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                   <div className="sets">
                     {Array.from({ length: Math.max(eff.sets + (extraSets[eff.id] ?? 0), sets[eff.id]?.length ?? 0) }).map((_, i) => {
                       const entry = getSet(eff.id, i);
+                      /* No ghost on a done row: what is there is what was saved, and a suggestion
+                         beside it would read as a number he logged. */
+                      const gw = !eff.bodyweight && !entry.done && entry.weight === '' ? ghostFor(eff.id, i, 'weight', p?.suggestion.weight) : '';
+                      const gr = !entry.done && entry.reps === '' ? ghostFor(eff.id, i, 'reps', p?.suggestion.reps) : '';
+                      const repUnit = eff.timed ? 's' : 'reps';
                       return (
                         <div className="set-row" key={i}>
                           <span className="n">{i + 1}</span>
                           <input
-                            type="number" inputMode="decimal" placeholder={eff.bodyweight ? 'BW' : 'lb'}
+                            type="number" inputMode="decimal"
+                            placeholder={eff.bodyweight ? 'BW' : gw ? `${gw} lb` : 'lb'}
+                            className={gw ? 'ghost' : undefined} data-ghost={gw || undefined}
                             value={entry.weight}
                             disabled={!!eff.bodyweight || sessionRead === 'loading'}
                             onChange={(e) => updateSet(eff.id, i, { weight: e.target.value })}
                             onBlur={() => autosave(ex.id, eff, i, getSet(eff.id, i))}
                           />
                           <input
-                            type="number" inputMode="decimal" placeholder={eff.timed ? 's' : 'reps'}
+                            type="number" inputMode="decimal"
+                            placeholder={gr ? `${gr} ${repUnit}` : repUnit}
+                            className={gr ? 'ghost' : undefined} data-ghost={gr || undefined}
                             value={entry.reps}
                             disabled={sessionRead === 'loading'}
                             onChange={(e) => updateSet(eff.id, i, { reps: e.target.value })}
@@ -1415,6 +1477,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                         </div>
                       );
                     })}
+                    {hintSlot === ex.id && <div className="set-hint">tap the circle to accept · tap a number to change</div>}
                     {/* ONE MORE ROW THAN IS ON SCREEN NOW, since 2026-09-27. It added one to a counter
                         that the row count took the max of, so on a card whose log already held more
                         sets than the prescription (a fourth set logged, then a reload) the tap changed
@@ -1609,18 +1672,24 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                        entry has no sets, reps, rest or cue: those belong to a SLOT and this is not
                        one. `autosave` needs a name and an id and reads nothing else off it. */
                     const asEx = { ...chosen, sets: 3, reps: '', rest: lead.rest, cue: '' } as unknown as Exercise;
+                    /* CARRY-FORWARD ONLY. A fill is not in the plan read, so set 1 has no
+                       suggestion to show; sets 2 and 3 show what he put in the set above. */
+                    const gw = !entry.done && entry.weight === '' ? ghostFor(chosen.id, i, 'weight', null) : '';
+                    const gr = !entry.done && entry.reps === '' ? ghostFor(chosen.id, i, 'reps', null) : '';
                     return (
                       <div className="set-row" key={i}>
                         <span className="n">{i + 1}</span>
                         <input
-                          type="number" inputMode="decimal" placeholder="lb"
+                          type="number" inputMode="decimal" placeholder={gw ? `${gw} lb` : 'lb'}
+                          className={gw ? 'ghost' : undefined} data-ghost={gw || undefined}
                           value={entry.weight}
                           disabled={sessionRead === 'loading'}
                           onChange={(e) => updateSet(chosen.id, i, { weight: e.target.value })}
                           onBlur={() => autosave(chosen.id, asEx, i, getSet(chosen.id, i), lead.id)}
                         />
                         <input
-                          type="number" inputMode="decimal" placeholder="reps"
+                          type="number" inputMode="decimal" placeholder={gr ? `${gr} reps` : 'reps'}
+                          className={gr ? 'ghost' : undefined} data-ghost={gr || undefined}
                           value={entry.reps}
                           disabled={sessionRead === 'loading'}
                           onChange={(e) => updateSet(chosen.id, i, { reps: e.target.value })}
@@ -1630,7 +1699,10 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                           type="button" aria-label="mark set done"
                           className={`done-toggle${entry.done ? ' on' : ''}`}
                           onClick={() => {
-                            const next = { ...getSet(chosen.id, i), done: !getSet(chosen.id, i).done };
+                            const cur = getSet(chosen.id, i);
+                            const next = cur.done
+                              ? { ...cur, done: false }
+                              : { ...commitGhosts(chosen.id, i, cur, undefined, true), done: true };
                             updateSet(chosen.id, i, next);
                             autosave(chosen.id, asEx, i, next, lead.id);
                             /* NO REST TIMER OFF A PARTNER. It rides inside the lead lift's rest,
