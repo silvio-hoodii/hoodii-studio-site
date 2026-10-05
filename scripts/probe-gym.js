@@ -257,6 +257,28 @@
   const cardBySlot = (slot) => $$('.ex[data-slot]').find((e) => e.dataset.slot === slot) || null;
   const firstInputs = (c) => $$('input', $('.set-row', c));
 
+  /* A weighted card no test has touched: every row empty and not done, and a ghost in both boxes of
+     set 1, which means the plan read gave it a suggestion. Searched from the bottom of the day. */
+  function untouchedGhostCard() {
+    const cards = $$('.ex[data-slot]').filter((c) => !$('.swapped-note', c)).reverse();
+    for (const c of cards) {
+      const rows = $$('.set-row', c);
+      if (rows.length < 2) continue;
+      const clean = rows.every((row) => {
+        const [w, r] = $$('input', row);
+        const d = $('.done-toggle', row);
+        return w && r && d && !w.disabled && !r.disabled && w.value === '' && r.value === '' && !d.classList.contains('on');
+      });
+      const [w0, r0] = $$('input', rows[0]);
+      if (clean && w0.dataset.ghost && r0.dataset.ghost) return c;
+    }
+    return null;
+  }
+  async function dismissTimer() {
+    const bar = $('.timer-bar');
+    if (bar && !bar.classList.contains('off')) { $('button', bar)?.click(); await sleep(150); }
+  }
+
   function clearQueueKeys() {
     try {
       for (let i = localStorage.length - 1; i >= 0; i--) {
@@ -588,6 +610,108 @@
       $('button', bar).click();
       await sleep(200);
       return { pass: before && bar.classList.contains('off'), detail: { visibleBefore: before, visibleAfter: !bar.classList.contains('off') } };
+    },
+
+    /* ---- the ghost: a suggestion in an empty box, committed by the tick (restored 2026-10-04) ----
+     *
+     * His decision of 2026-06-01, lost in the 2026-08-10 port: an untouched set shows the suggestion
+     * in muted italic and a tick saves it. Without it a tick on an untouched set saved `done` with no
+     * weight and no reps, which progression cannot read. These three drive the tick and read the
+     * POST body, because the failure is in what reaches the server, not in what the box looks like.
+     *
+     * Each takes a card nobody has touched yet, searched from the BOTTOM of the day, because the
+     * tests above all work on the first cards. Each puts the rest timer away when it is done. */
+    async ghostTickCommitsTheSuggestion() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = untouchedGhostCard();
+      if (!c) return { pass: false, detail: 'no untouched weighted card with a ghost on set 1 (no suggestion came back from the plan read?)' };
+      const name = text($('.ex-name', c));
+      const row = $('.set-row', c);
+      const [w, r] = $$('input', row);
+      const gw = w.dataset.ghost;
+      const gr = r.dataset.ghost;
+      /* Set 1's ghost IS the suggestion printed on the card, "135 lb × 8". */
+      const m = /^([\d.]+) lb × (\d+)/.exec(text($('.ex-suggest', c)) || '');
+      const looksLikeASuggestion =
+        getComputedStyle(w, '::placeholder').fontStyle === 'italic' && w.value === '' && w.placeholder.startsWith(gw);
+      const hints = $$('.set-hint').length;
+      const grab = since();
+      $('.done-toggle', row).click();
+      await sleep(300);
+      const sent = grab().filter((x) => x.url.includes('/gym/api/set'));
+      const body = sent[sent.length - 1]?.body;
+      const after = $$('input', $('.set-row', cardBySlot(c.dataset.slot)));
+      await dismissTimer();
+      return {
+        pass: !!m && gw === m[1] && gr === m[2] && looksLikeASuggestion && hints === 1
+          && sent.length === 1 && body?.done === true && body?.setIdx === 1
+          && body?.weight === Number(gw) && body?.reps === Number(gr)
+          && after[0]?.value === gw && !after[0]?.classList.contains('ghost'),
+        detail: {
+          exercise: name, suggestionOnCard: m ? `${m[1]} x ${m[2]}` : null, ghost: { weight: gw, reps: gr },
+          ghostIsItalic: looksLikeASuggestion, hintsOnPage: hints, posts: sent.length, body,
+          boxAfterTick: after[0]?.value ?? null,
+        },
+      };
+    },
+
+    async typedWeightOverridesOnlyTheWeight() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = untouchedGhostCard();
+      if (!c) return { pass: false, detail: 'no second untouched weighted card with a ghost' };
+      const slot = c.dataset.slot;
+      const row = () => $('.set-row', cardBySlot(slot));
+      const [w, r] = $$('input', row());
+      const gr = r.dataset.ghost;
+      const typed = Number(w.dataset.ghost) + 5;
+      type(w, String(typed)); blur(w);
+      await sleep(200);
+      const repsStillGhost = $$('input', row())[1].classList.contains('ghost');
+      const grab = since();
+      $('.done-toggle', row()).click();
+      await sleep(300);
+      const sent = grab().filter((x) => x.url.includes('/gym/api/set'));
+      const body = sent[sent.length - 1]?.body;
+      await dismissTimer();
+      return {
+        pass: repsStillGhost && sent.length === 1 && body?.done === true
+          && body?.weight === typed && body?.reps === Number(gr),
+        detail: { exercise: text($('.ex-name', c)), typedWeight: typed, repsGhost: gr, repsStillGhost, posts: sent.length, body },
+      };
+    },
+
+    /* Set 2's ghost is what set 1 was SAVED with: one value he typed (reps) and one he accepted
+       (weight), so both halves of carry-forward are on the line. */
+    async setTwoGhostIsSetOnesCommit() {
+      if (!state.patched) return { pass: false, detail: 'fetch not patched' };
+      await drain();
+      const c = untouchedGhostCard();
+      if (!c) return { pass: false, detail: 'no third untouched weighted card with a ghost' };
+      const slot = c.dataset.slot;
+      const rows = () => $$('.set-row', cardBySlot(slot));
+      const [w0, r0] = $$('input', rows()[0]);
+      const acceptedW = w0.dataset.ghost;
+      const typedR = Number(r0.dataset.ghost) + 2;
+      type(r0, String(typedR)); blur(r0);
+      await sleep(200);
+      $('.done-toggle', rows()[0]).click();
+      await sleep(300);
+      const [w1, r1] = $$('input', rows()[1]);
+      const ghost2 = { weight: w1.dataset.ghost ?? null, reps: r1.dataset.ghost ?? null };
+      const grab = since();
+      $('.done-toggle', rows()[1]).click();
+      await sleep(300);
+      const sent = grab().filter((x) => x.url.includes('/gym/api/set'));
+      const body = sent[sent.length - 1]?.body;
+      await dismissTimer();
+      return {
+        pass: ghost2.weight === acceptedW && ghost2.reps === String(typedR)
+          && sent.length === 1 && body?.setIdx === 2 && body?.done === true
+          && body?.weight === Number(acceptedW) && body?.reps === typedR,
+        detail: { exercise: text($('.ex-name', c)), set1Saved: { weight: acceptedW, reps: typedR }, set2Ghost: ghost2, set2Body: body },
+      };
     },
 
     /* ---- swapping ---- */

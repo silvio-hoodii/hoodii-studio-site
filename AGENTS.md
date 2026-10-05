@@ -399,8 +399,8 @@ note box at all.**
 ## THE GYM DATA PIPELINE, and what each activity actually holds
 
 Everything under `/gym` that is not a plan comes from the Samsung Health export on the laptop, via
-`healthos.db`, via `content/health/sync.mjs`, into Neon. The 07:15 scheduled task
-(`HealthOS/sync/run-health-sync.ps1`) runs the whole chain: pull the newest export from Drive, unzip
+`healthos.db`, via `content/health/sync.mjs`, into Neon. No scheduled task runs this (the 07:15 task was removed 2026-09-04). An agent runs
+`HealthOS/sync/run-health-sync.ps1` when Silvio says he uploaded a new export, and it runs the whole chain: pull the newest export from Drive, unzip
 it **and verify the unzip**, `parse-body-metrics.js` + `server/migrate-body-comp.mjs`,
 `import-watch-sessions.mjs`, `import-session-detail.mjs`, then the mirror.
 
@@ -455,7 +455,7 @@ read of /gym. Ship the code, confirm production is READY on that commit
 (`vercel api /v13/deployments/<url>` returns `readyState` and `meta.githubCommitSha`), then drop. The
 drop script re-counted the column's non-null rows and would have refused if any had appeared.
 
-**And the RIR guide stayed.** `content/gym/rir-guide.json` teaches what reps-in-reserve means, which
+**And the RIR guide stayed.** `content/gym/rir-guide.json` (since removed from the tree) taught what reps-in-reserve means, which
 is worth having whether the number is logged or not. Deleting the teaching along with the dead
 plumbing is the mistake available whenever a name is shared by a feature and its explainer.
 
@@ -611,7 +611,7 @@ accumulates things a reader has to work out are dead.
   only one that did. `cookieAuthorises` is edge-safe for the proxy, `isAuthed()` in
   `src/lib/auth-server.ts` is the server-component half, and **`scripts/lint-auth.mjs` fails the build
   on a second copy of either.** Its first live run found a THIRD copy the audit had missed, in
-  `src/app/french/page.tsx`, where an unset secret showed every anonymous visitor the edit controls.
+  `src/app/french/page.tsx` (since removed with the hoodii.studio `/french` page, 2026-09-27), where an unset secret showed every anonymous visitor the edit controls.
   The cookie is SET in one place, `src/lib/login-server.ts`; `/kitchen/api/unlock` (the inline
   unlock) calls `signInWithPassword` there since 2026-09-27 rather than carrying its own copy, so
   only the two lib files are in that linter's allowlist.
@@ -708,8 +708,8 @@ accumulates things a reader has to work out are dead.
   overhead press was the only main lift flat all year: at 65 lb, three sets of ten banks an
   estimated max of 86.7 and the jump to 70 demands 88.7. Fixed by a 2.5 lb increment on the cable
   stack (evidenced by the 72.5 and 87.5 he has logged on it) and a per-exercise `rangeWidth` on the
-  dumbbell lifts. It cannot live in `validate.mjs`, which is offline by design, so the 07:15 sync
-  task runs it daily: the check depends on his current loads and can break with no file edited.
+  dumbbell lifts. It cannot live in `validate.mjs`, which is offline by design, so it runs inside the health sync
+  (`run-health-sync.ps1`, started by an agent after each export) and `check-ladder.mjs` finishes it: the check depends on his current loads and can break with no file edited.
 - **`.ex` ON /gym MEANS AN EXERCISE, and nothing else may answer to it.** `scripts/probe-gym.js`
   selects it to find the day's cards. On 2026-08-27 a notes block reused it and **all 22 tests
   passed** while the harness's `cardNames()` went from 10 entries to 28, because `wholeDayIsShown`
@@ -974,7 +974,7 @@ gets its path.
 code runs, and Provisioned Memory for an instance's whole lifetime *including* time spent waiting
 on I/O. `/reading/shelf` was 13ms of Active CPU against a 153ms P75 time to first byte, so what it
 cost was memory held open waiting for Postgres, not compute. **Count round trips, not work.** That
-page issued nine separate HTTP queries per hit; `getShelfBundle` in `src/lib/reading/shelf-db.ts`
+page issued nine separate HTTP queries per hit; `getShelfBundle` in `src/lib/reading/shelf-db.ts` (since removed)
 sends the same nine as one `sql.transaction`. A `Promise.all` makes queries concurrent, not free.
 
 `/` and `/opengraph-image` were checked at the same time and left alone: the first already carries
