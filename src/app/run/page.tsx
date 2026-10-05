@@ -6,6 +6,8 @@ import SubNav from '@/components/training/SubNav';
 import RecentSessions from '@/components/training/RecentSessions';
 import Cues from '@/components/training/Cues';
 import type { ConditioningWeek } from '@/lib/gym/types';
+import { runWeekAt, SHORT_DAY } from '@/lib/gym/run-week';
+import { today } from '@/lib/day';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,16 +29,31 @@ export const dynamic = 'force-dynamic';
  * every view is a URL he can bookmark. */
 /* OUTDOORS SINCE 2026-10-04. Each week is a list of runs, each a WATCH distance: his rule the same
  * evening is that a distance on this page is the number his watch shows, the session total with any
- * walking in it, never a running-only figure. Minutes are DERIVED from that distance and
- * `run.pace.sessionSecPerKm` (his own easy session, walks included), never typed, so a distance edit
- * cannot leave a stale time beside it. content/gym/validate.mjs holds the 10% weekly cap. */
-function minutes(km: number, secPerKm: number): number {
+ * walking in it, never a running-only figure, in km to two decimals as the watch prints it. Minutes
+ * are DERIVED from that distance and `run.pace.sessionSecPerKm`, a [low, high] range from two of his
+ * own sessions, never typed, so a distance edit cannot leave a stale time beside it. A range, not one
+ * number, because how much he walks decides it. content/gym/validate.mjs holds the 10% weekly cap,
+ * the rest rule for every week, and the lift-day cap. */
+function mins(km: number, secPerKm: number): number {
   return Math.round((km * secPerKm) / 60);
 }
-function weekFigures(w: ConditioningWeek, secPerKm: number) {
-  const runs = w.runs.map((r) => ({ ...r, min: minutes(r.km, secPerKm) }));
-  const km = w.runs.reduce((a, r) => a + r.km, 0);
-  return { runs, totalMin: runs.reduce((a, r) => a + r.min, 0), km };
+function range(lo: number, hi: number): string {
+  return lo === hi ? `about ${lo} min` : `about ${lo} to ${hi} min`;
+}
+function weekFigures(w: ConditioningWeek, [lo, hi]: [number, number]) {
+  const runs = w.runs.map((r) => ({ ...r, lo: mins(r.km, lo), hi: mins(r.km, hi) }));
+  return {
+    runs,
+    lo: runs.reduce((a, r) => a + r.lo, 0),
+    hi: runs.reduce((a, r) => a + r.hi, 0),
+  };
+}
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function longDate(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  const wd = new Date(Date.UTC(y ?? 0, (m ?? 1) - 1, d ?? 1, 12)).getUTCDay();
+  const name = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][wd];
+  return `${name} ${d} ${MONTH[(m ?? 1) - 1]}`;
 }
 
 const SUB_TABS = [
@@ -60,7 +77,14 @@ export default async function RunPage({
      the last session and a separate getLastSession call would be the same row fetched twice. */
   const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
   const lastSession = recent[0] ?? null;
-  const { sessionSecPerKm } = c.run.pace;
+  const span = c.run.pace.sessionSecPerKm;
+  const at = runWeekAt(c.run.startsOn, today(), c.run.weeks.length);
+  /* Where he is in the plan, a fact about him: before the start it names the start day. */
+  const where = at.before
+    ? `Week 1 starts ${longDate(c.run.startsOn)}.`
+    : at.after
+      ? `The ${c.run.weeks.length} weeks are done. Reassess before going on.`
+      : `This is week ${at.week} of ${c.run.weeks.length}.`;
   const counts = c.run.weeks.map((w) => w.runs.length);
   const lo = Math.min(...counts);
   const hi = Math.max(...counts);
@@ -79,7 +103,7 @@ export default async function RunPage({
               there is no article to get wrong rather than branching on the digit: 8, 11 and 18 all
               take "an" and the next edit to the plan would have reintroduced it. */}
           <p className="lede">
-            {c.run.surface}, {perWeek}, over {c.run.weeks.length} weeks.
+            {c.run.surface}, {perWeek}, over {c.run.weeks.length} weeks. {where}
           </p>
           <LastSession s={lastSession} />
           <RecentSessions sessions={recent} kind="treadmill" />
@@ -105,16 +129,10 @@ export default async function RunPage({
               <div className="ex-cue">{c.run.howHard.primary}</div>
               <div className="ex-cue">{c.run.howHard.secondary}</div>
             </div>
-            {/* THE PACE, above the table: the one number he checks on the watch mid-run. The belt
-                block that stood here went with the treadmill on 2026-10-04. */}
-            <div className="ex">
-              <div className="ex-name">Pace</div>
-              <div className="ex-meta">
-                Run at <b className="nowrap">{c.run.pace.run}</b>. {c.run.pace.walk}
-              </div>
-              <div className="ex-cue">{c.run.pace.check}</div>
-            </div>
+            {/* The Pace block that stood here (8:00 per km, a pace check) was DELETED 2026-10-04 on
+                review: pace never kept him easy, the talk test and the 140 did. run.howHard.$why. */}
           </div>
+          <p className="ex-cue">{where}</p>
           <div className="table-scroll">
             <table className="plan-table">
               <thead>
@@ -131,19 +149,20 @@ export default async function RunPage({
               </thead>
               <tbody>
                 {c.run.weeks.map((w) => {
-                  const f = weekFigures(w, sessionSecPerKm);
+                  const f = weekFigures(w, span);
                   return (
-                    <tr key={w.week}>
+                    <tr key={w.week} className={w.week === at.week && !at.after ? 'now' : undefined}>
                       <td className="tnum">{w.week}</td>
                       <td>
                         {f.runs.map((r) => (
                           <div key={r.day}>
-                            {r.day} {r.km.toFixed(1)} km, about {r.min} min
+                            {SHORT_DAY[r.day] ?? r.day} {r.km.toFixed(2)} km
+                            <div className="quiet">{range(r.lo, r.hi)}</div>
                           </div>
                         ))}
                         {w.note && <div className="quiet">{w.note}</div>}
                       </td>
-                      <td className="tnum">{f.totalMin} min</td>
+                      <td className="tnum">{f.lo === f.hi ? f.lo : `${f.lo} to ${f.hi}`} min</td>
                     </tr>
                   );
                 })}

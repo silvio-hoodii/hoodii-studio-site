@@ -356,12 +356,16 @@ export interface Conditioning {
   run: {
     title: string;
     surface: string;
-    sessionsPerWeek: number;
     startedFrom: string;
+    /** Monday of week 1, YYYY-MM-DD. /run and /health count the plan week from it. */
+    startsOn: string;
+    /** His current weekly watch distance, km. validate.mjs opens the plan within 10% of it. */
+    currentWeekKm: number;
     why: Prose;
     howHard: { primary: string; secondary: string };
-    /** Outdoor pace, from his own easy run. The two numbers feed the watch-distance line. */
-    pace: { run: string; walk: string; check: string; sessionSecPerKm: number };
+    /** [low, high] seconds per km for a whole easy session, walks included, from two of his runs.
+     *  The page turns each run's distance into a minute range with it. */
+    pace: { sessionSecPerKm: [number, number] };
     weeks: ConditioningWeek[];
     rules: string[];
   cues?: Cue[];

@@ -128,7 +128,12 @@ export function LengthBars({ lengths, poolLength }: { lengths: LengthRow[]; pool
 export function SessionStats({ s }: { s: SessionDetail }) {
   const items: { k: string; v: string }[] = [];
   if (s.minutes) items.push({ k: 'Time', v: `${s.minutes} min` });
-  if (s.distanceM) items.push({ k: 'Distance', v: `${Math.round(s.distanceM).toLocaleString()} m` });
+  /* A RUN IS IN km TO TWO DECIMALS, the way his watch shows it (5.03, not 5,028 m): his rule,
+     2026-10-04. A swim stays in metres, which is what a pool counts. */
+  if (s.distanceM) {
+    const run = s.kind === 'running' || s.kind === 'treadmill';
+    items.push({ k: 'Distance', v: run ? `${(s.distanceM / 1000).toFixed(2)} km` : `${Math.round(s.distanceM).toLocaleString()} m` });
+  }
   if (s.kind === 'swimming') {
     if (s.lengths) items.push({ k: 'Lengths', v: String(s.lengths) });
     if (s.avgSwolf != null) items.push({ k: 'SWOLF', v: String(s.avgSwolf) });

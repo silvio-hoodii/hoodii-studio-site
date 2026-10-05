@@ -21,7 +21,7 @@ export const metadata: Metadata = {
    * other page on the site reads "X . Silvio Neyra". Same fix, and same reason, as the comment in
    * src/app/kitchen/layout.tsx. */
   title: { default: 'Run', template: '%s · Silvio Neyra' },
-  description: 'My running: the outdoor walk-run build, the pace to hold, and how to run it.',
+  description: 'My running: the outdoor build from the 5 km I already run, and how to run it easy.',
   /* NOINDEX, matching /gym and /health, which carry the same kind of thing: his own training and
    * his own numbers. /swim is currently indexable and this route did NOT copy that, deliberately.
    * Two sibling routes disagreeing about whether a training log belongs in a search index is worth
