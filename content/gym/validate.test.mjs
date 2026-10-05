@@ -338,7 +338,8 @@ const crossDayReference = (p, hostDay) => {
        a card reads "Session A", which is what DAY_OF in validate.mjs maps and what the card prints.
        Returning the raw key here would have built a sentence saying "is on a, not here", which the
        gate cannot resolve, and the case would have failed for a reason unrelated to what it tests. */
-    return { name, homeDay, absentDay, homeLabel: `Session ${homeDay.toUpperCase()}`, absentLabel: `Session ${absentDay.toUpperCase()}` };
+    /* THE SESSION'S OWN NAME since 2026-10-04 ("Lower 1"), which is what DAY_OF in validate.mjs maps. */
+    return { name, homeDay, absentDay, homeLabel: p.days[homeDay].name, absentLabel: p.days[absentDay].name };
   }
   throw new Error(`no exercise sits on exactly one day other than ${hostDay} while being absent, alts included, from a third day, so neither cross-reference case can be built; repoint them`);
 };
@@ -904,8 +905,9 @@ const CASES = [
        Every hardcoded exercise name in this file has gone stale at least once. */
     name: 'a real cross-reference to another day still passes',
     mutate: (p) => {
-      const elsewhere = crossDayReference(p, 'a');
-      const b = p.days.a.blocks.find((x) => x.why);
+      const host = Object.keys(p.days)[0];
+      const elsewhere = crossDayReference(p, host);
+      const b = p.days[host].blocks.find((x) => x.why);
       b.why = `${b.why} The ${elsewhere.name} is in ${elsewhere.homeLabel}, not here.`;
     },
     expect: null,
@@ -913,8 +915,9 @@ const CASES = [
   {
     name: 'a cross-reference to a day that does NOT have the exercise is refused',
     mutate: (p) => {
-      const elsewhere = crossDayReference(p, 'a');
-      const b = p.days.a.blocks.find((x) => x.why);
+      const host = Object.keys(p.days)[0];
+      const elsewhere = crossDayReference(p, host);
+      const b = p.days[host].blocks.find((x) => x.why);
       b.why = `${b.why} The ${elsewhere.name} is in ${elsewhere.absentLabel}, not here.`;
     },
     expect: 'it is not there either',
@@ -1059,7 +1062,7 @@ const CASES = [
          that optional means skipped), so the case synthesises one: a copy of the front squat block,
          relabelled accessory with fresh ids, dropped in front of the first main. A leg lift, so the
          warm-up region rule stays quiet and the rule under test is the one that fires. */
-      const day = p.days.b;
+      const day = Object.values(p.days).find((d) => d.blocks.some((b) => b.role === 'main' && b.exercises[0].id === 'front-squat'));
       const firstMain = day.blocks.findIndex((b) => b.role === 'main');
       const blk = structuredClone(day.blocks.find((b) => b.role === 'main' && b.exercises[0].id === 'front-squat'));
       blk.role = 'accessory';
@@ -1122,7 +1125,7 @@ const CASES = [
       /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1147,7 +1150,7 @@ const CASES = [
       /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1161,39 +1164,43 @@ const CASES = [
     name: 'a structural change that also rewrites daysHash, with no words for it, is refused',
     keepFreeze: true,
     mutate: (p) => {
-      const acc = p.days.a.blocks.find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.daysHash = structuralHash(p.days);
     },
     expect: 'no entry in frozen.changes carries that hash',
   },
+  /* 'a main lift with two sets is refused' and 'a session scheduled once a week is refused' WERE
+     DELETED 2026-10-04 with the rules they tested (three sets per main lift, two weekdays per session):
+     an agent's dose design, removed on his words that night. The schedule rule that replaced them is a
+     data check, tested here. */
   {
-    name: 'a main lift with two sets is refused',
-    mutate: (p) => { p.days.b.blocks.find((b) => b.role === 'main').exercises[0].sets = 2; p.frozen.daysHash = structuralHash(p.days); },
-    expect: 'three sets',
+    name: 'two sessions on one weekday are refused',
+    mutate: (p) => { const [a, b] = Object.values(p.days); b.scheduledOn = [a.scheduledOn[0]]; },
+    expect: 'is scheduled for both',
   },
   {
-    name: 'a session scheduled once a week is refused',
-    mutate: (p) => { p.days.a.scheduledOn = ['monday']; p.frozen.daysHash = structuralHash(p.days); },
-    expect: 'exactly two distinct weekdays',
+    name: 'a weekday that is not a weekday is refused',
+    mutate: (p) => { Object.values(p.days)[0].scheduledOn = ['someday']; },
+    expect: 'non-empty list of distinct weekdays',
   },
   /* 'the athletic session scheduled twice a week is refused' WAS DELETED 2026-09-06 with Session C.
      The rule (a session with no main lifts is scheduled once) is still in validate.mjs and has no
      instance in the week to run against. When a no-main session returns, so does this case. */
   {
     name: 'a rep window wider than eight is refused',
-    mutate: (p) => { p.days.a.blocks[0].exercises[0].rangeWidth = 9; },
+    mutate: (p) => { Object.values(p.days)[0].blocks[0].exercises[0].rangeWidth = 9; },
     expect: 'must be 1 to 8',
   },
   {
     name: 'a rep window of eight is still allowed',
-    mutate: (p) => { p.days.a.blocks[0].exercises[0].rangeWidth = 8; },
+    mutate: (p) => { Object.values(p.days)[0].blocks[0].exercises[0].rangeWidth = 8; },
     expect: null,
   },
   {
     name: 'a cue longer than eighty words is refused',
-    mutate: (p) => { const ex = p.days.a.blocks[0].exercises[0]; ex.cue = `${ex.cue} ${Array.from({ length: 40 }, () => 'more').join(' ')}`; },
+    mutate: (p) => { const ex = Object.values(p.days)[0].blocks[0].exercises[0]; ex.cue = `${ex.cue} ${Array.from({ length: 40 }, () => 'more').join(' ')}`; },
     expect: 'ceiling is 80 words',
   },
   {
@@ -1428,7 +1435,8 @@ function agree(name, ok, detail) {
     ['two machines that are not adjacent are refused', calf, legCurl, false],
     ['adjacency may not cross a zone', bar, pulldown, false],
     ['one cable column shared by two exercises is refused', pulldown, pulldown, false],
-    ['the rack shared by two exercises is refused, it is not declared shareable', rack, rack, false],
+    /* FLIPPED 2026-10-04: the rack is declared shareable (bench and row on one bar), his case (a). */
+    ['the rack shared by two exercises is legal, it is declared shareable', rack, rack, true],
   ];
 
   for (const [name, a, b, want] of cases) {

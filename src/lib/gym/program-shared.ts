@@ -4,12 +4,17 @@
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
-/** THE TABS, in order. A and B are the lifting rotation; C is the Saturday session since 2026-09-04.
- *  Four sessions keyed a to d before 2026-09-03, weekday names before that same day. */
-export const DAY_ORDER: DayKey[] = ['a', 'b'];
-/** THE ROTATION: the next lifting session is always the one of these not done last. C is outside
- *  it; cycle.ts offers C on its scheduled day and never counts it as a rotation step. */
-export const ROTATION: DayKey[] = ['a', 'b'];
+/** THE TABS, in order. Four sessions since 2026-10-04 (Lower 1, Upper 1, Lower 2, Upper 2), on his
+ *  words that night. Session A and B (keys 'a', 'b') ran 2026-09-06 to 2026-10-04; keys a to d
+ *  before 2026-09-03, weekday names before that. Old rows keep their keys and render by their stored
+ *  title, so no key is ever reused for a different session. */
+export const DAY_ORDER: DayKey[] = ['l1', 'u1', 'l2', 'u2'];
+/** THE ROTATION: the next lifting session is the one after the last one done, in this order, and
+ *  any length works. cycle.ts reads only this list. */
+export const ROTATION: DayKey[] = ['l1', 'u1', 'l2', 'u2'];
+/** The first day of the current rotation. Watch lifts before it are not steps of it: without this,
+ *  a rotation with nothing logged under its keys yet counted every watch lift ever recorded. */
+export const ROTATION_SINCE = '2026-10-05';
 
 /* The cycle is rolling: computeNextUp picks the next session from what was actually logged and from
  * what the watch saw. GymClient has derived a readable name from the day's own title since

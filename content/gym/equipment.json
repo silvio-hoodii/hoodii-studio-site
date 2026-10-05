@@ -51,7 +51,8 @@
           "count": "unknown",
           "confidence": "logged",
           "evidence": "Back squat to 185, BB bench to 185, BB row to 185, RDL to 225, BB OHP 115, front squat 115",
-          "sharedInOneWindow": false,
+          "sharedInOneWindow": true,
+          "sharedBecause": "2026-10-04, the four-session week: his own pairing rule, case (a), is 'same equipment', and two barbell lifts in one rack are that case. Bench then row on one bar costs a plate change and nothing else; the band Pallof press loops round a post of the rack he is already in. Was false from 2026-08-28, a reading of the cable-column complaint (note #27) applied to the rack too.",
           "adjacentTo": [
             "rack-pullup-bar"
           ],

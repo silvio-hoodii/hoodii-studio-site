@@ -399,6 +399,20 @@ check(
   '80, his own log',
 );
 
+check(
+  'a first-time hold does not ask for a weight',
+  suggest(null, plan({ type: 'timed', targetReps: 30 })),
+  (s) => s.weight === null && s.reps === 30 && !/weight/.test(s.reason),
+  'the seconds, no weight in the sentence',
+);
+
+check(
+  'a first-time bodyweight lift does not ask for a weight',
+  suggest(null, plan({ type: 'bodyweight', targetReps: 6 })),
+  (s) => s.weight === null && s.reps === 6 && !/weight/.test(s.reason),
+  'the reps, no weight in the sentence',
+);
+
 /* ---- the 2026-09-27 audit, run against this engine with edge cases -------------------------------
  * Each case is the audit's own input. Where the fix lives outside the engine (the assisted flag, the
  * cable increment) the case supplies what the plan route now derives and asserts what the engine does

@@ -46,7 +46,7 @@ interface Props {
   barbellIds: string[];
   /** The most recent session with logged work and the heaviest set of each lift in it. Rendered
    *  under the day title. His words, 2026-09-06: "I don't even know what I did last session." */
-  lastSession: { date: string; day: string | null; lifts: { id: string; name: string; weight: number | null; reps: number | null }[] } | null;
+  lastSession: { date: string; day: string | null; title: string | null; lifts: { id: string; name: string; weight: number | null; reps: number | null }[] } | null;
   /* NO `streak` PROP. It was passed in and read by the line removed on 2026-08-27 below, and a prop
      that arrives and is never read is the exact shape of the `rir` column this repo dropped the same
      day: declared in an interface, sent on every render, used by nothing. Removing it also drops a
@@ -1094,12 +1094,17 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   /* ONCE A DAY, since 2026-09-27. Every paired block in the week is 'fill', so the same sentence sat
    * on all eight of them; it is said on the first and the bracket carries it after that.
    *
-   * The 'alternate' branch is gone (no block uses it since 2026-09-06). validate.mjs still accepts
-   * the value, so an 'alternate' block would now get NO line rather than the sequence line, which is
-   * the wrong instruction for it. Restore the branch with the first block that uses it. */
+   * The 'alternate' branch was gone from 2026-09-06 and came back 2026-10-04 with the four-session
+   * week, below. */
   const firstFillIdx = blocks.findIndex((b) => b.pairing === 'fill' && b.exercises.length >= 2);
+  /* THE 'alternate' BRANCH IS BACK, 2026-10-04: the four-session week pairs two real lifts that take
+     turns (bench and row, press and pulldown). Said once a day, on the first such block, like 'fill'. */
+  const firstAltIdx = blocks.findIndex((b) => b.pairing === 'alternate' && b.exercises.length >= 2);
   function howToRun(block: { pairing: string; exercises: unknown[] }, bi: number): string | null {
     if (block.exercises.length < 2) return null;
+    if (block.pairing === 'alternate') {
+      return bi === firstAltIdx ? 'Take turns: a set of the first, rest, a set of the second, rest.' : null;
+    }
     /* Added 2026-08-21. Eleven of the thirteen paired blocks were a real lift plus a band, plank,
      * bridge or carry, and this line used to call them supersets. He said they were not, and he was
      * right. This says the true thing, and it is the one instruction on the page that makes the
@@ -1142,7 +1147,11 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
               today's, and the label has to say so. */}
           <span className="lasttime-k">{lastSession.date === date ? 'Today' : 'Last time'}</span>
           {' '}
-          {lastSession.day && (lastSession.day in program.days) ? splitName(program.days[lastSession.day as DayKey]) : 'a session'}
+          {lastSession.day && (lastSession.day in program.days)
+            ? splitName(program.days[lastSession.day as DayKey])
+            : lastSession.title
+              ? splitName({ title: lastSession.title, name: lastSession.title })
+              : 'a session'}
           {', '}
           {new Date(`${lastSession.date}T12:00:00Z`).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
           {lastSession.lifts.length > 0 && (
@@ -1308,7 +1317,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * things that are actually tied instead of swallowing the label as well. */}
       {blocks.map((block, bi) => (
         /* `data-role` is for the probe, which asserts no primer offers a fill. */
-        <div className={`exgroup${block.pairing === 'fill' && block.exercises.length >= 2 ? ' tied' : ''}`} key={bi} data-role={block.role}>
+        <div className={`exgroup${(block.pairing === 'fill' || block.pairing === 'alternate') && block.exercises.length >= 2 ? ' tied' : ''}`} key={bi} data-role={block.role}>
           <div className="exgroup-label">
             <span className="exgroup-n tnum">{bi + 1}/{blocks.length}</span>
             {block.label}

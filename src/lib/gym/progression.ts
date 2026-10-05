@@ -276,6 +276,10 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     if (plan.firstWeight && type === 'weighted') {
       return { weight: plan.firstWeight.weight, reps: bottom, reason: plan.firstWeight.say };
     }
+    /* A hold or a bodyweight lift has no weight to log, so "log your working weight" was the wrong
+       instruction on the side plank and the pull-up, both new on 2026-10-04. */
+    if (type === 'timed') return { weight: null, reps: bottom, reason: 'First try: hold what you can, up to the time shown, and type the seconds.' };
+    if (type === 'bodyweight') return { weight: null, reps: bottom, reason: 'First try: do what you can, up to the reps shown, and type the reps.' };
     return { weight: null, reps: bottom, reason: FIRST_TIME };
   }
 

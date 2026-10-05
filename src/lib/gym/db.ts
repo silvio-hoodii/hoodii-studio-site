@@ -508,6 +508,9 @@ export async function getRotationState(
   keys: string[],
   today: string,
   excludedIsodow: number[],
+  /** No watch date before this counts as a rotation step: the day the current rotation began. A
+   *  rotation with nothing logged under its keys yet would otherwise count every watch lift ever. */
+  since: string = '1970-01-01',
 ): Promise<{
   last: { date: string; day: string | null; status: string | null } | null;
   todayDay: string | null;
@@ -543,6 +546,7 @@ export async function getRotationState(
           select distinct w.date from health_watch_session w
           where w.kind = 'strength'
             and w.date > coalesce((select l.date from last l), '1970-01-01')
+            and w.date >= ${since}
             and w.date < ${today}
             and not (extract(isodow from w.date::date)::int = any(${excludedIsodow}::int[]))
             and not exists (select 1 from gym_set g where g.date = w.date and ${PERFORMED})
@@ -571,6 +575,10 @@ export async function getRotationState(
 export interface LastSessionSummary {
   date: string;
   day: string | null;
+  /** The title stamped on the session row when it ran. The page names a session from the live
+   *  programme by its key; a key the programme no longer has (Session A and B, retired 2026-10-04)
+   *  falls back to this, so the strip names the day he actually did. */
+  title: string | null;
   lifts: { id: string; name: string; weight: number | null; reps: number | null }[];
 }
 export async function getLastSessionSummary(): Promise<LastSessionSummary | null> {
@@ -589,13 +597,15 @@ export async function getLastSessionSummary(): Promise<LastSessionSummary | null
        order by date desc, logged_at desc nulls last, id desc
        limit 1
     )
-    select h.date as s_date, h.day as s_day, g.exercise_id, g.exercise_name, g.weight, g.reps
+    select h.date as s_date, h.day as s_day,
+           (select s.day_title from gym_session s where s.date = h.date and s.day is not distinct from h.day limit 1) as s_title,
+           g.exercise_id, g.exercise_name, g.weight, g.reps
       from head h
       join gym_set g on g.date = h.date and g.day is not distinct from h.day
      where ${HISTORY}
      order by (g.logged_at is null) asc, g.logged_at asc, g.id asc
   `;
-  const all = rows as unknown as { s_date: string; s_day: string | null; exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[];
+  const all = rows as unknown as { s_date: string; s_day: string | null; s_title: string | null; exercise_id: string; exercise_name: string | null; weight: number | null; reps: number | null }[];
   const head = all[0];
   if (!head) return null;
   const byId = new Map<string, { id: string; name: string; weight: number | null; reps: number | null }>();
@@ -610,7 +620,7 @@ export async function getLastSessionSummary(): Promise<LastSessionSummary | null
     const sameWeightMoreReps = (w ?? -1) === (cur.weight ?? -1) && (reps ?? 0) > (cur.reps ?? 0);
     if (heavier || sameWeightMoreReps) { cur.weight = w; cur.reps = reps; }
   }
-  return { date: head.s_date, day: head.s_day, lifts: [...byId.values()] };
+  return { date: head.s_date, day: head.s_day, title: head.s_title ?? null, lifts: [...byId.values()] };
 }
 
 /* `getTrainingDates` was here and is GONE, 2026-08-26. It existed to power a consecutive-day streak

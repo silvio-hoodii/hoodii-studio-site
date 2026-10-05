@@ -221,7 +221,7 @@ export function tierFor(tiers: Tier[], n: number): Tier {
  *  (`scheduledOn` carries the two weekdays). Per-session columns read A then B; WEEKLY totals in this
  *  file multiply each session's contribution by how many times a week it is scheduled, so a set in
  *  Session A counts twice in the weekly number and once in the A column. */
-export const COVERAGE_DAY_ORDER = ['a', 'b', 'c'];
+export const COVERAGE_DAY_ORDER = ['l1', 'u1', 'l2', 'u2'];
 
 /** One exercise's contribution to ONE muscle on ONE day. */
 export interface Contribution {
@@ -634,7 +634,12 @@ export function computeCoverage(
     }
   }
 
-  const dayOrder = COVERAGE_DAY_ORDER.filter((d) => perMuscleByDay.has(d));
+  /* The programme's own key order, since 2026-10-04: a hard-coded ['a', 'b', 'c'] dropped every
+     column the moment the keys changed. Keys it lists come first in its order, any others after. */
+  const dayOrder = [
+    ...COVERAGE_DAY_ORDER.filter((d) => perMuscleByDay.has(d)),
+    ...[...perMuscleByDay.keys()].filter((d) => !COVERAGE_DAY_ORDER.includes(d)),
+  ];
 
   const muscleRows: MuscleRow[] = [...perMuscle.entries()]
     .sort((a, b) => b[1] - a[1])

@@ -26,26 +26,28 @@
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
   "accepted": "2026-10-04",
-  "acceptedBecause": "the week rebuilt 2026-10-04 on his words (\"rebuild everything based on what I can do\"), sized to his measured pace. The three GATED lists were empty before and are empty now: no muscle under 4 fractional sets, no strict Zhang pairing, no unsourced exercise. perMuscle moved down on most upper-body muscles and the quadriceps because the card went from 27 sets to 16 and 15, sized so 3 in 4 of his days land at or under 80 minutes. Side deltoids and calves sit exactly at the floor of 4, and abs, triceps, front deltoids, biceps and rear deltoids at 5, so the next cut to any of them fails this gate.",
-  "belowMinimum": [],
+  "acceptedBecause": "the four-session week of 2026-10-04 (Lower 1, Upper 1, Lower 2, Upper 2), on his words that night. CALVES BELOW THE FLOOR IS HIS RULING, not an oversight: no calf raises (2026-09-06, restated 2026-10-04); the 2 fractional sets left are the box jump and the lateral bound. No strict Zhang pairing, no unsourced exercise. Every other muscle is at or over the floor of 4: hamstrings 4.5 is the closest, from the RDL alone.",
+  "belowMinimum": [
+    "calves"
+  ],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
-    "glutes": 32,
-    "quads": 20,
-    "erectors": 12,
-    "grip": 11,
-    "chest": 10,
-    "hamstrings": 9,
-    "adductors": 8,
-    "upper-back": 8,
-    "lats": 6,
-    "abs": 5,
-    "triceps": 5,
-    "front-delts": 5,
-    "biceps": 5,
+    "glutes": 22,
+    "quads": 16,
+    "lats": 12,
+    "grip": 10.5,
+    "upper-back": 10.5,
+    "erectors": 10,
+    "front-delts": 10,
+    "triceps": 9,
+    "adductors": 8.5,
+    "chest": 8,
+    "biceps": 8,
+    "abs": 6.5,
     "rear-delts": 5,
-    "calves": 4,
-    "side-delts": 4
+    "side-delts": 5,
+    "hamstrings": 4.5,
+    "calves": 2
   }
 }

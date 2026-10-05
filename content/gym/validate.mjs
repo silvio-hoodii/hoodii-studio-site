@@ -844,7 +844,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * Word boundaries, and an explicit refusal of the two body words that follow. A gate whose
        * escape hatch can be opened by an anatomical noun is a gate that checks less than it claims,
        * which is theme T6 of the 2026-08-28 audit and is now three for three on this file. */
-      const DAY_WORD = /\b(session [abcd]|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab])\b(?!\s*(?:back|body))/i;
+      const DAY_WORD = /\b(session [abcd]|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab12])\b(?!\s*(?:back|body))/i;
 
       /* AND NAMING A DAY IS NO LONGER A BLANK CHEQUE. 10-gym P1-9 proposed this and it was never
        * built: a `why` that names a weekday must name something ACTUALLY ON THAT DAY. Thursday's
@@ -860,7 +860,10 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       /* TWO SESSIONS since 2026-09-03. The older names stay so that a why naming one is REFUSED
          as a reference to a session that no longer exists, rather than forgiven. */
       const DAY_OF = { 'session a': 'a', 'session b': 'b', 'session c': 'c', 'session d': 'd',
-        'lower a': 'a', 'upper a': 'b', 'lower b': 'c', 'upper b': 'd' };
+        'lower a': 'a', 'upper a': 'b', 'lower b': 'c', 'upper b': 'd',
+        /* THE FOUR-SESSION WEEK, 2026-10-04. The Session A and B names above resolve to keys that no
+           longer exist, so a why naming one is refused rather than forgiven. */
+        'lower 1': 'l1', 'upper 1': 'u1', 'lower 2': 'l2', 'upper 2': 'u2' };
       /* 'session c' resolves to the real Saturday session since 2026-09-04; 'session d' resolves to
          nothing that exists and is therefore refused, which is the point of keeping it in the map. */
       const namesOn = (dayKey) => {
@@ -1974,26 +1977,25 @@ if (process.argv.includes('--print-hash')) {
     }
   }
 
-  // 3. three sets, twice a week, per main lift
+  // 3. the schedule is real weekdays, one session per weekday
+  /* WAS "three sets, twice a week, per main lift", an agent's dose rule (2026-09-06), REMOVED
+   * 2026-10-04 on his words that night: "if you're saying there's a rule that doesn't allow me to do
+   * X or Y, I don't really care because the agent before you decided that." The four-session week
+   * (Lower 1, Upper 1, Lower 2, Upper 2) trains each pattern twice and each named lift once, and
+   * carries 2-set accessory pairs. What stays is the data check: every session names real, distinct
+   * weekdays, and no weekday holds two sessions, because the plan on /health would print one of them
+   * and silently drop the other. */
+  const weekdayOwner = new Map();
   for (const [dayKey, day] of Object.entries(program.days)) {
     const on = day.scheduledOn;
-    const hasMain = (day.blocks || []).some((b) => b.role === 'main');
-    const validDays = Array.isArray(on) && new Set(on).size === on.length && on.every((w) => WEEKDAY_SET.has(w));
-    /* A LIFTING session (any main block) is scheduled on exactly two weekdays: that is the twice-a-week
-       rule. A session with NO main lift is the Saturday athletic session since 2026-09-04, once a
-       week, outside the rotation. Anything else is a different programme and needs his words. */
-    if (hasMain && (!validDays || on.length !== 2)) {
-      fail(dayKey, `"scheduledOn" must be exactly two distinct weekdays for a session with main lifts, got ${JSON.stringify(on ?? null)}. Every main lift is trained twice a week; a lifting session scheduled once is a different programme and needs his words in frozen.changes.`);
+    const validDays = Array.isArray(on) && on.length > 0 && new Set(on).size === on.length && on.every((w) => WEEKDAY_SET.has(w));
+    if (!validDays) {
+      fail(dayKey, `"scheduledOn" must be a non-empty list of distinct weekdays, got ${JSON.stringify(on ?? null)}.`);
+      continue;
     }
-    if (!hasMain && (!validDays || on.length !== 1)) {
-      fail(dayKey, `"scheduledOn" must be exactly one weekday for a session with no main lifts (the athletic session), got ${JSON.stringify(on ?? null)}.`);
-    }
-    for (const b of day.blocks || []) {
-      if (b.role !== 'main') continue;
-      const lead = b.exercises?.[0];
-      if (lead && lead.sets !== 3) {
-        fail(`${dayKey}/${b.label}`, `main lift "${lead.id}" has ${lead.sets} sets; every main lift is three sets, twice a week. More is past the point where Pelland 2026 found detectable strength increments per lift, fewer is under the powerlifter floor of 3. Change it with his words in frozen.changes, or move the exercise to an accessory block.`);
-      }
+    for (const w of on) {
+      if (weekdayOwner.has(w)) fail(dayKey, `"${w}" is scheduled for both ${weekdayOwner.get(w)} and ${dayKey}; the plan on /health shows one session a weekday.`);
+      else weekdayOwner.set(w, dayKey);
     }
   }
 

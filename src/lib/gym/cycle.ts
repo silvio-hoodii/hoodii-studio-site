@@ -1,7 +1,7 @@
 import 'server-only';
 import { getRotationState } from './db';
 import { loadProgram } from './program';
-import { ROTATION } from './program-shared';
+import { ROTATION, ROTATION_SINCE } from './program-shared';
 import type { DayKey } from './types';
 
 function dateDiffDays(a: string, b: string): number {
@@ -76,7 +76,8 @@ async function excludedIsodow(): Promise<number[]> {
   }
 }
 
-/** Rolling "what's next": A and B alternate.
+/** Rolling "what's next": the session after the last one done, in ROTATION order. Four since
+ * 2026-10-04 (Lower 1, Upper 1, Lower 2, Upper 2); A and B alternated before that.
  *
  * READS THE APP'S LOG AND THE WATCH, since 2026-09-03. Until then it read the app only, on the
  * argument that only the app knows WHICH session was performed. True, and it made the answer wrong
@@ -97,7 +98,7 @@ async function excludedIsodow(): Promise<number[]> {
  * have no "start of the cycle" to reset to: after any gap the next session is simply the other one. */
 export async function computeNextUp(today: string): Promise<NextUp> {
   /* ONE QUERY, since 2026-09-27. Was three in a row. The programme read is a local file. */
-  const state = await getRotationState([...ROTATION], today, await excludedIsodow());
+  const state = await getRotationState([...ROTATION], today, await excludedIsodow(), ROTATION_SINCE);
   const lastRow = state.last;
 
   let lastDate: string | null = null;
@@ -132,7 +133,9 @@ export async function computeNextUp(today: string): Promise<NextUp> {
      whatever that is... fold"); the jumps and bounds are primers inside the two sessions now. The
      rotation is the whole schedule: whichever of A and B he did not do last. */
   const nextDay: DayKey = rotationNext;
-  const todayDay = state.todayDay as DayKey | null;
+  /* A day recorded today under a retired key (Session A or B) is not a tab on the page, so it is not
+     today's session here: the page would open on a key the programme no longer has. */
+  const todayDay = state.todayDay && (ROTATION as string[]).includes(state.todayDay) ? (state.todayDay as DayKey) : null;
 
   return { lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
 }

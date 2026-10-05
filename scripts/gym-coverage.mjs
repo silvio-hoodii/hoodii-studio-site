@@ -105,7 +105,7 @@ rule('=');
  *
  * THE REAL CONSTRAINT IS HIS TIME, and this report cannot see it, so it stops pretending to. */
 console.log(`\nPER MUSCLE, for SIZE  (Table 3: minimum ${MIN_EFFECTIVE_DOSE}; 5 to ${EFFICIENT_ZONE_TOP} is the CHEAPEST band, not a cap)\n`);
-console.log(pad('muscle', 22) + padL('all', 6) + padL('loaded', 8) + '  ' + pad('tier (on loaded)', 17) + 'per day (Lower A / Upper A / Lower B / Upper B)');
+console.log(pad('muscle', 22) + padL('all', 6) + padL('loaded', 8) + '  ' + pad('tier (on loaded)', 17) + `per day (${coverage.dayOrder.map((k) => program.days?.[k]?.name ?? k).join(' / ')})`);
 rule();
 for (const m of coverage.perMuscle) {
   const byDay = m.byDay.map((v) => (v ? String(v) : '.')).join(' / ');
