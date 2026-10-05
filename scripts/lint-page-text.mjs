@@ -53,7 +53,7 @@ const CONTENT = [
   ['content/gym/alt-cues.json', /^\.cues\.[\w-]+$/],
   ['content/gym/warmups.json', /^(?!.*\.\$)/],
   ['content/gym/cooldowns.json', /^(?!.*\.\$)/],
-  ['content/gym/conditioning.json', /^\.(?:run|bike)\.(?:rules\[\d+\]|howHard\.\w+|cues\[\d+\]\.(?:cue|test|name)|weeks\[\d+\]\.note|beltSettings\.(?:run|walk|theUnitTest)|protocol\.(?:structure|shortVersion))$|^\.slots\.(?:\w+\.what|poolTimes\.\w+)$/],
+  ['content/gym/conditioning.json', /^\.(?:run|bike)\.(?:rules\[\d+\]|howHard\.\w+|cues\[\d+\]\.(?:cue|test|name)|weeks\[\d+\]\.note|pace\.(?:run|walk|check)|protocol\.(?:structure|next|name))$|^\.slots\.(?:\w+\.what|poolTimes\.\w+)$/],
   ['content/swim/plan.json', /^\.(?:pullBuoyRule|structure\.note|theGoal\.(?:target|whatThatActuallyIs)|theOneTechniqueChange\.what|cues\[\d+\]\.(?:cue|test|name)|structure\.calibration\.(?:what|test))$/],
   ['content/swim/coaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:do|check|name)$/],
   ['content/swim/teaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:say|show|watch|see)$|^\.beforeYouStart\.body$/],

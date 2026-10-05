@@ -265,18 +265,16 @@ export interface Program {
  *  diffable. */
 type Prose = string | string[];
 
-/** `session` is a sequence of CLOCK TIMES, not distances, since 2026-08-21. He ran 3.1x the week-1
- *  prescription on 2026-08-19 at a speed that was entirely correct, because the distance target
- *  lived on a treadmill console he does not trust and believes is in miles. A clock cannot be in the
- *  wrong unit, so `consoleCheck` is an after-the-fact confirmation in BOTH units and never the
- *  target. Every one of these strings is computed in the patch script from the belt speeds and the
- *  original Bertelsen doses, never typed. */
+/** One week of the outdoor walk-run, since 2026-10-04: a warm-up walk, then `blocks` rounds of
+ *  [`run`, `walk`], all as m:ss CLOCK TIMES. The page derives the session line, its total minutes
+ *  and the watch distance from these and `run.pace`, so no total is typed anywhere to drift. The
+ *  distance shown is the watch's TOTAL, walks included: his rule, 2026-10-04. */
 export interface ConditioningWeek {
   week: number;
-  runKm: number;
-  session: string;
-  clockTotal: string;
-  consoleCheck: string;
+  warmup: string;
+  blocks: number;
+  run: string;
+  walk: string;
   note?: string;
 }
 
@@ -365,12 +363,9 @@ export interface Conditioning {
     sessionsPerWeek: number;
     startedFrom: string;
     why: Prose;
-    howHard: { primary: string; secondary: string; startingSpeed: string };
-    /** The two belt settings in km/h AND mph, plus the one-off test that tells him which unit his
-     *  console is in. Both units, because being right in either beats being right in the one he
-     *  turns out not to have. */
-    beltSettings: { run: string; walk: string; theUnitTest: string; whyBothUnits: string };
-    whyTheClockNotTheConsole: Prose;
+    howHard: { primary: string; secondary: string };
+    /** Outdoor pace, from his own easy run. The two numbers feed the watch-distance line. */
+    pace: { run: string; walk: string; check: string; runSecPerKm: number; walkSecPerKm: number };
     weeks: ConditioningWeek[];
     rules: string[];
   cues?: Cue[];
@@ -381,8 +376,9 @@ export interface Conditioning {
     title: string;
     surface: string;
     sessionsPerWeek: number;
+    startedFrom: string;
     why: Prose;
-    protocol: { name: string; structure: string; totalMinutes: number; shortVersion: string; evidenceNote: string };
+    protocol: { name: string; structure: string; totalMinutes: number; next: string; evidenceNote: string };
     howHard: { hardPiece: string; heartRate: string; easyPiece: string };
     rules: string[];
   cues?: Cue[];

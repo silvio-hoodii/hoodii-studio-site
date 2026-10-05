@@ -5,6 +5,7 @@ import LastSession from '@/components/training/LastSession';
 import SubNav from '@/components/training/SubNav';
 import RecentSessions from '@/components/training/RecentSessions';
 import Cues from '@/components/training/Cues';
+import type { ConditioningWeek } from '@/lib/gym/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,27 +25,31 @@ export const dynamic = 'force-dynamic';
  * Plain links with a query param rather than client state, for the reason the kitchen filters and
  * the swim tabs give: it works before hydration, it survives a reload standing at a treadmill, and
  * every view is a URL he can bookmark. */
-/* THE CONSOLE CHECK IS DERIVED FROM THE CLOCK AND THE BELT, since 2026-09-27. `consoleCheck` and
- * `runKm` in conditioning.json are typed for 8.0 and 5.0 km/h, and the cues tell him to drop the belt
- * 0.5 km/h on a fail, after which the typed figures are simply wrong. Computing them from the session
- * string and `beltSettings` keeps the numbers true for the speeds the page states, and the line says
- * which speed it assumes, so a lowered belt reads as a different case rather than a failed run. The
- * page cannot know the belt he actually set, so it does not pretend to. */
-const KM_PER_MILE = 1.609344;
-function segSeconds(session: string, what: 'walk' | 'run'): number | null {
-  let total = 0;
-  for (const m of session.matchAll(/(\d+):(\d{2})\s+(walk|run)/g)) {
-    if (m[3] === what) total += Number(m[1]) * 60 + Number(m[2]);
-  }
-  return total > 0 ? total : null;
+/* OUTDOORS SINCE 2026-10-04, and every figure in a row is DERIVED from the week's clock times and
+ * `run.pace`, none typed. His rule the same evening: a distance on this page is the number his watch
+ * shows, which is the TOTAL for the session, walks included, never a running-only figure. So the line
+ * under each week is the whole session's distance at the stated paces, and the running-only split
+ * stays in conditioning.json's `$` fields. */
+function secs(mmss: string): number | null {
+  const m = /^(\d+):(\d{2})$/.exec(mmss.trim());
+  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
 }
-function consoleLine(session: string, runKmh: number, walkKmh: number): string | null {
-  const run = segSeconds(session, 'run');
-  const walk = segSeconds(session, 'walk');
-  if (run == null || walk == null || !(runKmh > 0) || !(walkKmh > 0)) return null;
-  const runKm = (run / 3600) * runKmh;
-  const km = runKm + (walk / 3600) * walkKmh;
-  return `At ${runKmh.toFixed(1)} km/h the console should read ${km.toFixed(2)} km, or ${(km / KM_PER_MILE).toFixed(2)} miles, ${Number(runKm.toFixed(2))} km of it running.`;
+function clock(total: number): string {
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+function weekFigures(w: ConditioningWeek, runSecPerKm: number, walkSecPerKm: number) {
+  const warm = secs(w.warmup);
+  const run = secs(w.run);
+  const walk = secs(w.walk);
+  if (warm == null || run == null || walk == null || !(w.blocks > 0)) return null;
+  const runTotal = run * w.blocks;
+  const walkTotal = warm + walk * w.blocks;
+  const km = runTotal / runSecPerKm + walkTotal / walkSecPerKm;
+  return {
+    line: `${w.warmup} walk, then ${w.blocks} rounds of ${w.run} run, ${w.walk} walk`,
+    total: clock(runTotal + walkTotal),
+    watch: `About ${km.toFixed(1)} km on the watch.`,
+  };
 }
 
 const SUB_TABS = [
@@ -68,8 +73,7 @@ export default async function RunPage({
      the last session and a separate getLastSession call would be the same row fetched twice. */
   const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
   const lastSession = recent[0] ?? null;
-  const runKmh = parseFloat(c.run.beltSettings.run);
-  const walkKmh = parseFloat(c.run.beltSettings.walk);
+  const { runSecPerKm, walkSecPerKm } = c.run.pace;
 
   return (
     <div className="wrap">
@@ -110,16 +114,15 @@ export default async function RunPage({
               <div className="ex-cue">{c.run.howHard.primary}</div>
               <div className="ex-cue">{c.run.howHard.secondary}</div>
             </div>
-            {/* THE BELT, IN BOTH UNITS. Above the table on purpose: the two numbers he dials in are
-                the first thing he needs standing at the treadmill, and the unit test is what stops
-                the whole table being read wrong. */}
+            {/* THE PACE, above the table: the one number he checks on the watch mid-run. The belt
+                block that stood here went with the treadmill on 2026-10-04. */}
             <div className="ex">
-              <div className="ex-name">The belt</div>
+              <div className="ex-name">Pace</div>
               <div className="ex-meta">
-                Run at <b className="nowrap">{c.run.beltSettings.run}</b> Walk at{' '}
-                <b className="nowrap">{c.run.beltSettings.walk}</b>
+                Run at <b className="nowrap">{c.run.pace.run}</b>, walk at{' '}
+                <b className="nowrap">{c.run.pace.walk}</b>
               </div>
-              <div className="ex-cue">{c.run.beltSettings.theUnitTest}</div>
+              <div className="ex-cue">{c.run.pace.check}</div>
             </div>
           </div>
           <div className="table-scroll">
@@ -137,19 +140,20 @@ export default async function RunPage({
                 </tr>
               </thead>
               <tbody>
-                {c.run.weeks.map((w) => (
-                  <tr key={w.week}>
-                    <td className="tnum">{w.week}</td>
-                    <td>
-                      {w.session}
-                      {consoleLine(w.session, runKmh, walkKmh) && (
-                        <div className="quiet">{consoleLine(w.session, runKmh, walkKmh)}</div>
-                      )}
-                      {w.note && <div className="quiet">{w.note}</div>}
-                    </td>
-                    <td className="tnum">{w.clockTotal}</td>
-                  </tr>
-                ))}
+                {c.run.weeks.map((w) => {
+                  const f = weekFigures(w, runSecPerKm, walkSecPerKm);
+                  return (
+                    <tr key={w.week}>
+                      <td className="tnum">{w.week}</td>
+                      <td>
+                        {f?.line}
+                        {f && <div className="quiet">{f.watch}</div>}
+                        {w.note && <div className="quiet">{w.note}</div>}
+                      </td>
+                      <td className="tnum">{f?.total}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
