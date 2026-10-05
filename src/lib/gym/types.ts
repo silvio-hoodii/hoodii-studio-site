@@ -265,16 +265,12 @@ export interface Program {
  *  diffable. */
 type Prose = string | string[];
 
-/** One week of the outdoor walk-run, since 2026-10-04: a warm-up walk, then `blocks` rounds of
- *  [`run`, `walk`], all as m:ss CLOCK TIMES. The page derives the session line, its total minutes
- *  and the watch distance from these and `run.pace`, so no total is typed anywhere to drift. The
- *  distance shown is the watch's TOTAL, walks included: his rule, 2026-10-04. */
+/** One week of the outdoor run, since 2026-10-04: a list of runs, each a day label and a WATCH
+ *  distance (the session total, walks included: his rule, 2026-10-04). The page derives minutes
+ *  from `run.pace.sessionSecPerKm`; validate.mjs caps weekly growth at 10%. */
 export interface ConditioningWeek {
   week: number;
-  warmup: string;
-  blocks: number;
-  run: string;
-  walk: string;
+  runs: { day: string; km: number }[];
   note?: string;
 }
 
@@ -365,7 +361,7 @@ export interface Conditioning {
     why: Prose;
     howHard: { primary: string; secondary: string };
     /** Outdoor pace, from his own easy run. The two numbers feed the watch-distance line. */
-    pace: { run: string; walk: string; check: string; runSecPerKm: number; walkSecPerKm: number };
+    pace: { run: string; walk: string; check: string; sessionSecPerKm: number };
     weeks: ConditioningWeek[];
     rules: string[];
   cues?: Cue[];

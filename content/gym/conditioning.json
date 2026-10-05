@@ -61,7 +61,7 @@
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift first. Then the swim after every lift, and the walk-run after Session B before it.",
+      "what": "Lift first. Then the swim after every lift, and from week 3 of the run plan a short run after Tuesday's Session B, before the swim.",
       "why": "Lift first, unchanged: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym. The run sits after the shorter session and the swim after the longer one, so no evening carries all three."
     },
     "poolTimes": {
@@ -78,133 +78,163 @@
     "startedFrom": "A returning runner, not a beginner. Runs of 9 minutes or more on record: 29 in 2023 (including continuous runs of 5.0, 6.0 and 7.5 km), 5 in 2024, 2 in 2025, one treadmill session on 2026-08-18, and since 2026-08-24 four outdoor runs that read 4.54, 5.03, 5.02 and 5.03 km on his watch, 34.7 to 40.1 minutes each, four in 41 days, with a three-week gap. The last, 2026-10-03, was continuous, 34.7 minutes, average running heart rate 155, 31.5 minutes above 140. The one that stayed easy was 2026-08-24: 3 minutes run, 1 minute walk, ten times, 40.1 minutes, 4.54 km, running pace 8:04 per km, running heart rate 125. Source: HealthOS/knowledge/ANALYSIS-2026-10-04-RUN.md, which an adversary re-ran the same day.",
     "$startedFromRunningOnly": "RUNNING-ONLY FIGURES, never rendered (his rule, 2026-10-04: a page shows the watch total). Running seconds = step rate 140 or more. Kilometres of running in those four sessions: 3.62, 4.19, 4.37, 4.94. Running pace 8:04, 7:13, 7:00, 6:50 per km. Walking pace on 2026-08-24: 0.92 km in 10.9 minutes, about 11:50 per km.",
     "why": [
-      "Start from what he has done, at the effort he has shown he can hold easily, and let the clock grow",
-      "10% a week. Twice a week rather than once, because his record is one run a week with gaps, and",
-      "the same weekly load split into two shorter runs is the gentler way to carry it on the legs of a",
-      "heavy runner (his weight is in HealthOS/CURRENT.md and is not copied here). That last clause is a judgment, not a finding."
+      "Start from the week he already runs and let it grow at the rate the injury evidence allows.",
+      "The session does not shrink: week 1 is one easy 5.0 km, which is what his last two weeks held.",
+      "Growth goes to a second, short run before it goes to longer runs."
     ],
     "howHard": {
       "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, walk until you can, then run on slower.",
-      "secondary": "If you want a number, keep your heart rate under 140. On your one easy run that meant about 8:00 per km.",
-      "$why": "THE TALK TEST is the intensity instruction of the injury trial this plan's load rules come from. Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"All participants were instructed to have at least one day with no running between each session and to run with a moderate intensity i.e. being able to converse without breathlessness.\" THE 140 HAS NO STUDY BEHIND IT; it is the plan's old ceiling, kept as a convention. What his own record adds (ANALYSIS-2026-10-04-RUN.md, E9 and recommendations): only 2026-08-24, at 8:04 per km running pace with one-minute walks, stayed mostly under 140 (2.4 of 40.1 minutes above). At 7:13 per km on 2026-08-30 he was above 140 for 18.5 of 39.3 minutes. The watch put his aerobic threshold at 134 to 136 on each run, so 140 sits just above it. So \"about 8:00 per km\" is his number, not a population one."
+      "secondary": "If you want a number, keep your heart rate under 140, and walk when it climbs past. On your one easy run that meant about 8:00 per km while running.",
+      "$why": "EASY, GROUNDED THREE WAYS. (1) The trial behind the load rules used a talk instruction only. Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"run with a moderate intensity i.e. being able to converse without breathlessness.\" (2) HIS WATCH'S OWN AEROBIC THRESHOLD: 134 to 136 on each of his runs (sensing_status.json, ANALYSIS-2026-10-04-RUN.md E9). 140 sits just above it. The 140 itself has no study behind it; it is the plan's ceiling, kept as a convention. (3) HIS RECORD: only 2026-08-24, at 8:04 per km running pace with one-minute walks, stayed mostly under 140 (2.4 of 40.1 minutes above). At 7:13 per km on 2026-08-30 he was above 140 for 18.5 of 39.3 minutes, and the continuous 2026-10-03 run spent 31.5 of 34.7 minutes above it. So the run is continuous by default and walks are the release valve: walking whenever the talk test or the 140 fails is what holds a 5.0 km run easy for him."
     },
     "pace": {
-      "run": "about 8:00 per km",
-      "walk": "about 12:00 per km",
-      "check": "Look at the pace once in each run block. Faster than 8:00 per km means slow down.",
-      "runSecPerKm": 480,
-      "walkSecPerKm": 720,
-      "$why": "GROUNDED IN HIS LOG, not a source. 480 s/km is 8:00, rounded from his 8:04 running pace on 2026-08-24, the one run that stayed under 140. 720 s/km is 12:00, rounded from that session's walking (0.92 km in 10.9 min, about 11:50). The page uses these two numbers to compute the \"about X km on the watch\" line for each week, total distance including walks, which is the figure his watch shows. Checked against the session they come from: 2026-08-24 as written (29.2 min running, 10.9 min walking) computes to 3.65 + 0.91 = 4.56 km against 4.54 on the watch. THE CHECK IS 8:00 because 8:04 is the only pace on his record that stayed under 140 (one run, n = 1); at 7:13 he was above 140 for 18.5 of 39.3 minutes. A faster threshold would permit a pace his data has never shown to be easy. The pace stays fixed for all eight weeks so distance and speed never rise together."
+      "run": "about 8:00 per km while running",
+      "walk": "Walk whenever the talk test fails.",
+      "check": "Look at the pace once a kilometre. Faster than 8:00 per km while running means slow down.",
+      "sessionSecPerKm": 530,
+      "$why": "GROUNDED IN HIS LOG. 8:00 is rounded from 8:04, his running pace on 2026-08-24, the only run on record that stayed under 140 (n = 1); a faster check would permit a pace his data has never shown to be easy. sessionSecPerKm = 530 is that same session's WHOLE pace, walks included: 40.1 minutes for 4.54 km on the watch = 530 s per km (8:50). The page multiplies each run's watch distance by it to print the minutes, so 5.0 km reads about 44 minutes. That is longer than his hard 5.03 km on 2026-10-03 (34.7 min) on purpose: it is what 5 km takes at the effort that stayed easy. If his easy runs come in faster at the same heart rate, the minutes should be re-derived from the new session, not typed."
     },
     "weeks": [
       {
         "week": 1,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "5:00",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          }
+        ]
       },
       {
         "week": 2,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "5:30",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5.5
+          }
+        ]
       },
       {
         "week": 3,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "6:00",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 1
+          }
+        ]
       },
       {
         "week": 4,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "6:30",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 1.6
+          }
+        ]
       },
       {
         "week": 5,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "7:00",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 2.2
+          }
+        ]
       },
       {
         "week": 6,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "7:30",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 2.9
+          }
+        ]
       },
       {
         "week": 7,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "8:00",
-        "walk": "1:00"
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 3.6
+          }
+        ]
       },
       {
         "week": 8,
-        "warmup": "5:00",
-        "blocks": 3,
-        "run": "8:30",
-        "walk": "1:00",
+        "runs": [
+          {
+            "day": "Sat",
+            "km": 5
+          },
+          {
+            "day": "Tue",
+            "km": 4.4
+          }
+        ],
         "note": "Reassess here before deciding whether to keep climbing or hold."
       }
     ],
     "$weeksWhy": [
-      "WEEK 1 SITS BETWEEN HIS AVERAGE WEEK AND HIS BIGGEST, AT EASY EFFORT, SPLIT IN TWO. Running-only",
-      "figures, never rendered: his four outdoor runs since 2026-08-24 hold 17.1 km of running over about",
-      "six weeks, about 3.0 km a week on average and about 2.3 km a week over the last four (a three-week",
-      "gap); his two most recent single weeks held 4.4 and 4.9. Week 1 is 2 sessions of 15 running minutes,",
-      "30 minutes a week, which at 8:00 per km is about 3.75 km of running: above his average, below his two",
-      "recent weeks, and level with the old plan's top week (3.8). On the watch that is about 2.5 km a",
-      "session, walks included, against his 4.5 to 5.0 km single runs. JUDGMENT: no study sets the start",
-      "for a returning runner. ANALYSIS-2026-10-04-RUN.md's corrected inference reads \"The plan's own rules",
-      "point to dropping back toward its weekly sizes, not holding where he is\", and week 1 follows it.",
-      "Nothing in his record shows he tolerated his recent weeks well or badly: there is no injury data,",
-      "and 2026-10-03 was hard by the watch (6.0 minutes at or above its anaerobic threshold).",
+      "WEEK 1 IS HIS CURRENT WEEK. His last two calendar weeks each held one run of about 5.0 km on the watch",
+      "(5.02 on 2026-09-26, 5.03 on 2026-10-03), and 5.03 on 2026-08-30 before that. Week 1 is one run of 5.0 km.",
+      "What changes is the effort, not the size: easy by the talk test, walking whenever it fails (howHard.$why).",
+      "The injury evidence limits how fast WEEKLY load grows; it does not ask for a session smaller than the",
+      "one he already runs.",
       "",
-      "WHY HE IS OUTSIDE THE NOVICE TRIAL NOW, and why its rules still apply. Bertelsen 2018 (fetched",
-      "2026-10-04, https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/) admitted \"Individuals with BMI 30-35,",
-      "age 18-65 years, no previous running experience (less than 10km combined the last year)\". He has",
-      "about 20 km since 2026-08-18, so the trial no longer describes him. Its authors write that \"other",
-      "sub-groups may possibly tolerate a start-to-run distance of more than 6km per week while remaining",
-      "at low risk of running-related injury (E.g. obese individuals with previous sports experience).",
-      "Further studies are needed\" (quoted across a sentence break). No evidence fixes his start. Its load",
-      "rule is still the nearest guide: \"In both programs, the weekly running distance was increased by 10%",
-      "each week throughout the follow-up.\" Injuries: \"Two participants were injured in the 3km",
-      "intervention (6.9%). Five participants were injured in the 6km intervention (18.5%).\"",
+      "GROWTH IS 10% A WEEK OF WATCH DISTANCE, at most. Bertelsen 2018 (fetched 2026-10-04,",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/): \"In both programs, the weekly running distance was",
+      "increased by 10% each week throughout the follow-up.\" Weekly totals 5.0, 5.5, 6.0, 6.6, 7.2, 7.9, 8.6, 9.4 km:",
+      "each is 110% of the week before, rounded DOWN to 0.1 km so rounding can never exceed the cap.",
+      "content/gym/validate.mjs refuses a week table that breaks it. The trial ran four weeks; weeks 5 to 8",
+      "extrapolate its rule past what it measured, and week 8 (9.4 km a week) is above both of its starting",
+      "arms (3 and 6 km), which is why week 8 says reassess. Injuries in the trial: \"Two participants were",
+      "injured in the 3km intervention (6.9%). Five participants were injured in the 6km intervention (18.5%).\"",
+      "He is outside that trial's population now (it admitted \"less than 10km combined the last year\"; he has",
+      "about 20 km since 2026-08-18), and its authors write that some sub-groups \"may possibly tolerate a",
+      "start-to-run distance of more than 6km per week\" with \"previous sports experience\". So the 10% is the",
+      "nearest guide for his weight, not a finding about him.",
       "",
-      "THE PROGRESSION. Three run blocks a session, one minute walking after each, 5 minutes walking first.",
-      "Each block grows 30 seconds a week: 15, 16.5, 18, 19.5, 21, 22.5, 24, 25.5 running minutes a session,",
-      "increases of 10.0, 9.1, 8.3, 7.7, 7.1, 6.7 and 6.3%, none above the trial's 10%. Week 8 is 51 running",
-      "minutes a week, about 6.4 km of running: above the trial's 6 km STARTING dose, reached by its own 10%",
-      "rule. The trial ran four weeks; weeks 5 to 8 extrapolate that rule past what it measured, which is why",
-      "week 8 says reassess. The walks: the trial split its running \"into shorter intervals with walking at",
-      "an easy/comfortable pace in the pauses between each interval\", and on his record the one-minute walks",
-      "are what kept 2026-08-24 under 140. Blocks of 5:00 and up are inside what he has run without stopping",
-      "(6.1 min on 2026-09-26, 17.7 on 2026-10-03).",
-      "",
-      "WHY THREE BLOCKS AND THE 5:00 WALK FIRST: judgment. Three keeps the watch screen simple; the 5:00 walk",
-      "is the warm-up and matches the old plan's opening walk."
+      "FREQUENCY BEFORE DISTANCE. The Saturday run stays at 5.0 km from week 3 on and every later increase",
+      "goes to a second, short run, so no single run gets longer than what he has just done. The second run",
+      "starts in week 3, at 1.0 km (about 9 minutes), because that is the first week the 10% cap leaves room",
+      "for a run worth putting shoes on for: week 2's headroom is 0.5 km. JUDGMENT: 1.0 km as the smallest",
+      "useful run is mine, not a source's; the trial's own week-1 sessions were 1.2 km including walks (500 m",
+      "walk, 500 m run, 200 m walk, 500 m run, minus the opening walk). Week 2 puts its 0.5 km on the one run",
+      "(5.5 km) because there is nowhere else to put it; week 3 moves it back to 5.0 and opens the second run.",
+      "Pace is fixed throughout, so distance and speed never rise in the same week."
     ],
     "rules": [
       "Never add more than 10% in a week, and never add distance and speed in the same week.",
-      "Pace stays near 8:00 per km for all eight weeks. Only the run minutes grow.",
-      "The run ends when the last block ends, however good you feel.",
+      "Pace stays near 8:00 per km while running for all eight weeks. Only the distance grows.",
+      "The run ends at its distance, however good you feel.",
       "A missed week means repeat the last week you completed, not jump to where the calendar says.",
       "Any pain that changes how you walk means stop and say so. Shin and knee are the two to watch."
     ],
-    "$rulesWhy": "Rules 1 and 4 are the old plan's and stay: rule 1 is Bertelsen's ~10% a week (quoted in $weeksWhy), and rule 4 is the reading of that rule after a gap. Rule 2 is how rule 1 is kept: if speed is fixed, only time can rise. Rule 3 is from his record, not a paper: by calendar week, every one of his four outdoor runs broke a plan rule and held 2 to 5 times the prescribed running (ANALYSIS-2026-10-04-RUN.md, finding 10). Rule 5 is unchanged.",
+    "$rulesWhy": "Rules 1 and 4 are the old plan's and stay: rule 1 is Bertelsen's 10% a week (quoted in $weeksWhy) and validate.mjs now checks it against the table; rule 4 is that rule read after a gap. Rule 2 is how rule 1 is kept: with pace fixed, only distance can rise. Rule 3 is from his record, not a paper: by calendar week, every one of his four outdoor runs broke a plan rule (ANALYSIS-2026-10-04-RUN.md, finding 10). Rule 5 is unchanged.",
     "cues": [
       {
         "name": "Step rate",
-        "cue": "Keep the short, quick step you already have. Your recent runs sit at 154 to 161 steps a minute. Step rate is how many times a foot lands in one minute, both feet counted. To measure it, two minutes into the first run block, count every time your RIGHT foot lands for 30 seconds.",
-        "test": "PASS = 38 or more right-foot landings in 30 seconds, which is 152 steps a minute. FAIL = 37 or fewer: take shorter, quicker steps at the same pace and count again in the next block. Do not speed up to fix it.",
+        "cue": "Keep the short, quick step you already have. Your recent runs sit at 154 to 161 steps a minute. Step rate is how many times a foot lands in one minute, both feet counted. To measure it, after the first kilometre, count every time your RIGHT foot lands for 30 seconds.",
+        "test": "PASS = 38 or more right-foot landings in 30 seconds, which is 152 steps a minute. FAIL = 37 or fewer: take shorter, quicker steps at the same pace and count again a kilometre later. Do not speed up to fix it.",
         "why": "Raising step rate is the one form change with a consistent measured effect on how hard your legs get hit, and you already made it: at the same speed your runs this year sit above every run you did in 2023. The job now is to keep it at the slower easy pace, where a long, loping step is the easy mistake.",
         "confidence": "evidence",
         "grounding": "HIS DATA (ANALYSIS-2026-10-04-RUN.md, finding 5, adversary-checked): within each speed band every 2026 run sits at 154 to 161 steps a minute and every 2023 run at 148 to 154 (n = 4 against n = 16), no overlap; run-to-run noise +-2.3. 152 is 154 minus that noise, rounded to a count a hand can make (38 x 4). Note the session average on the Now tab includes the walks (141.8 on 2026-08-24), so it cannot be used for this check. THE EVIDENCE for step rate itself: Figueiredo I, Reis e Silva M, Sousa JE. Cureus. 2025;17(8):e90322, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC12440572/, verbatim: \"A moderate increase in cadence (typically 5-10%) led to consistent biomechanical improvements, including reduced vertical ground reaction forces, lower loading rates, shorter stride length, and improved lower limb alignment\" and \"cadence modification did not negatively affect metabolic cost\". Caveats kept from the earlier pass: Cureus is a low-barrier journal, the review covers normal-weight runners only, and no step-rate study at BMI 30 to 35 was found.",
@@ -222,7 +252,7 @@
       {
         "name": "The passage",
         "cue": "Pick about 30 words you know by heart and use the SAME words every run. Say them out loud at normal speaking volume to gauge how hard you are working. You have two gauges, the passage and the watch, and whichever one is stricter wins. If the passage fails, you slow down even if the watch reads under 140. If the watch reads over 140, you slow down even if the words came out fine.",
-        "test": "Say the passage out loud halfway through each run block. PASS = all the words with at most one break to breathe, AND the watch reads 140 or below. If you are unsure whether you broke to breathe, count it as a break. FAIL = walk for one minute, then run the rest of the block slower. The clock keeps running and the session ends at the same time.",
+        "test": "Say the passage out loud once a kilometre. PASS = all the words with at most one break to breathe, AND the watch reads 140 or below. If you are unsure whether you broke to breathe, count it as a break. FAIL = walk until it passes, then run on slower. The distance stays the same.",
         "why": "Two gauges will disagree, and letting the stricter one win means a wrong wrist reading can only make you go easier, never harder. Fixed words matter because an improvised sentence gets shorter as you tire, so the test gets easier exactly when it needs to hold. On your 2026-10-03 run the watch read over 140 for 31.5 of 34.7 minutes; this is the cue that stops that becoming the easy run.",
         "confidence": "contested",
         "grounding": "Bertelsen 2018 (https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, fetched 2026-10-04) used a talk instruction only: \"run with a moderate intensity i.e. being able to converse without breathlessness\". Vieira AM et al. Rev Cardiovasc Med. 2022;23(7):225, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC11266803/, verbatim: \"Workload, oxygen uptake, and heart rate in the last positive stage of the TT were not different from the same parameters related to the first ventilatory threshold.\" CONTESTED because that review is of cardiac patients, and its authors write \"Evidence is missing regarding the applicability of the talk test in a more heterogeneous population\". The 140 is a convention (see howHard.$why). The walk-a-minute fix replaces the old belt drop: there is no belt outdoors; judgment.",
@@ -239,9 +269,9 @@
       },
       {
         "name": "Walks and stopping",
-        "cue": "The walks are part of the run: keep walking through them and do not stand still. Stopping for any other reason is different and always correct: pain that changes the way you walk, dizziness, chest pain, or anything that feels wrong means you stop and walk home.",
-        "test": "Three checks. (1) Before the first walk, start the watch on an outdoor run. PASS = it shows a heart rate before you set off. (2) In every walk you keep moving. PASS = no standing rests. (3) A stop for pain, dizziness or anything wrong is a PASS, every time.",
-        "why": "The injury trial behind the load rules walked its pauses; it never stood. Starting the watch before the first walk keeps the whole session as one record, which is what the Now tab and the watch distance on the Plan tab compare against.",
+        "cue": "Walking is allowed whenever the talk test fails; walk until it passes, then run on. Keep moving, do not stand still. Stopping for any other reason is different and always correct: pain that changes the way you walk, dizziness, chest pain, or anything that feels wrong means you stop and walk home.",
+        "test": "Three checks. (1) Before you set off, start the watch on an outdoor run. PASS = it shows a heart rate. (2) Every walk is a walk, not a standing rest. (3) A stop for pain, dizziness or anything wrong is a PASS, every time.",
+        "why": "The injury trial behind the load rules walked its pauses; it never stood. On your own record, walking is what held a run under 140.",
         "confidence": "convention",
         "grounding": "Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"The running distance in both programs was split up into shorter intervals with walking at an easy/comfortable pace in the pauses between each interval.\" CONVENTION because the trial never compared walking against standing.",
         "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/"
@@ -257,7 +287,7 @@
       }
     ],
     "cuesNote": "WHAT WAS DROPPED, one line each.\n\n1. ALL FOUR TREADMILL CUES (belt speed, incline zero, the safety clip, the console unit test), with the treadmill. He runs outdoors.\n2. \"RAISE YOUR STEP RATE 5 PERCENT.\" He already did: his 2026 runs sit above every 2023 run at the same speed. The cue now holds the step he has.\n3. THE \"RUN QUIETLY\" CUE, the footstrike video and the 180 steps a minute target, as before: the sound does not track the force, and 180 is not his number.\n\nMYTHS STILL WORTH NAMING: 180 steps a minute is not universal (Leacox 2025); heel striking is not wrong for an uninjured runner (Anderson 2020); heavy runners do not provably need maximum cushioning, nor provably not (Malisoux 2020).",
-    "$scheduleNote": "TWO A WEEK, Tuesday and Friday after Session B, as week.assignedDays sets it (his ruling 2026-09-04). Two things the record says that this file does not settle. (1) He has not run on those days: his four outdoor runs were a Monday, a Sunday and two Saturdays. (2) Robineau 2016 (abstract fetched 2026-10-04, https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25546450&rettype=abstract&retmode=text): \"Gains in maximal strength for bench press and half squat were lower in C-0h compared with that in C-6h, C-24h, and STR.\" A run straight after Session B is the 0 h case. Both are his call, not this file's; the first is the open question in the 2026-10-04 report."
+    "$scheduleNote": "THE DAYS, decided 2026-10-04 (the coordinator's instruction was to decide, not ask). The lifting week is Mon A, Tue B, Thu A, Fri B with a swim after each lift (week.assignedDays). The free days are Wed, Sat and Sun, and the rest rule (never more than 3 in a row) allows a run on exactly one of them: Sat makes Thu-Fri-Sat, 3, legal; Sun as well would make 4; Wed would join Mon-Tue to Thu-Fri into 5. SATURDAY, because it is his real pattern (2026-09-26 at 13:00 and 2026-10-03 at 21:11; the other two were a Monday and a Sunday) and it is the day after a lift rather than the same evening. Robineau 2016 (abstract fetched 2026-10-04, https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25546450&rettype=abstract&retmode=text): \"Gains in maximal strength for bench press and half squat were lower in C-0h compared with that in C-6h, C-24h, and STR.\" A Saturday run is more than 6 h after Friday's lift. THE SECOND RUN (from week 3) has no free day left, so it shares a lift evening: TUESDAY after Session B, the slot the walk-run held since 2026-09-04. That is the 0 h case Robineau found costs strength, accepted because the run is short (1.0 to 4.4 km) and the alternative breaks his rest rule or his no-mornings ruling (slots.morning.why). Weeks 1 and 2 have no Tuesday run."
   },
   "bike": {
     "title": "Bike",
@@ -460,9 +490,12 @@
         "friday"
       ],
       "eveningRun": [
-        "tuesday",
-        "friday"
-      ]
+        "tuesday"
+      ],
+      "weekendRun": [
+        "saturday"
+      ],
+      "$runDays": "CHANGED 2026-10-04 with the outdoor run rebuild: the run moved to Saturday (weekendRun) and Tuesday keeps a short second run from week 3 (eveningRun). Friday lost its run. Why: run.$scheduleNote."
     },
     "howItFits": {
       "$comment": [

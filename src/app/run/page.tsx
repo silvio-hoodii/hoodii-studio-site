@@ -25,31 +25,18 @@ export const dynamic = 'force-dynamic';
  * Plain links with a query param rather than client state, for the reason the kitchen filters and
  * the swim tabs give: it works before hydration, it survives a reload standing at a treadmill, and
  * every view is a URL he can bookmark. */
-/* OUTDOORS SINCE 2026-10-04, and every figure in a row is DERIVED from the week's clock times and
- * `run.pace`, none typed. His rule the same evening: a distance on this page is the number his watch
- * shows, which is the TOTAL for the session, walks included, never a running-only figure. So the line
- * under each week is the whole session's distance at the stated paces, and the running-only split
- * stays in conditioning.json's `$` fields. */
-function secs(mmss: string): number | null {
-  const m = /^(\d+):(\d{2})$/.exec(mmss.trim());
-  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+/* OUTDOORS SINCE 2026-10-04. Each week is a list of runs, each a WATCH distance: his rule the same
+ * evening is that a distance on this page is the number his watch shows, the session total with any
+ * walking in it, never a running-only figure. Minutes are DERIVED from that distance and
+ * `run.pace.sessionSecPerKm` (his own easy session, walks included), never typed, so a distance edit
+ * cannot leave a stale time beside it. content/gym/validate.mjs holds the 10% weekly cap. */
+function minutes(km: number, secPerKm: number): number {
+  return Math.round((km * secPerKm) / 60);
 }
-function clock(total: number): string {
-  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
-}
-function weekFigures(w: ConditioningWeek, runSecPerKm: number, walkSecPerKm: number) {
-  const warm = secs(w.warmup);
-  const run = secs(w.run);
-  const walk = secs(w.walk);
-  if (warm == null || run == null || walk == null || !(w.blocks > 0)) return null;
-  const runTotal = run * w.blocks;
-  const walkTotal = warm + walk * w.blocks;
-  const km = runTotal / runSecPerKm + walkTotal / walkSecPerKm;
-  return {
-    line: `${w.warmup} walk, then ${w.blocks} rounds of ${w.run} run, ${w.walk} walk`,
-    total: clock(runTotal + walkTotal),
-    watch: `About ${km.toFixed(1)} km on the watch.`,
-  };
+function weekFigures(w: ConditioningWeek, secPerKm: number) {
+  const runs = w.runs.map((r) => ({ ...r, min: minutes(r.km, secPerKm) }));
+  const km = w.runs.reduce((a, r) => a + r.km, 0);
+  return { runs, totalMin: runs.reduce((a, r) => a + r.min, 0), km };
 }
 
 const SUB_TABS = [
@@ -73,7 +60,11 @@ export default async function RunPage({
      the last session and a separate getLastSession call would be the same row fetched twice. */
   const recent = sub === 'now' ? await getRecentSessions('treadmill', 10) : [];
   const lastSession = recent[0] ?? null;
-  const { runSecPerKm, walkSecPerKm } = c.run.pace;
+  const { sessionSecPerKm } = c.run.pace;
+  const counts = c.run.weeks.map((w) => w.runs.length);
+  const lo = Math.min(...counts);
+  const hi = Math.max(...counts);
+  const perWeek = lo === hi ? `${hi}x a week` : `${lo} to ${hi} runs a week`;
 
   return (
     <div className="wrap">
@@ -88,7 +79,7 @@ export default async function RunPage({
               there is no article to get wrong rather than branching on the digit: 8, 11 and 18 all
               take "an" and the next edit to the plan would have reintroduced it. */}
           <p className="lede">
-            {c.run.surface}, {c.run.sessionsPerWeek}x a week, over {c.run.weeks.length} weeks.
+            {c.run.surface}, {perWeek}, over {c.run.weeks.length} weeks.
           </p>
           <LastSession s={lastSession} />
           <RecentSessions sessions={recent} kind="treadmill" />
@@ -104,7 +95,7 @@ export default async function RunPage({
       {sub === 'plan' && (
         <div className="exgroup">
           <div className="exgroup-label">
-            {c.run.title} <span className="tag">({c.run.surface}, {c.run.sessionsPerWeek}x/week)</span>
+            {c.run.title} <span className="tag">({c.run.surface}, {perWeek})</span>
           </div>
           {/* `why` (the trial behind the plan) and `whyTheClockNotTheConsole` rendered here until
               2026-09-15. Both are still in conditioning.json. AGENTS.md, "Page text". */}
@@ -119,8 +110,7 @@ export default async function RunPage({
             <div className="ex">
               <div className="ex-name">Pace</div>
               <div className="ex-meta">
-                Run at <b className="nowrap">{c.run.pace.run}</b>, walk at{' '}
-                <b className="nowrap">{c.run.pace.walk}</b>
+                Run at <b className="nowrap">{c.run.pace.run}</b>. {c.run.pace.walk}
               </div>
               <div className="ex-cue">{c.run.pace.check}</div>
             </div>
@@ -134,23 +124,26 @@ export default async function RunPage({
                     so it belongs under the session as a quiet line, not in a column of its own. */}
                 <tr>
                   <th className="tnum">Week</th>
-                  {/* "On the clock" leads, because the clock IS the prescription now. */}
-                  <th className="wide">On the clock</th>
+                  {/* Each run: day, watch distance, minutes. Total is the week's minutes. */}
+                  <th className="wide">Runs</th>
                   <th className="tnum">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {c.run.weeks.map((w) => {
-                  const f = weekFigures(w, runSecPerKm, walkSecPerKm);
+                  const f = weekFigures(w, sessionSecPerKm);
                   return (
                     <tr key={w.week}>
                       <td className="tnum">{w.week}</td>
                       <td>
-                        {f?.line}
-                        {f && <div className="quiet">{f.watch}</div>}
+                        {f.runs.map((r) => (
+                          <div key={r.day}>
+                            {r.day} {r.km.toFixed(1)} km, about {r.min} min
+                          </div>
+                        ))}
                         {w.note && <div className="quiet">{w.note}</div>}
                       </td>
-                      <td className="tnum">{f?.total}</td>
+                      <td className="tnum">{f.totalMin} min</td>
                     </tr>
                   );
                 })}

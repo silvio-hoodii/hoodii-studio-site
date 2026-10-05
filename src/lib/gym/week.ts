@@ -374,7 +374,8 @@ export const SLOT_LABEL: Record<string, string> = {
      walk-run follows Session B. `saturdayRow` LEFT 2026-09-06 with Session C, which was folded into A
      and B; the validator compares this list against week.assignedDays in both directions. */
   eveningSwim: 'evening swim',
-  eveningRun: 'evening walk-run',
+  eveningRun: 'short run after the lift',
+  weekendRun: 'run',
 };
 
 export { dayOf };

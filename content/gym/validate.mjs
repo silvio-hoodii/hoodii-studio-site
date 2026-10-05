@@ -1519,7 +1519,7 @@ if (!conditioning.week?.restRule) {
    * slot means a slot was deleted and its label left behind, which is the shape that leaves a
    * retired thing looking scheduled. */
   {
-    const SLOT_LABEL_KEYS = new Set(['eveningSwim', 'eveningRun']); // saturdayRow left 2026-09-06 with Session C
+    const SLOT_LABEL_KEYS = new Set(['eveningSwim', 'eveningRun', 'weekendRun']); // saturdayRow left 2026-09-06 with Session C
     const slotKeys = new Set(
       Object.keys(assigned).filter((k) => !k.startsWith('$') && k !== 'why'),
     );
@@ -1558,6 +1558,34 @@ if (!conditioning.week?.restRule) {
     );
   } else {
     out.push(`ok    [conditioning.json] planned week trains ${training.size} days, longest run ${worst}, rule allows ${maxConsecutive}`);
+  }
+}
+
+/* THE RUN'S WEEKLY LOAD MAY NOT GROW MORE THAN 10%. Added 2026-10-04 with the outdoor rebuild.
+ * The plan's first rule ("Never add more than 10% in a week") was prose; the week table is data, so
+ * the rule is checked against it here: each week's summed watch distance against the week before,
+ * plus a shape check so a typo cannot render NaN minutes. Source of the 10%: Bertelsen 2018, quoted
+ * in conditioning.json run.$weeksWhy. */
+{
+  const weeks = conditioning.run?.weeks;
+  if (!Array.isArray(weeks) || weeks.length === 0) {
+    fail('conditioning.json', 'run.weeks is missing or empty.');
+  } else {
+    let prev = null;
+    weeks.forEach((w, i) => {
+      if (!Array.isArray(w.runs) || w.runs.length === 0
+        || w.runs.some((r) => typeof r.day !== 'string' || !(typeof r.km === 'number' && r.km > 0))) {
+        fail('conditioning.json', `run.weeks[${i}] needs runs: [{day, km > 0}]`);
+        return;
+      }
+      const total = w.runs.reduce((a, r) => a + r.km, 0);
+      if (prev != null && total > prev * 1.1 + 1e-9) {
+        fail('conditioning.json', `run week ${w.week} totals ${total.toFixed(2)} km, more than 10% over week ${weeks[i - 1].week} (${prev.toFixed(2)} km). His plan's first rule.`);
+      }
+      prev = total;
+    });
+    if (!(conditioning.run?.pace?.sessionSecPerKm > 0)) fail('conditioning.json', 'run.pace.sessionSecPerKm must be a positive number: the page derives every minute figure from it.');
+    out.push(`ok    [conditioning.json] run plan: ${weeks.length} weeks, weekly growth within 10%`);
   }
 }
 
