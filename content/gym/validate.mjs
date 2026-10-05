@@ -1349,7 +1349,12 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * failure wearing the opposite sign, and it cost twelve days.
        *
        * The refusal comes back as a CODE so each one keeps the distinct, sourced message it had. */
-      const refusal = pairingRefusal(a, b, stationOf);
+      /* HIS RULING OVERRIDES THE ADJACENCY RULE FOR ONE BLOCK, since 2026-10-04: a block that carries
+       * `walkAccepted` (his ruling, at least eight words) may span two stations and two zones. The
+       * overhead press and the assisted pull-up machine are across the gym; he said that walk is fine. */
+      const walkAccepted = typeof block.walkAccepted === 'string' && block.walkAccepted.trim().split(/\s+/).length >= 8;
+      const rawRefusal = pairingRefusal(a, b, stationOf);
+      const refusal = walkAccepted && (rawRefusal?.code === 'two-stations' || rawRefusal?.code === 'adjacent-crosszone') ? null : rawRefusal;
       if (refusal?.code === 'two-stations') {
         fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one, unless the two fixtures are declared adjacent in equipment.json, which is case (c) of the rule that file quotes. Either give the partner no fixture, or declare the two adjacent WITH his words for it.`);
       }
@@ -1398,7 +1403,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
          in the catalogue. The lead still names the zone the block happens in. */
       const PORTABLE = new Set(['dumbbell', 'kettlebell', 'bodyweight', 'band']);
       const partnerPortable = b.station == null && PORTABLE.has(MOVEMENTS?.[b.id]?.implement);
-      if (a.zone !== b.zone && !partnerPortable) {
+      if (a.zone !== b.zone && !partnerPortable && !walkAccepted) {
         fail(where, `${block.pairing} block spans two zones ("${a.zone}" and "${b.zone}"). Doing both in one window means walking back and forth between them every set. A dumbbell, kettlebell, band or bodyweight partner with no station may be carried to the lead's zone; a fixture may not.`);
       }
 
@@ -2004,8 +2009,12 @@ if (process.argv.includes('--print-hash')) {
     for (const b of day.blocks || []) {
       for (const ex of b.exercises || []) {
         for (const item of [ex, ...(ex.alts ?? [])]) {
-          if (item.rangeWidth !== undefined && (!Number.isInteger(item.rangeWidth) || item.rangeWidth < 1 || item.rangeWidth > 8)) {
-            fail(`${dayKey}/${b.label}`, `"rangeWidth" on "${item.id}" is ${JSON.stringify(item.rangeWidth)}; it must be 1 to 8. A 12 to 23 rep window was live on the lateral raise, past Iversen's 15 RM ceiling, because the dumbbell jump at 20 lb is 25%. Coaches handle that jump with two top-range sets before moving up, or a cable, not with eleven more reps.`);
+          /* A TIMED HOLD COUNTS SECONDS, NOT REPS, since 2026-10-04: its window may be up to 15 (seconds),
+           * because it steps by 5 s and a 2 s default meant the hold could never grow. Reps stay at 8. */
+          const timedItem = item.timed === true || item.progression === 'time';
+          const maxWidth = timedItem ? 15 : 8;
+          if (item.rangeWidth !== undefined && (!Number.isInteger(item.rangeWidth) || item.rangeWidth < 1 || (!timedItem && item.rangeWidth > 8) || item.rangeWidth > 15)) {
+            fail(`${dayKey}/${b.label}`, `"rangeWidth" on "${item.id}" is ${JSON.stringify(item.rangeWidth)}; it must be 1 to ${maxWidth}. A 12 to 23 rep window was live on the lateral raise, past Iversen's 15 RM ceiling, because the dumbbell jump at 20 lb is 25%. Coaches handle that jump with two top-range sets before moving up, or a cable, not with eleven more reps.`);
           }
         }
         if (words(ex.cue) > 80) {

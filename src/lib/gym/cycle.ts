@@ -38,8 +38,8 @@ export interface NextUp {
   cutShort: boolean;
   /** Lifting sessions the WATCH recorded after the last logged rotation session, on dates the app
    *  has nothing for and not on a weekday scheduled for a session outside the rotation (none today;
-   *  see `excludedIsodow`). Each advances the rotation by one. The page prints
-   *  the count and the dates, because a guess he cannot see is a guess he cannot correct. */
+   *  see `excludedIsodow`). They do NOT move the rotation (since 2026-10-04, see computeNextUp). The
+   *  page prints the count and the dates so he can see an unlogged lift and pick its tab by hand. */
   assumedFromWatch: number;
   assumedDates: string[];
 }
@@ -86,9 +86,15 @@ async function excludedIsodow(): Promise<number[]> {
  * reset to Session A after any seven-day gap in LOGGING. His words on 2026-09-03: "I don't even
  * know if the session that I'm doing is the right one."
  *
- * With two rotation sessions the inference is honest: a lifting session the watch saw and the app
- * did not is one step of the rotation, whichever it was. The count and dates are returned so the
- * card can say what was assumed, and the tabs let him override it in one tap.
+ * With two rotation sessions the inference was honest: a lifting session the watch saw and the app
+ * did not was one step of the rotation, whichever it was.
+ *
+ * WITH FOUR IT IS NOT, and since 2026-10-04 a watch-only lift no longer moves the rotation. The watch
+ * knows he lifted, not WHICH session he did, so stepping once per watch lift silently skipped
+ * sessions: one unlogged lift after Upper 2 sent him past Lower 1 to Upper 1, and the squat day was
+ * gone without a word (coach review, 2026-10-04). The rotation now advances only on sessions logged
+ * in the app. The watch dates are still returned and printed, and the tabs let him pick another
+ * session in one tap.
  *
  * NO SESSION OUTSIDE THE ROTATION SINCE 2026-09-06, when Session C (Saturday) was folded into A and
  * B. See `excludedIsodow` below for what replaced the Saturday exclusion.
@@ -124,11 +130,12 @@ export async function computeNextUp(today: string): Promise<NextUp> {
 
   /* Watch sessions after the last logged rotation date, on dates the app has no session for, not on
      an excluded weekday. Today is excluded: a session in progress right now is `todayDay`'s
-     business, and the watch export is manual so it never has today's data anyway. */
+     business, and the watch export is manual so it never has today's data anyway. REPORTED, NOT
+     COUNTED: they do not move the rotation (see the comment on computeNextUp). */
   const assumedDates = state.watchDates;
   const assumedFromWatch = assumedDates.length;
 
-  const rotationNext: DayKey = ROTATION[(base + assumedFromWatch) % ROTATION.length]!;
+  const rotationNext: DayKey = ROTATION[base]!;
   /* NO SATURDAY SESSION SINCE 2026-09-06. Session C was folded into A and B on his word ("session c,
      whatever that is... fold"); the jumps and bounds are primers inside the two sessions now. The
      rotation is the whole schedule: whichever of A and B he did not do last. */

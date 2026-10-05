@@ -32,6 +32,10 @@ export interface PlanInput {
   rangeWidth?: number;
   today?: string;
   recent?: LastSession[] | null;
+  /** A LONGER WINDOW than `recent`, newest first, `last` included (the plan route sends eight
+   *  sessions). Read only by `provenTarget` below, to find a weight he has already done for every
+   *  working set. Kept apart from `recent` so the stall detector keeps its three-session window. */
+  history?: LastSession[] | null;
   /** True when the logged number is COUNTERWEIGHT rather than load, so progress means it goes DOWN.
    *
    *  The assisted pull-up is the case: less assistance is harder. Its cue has always said so, in the
@@ -233,6 +237,60 @@ function toppedPreviousSession(recent: LastSession[] | null | undefined, ww: num
   if (workingWeight(ss, bottom) !== ww) return false;
   const reps = ss.filter((x) => x.weight === ww).map((x) => x.reps ?? 0);
   return reps.length > 0 && Math.min(...reps) >= top;
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** "2026-08-25" -> "Aug 25", read off the string itself so no time zone can move the day. */
+function shortDate(d: string): string {
+  const m = /^\d{4}-(\d{2})-(\d{2})/.exec(d);
+  return m ? `${MONTHS[Number(m[1]) - 1]} ${Number(m[2])}` : d;
+}
+
+/* A WEIGHT HE HAS ALREADY DONE FOR EVERY WORKING SET, since 2026-10-04 (coach review).
+ *
+ * When the last session fell short (two or more working sets under the bottom of the range, or a ramp
+ * whose top set overshot it), holding the weight and asking for one more rep asks for a set he has
+ * not shown he can do three times. His row on 2026-10-03 was 175 x 6/6/5 in an 8 to 10 range; on
+ * 2026-08-25 he did 170 x 8/8/8. The second is a target, the first is a hope.
+ *
+ * Reads the history window (newest first) for the heaviest weight, not above the current one, at
+ * which at least `needed` sets reached the bottom of the range. A set at a heavier weight counts for
+ * a lighter one. For a counterweight lift every direction flips: less assistance is harder, so it
+ * looks for the LEAST assistance not below the current one. The reps are the `needed`-th best he did
+ * there on the most recent such date, capped at the top of the range. Null when nothing qualifies. */
+function provenTarget(
+  history: LastSession[] | null | undefined,
+  ww: number,
+  bottom: number,
+  top: number,
+  needed: number,
+  assisted: boolean,
+): { weight: number; reps: number; date: string } | null {
+  let best: { weight: number; reps: number; date: string } | null = null;
+  for (const sess of history ?? []) {
+    const ss = (sess.sets || []).filter((s) => (s.reps ?? 0) > 0 && s.weight != null && s.weight > 0);
+    for (const w of new Set(ss.map((s) => s.weight as number))) {
+      if (assisted ? w < ww : w > ww) continue;
+      const reps = ss
+        .filter((s) => (assisted ? (s.weight as number) <= w : (s.weight as number) >= w) && (s.reps ?? 0) >= bottom)
+        .map((s) => s.reps ?? 0)
+        .sort((a, b) => b - a);
+      if (reps.length < needed) continue;
+      const cand = { weight: w, reps: Math.min(top, reps[needed - 1]!), date: sess.date };
+      /* Same weight on two dates: the NEWER one stands (history is newest first), so the card names
+         the most recent time he did it. */
+      const better = !best || (assisted ? cand.weight < best.weight : cand.weight > best.weight);
+      if (better) best = cand;
+    }
+  }
+  return best;
+}
+
+/** Round DOWN to a weight that exists: the rack rung at or below, or a whole number of increments. */
+function floorLoad(target: number, increment: number, ladder?: number[] | null): number {
+  if (ladder && ladder.length) return stepTo(target, increment, ladder);
+  const inc = increment > 0 ? increment : 5;
+  return r1(Math.floor(target / inc + 1e-9) * inc);
 }
 
 export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggestion {
@@ -454,6 +512,27 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
     }
   }
 
+  /* FAST CATCH-UP, since 2026-10-04 (coach review). A first weight that was far too light (the Smith
+   * hip thrust starts from a June glute bridge, the step-up from a lunge) could only climb one step a
+   * session, so a weight he does for 20 took months to reach. When EVERY working set beat the top of
+   * the range by 3 or more reps, the next weight comes from the session's estimated max instead:
+   * Epley off the weakest working set (every set reached it), solved for the TOP of the range, then
+   * rounded DOWN to a weight that exists. Never less than one step. The reps go back to the bottom,
+   * so the first set at the new weight leaves reps in hand: form over heavier. Not for a
+   * counterweight lift, whose number runs the other way. */
+  if (!assisted && minReps >= top + 3) {
+    const e1 = ww * (1 + minReps / 30);
+    const one = stepUp(ww, increment, ladder);
+    const next = Math.max(one, floorLoad(e1 / (1 + top / 30), increment, ladder));
+    if (next > ww) {
+      return {
+        weight: next,
+        reps: bottom,
+        reason: `Got ${wd} at ${ww}, well past ${top}: up to ${next}, back to ${bottom}.`,
+      };
+    }
+  }
+
   if (minReps >= top) {
     /* HOLD ONE MORE SESSION WHEN THE RANGE DOES NOT EARN THE RUNG. See rungIsEarned above.
      *
@@ -523,12 +602,44 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       : `Hit ${wd} at ${ww}: up to ${next}, +${r1(next - ww)} lb.`;
     return { weight: next, reps: bottom, reason };
   }
-  /* ONE MORE REP THAN HIS BEST SET, since 2026-10-04. This read `minReps < bottom ? bottom : top`,
+  /* FELL SHORT: BACK TO A WEIGHT HE HAS DONE FOR EVERY SET, since 2026-10-04 (coach review). Two
+   * triggers. Two or more working sets under the bottom of the range (the row, 175 x 6/6/5 in 8 to
+   * 10). Or a ramp, one set at each weight, whose heavier set fell under the bottom (the bench on
+   * 2026-10-03, 135 x 12, 155 x 9, 175 x 5): the working weight is then a single set, and three sets
+   * of it is untested. Either way the card offers the heaviest weight his history shows done for
+   * every working set (see provenTarget). On the shortfall it asks for the bottom of the range there;
+   * on the ramp, the reps he actually did there. With nothing in the history, the rule below stands.
+   *
+   * `needed` is the number of sets he logged last time, held between 2 and 3: the engine has no
+   * programme lookup, and that count is the work he is about to be asked for. A ramp whose top set
+   * was IN the range (a first-try calibration that worked up to a set of 10) is not a trigger: that
+   * top set is the weight he chose. */
+  const below = repsAtWork.filter((r) => r < bottom).length;
+  const overshot = workSets.length === 1 && sets.some((s) => s.weight != null
+    && (assisted ? s.weight < ww : s.weight > ww) && (s.reps ?? 0) < bottom);
+  if (below >= 2 || overshot) {
+    const needed = Math.max(2, Math.min(3, sets.length));
+    const proven = provenTarget(plan.history ?? plan.recent ?? [last as LastSession], ww, bottom, top, needed, assisted);
+    if (proven) {
+      const reps = below >= 2 ? bottom : proven.reps;
+      return {
+        weight: proven.weight,
+        reps,
+        reason: below >= 2
+          ? `Got ${wd} at ${ww}, under ${bottom}: ${proven.weight} x ${reps}, done for every set on ${shortDate(proven.date)}.`
+          : `Last time was one set a weight: ${proven.weight} x ${reps}, done for ${needed} sets on ${shortDate(proven.date)}.`,
+      };
+    }
+  }
+
+  /* ONE MORE REP THAN HIS TYPICAL SET, since 2026-10-04. This read `minReps < bottom ? bottom : top`,
    * so 8/8/8 on a pulldown in an 8 to 12 range put 12 on the card and prefilled it: four reps a set
-   * in one session. And 6/6/5 on the row asked for 8. The weight holds; the target is his best set
-   * plus one, never past the top of the range. The weight moves only from the branch above, when
-   * every working set reached the top. */
-  const best = Math.max(...repsAtWork);
-  const goal = Math.min(top, best + 1);
+   * in one session. It was then his BEST set plus one, which asks every set to beat the best one.
+   * Since the coach review the same night it is the MEDIAN working set plus one (the lower middle on
+   * an even count), never past the top of the range. The weight holds; it moves only from the
+   * branches above. */
+  const sorted = [...repsAtWork].sort((a, b) => a - b);
+  const median = sorted[Math.floor((sorted.length - 1) / 2)]!;
+  const goal = Math.min(top, median + 1);
   return { weight: ww, reps: goal, reason: `Got ${wd} at ${ww}: hold, build to ${goal}.` };
 }

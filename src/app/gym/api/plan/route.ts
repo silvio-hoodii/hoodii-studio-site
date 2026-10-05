@@ -81,6 +81,8 @@ export async function POST(req: Request) {
         repSuffix: ex.repSuffix,
         today: date,
         recent: recent.slice(0, 3),
+        /* All eight, for the "weight he has done for every set" lookup in progression.ts. */
+        history: recent,
       });
       return { id: ex.id, last, suggestion, recent };
     });

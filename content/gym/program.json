@@ -1,14 +1,14 @@
 {
   "$comment": [
     "REBUILT 2026-10-04 (late evening) as FOUR sessions on his words that night: \"I need this to be the best programming possible ... think about something better or just do shit\", after \"rebuild everything based on what I can do ... I want it to be grounded\".",
-    "Lower 1 (squat and glutes), Upper 1, Lower 2 (hinge and single leg), Upper 2, scheduled Mon, Tue, Thu, Fri and run as a rotation in that order (src/lib/gym/program-shared.ts ROTATION). Legs and glutes first: the two lower days open with the squat and the hinge.",
+    "Lower 1 (squat and glutes), Upper 1, Lower 2 (hinge and single leg), Upper 2, scheduled Mon, Tue, Thu, Fri and run as a rotation in that order (src/lib/gym/program-shared.ts ROTATION). Legs and glutes first: both lower days open with the back squat.",
     "Sixteen sets a session, jump sets included: 31.8 + 2.51 x 16 = 72 minutes at his measured pace, 79 at the 75th percentile, so about 3 in 4 days land at or under his 80 (days.*.$time).",
     "Every block is a pair. \"fill\" = a light partner in a heavy lift's rest; \"alternate\" = two lifts taking turns. Starting weights come from his typed log through progression.ts; a lift with no log carries firstWeight and says it is a first try.",
     "The Session A and B of 2026-09-06 to 2026-10-04 are in git history (this file at da5feb8). Old rows keyed a and b stay in his log and render with their stored titles."
   ],
   "goal": {
     "his": "Legs and glutes first: a stronger squat and stronger glutes, with form I trust over heavier weight, while the fat comes off. Chest in the week, posture work, and stay athletic: jumps, sideways work, a carry, step-ups, and the swim after every lift.",
-    "measuredBy": "Working weight on the lead lifts (back squat, Romanian deadlift, front squat, hip thrust, step-up, bench, overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
+    "measuredBy": "Working weight on the lead lifts (back squat, Romanian deadlift, hip thrust, step-up, bench, overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
     "inHisWords": [
       {
         "on": "2026-05 (recorded 2026-08-27)",
@@ -60,17 +60,17 @@
       "Four sessions on four weekdays, Mon Lower 1, Tue Upper 1, Thu Lower 2, Fri Upper 2. The rotation follows what he did, not the calendar: a missed day is the next session, never skipped.",
       "Sized to 16 sets so a typical day is about 72 minutes at his measured pace and about 3 in 4 days stay at or under 80 (days.*.$time).",
       "Bench and row share one rack and one bar: a plate change between them (equipment.json, rack sharedInOneWindow).",
-      "Band-assisted pull-up on the rack bar: his log has no unassisted pull-up (only the machine, 40 lb of assistance for 5), so the band takes part of his weight and the first session finds his number. The assisted machine and the pulldown are one tap away.",
+      "Assisted pull-up machine in Upper 2: his log has 40 lb of assistance for 6, 5 and 5 (2026-08-25), so the card starts from a number he has done. The walk from the rack is accepted. The band on the rack bar and the pulldown are one tap away.",
       "Swim in the evening after the lift, his choice 2026-09-04. The Saturday run stays; the second run from run-plan week 3 follows Upper 1 on Tuesday."
     ]
   },
   "acceptedGaps": {
     "adductors": "Direct inner-thigh work is the Copenhagen plank, bodyweight, progressed by seconds (his sets: 20 to 23 s) and then by moving the top foot to the bench. The squats, split squat and step-up load the adductors as a helper. The DB lateral lunge is one tap away as its alternative. Accepted 2026-10-04 with the four-session week.",
-    "abs": "Direct trunk work is bodyweight: hanging knee raise (Lower 1), side plank (Lower 1), band Pallof press (Lower 2), Copenhagen plank (Lower 2). Progressed by reps or seconds, not load. The front squat, the RDL and the carry load the trunk as well."
+    "abs": "Direct trunk work is bodyweight: hanging knee raise (Lower 1), side plank (Lower 1), band Pallof press (Lower 2), Copenhagen plank (Lower 2). Progressed by reps or seconds, not load. The squats, the RDL and the carry load the trunk as well."
   },
   "frozen": {
     "until": "2026-11-01",
-    "daysHash": "1e50ff8b4b0cb348",
+    "daysHash": "3b732d4746e2654a",
     "changes": [
       {
         "on": "2026-09-06",
@@ -89,6 +89,12 @@
         "hisWords": "I need this to be the best programming possible. You have access to everything ... every single thing in this repo has been done by agents, so it's not like I invented a rule ... if you're saying there's a rule that doesn't allow me to do X or Y, I don't really care because the agent before you decided that. So you should be able to either think about something better or just do shit.",
         "hash": "1e50ff8b4b0cb348",
         "what": "Four sessions (Lower 1, Upper 1, Lower 2, Upper 2) on Mon, Tue, Thu, Fri, 16 sets each, every block a pair. Legs and glutes first, step-ups and a Smith hip thrust in Lower 1, Bulgarian split squat and Copenhagen plank in Lower 2, chest twice (bench, incline) plus push-ups, overhead press twice, band-assisted pull-ups added."
+      },
+      {
+        "on": "2026-10-04",
+        "hisWords": "I need this to be the best programming possible. You have access to everything ... every single thing in this repo has been done by agents, so it's not like I invented a rule ... if you're saying there's a rule that doesn't allow me to do X or Y, I don't really care because the agent before you decided that. So you should be able to either think about something better or just do shit.",
+        "hash": "3b732d4746e2654a",
+        "what": "Coach review of the same night, before the first Monday. Back squat twice a week: Lower 2 opens its loaded work with the back squat (same id as Lower 1, one history), 3 x 5 to 7, push-ups in its rest, front squat an alternative; the RDL follows. Upper 2 pull-up is the assisted machine (his 40 lb x 6/5/5), band and pulldown as alternatives, the walk from the rack accepted. Side plank and Copenhagen plank grow by seconds (rangeWidth 15). Still 16 sets a session."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -318,7 +324,7 @@
               "rangeWidth": 4,
               "firstWeight": {
                 "weight": 30,
-                "say": "First try: 30 lb dumbbells, a step under your reverse lunge (35 x 8). Knee-height box or bench."
+                "say": "First try: start with 30 lb dumbbells and work up until 8 a leg feels hard, about 2 left in the tank. Log that weight."
               },
               "alts": [
                 {
@@ -374,7 +380,8 @@
                   "station": null,
                   "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s."
                 }
-              ]
+              ],
+              "rangeWidth": 15
             }
           ]
         },
@@ -424,7 +431,7 @@
               "needsFloor": true,
               "firstWeight": {
                 "weight": 70,
-                "say": "First try: 70 lb of plates, not counting the Smith bar (your glute bridge was 70 x 10). Log the plates."
+                "say": "First try: start at 70 lb of plates (not counting the Smith bar) and work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
               }
             },
             {
@@ -741,7 +748,7 @@
         "thursday"
       ],
       "name": "Lower 2",
-      "title": "Lower 2: hinge and single leg",
+      "title": "Lower 2: squat, hinge and single leg",
       "warmup": [
         "lower"
       ],
@@ -831,8 +838,95 @@
         {
           "role": "main",
           "pairing": "fill",
+          "label": "Squat, push-ups in the rest",
+          "why": "The squat a second time in the week, first while you are fresh: the same lift and the same numbers as Lower 1, so one history moves it. The push-ups ride in its rest on the floor by the rack: chest a second time in the week, and a press uses nothing a squat needs.",
+          "exercises": [
+            {
+              "id": "bb-back-squat",
+              "name": "BB Back Squat",
+              "sets": 3,
+              "reps": "5",
+              "rest": "3 min",
+              "zone": "rack",
+              "station": "rack",
+              "log": true,
+              "cue": "The lift the week is built around. Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep.",
+              "progression": "weight",
+              "rangeWidth": 2,
+              "alts": [
+                {
+                  "id": "front-squat",
+                  "name": "Front Squat",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
+                  "sets": 3,
+                  "reps": "8",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "heavy-goblet-squat",
+                  "name": "Heavy Goblet Squat",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
+                },
+                {
+                  "id": "bulgarian-split-squat",
+                  "name": "Bulgarian Split Squat",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Dumbbells hanging at your sides. Put the top of your back foot on the bench, laces down. Your front foot should be far enough forward that at the bottom your front shin is straight up and down, not leaning forward over your toes. Lower until your back knee is close to the floor. Drive up through the FRONT heel. The back leg is a kickstand, it does not push.",
+                  "sets": 3,
+                  "reps": "8/leg",
+                  "rest": "2 min"
+                },
+                {
+                  "id": "reverse-lunge",
+                  "name": "Reverse Lunge",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
+                },
+                {
+                  "id": "walking-lunge",
+                  "name": "Walking Lunge",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
+                },
+                {
+                  "id": "leg-press",
+                  "name": "Leg Press",
+                  "zone": "machines",
+                  "station": "leg-press",
+                  "cue": "Feet shoulder width on the platform. Lower until your knees are near your chest without your lower back rounding off the pad, then press. Use this on a day your back is tired."
+                }
+              ]
+            },
+            {
+              "id": "pushup",
+              "name": "Pushup",
+              "sets": 2,
+              "reps": "15",
+              "rest": "45s",
+              "zone": "rack",
+              "station": null,
+              "needsFloor": true,
+              "bodyweight": true,
+              "log": true,
+              "progression": "reps",
+              "cue": "On the floor beside the rack between squat sets. Hands a little wider than your shoulders, body one straight line from head to heels, bum and stomach squeezed before you lower. Chest to a fist off the floor, elbows going back at about 45 degrees, then push up. Success: hips and chest arrive at the top together. If the hips sag, do them with your hands on the bench instead.",
+              "alts": [],
+              "whyHere": "chest a second time in the week, and a press uses nothing a squat needs"
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
           "label": "Hinge, Pallof press in the rest",
-          "why": "The heavy hinge first, at your own six to eight: the back of the legs and the glutes. The Pallof press rides in its rest with a band on the same rack, and trains your trunk not to twist.",
+          "why": "The heavy hinge after the squat, at your own six to eight: the back of the legs and the glutes. The Pallof press rides in its rest with a band on the same rack, and trains your trunk not to twist.",
           "exercises": [
             {
               "id": "romanian-deadlift",
@@ -922,93 +1016,6 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Front squat, push-ups in the rest",
-          "why": "The upright squat: the bar in front keeps your chest up, and depth comes easier. The push-ups ride in its rest on the floor by the rack: chest a second time in the week, and a press uses nothing a squat needs.",
-          "exercises": [
-            {
-              "id": "front-squat",
-              "name": "Front Squat",
-              "sets": 3,
-              "reps": "8",
-              "rest": "2 min",
-              "zone": "rack",
-              "station": "rack",
-              "log": true,
-              "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
-              "progression": "weight",
-              "rangeWidth": 2,
-              "alts": [
-                {
-                  "id": "heavy-goblet-squat",
-                  "name": "Heavy Goblet Squat",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
-                },
-                {
-                  "id": "bb-back-squat",
-                  "name": "BB Back Squat",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "The lift the week is built around. Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep.",
-                  "sets": 3,
-                  "reps": "5",
-                  "rest": "3 min"
-                },
-                {
-                  "id": "bulgarian-split-squat",
-                  "name": "Bulgarian Split Squat",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Dumbbells hanging at your sides. Put the top of your back foot on the bench, laces down. Your front foot should be far enough forward that at the bottom your front shin is straight up and down, not leaning forward over your toes. Lower until your back knee is close to the floor. Drive up through the FRONT heel. The back leg is a kickstand, it does not push.",
-                  "sets": 3,
-                  "reps": "8/leg",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "reverse-lunge",
-                  "name": "Reverse Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
-                },
-                {
-                  "id": "walking-lunge",
-                  "name": "Walking Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
-                },
-                {
-                  "id": "leg-press",
-                  "name": "Leg Press",
-                  "zone": "machines",
-                  "station": "leg-press",
-                  "cue": "Feet shoulder width on the platform. Lower until your knees are near your chest without your lower back rounding off the pad, then press. Use this on a day your back is tired."
-                }
-              ]
-            },
-            {
-              "id": "pushup",
-              "name": "Pushup",
-              "sets": 2,
-              "reps": "15",
-              "rest": "45s",
-              "zone": "rack",
-              "station": null,
-              "needsFloor": true,
-              "bodyweight": true,
-              "log": true,
-              "progression": "reps",
-              "cue": "On the floor beside the rack between deadlift sets. Hands a little wider than your shoulders, body one straight line from head to heels, bum and stomach squeezed before you lower. Chest to a fist off the floor, elbows going back at about 45 degrees, then push up. Success: hips and chest arrive at the top together. If the hips sag, do them with your hands on the bench instead.",
-              "alts": [],
-              "whyHere": "chest a second time in the week, and a press uses nothing a squat needs"
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
           "label": "Split squat, Copenhagen plank in the rest",
           "why": "One leg at a time on the bench, the glute and thigh of each side on its own. The Copenhagen plank uses the same bench: the inside of the thigh and the side of the trunk, the sideways half you said the lifting was missing.",
           "exercises": [
@@ -1078,7 +1085,8 @@
                   "station": null,
                   "cue": "A dumbbell in each hand. Step wide to one side, sit back into that hip with the other leg straight, push back to the middle. Your 35 lb for 6 a side is the number to start from."
                 }
-              ]
+              ],
+              "rangeWidth": 15
             }
           ]
         }
@@ -1164,7 +1172,7 @@
           "role": "main",
           "pairing": "alternate",
           "label": "Overhead press and pull-up",
-          "why": "The barbell overhead press in the rack, and band-assisted pull-ups on the bar on top of the same rack, taking turns.",
+          "why": "The barbell overhead press in the rack, and pull-ups on the assisted machine, taking turns. The machine is across the gym: walk over in the press rest.",
           "exercises": [
             {
               "id": "bb-overhead-press",
@@ -1189,26 +1197,25 @@
               ]
             },
             {
-              "id": "band-assisted-pullup",
-              "name": "Band-Assisted Pull-Up",
+              "id": "assisted-pullup",
+              "name": "Assisted Pull-Up",
               "sets": 3,
               "reps": "6",
               "rest": "90s",
-              "zone": "rack",
-              "station": "rack-pullup-bar",
+              "zone": "machines",
+              "station": "assisted-pullup",
               "log": true,
-              "cue": "First try. Loop a band over the bar on top of the rack, pull one end through the other, and put one knee in the loop. Hands a little wider than your shoulders. Pull your elbows down toward your ribs until your chin is over the bar, then lower slowly to straight arms. Do what you can and type the reps. Same band every time; when 10 is easy, use a lighter band.",
-              "progression": "reps",
-              "bodyweight": true,
+              "cue": "Set the counterweight so you get 6 clean reps: full hang with straight arms at the bottom, chin over the bar at the top. Log the COUNTERWEIGHT, and remember it is the one number here that should go DOWN over time. When 6 feels easy, take 10 lb of assistance off.",
+              "progression": "weight",
               "rangeWidth": 4,
-              "whyHere": "band-assisted pull-ups on the bar on top of the same rack",
+              "whyHere": "pull-ups on the assisted machine",
               "alts": [
                 {
-                  "id": "assisted-pullup",
-                  "name": "Assisted Pull-Up",
-                  "zone": "machines",
-                  "station": "assisted-pullup",
-                  "cue": "Set the counterweight so you get 6 clean reps: full hang with straight arms at the bottom, chin over the bar at the top. Log the COUNTERWEIGHT, and remember it is the one number here that should go DOWN over time. When 6 feels easy, take 10 lb of assistance off."
+                  "id": "band-assisted-pullup",
+                  "name": "Band-Assisted Pull-Up",
+                  "zone": "rack",
+                  "station": "rack-pullup-bar",
+                  "cue": "Loop a band over the bar on top of the rack, pull one end through the other, and put one knee in the loop. Hands a little wider than your shoulders. Pull your elbows down toward your ribs until your chin is over the bar, then lower slowly to straight arms. Same band every time; when 10 is easy, use a lighter band."
                 },
                 {
                   "id": "lat-pulldown",
@@ -1219,7 +1226,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "walkAccepted": "His ruling, 2026-10-04: the walk from the rack to the assisted pull-up machine is acceptable, so this pair may span two stations."
         },
         {
           "role": "main",

@@ -189,6 +189,15 @@ const sharedStationBlock = (p) => {
  *  dragged one of them across the gym and the ZONE rule refused it: the case reported a failure of
  *  the adjacency rule that was actually the walking-route rule doing its job. Replacing a block's
  *  contents touches one block, needs no second file, and cannot reach any other day. */
+/** The first timed-hold slot in the week, wherever it is. Found, not pointed at, so the case survives a
+ *  rebuilt week. */
+const firstTimed = (p) => {
+  for (const d of Object.values(p.days || {})) {
+    for (const b of d.blocks || []) for (const e of b.exercises || []) if (e.timed === true) return e;
+  }
+  throw new Error('no timed slot in the week; repoint this case');
+};
+
 const rebuildBlockAs = (p, leadId, partnerId) => {
   const cat = CATALOGUE();
   /* The OWNING DAY is tracked now, not just the block, because the warmup belongs to the day and
@@ -967,6 +976,18 @@ const CASES = [
     expect: 'occupies 2 stations',
   },
   {
+    /* 2026-10-04: his ruling on one block (`walkAccepted`, at least eight words) lets that pair span
+       two stations. A short or empty one does not. */
+    name: 'a block carrying his walk ruling may span two stations',
+    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise').walkAccepted = 'His ruling: the walk between these two machines is fine for this pair.'; },
+    expect: null,
+  },
+  {
+    name: 'a walk ruling under eight words does not count',
+    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise').walkAccepted = 'fine'; },
+    expect: 'occupies 2 stations',
+  },
+  {
     /* Adjacency is a fact about ONE place. Two fixtures in different zones cannot be in arm's reach,
      * and a file that said so would be describing a gym nobody has been in. */
     name: 'stations declared adjacent across two zones is refused',
@@ -1059,12 +1080,12 @@ const CASES = [
     name: 'an accessory block sitting before a main lift is refused',
     mutate: (p) => {
       /* THE WEEK HAS NO ACCESSORY BLOCKS SINCE 2026-09-06 (every block is a main pair, on his ruling
-         that optional means skipped), so the case synthesises one: a copy of the front squat block,
+         that optional means skipped), so the case synthesises one: a copy of the RDL block,
          relabelled accessory with fresh ids, dropped in front of the first main. A leg lift, so the
          warm-up region rule stays quiet and the rule under test is the one that fires. */
-      const day = Object.values(p.days).find((d) => d.blocks.some((b) => b.role === 'main' && b.exercises[0].id === 'front-squat'));
+      const day = Object.values(p.days).find((d) => d.blocks.some((b) => b.role === 'main' && b.exercises[0].id === 'romanian-deadlift'));
       const firstMain = day.blocks.findIndex((b) => b.role === 'main');
-      const blk = structuredClone(day.blocks.find((b) => b.role === 'main' && b.exercises[0].id === 'front-squat'));
+      const blk = structuredClone(day.blocks.find((b) => b.role === 'main' && b.exercises[0].id === 'romanian-deadlift'));
       blk.role = 'accessory';
       blk.exercises.forEach((e) => { e.id = `${e.id}-acc`; e.name = `${e.name} Acc`; delete e.alts; });
       day.blocks.splice(firstMain, 0, blk);
@@ -1197,6 +1218,17 @@ const CASES = [
     name: 'a rep window of eight is still allowed',
     mutate: (p) => { Object.values(p.days)[0].blocks[0].exercises[0].rangeWidth = 8; },
     expect: null,
+  },
+  {
+    /* 2026-10-04: a timed hold counts seconds and steps by 5 s, so its window may be up to 15. */
+    name: 'a timed hold may carry a 15 s window',
+    mutate: (p) => { firstTimed(p).rangeWidth = 15; },
+    expect: null,
+  },
+  {
+    name: 'a timed hold past 15 s is refused',
+    mutate: (p) => { firstTimed(p).rangeWidth = 16; },
+    expect: 'must be 1 to 15',
   },
   {
     name: 'a cue longer than eighty words is refused',

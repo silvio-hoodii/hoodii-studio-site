@@ -54,6 +54,9 @@ const sets = (n: number, weight: number | null, reps: number) =>
 const session = (date: string, n: number, weight: number | null, reps: number): LastSession =>
   ({ date, sets: sets(n, weight, reps) });
 const plan = (p: PlanInput): PlanInput => ({ today: '2026-08-28', ...p });
+/** One logged session from [weight, reps] rows, in the order he typed them. */
+const logged0 = (date: string, rows: [number | null, number][]): LastSession =>
+  ({ date, sets: rows.map(([weight, reps]) => ({ weight, reps })) });
 
 /* ---- the bodyweight and timed branch ---------------------------------------------------------- */
 
@@ -361,11 +364,25 @@ check(
 /* HIS REAL BENCH, 2026-10-03: 135x12, 155x9, 175x5, range 6 to 10. Every weight once, so the old
    heavier tie-break made 175 the working weight and the card asked for 175 x 6, his estimated max. */
 const OCT3_BENCH: LastSession = { date: '2026-10-03', sets: [{ weight: 135, reps: 12 }, { weight: 155, reps: 9 }, { weight: 175, reps: 5 }] };
+/* WAS 155 x 10, locked 2026-10-04 and changed by the coach review the same night: 155 was ONE set, so
+   "155 x 10" asked for three sets of a weight he had done once, for 9. With no history the card still
+   holds 155 (next case); with his real history it offers a weight done for three sets (the one after). */
 check(
-  'bench 135x12, 155x9, 175x5: the working weight is 155, not the single top set',
+  'bench 135x12, 155x9, 175x5 with no older history: the working weight is 155, not the single top set',
   suggest(OCT3_BENCH, plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-10-05', recent: [OCT3_BENCH] })),
-  (s) => s.weight === 155 && s.reps === 10,
-  '155 x 10: hold 155, build from his 9 (it printed 175 x 6)',
+  (s) => s.weight === 155,
+  '155: never the 175 single (it printed 175 x 6)',
+);
+const BENCH_HISTORY: LastSession[] = [
+  OCT3_BENCH,
+  logged0('2026-09-23', [[135, 10], [135, 10], [135, 12]]),
+  logged0('2026-09-06', [[165, 5], [165, 8], [165, 7]]),
+];
+check(
+  'bench ramp with his real history: a target he has done for three sets, not 155 x 10 x 3',
+  suggest(OCT3_BENCH, plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-10-06', recent: BENCH_HISTORY, history: BENCH_HISTORY })),
+  (s) => s.weight === 135 && s.reps === 10,
+  '135 x 10, his 2026-09-23 sets of 10, 10 and 12 (165 on 09-06 was 5, 8, 7: only two sets of 6+)',
 );
 
 check(
@@ -522,10 +539,11 @@ check(
   '105 (with the default 5 it asked for 110, a pin two steps up)',
 );
 
-/* ---- one more rep than his best set, 2026-10-04, on his real rows ---------------------------------
+/* ---- one more rep than his TYPICAL set, 2026-10-04, on his real rows ------------------------------
  * The engine asked for the TOP of the range after any in-range session: 8/8/8 on the pulldown in an
- * 8 to 12 range became 12, and 6/6/5 on the row became 8. It now holds the weight and asks for his
- * best set plus one, capped at the top. */
+ * 8 to 12 range became 12, and 6/6/5 on the row became 8. It then asked for his best set plus one;
+ * since the coach review the same night it asks for the MEDIAN working set plus one, capped at the
+ * top, and a session with two or more sets under the range goes back to a weight he has done. */
 const ON = '2026-10-05';
 check(
   'pulldown 180 x 8/8/8 in 8 to 12 asks 180 x 9, not 12',
@@ -534,10 +552,114 @@ check(
   '180 x 9',
 );
 check(
-  'row 175 x 6/6/5 in 8 to 10 asks 175 x 7, not 8',
+  'row 175 x 6/6/5 in 8 to 10 with no older history: hold 175, median plus one',
   suggest(logged('2026-10-03', [[175, 6], [175, 6], [175, 5]]), { targetReps: 8, rangeWidth: 2, today: ON, recent: [logged('2026-10-03', [[175, 6], [175, 6], [175, 5]])] }),
   (s) => s.weight === 175 && s.reps === 7,
   '175 x 7',
+);
+/* HIS REAL ROW, the eight sessions the plan route reads before 2026-10-06 (gym_set, read 2026-10-04). */
+const ROW_HISTORY: LastSession[] = [
+  logged('2026-10-03', [[175, 6], [175, 6], [175, 5]]),
+  logged('2026-09-23', [[135, 10], [155, 10]]),
+  logged('2026-09-19', [[155, 9], [155, 8], [155, 8]]),
+  logged('2026-09-10', [[135, 10], [155, 8], [155, 8]]),
+  logged('2026-09-06', [[135, 10], [135, 10], [155, 8]]),
+  logged('2026-08-25', [[170, 8], [170, 8], [170, 8], [170, 7]]),
+  logged('2026-08-19', [[170, 8], [170, 7], [170, 7]]),
+  logged('2026-08-15', [[165, 8], [165, 8], [165, 8]]),
+];
+check(
+  'row 175 x 6/6/5 with his real history: back to 170 x 8, done 8/8/8 on Aug 25',
+  suggest(ROW_HISTORY[0]!, { targetReps: 8, rangeWidth: 2, today: '2026-10-06', recent: ROW_HISTORY.slice(0, 3), history: ROW_HISTORY }),
+  (s) => s.weight === 170 && s.reps === 8 && /Aug 25/.test(s.reason),
+  '170 x 8, naming Aug 25',
+);
+check(
+  'a shortfall never offers a weight ABOVE the one he fell short at',
+  suggest(logged('2026-10-03', [[165, 6], [165, 6], [165, 5]]), {
+    targetReps: 8, rangeWidth: 2, today: '2026-10-06',
+    history: [logged('2026-10-03', [[165, 6], [165, 6], [165, 5]]), logged('2026-08-25', [[170, 8], [170, 8], [170, 8]]), logged('2026-08-15', [[160, 8], [160, 8], [160, 8]])],
+  }),
+  (s) => s.weight === 160 && s.reps === 8,
+  '160 x 8: 170 x 8 x 3 is in the history but heavier than the 165 he just missed',
+);
+check(
+  'one set under the range is not a shortfall: hold and build',
+  suggest(logged('2026-10-03', [[175, 8], [175, 8], [175, 6]]), { targetReps: 8, rangeWidth: 2, today: ON, history: ROW_HISTORY }),
+  (s) => s.weight === 175 && s.reps === 9,
+  '175 x 9 (median 8, plus one)',
+);
+check(
+  'assisted pull-up shortfall goes to MORE assistance he has done, never less',
+  suggest(logged('2026-10-01', [[40, 6], [40, 5], [40, 5]]), {
+    targetReps: 6, rangeWidth: 4, increment: 10, assistance: true, today: '2026-10-06',
+    history: [logged('2026-10-01', [[40, 6], [40, 5], [40, 5]]), logged('2026-09-20', [[30, 6], [30, 6]]), logged('2026-09-10', [[50, 7], [50, 6], [50, 6]])],
+  }),
+  (s) => s.weight === 50 && s.reps === 6,
+  '50 x 6: 30 lb is less help (harder) and was two sets only',
+);
+check(
+  'curl 35 x 8/8/8 in 10 to 15, his real history: 35 x 10, naming the most recent date he did it',
+  suggest(logged('2026-10-01', [[35, 8], [35, 8], [35, 8]]), {
+    targetReps: 10, rangeWidth: 5, ladder: DB, today: '2026-10-09',
+    history: [
+      logged('2026-10-01', [[35, 8], [35, 8], [35, 8]]),
+      logged('2026-09-28', [[35, 10], [35, 10], [35, 10]]),
+      logged('2026-09-21', [[40, 10], [40, 10]]),
+      logged('2026-09-15', [[40, 12], [40, 11], [40, 11]]),
+      logged('2026-09-08', [[35, 12], [35, 12], [35, 11]]),
+    ],
+  }),
+  (s) => s.weight === 35 && s.reps === 10 && /Sep 28/.test(s.reason),
+  '35 x 10, Sep 28 (40 x 12/11/11 is heavier than the 35 he just missed, so it is not offered)',
+);
+check(
+  'median, not best: 8/9/12 in 8 to 12 asks 10, not the 12 the best set would cap at',
+  suggest(logged('2026-10-03', [[100, 12], [100, 9], [100, 8]]), { targetReps: 8, rangeWidth: 4, increment: 2.5, today: ON }),
+  (s) => s.weight === 100 && s.reps === 10,
+  '100 x 10',
+);
+
+/* ---- first-try calibration and fast catch-up, 2026-10-04 (coach review) ---------------------------
+ * The Smith hip thrust starts at 70 lb of plates off a June glute bridge and the step-up at 30 lb off
+ * a lunge. One 5 lb step a session would take months to reach a weight he already does for 20. */
+check(
+  'hip thrust 70 x 25/25/24 in 10 to 14: the next weight from his estimated max, not one step',
+  suggest(logged('2026-10-05', [[70, 25], [70, 25], [70, 24]]), { targetReps: 10, rangeWidth: 4, today: '2026-10-09', recent: [logged('2026-10-05', [[70, 25], [70, 25], [70, 24]])] }),
+  (s) => s.weight === 85 && s.reps === 10,
+  '85 x 10: Epley off 24 reps is 126, solved for 14 reps is 85.9, rounded DOWN to 85',
+);
+check(
+  'step-up 30 x 25/25/25 in 8 to 12 on the dumbbell rack: lands on a rack weight, rounded down',
+  suggest(logged('2026-10-05', [[30, 25], [30, 25], [30, 25]]), { targetReps: 8, rangeWidth: 4, ladder: DB, today: '2026-10-09', recent: [logged('2026-10-05', [[30, 25], [30, 25], [30, 25]])] }),
+  (s) => s.weight === 35 && s.reps === 8,
+  '35 x 8: the estimate is 39.3, and 40 would be rounding up',
+);
+check(
+  'two over the top is not a catch-up: one step, as before',
+  suggest(logged('2026-10-05', [[70, 16], [70, 16], [70, 16]]), { targetReps: 10, rangeWidth: 4, today: '2026-10-09', recent: [logged('2026-10-05', [[70, 16], [70, 16], [70, 16]])] }),
+  (s) => s.weight === 75 && s.reps === 10,
+  '75 x 10',
+);
+check(
+  'a catch-up on a cable stack rounds down to its 2.5 lb pin',
+  suggest(logged('2026-10-05', [[50, 20], [50, 20], [50, 20]]), { targetReps: 10, rangeWidth: 4, increment: 2.5, today: '2026-10-09' }),
+  (s) => s.weight === 55 && s.reps === 10,
+  '55 x 10: Epley 83.3, solved for 14 is 56.8, the pin at or below is 55',
+);
+check(
+  'a first-try ramp that worked up to a set of 10 keeps the top set, not a warm-up',
+  suggest(logged('2026-10-05', [[70, 10], [90, 10], [115, 10]]), { targetReps: 10, rangeWidth: 4, today: '2026-10-09', recent: [logged('2026-10-05', [[70, 10], [90, 10], [115, 10]])] }),
+  (s) => s.weight === 115 && s.reps === 11,
+  '115 x 11',
+);
+
+/* ---- timed holds grow, rangeWidth 15 (seconds), 2026-10-04 ------------------------------------- */
+check(
+  'Copenhagen plank 20 s/side with a 15 s window: 23 and 20 asks 25, not the old cap of 22',
+  suggest(logged('2026-10-01', [[null, 23], [null, 20]]), { type: 'timed', targetReps: 20, rangeWidth: 15, today: '2026-10-08' }),
+  (s) => s.reps === 25,
+  '25 s',
 );
 check(
   'reverse fly 15 x 15/15/15 in 12 to 20 asks 15 x 16, not 20',
@@ -546,10 +668,16 @@ check(
   '15 x 16',
 );
 check(
-  'lateral raise 17.5 x 17/17/20 in 12 to 20 asks 17.5 x 20, never past the top',
+  'lateral raise 17.5 x 17/17/20 in 12 to 20 asks 17.5 x 18, the typical set plus one',
   suggest(logged('2026-10-03', [[17.5, 17], [17.5, 17], [17.5, 20]]), { targetReps: 12, rangeWidth: 8, ladder: DB, today: ON, recent: [logged('2026-10-03', [[17.5, 17], [17.5, 17], [17.5, 20]])] }),
+  (s) => s.weight === 17.5 && s.reps === 18,
+  '17.5 x 18 (median 17 plus one; the best-set rule asked 20 of every set)',
+);
+check(
+  'reps never pass the top of the range',
+  suggest(logged('2026-10-03', [[17.5, 20], [17.5, 20], [17.5, 19]]), { targetReps: 12, rangeWidth: 8, ladder: DB, today: ON }),
   (s) => s.weight === 17.5 && s.reps === 20,
-  '17.5 x 20 (best 20 plus one, capped at the top of 20)',
+  '17.5 x 20, capped',
 );
 check(
   'every set at the top still moves the weight up',

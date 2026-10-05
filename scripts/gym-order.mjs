@@ -121,8 +121,10 @@ for (const dayKey of DAY_ORDER) {
   if (!day) continue;
   let blockIdx = 0;
   for (const b of day.blocks) {
-    blockIdx++;
     const isPrimer = b.role === 'primer';
+    /* THE PRIMER TAKES NO POSITION, since 2026-10-04: two sets of three jumps are a warm-up, so the
+       first two LIFTING blocks are the fresh ones (Lower 2 opens squat then RDL on the coach review). */
+    if (!isPrimer) blockIdx++;
     for (const e of b.exercises) {
       const k = byId.get(e.id);
       if (!k) continue;
@@ -138,7 +140,7 @@ for (const dayKey of DAY_ORDER) {
 }
 
 console.log(`${programPath}`);
-console.log(`A slot is FRESH if it is in the first ${FRESH_BLOCKS} blocks of a day and not the primer.`);
+console.log(`A slot is FRESH if it is in the first ${FRESH_BLOCKS} lifting blocks of a day (the primer is not counted).`);
 console.log('Nunes 2021: strength gains are largest in the exercises performed at the beginning of a session');
 console.log('(ES 0.32, p = 0.034), and order has no effect on hypertrophy (ES 0.03, p = 0.862).\n');
 

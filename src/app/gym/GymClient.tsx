@@ -1242,9 +1242,10 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
       {/* THE WATCH COUNTS TOO, since 2026-09-03. Between May and August the watch recorded 72 lifting
         * sessions and this app logged 37, and the rotation read only the app, so a week trained
         * without logging sent him back to Session A. His words that night: "I don't even know if the
-        * session that I'm doing is the right one." Now an unlogged session the watch saw advances the
-        * rotation, and this line names the dates, because a guess he cannot see is a guess he cannot
-        * correct. The tabs above are the correction.
+        * session that I'm doing is the right one." Since 2026-10-04 (four sessions) an unlogged
+        * session the watch saw no longer advances the rotation, because the watch cannot say WHICH
+        * session it was and stepping skipped days. This line names the dates so he can pick another
+        * tab above if he did one of them.
         *
         * THE FACT, NOT THE ARGUMENT, since 2026-09-27 (the four-kinds rule). It was two sentences
         * explaining the rotation, and it named `day`, the tab ON SCREEN, as the session "offered":
