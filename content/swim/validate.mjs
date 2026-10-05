@@ -476,6 +476,15 @@ function checkQuotesAgainstSources() {
       }
     }
   }
+  /* THE LADDER'S RUNGS, since 2026-10-04. A rung that leans on a coach's wording carries it in
+     `$quotes` (the renderer never sees a $ field), and it is checked here like any other quote.
+     US Masters only: the ladder is his own training, the same family as Coach me. */
+  for (const r of plan.structure?.ladder || []) {
+    for (const q of r.$quotes || []) {
+      if (!/^usms-/.test(String(q.source || ''))) fail(`plan.json/ladder ${r.weeks}`, `quotes "${q.source}"; a ladder rung may quote US Masters Swimming only (a usms-* capture)`);
+      items.push(['plan.json', `ladder ${r.weeks}`, q.source, q.text]);
+    }
+  }
 
   let checked = 0;
   const followed = [];

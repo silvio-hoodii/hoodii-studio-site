@@ -55,7 +55,15 @@
     "and validate.mjs refuses the field. The turn cue moved to Coach me only, where US Masters' own",
     "words sit under it: one turn on two tabs was the repetition he complained about. onDrills and",
     "paddleRule left the page, being rules about things he does not do; both are kept below under $",
-    "with their evidence."
+    "with their evidence.",
+    "",
+    "REBUILT ON HIS LAPS 2026-10-04, on his email that evening: \"rebuild everything based on what I can do ...",
+    "whatever you put there I'll do but I want it to be grounded.\" Only structure.ladder and structure.note changed.",
+    "The goal is his ruling and did not move. Every rung now starts from a piece he has swum (500 m, three times in",
+    "two swims) and keeps the shape of his best swim (500 + 36 s + 500 on 2026-10-04): 1,000 m with one stop, the",
+    "stop shrinking, then the first piece growing 100 m at a time. Each rung carries its reason in $why and any US",
+    "Masters wording in $quotes, which validate.mjs checks against the captured page. The old ladder and what the",
+    "laps said about it are in structure.$ladderBefore20261004. Analysis: HealthOS/knowledge/ANALYSIS-2026-10-04-SWIM.md."
   ],
   "title": "Swim",
   "sessionsPerWeek": "3 to 4 a week",
@@ -72,40 +80,83 @@
   },
   "$onDrills": "Not prescribed. The evidence that isolated drills improve adult freestyle endurance is thin, so pacing comes first.",
   "structure": {
-    "note": "Continuity piece first, fresh, no buoy. The rest of the swim is yours.",
+    "note": "First thing in the swim, no buoy. After the 1,000 m, the rest of the swim is yours.",
     "ladder": [
       {
-        "weeks": "1 to 2",
-        "piece": "Your number, then your number minus 100 m",
-        "rest": "60 s",
-        "$noteChanged": "THE TYPED COUNT WAS REMOVED 2026-09-02, and it was found by reading the rendered Plan tab rather than by any gate.\n\nIt read \"seven of your last ten swims already hold a piece that big or bigger\". That number was TRUE when checked on 2026-09-02, and it is derived and rendered on the Now tab from health_swim_length in the same breath: \"7 of them are 150 m or more\". So this was a typed copy of a live figure sitting two tabs from its own source, which is a number that goes stale silently while its twin stays right.\n\nTHE SAME SENTENCE WAS DELETED FROM theGoal.whyItIsAchievable EARLIER IN THE SAME SESSION, for the same reason, and this copy was missed. Two copies of one derived fact, one field apart, and removing one of them is the patch-and-move-on failure he named: \"I'm going to say something, you're going to agree, and you're just going to change the one thing.\"\n\nIT POINTS AT THE TAB INSTEAD OF RESTATING THE NUMBER. Note what the rung actually needs, which is not the count: it needs to say that this first rung asks for nothing new. Pointing at where the live figure is renders that argument without owning a copy of it.\n\nUntil 2026-09-02 this read \"This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of monthly.\" Both halves were stale. \"Twice\" was about the 600 m in the lap data, written while the rung was still relative wording, and the rung now resolves to \"200 m, then 100 m\" from his baseline, so the note sat in the same table cell as a number it was not about. \"Instead of monthly\" is the dead premise, removed from theGoal in the same pass."
-      },
-      {
-        "weeks": "3 to 4",
-        "piece": "Your number plus 100 m, then your number minus 100 m",
-        "rest": "60 s"
-      },
-      {
-        "weeks": "5 to 6",
-        "piece": "Your number plus 200 m, then your number minus 100 m",
-        "rest": "45 s"
+        "weeks": "1 to 6",
+        "piece": "Your number plus 100 m, one stop, then on to 1,000 m",
+        "rest": "60 s at most",
+        "$why": [
+          "RESOLVES TO \"500 m, one stop, then on to 1,000 m\" WITH HIS NUMBER, 400 m (gym_swim_baseline, set 2026-09-11, no buoy).",
+          "",
+          "500 m: the longest unbroken freestyle piece he has swum in the last 6 weeks, and he has swum it three times in two swims: 2026-08-27 (first piece of the swim) and 2026-10-04 twice (lengths 21 to 40 and 41 to 60). Nothing longer since May. This rung asks for a piece he has done, not one he has not.",
+          "\"then on to 1,000 m\", one stop: on 2026-10-04 he swam lengths 21 to 60 as 500 m + 36 s stand + 500 m, all freestyle. That is the least standing in any all-freestyle 1,000 m since January 2025 and the closest he has come to the goal. The rung is that swim, made the plan.",
+          "60 s at most: 36 s is what he took on Oct 4; 60 s was already this ladder's rest. The second 500 that day ran at the highest heart rate of any long piece in the record (156 to 168 bpm) and 2.3 s a length slower than the first, so the rung leaves him more stand than he used rather than less.",
+          "Weeks 1 to 6, so it runs to week 6 counted from his number (2026-10-22 with the 2026-09-11 number): about 11 swims at his 4.5 swim days a week. Weeks 1 to 4 under the old ladder asked 400 m then 500 m first; he swam the asked first piece as unbroken freestyle in 1 of 18 swims, so the old weeks are not credited as done.",
+          "Relative wording kept on purpose: if he re-tests his number the whole ladder restarts from it, the way calibration was designed. The second piece is written as \"on to 1,000 m\" so a new number never makes the swim longer than the goal.",
+          "",
+          "Derived 2026-10-04 from HealthOS/swim-laps.json, local dates off sessionStartLocal, piece = deep.ts unbrokenPieces (freestyle only, any stop or other stroke ends it), the 32 swims of 8+ freestyle lengths from 2026-08-23 to 2026-10-04. Full analysis and adversary verdicts: HealthOS/knowledge/ANALYSIS-2026-10-04-SWIM.md."
+        ],
+        "$quotes": [
+          {
+            "source": "usms-adult-training",
+            "text": "I prefer using rest intervals when doing broken swims such as a 200 broken five seconds at each 50. Those sets help swimmers get the feel of racing that specific distance."
+          },
+          {
+            "source": "usms-adult-training",
+            "text": "1 x 800, broken by 10 seconds rest at each 100, steady pace throughout"
+          }
+        ]
       },
       {
         "weeks": "7 to 8",
-        "piece": "Your number plus 300 m, then your number minus 200 m",
-        "rest": "45 s"
+        "piece": "Your number plus 100 m, one stop, then on to 1,000 m",
+        "rest": "20 s at most",
+        "$why": [
+          "SAME 500 m PIECE, SHORTER STAND. The one thing between Oct 4 and the goal is the stop, so this rung shrinks it before the piece grows.",
+          "20 s: inside what he has done. On 2026-10-04 he stood 15 s after lengths 1 to 20 and 36 s after lengths 21 to 40. Stop length is chosen, not forced: across 1,250 stops in 2026 it does not grow with the distance just swum (rank correlation -0.04), so a shorter stand is a choice he can make. US Masters writes its broken distance swims with 5 to 10 s at each break (quotes below), so 20 s is on the generous side of theirs.",
+          "",
+          "Derived 2026-10-04 from HealthOS/swim-laps.json, local dates off sessionStartLocal, piece = deep.ts unbrokenPieces (freestyle only, any stop or other stroke ends it), the 32 swims of 8+ freestyle lengths from 2026-08-23 to 2026-10-04. Full analysis and adversary verdicts: HealthOS/knowledge/ANALYSIS-2026-10-04-SWIM.md."
+        ],
+        "$quotes": [
+          {
+            "source": "usms-adult-training",
+            "text": "a set about distance pacing can be done with very little rest between repeats."
+          }
+        ]
       },
       {
         "weeks": "9 to 10",
-        "piece": "Your number plus 400 m, unbroken, then easy swimming with whatever is left",
-        "rest": "none"
+        "piece": "Your number plus 200 m, one stop, then on to 1,000 m",
+        "rest": "20 s at most",
+        "$why": [
+          "RESOLVES TO \"600 m, one stop, then on to 1,000 m\": 600 + 400.",
+          "The first rung asking for something new. 600 m unbroken is 100 m past anything in the last 6 weeks; it was last swum once, in May 2026. 100 m is the smallest step a 25 m pool rounds to sensibly and the step this ladder has always used. The total stays 1,000 m with one short stop, the shape he showed on Oct 4.",
+          "Why grow the first piece and not the second: in 25 of 32 swims his longest piece IS the first piece of the swim, and of the 6 swims holding a piece of 400 m or more, 5 had it as the first piece (Oct 4 is the exception). The long piece happens first or rarely.",
+          "",
+          "Derived 2026-10-04 from HealthOS/swim-laps.json, local dates off sessionStartLocal, piece = deep.ts unbrokenPieces (freestyle only, any stop or other stroke ends it), the 32 swims of 8+ freestyle lengths from 2026-08-23 to 2026-10-04. Full analysis and adversary verdicts: HealthOS/knowledge/ANALYSIS-2026-10-04-SWIM.md."
+        ]
       },
       {
-        "weeks": "11 on",
-        "piece": "Add 100 m a fortnight until the piece is 1,000 m",
-        "rest": "none",
+        "weeks": "11 to 12",
+        "piece": "Your number plus 300 m, one stop, then on to 1,000 m",
+        "rest": "20 s at most",
+        "$why": [
+          "RESOLVES TO \"700 m, one stop, then on to 1,000 m\": 700 + 300. Same 100 m step, same total, same one stop. 700 m unbroken last happened in July 2025 (2025-07-05 and 07-10) and never in 2026; 2025 is context here, not a target.",
+          "",
+          "Derived 2026-10-04 from HealthOS/swim-laps.json, local dates off sessionStartLocal, piece = deep.ts unbrokenPieces (freestyle only, any stop or other stroke ends it), the 32 swims of 8+ freestyle lengths from 2026-08-23 to 2026-10-04. Full analysis and adversary verdicts: HealthOS/knowledge/ANALYSIS-2026-10-04-SWIM.md."
+        ]
+      },
+      {
+        "weeks": "13 on",
+        "piece": "Add 100 m to the first piece each fortnight until it is 1,000 m with no stop",
+        "rest": "20 s at most",
         "note": "A fortnight, not a week, and never add after a fortnight with missed swims.",
-        "$noteChanged": "THE SECOND HALF OF THIS NOTE IS THE ANSWER TO A QUESTION THAT WAS DELETED FROM plan.json/open ON 2026-09-02, and it is written here because this rung is where the question actually bites.\n\nTHE QUESTION, asked 2026-08-28 and re-asked 2026-09-02: the ladder's premise was \"the long piece happens monthly, not weekly, that is the gap, not fitness\", which the live laps had overtaken, and then five continuous 2,000 m swims from March and April 2023 turned up in the lap data, twice this plan's goal. It offered four options: leave the ladder, start further up, rebuild it with 2,000 m as the reference, or swim one and find out.\n\nIT IS ANSWERED BY TWO OF HIS RULINGS AND NEEDED NO FIFTH OPTION. \"Forget 2023\" removes the premise the question was built on, and \"the goal is 1,000 m uninterrupted in one swim, not 2 km\" settles what the top of the ladder is for. The third option died with the first ruling. The second was never a real choice: every rung here is measured from the number his own calibration swim sets, so the ladder already starts where he is.\n\nWHAT WAS STILL GENUINELY OPEN was only this rung, which stopped at 1,000 m and said nothing about what happens after. His words: \"then just stretch it as much as I can until it gets to the point where I need more time.\" The slot is the answer, so the slot is now printed here. A question left standing after its answer arrives is worse than no question at all, because scripts/gym-notes.mjs will go on putting it to him."
+        "$why": [
+          "Goes 800 + 200, 900 + 100, then 1,000 m unbroken, which is his goal (theGoal.target, unchanged). The note is the old last rung's note, kept: it is the one place the ladder already said not to climb on the calendar alone.",
+          "",
+          "NOT GROUNDED IN HIS LAPS, and saying so: the rate. Nothing in his data shows how fast his unbroken piece can grow; its maximum held at 450 to 500 m for the whole 6 weeks. 100 m a fortnight is this ladder's old rate, kept as convention."
+        ]
       }
     ],
     "calibration": {
@@ -113,6 +164,47 @@
       "what": "First thing in a swim, buoy on the deck. Swim until you want to stop, stop at that wall, and round down to the nearest 25 m.",
       "test": "Was the buoy on the deck the whole time? If not, the number does not count.",
       "why": "One swim replaces a guess with your own number."
+    },
+    "$ladderBefore20261004": {
+      "$why": [
+        "THE LADDER FROM 2026-09-11 TO 2026-10-04, verbatim. Replaced on his email of 2026-10-04: \"rebuild everything based on what I can do ... whatever you put there I'll do but I want it to be grounded.\"",
+        "What the laps said about it (32 swims, 2026-08-23 to 10-04, and the 18 since 09-11): weeks 1 to 2 asked a 400 m first piece and weeks 3 to 4 a 500 m one; he swam the asked first piece as unbroken freestyle in 1 of 18 swims (3 of 18 with a breaststroke length allowed). 400 m was within his capacity (five first pieces of 400 m or more in 6 weeks) but he swam it rarely: the gap in weeks 1 to 4 was how often, not how far. From week 5 (2026-10-09) it would have asked 600 m, then 700, then 800 unbroken, every one past anything he has swum since May, because it climbed by the calendar whether or not a rung was swum. Its second piece (\"your number minus 100 m\") was not swum either: in all 4 swims that went on after a first piece of 400 m or more, the next piece was 50 or 100 m (asked: 300 m). The rebuild keeps the same two-piece shape, starts at the piece he has swum (500 m), joins it to the goal distance the way he did on Oct 4, and climbs from there."
+      ],
+      "ladder": [
+        {
+          "weeks": "1 to 2",
+          "piece": "Your number, then your number minus 100 m",
+          "rest": "60 s",
+          "$noteChanged": "THE TYPED COUNT WAS REMOVED 2026-09-02, and it was found by reading the rendered Plan tab rather than by any gate.\n\nIt read \"seven of your last ten swims already hold a piece that big or bigger\". That number was TRUE when checked on 2026-09-02, and it is derived and rendered on the Now tab from health_swim_length in the same breath: \"7 of them are 150 m or more\". So this was a typed copy of a live figure sitting two tabs from its own source, which is a number that goes stale silently while its twin stays right.\n\nTHE SAME SENTENCE WAS DELETED FROM theGoal.whyItIsAchievable EARLIER IN THE SAME SESSION, for the same reason, and this copy was missed. Two copies of one derived fact, one field apart, and removing one of them is the patch-and-move-on failure he named: \"I'm going to say something, you're going to agree, and you're just going to change the one thing.\"\n\nIT POINTS AT THE TAB INSTEAD OF RESTATING THE NUMBER. Note what the rung actually needs, which is not the count: it needs to say that this first rung asks for nothing new. Pointing at where the live figure is renders that argument without owning a copy of it.\n\nUntil 2026-09-02 this read \"This is the distance you just proved, twice, and the only change is that it happens EVERY swim instead of monthly.\" Both halves were stale. \"Twice\" was about the 600 m in the lap data, written while the rung was still relative wording, and the rung now resolves to \"200 m, then 100 m\" from his baseline, so the note sat in the same table cell as a number it was not about. \"Instead of monthly\" is the dead premise, removed from theGoal in the same pass."
+        },
+        {
+          "weeks": "3 to 4",
+          "piece": "Your number plus 100 m, then your number minus 100 m",
+          "rest": "60 s"
+        },
+        {
+          "weeks": "5 to 6",
+          "piece": "Your number plus 200 m, then your number minus 100 m",
+          "rest": "45 s"
+        },
+        {
+          "weeks": "7 to 8",
+          "piece": "Your number plus 300 m, then your number minus 200 m",
+          "rest": "45 s"
+        },
+        {
+          "weeks": "9 to 10",
+          "piece": "Your number plus 400 m, unbroken, then easy swimming with whatever is left",
+          "rest": "none"
+        },
+        {
+          "weeks": "11 on",
+          "piece": "Add 100 m a fortnight until the piece is 1,000 m",
+          "rest": "none",
+          "note": "A fortnight, not a week, and never add after a fortnight with missed swims.",
+          "$noteChanged": "THE SECOND HALF OF THIS NOTE IS THE ANSWER TO A QUESTION THAT WAS DELETED FROM plan.json/open ON 2026-09-02, and it is written here because this rung is where the question actually bites.\n\nTHE QUESTION, asked 2026-08-28 and re-asked 2026-09-02: the ladder's premise was \"the long piece happens monthly, not weekly, that is the gap, not fitness\", which the live laps had overtaken, and then five continuous 2,000 m swims from March and April 2023 turned up in the lap data, twice this plan's goal. It offered four options: leave the ladder, start further up, rebuild it with 2,000 m as the reference, or swim one and find out.\n\nIT IS ANSWERED BY TWO OF HIS RULINGS AND NEEDED NO FIFTH OPTION. \"Forget 2023\" removes the premise the question was built on, and \"the goal is 1,000 m uninterrupted in one swim, not 2 km\" settles what the top of the ladder is for. The third option died with the first ruling. The second was never a real choice: every rung here is measured from the number his own calibration swim sets, so the ladder already starts where he is.\n\nWHAT WAS STILL GENUINELY OPEN was only this rung, which stopped at 1,000 m and said nothing about what happens after. His words: \"then just stretch it as much as I can until it gets to the point where I need more time.\" The slot is the answer, so the slot is now printed here. A question left standing after its answer arrives is worse than no question at all, because scripts/gym-notes.mjs will go on putting it to him."
+        }
+      ]
     }
   },
   "$paddleRule": {
