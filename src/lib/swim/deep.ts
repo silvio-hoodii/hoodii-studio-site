@@ -1,6 +1,7 @@
 import 'server-only';
 import { sql, SWIM_USABLE_SESSIONS } from './db';
 import { today } from '../day';
+import type { LadderSwim } from './ladder';
 
 /* EIGHT YEARS OF LENGTHS, READ. Built 2026-08-27, Phase D item 2 of the training redesign.
  *
@@ -609,6 +610,10 @@ interface PieceRow {
   ms: string | number;
   first_i: string | number;
   last_i: string | number;
+  /** The rest recorded after the piece's last length, ms, and the swim's length count, so a caller can
+   *  tell a stop from the end of the swim. Read by the swim ladder (src/lib/swim/ladder.ts). */
+  rest_last: string | number | null;
+  lis: string | number | null;
 }
 
 /** Unbroken freestyle pieces: one ends at any stop, at any other stroke, and at any length outside the band. */
@@ -624,6 +629,7 @@ async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): 
     ),
     l as (
       select ln.session_uuid, ln.length_index, ln.pool_length, ln.duration_ms, ln.session_start_time,
+             coalesce(ln.rest_after_ms, 0) as rest_after, ln.lengths_in_session,
              coalesce(left(ln.session_start_local, 10),
                       ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text) as day,
              (ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) as ok,
@@ -645,7 +651,9 @@ async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): 
     )
     select session_uuid, min(session_start_time) as st, min(day) as day,
            count(*) as n, sum(pool_length) as metres, sum(duration_ms) as ms,
-           min(length_index) as first_i, max(length_index) as last_i
+           min(length_index) as first_i, max(length_index) as last_i,
+           (array_agg(rest_after order by length_index desc))[1] as rest_last,
+           max(lengths_in_session) as lis
       from g
      group by session_uuid, grp
   `) as unknown as PieceRow[];
@@ -736,6 +744,27 @@ export async function getSwimYear(): Promise<SwimYear> {
       lastIndex: Number(r.last_i),
     }));
   return { summaries, pieces };
+}
+
+/** Every swim from `fromDay` on, oldest first, as the swim ladder reads it (src/lib/swim/ladder.ts).
+ *  Its own query rather than getSwimYear's pieces, which start on January 1 and would drop the
+ *  ladder's December swims every New Year. A swim with no freestyle piece is absent: it cannot meet a rung. */
+export async function getLadderSwims(fromDay: string): Promise<LadderSwim[]> {
+  const rows = await unbrokenPieces({ sinceDay: fromDay });
+  const by = new Map<string, LadderSwim & { st: string }>();
+  for (const r of rows) {
+    const s = by.get(r.session_uuid) ?? { uuid: r.session_uuid, date: String(r.day), st: String(r.st ?? ''), pieces: [] };
+    s.pieces.push({
+      metres: Number(r.metres),
+      firstIndex: Number(r.first_i),
+      lastIndex: Number(r.last_i),
+      restAfterS: r.lis != null && Number(r.last_i) < Number(r.lis) ? Math.round(Number(r.rest_last ?? 0) / 1000) : null,
+    });
+    by.set(r.session_uuid, s);
+  }
+  return [...by.values()]
+    .sort((a, b) => (a.st < b.st ? -1 : a.st > b.st ? 1 : 0))
+    .map(({ uuid, date, pieces }) => ({ uuid, date, pieces }));
 }
 
 /** One call, one round of queries, for the whole deep-dive page. */

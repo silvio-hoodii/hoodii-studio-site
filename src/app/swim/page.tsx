@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { loadSwimPlan, loadSwimCoaching, loadSwimTeaching } from '@/lib/swim/content';
 import { getSwimBaseline, type SwimBaseline } from '@/lib/swim/db';
-import { getSwimYear, LENGTH_MIN_MS, LENGTH_MAX_MS, type SwimYear, type SwimSummary } from '@/lib/swim/deep';
+import { getSwimYear, getLadderSwims, LENGTH_MIN_MS, LENGTH_MAX_MS, type SwimYear, type SwimSummary } from '@/lib/swim/deep';
+import { ladderPosition, type LadderSwim } from '@/lib/swim/ladder';
 import {
   loadSwimStandards, getSwimPbs, standingFor, ratedDistances, fmtTime, tierTimeMs,
   type SwimStandards, type DistanceStanding,
@@ -18,7 +19,7 @@ import Cues from '@/components/training/Cues';
 import Readout from '@/components/Readout';
 import { shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
-import type { SwimPlan, SwimCoaching, SwimTeaching } from '@/lib/swim/types';
+import type { SwimPlan, SwimCoaching, SwimTeaching, SwimLadderStep } from '@/lib/swim/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,38 +54,35 @@ function per100(seconds: number, metres: number): string {
 
 const newestFirst = (a: { date: string }, b: { date: string }) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
 
-/** "Your number plus 100 m" becomes "500 m" once a number exists. The relative wording stays in the data. */
-function resolvePiece(piece: string, base: number | null): string {
-  if (!base) return piece;
-  return piece
-    .replace(/your number plus (\d+) m/gi, (_m, n) => `${base + Number(n)} m`)
-    // Floored at 100 m: a small number once made the week 7 to 8 rung resolve to 0 m.
-    .replace(/your number minus (\d+) m/gi, (_m, n) => `${Math.max(100, base - Number(n))} m`)
-    .replace(/your number/gi, `${base} m`);
-}
-
+/* THE RUNG HE IS ON, off his laps since 2026-10-04 (src/lib/swim/ladder.ts). Until then this counted
+   weeks from the day his number was set and moved him up every fortnight whatever he swam; he met
+   the asked piece in 1 of 18 swims and it kept climbing. */
 interface Rung {
-  week: number;
-  weeks: string;
-  piece: string;
-  rest: string;
+  /** 0-based; equals the rung count when the last rung is done. */
+  index: number;
+  total: number;
+  step: SwimLadderStep | null;
+  met: number;
+  need: number;
 }
 
-/** The ladder row he is on, counted in weeks from the day his number was set. */
-function currentRung(plan: SwimPlan, baseline: SwimBaseline | null): Rung | null {
-  if (!baseline) return null;
-  const days = Math.floor((Date.parse(today()) - Date.parse(baseline.measuredOn)) / 86_400_000);
-  const week = Math.max(1, Math.floor(days / 7) + 1);
-  for (const r of plan.structure.ladder) {
-    const m = /^(\d+)\s*(?:to\s*(\d+)|on)$/i.exec(r.weeks.trim());
-    if (!m) continue;
-    const lo = Number(m[1]);
-    const hi = m[2] ? Number(m[2]) : Number.POSITIVE_INFINITY;
-    if (week >= lo && week <= hi) {
-      return { week, weeks: r.weeks, piece: resolvePiece(r.piece, baseline.metres), rest: r.rest };
-    }
+function currentRung(plan: SwimPlan, swims: LadderSwim[]): Rung {
+  const L = plan.structure.ladder;
+  const p = ladderPosition(L, swims, plan.structure.ladderFrom, plan.structure.advanceAfter);
+  return { index: p.index, total: L.length, step: L[p.index] ?? null, met: p.met, need: p.need };
+}
+
+/** One line: the rung, and how many of his swims have met it. */
+function RungLine({ rung }: { rung: Rung }) {
+  if (!rung.step) {
+    return <p className="ex-cue"><b>Ladder done:</b> 1,000 m without stopping, in {rung.need} swims.</p>;
   }
-  return null;
+  return (
+    <p className="ex-cue">
+      <b>Now: {rung.step.piece}</b>{rung.step.standS != null && <>, stop {rung.step.rest}</>}. Rung {rung.index + 1} of{' '}
+      {rung.total}. Swims that met it: {rung.met} of {rung.need}.
+    </p>
+  );
 }
 
 function lastSwimLine(s: SwimSummary | null): string | null {
@@ -168,13 +166,13 @@ function SwimBars({ rows }: { rows: SwimSummary[] }) {
   );
 }
 
-function Toward1000({ year, baseline, plan }: { year: SwimYear; baseline: SwimBaseline | null; plan: SwimPlan }) {
+function Toward1000({ year, ladder, plan }: { year: SwimYear; ladder: LadderSwim[]; plan: SwimPlan }) {
   const s = year.summaries;
   if (!s.length) return null;
   const last = s.slice(-10);
   const before = s.slice(-20, -10);
   const top = year.pieces[0] ?? null;
-  const rung = currentRung(plan, baseline);
+  const rung = currentRung(plan, ladder);
   const typical = (xs: number[]) => {
     const m = median(xs);
     return m == null ? null : Math.round(m);
@@ -187,12 +185,7 @@ function Toward1000({ year, baseline, plan }: { year: SwimYear; baseline: SwimBa
   return (
     <div className="exgroup">
       <div className="exgroup-label">Toward 1,000 m unbroken</div>
-      {rung && baseline && (
-        <p className="ex-cue" style={{ marginTop: 0 }}>
-          <b>This week: {rung.piece}</b>, rest {rung.rest}. Week {rung.week} of the ladder from your
-          number, {baseline.metres} m, set {shortDate(baseline.measuredOn)}.
-        </p>
-      )}
+      <RungLine rung={rung} />
       <div className="stats">
         {top && (
           <div>
@@ -322,19 +315,9 @@ function swimDays(s: SwimSummary[]): { date: string; metres: number; longestM: n
  * the 1,000 m goal as a dashed line and his real longest unbroken piece of the last ten swim days as
  * a solid one, so the gap between the plan and the pool is the picture.
  *
- * The step height is read out of the rung's text, because plan.json states each piece as a sentence.
- * The FIRST distance of 300 m or more is the piece ("500 m, then 300 m" is 500; "Add 100 m a fortnight
- * until the piece is 1,000 m" is 1,000). A rung whose text yields none is drawn at no height rather
- * than guessed, and if no rung parses the picture is not drawn at all: the table below still is. */
-function pieceMetres(text: string): number | null {
-  for (const m of text.matchAll(/(\d[\d,]*)\s*m\b/g)) {
-    const n = Number(m[1]!.replace(/,/g, ''));
-    if (n >= 300) return n;
-  }
-  return null;
-}
+ * The step height is the rung's firstM since 2026-10-04; it was parsed out of the rung's sentence before. */
 
-function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: number | null; on: boolean }[]; longest: number }) {
+function LadderTrack({ steps, longest }: { steps: { label: string; metres: number | null; on: boolean }[]; longest: number }) {
   if (!steps.some((s) => s.metres)) return null;
   const W = 340;
   const H = 150;
@@ -348,12 +331,12 @@ function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: numbe
       <svg viewBox={`0 0 ${W} ${H + 18}`} role="img"
         aria-label={`The ladder from ${steps[0]?.metres ?? ''} m to ${GOAL_M} m; your longest recent piece is ${longest} m`}>
         {steps.map((st, i) => st.metres ? (
-          <g key={st.weeks} data-r={`weeks ${st.weeks}: ${st.metres.toLocaleString('en-CA')} m unbroken${st.on ? ', this week' : ''}`}>
+          <g key={st.label} data-r={`rung ${st.label}: first piece ${st.metres.toLocaleString('en-CA')} m${st.on ? ', now' : ''}`}>
             <rect x={i * bw + 2} y={0} width={bw - 4} height={H} fill="transparent" />
             <rect x={i * bw + 2} y={y(st.metres)} width={bw - 4} height={H - y(st.metres)} rx="1.5"
               className={`vbar ${st.on ? 'on' : 'off'}`} style={{ ['--i' as string]: i }} />
             <text x={i * bw + bw / 2} y={y(st.metres) - 4} textAnchor="middle" className="lv">{st.metres}</text>
-            <text x={i * bw + bw / 2} y={H + 13} textAnchor="middle" className="lw">{st.weeks}</text>
+            <text x={i * bw + bw / 2} y={H + 13} textAnchor="middle" className="lw">{st.label}</text>
           </g>
         ) : null)}
         <line x1="0" x2={W} y1={y(GOAL_M)} y2={y(GOAL_M)} className="goal" />
@@ -363,14 +346,14 @@ function LadderTrack({ steps, longest }: { steps: { weeks: string; metres: numbe
       <figcaption>
         <span><i className="k-goal" />goal {GOAL_M.toLocaleString('en-CA')} m</span>
         {longest > 0 && <span><i className="k-you" />your longest lately {longest} m</span>}
-        <span className="lwk">weeks</span>
+        <span className="lwk">rungs</span>
       </figcaption>
     </figure>
   );
 }
 
-function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBaseline | null; year: SwimYear | null }) {
-  const rung = currentRung(plan, baseline);
+function PlanTab({ plan, baseline, year, ladder }: { plan: SwimPlan; baseline: SwimBaseline | null; year: SwimYear | null; ladder: LadderSwim[] }) {
+  const rung = currentRung(plan, ladder);
   /* Derived since 2026-09-11. The typed line said "about 1,000 m every time" while three of his
      last ten swims were under 1,000 m. */
   const days = year ? swimDays(year.summaries).slice(-10) : [];
@@ -393,40 +376,35 @@ function PlanTab({ plan, baseline, year }: { plan: SwimPlan; baseline: SwimBasel
           )}
         </div>
       </div>
-      {rung && baseline && (
-        <p className="ex-cue">
-          <b>This week: {rung.piece}</b>, rest {rung.rest}. Your number is {baseline.metres} m, set{' '}
-          {shortDate(baseline.measuredOn)}.
-        </p>
-      )}
+      <RungLine rung={rung} />
       <p className="lede">{plan.structure.note}</p>
       <LadderTrack
-        steps={plan.structure.ladder.map((st) => ({
-          weeks: st.weeks,
-          metres: pieceMetres(resolvePiece(st.piece, baseline?.metres ?? null)),
-          on: rung?.weeks === st.weeks,
+        steps={plan.structure.ladder.map((st, i) => ({
+          label: String(i + 1),
+          metres: st.firstM,
+          on: i === rung.index,
         }))}
         longest={longest}
       />
       <details className="fold">
-        <summary>The ladder, week by week</summary>
+        <summary>The ladder, rung by rung</summary>
       <div className="table-scroll">
         <table className="plan-table">
           <thead>
             <tr>
-              <th className="tnum">Weeks</th>
+              <th className="tnum">Rung</th>
               <th className="wide">Continuity piece</th>
-              <th>Rest</th>
+              <th>Stop</th>
             </tr>
           </thead>
           <tbody>
-            {plan.structure.ladder.map((s) => {
-              const on = rung?.weeks === s.weeks;
+            {plan.structure.ladder.map((s, i) => {
+              const on = i === rung.index;
               return (
-                <tr key={s.weeks} className={on ? 'now' : undefined}>
-                  <td className="tnum">{s.weeks}{on ? ', now' : ''}</td>
+                <tr key={i} className={on ? 'now' : undefined}>
+                  <td className="tnum">{i + 1}{on ? ', now' : ''}</td>
                   <td>
-                    {resolvePiece(s.piece, baseline?.metres ?? null)}
+                    {s.piece}
                     {s.note && <div className="quiet">{s.note}</div>}
                   </td>
                   <td>{s.rest}</td>
@@ -645,16 +623,18 @@ export default async function SwimPage({
   const sp = await searchParams;
   const sub = SUB_TABS.find((x) => x.id === sp.s)?.id ?? 'now';
 
-  const [plan, year, baseline, teaching, coaching, recent, standards, pbs] = await Promise.all([
-    loadSwimPlan(),
+  const planP = loadSwimPlan();
+  const [plan, year, baseline, teaching, coaching, recent, standards, pbs, ladder] = await Promise.all([
+    planP,
     sub === 'teach' ? null : getSwimYear(),
-    sub === 'now' || sub === 'plan' ? getSwimBaseline() : null,
+    sub === 'plan' ? getSwimBaseline() : null,
     sub === 'teach' ? loadSwimTeaching() : null,
     sub === 'me' ? loadSwimCoaching() : null,
     sub === 'now' ? getRecentSessions('swimming', 1)
       : sub === 'me' || sub === 'how' ? getRecentSessions('swimming', 10) : null,
     sub === 'now' ? loadSwimStandards() : null,
     sub === 'now' ? getSwimPbs() : null,
+    sub === 'now' || sub === 'plan' ? planP.then((p) => getLadderSwims(p.structure.ladderFrom)) : null,
   ]);
   const lastSession = sub === 'now' ? (recent?.[0] ?? null) : null;
   const lastSummary = lastSession && year
@@ -670,7 +650,7 @@ export default async function SwimPage({
       {sub === 'now' && year && standards && pbs && (
         <>
           <LastSession s={lastSession} insight={lastSwimLine(lastSummary)} />
-          <Toward1000 year={year} baseline={baseline} plan={plan} />
+          <Toward1000 year={year} ladder={ladder ?? []} plan={plan} />
           <SwimLevel
             standards={standards}
             standings={ratedDistances(standards).map((d) => standingFor(d, pbs, standards))}
@@ -684,7 +664,7 @@ export default async function SwimPage({
         </>
       )}
 
-      {sub === 'plan' && <PlanTab plan={plan} baseline={baseline} year={year} />}
+      {sub === 'plan' && <PlanTab plan={plan} baseline={baseline} year={year} ladder={ladder ?? []} />}
       {sub === 'how' && year && <HowTab plan={plan} year={year} recent={recent ?? []} />}
       {sub === 'me' && coaching && year && <CoachMe c={coaching} year={year} recent={recent ?? []} />}
       {sub === 'teach' && teaching && <CoachThem t={teaching} />}

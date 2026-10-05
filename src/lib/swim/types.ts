@@ -4,9 +4,12 @@ import type { Cue } from '@/lib/gym/types';
 
 type Prose = string | string[];
 
-/** A rung, written relative to his number so one ladder serves any number he sets. */
+/** A rung: the first piece, the longest stop allowed after it, and the words the page prints. The page
+ *  moves him up only when his laps meet it (src/lib/swim/ladder.ts); nothing here counts weeks. */
 export interface SwimLadderStep {
-  weeks: string;
+  firstM: number;
+  /** Null on the last rung: no stop. */
+  standS: number | null;
   piece: string;
   rest: string;
   note?: string;
@@ -25,7 +28,15 @@ export interface SwimPlan {
   theGoal: { target: string; whatThatActuallyIs: string };
   /** addSeconds is what the How tab adds to his last middle length to print the target. */
   theOneTechniqueChange: { what: string; why: string; addSeconds: number };
-  structure: { note: string; calibration: SwimCalibration; ladder: SwimLadderStep[] };
+  structure: {
+    note: string;
+    calibration: SwimCalibration;
+    ladder: SwimLadderStep[];
+    /** First local day whose swims count toward a rung. */
+    ladderFrom: string;
+    /** Swims that must meet a rung before the next one shows. */
+    advanceAfter: number;
+  };
   pullBuoyRule: string;
   cues?: Cue[];
   cuesNote?: string | null;
