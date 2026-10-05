@@ -75,7 +75,7 @@
     "title": "Run",
     "surface": "Outdoors",
     "sessionsPerWeek": 2,
-    "startedFrom": "A returning runner, not a beginner. 40 runs of 9 minutes or more on record: 29 in 2023 (including continuous runs of 5.0, 6.0 and 7.5 km), 5 in 2024, 2 in 2025, and since 2026-08-24 four outdoor runs that read 4.54, 5.03, 5.02 and 5.03 km on his watch, 34.7 to 40.1 minutes each, about one a week with a three-week gap. The last, 2026-10-03, was continuous, 34.7 minutes, average running heart rate 155, 31.5 minutes above 140. The one that stayed easy was 2026-08-24: 3 minutes run, 1 minute walk, ten times, 40.1 minutes, 4.54 km, running pace 8:04 per km, running heart rate 125. Source: HealthOS/knowledge/ANALYSIS-2026-10-04-RUN.md, which an adversary re-ran the same day.",
+    "startedFrom": "A returning runner, not a beginner. Runs of 9 minutes or more on record: 29 in 2023 (including continuous runs of 5.0, 6.0 and 7.5 km), 5 in 2024, 2 in 2025, one treadmill session on 2026-08-18, and since 2026-08-24 four outdoor runs that read 4.54, 5.03, 5.02 and 5.03 km on his watch, 34.7 to 40.1 minutes each, four in 41 days, with a three-week gap. The last, 2026-10-03, was continuous, 34.7 minutes, average running heart rate 155, 31.5 minutes above 140. The one that stayed easy was 2026-08-24: 3 minutes run, 1 minute walk, ten times, 40.1 minutes, 4.54 km, running pace 8:04 per km, running heart rate 125. Source: HealthOS/knowledge/ANALYSIS-2026-10-04-RUN.md, which an adversary re-ran the same day.",
     "$startedFromRunningOnly": "RUNNING-ONLY FIGURES, never rendered (his rule, 2026-10-04: a page shows the watch total). Running seconds = step rate 140 or more. Kilometres of running in those four sessions: 3.62, 4.19, 4.37, 4.94. Running pace 8:04, 7:13, 7:00, 6:50 per km. Walking pace on 2026-08-24: 0.92 km in 10.9 minutes, about 11:50 per km.",
     "why": [
       "Start from what he has done, at the effort he has shown he can hold easily, and let the clock grow",
@@ -85,108 +85,112 @@
     ],
     "howHard": {
       "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, walk until you can, then run on slower.",
-      "secondary": "If you want a number, keep your heart rate under 140. On your runs that has meant about 8:00 per km.",
+      "secondary": "If you want a number, keep your heart rate under 140. On your one easy run that meant about 8:00 per km.",
       "$why": "THE TALK TEST is the intensity instruction of the injury trial this plan's load rules come from. Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"All participants were instructed to have at least one day with no running between each session and to run with a moderate intensity i.e. being able to converse without breathlessness.\" THE 140 HAS NO STUDY BEHIND IT; it is the plan's old ceiling, kept as a convention. What his own record adds (ANALYSIS-2026-10-04-RUN.md, E9 and recommendations): only 2026-08-24, at 8:04 per km running pace with one-minute walks, stayed mostly under 140 (2.4 of 40.1 minutes above). At 7:13 per km on 2026-08-30 he was above 140 for 18.5 of 39.3 minutes. The watch put his aerobic threshold at 134 to 136 on each run, so 140 sits just above it. So \"about 8:00 per km\" is his number, not a population one."
     },
     "pace": {
       "run": "about 8:00 per km",
       "walk": "about 12:00 per km",
-      "check": "Look at the pace once in each run block. Faster than 7:30 per km means slow down.",
+      "check": "Look at the pace once in each run block. Faster than 8:00 per km means slow down.",
       "runSecPerKm": 480,
       "walkSecPerKm": 720,
-      "$why": "GROUNDED IN HIS LOG, not a source. 480 s/km is 8:00, rounded from his 8:04 running pace on 2026-08-24, the one run that stayed under 140. 720 s/km is 12:00, rounded from that session's walking (0.92 km in 10.9 min, about 11:50). The page uses these two numbers to compute the \"about X km on the watch\" line for each week, total distance including walks, which is the figure his watch shows. Checked against the session they come from: 2026-08-24 as written (29.2 min running, 10.9 min walking) computes to 3.65 + 0.91 = 4.56 km against 4.54 on the watch. THE 7:30 CHECK IS A JUDGMENT between his two data points: 8:04 stayed under 140, 7:13 did not. The pace stays fixed for all eight weeks so distance and speed never rise together."
+      "$why": "GROUNDED IN HIS LOG, not a source. 480 s/km is 8:00, rounded from his 8:04 running pace on 2026-08-24, the one run that stayed under 140. 720 s/km is 12:00, rounded from that session's walking (0.92 km in 10.9 min, about 11:50). The page uses these two numbers to compute the \"about X km on the watch\" line for each week, total distance including walks, which is the figure his watch shows. Checked against the session they come from: 2026-08-24 as written (29.2 min running, 10.9 min walking) computes to 3.65 + 0.91 = 4.56 km against 4.54 on the watch. THE CHECK IS 8:00 because 8:04 is the only pace on his record that stayed under 140 (one run, n = 1); at 7:13 he was above 140 for 18.5 of 39.3 minutes. A faster threshold would permit a pace his data has never shown to be easy. The pace stays fixed for all eight weeks so distance and speed never rise together."
     },
     "weeks": [
       {
         "week": 1,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "6:00",
+        "run": "5:00",
         "walk": "1:00"
       },
       {
         "week": 2,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "6:30",
+        "run": "5:30",
         "walk": "1:00"
       },
       {
         "week": 3,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "7:00",
+        "run": "6:00",
         "walk": "1:00"
       },
       {
         "week": 4,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "7:30",
+        "run": "6:30",
         "walk": "1:00"
       },
       {
         "week": 5,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "8:00",
+        "run": "7:00",
         "walk": "1:00"
       },
       {
         "week": 6,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "8:30",
+        "run": "7:30",
         "walk": "1:00"
       },
       {
         "week": 7,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "9:00",
+        "run": "8:00",
         "walk": "1:00"
       },
       {
         "week": 8,
         "warmup": "5:00",
         "blocks": 3,
-        "run": "9:30",
+        "run": "8:30",
         "walk": "1:00",
         "note": "Reassess here before deciding whether to keep climbing or hold."
       }
     ],
     "$weeksWhy": [
-      "WEEK 1 IS HIS RECENT WEEK, AT EASY EFFORT, SPLIT IN TWO. Every week since 2026-09-26 held one run of",
-      "4.4 to 4.9 km of running (running-only figures). Week 1 is 2 sessions of 18 running minutes, 36",
-      "minutes a week, which at 8:00 per km is 4.5 km of running: the middle of what he has been doing,",
-      "not the 4.9 km peak and not the old plan's 1.0 km. Per session that is 2.9 km on the watch",
-      "including walks, against his 4.5 to 5.0 km single runs. JUDGMENT: no study sets the start for a",
-      "returning runner; this is his own tolerated weekly load, held, not raised, in week 1.",
+      "WEEK 1 SITS BETWEEN HIS AVERAGE WEEK AND HIS BIGGEST, AT EASY EFFORT, SPLIT IN TWO. Running-only",
+      "figures, never rendered: his four outdoor runs since 2026-08-24 hold 17.1 km of running over about",
+      "six weeks, about 3.0 km a week on average and about 2.3 km a week over the last four (a three-week",
+      "gap); his two most recent single weeks held 4.4 and 4.9. Week 1 is 2 sessions of 15 running minutes,",
+      "30 minutes a week, which at 8:00 per km is about 3.75 km of running: above his average, below his two",
+      "recent weeks, and level with the old plan's top week (3.8). On the watch that is about 2.5 km a",
+      "session, walks included, against his 4.5 to 5.0 km single runs. JUDGMENT: no study sets the start",
+      "for a returning runner. ANALYSIS-2026-10-04-RUN.md's corrected inference reads \"The plan's own rules",
+      "point to dropping back toward its weekly sizes, not holding where he is\", and week 1 follows it.",
+      "Nothing in his record shows he tolerated his recent weeks well or badly: there is no injury data,",
+      "and 2026-10-03 was hard by the watch (6.0 minutes at or above its anaerobic threshold).",
       "",
       "WHY HE IS OUTSIDE THE NOVICE TRIAL NOW, and why its rules still apply. Bertelsen 2018 (fetched",
       "2026-10-04, https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/) admitted \"Individuals with BMI 30-35,",
       "age 18-65 years, no previous running experience (less than 10km combined the last year)\". He has",
-      "about 20 km since 2026-08-18, so the trial no longer describes him. Its authors say verbatim that",
-      "\"other sub-groups may possibly tolerate a start-to-run distance of more than 6km per week while",
-      "remaining at low risk of running-related injury (E.g. obese individuals with previous sports",
-      "experience). Further studies are needed\". That is the honest status: no evidence fixes his start.",
-      "Its load rule is still the nearest guide for the weight he carries: \"In both programs, the weekly",
-      "running distance was increased by 10% each week throughout the follow-up.\" Injuries: \"Two",
-      "participants were injured in the 3km intervention (6.9%). Five participants were injured in the",
-      "6km intervention (18.5%).\"",
+      "about 20 km since 2026-08-18, so the trial no longer describes him. Its authors write that \"other",
+      "sub-groups may possibly tolerate a start-to-run distance of more than 6km per week while remaining",
+      "at low risk of running-related injury (E.g. obese individuals with previous sports experience).",
+      "Further studies are needed\" (quoted across a sentence break). No evidence fixes his start. Its load",
+      "rule is still the nearest guide: \"In both programs, the weekly running distance was increased by 10%",
+      "each week throughout the follow-up.\" Injuries: \"Two participants were injured in the 3km",
+      "intervention (6.9%). Five participants were injured in the 6km intervention (18.5%).\"",
       "",
-      "THE PROGRESSION. Three run blocks a session, one minute walking after each, 5 minutes walking",
-      "first. Each block grows 30 seconds a week: 18, 19.5, 21, 22.5, 24, 25.5, 27, 28.5 running minutes",
-      "a session, increases of 8.3, 7.7, 7.1, 6.7, 6.3, 5.9 and 5.6%, all under the trial's 10%. Week 8 is",
-      "28.5 running minutes a session, about his 2026-08-24 run (29.2), twice a week: 57 minutes, about",
-      "7.1 km of running a week. The trial ran four weeks; weeks 5 to 8 extrapolate its rule past what it",
-      "measured. The walks: the trial split its running \"into shorter intervals with walking at an",
-      "easy/comfortable pace in the pauses between each interval\", and on his record the one-minute",
-      "walks are what kept 2026-08-24 under 140. Blocks of 6:00 and up are inside what he has run",
-      "without stopping (6.1 min on 2026-09-26, 17.7 on 2026-10-03).",
+      "THE PROGRESSION. Three run blocks a session, one minute walking after each, 5 minutes walking first.",
+      "Each block grows 30 seconds a week: 15, 16.5, 18, 19.5, 21, 22.5, 24, 25.5 running minutes a session,",
+      "increases of 10.0, 9.1, 8.3, 7.7, 7.1, 6.7 and 6.3%, none above the trial's 10%. Week 8 is 51 running",
+      "minutes a week, about 6.4 km of running: above the trial's 6 km STARTING dose, reached by its own 10%",
+      "rule. The trial ran four weeks; weeks 5 to 8 extrapolate that rule past what it measured, which is why",
+      "week 8 says reassess. The walks: the trial split its running \"into shorter intervals with walking at",
+      "an easy/comfortable pace in the pauses between each interval\", and on his record the one-minute walks",
+      "are what kept 2026-08-24 under 140. Blocks of 5:00 and up are inside what he has run without stopping",
+      "(6.1 min on 2026-09-26, 17.7 on 2026-10-03).",
       "",
-      "WHY THREE BLOCKS AND THE 5:00 WALK FIRST: judgment. Three keeps the watch screen simple; the",
-      "5:00 walk is the warm-up and matches the old plan's opening walk, which he never complained of."
+      "WHY THREE BLOCKS AND THE 5:00 WALK FIRST: judgment. Three keeps the watch screen simple; the 5:00 walk",
+      "is the warm-up and matches the old plan's opening walk."
     ],
     "rules": [
       "Never add more than 10% in a week, and never add distance and speed in the same week.",
@@ -228,7 +232,7 @@
         "name": "Hills",
         "cue": "On a climb, keep the effort and let the pace drop. Slow down or walk up it until the talk test passes again. A flat loop makes every other check on this page easier to read.",
         "test": "At the top of any climb, say your passage. PASS = all the words with at most one break. FAIL = walk until it passes, then run on at the slower pace.",
-        "why": "Your one hilly run, 2026-09-26, climbed 111 m against 29 to 35 m on the others, and at matched speed its heart rate sat 16 beats above your first run. A hill is the commonest reason an easy pace stops being easy.",
+        "why": "Your one hilly run, 2026-09-26, climbed 111 m against 29 to 35 m on the others. A climb at the same pace is more work, so judge it by the talk test, not the watch pace.",
         "confidence": "convention",
         "grounding": "HIS DATA, ANALYSIS-2026-10-04-RUN.md finding 2: at matched speed (6:57 to 7:35 per km) heart rate was 130 on 2026-08-24, 148 on 08-30, 146 on 09-26 and 159 on 10-03, and the analysis names the 111 m climb on 09-26 as one of four confounds it CANNOT separate (walk breaks, time of day, same-day lifting and swimming, route). So the cue does not claim the hill caused the 146; it asks him to judge the climb by effort, which needs no such claim. No study cited. CONVENTION.",
         "url": null
@@ -259,7 +263,7 @@
     "title": "Bike",
     "surface": "Gym bike",
     "sessionsPerWeek": 0,
-    "startedFrom": "HIS RIDING, read from the 2026-10-04 Samsung export (exercise_type 15003 = stationary bike, 11007 = outdoor cycling, per HealthOS/server/import-watch-sessions.mjs; local times from each row's time_offset). Stationary bike: 42 sessions. In 2023 and 2024, 39 of them, almost all 5 to 15 minutes (longest 20.1), average heart rate 89 to 125: warm-ups. In 2026, two real rides: 2026-08-19 06:10, 35.1 minutes, average 120, max 143; and 2026-09-26 14:10, 31.6 minutes, average 137, max 155, about an hour after a run. Outdoor: five rides he started himself between 2024-04-21 and 2024-08-12, 42.7 to 47.6 minutes, 8.9 to 10.4 km, 12 to 14 km/h average, average heart rate 127 to 139, max 163 to 174; two longer ones recorded by another device (13.3 km in 66 minutes, 19.0 km in 103 minutes, no heart rate). Nothing outdoors he started himself since 2024-09-12; the rest of the 11007 rows are the watch's own detection (source_type 4), fragments of 3 to 52 minutes. He has never done an interval session on a bike. Type 15006 (11 sessions, 2022 to 2025) is not mapped by the importer and is not counted here.",
+    "startedFrom": "HIS RIDING, read from the 2026-10-04 Samsung export (exercise_type 15003 = stationary bike, 11007 = outdoor cycling, per HealthOS/server/import-watch-sessions.mjs; local times from each row's time_offset). Stationary bike: 42 sessions. In 2023 and 2024, 39 of them, almost all 5 to 15 minutes (longest 20.1), average heart rate 89 to 125: warm-ups. In 2026, two real rides: 2026-08-19 06:10, 35.1 minutes, average 120, max 143; and 2026-09-26 14:10, 31.6 minutes, average 137, max 155, starting 33 minutes after his run of that day ended. Outdoor: five rides he started himself between 2024-04-21 and 2024-08-12, 42.7 to 47.6 minutes, 8.9 to 10.4 km, 12 to 14 km/h average, average heart rate 127 to 139, max 163 to 174; two longer rows with no source_type and no heart rate, from a different device id (13.3 km in 66 minutes, 19.0 km in 103 minutes; which device is unverified). Of the 43 outdoor rows, 9 he started himself (source_type 1: the five above, two on 2022-12-23, one on 2023-01-31, one 2.57 km on 2024-09-12), 32 are the watch's own detection (source_type 4, fragments of 3 to 52 minutes) and 2 are the blank rows. Nothing outdoors he started since 2024-09-12. No ride on record shows a 4 by 4 shape, so no interval session is assumed. Type 15006 (11 sessions, 2022 to 2025) is not mapped by the importer and is not counted here.",
     "why": [
       "The bike earns its place for one reason. Wilson 2012, abstract fetched 2026-10-04 at",
       "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22002517&rettype=abstract&retmode=text,",
@@ -273,13 +277,13 @@
       "totalMinutes": 31,
       "next": "Then 4 rounds: 10 min easy, then 4 rounds of [4 min hard, 3 min easy]. 38 minutes.",
       "evidenceNote": "The 4x4 shape and the 38 minutes are the EX-MET protocol's. The three-round start is a judgment fitted to his rides.",
-      "$why": "STARTS AT 31 MINUTES BECAUSE HIS TWO 2026 RIDES WERE 31.6 AND 35.1 MINUTES. Three rounds is the same session length he has already ridden, with hard pieces added. He has reached the hard band on a bike before: his 2024 outdoor rides peaked at 163 to 174, and 2026-09-26 reached 155. The old plan opened at 43 minutes with \"the first two sessions deliberately undercooked\"; both came from assuming he had never ridden. THE FULL SESSION IS EX-MET'S: Tjonna et al., BMC Public Health 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC5879994/, verbatim: \"The 4-AIT and 1-AIT groups exercise for 38 and 17 min per session, respectively. Both the AIT protocols include a 10-min warm-up and a 3-min cool-down at 60-70% peak heart rate (HRpeak)\" (en dashes in the source written as hyphens here), and \"a 4-min interval is performed at 85-95% HRpeak (RPE at 15-17 on Borg scale). This is repeated 4 times in the 4-AIT group, separated by 3 min of active recovery at 50-70% HRpeak\". 10 + 4x4 + 3x3 + 3 = 38, which is the page's \"4 rounds of [4 hard, 3 easy]\" after a 10-minute warm-up, the last 3 easy minutes being the cool-down. Three rounds: 10 + 3x4 + 2x3 + 3 = 31. No study sets the step from three to four; the rule for it is a judgment."
+      "$why": "STARTS AT 31 MINUTES BECAUSE HIS TWO 2026 RIDES WERE 31.6 AND 35.1 MINUTES. Three rounds is the same session length he has already ridden, with hard pieces added. His bike heart rate has touched the hard band but never been held there: 2024 outdoor peaks of 163 to 174, 2026-09-26 peak 155, 2026-08-19 peak 143. Those are peaks, not 4-minute holds, which is one more reason to start at three rounds. The old plan opened at 43 minutes with \"the first two sessions deliberately undercooked\"; both came from assuming he had never ridden. THE FULL SESSION IS EX-MET'S: Tjonna et al., BMC Public Health 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC5879994/, verbatim: \"The 4-AIT and 1-AIT groups exercise for 38 and 17 min per session, respectively. Both the AIT protocols include a 10-min warm-up and a 3-min cool-down at 60-70% peak heart rate (HRpeak)\" (en dashes in the source written as hyphens here), and \"a 4-min interval is performed at 85-95% HRpeak (RPE at 15-17 on Borg scale). This is repeated 4 times in the 4-AIT group, separated by 3 min of active recovery at 50-70% HRpeak\". 10 + 4x4 + 3x3 + 3 = 38, which is the page's \"4 rounds of [4 hard, 3 easy]\" after a 10-minute warm-up, the last 3 easy minutes being the cool-down. Three rounds: 10 + 3x4 + 2x3 + 3 = 31. No study sets the step from three to four; the rule for it is a judgment."
     },
     "howHard": {
       "hardPiece": "By the end of each 4 minutes you should only be able to get out two or three words at a time. Pick a resistance you could hold for 5 minutes but would not want to.",
       "heartRate": "Aim to finish each hard piece around 150 to 165.",
       "easyPiece": "Genuinely easy. Keep pedalling, get your breath fully back before the next one.",
-      "$why": "150 to 165 is 85 to 95% of 175, the band EX-MET prescribes (quoted in protocol.$why), and HIS RULING of 2026-09-03 keeps it there (see $anchorRuling). His own riding shows it is reachable: 2024 outdoor maxima 163 to 174, 2026-09-26 max 155."
+      "$why": "150 to 165 is 85 to 95% of 175, the band EX-MET prescribes (quoted in protocol.$why), and HIS RULING of 2026-09-03 keeps it there (see $anchorRuling). His riding has touched it (2024 outdoor peaks 163 to 174, 2026-09-26 peak 155) but never held it for 4 minutes on record."
     },
     "rules": [
       "Three rounds until two rides in a row end every hard piece between 150 and 165. Then four."
@@ -324,8 +328,8 @@
       },
       {
         "name": "Do not touch the resistance before 2:00",
-        "cue": "Set the resistance in the first 15 seconds of each 4 minute effort and then leave it completely alone until 2:00. At 30 and 60 seconds the watch will look too low. That is normal: on a bike the heart rate takes over a minute to arrive. Cranking the resistance at 40 seconds because the watch says 128 is the single most likely way a first interval session goes wrong. At 2:00 you make one decision, in a fixed order, cadence first and then heart rate, and then you ride out the last two minutes. Also expect the resistance level to be LOWER in interval 4 than in interval 1.",
-        "test": "At 2:00 into each 4 minute effort, one look, two readouts, at most one change. (1) RPM below 70? Drop one resistance level and stop there, no heart rate check this interval. (2) Otherwise, heart rate 150 to 165: change nothing. Under 150: add one level. Over 165: drop one level. No further changes until the next effort, with two standing overrides that beat this rule at any second: if you have to come off the seat to turn the pedals, drop a level, and if a stop rule fires, stop. The session succeeded if all four efforts ended with heart rate between 150 and 165. Whether the resistance number went up, down, or nowhere is not part of that test.",
+        "cue": "Set the resistance in the first 15 seconds of each 4 minute effort and then leave it completely alone until 2:00. At 30 and 60 seconds the watch will look too low. That is normal: on a bike the heart rate takes over a minute to arrive. Cranking the resistance at 40 seconds because the watch says 128 is the single most likely way a first interval session goes wrong. At 2:00 you make one decision, in a fixed order, cadence first and then heart rate, and then you ride out the last two minutes. Also expect the resistance level to be LOWER in the last interval than in the first.",
+        "test": "At 2:00 into each 4 minute effort, one look, two readouts, at most one change. (1) RPM below 70? Drop one resistance level and stop there, no heart rate check this interval. (2) Otherwise, heart rate 150 to 165: change nothing. Under 150: add one level. Over 165: drop one level. No further changes until the next effort, with two standing overrides that beat this rule at any second: if you have to come off the seat to turn the pedals, drop a level, and if a stop rule fires, stop. The session succeeded if every effort ended with heart rate between 150 and 165. Whether the resistance number went up, down, or nowhere is not part of that test.",
         "why": "The load-bearing fact, that heart rate lags well over a minute on a bike, is sourced twice and is the whole reason the 2:00 checkpoint exists. The single-decision design and the falling-number reassurance are my convention layered on top of that fact, not findings, and the falling number is deliberately not a success criterion because a session where all four efforts landed in the band is a good session whatever the resistance did.",
         "confidence": "evidence",
         "grounding": "Two papers, both fetched. (1) Tjonna et al., EX-MET protocol, BMC Public Health 2018, https://pmc.ncbi.nlm.nih.gov/articles/PMC5879994/: the 4x4 arm specifies the interval target heart rate is \"reached within two minutes\". (2) Acala JJ, Roche-Willis D, Astorino TA. \"Characterizing the Heart Rate Response to the 4 x 4 Interval Exercise Protocol.\" Int J Environ Res Public Health. 2020;17(14):5103. 39 healthy ACTIVE adults (20 M, 19 F, age 26.0 +/- 6.1, body mass 72.1 +/- 10.8 kg, BMI 24.2 +/- 2.9, VO2max 37.0 +/- 5.4) on a Velotron cycle ergometer: roughly 1.3 min to reach 85% HRmax in interval 1; time in the 85-95% band 2.7 +/- 0.6 min in interval 1 versus 3.4 to 3.5 min in intervals 2 to 4; 12.9 +/- 0.4 of 16 min overall; mean power 75%, 63%, 59% and 54% of peak power output across intervals 1 to 4. Three things that paper does NOT support and that I am therefore not claiming: its authors did not recommend setting resistance once, their method \"continually adjusted [power] in steps of +/-5% PPO\" off real-time heart rate and raised the work rate \"at any point... that HR declined by >= 2 b/min\"; the falling power was produced by that investigator control, not observed in self-paced riders; and the paper states its \"data cannot be applied to older, inactive, or highly trained populations\", which puts him outside it.",
@@ -333,7 +337,7 @@
       },
       {
         "name": "Stay on the seat",
-        "cue": "Stay seated for all four efforts. Standing up is not a way to make an interval harder, and on a gym upright with flat pedals and street shoes it is not a skill you have yet. If the only way you can turn the pedals is to lift off the seat, the resistance is one level too high, full stop.",
+        "cue": "Stay seated for every effort. Standing up is not a way to make an interval harder, and on a gym upright with flat pedals and street shoes it is not a skill you have yet. If the only way you can turn the pedals is to lift off the seat, the resistance is one level too high, full stop.",
         "test": "Any moment during a 4 minute effort when your backside leaves the seat: sit back down and drop one resistance level immediately. No judgement about how briefly, and this override beats the 2:00 rule.",
         "why": "All that paper supports is the narrow claim that standing does not change the metabolic cost of the work, in elite cyclists on a real bike. That standing is a bad idea for a heavy rider on a gym upright is my judgement, not a finding: it costs him cadence control and it is the usual way \"too much resistance\" turns into a knee problem instead of into a dropped level.",
         "confidence": "convention",
