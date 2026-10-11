@@ -197,7 +197,7 @@
   },
   "frozen": {
     "until": "2026-11-08",
-    "daysHash": "4328608d087a55b8",
+    "daysHash": "48d832c18cc708af",
     "changes": [
       {
         "on": "2026-09-06",
@@ -268,7 +268,7 @@
       {
         "on": "2026-10-11",
         "hisWords": "Keep working, keep fixing things until everything is set. Keep checking. I'll be uh, keeping the session alive in remote control so I can still uh, check in with you.",
-        "hash": "4328608d087a55b8",
+        "hash": "48d832c18cc708af",
         "what": "Fixes from the third adversary review under his standing instruction above, not a new ruling: the press and row no longer share one bench angle in turns, the pull-up comes before the carry so the grip is fresh, the chest press and pull-up no longer depend on the machines being side by side. Version 5 the same day, after three adversary reviews and his rulings that afternoon: legs first, three sets minimum, about 90 minutes. A: back squat + hanging leg raise; step-up + seated overhead triceps extension; incline press + lateral raise; one-arm row + single-leg RDL (the bench changes only between blocks). B: lateral bound; RDL + curl; Smith hip thrust + reverse fly; assisted pull-up on its own while the grip is fresh; machine chest press + farmer carry, last. goal.keep lists the things he asked for and validate.mjs refuses a week missing any."
       }
     ],
@@ -425,7 +425,7 @@
               "log": true,
               "cue": "Box or bench at knee height, a dumbbell in each hand. Put your whole foot on top and drive up through that HEEL until you stand tall on it. The foot on the floor does not push off: lift it like a passenger. Lower slowly on the same leg. All reps on one leg, then the other. Success: your knee tracks over your toes and the top hip does not drop.",
               "progression": "weight",
-              "rangeWidth": 4,
+              "rangeWidth": 7,
               "firstWeight": {
                 "weight": 30,
                 "say": "First try: start with 30 lb dumbbells and work up until 8 a leg feels hard, about 2 left in the tank. Log that weight."
@@ -461,11 +461,11 @@
               "station": null,
               "cue": "Sit on the end of the bench, back tall, one dumbbell held in both hands above your head, arms straight. Bend only at the elbows to lower it behind your head until you feel the stretch in the back of your arms, elbows pointing up and staying close. Straighten back up. Upper arms stay still the whole set.",
               "sets": 3,
-              "reps": "10",
+              "reps": "8",
               "rest": "45s",
               "log": true,
               "progression": "weight",
-              "rangeWidth": 5,
+              "rangeWidth": 4,
               "alts": [],
               "whyHere": "The overhead triceps extension rides in its rest, seated on the end of the same bench"
             }
@@ -788,7 +788,7 @@
               "station": null,
               "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
               "sets": 3,
-              "reps": "10",
+              "reps": "8",
               "rest": "45s",
               "log": true,
               "progression": "weight",
@@ -947,7 +947,7 @@
               "id": "machine-chest-press",
               "name": "Machine Chest Press",
               "sets": 3,
-              "reps": "10",
+              "reps": "6",
               "rest": "90s",
               "zone": "machines",
               "station": "chest-press",
