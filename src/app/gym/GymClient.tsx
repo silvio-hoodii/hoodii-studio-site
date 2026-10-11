@@ -211,6 +211,8 @@ function Trend({ recent, countUnit, assisted }: { recent: LastSession[]; countUn
  * minute between picking an alternative and finishing the first set of it, which no server knows
  * about. Per date, so yesterday's substitutions do not follow him into today. */
 const swapKey = (date: string) => `gym:swaps:${date}`;
+/** Where a running rest timer's end time is kept, so a discarded tab comes back with it. */
+const TIMER_KEY = 'gym:timer';
 
 export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession, sessionDate, barbellIds }: Props) {
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
@@ -567,16 +569,38 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   const [remaining, setRemaining] = useState(0);
   const vibratedRef = useRef(false);
 
+  /* THE TIMER SURVIVES THE PHONE THROWING THE PAGE AWAY, since 2026-10-11. His question: "make sure
+     that the timers still work even if I switch tabs, switch apps or lock my screen". The countdown
+     was already wall-clock, so a locked phone showed the right number on return. What it did not
+     survive is the browser discarding a background tab, which mobile browsers do to save memory: the
+     reload came back with no timer at all. The end time is kept on the device and read back on load. */
   const startTimer = useCallback((label: string, seconds: number) => {
     if (timerRef.current) clearInterval(timerRef.current);
     vibratedRef.current = false;
     const targetEnd = Date.now() + seconds * 1000;
     setTimer({ label, targetEnd });
     setRemaining(seconds);
+    try { localStorage.setItem(TIMER_KEY, JSON.stringify({ label, targetEnd })); } catch { /* private mode */ }
   }, []);
   const dismissTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     setTimer(null);
+    try { localStorage.removeItem(TIMER_KEY); } catch { /* private mode */ }
+  }, []);
+  /* Read back once on load. A rest that ended more than a minute ago is not brought back: by then he
+     has moved on, and a stale "GO" would only be noise. Through a promise, not set synchronously in
+     the effect, for the same reason as the swaps read above. */
+  useEffect(() => {
+    let saved: { label?: unknown; targetEnd?: unknown } | null = null;
+    try { saved = JSON.parse(localStorage.getItem(TIMER_KEY) || 'null'); } catch { saved = null; }
+    if (!saved || typeof saved.label !== 'string' || typeof saved.targetEnd !== 'number') return;
+    const { label, targetEnd } = saved as { label: string; targetEnd: number };
+    if (Date.now() - targetEnd > 60_000) { try { localStorage.removeItem(TIMER_KEY); } catch { /* */ } return; }
+    void Promise.resolve().then(() => {
+      vibratedRef.current = Date.now() >= targetEnd;
+      setTimer({ label, targetEnd });
+      setRemaining(Math.max(0, Math.round((targetEnd - Date.now()) / 1000)));
+    });
   }, []);
 
   useEffect(() => {
