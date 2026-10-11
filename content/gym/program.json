@@ -369,16 +369,6 @@
               "bodyweight": true,
               "alts": [
                 {
-                  "id": "hanging-knee-raise",
-                  "name": "Hanging Knee Raise",
-                  "zone": "rack",
-                  "station": "rack-pullup-bar",
-                  "cue": "Hang from the bar on top of the rack, arms straight, feet clear of the floor. Bring both knees up toward your chest, and at the top keep going a couple of inches by curling your hips under you. That last bit is the part your abdominals do. Lower under control until your legs are straight and you have come to a STOP before the next rep. No swinging. When fifteen is easy, straighten the legs instead of adding weight.",
-                  "sets": 2,
-                  "reps": "10",
-                  "rest": "45s"
-                },
-                {
                   "id": "plank-shoulder-taps",
                   "name": "Plank w/ Shoulder Taps",
                   "zone": "benchDb",
@@ -987,7 +977,7 @@
               "zone": "machines",
               "station": null,
               "log": true,
-              "cue": "A heavy dumbbell in each hand. Stand as tall as you can, shoulders back, stomach tight, and walk for the seconds shown. Put them down before your form falls apart, not after. Start the watch before you pick them up, because both hands are full. Count seconds and type the seconds. Get to the top of the range on time first, then go heavier.",
+              "cue": "A heavy dumbbell in each hand, gripped dead centre and squeezed hard so it cannot swing. Hold them a hand's width off your thighs so they do not bump. Stand tall, shoulders down, stomach tight, short quick steps. Start the watch before you pick them up; type the seconds. Reach the top of the time range first, then add 5 lb. Put them down before your form goes.",
               "progression": "time",
               "timed": true,
               "bodyweight": false,

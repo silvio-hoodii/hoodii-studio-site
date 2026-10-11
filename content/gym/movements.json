@@ -1580,19 +1580,6 @@
       "note": "SPLIT OUT OF `anti-extension` ON 2026-09-01, and the split is the point. That group's jointAction is \"Resisting lumbar extension isometrically\", which is what a dead bug and a plank do: the spine holds still. These two MOVE the spine. Filing a movement under a group whose joint action it does not perform is the exact error that put the erectors on the 45-degree back extension, found the same day, and `hanging-knee-raise` carried an unconfirmed jointActionNote of its own. It is now prescribed twice a week and the abdominal floor rests on it, so it was resolved before being leaned on rather than after.",
       "variants": [
         {
-          "id": "hanging-knee-raise",
-          "name": "Hanging Knee Raise",
-          "implement": "bodyweight",
-          "zone": "rack",
-          "station": "rack-pullup-bar",
-          "loadable": false,
-          "secondary": [
-            "grip"
-          ],
-          "note": "Logged 6 sets in August. Progressed by leg position rather than weight.",
-          "confirmedBy": "Hanging from the bar loads the grip isometrically for the whole set; that is why grip is a helper here and not on the cable crunch. Checked 2026-09-03."
-        },
-        {
           "id": "hanging-leg-raise",
           "name": "Hanging Leg Raise",
           "implement": "bodyweight",
@@ -1602,8 +1589,11 @@
           "secondary": [
             "grip"
           ],
-          "note": "ADDED 2026-10-11 on his note #58: \"Hanging knee raises are Hanging leg raises now\". The harder version of the knee raise: the legs travel straight, so the lever is longer. Progressed by reps and by how high the feet go.",
-          "confirmedBy": "Same hang as the knee raise, so grip is the same isometric helper. 2026-10-11."
+          "note": "ADDED 2026-10-11 on his note #58, \"Hanging knee raises are Hanging leg raises now\", and his reply the same day: \"Just hanging knee raise is leg raise. That's the whole point of the note.\" One movement for him, progressed from bent knees to straight legs, so the knee raise id is an ALIAS here and every set he logged under it (August on, and 2026-10-11) is this card's history. Progressed by reps and by how high the feet go.",
+          "confirmedBy": "Same hang as the knee raise, so grip is the same isometric helper. 2026-10-11.",
+          "aliases": [
+            "hanging-knee-raise"
+          ]
         },
         {
           "id": "cable-crunch",
