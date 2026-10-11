@@ -156,6 +156,15 @@
           "loadable": true
         },
         {
+          "id": "sumo-goblet-squat",
+          "name": "Sumo Goblet Squat",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "note": "Added 2026-10-10. A wide stance with the toes turned out, one dumbbell held at the chest. His words that day: wide-stance squats are where he feels his glutes, and the back squat is where he feels the weight on his back. Capped like the goblet squat by what he can hold."
+        },
+        {
           "id": "heavy-goblet-squat",
           "name": "Heavy Goblet Squat",
           "implement": "dumbbell",
