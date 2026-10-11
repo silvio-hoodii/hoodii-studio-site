@@ -1,14 +1,14 @@
 {
   "$comment": [
     "REBUILT 2026-10-04 (late evening) as FOUR sessions on his words that night: \"I need this to be the best programming possible ... think about something better or just do shit\", after \"rebuild everything based on what I can do ... I want it to be grounded\".",
-    "Lower 1 (squat and glutes), Upper 1, Lower 2 (hinge and single leg), Upper 2, scheduled Mon, Tue, Thu, Fri and run as a rotation in that order (src/lib/gym/program-shared.ts ROTATION). Legs and glutes first: both lower days open with the back squat.",
+    "Lower 1 (squat and glutes), Upper 1, Lower 2 (hinge and single leg), Upper 2, scheduled Mon, Tue, Thu, Fri and run as a rotation in that order (src/lib/gym/program-shared.ts ROTATION). Legs and glutes first: both lower days open with a jump and then a squat, the back squat on Lower 1 at eight to twelve and a sumo goblet squat on Lower 2 (2026-10-10).",
     "Sixteen sets a session, jump sets included: 31.8 + 2.51 x 16 = 72 minutes at his measured pace, 79 at the 75th percentile, so about 3 in 4 days land at or under his 80 (days.*.$time).",
     "Every block is a pair. \"fill\" = a light partner in a heavy lift's rest; \"alternate\" = two lifts taking turns. Starting weights come from his typed log through progression.ts; a lift with no log carries firstWeight and says it is a first try.",
     "The Session A and B of 2026-09-06 to 2026-10-04 are in git history (this file at da5feb8). Old rows keyed a and b stay in his log and render with their stored titles."
   ],
   "goal": {
     "his": "Legs and glutes first: a stronger squat and stronger glutes, with form I trust over heavier weight, while the fat comes off. Chest in the week, posture work, and stay athletic: jumps, sideways work, a carry, step-ups, and the swim after every lift.",
-    "measuredBy": "Working weight on the lead lifts (back squat, Romanian deadlift, hip thrust, step-up, bench, overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
+    "measuredBy": "Working weight on the lead lifts (back squat read as its estimated max from the 8-12 sets since 2026-10-10, since a lighter weight for more reps is the plan and not a regression; Romanian deadlift, hip thrust, step-up, bench, overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
     "inHisWords": [
       {
         "on": "2026-05 (recorded 2026-08-27)",
@@ -53,6 +53,22 @@
       {
         "on": "2026-10-04",
         "said": "I need this to be the best programming possible. You have access to everything ... every single thing in this repo has been done by agents, so it's not like I invented a rule ... if you're saying there's a rule that doesn't allow me to do X or Y, I don't really care because the agent before you decided that. So you should be able to either think about something better or just do shit."
+      },
+      {
+        "on": "2026-10-10",
+        "said": "my goal is not to squat like I don't know 225 ... I just want to be able to move around confidently"
+      },
+      {
+        "on": "2026-10-10",
+        "said": "for the amount that I do them, are they actually doing something or ... a type of warm up that is not actually gonna do something long term?"
+      },
+      {
+        "on": "2026-10-10",
+        "said": "if I do split squats or if I do some other type of squats like sumo squats I that's where I feel more of my glute"
+      },
+      {
+        "on": "2026-10-10",
+        "said": "one of the reasons I like uh, the one leg RDL is because I can pair it with everything. It's just me bringing a dumbbell to whatever I go."
       }
     ],
     "decided": "Rewritten 2026-10-04 from his words that night: legs and glutes first, 80 minutes a session at most, four lifting days, pairs to save time, chest in the week, no calf raises, swim after the lift, form over heavier, posture work, stay athletic (jumps, sideways, a carry), step-ups wanted.",
@@ -69,8 +85,8 @@
     "abs": "Direct trunk work is bodyweight: hanging knee raise (Lower 1), side plank (Lower 1), band Pallof press (Lower 2), Copenhagen plank (Lower 2). Progressed by reps or seconds, not load. The squats, the RDL and the carry load the trunk as well."
   },
   "frozen": {
-    "until": "2026-11-01",
-    "daysHash": "3b732d4746e2654a",
+    "until": "2026-11-08",
+    "daysHash": "b763867e28a43cff",
     "changes": [
       {
         "on": "2026-09-06",
@@ -95,6 +111,12 @@
         "hisWords": "I need this to be the best programming possible. You have access to everything ... every single thing in this repo has been done by agents, so it's not like I invented a rule ... if you're saying there's a rule that doesn't allow me to do X or Y, I don't really care because the agent before you decided that. So you should be able to either think about something better or just do shit.",
         "hash": "3b732d4746e2654a",
         "what": "Coach review of the same night, before the first Monday. Back squat twice a week: Lower 2 opens its loaded work with the back squat (same id as Lower 1, one history), 3 x 5 to 7, push-ups in its rest, front squat an alternative; the RDL follows. Upper 2 pull-up is the assisted machine (his 40 lb x 6/5/5), band and pulldown as alternatives, the walk from the rack accepted. Side plank and Copenhagen plank grow by seconds (rangeWidth 15). Still 16 sets a session."
+      },
+      {
+        "on": "2026-10-10",
+        "hisWords": "Question everything I said and implement what the best possible program is based on everything that we're discussing. And also, I don't want it to be, like, two hours long. I think we're doing supersets just fine.",
+        "hash": "b763867e28a43cff",
+        "what": "Leg days rethought. Lower 1 back squat 3x8-12 at a weight he trusts: 185 for 6 to 8 reps since 2026-08-20 with a dip to 155-175 in September; lighter weight for more reps grows muscle about as well when the last reps are hard, and his words are that the goal is moving with confidence, not a 225 squat. Lower 2 squat is a sumo goblet squat 3x10-12 from 65 lb, his goblet weight, the wide stance where he feels his glutes. Single-leg RDL replaces the tricep pushdown in Upper 2, alternating with the curl; triceps keep four presses a week. Upper 2 opens at the rack. JUMPS STAY AT THEIR OLD DOSE, on review the same day: the \">40 jumps per session\" finding (de Villarreal 2010, PMID 19897415) is for high-intensity programmes measured on maximal strength, reaching it in quality sets of three to four costs about nine sets and breaks the 80 minutes, and it would triple single-leg landings at his bodyweight. The jumps are practice at jumping and landing, not a muscle builder, and are labelled as that."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -196,20 +218,20 @@
           "role": "main",
           "pairing": "fill",
           "label": "Squat, knee raises in the rest",
-          "why": "The heavy squat first, because your words were that it all started with weak glutes and a weak squat. Three sets at five to seven reps, up 5 lb when all three reach seven. The knee raises ride in its rest on the bar above the rack.",
+          "why": "The back squat first, at a weight you trust for eight to twelve: muscle grows as well on twelve good reps as on five heavy ones, and depth is what works the glutes. Add reps until all three sets reach twelve, then add weight. The knee raises ride in its rest on the bar above the rack.",
           "exercises": [
             {
               "id": "bb-back-squat",
               "name": "BB Back Squat",
               "sets": 3,
-              "reps": "5",
-              "rest": "3 min",
+              "reps": "8",
+              "rest": "2 min",
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "The lift the week is built around. Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep.",
+              "cue": "Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep. Stop a set when a rep would look different from the first.",
               "progression": "weight",
-              "rangeWidth": 2,
+              "rangeWidth": 4,
               "alts": [
                 {
                   "id": "front-squat",
@@ -838,62 +860,39 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Squat, push-ups in the rest",
-          "why": "The squat a second time in the week, first while you are fresh: the same lift and the same numbers as Lower 1, so one history moves it. The push-ups ride in its rest on the floor by the rack: chest a second time in the week, and a press uses nothing a squat needs.",
+          "label": "Sumo squat, push-ups in the rest",
+          "why": "A second squat in the week, wide, where you feel your glutes, and light enough that form is the only question. The push-ups ride in its rest on the floor by the rack: chest a second time in the week, and a press uses nothing a squat needs.",
           "exercises": [
             {
-              "id": "bb-back-squat",
-              "name": "BB Back Squat",
+              "id": "sumo-goblet-squat",
+              "name": "Sumo Goblet Squat",
               "sets": 3,
-              "reps": "5",
-              "rest": "3 min",
+              "reps": "10",
+              "rest": "90s",
               "zone": "rack",
-              "station": "rack",
+              "station": null,
               "log": true,
-              "cue": "The lift the week is built around. Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep.",
+              "cue": "One dumbbell held upright against your chest, both hands under the top end. Feet wide, about one and a half shoulder widths, toes turned well out. Sit straight down between your heels, knees pushed out over your toes, chest tall, until your hip crease is below your knees. Drive up through the heels and squeeze your glutes at the top.",
               "progression": "weight",
               "rangeWidth": 2,
+              "firstWeight": {
+                "weight": 65,
+                "say": "First time wide: start at 65 lb, the dumbbell you did goblet squats with for 3x10."
+              },
               "alts": [
-                {
-                  "id": "front-squat",
-                  "name": "Front Squat",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Lighter than the back squat. Bar across the front of your shoulders, elbows driven forward and UP so the upper arms are near parallel to the floor. Fingertips just hook under the bar; the shoulders hold it, not the hands. Sit straight down, elbows stay high the whole time. Because the bar is in front, your body is forced upright and depth gets easier. If the elbows drop the bar rolls forward: rack it and go lighter.",
-                  "sets": 3,
-                  "reps": "8",
-                  "rest": "2 min"
-                },
                 {
                   "id": "heavy-goblet-squat",
                   "name": "Heavy Goblet Squat",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
+                  "cue": "Same lift with your feet at shoulder width. Use it if the wide stance pinches your hips."
                 },
                 {
-                  "id": "bulgarian-split-squat",
-                  "name": "Bulgarian Split Squat",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Dumbbells hanging at your sides. Put the top of your back foot on the bench, laces down. Your front foot should be far enough forward that at the bottom your front shin is straight up and down, not leaning forward over your toes. Lower until your back knee is close to the floor. Drive up through the FRONT heel. The back leg is a kickstand, it does not push.",
-                  "sets": 3,
-                  "reps": "8/leg",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "reverse-lunge",
-                  "name": "Reverse Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Dumbbells hanging at your sides, standing tall. Step straight BACKWARD, long enough that the back knee drops toward the floor and the front shin stays roughly vertical. Push through the FRONT heel to stand back up."
-                },
-                {
-                  "id": "walking-lunge",
-                  "name": "Walking Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
+                  "id": "bb-back-squat",
+                  "name": "BB Back Squat",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "The lift the week is built around. Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep."
                 },
                 {
                   "id": "leg-press",
@@ -1030,7 +1029,7 @@
               "log": true,
               "cue": "Dumbbells at your sides, the top of your back foot on the bench, laces down. Front foot far enough forward that your front shin is upright at the bottom. Lower until your back knee is close to the floor, then drive up through the FRONT heel. The back leg is a kickstand. All reps on one leg, then the other.",
               "progression": "weight",
-              "rangeWidth": 2,
+              "rangeWidth": 5,
               "alts": [
                 {
                   "id": "reverse-lunge",
@@ -1103,7 +1102,7 @@
         "friday"
       ],
       "name": "Upper 2",
-      "title": "Upper 2: incline, overhead, arms",
+      "title": "Upper 2: overhead, incline, arms",
       "warmup": [
         "upper"
       ],
@@ -1112,62 +1111,6 @@
         "hip90"
       ],
       "blocks": [
-        {
-          "role": "main",
-          "pairing": "alternate",
-          "label": "Incline press and chest-supported row",
-          "why": "Chest from a different angle than the flat bench, then a row on the same bench, face down, so your lower back gets a day off from the hinge. Take turns on one bench.",
-          "exercises": [
-            {
-              "id": "db-incline-press",
-              "name": "DB Incline Press",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": "bench",
-              "log": true,
-              "cue": "Bench one or two notches up from flat. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Success: a stretch across the chest at the bottom, not a pinch at the front of the shoulder.",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "formerIds": [
-                "db-bench-press"
-              ],
-              "alts": [
-                {
-                  "id": "machine-chest-press",
-                  "name": "Machine Chest Press",
-                  "zone": "machines",
-                  "station": "chest-press",
-                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
-                }
-              ]
-            },
-            {
-              "id": "chest-supported-row",
-              "name": "Chest-Supported DB Row",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": "bench",
-              "log": true,
-              "cue": "Same bench as the press, one notch steeper, lying face down with your chest on the pad and a dumbbell in each hand. Pull your elbows back past your ribs and squeeze your shoulder blades together, then lower until the arms are straight. The bench holds your back still, so nothing can cheat.",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "whyHere": "so your lower back gets a day off from the hinge",
-              "alts": [
-                {
-                  "id": "seated-cable-row",
-                  "name": "Seated Cable Row",
-                  "zone": "cable",
-                  "station": "cable-row",
-                  "cue": "Tall chest, pull the handle to your stomach, squeeze the shoulder blades, let it stretch all the way forward."
-                }
-              ]
-            }
-          ]
-        },
         {
           "role": "main",
           "pairing": "alternate",
@@ -1232,15 +1175,71 @@
         {
           "role": "main",
           "pairing": "alternate",
-          "label": "Curl and pushdown",
-          "why": "Arms last, biceps and triceps taking turns. Carry the dumbbells to the cable.",
+          "label": "Incline press and chest-supported row",
+          "why": "Chest from a different angle than the flat bench, then a row on the same bench, face down, so your lower back gets a day off from the hinge. Take turns on one bench.",
+          "exercises": [
+            {
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": "bench",
+              "log": true,
+              "cue": "Bench one or two notches up from flat. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Success: a stretch across the chest at the bottom, not a pinch at the front of the shoulder.",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "formerIds": [
+                "db-bench-press"
+              ],
+              "alts": [
+                {
+                  "id": "machine-chest-press",
+                  "name": "Machine Chest Press",
+                  "zone": "machines",
+                  "station": "chest-press",
+                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
+                }
+              ]
+            },
+            {
+              "id": "chest-supported-row",
+              "name": "Chest-Supported DB Row",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": "bench",
+              "log": true,
+              "cue": "Same bench as the press, one notch steeper, lying face down with your chest on the pad and a dumbbell in each hand. Pull your elbows back past your ribs and squeeze your shoulder blades together, then lower until the arms are straight. The bench holds your back still, so nothing can cheat.",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "whyHere": "so your lower back gets a day off from the hinge",
+              "alts": [
+                {
+                  "id": "seated-cable-row",
+                  "name": "Seated Cable Row",
+                  "zone": "cable",
+                  "station": "cable-row",
+                  "cue": "Tall chest, pull the handle to your stomach, squeeze the shoulder blades, let it stretch all the way forward."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "alternate",
+          "label": "Curl and single-leg RDL",
+          "why": "Two dumbbells, one spot: the biceps, then the back of each leg on its own, the lift you said you can carry anywhere.",
           "exercises": [
             {
               "id": "bicep-curl",
               "name": "DB Biceps Curl",
-              "zone": "cable",
+              "zone": "benchDb",
               "station": null,
-              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way. Carry them to the cable for the pushdowns.",
+              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
               "sets": 2,
               "reps": "10",
               "rest": "45s",
@@ -1271,19 +1270,27 @@
               ]
             },
             {
-              "id": "tricep-pushdown",
-              "name": "Tricep Pushdown",
+              "id": "single-leg-rdl",
+              "name": "Single-Leg RDL",
               "sets": 2,
-              "reps": "10",
+              "reps": "8/leg",
               "rest": "45s",
-              "zone": "cable",
-              "station": "cable-adjustable",
+              "zone": "benchDb",
+              "station": null,
               "log": true,
-              "cue": "Cable high, rope or straight bar. Pin your elbows to your sides and keep them there: only the forearms move. Push down until the arms are completely straight, hold half a second, then let it come up slowly until you feel the stretch. If your elbows drift forward or you lean over the bar, go lighter.",
+              "cue": "One dumbbell, in the hand OPPOSITE the standing leg, the other hand on a bench or rack. Soft standing knee, push the hips back and let the free leg travel straight back as the dumbbell lowers down the standing shin. Stop when that hamstring pulls; do not chase the floor. Hips stay level. Holding on is the point: your hamstring decides the weight, not your balance.",
               "progression": "weight",
               "rangeWidth": 5,
-              "whyHere": "biceps and triceps taking turns",
-              "alts": []
+              "alts": [
+                {
+                  "id": "db-rdl",
+                  "name": "DB RDL",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Both feet down, a dumbbell in each hand: the same hinge without the balance. Use it on a day one leg feels off."
+                }
+              ],
+              "whyHere": "the back of each leg on its own"
             }
           ]
         }
