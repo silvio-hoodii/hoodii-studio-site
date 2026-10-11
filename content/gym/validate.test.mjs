@@ -1143,10 +1143,11 @@ const CASES = [
          partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
          at 45s still leave room for three sets of six presses, so the only thing that changes is the
          hash, which is the one thing this case is about. */
-      /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
+      /* REPOINTED 2026-10-10 to Upper 2's incline press and chest-supported row: the barbell bench left the
+         week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1168,10 +1169,11 @@ const CASES = [
          partner no longer fits the rest). Overhead press and curls share the rack, and curls leading
          at 45s still leave room for three sets of six presses, so the only thing that changes is the
          hash, which is the one thing this case is about. */
-      /* REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
+      /* REPOINTED 2026-10-10 to Upper 2's incline press and chest-supported row: the barbell bench left the
+         week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1185,7 +1187,7 @@ const CASES = [
     name: 'a structural change that also rewrites daysHash, with no words for it, is refused',
     keepFreeze: true,
     mutate: (p) => {
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'bb-bench-press' && (b.exercises || []).length === 2);
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.daysHash = structuralHash(p.days);
