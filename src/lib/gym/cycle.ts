@@ -1,7 +1,7 @@
 import 'server-only';
 import { getRotationState } from './db';
 import { loadProgram } from './program';
-import { ROTATION, ROTATION_SINCE } from './program-shared';
+import { FREE_DAY, ROTATION, ROTATION_SINCE } from './program-shared';
 import type { DayKey } from './types';
 
 function dateDiffDays(a: string, b: string): number {
@@ -33,6 +33,8 @@ export interface NextUp {
    * had never happened. Reported as the app "behaving a little bit weird" on 2026-08-14 after a real
    * session. Two questions, two fields. */
   todayDay: DayKey | null;
+  /** Today's latest work is on the free day, so a reload mid-session opens the Free tab. */
+  todayFree: boolean;
   /** The last session was ended as CUT SHORT, so `nextDay` is a repeat rather than the next in the
    *  rotation. The page says so, because silently re-offering the same day reads as a bug. */
   cutShort: boolean;
@@ -144,5 +146,7 @@ export async function computeNextUp(today: string): Promise<NextUp> {
      today's session here: the page would open on a key the programme no longer has. */
   const todayDay = state.todayDay && (ROTATION as string[]).includes(state.todayDay) ? (state.todayDay as DayKey) : null;
 
-  return { lastDate, daysSince, nextDay, todayDay, cutShort, assumedFromWatch, assumedDates };
+  const todayFree = state.todayDay === FREE_DAY;
+
+  return { lastDate, daysSince, nextDay, todayDay, todayFree, cutShort, assumedFromWatch, assumedDates };
 }

@@ -1130,6 +1130,11 @@
 .training .extra-name:focus-visible, .training .extra-num:focus-visible {
   outline: 2px solid var(--signal); outline-offset: 1px;
 }
+/* The free day, 2026-10-10: one card per exercise he picked, the sets he did, one entry row whose
+ * empty boxes show the set to repeat (the ghost, same look as a card's). */
+.training .free-card { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }
+.training .free-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.training .extra-num.free-ghost::placeholder { color: var(--muted-foreground); font-style: italic; opacity: 1; }
 
 /* ---- weekly volume, /health?s=volume ----
  *

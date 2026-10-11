@@ -15,6 +15,9 @@ export const ROTATION: DayKey[] = ['l1', 'u1', 'l2', 'u2'];
 /** The first day of the current rotation. Watch lifts before it are not steps of it: without this,
  *  a rotation with nothing logged under its keys yet counted every watch lift ever recorded. */
 export const ROTATION_SINCE = '2026-10-05';
+/** THE FREE DAY's key in gym_set and gym_session, since 2026-10-10. Not a programme day and not in
+ *  ROTATION, so nothing logged under it moves the rotation: the next session waits for him. */
+export const FREE_DAY = 'free';
 
 /* The cycle is rolling: computeNextUp picks the next session from what was actually logged and from
  * what the watch saw. GymClient has derived a readable name from the day's own title since

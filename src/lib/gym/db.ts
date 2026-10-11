@@ -522,6 +522,10 @@ export async function getRotationState(
 
      `last` requires performed sets under the SAME day, not merely on the same date: a real session A
      and a stray session B on one date made B the last session and offered A again.
+     And PRESCRIBED sets, since 2026-10-10: an off-plan set typed into the box under Lower 1's tab
+     stamped Lower 1 done, so rows and pulldowns before the pool skipped the squat day. His worry,
+     the same day, was that a free log would pull him off the programme; the programme now waits
+     for the session itself, whatever else he logs.
      `today_day` is the day whose latest performed set is newest, not the first key alphabetically,
      and a row with no performed set is not today's session at all.
      The watch dates skip a date only when the app logged performed work on it, not when any session
@@ -530,7 +534,8 @@ export async function getRotationState(
     with last as (
       select s.date, s.day, s.status from gym_session s
       where s.day = any(${keys})
-        and exists (select 1 from gym_set g where g.date = s.date and g.day = s.day and ${PERFORMED} and g.reps is not null and g.reps > 0)
+        and exists (select 1 from gym_set g where g.date = s.date and g.day = s.day and ${PERFORMED} and g.reps is not null and g.reps > 0
+                      and coalesce(g.off_plan, false) = false)
       order by s.date desc
       limit 1
     )

@@ -78,9 +78,13 @@ export async function loadMovements(): Promise<MovementCatalogue> {
 /** Every exercise name the gym can do, for the off-plan capture box's autocomplete. Read from the
  *  movement catalogue rather than typed, so a variant added there shows up here with no second
  *  edit. Sorted, deduplicated, and it is a HINT: the box accepts anything he types. */
-export async function loadExtraSuggestions(): Promise<string[]> {
-  const cat = await readJson<{ movements: Record<string, { variants: { name: string }[] }> }>('movements.json');
-  const names = new Set<string>();
-  for (const m of Object.values(cat.movements)) for (const v of m.variants) names.add(v.name);
-  return [...names].sort((a, b) => a.localeCompare(b));
+/* WITH THE ID, since 2026-10-10, for the free day. A name typed into the box was slugged into an id,
+ * which matches the catalogue only when the name happens to slug to it; the free day looks up his
+ * last numbers by id, so the id now comes from the catalogue and the slug is the fallback for a name
+ * the catalogue does not know. */
+export async function loadExtraSuggestions(): Promise<{ id: string; name: string }[]> {
+  const cat = await readJson<{ movements: Record<string, { variants: { id: string; name: string }[] }> }>('movements.json');
+  const byName = new Map<string, string>();
+  for (const m of Object.values(cat.movements)) for (const v of m.variants) if (!byName.has(v.name)) byName.set(v.name, v.id);
+  return [...byName].map(([name, id]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
 }

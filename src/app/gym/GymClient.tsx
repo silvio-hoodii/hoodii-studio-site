@@ -9,7 +9,7 @@ import type {
 import type { Suggestion, LastSession } from '@/lib/gym/progression';
 import type { NextUp } from '@/lib/gym/cycle';
 import {
-  DAY_ORDER, exType, findExercise, repSuffix,
+  DAY_ORDER, FREE_DAY, exType, findExercise, repSuffix,
   parseTargetReps, restSeconds, effectiveExercise, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
 import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kinds';
@@ -32,7 +32,7 @@ interface Props {
   program: Program;
   warmups: { lower: WarmupItem[]; upper: WarmupItem[]; posture?: WarmupItem[] };
   cooldowns: Record<string, CooldownItem>;
-  extraSuggestions: string[];
+  extraSuggestions: { id: string; name: string }[];
   nextUp: NextUp;
   /** What could legally ride in each empty rest, keyed `${dayKey}:${blockIndex}`, computed on the
    *  server by src/lib/gym/fill.ts. Only blocks that are one exercise with a rest of 60s or more, and
@@ -229,7 +229,17 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
      said on screen instead of being swallowed. */
   const [sessionRead, setSessionRead] = useState<'loading' | 'ready' | 'failed'>('loading');
   const [readNonce, setReadNonce] = useState(0);
+  /* THE FREE DAY, since 2026-10-10. His words: "if I only have 30 minutes ... I'm gonna do like some
+   * rows ... pull downs", and "there's no way for me to register that anywhere ... why do I even
+   * bother opening the app?" He picks any exercise, it comes up with his last numbers, and every set
+   * is written under FREE_DAY. His worry the same night was that this would pull him off the
+   * programme for good; the answer is structural, not a nag: nothing logged here moves the rotation
+   * (see getRotationState in db.ts), so the programmed session he skipped is still the one offered
+   * next, and this tab says which. `activeDay` is left alone underneath so the rest of the page keeps
+   * a real programme day to read. */
+  const [free, setFree] = useState(nextUp.todayFree);
   const selectDay = (k: DayKey) => {
+    setFree(false);
     if (k === activeDay) return;
     setSessionRead('loading');
     setActiveDay(k);
@@ -298,6 +308,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   const [extraWeight, setExtraWeight] = useState('');
   const [extraReps, setExtraReps] = useState('');
   const [extraLog, setExtraLog] = useState<{ id: string; name: string; weight: string; reps: string }[]>([]);
+  /* The free day's cards: picked and not yet logged (cards with a set come back from `extraLog`),
+     what is typed in each card's one entry row, and his last session of each for the ghost. */
+  const [freeAdded, setFreeAdded] = useState<{ id: string; name: string }[]>([]);
+  const [freePick, setFreePick] = useState('');
+  const [freeIn, setFreeIn] = useState<Record<string, { weight: string; reps: string }>>({});
+  const [freeLast, setFreeLast] = useState<Record<string, LastSession | null>>({});
   const [timer, setTimer] = useState<{ label: string; targetEnd: number } | null>(null);
   const [finished, setFinished] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -855,7 +871,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   function logExtra() {
     const name = extraName.trim();
     if (!name) return;
-    const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const id = extraIdFor(name);
     /* NO SET INDEX. The server derives it, inside the insert, from what is already in the table.
      *
      * This counted `extraLog.filter(...).length + 1`, and `extraLog` is React state the hydrate
@@ -878,6 +894,93 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     });
     setExtraLog((prev) => [...prev, { id, name, weight: extraWeight, reps: extraReps }]);
     setExtraReps('');
+  }
+
+  /** The catalogue's id for a name he picked, case aside; a slug of what he typed when the catalogue
+   *  does not know it. The catalogue id is what lines a free set up with every other set of that lift,
+   *  so his rows before the pool feed the next Upper 1 suggestion too. */
+  function extraIdFor(name: string): string {
+    const hit = extraSuggestions.find((s) => s.name.toLowerCase() === name.trim().toLowerCase());
+    return hit ? hit.id : name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  /* One card per exercise: everything off-plan logged today (in the order he did it), then anything
+     picked and not lifted yet. */
+  const freeCards = useMemo(() => {
+    const out: { id: string; name: string }[] = [];
+    const seen = new Set<string>();
+    for (const e of [...extraLog, ...freeAdded]) {
+      if (seen.has(e.id)) continue;
+      seen.add(e.id);
+      out.push({ id: e.id, name: e.name });
+    }
+    return out;
+  }, [extraLog, freeAdded]);
+  const freeKey = freeCards.map((c) => c.id).join(',');
+
+  /* HIS LAST SESSION OF EACH, for the ghost. The plan route's history read, which stops before
+     today, so "last" is never the set he just did. Only `last` is used: a free day has no rep target
+     to progress toward, so it offers what he did, and he types over it. */
+  useEffect(() => {
+    if (!free || !freeCards.length) return;
+    let cancelled = false;
+    postJson('/gym/api/plan', { date, exercises: freeCards.map((c) => ({ id: c.id })) })
+      .then((data) => {
+        if (cancelled) return;
+        const byId: Record<string, LastSession | null> = {};
+        for (const ex of data.exercises || []) byId[ex.id] = ex.last ?? null;
+        setFreeLast((prev) => ({ ...prev, ...byId }));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [free, freeKey]);
+
+  function addFreeCard() {
+    const name = freePick.trim();
+    if (!name) return;
+    const hit = extraSuggestions.find((s) => s.name.toLowerCase() === name.toLowerCase());
+    const id = extraIdFor(name);
+    setFreeAdded((prev) => (prev.some((p) => p.id === id) ? prev : [...prev, { id, name: hit ? hit.name : name }]));
+    setFreePick('');
+  }
+
+  /** What an empty box on a free card shows: the set he just did of it, or failing that the heaviest
+   *  set of his last session of it. '' when there is nothing. */
+  function freeGhost(id: string, field: 'weight' | 'reps'): string {
+    const today = extraLog.filter((e) => e.id === id);
+    const prevToday = today[today.length - 1];
+    if (prevToday) return prevToday[field];
+    const sets = (freeLast[id]?.sets ?? []).filter((s) => (s.reps ?? 0) > 0);
+    if (!sets.length) return '';
+    const top = sets.reduce((a, b) => ((b.weight ?? 0) > (a.weight ?? 0) ? b : a));
+    const v = top[field];
+    return v != null ? String(v) : '';
+  }
+
+  /** "70 lb × 8", the heaviest set of a past session, for the card's heading line. */
+  function freeGhostFromLast(last: LastSession): string | null {
+    const sets = last.sets.filter((s) => (s.reps ?? 0) > 0);
+    if (!sets.length) return null;
+    const top = sets.reduce((a, b) => ((b.weight ?? 0) > (a.weight ?? 0) ? b : a));
+    return top.weight != null && top.weight > 0 ? `${top.weight} lb × ${top.reps}` : `${top.reps}`;
+  }
+
+  /** One set on a free card, appended like any off-plan set and filed under FREE_DAY, so it never
+   *  moves the rotation. A box left empty takes its ghost, the same contract as a tick on a card. */
+  function logFree(card: { id: string; name: string }) {
+    const typed = freeIn[card.id] ?? { weight: '', reps: '' };
+    const weight = typed.weight !== '' ? typed.weight : freeGhost(card.id, 'weight');
+    const reps = typed.reps !== '' ? typed.reps : freeGhost(card.id, 'reps');
+    if (weight === '' && reps === '') return;
+    void write(`extra:${date}:${card.id}:${Date.now()}`, '/gym/api/set', {
+      date, day: FREE_DAY, dayTitle: 'Free',
+      exerciseId: card.id, exerciseName: card.name, offPlan: true,
+      weight: weight === '' ? null : Number(weight),
+      reps: reps === '' ? null : Number(reps),
+    });
+    setExtraLog((prev) => [...prev, { id: card.id, name: card.name, weight, reps }]);
+    setFreeIn((prev) => ({ ...prev, [card.id]: { weight: '', reps: '' } }));
   }
 
   /** Sends the note, and clears the box only if it actually landed. A queued note stays on screen
@@ -1135,12 +1238,77 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           it before typing, because the inputs are disabled until it is 'ready' or 'failed'. */}
       <div className="tabs" data-session={sessionRead}>
         {DAY_ORDER.map((k) => (
-          <button key={k} className={`tab${k === activeDay ? ' on' : ''}`} onClick={() => selectDay(k)}>
+          <button key={k} className={`tab${k === activeDay && !free ? ' on' : ''}`} onClick={() => selectDay(k)}>
             {splitName(program.days[k])}
           </button>
         ))}
+        <button className={`tab${free ? ' on' : ''}`} onClick={() => setFree(true)}>Free</button>
       </div>
 
+      {free && (
+        <div className="free">
+          <div className="count" style={{ marginTop: 22 }}>Free</div>
+          {/* THE ONE LINE THAT ANSWERS HIS WORRY, a fact and not a lecture: the programmed session is
+              still waiting, by name. Nothing logged on this tab moves it. */}
+          <p className="lede" style={{ marginTop: 6 }}>
+            Next on the programme: {splitName(program.days[nextUp.nextDay])}.
+          </p>
+          <div className="extra-row" style={{ marginTop: 16 }}>
+            <input
+              className="extra-name"
+              list="gym-extra-names"
+              value={freePick}
+              onChange={(e) => setFreePick(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') addFreeCard(); }}
+              placeholder="Lat Pulldown"
+              autoCapitalize="sentences"
+            />
+            <button className="btn" onClick={addFreeCard} disabled={!freePick.trim()}>Add</button>
+          </div>
+          {freeCards.map((card) => {
+            const done = extraLog.filter((e) => e.id === card.id);
+            const last = freeLast[card.id];
+            const lastTop = last ? freeGhostFromLast(last) : null;
+            const typed = freeIn[card.id] ?? { weight: '', reps: '' };
+            const gw = typed.weight === '' ? freeGhost(card.id, 'weight') : '';
+            const gr = typed.reps === '' ? freeGhost(card.id, 'reps') : '';
+            return (
+              <div className="free-card" key={card.id}>
+                <div className="free-head">
+                  <span className="fill-name">{card.name}</span>
+                  {lastTop && (
+                    <span className="quiet tnum">
+                      Last {shortDate(last!.date)}: {lastTop}
+                    </span>
+                  )}
+                </div>
+                {done.map((s, i) => (
+                  <div className="extra-item tnum" key={i}>
+                    {i + 1}{'  '}{s.weight ? `${s.weight} lb` : ''}{s.weight && s.reps ? ' × ' : ''}{s.reps ? `${s.reps}` : ''}
+                  </div>
+                ))}
+                <div className="extra-row">
+                  <input
+                    className={`extra-num${gw ? ' free-ghost' : ''}`} inputMode="decimal" value={typed.weight}
+                    placeholder={gw ? `${gw} lb` : 'lb'}
+                    onChange={(e) => setFreeIn((p) => ({ ...p, [card.id]: { ...typed, weight: e.target.value } }))}
+                  />
+                  <input
+                    className={`extra-num${gr ? ' free-ghost' : ''}`} inputMode="numeric" value={typed.reps}
+                    placeholder={gr ? `${gr} reps` : 'reps'}
+                    onChange={(e) => setFreeIn((p) => ({ ...p, [card.id]: { ...typed, reps: e.target.value } }))}
+                  />
+                  <button className="btn" onClick={() => logFree(card)} disabled={!(typed.reps || gr || typed.weight || gw)}>
+                    Set {done.length + 1}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {!free && (<>
       <div className="count" style={{ marginTop: 22 }}>{day.title}</div>
 
       {/* WHAT HE DID LAST TIME, one line, under the title, since 2026-09-06. His words: "I don't
@@ -1778,6 +1946,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           ))}
         </details>
       )}
+      </>)}
+
+      {/* One list for both boxes, the free tab's picker and the off-plan box below. */}
+      <datalist id="gym-extra-names">
+        {extraSuggestions.map((s) => <option key={s.id} value={s.name} />)}
+      </datalist>
 
       {/* ---- a note from the floor ----
         *
@@ -1797,7 +1971,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * The text is NOT cleared unless the write actually landed. Sets are different: the input
         * itself holds the value and a queued set can be re-read off the screen. A note that failed
         * to send and got wiped out of the box is gone from the world. */}
-      <div className="extra-box">
+      {!free && <div className="extra-box">
         <div className="section-label">Did something else? Log it</div>
         <input
           className="extra-name"
@@ -1807,9 +1981,6 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           placeholder="Hanging knee raise"
           autoCapitalize="sentences"
         />
-        <datalist id="gym-extra-names">
-          {extraSuggestions.map((n) => <option key={n} value={n} />)}
-        </datalist>
         <div className="extra-row">
           <input className="extra-num" inputMode="decimal" value={extraWeight}
                  onChange={(e) => setExtraWeight(e.target.value)} placeholder="lb" />
@@ -1828,7 +1999,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
       <div className="exgroup">
         <div className="exgroup-label">
@@ -1864,7 +2035,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         </div>
       </div>
 
-      <div style={{ marginTop: 30, marginBottom: 30 }}>
+      {!free && <div style={{ marginTop: 30, marginBottom: 30 }}>
         {finished ? (
           <p className="lede">
             Session saved. {totals.done}/{totals.total} sets logged.
@@ -1898,7 +2069,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             )}
           </>
         )}
-      </div>
+      </div>}
 
       {/* THE ONE POINTER OFF THIS PAGE, and it exists because REACH is what fails here, not
         * reasoning. He asked how the four days add up three times over nine days and got a document
@@ -1908,9 +2079,9 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         *
         * One line, under the finish buttons, where a session ends rather than in front of the work.
         * Not a card, not a section: note #12 is "walls of text again why do I need all this". */}
-      <p className="ex-cue" style={{ marginTop: -14 }}>
-        <a href="/health?s=volume">How the two sessions add up, muscle by muscle</a>
-      </p>
+      {!free && <p className="ex-cue" style={{ marginTop: -14 }}>
+        <a href="/health?s=volume">How the week adds up, muscle by muscle</a>
+      </p>}
 
       {/* NO CURIO LINK, 2026-09-27. It was added the same day as a second pointer off the lifting
         * form; the header already links Curio, and a link to another app is not one of the four
