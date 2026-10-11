@@ -1164,6 +1164,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
   async function flushAndFinish(status: 'finished' | 'cutshort' = 'finished'): Promise<boolean> {
     finishWantedRef.current = true;
     endingRef.current = status;
+    /* A NOTE TYPED AND NOT SAVED GOES WITH THE FINISH, since 2026-10-11. He wrote his last note of
+       the session, tapped Finish a thumb's width below Save note, and the note never left the phone:
+       "I thought by finishing it would save since the buttons are so close". Finishing is the end of
+       the session, so everything typed into it is sent. `saveNote` queues it like any write and keeps
+       the text on screen if it did not land. */
+    if (note.trim()) await saveNote();
     if (pendingRef.current.size > 0 && !(await retryPending())) {
       setFinishBlocked(lastFailRef.current ?? 'offline');
       return false;
