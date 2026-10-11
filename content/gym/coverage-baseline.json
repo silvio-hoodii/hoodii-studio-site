@@ -26,19 +26,21 @@
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
   "accepted": "2026-10-10",
-  "acceptedBecause": "the leg-day rethink of 2026-10-10, on his words that day (\"question everything I said and implement what the best possible program is\"). Forty jumps a lower day lifts calves to 4 with no calf raise, which stays his ruling. Glutes 28 and quads 20 from the second squat becoming a sumo squat and the single-leg RDL joining Upper 2; triceps 7 after the pushdown left, from four presses a week. No strict Zhang pairing, no unsourced exercise, nothing under the floor of 4.",
-  "belowMinimum": [],
+  "acceptedBecause": "the leg-day rethink of 2026-10-10, on his words that day (\"question everything I said and implement what the best possible program is\"). CALVES BELOW THE FLOOR IS STILL HIS RULING: no calf raises (2026-09-06, restated 2026-10-04); the 2 fractional sets are the two jump primers, which stayed at their old dose on review. The sumo goblet squat carries the same credit as the back squat it replaced, so glutes 22 to 24 is the single-leg RDL alone; triceps 9 to 7 after the pushdown left, from four presses a week. No strict Zhang pairing, no unsourced exercise.",
+  "belowMinimum": [
+    "calves"
+  ],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
-    "glutes": 28,
-    "quads": 20,
+    "glutes": 24,
+    "quads": 16,
     "lats": 12,
     "grip": 11.5,
     "erectors": 11,
     "upper-back": 10.5,
     "front-delts": 10,
-    "adductors": 9.5,
+    "adductors": 8.5,
     "chest": 8,
     "biceps": 8,
     "triceps": 7,
@@ -46,6 +48,6 @@
     "hamstrings": 6.5,
     "rear-delts": 5,
     "side-delts": 5,
-    "calves": 4
+    "calves": 2
   }
 }
