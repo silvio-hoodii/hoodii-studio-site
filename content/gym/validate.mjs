@@ -1914,6 +1914,35 @@ if (process.argv.includes('--print-hash')) {
     }
   }
 
+  /* WHAT HE NAMED STAYS IN THE WEEK, since 2026-10-11. His words that day, after the week went from
+   * four sessions to two and the curl and the triceps work vanished with nothing saying so: "now
+   * there's no bicep or tricep stuff ... We're fixing one thing, but then everything else goes away."
+   * The coverage gate could not see it: it floors muscles, and the arms still had 6 indirect sets
+   * from rows and presses. This floors the THINGS HE ASKED FOR. Each `goal.keep` entry names one, in
+   * his words, and lists the slot ids that satisfy it; a week with none of them prescribed (alts do
+   * not count: an alt is a tap away, not in the week) does not build. Removing an entry is the
+   * deliberate act, and it needs his words in the same commit. */
+  {
+    const keep = Array.isArray(program.goal?.keep) ? program.goal.keep : [];
+    if (!keep.length) fail('program.json', 'goal.keep is missing or empty: the list of things he asked to keep in the week.');
+    const prescribed = new Set();
+    for (const day of Object.values(program.days)) for (const b of day.blocks ?? []) for (const ex of b.exercises ?? []) prescribed.add(ex.id);
+    let missing = 0;
+    for (const k of keep) {
+      const ids = Array.isArray(k?.anyOf) ? k.anyOf : [];
+      if (!k?.what || !ids.length || typeof k?.said !== 'string' || k.said.trim().split(/\s+/).length < 4) {
+        fail('program.json', `goal.keep entry ${JSON.stringify(k?.what ?? k)} needs what, anyOf (slot ids) and said (his words).`);
+        missing++;
+        continue;
+      }
+      if (!ids.some((id) => prescribed.has(id))) {
+        missing++;
+        fail('program.json', `"${k.what}" is no longer in the week: none of ${ids.join(', ')} is prescribed. He asked for it ("${k.said}"). Put one back, or remove this entry with his words for doing so.`);
+      }
+    }
+    if (!missing && keep.length) out.push(`ok    [program.json] all ${keep.length} things he asked for are in the week`);
+  }
+
   // 3. the schedule is real weekdays, one session per weekday
   /* WAS "three sets, twice a week, per main lift", an agent's dose rule (2026-09-06), REMOVED
    * 2026-10-04 on his words that night: "if you're saying there's a rule that doesn't allow me to do

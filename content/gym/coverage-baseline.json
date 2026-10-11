@@ -26,28 +26,26 @@
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
   "accepted": "2026-10-11",
-  "acceptedBecause": "Back to two full-body sessions on 2026-10-11, his words: \"before we made it into two different sessions that I can just repeat during the week ... if I miss one ... do I go to the next one?\" Each session runs twice a week, so the week keeps half as many different exercises. SIDE DELTS AT 3, BELOW THE FLOOR, ACCEPTED: the only fixes cost the farmer carry (core, his question) or the push-ups (chest, a weak point he named), and the standing overhead press reaches them twice a week; the lateral raise is one tap on the Free tab. CALVES stay his ruling (no calf raises). Glutes 24 to 30, chest 8 to 10, rear delts 5 to 7 from the reverse fly in the deadlift rest. No strict Zhang pairing, no unsourced exercise.",
-  "belowMinimum": [
-    "side-delts"
-  ],
+  "acceptedBecause": "Two full-body sessions since 2026-10-11, each twice a week, and the same day the arms came back on his words: \"now there's no bicep or tricep stuff ... We're fixing one thing, but then everything else goes away.\" A last block in each (A curl + lateral raise, B triceps extension + single-leg RDL) puts biceps 6 to 10, triceps 8 to 12, side delts 3 to 7, hamstrings 9 to 13. No muscle below the floor except CALVES, his ruling (no calf raises). No strict Zhang pairing, no unsourced exercise.",
+  "belowMinimum": [],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
-    "glutes": 30,
+    "glutes": 34,
     "quads": 18,
-    "grip": 13,
+    "grip": 17,
+    "erectors": 13,
+    "hamstrings": 13,
+    "triceps": 12,
     "upper-back": 12,
     "lats": 12,
-    "erectors": 11,
     "front-delts": 11,
     "chest": 10,
-    "hamstrings": 9,
-    "triceps": 8,
+    "biceps": 10,
     "adductors": 7,
     "rear-delts": 7,
-    "biceps": 6,
+    "side-delts": 7,
     "abs": 5,
-    "calves": 4,
-    "side-delts": 3
+    "calves": 4
   }
 }

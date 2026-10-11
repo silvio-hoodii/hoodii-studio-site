@@ -83,7 +83,113 @@
       "Bench and row share one rack and one bar: a plate change between them (equipment.json, rack sharedInOneWindow).",
       "Assisted pull-up machine in Session B: his log has 40 lb of assistance for 6, 5 and 5 (2026-08-25), so the card starts from a number he has done. The walk from the rack is accepted. The band on the rack bar and the pulldown are one tap away.",
       "Swim in the evening after the lift, his choice 2026-09-04. No running since 2026-10-10, his ruling (\"if there's anything that refers to running, let's take it out\")."
-    ]
+    ],
+    "keep": [
+      {
+        "what": "a squat",
+        "anyOf": [
+          "bb-back-squat",
+          "front-squat",
+          "sumo-goblet-squat",
+          "heavy-goblet-squat"
+        ],
+        "said": "I don't want to lose track of my main lifts. The squats, the bench, the rows, whatever.",
+        "on": "2026-08-15"
+      },
+      {
+        "what": "a chest press",
+        "anyOf": [
+          "db-incline-press",
+          "db-bench-press",
+          "bb-bench-press"
+        ],
+        "said": "I don't want to lose track of my main lifts. The squats, the bench, the rows, whatever.",
+        "on": "2026-08-15"
+      },
+      {
+        "what": "a row",
+        "anyOf": [
+          "db-single-arm-row",
+          "bb-row",
+          "chest-supported-row",
+          "seated-cable-row"
+        ],
+        "said": "I don't want to lose track of my main lifts. The squats, the bench, the rows, whatever.",
+        "on": "2026-08-15"
+      },
+      {
+        "what": "glute work",
+        "anyOf": [
+          "smith-hip-thrust",
+          "bb-hip-thrust",
+          "db-step-up",
+          "bulgarian-split-squat"
+        ],
+        "said": "I do think that more glute work might be needed",
+        "on": "2026-10-04"
+      },
+      {
+        "what": "step-ups",
+        "anyOf": [
+          "db-step-up"
+        ],
+        "said": "we either need some sort of hip thrust or step ups",
+        "on": "2026-10-10"
+      },
+      {
+        "what": "the single-leg RDL",
+        "anyOf": [
+          "single-leg-rdl"
+        ],
+        "said": "one of the reasons I like uh, the one leg RDL is because I can pair it with everything",
+        "on": "2026-10-10"
+      },
+      {
+        "what": "posture work",
+        "anyOf": [
+          "db-reverse-fly",
+          "face-pull",
+          "band-pull-apart"
+        ],
+        "said": "I would also want to do stuff for posture",
+        "on": "2026-09-04"
+      },
+      {
+        "what": "sideways work",
+        "anyOf": [
+          "lateral-bound",
+          "banded-lateral-walk",
+          "lateral-lunge"
+        ],
+        "said": "I feel like all this lifting is just one plane. I am not doing side or whatever else.",
+        "on": "2026-08-15"
+      },
+      {
+        "what": "biceps",
+        "anyOf": [
+          "bicep-curl",
+          "db-hammer-curl",
+          "incline-db-curl",
+          "cable-curl",
+          "kb-hammer-curl"
+        ],
+        "said": "now there's no bicep or tricep stuff",
+        "on": "2026-10-11"
+      },
+      {
+        "what": "triceps",
+        "anyOf": [
+          "db-overhead-tricep-extension",
+          "tricep-pushdown",
+          "cable-overhead-tricep-extension",
+          "db-skullcrusher",
+          "ez-skullcrusher"
+        ],
+        "said": "now there's no bicep or tricep stuff",
+        "on": "2026-10-11"
+      }
+    ],
+    "$keepWhy": "goal.keep: the things he asked for, each in his words. validate.mjs refuses a week where none of an entry's slot ids is prescribed (2026-10-11, after the arms vanished in the move to two sessions). Removing an entry needs his words."
   },
   "acceptedGaps": {
     "adductors": "Direct inner-thigh work is the Copenhagen plank, bodyweight, progressed by seconds (his sets: 20 to 23 s) and then by moving the top foot to the bench. The squats, split squat and step-up load the adductors as a helper. The DB lateral lunge is one tap away as its alternative. Accepted 2026-10-04 with the four-session week.",
@@ -91,7 +197,7 @@
   },
   "frozen": {
     "until": "2026-11-08",
-    "daysHash": "f069ce3d06ed3975",
+    "daysHash": "3ad0e9ece6c435c6",
     "changes": [
       {
         "on": "2026-09-06",
@@ -134,6 +240,12 @@
         "hisWords": "now we are regressing into four different sessions, whereas before we made it into two different sessions that I can just repeat during the week. Because now if I miss one, then it's like, oh, do I go to the next one? Do I do the same one?",
         "hash": "f069ce3d06ed3975",
         "what": "Back to two full-body sessions, each twice a week (A Mon and Thu, B Tue and Fri), alternating: the next one is always the other one. Built from the four-session blocks, so every cue, swap and 2026-10-10 change carries over. A: box jump; back squat 3x8-12 + knee raises; DB incline press and one-arm row; step-up + push-ups. B: lateral bound; RDL + reverse fly; standing overhead press and assisted pull-up; Smith hip thrust + farmer carry. 17 sets each, about 75 minutes. Out of the week, one tap as swaps: Pallof press (on the knee raise), sumo goblet squat, split squat, single-leg RDL, lateral raise, curl, side plank, Copenhagen, chest-supported row, pulldown. The four-session week was an agent call on 2026-10-04 and was never trained."
+      },
+      {
+        "on": "2026-10-11",
+        "hisWords": "But now there's no bicep or tricep stuff. What's, what's happening again? I think like we're just regressing all the time. We're fixing one thing, but then everything else goes away.",
+        "hash": "3ad0e9ece6c435c6",
+        "what": "Each session ends with a short last block, the first thing to skip on a short day: A the curl taking turns with the lateral raise, B the overhead triceps extension taking turns with the single-leg RDL (back in the week; he likes it because it pairs with anything). 21 sets each by the count, about 85 minutes by the per-set fit, nearer 80 in practice because the last block runs on 45-second rests. goal.keep now lists the ten things he asked for, and validate.mjs refuses a week missing any of them."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -154,9 +266,9 @@
         "couch"
       ],
       "$time": {
-        "sets": 17,
-        "fitMin": 74,
-        "fitPlus75thMin": 81.4,
+        "sets": 21,
+        "fitMin": 85,
+        "fitPlus75thMin": 91.4,
         "how": "minutes = 31.8 + 2.51 x sets, his 17 sessions 2026-08-27 to 2026-10-03 (Theil-Sen), every set counted the same, jump sets included; 75th-percentile residual +6.9."
       },
       "blocks": [
@@ -494,6 +606,79 @@
               "whyHere": "Push-ups ride in its rest"
             }
           ]
+        },
+        {
+          "role": "accessory",
+          "pairing": "alternate",
+          "label": "Curl and lateral raise",
+          "why": "Arms and shoulders last, and the first thing to skip on a short day. The curl for the front of the arm, which rows and pull-ups only reach second-hand; the lateral raise takes turns with it for the sides of the shoulders.",
+          "exercises": [
+            {
+              "id": "bicep-curl",
+              "name": "DB Biceps Curl",
+              "zone": "benchDb",
+              "station": null,
+              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
+              "sets": 2,
+              "reps": "10",
+              "rest": "45s",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "alts": [
+                {
+                  "id": "db-hammer-curl",
+                  "name": "DB Hammer Curl",
+                  "sets": 3,
+                  "reps": "10",
+                  "rest": "45s",
+                  "zone": "benchDb",
+                  "station": null,
+                  "log": true,
+                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
+                  "progression": "weight",
+                  "rangeWidth": 5
+                },
+                {
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                }
+              ]
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 2,
+              "reps": "12",
+              "rest": "45s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing, a dumbbell in each hand at your sides, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if pouring from two jugs. Lower about twice as slowly as you lifted. Success: your shoulders do not rise toward your ears, and you can stop the weight dead at the top. If either fails, go lighter.",
+              "progression": "weight",
+              "rangeWidth": 8,
+              "alts": [
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "KB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone."
+                },
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave."
+                }
+              ],
+              "whyHere": "the lateral raise takes turns with it for the sides of the shoulders"
+            }
+          ]
         }
       ]
     },
@@ -512,9 +697,9 @@
         "ankle"
       ],
       "$time": {
-        "sets": 17,
-        "fitMin": 74,
-        "fitPlus75thMin": 81.4,
+        "sets": 21,
+        "fitMin": 85,
+        "fitPlus75thMin": 91.4,
         "how": "minutes = 31.8 + 2.51 x sets, his 17 sessions 2026-08-27 to 2026-10-03 (Theil-Sen), every set counted the same, jump sets included; 75th-percentile residual +6.9."
       },
       "blocks": [
@@ -849,6 +1034,51 @@
                 }
               ],
               "whyHere": "your grip and posture, and the carry you asked for"
+            }
+          ]
+        },
+        {
+          "role": "accessory",
+          "pairing": "alternate",
+          "label": "Triceps extension and single-leg RDL",
+          "why": "Last, and the first thing to skip on a short day. The overhead extension for the back of the arm, the long head the presses barely stretch; the single-leg RDL takes turns with it, the back of each leg on its own with one dumbbell.",
+          "exercises": [
+            {
+              "id": "db-overhead-tricep-extension",
+              "name": "DB Overhead Tricep Extension",
+              "zone": "smith",
+              "station": null,
+              "cue": "One dumbbell held in both hands, straight above your head, elbows close to your ears. Lower it behind your head by bending only at the elbow, then press back up. Upper arms stay still and vertical the whole time. This one stretches the long head of the triceps where the pushdown shortens it, which is why they are not the same exercise. You have worked this at 42.5 to 50 lb.",
+              "sets": 2,
+              "reps": "10",
+              "rest": "45s",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 5,
+              "alts": []
+            },
+            {
+              "id": "single-leg-rdl",
+              "name": "Single-Leg RDL",
+              "sets": 2,
+              "reps": "8/leg",
+              "rest": "45s",
+              "zone": "smith",
+              "station": null,
+              "log": true,
+              "cue": "One dumbbell, in the hand OPPOSITE the standing leg, the other hand on a bench or rack. Soft standing knee, push the hips back and let the free leg travel straight back as the dumbbell lowers down the standing shin. Stop when that hamstring pulls; do not chase the floor. Hips stay level. Holding on is the point: your hamstring decides the weight, not your balance.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "alts": [
+                {
+                  "id": "db-rdl",
+                  "name": "DB RDL",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Both feet down, a dumbbell in each hand: the same hinge without the balance. Use it on a day one leg feels off."
+                }
+              ],
+              "whyHere": "the single-leg RDL takes turns with it"
             }
           ]
         }

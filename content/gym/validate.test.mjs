@@ -205,11 +205,17 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
      the bottom of this function. */
   let owner = null;
   let block = null;
+  /* NOT A BLOCK HOLDING SOMETHING HE ASKED FOR, since 2026-10-11: replacing the squat block would
+     trip goal.keep and these cases would fail for a reason that is not theirs. */
+  const kept = new Set((p.goal?.keep ?? []).flatMap((k) => k.anyOf ?? []));
   for (const d of Object.values(p.days || {})) {
-    const hit = (d.blocks || []).find((b) => (b.exercises || []).length === 2);
+    const hit = (d.blocks || []).find((b) => (b.exercises || []).length === 2 && !b.exercises.some((e) => kept.has(e.id)));
     if (hit) { owner = d; block = hit; break; }
   }
   if (!block) throw new Error('no two-exercise block at all; repoint this case');
+  /* A rebuilt block is a new pair, so the walk ruling of the pair it replaces does not carry over;
+     the case that wants one sets it after this returns. */
+  delete block.walkAccepted;
   const slot = (id, sets, reps, rest) => {
     const v = cat[id];
     if (!v) throw new Error(`${id} is not in movements.json; repoint this case`);
@@ -1241,6 +1247,18 @@ const CASES = [
     name: 'a changelog longer than thirty lines is refused',
     mutate: (p) => { p.$comment = Array.from({ length: 31 }, (_, i) => `line ${i}`); },
     expect: '$comment is 31 lines',
+  },
+  /* WHAT HE NAMED STAYS IN THE WEEK, 2026-10-11: the curl and the triceps work vanished when four
+     sessions became two and no gate noticed. These hold goal.keep to its job. */
+  {
+    name: 'a week with the curl taken out is refused (biceps is on his keep list)',
+    mutate: (p) => { for (const d of Object.values(p.days)) d.blocks = d.blocks.filter((b) => !b.exercises.some((e) => e.id === 'bicep-curl')); },
+    expect: '"biceps" is no longer in the week',
+  },
+  {
+    name: 'a keep entry without his words is refused',
+    mutate: (p) => { p.goal.keep[0].said = ''; },
+    expect: 'needs what, anyOf',
   },
   /* NO RUN PLAN since 2026-10-10 (his ruling). The six run-plan cases went with it; these hold the
      planned week to lifts and swims, and refuse the plan coming back. */
