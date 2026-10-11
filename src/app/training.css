@@ -1130,6 +1130,19 @@
 .training .extra-name:focus-visible, .training .extra-num:focus-visible {
   outline: 2px solid var(--signal); outline-offset: 1px;
 }
+/* A drawing under a cue, 2026-10-10 (ExerciseDiagram.tsx). Text inside the viewBox, so it keeps a
+ * max-width: scaled up on desktop its 11px labels would be 30px. */
+.training .exdiag-fig { margin: 12px 0 4px; max-width: 380px; }
+.training .exdiag-fig figcaption {
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 4px;
+}
+.training .exdiag { width: 100%; height: auto; display: block; }
+.training .exdiag text { font-family: var(--font-mono, ui-monospace, monospace); font-size: 10.5px; fill: var(--muted-foreground); }
+.training .exdiag-line { fill: none; stroke: var(--foreground); stroke-width: 1.5; }
+.training .exdiag-faint { fill: none; stroke: var(--muted-foreground); stroke-width: 1; stroke-dasharray: 3 3; }
+.training .exdiag-solid { fill: var(--foreground); stroke: none; }
+.training .exdiag-arrow { stroke: var(--foreground); stroke-width: 1.5; stroke-dasharray: 4 3; }
 /* The free day, 2026-10-10: one card per exercise he picked, the sets he did, one entry row whose
  * empty boxes show the set to repeat (the ghost, same look as a card's). */
 .training .free-card { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }

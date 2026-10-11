@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
+import ExerciseDiagram from '@/components/training/ExerciseDiagram';
 import { shortDate } from '@/lib/format';
 import type {
   Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem, FillOptions, FillCandidate,
@@ -1596,6 +1597,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                 <details className="cuefold">
                   <summary>How to do it</summary>
                   <div className="ex-cue">{eff.cue}</div>
+                  <ExerciseDiagram id={eff.id} />
                 </details>
                 {/* `swap-revert`, not `swap-toggle`. Both controls sat on a swapped card wearing the same class,
                      and the revert link renders first, so "the swap control" resolved to the wrong one: an
