@@ -198,6 +198,13 @@ const firstTimed = (p) => {
   throw new Error('no timed slot in the week; repoint this case');
 };
 
+/* NO SOLO BLOCK IN THE WEEK since 2026-10-11 (every block is a pair). The solo-block cases make one:
+   the first fill block loses its partner, keeping its why. */
+const soloFrom = (p) => {
+  const b = Object.values(p.days).flatMap((d) => d.blocks || []).find((x) => x.pairing === 'fill' && (x.exercises || []).length === 2 && x.why);
+  if (b) b.exercises = [b.exercises[0]];
+  return b;
+};
 const rebuildBlockAs = (p, leadId, partnerId) => {
   const cat = CATALOGUE();
   /* The OWNING DAY is tracked now, not just the block, because the warmup belongs to the day and
@@ -207,10 +214,14 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
   let block = null;
   /* NOT A BLOCK HOLDING SOMETHING HE ASKED FOR, since 2026-10-11: replacing the squat block would
      trip goal.keep and these cases would fail for a reason that is not theirs. */
-  const kept = new Set((p.goal?.keep ?? []).flatMap((k) => k.anyOf ?? []));
-  for (const d of Object.values(p.days || {})) {
-    const hit = (d.blocks || []).find((b) => (b.exercises || []).length === 2 && !b.exercises.some((e) => kept.has(e.id)));
-    if (hit) { owner = d; block = hit; break; }
+  /* A block is replaceable when every keep entry is still met by the OTHER blocks of the week. */
+  const keep = p.goal?.keep ?? [];
+  const all = Object.values(p.days || {}).flatMap((d) => (d.blocks || []).map((b) => ({ d, b })));
+  const stillKept = (skip) => keep.every((k) => all.some(({ b }) => b !== skip && b.exercises.some((e) => (k.anyOf ?? []).includes(e.id))));
+  /* From the END of the week: a replaced block in the middle of a day can make the route double back,
+     which fails these cases for a reason that is not theirs. */
+  for (const { d, b } of all.slice().reverse()) {
+    if ((b.exercises || []).length === 2 && stillKept(b)) { owner = d; block = b; break; }
   }
   if (!block) throw new Error('no two-exercise block at all; repoint this case');
   /* A rebuilt block is a new pair, so the walk ruling of the pair it replaces does not carry over;
@@ -906,7 +917,7 @@ const CASES = [
     name: 'a body part may not stand in for a day and exempt a stale clause',
     mutate: (p) => {
       const b = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((x) => (x.exercises || []).length === 1 && x.why);
+        .find((x) => (x.exercises || []).length === 1 && x.why) ?? soloFrom(p);
       if (!b) throw new Error('no solo block with a why; repoint this case');
       b.why = `${b.why} The Copenhagen Plank works the upper back here.`;
     },
@@ -944,7 +955,7 @@ const CASES = [
     name: 'a solo block whose why says something rides in its rest is refused',
     mutate: (p) => {
       const b = Object.values(p.days).flatMap((d) => d.blocks || [])
-        .find((x) => (x.exercises || []).length === 1 && x.why);
+        .find((x) => (x.exercises || []).length === 1 && x.why) ?? soloFrom(p);
       if (!b) throw new Error('no solo block with a why; repoint this case');
       b.why = `${b.why} The carry rides in the rest here.`;
     },
@@ -1153,7 +1164,7 @@ const CASES = [
          week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1179,7 +1190,7 @@ const CASES = [
          week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1193,7 +1204,7 @@ const CASES = [
     name: 'a structural change that also rewrites daysHash, with no words for it, is refused',
     keepFreeze: true,
     mutate: (p) => {
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && (b.exercises || []).length === 2);
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.daysHash = structuralHash(p.days);

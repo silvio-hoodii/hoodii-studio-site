@@ -1593,6 +1593,19 @@
           "confirmedBy": "Hanging from the bar loads the grip isometrically for the whole set; that is why grip is a helper here and not on the cable crunch. Checked 2026-09-03."
         },
         {
+          "id": "hanging-leg-raise",
+          "name": "Hanging Leg Raise",
+          "implement": "bodyweight",
+          "zone": "rack",
+          "station": "rack-pullup-bar",
+          "loadable": false,
+          "secondary": [
+            "grip"
+          ],
+          "note": "ADDED 2026-10-11 on his note #58: \"Hanging knee raises are Hanging leg raises now\". The harder version of the knee raise: the legs travel straight, so the lever is longer. Progressed by reps and by how high the feet go.",
+          "confirmedBy": "Same hang as the knee raise, so grip is the same isometric helper. 2026-10-11."
+        },
+        {
           "id": "cable-crunch",
           "name": "Cable Crunch",
           "implement": "cable",

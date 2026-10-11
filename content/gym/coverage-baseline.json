@@ -26,26 +26,28 @@
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
   "accepted": "2026-10-11",
-  "acceptedBecause": "Two full-body sessions since 2026-10-11, each twice a week, and the same day the arms came back on his words: \"now there's no bicep or tricep stuff ... We're fixing one thing, but then everything else goes away.\" A last block in each (A curl + lateral raise, B triceps extension + single-leg RDL) puts biceps 6 to 10, triceps 8 to 12, side delts 3 to 7, hamstrings 9 to 13. No muscle below the floor except CALVES, his ruling (no calf raises). No strict Zhang pairing, no unsourced exercise.",
-  "belowMinimum": [],
+  "acceptedBecause": "Version 5 of the two full-body sessions, 2026-10-11, on his rulings that afternoon: three sets minimum on every exercise (\"why are there exercise of 2 sets thats a waste of time make ot 3 at leats\") and about 90 minutes (\"dont care about 80 or 90 if its a good enough program and reliable\"). Every big muscle has direct loaded work: chest 12 (both sessions), lats 12, biceps 12, triceps 12, hamstrings 15, glutes 30, quads 12, side delts 6, rear delts 9. CALVES BELOW THE FLOOR: his ruling, no calf raises. ABS 0 loaded: the hanging leg raise and the farmer carry, accepted in program.json acceptedGaps.abs. No strict Zhang pairing, no unsourced exercise.",
+  "belowMinimum": [
+    "calves"
+  ],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
     "glutes": 34,
-    "quads": 18,
-    "grip": 17,
-    "erectors": 13,
-    "hamstrings": 13,
+    "grip": 24,
+    "quads": 16,
+    "erectors": 15,
+    "upper-back": 15,
+    "hamstrings": 15,
     "triceps": 12,
-    "upper-back": 12,
+    "chest": 12,
     "lats": 12,
-    "front-delts": 11,
-    "chest": 10,
-    "biceps": 10,
-    "adductors": 7,
-    "rear-delts": 7,
-    "side-delts": 7,
-    "abs": 5,
-    "calves": 4
+    "biceps": 12,
+    "abs": 9,
+    "rear-delts": 9,
+    "adductors": 8,
+    "front-delts": 6,
+    "side-delts": 6,
+    "calves": 2
   }
 }
