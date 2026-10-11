@@ -368,7 +368,7 @@
     async surfaceNavIsPresentAndDistinct() {
       const nav = $('.surface-nav');
       if (!nav) return { pass: false, detail: 'no .surface-nav on the page' };
-      const want = ['/gym', '/swim', '/run', '/bike', '/health'];
+      const want = ['/gym', '/swim', '/bike', '/health'];
       const links = $$('.surf-tab', nav);
       const hrefs = links.map((a) => new URL(a.href).pathname);
       const missing = want.filter((w) => !hrefs.includes(w));

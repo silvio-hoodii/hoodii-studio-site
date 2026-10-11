@@ -14,7 +14,7 @@ import { daysAgo } from '@/lib/day';
  * rendering trap every chart on this site has already paid for. A grid of spans is the size it says. */
 
 const APPS: [string, string][] = [
-  ['home', 'Index'], ['gym', 'Gym'], ['health', 'Health'], ['swim', 'Swim'], ['run', 'Run'], ['bike', 'Bike'],
+  ['home', 'Index'], ['gym', 'Gym'], ['health', 'Health'], ['swim', 'Swim'], ['bike', 'Bike'],
   ['curio', 'Curio'], ['music', 'Music'], ['reading', 'Reading'], ['kitchen', 'Kitchen'],
 ];
 const DAYS = 30;

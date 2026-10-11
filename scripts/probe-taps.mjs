@@ -121,7 +121,6 @@ const DEFAULT_PATHS = [
      `assertSubTabsExist` below is the gate now. */
   '/swim', '/swim?s=plan', '/swim?s=how', '/swim?s=me', '/swim?s=teach',
   '/swim/deep', '/swim/records',
-  '/run', '/run?s=plan', '/run?s=how',
   '/bike', '/bike?s=plan', '/bike?s=how',
   /* THREE OF THE FOUR KITCHEN PATHS HERE WERE 404s FOR A WEEK, which is the `/work` failure this
      list already records twice, still live. `/kitchen/find` and `/kitchen/want` were deleted in the
@@ -184,7 +183,6 @@ if (mangled.length) {
 const SUBTAB_SOURCES = [
   ['/health', 'src/app/health/page.tsx', 'TABS'],
   ['/swim', 'src/app/swim/page.tsx', 'SUB_TABS'],
-  ['/run', 'src/app/run/page.tsx', 'SUB_TABS'],
   ['/bike', 'src/app/bike/page.tsx', 'SUB_TABS'],
 ];
 {

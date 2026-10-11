@@ -1,7 +1,6 @@
 import 'server-only';
 import { sql } from '../health/db';
-import { dayOf, daysAgo, today } from '../day';
-import { runWeekAt } from './run-week';
+import { dayOf, daysAgo } from '../day';
 import { loadConditioning } from './program';
 import type { Conditioning, Program } from './types';
 
@@ -111,16 +110,13 @@ export function weekdayOf(date: string): WeekdayKey {
 export function plannedWeek(
   program: Program,
   conditioning: Conditioning,
-  onDate: string = today(),
 ): TrainingWeek['plan'] {
   const liftDays = program.days as Record<string, { title?: string; scheduledOn?: string[] | string } | undefined>;
   const assigned = conditioning.week?.assignedDays ?? {};
-  /* THE RUNS COME FROM THE RUN PLAN'S CURRENT WEEK, not from assignedDays, since 2026-10-04. The
-     plan has one run in weeks 1 and 2 and two from week 3, so a fixed weekday list would show a
-     Tuesday run on /health two weeks before /run asks for it. One source, read by both pages. */
-  const runs = conditioning.run.weeks;
-  const at = runWeekAt(conditioning.run.startsOn, onDate, runs.length);
-  const runDays = new Set((runs[at.week - 1]?.runs ?? []).map((r) => r.day));
+  /* NO RUNS IN THE PLAN, since 2026-10-10. His words: "if there's anything that refers to running,
+     let's take it out ... It makes really no sense." Swimming covers the aerobic side and the jumps
+     on the lower days the impact; validate.mjs refuses a `run` block back in conditioning.json. A
+     run the watch records still shows on /health, because that is what he did, not a plan. */
 
   /* THE INDEX IS BUILT FROM `scheduledOn`, and this line used to be `liftDays[weekday]`.
    *
@@ -145,7 +141,6 @@ export function plannedWeek(
     const slots = Object.entries(assigned)
       .filter(([k, v]) => !k.startsWith('$') && k !== 'why' && Array.isArray(v) && v.includes(weekday))
       .map(([k]) => k);
-    if (runDays.has(weekday)) slots.unshift(liftKey ? 'runAfterLift' : 'run');
     return {
       weekday,
       liftKey,
@@ -386,10 +381,6 @@ export const SLOT_LABEL: Record<string, string> = {
      walk-run follows Session B. `saturdayRow` LEFT 2026-09-06 with Session C, which was folded into A
      and B; the validator compares this list against week.assignedDays in both directions. */
   eveningSwim: 'evening swim',
-  /* DERIVED, not assignedDays keys: plannedWeek adds these from the run plan's current week, and
-     validate.mjs exempts them from the both-directions comparison by name (DERIVED_SLOTS). */
-  run: 'run',
-  runAfterLift: 'short run after the lift',
 };
 
 export { dayOf };

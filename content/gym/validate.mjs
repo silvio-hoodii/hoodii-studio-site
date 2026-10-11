@@ -1527,11 +1527,10 @@ if (!conditioning.week?.restRule) {
    * slot means a slot was deleted and its label left behind, which is the shape that leaves a
    * retired thing looking scheduled. */
   {
-    /* The runs left assignedDays on 2026-10-04: plannedWeek derives them from run.weeks, under the
-       two DERIVED_SLOTS labels in week.ts, which this comparison therefore does not expect here. */
+    /* No run slots since 2026-10-10 (running left the week on his ruling; see the check below). */
     const SLOT_LABEL_KEYS = new Set(['eveningSwim']); // saturdayRow left 2026-09-06 with Session C
     for (const k of ['eveningRun', 'weekendRun', 'run', 'runAfterLift']) {
-      if (k in assigned) fail('conditioning.json', `week.assignedDays.${k} is back. Run days live in run.weeks[].runs[].day since 2026-10-04, so the planned week and the rest rule read one source.`);
+      if (k in assigned) fail('conditioning.json', `week.assignedDays.${k} is back. Running left the week on 2026-10-10 on his ruling.`);
     }
     const slotKeys = new Set(
       Object.keys(assigned).filter((k) => !k.startsWith('$') && k !== 'why'),
@@ -1564,96 +1563,26 @@ if (!conditioning.week?.restRule) {
     }
     return { worst: Math.min(worst, 7), worstEnd };
   };
-  /* EVERY WEEK OF THE RUN PLAN IS A DIFFERENT PLANNED WEEK, since 2026-10-04. The runs moved out of
-     assignedDays into run.weeks[].runs[].day (one run in weeks 1-2, two from week 3), and an adversary
-     showed the old check read only assignedDays, so a Sunday or Wednesday run in the table passed.
-     Each run week is now checked as lifts + swims + THAT week's runs. One "ok" line only when no
-     week failed, so a failure is never followed by a line saying the week is fine. */
-  const runWeeks = Array.isArray(conditioning.run?.weeks) ? conditioning.run.weeks : [];
-  const weeksToCheck = runWeeks.length ? runWeeks : [{ week: 0, runs: [] }];
-  let restFails = 0;
-  let worstSeen = 0;
-  let maxDays = 0;
-  for (const w of weeksToCheck) {
+  /* NO RUN PLAN, since 2026-10-10, on his words: "if there's anything that refers to running, let's
+     take it out ... It makes really no sense." The planned week is lifts + swims only, checked once.
+     A `run` block coming back to conditioning.json fails here, because the page that read it and the
+     planned-week rows it added are gone: a run plan in the file would be a plan nothing shows him. */
+  if ('run' in conditioning) {
+    fail('conditioning.json', 'a `run` block is back. Running left the week on 2026-10-10 on his ruling ("if there\'s anything that refers to running, let\'s take it out"); /run is gone and the planned week has no run rows. Bring it back only on his words.');
+  }
+  {
     const days = new Set(training);
-    for (const r of Array.isArray(w.runs) ? w.runs : []) {
-      if (!WEEKDAYS.includes(r?.day)) {
-        fail('conditioning.json', `run week ${w.week} has a run on "${r?.day}", which is not a weekday name (monday ... sunday).`);
-        restFails++;
-        continue;
-      }
-      days.add(r.day);
-    }
     const { worst, worstEnd } = longest(days);
-    worstSeen = Math.max(worstSeen, worst);
-    maxDays = Math.max(maxDays, days.size);
     if (Number.isInteger(maxConsecutive) && worst > maxConsecutive) {
-      restFails++;
       fail(
         'conditioning.json',
-        `run week ${w.week}: the PLANNED week trains ${worst} days in a row (ending ${worstEnd}), but week.restRule.maxConsecutive is ${maxConsecutive}. ` +
-          `Training days that week: ${WEEKDAYS.filter((d) => days.has(d)).join(', ')}. ` +
-          `Move the run onto a day that keeps the rule, or change the rule on purpose.`,
+        `the PLANNED week trains ${worst} days in a row (ending ${worstEnd}), but week.restRule.maxConsecutive is ${maxConsecutive}. ` +
+          `Training days: ${WEEKDAYS.filter((d) => days.has(d)).join(', ')}. Change the week or the rule on purpose.`,
       );
+    } else {
+      out.push(`ok    [conditioning.json] the planned week keeps the rest rule: ${days.size} training days, longest run ${worst}, rule allows ${maxConsecutive}`);
     }
   }
-  if (!restFails) {
-    out.push(`ok    [conditioning.json] all ${weeksToCheck.length} planned weeks keep the rest rule: up to ${maxDays} training days, longest run ${worstSeen}, rule allows ${maxConsecutive}`);
-  }
-}
-
-/* THE RUN PLAN'S LOAD RULES, CHECKED AGAINST ITS TABLE. Added 2026-10-04 with the outdoor rebuild.
- * The plan's first rule ("Never add more than 10% in a week") was prose; the table is data, so:
- *   1. week 1 may not exceed his current week (run.currentWeekKm, his recent watch total) by more
- *      than 10%, so the plan cannot open above what he does;
- *   2. each week's summed WATCH distance may not exceed the week before by more than 10%. Watch
- *      distance, not running distance, because it is the number the page shows and the one he can
- *      check (his rule, 2026-10-04); Bertelsen's 10% was on running distance, and the difference is
- *      the walking he does when the talk test fails, which this cap therefore also limits;
- *   3. a run on a lifting day may be at most half that week's longest run (the Robineau 0 h case,
- *      kept short: run.$scheduleNote);
- *   4. startsOn is a date, and the minute range is two positive numbers, low first.
- * One "ok" line, only when nothing in this block failed. */
-{
-  const r = conditioning.run ?? {};
-  const weeks = r.weeks;
-  let bad = 0;
-  const no = (msg) => { bad++; fail('conditioning.json', msg); };
-  const liftDays = new Set(
-    Object.values(program.days).flatMap((d) => (Array.isArray(d.scheduledOn) ? d.scheduledOn : [d.scheduledOn])).filter(Boolean),
-  );
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(r.startsOn ?? ''))) no('run.startsOn must be a YYYY-MM-DD date: /run and /health count the plan week from it.');
-  const span = r.pace?.sessionSecPerKm;
-  if (!Array.isArray(span) || span.length !== 2 || !(span[0] > 0) || !(span[1] >= span[0])) {
-    no('run.pace.sessionSecPerKm must be [low, high] seconds per km, both positive, low first: the page derives every minute range from it.');
-  }
-  if (!(r.currentWeekKm > 0)) no('run.currentWeekKm must be his current weekly watch distance in km.');
-  if (!Array.isArray(weeks) || weeks.length === 0) {
-    no('run.weeks is missing or empty.');
-  } else {
-    let prev = r.currentWeekKm > 0 ? r.currentWeekKm : null;
-    weeks.forEach((w, i) => {
-      if (!Array.isArray(w.runs) || w.runs.length === 0
-        || w.runs.some((x) => typeof x?.day !== 'string' || !(typeof x.km === 'number' && x.km > 0))) {
-        no(`run.weeks[${i}] needs runs: [{day, km > 0}]`);
-        return;
-      }
-      const total = w.runs.reduce((a, x) => a + x.km, 0);
-      if (prev != null && total > prev * 1.1 + 1e-9) {
-        no(i === 0
-          ? `run week 1 totals ${total.toFixed(2)} km, more than 10% over his current week (run.currentWeekKm ${prev.toFixed(2)} km). The plan may not open above what he does.`
-          : `run week ${w.week} totals ${total.toFixed(2)} km, more than 10% over week ${weeks[i - 1].week} (${prev.toFixed(2)} km). His plan's first rule.`);
-      }
-      const top = Math.max(...w.runs.map((x) => x.km));
-      for (const x of w.runs) {
-        if (liftDays.has(x.day) && x.km > top / 2 + 1e-9) {
-          no(`run week ${w.week}: the ${x.day} run (${x.km} km) is on a lifting day and more than half the week's longest run (${top} km).`);
-        }
-      }
-      prev = total;
-    });
-  }
-  if (!bad) out.push(`ok    [conditioning.json] run plan: ${weeks.length} weeks, opens within 10% of his current week, grows at most 10% a week, lift-day runs at most half`);
 }
 
 /* THE SWIM CHECKS LEFT THIS FILE on 2026-08-26 and are content/swim/validate.mjs, which the build

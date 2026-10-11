@@ -136,7 +136,12 @@ const nextConfig: NextConfig = {
        *
        * 307, not 308, matching /reading/all above and for the same reason: a permanent redirect is
        * cached by browsers forever, and this is an architecture decision rather than a law. */
-      ...(['run', 'bike', 'swim'].flatMap((d) => [
+      /* /run IS DELETED, 2026-10-10: running left the week on his ruling. Its URLs and the old
+       * ?p=run bookmarks land on /health, the training index. Before the discipline rules below. */
+      { source: '/run', destination: '/health', permanent: false },
+      { source: '/run/:path*', destination: '/health', permanent: false },
+      { source: '/gym/conditioning', has: [{ type: 'query' as const, key: 'p', value: 'run' }], destination: '/health', permanent: false },
+      ...(['bike', 'swim'].flatMap((d) => [
         {
           source: '/gym/conditioning',
           has: [

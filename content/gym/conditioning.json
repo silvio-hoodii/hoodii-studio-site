@@ -60,8 +60,8 @@
     },
     "evening": {
       "name": "Evening",
-      "what": "Lift first, then the swim. From week 3 of the run plan, a short run after Tuesday's lift, before the swim.",
-      "why": "Lift first, unchanged: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym. From week 3 of the run plan Tuesday carries all three (lift, a short run, the swim): the rest rule leaves no free weekday for a second run, so it shares a lift evening and is capped at half the Saturday run (run.$scheduleNote). The main run is on Saturday, on its own."
+      "what": "Lift first, then the swim.",
+      "why": "Lift first: the concurrent-training review trends favour lifting before the aerobic piece, and his squat went up while stacking the swim after the gym."
     },
     "poolTimes": {
       "weekdayEarly": "Weekday early: ~6 am",
@@ -69,226 +69,6 @@
       "saturday": "Saturday: ~noon or ~2 pm",
       "sunday": "Sunday: ~noon or ~2 pm"
     }
-  },
-  "run": {
-    "title": "Run",
-    "surface": "Outdoors",
-    "startedFrom": "A returning runner, not a beginner. Runs of 9 minutes or more on record: 29 in 2023 (including continuous runs of 5.0, 6.0 and 7.5 km), 5 in 2024, 2 in 2025, one treadmill session on 2026-08-18, and since 2026-08-24 four outdoor runs that read 4.54, 5.03, 5.02 and 5.03 km on his watch, 34.7 to 40.1 minutes each, four in 41 days, with a three-week gap. The last, 2026-10-03, was continuous, 34.7 minutes, average running heart rate 155, 31.5 minutes above 140. The one that stayed easy was 2026-08-24: 3 minutes run, 1 minute walk, ten times, 40.1 minutes, 4.54 km, running pace 8:04 per km, running heart rate 125. Source: HealthOS/knowledge/ANALYSIS-2026-10-04-RUN.md, which an adversary re-ran the same day.",
-    "$startedFromRunningOnly": "RUNNING-ONLY FIGURES, never rendered (his rule, 2026-10-04: a page shows the watch total). Running seconds = step rate 140 or more. Kilometres of running in those four sessions: 3.62, 4.19, 4.37, 4.94. Running pace 8:04, 7:13, 7:00, 6:50 per km. Walking pace on 2026-08-24: 0.92 km in 10.9 minutes, about 11:50 per km.",
-    "why": [
-      "Start from the week he already runs and let it grow at the rate the injury evidence allows.",
-      "The session does not shrink: week 1 is one easy 5.00 km, what his last two weeks each held.",
-      "Growth goes to a second, short run before the main run gets longer."
-    ],
-    "howHard": {
-      "primary": "The talk test. You must be able to say a full sentence out loud without gasping. If you cannot, walk until you can, then run on slower.",
-      "secondary": "If you want a number, keep your heart rate under 140, and walk when it climbs past.",
-      "$why": "THE ONLY GAUGES ARE THE TALK TEST AND THE HEART RATE; PACE IS NOT ONE. (1) The trial behind the load rules used a talk instruction only. Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"run with a moderate intensity i.e. being able to converse without breathlessness.\" (2) HIS WATCH'S OWN AEROBIC THRESHOLD was 134 to 136 on each of his runs (sensing_status.json, ANALYSIS-2026-10-04-RUN.md E9); 140 sits just above it. The 140 itself has no study behind it; it is the plan's ceiling, kept as a convention. (3) WHY NO PACE RULE: the 2026-10-04 review struck the \"faster than 8:00 per km, slow down\" line. 8:00 continuous was never observed, and at matched speed (6:57 to 7:35 per km) his heart rate was 130 on 2026-08-24 and 146 to 159 on the other three runs, so the same pace was easy one day and hard the next; what differed was walk breaks, time of day, same-day lifting and route (analysis finding 2). He runs 6:50 to 7:13; a pace ceiling would have told a returning runner to jog like a beginner. The continuous 2026-10-03 run spent 31.5 of 34.7 minutes above 140, so the instruction that changes what he does is: walk when the talk test or the 140 fails."
-    },
-    "pace": {
-      "sessionSecPerKm": [
-        470,
-        530
-      ],
-      "$why": "THE MINUTE RANGE, NOT A PACE TO HOLD (nothing here renders as a target). The page turns each run's watch distance into \"about X to Y min\" with these two whole-session paces, walks included, both from his own runs: 470 s/km is 2026-08-30 (39.3 min for 5.03 km, 9.0 min of it walking, running heart rate 140), 530 s/km is 2026-08-24 (40.1 min for 4.54 km, 10.9 min walking, running heart rate 125). So 5.00 km reads about 39 to 44 min. How much he walks decides where in the range he lands; a faster easy run is fine and is not a rule break. If his easy runs move outside it, re-derive both from new sessions rather than typing a number."
-    },
-    "weeks": [
-      {
-        "week": 1,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5
-          }
-        ]
-      },
-      {
-        "week": 2,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5.5
-          }
-        ]
-      },
-      {
-        "week": 3,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5
-          },
-          {
-            "day": "tuesday",
-            "km": 1
-          }
-        ]
-      },
-      {
-        "week": 4,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5
-          },
-          {
-            "day": "tuesday",
-            "km": 1.6
-          }
-        ]
-      },
-      {
-        "week": 5,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5
-          },
-          {
-            "day": "tuesday",
-            "km": 2.2
-          }
-        ]
-      },
-      {
-        "week": 6,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 5.5
-          },
-          {
-            "day": "tuesday",
-            "km": 2.4
-          }
-        ]
-      },
-      {
-        "week": 7,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 6
-          },
-          {
-            "day": "tuesday",
-            "km": 2.5
-          }
-        ]
-      },
-      {
-        "week": 8,
-        "runs": [
-          {
-            "day": "saturday",
-            "km": 6.6
-          },
-          {
-            "day": "tuesday",
-            "km": 2.5
-          }
-        ],
-        "note": "Reassess here before deciding whether to keep climbing or hold."
-      }
-    ],
-    "$weeksWhy": [
-      "WEEK 1 IS HIS CURRENT WEEK: one run of 5.00 km on the watch, what each of his last two calendar weeks",
-      "held (run.currentWeekKm). The effort changes, not the size: walk whenever the talk test or the 140",
-      "fails (howHard.$why).",
-      "",
-      "THE 10% IS ON WATCH DISTANCE, at most, week on week. Bertelsen 2018 (fetched 2026-10-04,",
-      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/): \"In both programs, the weekly running distance was",
-      "increased by 10% each week throughout the follow-up.\" That is RUNNING distance. The plan applies it to",
-      "the watch total because that is the number on the page and the one he can check; the gap is the",
-      "walking, which the cap therefore also limits. JUDGMENT, stated. Weekly totals 5.0, 5.5, 6.0, 6.6, 7.2,",
-      "7.9, 8.5, 9.1 km, each at most 110% of the one before (validate.mjs). The trial ran four weeks; weeks",
-      "5 to 8 extrapolate its rule, and 9.1 km a week is above both of its starting arms (3 and 6 km), which",
-      "is why week 8 says reassess. Injuries in the trial: \"Two participants were injured in the 3km",
-      "intervention (6.9%). Five participants were injured in the 6km intervention (18.5%).\" He is outside",
-      "its population (it admitted \"less than 10km combined the last year\"; he has about 20 km since",
-      "2026-08-18), so the 10% is the nearest guide for his weight, not a finding about him.",
-      "",
-      "WEEK 2 IS 5.50 KM, LONGER THAN ANY RUN HE HAS DONE THIS YEAR (longest 5.03). That is +9% on his",
-      "longest 2026 run, inside the 10% rule, and a JUDGMENT: the cap leaves 0.5 km of headroom and a 0.5 km",
-      "second run is not a run. His 2023 record holds continuous runs of 6.0 and 7.5 km, so the distance",
-      "itself is not new to him. Week 3 moves the main run back to 5.00 and opens the second run.",
-      "",
-      "FREQUENCY BEFORE DISTANCE. From week 3 the growth goes to a short Tuesday run (1.0 km, about 8 to 9",
-      "minutes, the first week the cap leaves room for one) while Saturday holds at 5.00. Tuesday is capped at",
-      "2.5 km, half of Saturday (run.$scheduleNote); as it nears the cap (2.4 in week 6, 2.5 from week 7) the growth",
-      "goes back to Saturday: 5.5, 6.0, 6.6, never more than 10% on the run before. JUDGMENT: 1.0 km as the smallest",
-      "useful run and 2.5 km as the cap are mine, not a source's."
-    ],
-    "rules": [
-      "Never add more than 10% in a week to the total on your watch, and never add distance and speed in the same week.",
-      "The run ends at its distance, however good you feel.",
-      "A missed week means repeat the last week you completed, not jump to where the calendar says.",
-      "Any pain that changes how you walk means stop and say so. Shin and knee are the two to watch."
-    ],
-    "$rulesWhy": "Rule 1 is Bertelsen's 10% a week applied to watch distance (run.$weeksWhy says why and that this is a judgment) and validate.mjs checks it against the table. The old \"pace stays near 8:00\" rule is gone with the pace gauge (howHard.$why); \"never add distance and speed together\" stays as the trial-safe reading of rule 1. Rule 2 is from his record: by calendar week, every one of his four outdoor runs broke a plan rule (ANALYSIS-2026-10-04-RUN.md, finding 10). Rule 3 is rule 1 read after a gap. Rule 4 is unchanged.",
-    "cues": [
-      {
-        "name": "Step rate",
-        "cue": "Keep the short, quick step you already have. Your recent runs sit at 154 to 161 steps a minute. Step rate is how many times a foot lands in one minute, both feet counted. To measure it, after the first kilometre, count every time your RIGHT foot lands for 30 seconds.",
-        "test": "PASS = 38 or more right-foot landings in 30 seconds, which is 152 steps a minute. FAIL = 37 or fewer: take shorter, quicker steps without speeding up and count again a kilometre later.",
-        "why": "Raising step rate is the one form change with a consistent measured effect on how hard your legs get hit, and you already made it: at the same speed your runs this year sit above every run you did in 2023. The job now is to keep it at the slower easy pace, where a long, loping step is the easy mistake.",
-        "confidence": "evidence",
-        "grounding": "HIS DATA (ANALYSIS-2026-10-04-RUN.md, finding 5, adversary-checked): within each speed band every 2026 run sits at 154 to 161 steps a minute and every 2023 run at 148 to 154 (n = 4 against n = 16), no overlap; run-to-run noise +-2.3. 152 is 154 minus that noise, rounded to a count a hand can make (38 x 4). Note the session average on the Now tab includes the walks (141.8 on 2026-08-24), so it cannot be used for this check. THE EVIDENCE for step rate itself: Figueiredo I, Reis e Silva M, Sousa JE. Cureus. 2025;17(8):e90322, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC12440572/, verbatim: \"A moderate increase in cadence (typically 5-10%) led to consistent biomechanical improvements, including reduced vertical ground reaction forces, lower loading rates, shorter stride length, and improved lower limb alignment\" and \"cadence modification did not negatively affect metabolic cost\". Caveats kept from the earlier pass: Cureus is a low-barrier journal, the review covers normal-weight runners only, and no step-rate study at BMI 30 to 35 was found.",
-        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12440572/"
-      },
-      {
-        "name": "One change only",
-        "cue": "Step rate is the only thing about your running form you look after on this plan. Whatever part of your foot hits the ground first, leave it alone. That is called your footstrike: heel first is a rearfoot strike, ball of the foot first is a forefoot strike. If an app, a video or a friend tells you your footstrike is wrong, the answer is no. You also do not work on posture, arm swing, leaning forward or breathing rhythm. Pain that changes the way you walk means stop the run, not change your form.",
-        "test": "Before you start the watch, name to yourself the one form thing you are working on today. PASS = it is step rate and nothing else. FAIL = it is anything else, in which case drop it and run with step rate only.",
-        "why": "Switching a heel striker onto the forefoot moves load off the knee and onto the calf and Achilles tendon, the tissue least prepared to take it at your weight, and it makes running harder at the same speed. There is no prospective evidence that the switch prevents injury. And if you change two things at once and something starts hurting, you cannot tell which one did it.",
-        "confidence": "convention",
-        "grounding": "Anderson LM, Bonanno DR, Hart HF, Barton CJ. Sports Med. 2020;50(5):885-917, abstract fetched 2026-10-04 at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31823338&rettype=abstract&retmode=text, verbatim: \"combined with the associated shift in loading profile (i.e., greater ankle and plantarflexor loading) found in this review, changing strike pattern cannot be recommended for an uninjured RFS runner.\" The one-change-at-a-time packaging is coaching convention, hence the label.",
-        "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31823338&rettype=abstract&retmode=text"
-      },
-      {
-        "name": "The passage",
-        "cue": "Pick about 30 words you know by heart and use the SAME words every run. Say them out loud at normal speaking volume to gauge how hard you are working. You have two gauges, the passage and the watch, and whichever one is stricter wins. If the passage fails, you slow down even if the watch reads under 140. If the watch reads over 140, you slow down even if the words came out fine.",
-        "test": "Say the passage out loud once a kilometre. PASS = all the words with at most one break to breathe, AND the watch reads 140 or below. If you are unsure whether you broke to breathe, count it as a break. FAIL = walk until it passes, then run on slower. The distance stays the same.",
-        "why": "Two gauges will disagree, and letting the stricter one win means a wrong wrist reading can only make you go easier, never harder. Fixed words matter because an improvised sentence gets shorter as you tire, so the test gets easier exactly when it needs to hold. On your 2026-10-03 run the watch read over 140 for 31.5 of 34.7 minutes; this is the cue that stops that becoming the easy run.",
-        "confidence": "contested",
-        "grounding": "Bertelsen 2018 (https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, fetched 2026-10-04) used a talk instruction only: \"run with a moderate intensity i.e. being able to converse without breathlessness\". Vieira AM et al. Rev Cardiovasc Med. 2022;23(7):225, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC11266803/, verbatim: \"Workload, oxygen uptake, and heart rate in the last positive stage of the TT were not different from the same parameters related to the first ventilatory threshold.\" CONTESTED because that review is of cardiac patients, and its authors write \"Evidence is missing regarding the applicability of the talk test in a more heterogeneous population\". The 140 is a convention (see howHard.$why). The walk-a-minute fix replaces the old belt drop: there is no belt outdoors; judgment.",
-        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11266803/"
-      },
-      {
-        "name": "Hills",
-        "cue": "On a climb, keep the effort and let the pace drop. Slow down or walk up it until the talk test passes again.",
-        "test": "At the top of any climb, say your passage. PASS = all the words with at most one break. FAIL = walk until it passes, then run on at the slower pace.",
-        "why": "Your one hilly run, 2026-09-26, climbed 111 m against 29 to 35 m on the others. A climb at the same pace is more work, so judge it by the talk test, not the watch pace.",
-        "confidence": "convention",
-        "grounding": "HIS DATA, ANALYSIS-2026-10-04-RUN.md finding 2: at matched speed (6:57 to 7:35 per km) heart rate was 130 on 2026-08-24, 148 on 08-30, 146 on 09-26 and 159 on 10-03, and the analysis names the 111 m climb on 09-26 as one of four confounds it CANNOT separate (walk breaks, time of day, same-day lifting and swimming, route). So the cue does not claim the hill caused the 146; it asks him to judge the climb by effort, which needs no such claim. No study cited. CONVENTION.",
-        "url": null
-      },
-      {
-        "name": "Walks and stopping",
-        "cue": "Walking is allowed whenever the talk test fails; walk until it passes, then run on. Keep moving, do not stand still. Stopping for any other reason is different and always correct: pain that changes the way you walk, dizziness, chest pain, or anything that feels wrong means you stop and walk home.",
-        "test": "Three checks. (1) Before you set off, start the watch on an outdoor run. PASS = it shows a heart rate. (2) Every walk is a walk, not a standing rest. (3) A stop for pain, dizziness or anything wrong is a PASS, every time.",
-        "why": "The injury trial behind the load rules walked its pauses; it never stood. On your own record, walking is what held a run under 140.",
-        "confidence": "convention",
-        "grounding": "Bertelsen 2018, fetched 2026-10-04 at https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/, verbatim: \"The running distance in both programs was split up into shorter intervals with walking at an easy/comfortable pace in the pauses between each interval.\" CONVENTION because the trial never compared walking against standing.",
-        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6253747/"
-      },
-      {
-        "name": "Shoes",
-        "cue": "Choose running shoes on fit first, using the test below. If two pairs both pass the fit test, take the softer and more cushioned one. Do not pay extra for anything sold as stability or motion control, and do not trust a shoe because the box says it is for heavier runners.",
-        "test": "Do this late in the day, in the socks you will run in. Pull the insole out of the shoe first. The insole is the loose flat liner you can lift out from inside. Put it on the floor and stand on it. Three checks, all three must pass. (1) Look down at the gap in front of your longest toe, which is not always the big toe. PASS = the insole extends at least a thumb width past the end of it. (2) Look at the sides of the insole. PASS = no part of your foot hangs over the edge anywhere. (3) Put the insole back, lace the shoe and walk 20 steps. The heel cup is the stiff cup at the back of the shoe that wraps around your heel. PASS = your heel stays down inside it and does not lift away as you step. Any one fail means it is the wrong shoe, whatever the price, the brand or the review says.",
-        "why": "The trial split its runners at the middle of their own body mass, 78.2 kg for men, so at your weight you sit above even its heavier half. In that half the harder shoe still pointed the wrong way, but the range around it ran from 25 percent lower risk to roughly double, so it could be chance. The question is unsettled for a man your size, not settled against cushioning. Fit is where runners actually get hurt in month one: a shoe too short or too narrow gives black toenails and forefoot pain inside a few weeks.",
-        "confidence": "contested",
-        "grounding": "Malisoux L, Delattre N, Urhausen A, Theisen D. Am J Sports Med. 2020;48(2):473-480, abstract fetched 2026-10-04 at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31877062&rettype=abstract&retmode=text, verbatim: \"lighter runners had a higher injury risk in hard shoes (SHR, 1.80 [95% CI, 1.09-2.98]) while heavier runners did not (SHR, 1.23 [95% CI, 0.75-2.03])\" and \"the relative protective effect of greater shoe cushioning was found only in lighter runners.\" CONTESTED for him: the heavier subgroup is underpowered, not null. The three fit checks are CONVENTION.",
-        "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=31877062&rettype=abstract&retmode=text"
-      }
-    ],
-    "cuesNote": "WHAT WAS DROPPED, one line each.\n\n1. ALL FOUR TREADMILL CUES (belt speed, incline zero, the safety clip, the console unit test), with the treadmill. He runs outdoors.\n2. \"RAISE YOUR STEP RATE 5 PERCENT.\" He already did: his 2026 runs sit above every 2023 run at the same speed. The cue now holds the step he has.\n3. THE \"RUN QUIETLY\" CUE, the footstrike video and the 180 steps a minute target, as before: the sound does not track the force, and 180 is not his number.\n\nMYTHS STILL WORTH NAMING: 180 steps a minute is not universal (Leacox 2025); heel striking is not wrong for an uninjured runner (Anderson 2020); heavy runners do not provably need maximum cushioning, nor provably not (Malisoux 2020).",
-    "$scheduleNote": "THE DAYS, decided 2026-10-04 (the coordinator's instruction was to decide, not ask). Lifting is Mon Lower 1, Tue Upper 1, Thu Lower 2, Fri Upper 2 (the four-session week of 2026-10-04; it was Mon A, Tue B, Thu A, Fri B), a swim after each (program.json scheduledOn, week.assignedDays.eveningSwim). Free days: Wed, Sat, Sun. With run days now checked against the rest rule for every plan week (validate.mjs), exactly one free day can take a run: Saturday makes Thu-Fri-Sat, 3, legal; Sunday as well makes 4; Wednesday joins Mon-Tue to Thu-Fri into 5. SATURDAY, because it is his real pattern: two of his four outdoor runs were Saturdays (2026-09-26 at 13:00, 2026-10-03 at 21:11), the others a Monday and a Sunday. It is not always free of lifting: on 2026-10-03 he lifted at 13:23 and ran at 21:11, about 8 hours later. In the plan, Saturday has no lift and Friday's ends the evening before, more than 6 h away. Robineau 2016 (abstract fetched 2026-10-04, https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=25546450&rettype=abstract&retmode=text): \"Gains in maximal strength for bench press and half squat were lower in C-0h compared with that in C-6h, C-24h, and STR.\" THE SECOND RUN has no free day left, so it shares a lift evening: TUESDAY after Upper 1 (Session B until 2026-10-04), the evening the walk-run held since 2026-09-04. That is the 0 h case, and Wilson 2012 found endurance DURATION correlated with strength and size losses (verbatim: \"Correlational analysis identified significant negative relationships between frequency (-0.26 to -0.35) and duration (-0.29 to -0.75) of endurance training for hypertrophy, strength, and power.\", abstract fetched 2026-10-04 at https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22002517&rettype=abstract&retmode=text). So it is capped at half the Saturday run and at 2.5 km (validate.mjs enforces the half). It also makes Tuesday an evening of all three, lift, run and swim, which slots.evening.why now says. Weeks 1 and 2 have no Tuesday run, and /health shows it only from week 3.",
-    "startsOn": "2026-10-05",
-    "$startsOnWhy": "Monday 2026-10-05, the day after the rebuild; week 1's run is Saturday 2026-10-10. /run and /health both count the plan week from this date (src/lib/gym/run-week.ts).",
-    "currentWeekKm": 5.03,
-    "$currentWeekKmWhy": "His current week: one run in each of his last two calendar weeks, 5.02 km on 2026-09-26 and 5.03 km on 2026-10-03 on the watch (ANALYSIS-2026-10-04-RUN.md per-run table). validate.mjs refuses a week 1 more than 10% above it.",
-    "$hisRuling": "HOLDING ABOUT 5 KM AND ADDING A SECOND RUN IS HIS RULING, OVERRIDING THE ANALYSIS. ANALYSIS-2026-10-04-RUN.md's corrected inference reads \"The plan's own rules point to dropping back toward its weekly sizes, not holding where he is.\" He rejected that direction in his own words on 2026-10-04: \"the plan makes no sense for what I can actually do, it was built on me never having run before\" and \"rebuild everything based on what I can do\". So the plan holds his current weekly distance rather than dropping below it. What still bounds it is mechanical, not prose: validate.mjs refuses a week 1 more than 10% over his current week (run.currentWeekKm), any week more than 10% over the one before, a lift-day run longer than half the week's longest, and any week that breaks his three-days-in-a-row rule."
   },
   "bike": {
     "title": "Bike",
@@ -300,7 +80,7 @@
       "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=22002517&rettype=abstract&retmode=text,",
       "verbatim: \"resistance training concurrently with running, but not cycling, resulted in significant",
       "decrements in both hypertrophy and strength.\" So the bike is where hard aerobic work can go",
-      "without costing the legs he lifts with, which is what lets the running stay easy."
+      "without costing the legs he lifts with."
     ],
     "protocol": {
       "name": "Norwegian 4x4, three rounds",
@@ -478,8 +258,8 @@
         "His history is two thirds evening swims (26 of the last 41) and one morning swim since June, and his 2026-09-02",
         "words were \"getting up that early will affect my sleep schedule\". The 2026-09-03 morning ruling never started.",
         "",
-        "Week since 2026-10-04: Mon Lower 1 + swim, Tue Upper 1 + swim (and the second run from run-plan week 3), Wed off,",
-        "Thu Lower 2 + swim, Fri Upper 2 + swim, Sat run, Sun off. Longest run of training days is Thu-Fri-Sat, three.",
+        "Week since 2026-10-04: Mon Lower 1 + swim, Tue Upper 1 + swim, Wed off,",
+        "Thu Lower 2 + swim, Fri Upper 2 + swim, Sat and Sun off (since 2026-10-10, when running left).",
         "",
         "Each session is sized to 16 sets, about 72 minutes at his measured pace and under his 80 on about 3 days in 4",
         "(program.json days.*.$time), so a lift-then-swim evening is about two hours."
@@ -489,8 +269,7 @@
         "tuesday",
         "thursday",
         "friday"
-      ],
-      "$runDays": "CHANGED 2026-10-04: run days are no longer listed here. They live in run.weeks[].runs[].day, because the run plan has one run in weeks 1 and 2 and two from week 3, and a fixed list here showed a Tuesday run on /health two weeks early. plannedWeek (src/lib/gym/week.ts) adds them for the current plan week; validate.mjs checks the rest rule for every plan week and refuses a run key coming back here."
+      ]
     },
     "howItFits": {
       "$comment": [
@@ -501,18 +280,13 @@
         "and had simply never reached a page. That is its own lesson: the reasoning lived in a file he",
         "had never opened, which is exactly why he said the programme reads as arbitrary."
       ],
-      "title": "Why four things and not one",
-      "lead": "Lifting, swimming, running and the bike are not four hobbies competing for the week. Three of them are free and one has a price, and the plan is built around which is which.",
+      "title": "Why lifting and swimming",
+      "lead": "Lifting and swimming, and since 2026-10-10 no running: swimming costs the lifts nothing, and running was the one that charged a price.",
       "points": [
         {
           "claim": "Swimming and cycling cost your lifts nothing.",
           "detail": "A meta-analysis that separated the endurance MODALITY found running, but not cycling, produced significant losses in both strength and size. Swimming carries no eccentric loading either. So the aerobic base can grow on those two without paying for it at the rack.",
           "source": "Wilson 2012, 21 studies, 422 effect sizes"
-        },
-        {
-          "claim": "Running is the one that costs, so it is kept short rather than rare.",
-          "detail": "In the same analysis, endurance DURATION correlated more strongly with losses than frequency did. Short and frequent beats long and occasional, which is also exactly what the injury evidence for a novice runner at your bodyweight says.",
-          "source": "Wilson 2012, plus Bertelsen 2018 on novice runners"
         },
         {
           "claim": "Doing all of it beats doing one of them, on both scoreboards.",
@@ -523,14 +297,10 @@
           "claim": "Lift first when both happen the same day.",
           "detail": "No significant effect either way, but the trend favours lifting before the aerobic piece. You already stack the swim after the gym, so this one is a description of what you do rather than a change.",
           "source": "Held 2026"
-        },
-        {
-          "claim": "And what the rower is for.",
-          "detail": "Non-impact aerobic volume that running would otherwise have to supply, at a price running charges and a machine does not. Two easy fifteen-minute rows before any interval is written: nobody here has rowed, and the first honest hard piece on a new machine is a shock. The bike did this job until 2026-09-04 and comes back if he asks.",
-          "source": "Wilson 2012"
         }
       ],
       "sourceNote": "Full citations and the numbers behind each line are in HealthOS/knowledge/training-programme-evidence.md, section 2."
     }
-  }
+  },
+  "$runRemoved": "RUNNING LEFT THE WEEK 2026-10-10, on his words: \"if there's anything that refers to running, let's take it out because I think you're right. It makes really no sense.\" He dislikes it and would rather swim twice; swimming covers the aerobic side, and the jumps on the lower days give the impact that running would. The run plan (ten weeks from 2026-10-05), the /run page and the planned-week run rows are gone; the plan is in git history before this date. validate.mjs refuses a `run` block coming back."
 }

@@ -265,15 +265,6 @@ export interface Program {
  *  diffable. */
 type Prose = string | string[];
 
-/** One week of the outdoor run, since 2026-10-04: a list of runs, each a day label and a WATCH
- *  distance (the session total, walks included: his rule, 2026-10-04). The page derives minutes
- *  from `run.pace.sessionSecPerKm`; validate.mjs caps weekly growth at 10%. */
-export interface ConditioningWeek {
-  week: number;
-  runs: { day: string; km: number }[];
-  note?: string;
-}
-
 /** A technique cue. Added 2026-08-16, because the plan said how hard and how long and never how,
  *  and he has never run or cycled.
  *
@@ -353,25 +344,8 @@ export interface Conditioning {
   /** Optional in the type so an older conditioning.json still parses; validate.mjs makes it
    *  mandatory in practice by failing the build when it is missing. */
   week?: ConditioningWeekPlan;
-  run: {
-    title: string;
-    surface: string;
-    startedFrom: string;
-    /** Monday of week 1, YYYY-MM-DD. /run and /health count the plan week from it. */
-    startsOn: string;
-    /** His current weekly watch distance, km. validate.mjs opens the plan within 10% of it. */
-    currentWeekKm: number;
-    why: Prose;
-    howHard: { primary: string; secondary: string };
-    /** [low, high] seconds per km for a whole easy session, walks included, from two of his runs.
-     *  The page turns each run's distance into a minute range with it. */
-    pace: { sessionSecPerKm: [number, number] };
-    weeks: ConditioningWeek[];
-    rules: string[];
-  cues?: Cue[];
-    /** What was dropped from the cue set and why, which is the more useful half. */
-    cuesNote?: string | null;
-  };
+  /* NO `run` SINCE 2026-10-10: running left the week on his ruling, with /run. validate.mjs refuses
+     the block coming back. */
   bike: {
     title: string;
     surface: string;

@@ -81,7 +81,7 @@
       "Sized to 16 sets so a typical day is about 72 minutes at his measured pace and about 3 in 4 days stay at or under 80 (days.*.$time).",
       "Bench and row share one rack and one bar: a plate change between them (equipment.json, rack sharedInOneWindow).",
       "Assisted pull-up machine in Upper 2: his log has 40 lb of assistance for 6, 5 and 5 (2026-08-25), so the card starts from a number he has done. The walk from the rack is accepted. The band on the rack bar and the pulldown are one tap away.",
-      "Swim in the evening after the lift, his choice 2026-09-04. The Saturday run stays; the second run from run-plan week 3 follows Upper 1 on Tuesday."
+      "Swim in the evening after the lift, his choice 2026-09-04. No running since 2026-10-10, his ruling (\"if there's anything that refers to running, let's take it out\")."
     ]
   },
   "acceptedGaps": {
@@ -239,7 +239,7 @@
               "zone": "rack",
               "station": "rack",
               "log": true,
-              "cue": "Stance a little wider than your hips, toes turned out slightly. Breathe IN and hold it, tighten your stomach as if about to be poked, then sit down between your feet until the crease of your hip is below the top of your knee. Knees push out over your second toe. Stand up and breathe out at the top. Fresh breath and re-tighten before EVERY rep. Stop a set when a rep would look different from the first.",
+              "cue": "DRAFT, tell the note box what is wrong with it. Feet a little wider than hips, toes slightly out. Set a box behind you at a depth you trust. Breathe in and hold it, brace your stomach, then sit down between your feet until you just touch the box; never sit on it. Knees push out over your second toe. Fresh breath every rep. When every set feels solid, use a lower box. Stop when a rep looks different.",
               "progression": "weight",
               "rangeWidth": 4,
               "alts": [
@@ -860,7 +860,7 @@
               "zone": "rack",
               "station": null,
               "log": true,
-              "cue": "One dumbbell held upright against your chest, both hands under the top end. Feet wide, about one and a half shoulder widths, toes turned well out. Sit straight down between your heels, knees pushed out over your toes, chest tall, until your hip crease is below your knees. Drive up through the heels and squeeze your glutes at the top.",
+              "cue": "One dumbbell held upright against your chest, both hands under the top end. Feet wide, toes turned well out, the SAME width every session: count it once in your own foot lengths, so today's depth compares with last week's. Sit straight down between your heels, knees pushed out over your toes, chest tall, until your hip crease is below your knees. Drive up through the heels and squeeze your glutes at the top.",
               "progression": "weight",
               "rangeWidth": 2,
               "firstWeight": {

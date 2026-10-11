@@ -32,7 +32,7 @@ import { usePathname } from 'next/navigation';
 const ROUTES = [
   { href: '/gym', label: 'Lift' },
   { href: '/swim', label: 'Swim' },
-  { href: '/run', label: 'Run' },
+  /* NO RUN since 2026-10-10: running left the week on his ruling, and /run redirects to /health. */
   { href: '/bike', label: 'Bike' },
   { href: '/health', label: 'Body' },
 ] as const;

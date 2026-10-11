@@ -509,7 +509,7 @@ export default async function HealthPage({
         <>
           <div className="exgroup">
             <div className="exgroup-label">
-              The plan <span className="tag">({week.plan.trainingDays} days, longest run {week.plan.longestRun})</span>
+              The plan <span className="tag">({week.plan.trainingDays} days, at most {week.plan.longestRun} in a row)</span>
             </div>
             <PlanWeek week={week} />
           </div>
