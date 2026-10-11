@@ -84,7 +84,7 @@ export async function POST(req: Request) {
         /* All eight, for the "weight he has done for every set" lookup in progression.ts. */
         history: recent,
       });
-      return { id: ex.id, last, suggestion, recent };
+      return { id: ex.id, last, suggestion, recent, assisted: isAssisted(ex.id) };
     });
 
     return NextResponse.json({ ok: true, date, exercises: out });

@@ -119,15 +119,26 @@ const performed = (s: SetEntry | undefined): boolean =>
  * draw a flat line at zero. */
 const hasWeight = (sets: { weight: number | null }[]) => sets.some((s) => s.weight != null && s.weight > 0);
 
-function topSet(sets: { weight: number | null; reps: number | null }[], weighted: boolean): number | null {
+function topSet(sets: { weight: number | null; reps: number | null }[], weighted: boolean, byMax = false): number | null {
   let best: number | null = null;
   for (const s of sets) {
-    const v = weighted ? (s.weight != null && s.weight > 0 ? s.weight : null) : s.reps;
+    const v = weighted
+      ? (s.weight != null && s.weight > 0 ? (byMax ? estMax(s.weight, s.reps) : s.weight) : null)
+      : s.reps;
     if (v == null) continue;
     if (best == null || v > best) best = v;
   }
   return best;
 }
+
+/* THE LINE IS THE ESTIMATED MAX, NOT THE HEAVIEST WEIGHT, since 2026-10-10. His words: "if I do
+ * that number three times versus ... another number, maybe lower number of weight, I don't know,
+ * eight times, that might not necessarily mean a decrease." The top weight called 165 x 8 a drop
+ * from 185 x 3, on the day the squat moved to eight to twelve on purpose. Epley (w x (1 + reps/30)),
+ * the formula progression.ts, validate.mjs and check-ladder.mjs already use, so the line and the
+ * engine weigh a set the same way. Rounded to whole pounds: the decimals are not real precision.
+ * An ASSISTED lift keeps its raw number, because its weight is counterweight and less is harder. */
+const estMax = (w: number, reps: number | null): number => Math.round(w * (1 + (reps ?? 0) / 30));
 
 /* Eight sessions, one line, no text inside the drawing.
  *
@@ -138,13 +149,15 @@ function topSet(sets: { weight: number | null; reps: number | null }[], weighted
  *
  * It only appears from three sessions on. Two points is a line between two points, not a trend, and
  * a chart on an exercise he has done once is decoration on a screen he already found cluttered. */
-function Trend({ recent, countUnit }: { recent: LastSession[]; countUnit: string }) {
+function Trend({ recent, countUnit, assisted }: { recent: LastSession[]; countUnit: string; assisted?: boolean }) {
   const weighted = recent.some((s) => hasWeight(s.sets));
+  const byMax = weighted && !assisted;
   const unit = weighted ? 'lb' : countUnit;
+  const pre = byMax ? 'est. max ' : '';
   const points = [...recent]
     .reverse()
     .filter((s) => !weighted || hasWeight(s.sets))
-    .map((s) => topSet(s.sets, weighted))
+    .map((s) => topSet(s.sets, weighted, byMax))
     .filter((v): v is number => v != null);
   if (points.length < 3) return null;
 
@@ -183,8 +196,8 @@ function Trend({ recent, countUnit }: { recent: LastSession[]; countUnit: string
           the notes list's silent 20-row cap: a cap that does not say it is a cap. */}
       <span className="trend-n tnum">
         {points.every((v) => v === points[0])
-          ? `held at ${latest} ${unit}`
-          : `${first} to ${latest} ${unit}`} over the last {points.length}
+          ? `${pre}held at ${latest} ${unit}`
+          : `${pre}${first} to ${latest} ${unit}`} over the last {points.length}
       </span>
     </span>
   );
@@ -261,7 +274,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * true. budgetKeep and the chips are deleted rather than hidden. */
   const [swaps, setSwaps] = useState<Record<string, Alt>>({});
   const [sets, setSets] = useState<Record<string, SetEntry[]>>({});
-  const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[] }>>({});
+  const [plan, setPlan] = useState<Record<string, { last: LastSession | null; suggestion: Suggestion; recent: LastSession[]; assisted?: boolean }>>({});
   /* `openAlts` IS GONE, 2026-09-06: the alternatives render as a visible row of names, so there is no
      picker to open or close. */
 
@@ -747,7 +760,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         if (cancelled) return;
         const byId: typeof plan = {};
         for (const ex of data.exercises || []) {
-          byId[ex.id] = { last: ex.last, suggestion: ex.suggestion, recent: ex.recent ?? [] };
+          byId[ex.id] = { last: ex.last, suggestion: ex.suggestion, recent: ex.recent ?? [], assisted: !!ex.assisted };
         }
         setPlan((prev) => ({ ...prev, ...byId }));
       })
@@ -1444,7 +1457,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                       ? `${p.suggestion.weight} lb × ${p.suggestion.reps}${repSuffix(eff.reps)}`
                       : `× ${p.suggestion.reps}${repSuffix(eff.reps)}`}
                     <span className="ex-suggest-why">{p.suggestion.reason}</span>
-                    {p.recent && <Trend recent={p.recent} countUnit={eff.timed ? 's' : 'reps'} />}
+                    {p.recent && <Trend recent={p.recent} countUnit={eff.timed ? 's' : 'reps'} assisted={p.assisted} />}
                   </div>
                 )}
 

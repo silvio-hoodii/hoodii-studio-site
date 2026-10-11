@@ -8,7 +8,7 @@
   ],
   "goal": {
     "his": "Legs and glutes first: a stronger squat and stronger glutes, with form I trust over heavier weight, while the fat comes off. Chest in the week, posture work, and stay athletic: jumps, sideways work, a carry, step-ups, and the swim after every lift.",
-    "measuredBy": "Working weight on the lead lifts (back squat read as its estimated max from the 8-12 sets since 2026-10-10, since a lighter weight for more reps is the plan and not a regression; Romanian deadlift, hip thrust, step-up, bench, overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
+    "measuredBy": "Working weight on the lead lifts (back squat read as its estimated max from the 8-12 sets since 2026-10-10, since a lighter weight for more reps is the plan and not a regression; Romanian deadlift, hip thrust, step-up, dumbbell incline press (the barbell bench left the week on 2026-10-10 for his shoulder), overhead press, row), read once a month against the month before. Bodyweight and fat come from HealthOS/CURRENT.md and are never restated here. Longest unbroken swim from the lap data.",
     "inHisWords": [
       {
         "on": "2026-05 (recorded 2026-08-27)",
@@ -69,6 +69,10 @@
       {
         "on": "2026-10-10",
         "said": "one of the reasons I like uh, the one leg RDL is because I can pair it with everything. It's just me bringing a dumbbell to whatever I go."
+      },
+      {
+        "on": "2026-10-10",
+        "said": "I don't feel comfortable loading the barbell with like 180 uh, because again, I don't know if my form is perfect because sometimes I've said that ... my shoulder hurts. Um, so I kind of rather do um, dumbbells."
       }
     ],
     "decided": "Rewritten 2026-10-04 from his words that night: legs and glutes first, 80 minutes a session at most, four lifting days, pairs to save time, chest in the week, no calf raises, swim after the lift, form over heavier, posture work, stay athletic (jumps, sideways, a carry), step-ups wanted.",
@@ -86,7 +90,7 @@
   },
   "frozen": {
     "until": "2026-11-08",
-    "daysHash": "b763867e28a43cff",
+    "daysHash": "18093705e7a40347",
     "changes": [
       {
         "on": "2026-09-06",
@@ -117,6 +121,12 @@
         "hisWords": "Question everything I said and implement what the best possible program is based on everything that we're discussing. And also, I don't want it to be, like, two hours long. I think we're doing supersets just fine.",
         "hash": "b763867e28a43cff",
         "what": "Leg days rethought. Lower 1 back squat 3x8-12 at a weight he trusts: 185 for 6 to 8 reps since 2026-08-20 with a dip to 155-175 in September; lighter weight for more reps grows muscle about as well when the last reps are hard, and his words are that the goal is moving with confidence, not a 225 squat. Lower 2 squat is a sumo goblet squat 3x10-12 from 65 lb, his goblet weight, the wide stance where he feels his glutes. Single-leg RDL replaces the tricep pushdown in Upper 2, alternating with the curl; triceps keep four presses a week. Upper 2 opens at the rack. JUMPS STAY AT THEIR OLD DOSE, on review the same day: the \">40 jumps per session\" finding (de Villarreal 2010, PMID 19897415) is for high-intensity programmes measured on maximal strength, reaching it in quality sets of three to four costs about nine sets and breaks the 80 minutes, and it would triple single-leg landings at his bodyweight. The jumps are practice at jumping and landing, not a muscle builder, and are labelled as that."
+      },
+      {
+        "on": "2026-10-10",
+        "hisWords": "I don't feel comfortable loading the barbell with like 180 uh, because again, I don't know if my form is perfect because sometimes I've said that I feel like my elbow hurts, my elbow, sorry, my shoulder hurts. Um, so I kind of rather do um, dumbbells.",
+        "hash": "18093705e7a40347",
+        "what": "Upper 1 opens with the DB incline press (the low incline he already uses for every dumbbell press, notes #31 and #45) alternating with a DB single-arm row on the same bench; the barbell bench and barbell row are one tap away as swaps. The lateral raise and reverse fly move second so the bench area is one visit; the shoulder press and pulldown finish the day. The press now runs twice a week on one history."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -518,7 +528,7 @@
         "tuesday"
       ],
       "name": "Upper 1",
-      "title": "Upper 1: bench and row",
+      "title": "Upper 1: dumbbell press and row",
       "warmup": [
         "upper"
       ],
@@ -530,31 +540,31 @@
         {
           "role": "main",
           "pairing": "alternate",
-          "label": "Bench and row",
-          "why": "The barbell bench you asked to keep track of, then the row in the same rack with the same bar: a push and a pull take turns, so each rests while the other works. Change plates between them, not racks.",
+          "label": "Dumbbell press and one-arm row",
+          "why": "Your press with dumbbells, at the low incline you already use, because the barbell bench is where your shoulder complains. The row takes turns on the same bench, one arm at a time: a push and a pull, each resting while the other works.",
           "exercises": [
             {
-              "id": "bb-bench-press",
-              "name": "BB Bench Press",
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
               "sets": 3,
-              "reps": "6",
+              "reps": "8",
               "rest": "90s",
-              "zone": "rack",
-              "station": "rack",
+              "zone": "benchDb",
+              "station": "bench",
               "log": true,
-              "cue": "Flat bench inside the rack. Set the safety pins at chest height BEFORE you load the bar, every time, because you train alone. Feet flat, grip a little wider than your shoulders, shoulder blades pulled back and down into the bench and kept there. Lower to your lower chest until it touches lightly, press up, same spot every rep. If you have to bounce it, it is too heavy.",
+              "cue": "Bench one or two notches up from flat. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Success: a stretch across the chest at the bottom, not a pinch at the front of the shoulder.",
               "progression": "weight",
               "rangeWidth": 4,
+              "formerIds": [
+                "db-bench-press"
+              ],
               "alts": [
                 {
-                  "id": "db-incline-press",
-                  "name": "DB Incline Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Bench one or two notches up from flat, a dumbbell in each hand. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Last time you did 60 for three sets of 8.",
-                  "formerIds": [
-                    "db-bench-press"
-                  ]
+                  "id": "bb-bench-press",
+                  "name": "BB Bench Press",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Flat bench inside the rack. Set the safety pins at chest height BEFORE you load the bar, every time, because you train alone. Feet flat, grip a little wider than your shoulders, shoulder blades pulled back and down into the bench and kept there. Lower to your lower chest until it touches lightly, press up, same spot every rep. If you have to bounce it, it is too heavy."
                 },
                 {
                   "id": "machine-chest-press",
@@ -566,34 +576,28 @@
               ]
             },
             {
-              "id": "bb-row",
-              "name": "BB Row",
+              "id": "db-single-arm-row",
+              "name": "DB Single-Arm Row",
               "sets": 3,
-              "reps": "8",
+              "reps": "8/arm",
               "rest": "90s",
-              "zone": "rack",
-              "station": "rack",
+              "zone": "benchDb",
+              "station": "bench",
               "log": true,
-              "cue": "Hinge forward until your chest is roughly parallel to the floor, knees slightly bent, back flat. Breathe in and brace. Pull the bar to your belly button by driving your ELBOWS back past your ribs, then lower it all the way under control. Same bar as the bench: change the plates, not the rack. If you have to stand up to move the bar, it is too heavy.",
+              "cue": "DRAFT, tell the note box what is wrong with it. Same bench as the press, set flat for this. One knee and the same-side hand on the bench, the other foot on the floor, back flat. Dumbbell hanging straight down. Pull it to your hip by driving the ELBOW back past your ribs, pause, lower all the way until the shoulder stretches. All reps on one arm, then the other. Your back does not twist to lift it.",
               "progression": "weight",
-              "rangeWidth": 2,
+              "rangeWidth": 4,
+              "firstWeight": {
+                "weight": 50,
+                "say": "First try: start with a 50 lb dumbbell and work up until 8 an arm feels hard, about 2 left in the tank. Log that weight."
+              },
               "alts": [
                 {
-                  "id": "lat-pulldown",
-                  "name": "Lat Pulldown",
-                  "zone": "cable",
-                  "station": "cable-pulldown",
-                  "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight.",
-                  "sets": 3,
-                  "reps": "8",
-                  "rest": "2 min"
-                },
-                {
-                  "id": "straight-arm-pulldown",
-                  "name": "Straight-Arm Pulldown",
-                  "zone": "cable",
-                  "station": "cable-adjustable",
-                  "cue": "Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
+                  "id": "bb-row",
+                  "name": "BB Row",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Hinge forward until your chest is roughly parallel to the floor, knees slightly bent, back flat. Breathe in and brace. Pull the bar to your belly button by driving your ELBOWS back past your ribs, then lower it all the way under control. Same bar as the bench: change the plates, not the rack. If you have to stand up to move the bar, it is too heavy."
                 },
                 {
                   "id": "chest-supported-row",
@@ -608,85 +612,9 @@
                   "zone": "cable",
                   "station": "cable-row",
                   "cue": "Tall chest, pull the handle to your stomach, squeeze the shoulder blades, let it stretch all the way forward."
-                },
-                {
-                  "id": "db-pullover",
-                  "name": "DB Pullover",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Lying across or along a bench, one dumbbell held over the chest with near-straight arms. Lower it behind your head until you feel the stretch under the armpits, then pull it back over. 3x12.",
-                  "sets": 3,
-                  "reps": "12"
-                },
-                {
-                  "id": "assisted-pullup",
-                  "name": "Assisted Pull-Up",
-                  "zone": "machines",
-                  "station": "assisted-pullup",
-                  "cue": "Set the counterweight so you get 6 clean reps: full hang with straight arms at the bottom, chin over the bar at the top. Log the COUNTERWEIGHT, and remember it is the one number here that should go DOWN over time. When 6 feels easy, take 10 lb of assistance off."
                 }
               ],
-              "whyHere": "a push and a pull take turns, so each rests while the other works"
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "alternate",
-          "label": "Shoulder press and pulldown",
-          "why": "Overhead and pull-down, the vertical pair of the week. Carry the dumbbells to the pulldown and take turns there.",
-          "exercises": [
-            {
-              "id": "db-overhead-press",
-              "name": "Standing DB Overhead Press",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "cable",
-              "station": null,
-              "log": true,
-              "cue": "Standing beside the pulldown, no bench. Dumbbells at shoulder height, palms forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs stay down. Press straight up until the arms lock out over the middle of your head. Lower under control. If your back arches to start the rep, go lighter.",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "alts": [
-                {
-                  "id": "db-seated-ohp",
-                  "name": "Seated DB Overhead Press",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same press sitting on a bench with the back upright. Use it if standing turns into a lean back."
-                },
-                {
-                  "id": "machine-shoulder-press",
-                  "name": "Machine Shoulder Press",
-                  "zone": "machines",
-                  "station": "shoulder-press",
-                  "cue": "Seat set so the handles start at shoulder height. Press up until the arms are straight without locking hard, lower slowly. Back stays on the pad."
-                }
-              ]
-            },
-            {
-              "id": "lat-pulldown",
-              "name": "Lat Pulldown",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "cable",
-              "station": "cable-pulldown",
-              "log": true,
-              "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs and bring the bar to your upper chest. Let it back up slowly and all the way straight.",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "whyHere": "the vertical pair of the week",
-              "alts": [
-                {
-                  "id": "straight-arm-pulldown",
-                  "name": "Straight-Arm Pulldown",
-                  "zone": "cable",
-                  "station": "cable-adjustable",
-                  "cue": "Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
-                }
-              ]
+              "whyHere": "a push and a pull, each resting while the other works"
             }
           ]
         },
@@ -754,6 +682,66 @@
                 }
               ],
               "whyHere": "the posture work you asked for"
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "alternate",
+          "label": "Shoulder press and pulldown",
+          "why": "Overhead and pull-down, the vertical pair of the week. Carry the dumbbells to the pulldown and take turns there.",
+          "exercises": [
+            {
+              "id": "db-overhead-press",
+              "name": "Standing DB Overhead Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "cable",
+              "station": null,
+              "log": true,
+              "cue": "Standing beside the pulldown, no bench. Dumbbells at shoulder height, palms forward. Squeeze your bum and tighten your stomach BEFORE you press, so your ribs stay down. Press straight up until the arms lock out over the middle of your head. Lower under control. If your back arches to start the rep, go lighter.",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "alts": [
+                {
+                  "id": "db-seated-ohp",
+                  "name": "Seated DB Overhead Press",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same press sitting on a bench with the back upright. Use it if standing turns into a lean back."
+                },
+                {
+                  "id": "machine-shoulder-press",
+                  "name": "Machine Shoulder Press",
+                  "zone": "machines",
+                  "station": "shoulder-press",
+                  "cue": "Seat set so the handles start at shoulder height. Press up until the arms are straight without locking hard, lower slowly. Back stays on the pad."
+                }
+              ]
+            },
+            {
+              "id": "lat-pulldown",
+              "name": "Lat Pulldown",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "cable",
+              "station": "cable-pulldown",
+              "log": true,
+              "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs and bring the bar to your upper chest. Let it back up slowly and all the way straight.",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "whyHere": "the vertical pair of the week",
+              "alts": [
+                {
+                  "id": "straight-arm-pulldown",
+                  "name": "Straight-Arm Pulldown",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "Cable set high, rope or straight bar, stand back a step and hinge slightly forward. Arms stay STRAIGHT the whole time, elbows barely bent and locked there. Sweep the bar down in an arc to your thighs and squeeze the muscles down the sides of your back, then let it float back up. Much lighter than a lat pulldown, because straight arms are a long lever."
+                }
+              ]
             }
           ]
         }
