@@ -1147,7 +1147,7 @@ const CASES = [
          week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1173,7 +1173,7 @@ const CASES = [
          week for his shoulder. REPOINTED 2026-10-04: the week no longer has a barbell press block. A partner's rep count is in the
          structural hash and in no other gate (the three-set rule reads leads only, and two more reps on the partner still fit
          the bench rest), so the only thing this changes is the hash. */
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.until = '2999-01-01';
@@ -1187,7 +1187,7 @@ const CASES = [
     name: 'a structural change that also rewrites daysHash, with no words for it, is refused',
     keepFreeze: true,
     mutate: (p) => {
-      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'chest-supported-row');
+      const acc = Object.values(p.days).flatMap((d) => d.blocks).find((b) => b.role === 'main' && b.exercises[0]?.id === 'db-incline-press' && b.exercises[1]?.id === 'db-single-arm-row');
       if (!acc) throw new Error('no bench pair to change; repoint this case');
       acc.exercises[1].reps = String(Number.parseInt(acc.exercises[1].reps, 10) + 2);
       p.frozen.daysHash = structuralHash(p.days);

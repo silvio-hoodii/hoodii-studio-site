@@ -223,11 +223,11 @@ export interface Day {
   blocks: Block[];
 }
 
-/** SESSION IDS, not weekdays, since 2026-09-03. Four since 2026-10-04: Lower 1, Upper 1, Lower 2,
- *  Upper 2, in that rotation (ROTATION in program-shared.ts). The retired 'a' and 'b' keys live on
- *  only in old rows of his log. Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a
+/** SESSION IDS, not weekdays, since 2026-09-03. Two full-body sessions since 2026-10-11, 'fa' and
+ *  'fb', alternating (ROTATION in program-shared.ts). The retired 'a', 'b' and 'l1' 'u1' 'l2' 'u2'
+ *  keys live on only in old rows of his log. Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a
  *  different fact that only the plan view and the rest-rule gate need. */
-export type DayKey = 'l1' | 'u1' | 'l2' | 'u2';
+export type DayKey = 'fa' | 'fb';
 
 /** WHAT THE LIFTING IS FOR, in his words. Required; validate.mjs fails the build without it. It was
  *  stated five times between May and September 2026 and written nowhere, and every rebuild in that

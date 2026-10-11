@@ -864,6 +864,9 @@ for (const [dayKey, day] of Object.entries(program.days)) {
         /* THE FOUR-SESSION WEEK, 2026-10-04. The Session A and B names above resolve to keys that no
            longer exist, so a why naming one is refused rather than forgiven. */
         'lower 1': 'l1', 'upper 1': 'u1', 'lower 2': 'l2', 'upper 2': 'u2' };
+      /* BACK TO TWO, 2026-10-11 (keys fa, fb): Session A and B name the new keys; the four-session
+         names above now resolve to keys that no longer exist and are refused. */
+      DAY_OF['session a'] = 'fa'; DAY_OF['session b'] = 'fb';
       /* 'session c' resolves to the real Saturday session since 2026-09-04; 'session d' resolves to
          nothing that exists and is therefore refused, which is the point of keeping it in the map. */
       const namesOn = (dayKey) => {

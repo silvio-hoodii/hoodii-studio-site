@@ -4,17 +4,21 @@
  *  a second copy that could drift from what the server actually computed. */
 import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
 
-/** THE TABS, in order. Four sessions since 2026-10-04 (Lower 1, Upper 1, Lower 2, Upper 2), on his
- *  words that night. Session A and B (keys 'a', 'b') ran 2026-09-06 to 2026-10-04; keys a to d
+/** THE TABS, in order. TWO FULL-BODY SESSIONS AGAIN since 2026-10-11 (keys 'fa', 'fb'), on his
+ *  words: "now we are regressing into four different sessions, whereas before we made it into two
+ *  different sessions that I can just repeat during the week ... if I miss one, then it's like, oh,
+ *  do I go to the next one?" With two, the next one is always the other one. The four-session week
+ *  (l1 u1 l2 u2, 2026-10-04 to 10-11) was an agent's call and was never trained. Session A and B
+ *  (keys 'a', 'b') ran 2026-09-06 to 2026-10-04; keys a to d
  *  before 2026-09-03, weekday names before that. Old rows keep their keys and render by their stored
  *  title, so no key is ever reused for a different session. */
-export const DAY_ORDER: DayKey[] = ['l1', 'u1', 'l2', 'u2'];
+export const DAY_ORDER: DayKey[] = ['fa', 'fb'];
 /** THE ROTATION: the next lifting session is the one after the last one done, in this order, and
  *  any length works. cycle.ts reads only this list. */
-export const ROTATION: DayKey[] = ['l1', 'u1', 'l2', 'u2'];
+export const ROTATION: DayKey[] = ['fa', 'fb'];
 /** The first day of the current rotation. Watch lifts before it are not steps of it: without this,
  *  a rotation with nothing logged under its keys yet counted every watch lift ever recorded. */
-export const ROTATION_SINCE = '2026-10-05';
+export const ROTATION_SINCE = '2026-10-11';
 /** THE FREE DAY's key in gym_set and gym_session, since 2026-10-10. Not a programme day and not in
  *  ROTATION, so nothing logged under it moves the rotation: the next session waits for him. */
 export const FREE_DAY = 'free';

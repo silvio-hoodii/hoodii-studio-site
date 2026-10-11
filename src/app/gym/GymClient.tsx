@@ -899,7 +899,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
 
   /** The catalogue's id for a name he picked, case aside; a slug of what he typed when the catalogue
    *  does not know it. The catalogue id is what lines a free set up with every other set of that lift,
-   *  so his rows before the pool feed the next Upper 1 suggestion too. */
+   *  so his rows before the pool feed the next programmed suggestion for that lift too. */
   function extraIdFor(name: string): string {
     const hit = extraSuggestions.find((s) => s.name.toLowerCase() === name.trim().toLowerCase());
     return hit ? hit.id : name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

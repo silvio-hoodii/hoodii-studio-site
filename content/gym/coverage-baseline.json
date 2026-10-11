@@ -25,29 +25,29 @@
     "present unless `--accept-regression` is also passed, so silencing a new below-minimum muscle",
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
-  "accepted": "2026-10-10",
-  "acceptedBecause": "the leg-day rethink of 2026-10-10, on his words that day (\"question everything I said and implement what the best possible program is\"). CALVES BELOW THE FLOOR IS STILL HIS RULING: no calf raises (2026-09-06, restated 2026-10-04); the 2 fractional sets are the two jump primers, which stayed at their old dose on review. The sumo goblet squat carries the same credit as the back squat it replaced, so glutes 22 to 24 is the single-leg RDL alone; triceps 9 to 7 after the pushdown left, from four presses a week. No strict Zhang pairing, no unsourced exercise.",
+  "accepted": "2026-10-11",
+  "acceptedBecause": "Back to two full-body sessions on 2026-10-11, his words: \"before we made it into two different sessions that I can just repeat during the week ... if I miss one ... do I go to the next one?\" Each session runs twice a week, so the week keeps half as many different exercises. SIDE DELTS AT 3, BELOW THE FLOOR, ACCEPTED: the only fixes cost the farmer carry (core, his question) or the push-ups (chest, a weak point he named), and the standing overhead press reaches them twice a week; the lateral raise is one tap on the Free tab. CALVES stay his ruling (no calf raises). Glutes 24 to 30, chest 8 to 10, rear delts 5 to 7 from the reverse fly in the deadlift rest. No strict Zhang pairing, no unsourced exercise.",
   "belowMinimum": [
-    "calves"
+    "side-delts"
   ],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
-    "glutes": 24,
-    "quads": 16,
+    "glutes": 30,
+    "quads": 18,
+    "grip": 13,
+    "upper-back": 12,
     "lats": 12,
-    "grip": 11.5,
     "erectors": 11,
-    "upper-back": 10.5,
-    "front-delts": 10,
-    "adductors": 8.5,
-    "chest": 8,
-    "biceps": 8,
-    "triceps": 7,
-    "abs": 6.5,
-    "hamstrings": 6.5,
-    "rear-delts": 5,
-    "side-delts": 5,
-    "calves": 2
+    "front-delts": 11,
+    "chest": 10,
+    "hamstrings": 9,
+    "triceps": 8,
+    "adductors": 7,
+    "rear-delts": 7,
+    "biceps": 6,
+    "abs": 5,
+    "calves": 4,
+    "side-delts": 3
   }
 }
