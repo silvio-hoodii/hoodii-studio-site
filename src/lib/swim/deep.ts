@@ -1,7 +1,7 @@
 import 'server-only';
 import { sql, SWIM_USABLE_SESSIONS } from './db';
 import { today } from '../day';
-import type { LadderSwim } from './ladder';
+import { LADDER_LENGTH_MAX_MS, type LadderSwim } from './ladder';
 
 /* EIGHT YEARS OF LENGTHS, READ. Built 2026-08-27, Phase D item 2 of the training redesign.
  *
@@ -617,8 +617,10 @@ interface PieceRow {
 }
 
 /** Unbroken freestyle pieces: one ends at any stop, at any other stroke, and at any length outside the band. */
-async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): Promise<PieceRow[]> {
+async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string; maxLengthMs?: number }): Promise<PieceRow[]> {
   const since = opts.sinceDay ?? null;
+  /* The ladder passes 45 s (src/lib/swim/ladder.ts): a longer length is a stop folded into it. */
+  const maxMs = opts.maxLengthMs ?? LENGTH_MAX_MS;
   return (await sql`
     with scope as (
       select u.session_uuid
@@ -632,8 +634,8 @@ async function unbrokenPieces(opts: { lastSwims?: number; sinceDay?: string }): 
              coalesce(ln.rest_after_ms, 0) as rest_after, ln.lengths_in_session,
              coalesce(left(ln.session_start_local, 10),
                       ((ln.session_start_time::timestamp at time zone 'UTC') at time zone 'America/Edmonton')::date::text) as day,
-             (ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) as ok,
-             lag(ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${LENGTH_MAX_MS}) over w as prev_ok,
+             (ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${maxMs}) as ok,
+             lag(ln.stroke_type = 'Freestyle' and ln.duration_ms between ${LENGTH_MIN_MS} and ${maxMs}) over w as prev_ok,
              lag(coalesce(ln.rest_after_ms, 0)) over w as prev_rest,
              lag(ln.length_index) over w as prev_idx
         from health_swim_length ln
@@ -750,7 +752,7 @@ export async function getSwimYear(): Promise<SwimYear> {
  *  Its own query rather than getSwimYear's pieces, which start on January 1 and would drop the
  *  ladder's December swims every New Year. A swim with no freestyle piece is absent: it cannot meet a rung. */
 export async function getLadderSwims(fromDay: string): Promise<LadderSwim[]> {
-  const rows = await unbrokenPieces({ sinceDay: fromDay });
+  const rows = await unbrokenPieces({ sinceDay: fromDay, maxLengthMs: LADDER_LENGTH_MAX_MS });
   const by = new Map<string, LadderSwim & { st: string }>();
   for (const r of rows) {
     const s = by.get(r.session_uuid) ?? { uuid: r.session_uuid, date: String(r.day), st: String(r.st ?? ''), pieces: [] };

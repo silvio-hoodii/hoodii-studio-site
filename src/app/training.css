@@ -1052,56 +1052,6 @@
 }
 .training .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-/* ---- the swim baseline input ----
- *
- * The slot for the one number the whole ladder is measured from. 44px controls throughout: this is
- * typed at the side of a pool, wet, once every couple of months. */
-.training .baseline {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 0 14px;
-  margin: 14px 0;
-}
-.training .baseline-row { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; margin-top: 8px; }
-.training .baseline-field { display: flex; flex-direction: column; gap: 4px; }
-.training .baseline-k {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted-foreground);
-}
-.training .baseline-field input {
-  min-height: 44px;
-  width: 120px;
-  padding: 0 10px;
-  font-size: 17px;
-  font-variant-numeric: tabular-nums;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--background);
-  color: var(--foreground);
-}
-.training .baseline-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14.5px; }
-.training .baseline-check input { width: 20px; height: 20px; }
-.training .baseline-save {
-  margin-top: 12px;
-  min-height: 44px;
-  padding: 0 16px;
-  font-size: 15px;
-  font-weight: 600;
-  border: 1px solid var(--foreground);
-  border-radius: var(--radius-sm);
-  background: var(--foreground);
-  color: var(--background);
-  cursor: pointer;
-}
-.training .baseline-save:disabled { opacity: 0.45; cursor: default; }
-.training .baseline-save:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-/* The server's refusals are instructions ("round down to the nearest 25 m"), so they get read, not
-   hidden behind a generic failure state. */
-.training .baseline-err { color: var(--destructive); margin-top: 8px; }
-
 
 /* ---- OFF-PLAN CAPTURE, added 2026-08-27 ------------------------------------------------------
  *

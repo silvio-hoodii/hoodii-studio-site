@@ -86,34 +86,45 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
   if ('baseline' in plan) {
     fail('plan.json', 'baseline is gone since 2026-09-11: the Now tab derives where he is from the lengths. A typed copy is how "600 m twice" outlived the data.');
   }
-  for (const k of ['name', 'what', 'test', 'why']) {
-    if (!plan.structure?.calibration?.[k]) {
-      fail('plan.json', `structure.calibration.${k} is missing. The calibration swim is the gate on the whole ladder: every rung below it is written relative to the number it returns.`);
-    }
-  }
+  if ('calibration' in (plan.structure || {})) fail('plan.json', 'structure.calibration is gone since 2026-10-12: the long one, first thing in every swim, is the test.');
   if (!plan.structure?.ladder?.length) fail('plan.json', 'structure.ladder is empty, so the plan prescribes nothing');
-  /* THE RUNGS ARE NUMBERS SINCE 2026-10-04, because src/lib/swim/ladder.ts reads them to decide from his
-   * laps whether a rung is met, and the page prints `piece` and `rest`. The words and the numbers must
-   * say the same thing, or the page asks for one swim and gates on another. */
+  /* THE RUNGS ARE NUMBERS, because src/lib/swim/ladder.ts reads them to decide from his laps whether
+   * a rung is met, and the page prints `piece`. Since 2026-10-12 a rung is one number, the long one. */
   {
     const L = plan.structure?.ladder || [];
     if (!/^\d{4}-\d{2}-\d{2}$/.test(String(plan.structure?.ladderFrom || ''))) fail('plan.json', 'structure.ladderFrom must be a YYYY-MM-DD day: it is the first day whose swims count toward a rung');
     if (!Number.isInteger(plan.structure?.advanceAfter) || plan.structure.advanceAfter < 1) fail('plan.json', 'structure.advanceAfter must be a whole number of swims, 1 or more');
     L.forEach((s, i) => {
       const where = `plan.json/ladder rung ${i + 1}`;
-      if (!s.piece || !s.rest) fail(where, `a rung needs piece and rest, got ${JSON.stringify(s)}`);
-      if ('weeks' in s) fail(where, 'weeks is gone since 2026-10-04: a rung advances on his laps, not on the calendar');
+      if (!s.piece) fail(where, `a rung needs piece, got ${JSON.stringify(s)}`);
+      for (const k of ['weeks', 'standS', 'rest']) if (k in s) fail(where, `${k} is gone since 2026-10-12: a rung is the long one, one number`);
       if (!Number.isInteger(s.firstM) || s.firstM <= 0 || s.firstM > 1000) fail(where, `firstM must be whole metres up to 1,000, got ${JSON.stringify(s.firstM)}`);
-      const last = i === L.length - 1;
-      if (last ? s.standS !== null : !(Number.isInteger(s.standS) && s.standS >= 0)) fail(where, last ? 'the last rung is the goal: standS must be null (no stop)' : `standS must be whole seconds, got ${JSON.stringify(s.standS)}`);
-      if (last && s.firstM !== 1000) fail(where, 'the last rung must be 1,000 m, the goal');
+      if (i === L.length - 1 && s.firstM !== 1000) fail(where, 'the last rung must be 1,000 m, the goal');
       if (!String(s.piece).includes(`${s.firstM.toLocaleString('en-CA')} m`)) fail(where, `piece "${s.piece}" does not print firstM = ${s.firstM}`);
-      if (s.standS != null && !String(s.rest).includes(`${s.standS} s`)) fail(where, `rest "${s.rest}" does not print standS = ${s.standS}`);
       const prev = L[i - 1];
-      if (prev && (s.firstM < prev.firstM || (s.standS != null && prev.standS != null && s.standS > prev.standS) || (s.firstM === prev.firstM && s.standS === prev.standS))) {
-        fail(where, 'each rung must ask more than the one below it: a longer first piece or a shorter stop, never less of either');
-      }
+      if (prev && s.firstM <= prev.firstM) fail(where, 'each rung must ask for a longer long one than the rung below');
     });
+  }
+  /* THE CARD, since 2026-10-12. The page sums the "stop here" totals from the rows, so the rows are
+   * what must be right: exactly one block grows (the long one, first, at rung 1's length, because
+   * ladder.ts reads the FIRST piece of a swim), and the first stop must land on 1,000 m at rung 1. */
+  {
+    const B = plan.card?.blocks || [];
+    if (!plan.card?.title || !B.length) fail('plan.json', 'card.title and card.blocks are required: the Plan tab renders the card first');
+    const grows = B.filter((b) => b.grows);
+    if (grows.length !== 1 || B[0] !== grows[0]) fail('plan.json/card', 'exactly one block grows, and it must be the first: ladder.ts reads the first piece of the swim');
+    if (B[0] && plan.structure?.ladder?.[0] && B[0].metres !== plan.structure.ladder[0].firstM) fail('plan.json/card', `the long one is ${B[0].metres} m on the card and ${plan.structure.ladder[0].firstM} m on rung 1`);
+    if (B.filter((b) => b.shrinks).length > 1) fail('plan.json/card', 'at most one block shrinks as the long one grows');
+    let total = 0;
+    const stops = [];
+    for (const b of B) {
+      if ('stop' in b) { if (b.stop !== true) fail('plan.json/card', 'a stop row is { "stop": true }; the page sums its total'); stops.push(total); continue; }
+      if (!Number.isInteger(b.metres) || b.metres <= 0 || b.metres % 25) fail('plan.json/card', `${b.name}: metres must be whole 25 m lengths, got ${JSON.stringify(b.metres)}`);
+      if (!b.name || !b.what) fail('plan.json/card', `a block needs name and what, got ${JSON.stringify(b)}`);
+      total += b.metres;
+    }
+    if (stops[0] !== 1000) fail('plan.json/card', `the first stop must be at 1,000 m, it is at ${stops[0]}`);
+    for (const f of plan.card?.focus || []) if (!f.cue || !f.check) fail('plan.json/card', `a focus week needs cue and check, got ${JSON.stringify(f)}`);
   }
   /* THE SEVEN CUES ON THE HOW TAB WERE GATED BY NOTHING UNTIL 2026-09-02, and they are the ones he
    * follows in the water. `checkGroundedCues` at the bottom of this file is called on coaching.json
@@ -162,7 +173,7 @@ function fail(where, msg) { FAIL++; out.push(`FAIL  [${where}] ${msg}`); }
     if (!OPEN_TOPICS.has(q.topic)) fail(where, `topic must be one of ${[...OPEN_TOPICS].join(' | ')}, got ${JSON.stringify(q.topic ?? null)}. gym-notes.mjs prints it, because the topic changes what an answer IS.`);
   }
 
-  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, calibration block present, ${(plan.cues || []).length} cues gated, ${(plan.open || []).length} open question(s) with a shape`);
+  if (!FAIL) out.push(`ok    [plan.json] ${plan.structure.ladder.length} ladder rungs, card present, ${(plan.cues || []).length} cues gated, ${(plan.open || []).length} open question(s) with a shape`);
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -502,7 +513,7 @@ function checkQuotesAgainstSources() {
   for (const r of plan.structure?.ladder || []) {
     for (const q of r.$quotes || []) {
       if (!/^usms-/.test(String(q.source || ''))) fail(`plan.json/ladder ${r.firstM} m`, `quotes "${q.source}"; a ladder rung may quote US Masters Swimming only (a usms-* capture)`);
-      items.push(['plan.json', `ladder ${r.firstM} m / ${r.standS ?? 0} s`, q.source, q.text]);
+      items.push(['plan.json', `ladder ${r.firstM} m`, q.source, q.text]);
     }
   }
 

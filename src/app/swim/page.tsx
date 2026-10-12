@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { loadSwimPlan, loadSwimCoaching, loadSwimTeaching } from '@/lib/swim/content';
-import { getSwimBaseline, type SwimBaseline } from '@/lib/swim/db';
 import { getSwimYear, getLadderSwims, LENGTH_MIN_MS, LENGTH_MAX_MS, type SwimYear, type SwimSummary } from '@/lib/swim/deep';
 import { ladderPosition, type LadderSwim } from '@/lib/swim/ladder';
 import {
@@ -9,7 +8,6 @@ import {
 } from '@/lib/swim/level';
 import { getRecentSessions, mmss, type SessionDetail } from '@/lib/gym/session';
 import { BarChart } from '../health/HealthCharts';
-import BaselineForm from './BaselineForm';
 import LastSession from '@/components/training/LastSession';
 import SubNav from '@/components/training/SubNav';
 import { median } from '@/lib/health/fmt';
@@ -19,7 +17,7 @@ import Cues from '@/components/training/Cues';
 import Readout from '@/components/Readout';
 import { shortDate } from '@/lib/format';
 import { today } from '@/lib/day';
-import type { SwimPlan, SwimCoaching, SwimTeaching, SwimLadderStep } from '@/lib/swim/types';
+import type { SwimPlan, SwimCoaching, SwimTeaching, SwimLadderStep, SwimCard } from '@/lib/swim/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,8 +77,8 @@ function RungLine({ rung }: { rung: Rung }) {
   }
   return (
     <p className="ex-cue">
-      <b>Now: {rung.step.piece}</b>{rung.step.standS != null && <>, stop {rung.step.rest}</>}. Rung {rung.index + 1} of{' '}
-      {rung.total}. Swims that met it: {rung.met} of {rung.need}.
+      <b>The long one now: {rung.step.piece}</b>. Step {rung.index + 1} of {rung.total}. Swims that met it:{' '}
+      {rung.met} of {rung.need}.
     </p>
   );
 }
@@ -352,31 +350,83 @@ function LadderTrack({ steps, longest }: { steps: { label: string; metres: numbe
   );
 }
 
-function PlanTab({ plan, baseline, year, ladder }: { plan: SwimPlan; baseline: SwimBaseline | null; year: SwimYear | null; ladder: LadderSwim[] }) {
+/* THE CARD HE CARRIES INTO THE POOL, since 2026-10-12: one opening for every swim, and the 1,500 and
+ * 2,000 add blocks to it. The long one shows the rung he is on, the easy block gives back what the long
+ * one gains, and every "stop here" total is summed from the rows rather than typed, so the card cannot
+ * print a 1,000 that no longer adds up. Reasoning and the adversary pass: plan.json's $comment. */
+type CardLine = { stop: true; total: number } | { stop: false; metres: number; name: string; what: string };
+
+/** The card's rows at the long one's current length, with each stop's running total. */
+function cardLines(card: SwimCard, longM: number): CardLine[] {
+  const first = card.blocks.find((b) => !('stop' in b) && b.grows);
+  const grown = first && !('stop' in first) ? Math.max(0, longM - first.metres) : 0;
+  let total = 0;
+  return card.blocks.map((b): CardLine => {
+    if ('stop' in b) return { stop: true, total };
+    const metres = b.grows ? longM : b.shrinks ? Math.max(0, b.metres - grown) : b.metres;
+    total += metres;
+    return { stop: false, metres, name: b.name, what: b.what };
+  });
+}
+
+function CardTable({ card, longM }: { card: SwimCard; longM: number }) {
+  const rows = cardLines(card, longM).map((l, i) =>
+    l.stop ? (
+      <tr key={i} className="now">
+        <td className="tnum"><b>{l.total.toLocaleString('en-CA')}</b></td>
+        <td colSpan={2}>Stop here, or carry on</td>
+      </tr>
+    ) : (
+      <tr key={i}>
+        <td className="tnum">{l.metres}</td>
+        <td>{l.name}</td>
+        <td>{l.what}</td>
+      </tr>
+    ),
+  );
+  return (
+    <div className="table-scroll">
+      <table className="plan-table">
+        <thead>
+          <tr>
+            <th className="tnum">m</th>
+            <th>Block</th>
+            <th className="wide">What</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    </div>
+  );
+}
+
+function PlanTab({ plan, year, ladder }: { plan: SwimPlan; year: SwimYear | null; ladder: LadderSwim[] }) {
   const rung = currentRung(plan, ladder);
   /* Derived since 2026-09-11. The typed line said "about 1,000 m every time" while three of his
      last ten swims were under 1,000 m. */
   const days = year ? swimDays(year.summaries).slice(-10) : [];
-  const reached = days.filter((d) => d.metres >= GOAL_M).length;
   const longest = Math.max(0, ...days.map((d) => d.longestM));
+  const longM = rung.step?.firstM ?? GOAL_M;
   return (
     <div className="exgroup">
       <div className="exgroup-label">
-        {plan.title} <span className="tag">({plan.sessionsPerWeek})</span>
-      </div>
-      <div className="exlist">
-        <div className="ex">
-          <div className="ex-name">{plan.theGoal.target}</div>
-          <div className="ex-cue">{plan.theGoal.whatThatActuallyIs}</div>
-          {days.length > 0 && (
-            <div className="ex-cue">
-              {reached} of your last {days.length} swim days reached {GOAL_M.toLocaleString('en-CA')} m.
-              The longest piece in any of them: {longest} m.
-            </div>
-          )}
-        </div>
+        {plan.card.title} <span className="tag">({plan.sessionsPerWeek})</span>
       </div>
       <RungLine rung={rung} />
+      <CardTable card={plan.card} longM={longM} />
+      {plan.card.rules.map((r) => (
+        <p className="ex-cue" key={r}>{r}</p>
+      ))}
+      <div className="exgroup-label" style={{ marginTop: 18 }}>One focus a week</div>
+      <div className="exlist">
+        {plan.card.focus.map((f) => (
+          <div className="ex" key={f.week}>
+            <div className="ex-name">Week {f.week}: {f.cue}</div>
+            <div className="ex-cue">{f.check}</div>
+          </div>
+        ))}
+      </div>
+      <div className="exgroup-label" style={{ marginTop: 18 }}>{plan.theGoal.target}</div>
       <p className="lede">{plan.structure.note}</p>
       <LadderTrack
         steps={plan.structure.ladder.map((st, i) => ({
@@ -386,43 +436,6 @@ function PlanTab({ plan, baseline, year, ladder }: { plan: SwimPlan; baseline: S
         }))}
         longest={longest}
       />
-      <details className="fold">
-        <summary>The ladder, rung by rung</summary>
-      <div className="table-scroll">
-        <table className="plan-table">
-          <thead>
-            <tr>
-              <th className="tnum">Rung</th>
-              <th className="wide">Continuity piece</th>
-              <th>Stop</th>
-            </tr>
-          </thead>
-          <tbody>
-            {plan.structure.ladder.map((s, i) => {
-              const on = i === rung.index;
-              return (
-                <tr key={i} className={on ? 'now' : undefined}>
-                  <td className="tnum">{i + 1}{on ? ', now' : ''}</td>
-                  <td>
-                    {s.piece}
-                    {s.note && <div className="quiet">{s.note}</div>}
-                  </td>
-                  <td>{s.rest}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      </details>
-      <details className="src wk">
-        <summary>{plan.structure.calibration.name}</summary>
-        <div className="src-body">
-          <p>{plan.structure.calibration.what}</p>
-          <p><b>The test.</b> {plan.structure.calibration.test}</p>
-          <BaselineForm current={baseline} />
-        </div>
-      </details>
     </div>
   );
 }
@@ -442,7 +455,7 @@ function HowTab({ plan, year, recent }: { plan: SwimPlan; year: SwimYear; recent
   const add = plan.theOneTechniqueChange.addSeconds;
   return (
     <div className="exgroup">
-      <div className="exgroup-label">Swimming the continuity piece</div>
+      <div className="exgroup-label">Swimming the long one</div>
       <div className="exlist">
         <div className="ex">
           <div className="ex-name">Pace</div>
@@ -624,10 +637,9 @@ export default async function SwimPage({
   const sub = SUB_TABS.find((x) => x.id === sp.s)?.id ?? 'now';
 
   const planP = loadSwimPlan();
-  const [plan, year, baseline, teaching, coaching, recent, standards, pbs, ladder] = await Promise.all([
+  const [plan, year, teaching, coaching, recent, standards, pbs, ladder] = await Promise.all([
     planP,
     sub === 'teach' ? null : getSwimYear(),
-    sub === 'plan' ? getSwimBaseline() : null,
     sub === 'teach' ? loadSwimTeaching() : null,
     sub === 'me' ? loadSwimCoaching() : null,
     sub === 'now' ? getRecentSessions('swimming', 1)
@@ -664,7 +676,7 @@ export default async function SwimPage({
         </>
       )}
 
-      {sub === 'plan' && <PlanTab plan={plan} baseline={baseline} year={year} ladder={ladder ?? []} />}
+      {sub === 'plan' && <PlanTab plan={plan} year={year} ladder={ladder ?? []} />}
       {sub === 'how' && year && <HowTab plan={plan} year={year} recent={recent ?? []} />}
       {sub === 'me' && coaching && year && <CoachMe c={coaching} year={year} recent={recent ?? []} />}
       {sub === 'teach' && teaching && <CoachThem t={teaching} />}

@@ -1,32 +1,27 @@
 /* WHICH RUNG OF THE SWIM LADDER HE IS ON, read off his laps rather than off the calendar.
  *
- * Until 2026-10-04 /swim counted weeks from the day his number was set and moved him up every
- * fortnight whatever he swam. He swam the asked first piece in 1 of 18 swims and the page went on
- * climbing; from Oct 9 it would have asked 600 m, a piece he had swum once all year. His words that
- * night: "rebuild everything based on what I can do ... I want it to be grounded." So a rung now
- * advances only when his lengths show it met, `need` times, and nothing here reads a date except to
- * decide which swims count.
+ * Since 2026-10-12 the ladder is one number: THE LONG ONE, the block that opens every swim on his
+ * card (content/swim/plan.json card.blocks[0]). A rung { firstM } is met by a swim whose FIRST
+ * unbroken piece starts at length 1 and is at least firstM. Anything later in the swim does not
+ * count: the card puts the long one first, and 17 of his 19 swims holding a piece of 250 m or more
+ * since 2026-08-15 had it from length 1.
  *
- * MET, in the site's own terms (src/lib/swim/deep.ts unbrokenPieces): a piece is a run of freestyle
- * lengths that ends at any stop, any other stroke, or any length outside 12 to 120 s. A rung
- * { firstM, standS } is met by one swim when either
- *   - one piece is 1,000 m or more (the goal itself meets every rung), or
- *   - two pieces sit back to back, the first at least firstM, the stop between them at most standS
- *     seconds, and the two together at least 1,000 m.
- * "Back to back" means the second starts on the very next length, so nothing but the one stop is
- * between them: a breaststroke length is a break, the same as everywhere else on /swim. Where in the
- * swim the pair sits is not checked. The plan says first thing in the swim; the swim that set rung 1
- * (2026-10-04) had it at lengths 21 to 60, and a gate stricter than the evidence it rests on would
- * refuse the evidence.
+ * A piece is src/lib/swim/deep.ts unbrokenPieces, freestyle only, ending at any stop, any other
+ * stroke, or any length outside the band; for the ladder the band's ceiling is 45 s, because a
+ * longer length is a stop the watch folded into it (Oct 11 length 33: 60 s, no rest recorded).
+ *
+ * Until 2026-10-12 a rung was two pieces with a capped stop between them (500 m + 30 s + 500 m),
+ * from the 2026-10-04 rebuild. He never swam that plan; see plan.json's $comment.
  *
  * Pure, so the test can hold it to the cases: src/lib/swim/ladder.test.ts. */
 
 export const GOAL_M = 1000;
 
+/** Longest length the ladder accepts inside a piece, ms. */
+export const LADDER_LENGTH_MAX_MS = 45_000;
+
 export interface LadderRung {
   firstM: number;
-  /** Longest stop allowed between the two pieces, seconds. Null on the last rung: no stop at all. */
-  standS: number | null;
 }
 
 export interface LadderPiece {
@@ -46,17 +41,7 @@ export interface LadderSwim {
 }
 
 export function rungMet(rung: LadderRung, pieces: LadderPiece[]): boolean {
-  if (pieces.some((p) => p.metres >= GOAL_M)) return true;
-  if (rung.standS == null) return false;
-  const byStart = [...pieces].sort((a, b) => a.firstIndex - b.firstIndex);
-  for (let i = 0; i + 1 < byStart.length; i++) {
-    const a = byStart[i]!;
-    const b = byStart[i + 1]!;
-    if (b.firstIndex !== a.lastIndex + 1) continue;
-    if (a.restAfterS == null || a.restAfterS > rung.standS) continue;
-    if (a.metres >= rung.firstM && a.metres + b.metres >= GOAL_M) return true;
-  }
-  return false;
+  return pieces.some((p) => p.firstIndex === 1 && p.metres >= rung.firstM);
 }
 
 export interface LadderPosition {
