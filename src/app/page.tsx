@@ -57,8 +57,8 @@ import './curio/curio.css';
  *
  *     awake = min(1, 300 / revalidate)      600 -> 50.0% predicted, 49.4% measured over 15 days
  *
- * Batching the thirty round trips into one sql.transaction, which is what getShelfBundle does for
- * /reading/shelf, is therefore NOT the fix here. It would move Provisioned Memory, which is at 1.4%
+ * Batching the thirty round trips into one sql.transaction, which is what the reading shelf did
+ * before it was deleted on 2026-09-27, is therefore NOT the fix here. It would move Provisioned Memory, which is at 1.4%
  * of its allowance, and leave the wake untouched. Blocking crawlers is not the fix either, and that
  * was already measured on 2026-08-25: the rate did not move, because regenerations are limited by
  * this window rather than by demand.
@@ -94,8 +94,8 @@ export const metadata = { alternates: { canonical: '/' } };
  *
  * Corollary, and it is load-bearing: NEVER invent state for an app whose data we cannot reach. A
  * fabricated "3 days ago" would be worse than the cards it replaced. Reading and Swim were the two
- * standing examples, and Swim stopped being one on 2026-08-16: it is a route with a mirror behind
- * it now, so its row is computed rather than written. That is the real cure for the drift. The
+ * standing examples. Swim stopped being one on 2026-08-16 (a route with a mirror behind it) and
+ * Reading on 2026-09-27 (his Goodreads feed), so both rows are computed rather than written. That is the real cure for the drift. The
  * hand-written version of that row described the wrong app for months and read perfectly well the
  * whole time it was wrong.
  *
