@@ -58,11 +58,24 @@ function cdp(path) {
   });
 }
 
+// The tab is created in the BACKGROUND via the browser-level socket, so it never takes focus
+// from whatever Silvio is looking at. `/json/new` activates the new tab, and on 2026-09-17 a
+// research run that read forty pages popped a tab in front of him forty times. His words:
+// "can you make it so it doesnt pop up each time you open something". Target.createTarget with
+// `background: true` opens it in the tab strip without switching to it.
 let target;
 try {
-  target = await cdp('/json/new?' + encodeURIComponent('about:blank'));
+  const browser = await cdp('/json/version');
+  const bws = new globalThis.WebSocket(browser.webSocketDebuggerUrl);
+  await new Promise((r, j) => { bws.addEventListener('open', r); bws.addEventListener('error', j); });
+  const created = await new Promise((res) => {
+    bws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.id === 1) res(m.result); });
+    bws.send(JSON.stringify({ id: 1, method: 'Target.createTarget', params: { url: 'about:blank', background: true } }));
+  });
+  bws.close();
+  target = { webSocketDebuggerUrl: `ws://127.0.0.1:${CDP_PORT}/devtools/page/${created.targetId}` };
 } catch (e) {
-  console.error(String(e.message));
+  console.error(String(e.message || e));
   process.exit(2);
 }
 
