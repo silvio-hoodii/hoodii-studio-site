@@ -38,8 +38,10 @@
  * That made this a gate that cries wolf, and a gate that cries wolf gets answered with
  * GYM_GUARD_OFF=1 by reflex, which is the same as not having it. So the window is explicit:
  *
- *   started less than LIVE_HOURS ago  ->  REFUSE. He could be standing in the gym.
- *   older, or with no started_at      ->  say so loudly, exit 0. Nobody is 22 hours into a workout.
+ *   last activity under LIVE_HOURS ago  ->  REFUSE. He could be standing in the gym.
+ *   older, or with no time recorded     ->  say so loudly, exit 0. Nobody is 22 hours into a workout.
+ *
+ * (Measured from started_at until 2026-10-18; from the latest set since. See the import below.)
  *
  * The age is computed by Postgres from a timestamptz, never in JS from a zone name, per the standing
  * rule in HOODII/CLAUDE.md that a timestamp without an offset is not a time.
@@ -53,20 +55,23 @@
  */
 import { neon } from '@neondatabase/serverless';
 import { databaseUrl } from './lib/db-url.mjs';
-
-/* HOW LONG A SESSION COULD PLAUSIBLY STILL BE RUNNING. His logged sessions run 50 to 60 minutes by
- * the watch; six hours is generous slack for a long one, a phone left open on the drive home, and a
- * flush that arrived late. Past it, "he is mid-workout" is not a live hypothesis. */
-const LIVE_HOURS = 6;
+/* THE LIVE WINDOW IS SHARED, since 2026-10-18. LIVE_HOURS was a private constant here; it moved to
+ * src/lib/gym/session-end.mts so this guard, /gym, the log and the write path all mean the same thing
+ * by "live". The age is now measured from his LAST ACTIVITY (latest set, or the start if none), not
+ * from started_at: a session begun seven hours ago with a set ten minutes ago is live, and the old
+ * rule called it stranded. Every reader in the app already treats a stranded row as ended at its last
+ * activity, so --close-stranded below only writes down what is already read. */
+import { LIVE_HOURS, isLiveHours, hoursSinceActivitySql, lastActivitySql } from '../src/lib/gym/session-end.mts';
 
 /** Split open sessions into the ones that could be live and the ones that are stranded. Pure, so the
- *  self-test can watch it decide both ways: this gate had only ever been seen to refuse. */
-export function partition(rows, liveHours = LIVE_HOURS) {
+ *  self-test can watch it decide both ways: this gate had only ever been seen to refuse.
+ *  `hours_open` is hours since last activity. */
+export function partition(rows) {
   const live = [];
   const stranded = [];
   for (const r of rows) {
     const h = r.hours_open == null ? null : Number(r.hours_open);
-    (h != null && h < liveHours ? live : stranded).push({ ...r, hours_open: h });
+    (isLiveHours(h) ? live : stranded).push({ ...r, hours_open: h });
   }
   return { live, stranded };
 }
@@ -78,7 +83,7 @@ if (process.argv.includes('--selftest')) {
     ['just inside the window', [{ hours_open: 5.9 }], 1, 0],
     ['just outside it', [{ hours_open: 6.1 }], 0, 1],
     ['last night', [{ hours_open: 22 }], 0, 1],
-    ['no started_at at all', [{ hours_open: null }], 0, 1],
+    ['no time recorded at all', [{ hours_open: null }], 0, 1],
     ['one of each', [{ hours_open: 0.5 }, { hours_open: 30 }], 1, 1],
   ];
   let bad = 0;
@@ -111,11 +116,11 @@ try {
   /* The age comes out of Postgres, off a timestamptz. Never `Date.now() - Date.parse(started_at)`
      in JS against a zone name: that is the class the whole workspace has one rule about. */
   rows = await sql`
-    select date, day, day_title, status, started_at,
-           extract(epoch from (now() - started_at)) / 3600 as hours_open
-    from gym_session
-    where finished_at is null
-    order by started_at desc nulls last
+    select s.date, s.day, s.day_title, s.status, s.started_at,
+           ${sql.unsafe(hoursSinceActivitySql('s'))} as hours_open
+    from gym_session s
+    where s.finished_at is null
+    order by s.started_at desc nulls last
     limit 10
   `;
 } catch (err) {
@@ -139,21 +144,20 @@ if (closeStranded) {
     console.log('guard-live-session: nothing stranded to close.');
     process.exit(0);
   }
+  /* The same stamp every reader already derives (session-end.mts): last activity, never now(). A
+     row with no time at all is left alone; there is nothing honest to write. */
+  const last = sql.unsafe(lastActivitySql('s'));
   for (const r of stranded) {
     const [done] = await sql`
-      update gym_session
-         set status = 'finished',
-             finished_at = coalesce(
-               (select max(logged_at) from gym_set s where s.date = gym_session.date),
-               gym_session.started_at,
-               now())
-       where date = ${r.date} and finished_at is null
-         and (started_at is null or now() - started_at > make_interval(hours => ${LIVE_HOURS}))
-      returning date, day_title, started_at, finished_at`;
+      update gym_session s
+         set status = 'finished', finished_at = ${last}
+       where s.date = ${r.date} and s.day is not distinct from ${r.day} and s.finished_at is null
+         and ${last} <= now() - make_interval(hours => ${LIVE_HOURS})
+      returning s.date, s.day_title, s.started_at, s.finished_at`;
     if (done) {
       console.log(`guard-live-session: closed ${done.date} ${done.day_title ?? ''} at ${done.finished_at}`);
     } else {
-      console.log(`guard-live-session: left ${r.date} alone; it is inside the ${LIVE_HOURS}h live window.`);
+      console.log(`guard-live-session: left ${r.date} alone; it is inside the ${LIVE_HOURS}h live window or has no time recorded.`);
     }
   }
   process.exit(0);

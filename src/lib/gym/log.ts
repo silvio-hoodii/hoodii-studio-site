@@ -1,5 +1,6 @@
 import 'server-only';
 import { sql } from '../health/db';
+import { effectiveFinishedAtSql, effectiveStatusSql } from './session-end.mts';
 
 /* SESSION HISTORY. Built 2026-08-27, Decision 7 of docs/GYM-AUDIT-AND-PLAN-2026-08-27.md.
  *
@@ -61,6 +62,12 @@ const ON_PLAN_PERFORMED = sql.unsafe(
   '(s.done = true or (s.reps is not null and s.reps > 0)) and s.reps is not null and s.reps > 0 and coalesce(s.off_plan, false) = false',
 );
 
+/* THE FINISH AND THE STATUS ARE DERIVED, since 2026-10-18 (src/lib/gym/session-end.mts). An open row
+ * past the live window ends at its last set, so page_open_min can no longer read "still running" or
+ * be stamped from now(), and `status` reads 'active' only while he could still be training. */
+const FINISHED_AT = sql.unsafe(effectiveFinishedAtSql('g'));
+const STATUS = sql.unsafe(effectiveStatusSql('g'));
+
 /** The app's own record, newest first. */
 export async function getGymLog(limit = 5, offset = 0): Promise<GymLogRow[]> {
   const rows = await sql`
@@ -68,9 +75,9 @@ export async function getGymLog(limit = 5, offset = 0): Promise<GymLogRow[]> {
       g.date,
       g.day,
       g.day_title,
-      g.status,
+      ${STATUS} as status,
       g.sets_prescribed,
-      round(extract(epoch from (g.finished_at - g.started_at)) / 60)::int as page_open_min,
+      round(extract(epoch from (${FINISHED_AT} - g.started_at)) / 60)::int as page_open_min,
       (select count(*)::int from gym_set s
          where s.date = g.date and ${ON_PLAN_PERFORMED}) as sets_logged,
       (select count(distinct s.exercise_id)::int from gym_set s

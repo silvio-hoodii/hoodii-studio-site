@@ -4,6 +4,7 @@ import { equivalentIds } from './equivalent-ids';
 import { asNoteKind, type NoteKind } from './note-kinds';
 import excludedSets from '../../../content/gym/excluded-sets.json';
 import { excludedSetIds } from './excluded-sets';
+import { effectiveStatusSql, finishStampSql, isOpenSql, lastActivitySql, LIVE_HOURS } from './session-end.mts';
 
 // Same underlying Neon database as Kitchen (KITCHEN_DATABASE_URL), gym_ prefixed tables, see
 // content/gym/schema.sql. GYM_DATABASE_URL is the self-documenting name for this module, but the
@@ -19,6 +20,15 @@ if (!DATABASE_URL) {
 }
 
 export const sql = neon(DATABASE_URL);
+
+/* WHEN A SESSION ENDED, read through src/lib/gym/session-end.mts and nowhere else. Compile-time
+   constants with no input in them, so `sql.unsafe` (same reasoning as PERFORMED below). `s` is the
+   gym_session alias every query here uses. */
+const LAST_ACTIVITY = sql.unsafe(lastActivitySql('s'));
+const CLOSE_AT = LAST_ACTIVITY;
+const SESSION_OPEN = sql.unsafe(isOpenSql('s'));
+const SESSION_STATUS = sql.unsafe(effectiveStatusSql('s'));
+const FINISH_STAMP = sql.unsafe(finishStampSql('s'));
 
 const num = (v: unknown): number | null => (v === '' || v === null || v === undefined ? null : Number(v));
 
@@ -135,7 +145,21 @@ export async function upsertSession(opts: {
   dayTitle?: string | null;
   setsPrescribed?: number | null;
 }) {
+  /* A NEW SESSION CLOSES ANY ABANDONED ONE, since 2026-10-18. Every reader already treats an open
+     row past the live window as ended at its last activity (src/lib/gym/session-end.mts); this
+     writes that down the next time he trains, so the table stops holding open rows at all. Only rows
+     OUTSIDE the window, so a Free-tab set never closes the session he is in the middle of, and never
+     the row this write is about. Stamped at the last activity, never now(). Same statement as the
+     insert, one round trip. */
   await sql`
+    with closed as (
+      update gym_session s
+         set status = 'finished', finished_at = ${CLOSE_AT}
+       where s.finished_at is null
+         and not (s.date = ${opts.date} and s.day is not distinct from ${opts.day ?? null})
+         and ${LAST_ACTIVITY} <= now() - make_interval(hours => ${LIVE_HOURS})
+      returning s.id
+    )
     insert into gym_session (date, day, day_title, started_at, status, sets_prescribed)
     values (${opts.date}, ${opts.day ?? null}, ${opts.dayTitle ?? null}, now(), 'active',
             ${opts.setsPrescribed ?? null})
@@ -402,10 +426,13 @@ export async function getExerciseHistories(
  *  printed "Session saved." over an update that touched nothing. */
 export async function finishSession(opts: { date: string; day?: string | null; status?: 'finished' | 'cutshort' }): Promise<number> {
   const status = opts.status === 'cutshort' ? 'cutshort' : 'finished';
+  /* NOT now() WHEN HE LEFT HOURS AGO, since 2026-10-18. A Finish pressed the evening after a morning
+     session (same date, so the same tab) stamped a nine-hour session. Inside the live window this is
+     now(), as before; outside it, the last activity. See src/lib/gym/session-end.mts. */
   const rows = await sql`
-    update gym_session set status = ${status}, finished_at = now()
-    where date = ${opts.date} and day = ${opts.day ?? null}
-    returning id
+    update gym_session s set status = ${status}, finished_at = ${FINISH_STAMP}
+    where s.date = ${opts.date} and s.day = ${opts.day ?? null}
+    returning s.id
   `;
   return rows.length;
 }
@@ -478,11 +505,14 @@ export async function getLoggedHistory(): Promise<Map<string, { sets: number; we
  *  during a session that began at 23:40 keeps the 23:40 date, and opening the page the next evening
  *  starts a new session. */
 export async function getCarriedSession(today: string): Promise<{ date: string; day: string | null } | null> {
+  /* "STILL OPEN" IS THE SHARED RULE (session-end.mts), since 2026-10-18, rather than `status =
+     'active' and finished_at is null`, which an abandoned row satisfied forever. The three-hour
+     clause below is stricter than the six-hour live window, so the answer is unchanged today; the
+     point is that no reader carries its own definition of open. */
   const rows = await sql`
     select s.date, s.day
       from gym_session s
-     where s.status = 'active'
-       and s.finished_at is null
+     where ${SESSION_OPEN}
        and s.date::date = ${today}::date - 1
        and not exists (select 1 from gym_session t where t.date = ${today})
        and greatest(
@@ -532,7 +562,7 @@ export async function getRotationState(
      row exists there. */
   const rows = await sql`
     with last as (
-      select s.date, s.day, s.status from gym_session s
+      select s.date, s.day, ${SESSION_STATUS} as status from gym_session s
       where s.day = any(${keys})
         and exists (select 1 from gym_set g where g.date = s.date and g.day = s.day and ${PERFORMED} and g.reps is not null and g.reps > 0
                       and coalesce(g.off_plan, false) = false)

@@ -91,6 +91,10 @@ const GATES = [
   ['progression-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/progression.test.ts']],
   /* The ids progression skips (content/gym/excluded-sets.json), on his real RDL rows, and that db.ts still reads them. */
   ['excluded-sets-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/excluded-sets.test.ts']],
+  /* WHEN A SESSION ENDED. Added 2026-10-18: a session only ended on a button press and twice sat open
+   * for weeks. An open session past the live window reads as ended at its last set, never at now().
+   * The JS half here; `--sql` on the same file checks the Postgres fragments, which needs a database. */
+  ['session-end-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/session-end.test.ts']],
   /* THE BODY-COMPOSITION SPLIT'S SUITE. Added 2026-08-28, the day the rule it guards was fixed.
    *
    * Two defects, both live on /health until that day. The fat share was `(dFat / dKg) * 100` through
