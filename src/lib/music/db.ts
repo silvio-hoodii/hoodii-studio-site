@@ -146,10 +146,10 @@ export interface MusicSummary {
   liveness: Liveness;
 }
 
-/* A successful run older than this means plays are probably being lost. The 50-item cap covered
- * roughly two days of Silvio's listening as measured on 2026-08-11, and the poller is scheduled
- * three times a day, so 36 hours is several missed runs rather than one late one. */
-const STALE_HOURS = 36;
+/* A successful run older than this means plays are probably being lost. On a heavy day 50 songs
+ * play in under three hours (2026-10-19), and the poller runs every hour since 2026-10-28, so six
+ * hours is several missed runs rather than one late one. */
+const STALE_HOURS = 6;
 
 /** Counts and liveness in ONE round trip: two statements in one transaction. */
 export async function getSummary(): Promise<MusicSummary> {

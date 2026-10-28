@@ -5,7 +5,7 @@ import { syncMusic } from '@/lib/music/sync';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-/* The cron target. vercel.json points three daily schedules at this path.
+/* The cron target. vercel.json points 24 daily schedules at this path, one an hour (docs/agents/music.md says why).
  *
  * Note this route is NOT covered by src/proxy.ts, whose matcher only spans /kitchen, /gym, /health
  * and /french. So it carries its own authorisation and cannot lean on the `kos` cookie.
