@@ -79,7 +79,7 @@ export default function SaveBlocked({
     setBusy(true);
     setWrong(false);
     try {
-      const res = await fetch('/kitchen/api/unlock', {
+      const res = await fetch('/api/unlock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pw }),

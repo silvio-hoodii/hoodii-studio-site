@@ -129,7 +129,6 @@ const DEFAULT_PATHS = [
      a real page again as of 2026-09-12, which is the only reason its entry is not a fourth.
      A dish page is added because it is where the recipe link and the note box live, and no
      `[id]` route on this site had ever been measured. */
-  '/kitchen', '/kitchen/californiaroll',
   '/curio', '/music',
   /* THE FOUR CASE STUDIES WERE HERE until 2026-09-15, when /work was deleted. Worth keeping the
      history: this list said `/work` until 2026-08-28 and THERE WAS NO `/work` ROUTE, so it measured

@@ -58,7 +58,7 @@ export function proxy(req: NextRequest) {
   /* The unlock route is how a device BECOMES authorised, so it cannot require being authorised.
    * Added 2026-08-11 with the inline unlock: a write that fails mid-cook offers the password field
    * in place rather than sending him off to find a page (/kitchen/login itself redirects to /login). */
-  if (pathname === '/kitchen/api/unlock') return NextResponse.next();
+  if (pathname === '/api/unlock') return NextResponse.next();
 
   /* Two routes that READ but are shaped as POSTs, because both take a body the URL cannot carry:
    * /gym/api/plan is handed the day's exercise list and returns suggestions, /gym/api/session is
@@ -97,7 +97,7 @@ export function proxy(req: NextRequest) {
 
   /* /french/api, /reading/api and /bike/api were here until 2026-09-27, when the usage audit found
    * none of them had ever been written to and the routes were deleted. */
-  if (pathname.startsWith('/kitchen/api') || pathname.startsWith('/gym/api')
+  if (pathname.startsWith('/gym/api')
       || pathname.startsWith('/swim/api')) {
     if (req.method === 'GET' || authed) return NextResponse.next();
     return NextResponse.json(
@@ -134,7 +134,7 @@ export const config = {
        '/health/:path*', which ran this proxy on every page view of three apps to consult
        GATED_PAGES, an empty list since 2026-08-11. Re-gating a page means adding its prefix to
        GATED_PAGES AND to this list; the branch above is kept so that is two lines, not a rewrite. */
-    '/kitchen/api/:path*',
+    '/api/unlock',
     '/gym/api/:path*',
     /* Only the API, not the pages: /swim is public like every other page on this site. */
     '/swim/api/:path*',

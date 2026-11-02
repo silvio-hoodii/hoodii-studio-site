@@ -75,7 +75,7 @@
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has
      said yes, not whether the server says yes; that is the unlock route's own business. */
-  const UNLOCK_ROUTE = '/kitchen/api/unlock';
+  const UNLOCK_ROUTE = '/api/unlock';
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   /* Wait for a condition instead of guessing at a render. A fixed sleep passed on my laptop and

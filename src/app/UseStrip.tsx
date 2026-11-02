@@ -15,7 +15,7 @@ import { daysAgo } from '@/lib/day';
 
 const APPS: [string, string][] = [
   ['home', 'Index'], ['gym', 'Gym'], ['health', 'Health'], ['swim', 'Swim'], ['bike', 'Bike'],
-  ['curio', 'Curio'], ['music', 'Music'], ['kitchen', 'Kitchen'],
+  ['curio', 'Curio'], ['music', 'Music'],
 ];
 const DAYS = 30;
 

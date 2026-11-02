@@ -99,7 +99,13 @@ const nextConfig: NextConfig = {
        * old /reading/about, /all, /shelf and /want, lands on the front door. 307: a decision that could be reversed. */
       { source: '/reading', destination: '/', permanent: false },
       { source: '/reading/:path*', destination: '/', permanent: false },
-      { source: '/kitchen/shop', destination: '/kitchen', permanent: false },
+      /* /kitchen IS OFF, 2026-11-02, on his ruling. The routes are deleted and the tables are kept.
+       * The inline unlock moved to /api/unlock because /gym still needs it; a phone holding an old
+       * gym bundle still posts to the old path, and a 307 keeps the method and the body. */
+      { source: '/kitchen/api/unlock', destination: '/api/unlock', permanent: false },
+      { source: '/kitchen/login', destination: '/login', permanent: false },
+      { source: '/kitchen', destination: '/', permanent: false },
+      { source: '/kitchen/:path*', destination: '/', permanent: false },
       { source: '/french', destination: '/', permanent: false },
       { source: '/french/:path*', destination: '/', permanent: false },
 
@@ -163,7 +169,7 @@ const nextConfig: NextConfig = {
        * 307 rather than 308, matching the two above and for the same reason: a permanent redirect
        * is cached by the browser forever, and consolidating four forms into one is an architecture
        * decision rather than a URL law. */
-      ...['kitchen', 'gym', 'health', 'french'].map((app) => ({
+      ...['gym', 'health', 'french'].map((app) => ({
         source: `/${app}/login`,
         destination: '/login',
         permanent: false,

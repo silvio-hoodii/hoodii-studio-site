@@ -51,7 +51,6 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: '/icon/512', sizes: '512x512', type: 'image/png' },
     ],
     shortcuts: [
-      { name: 'Kitchen', short_name: 'Kitchen', url: '/kitchen' },
       { name: 'Gym', short_name: 'Gym', url: '/gym' },
       { name: 'Swim', short_name: 'Swim', url: '/swim' },
       { name: 'Health', short_name: 'Health', url: '/health' },
