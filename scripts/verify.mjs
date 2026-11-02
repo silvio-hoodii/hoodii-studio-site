@@ -95,6 +95,7 @@ const GATES = [
    * for weeks. An open session past the live window reads as ended at its last set, never at now().
    * The JS half here; `--sql` on the same file checks the Postgres fragments, which needs a database. */
   ['session-end-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/session-end.test.ts']],
+  ['stations-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/stations.test.ts']],
   /* THE DATE HELPERS BEHIND THE /health HEADLINE. Added 2026-08-28.
    *
    * `spanInMonths` does calendar arithmetic, and its month-end clamp CANNOT FIRE on today's data:

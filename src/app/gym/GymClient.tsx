@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SaveBlocked from '@/components/SaveBlocked';
 import ExerciseDiagram from '@/components/training/ExerciseDiagram';
+import StationsTab from './StationsTab';
+import { logId, logName, type Station, type StationExercise } from '@/lib/gym/stations';
 import { shortDate } from '@/lib/format';
 import type {
   Program, Day, DayKey, Exercise, Alt, WarmupItem, CooldownItem, FillOptions, FillCandidate,
@@ -241,8 +243,26 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
    * next, and this tab says which. `activeDay` is left alone underneath so the rest of the page keeps
    * a real programme day to read. */
   const [free, setFree] = useState(nextUp.todayFree);
+  /* THE STATIONS TAB, since 2026-11-02: a timed circuit for when there is no gym. Sets go under
+   * FREE_DAY, so it moves the rotation exactly as much as the Free tab does: not at all. Which tab he
+   * was on is remembered for the day, because a phone that drops the tab mid-circuit otherwise reopens
+   * on Free, with the clock still running behind it. */
+  const [stations, setStationsOpen] = useState(false);
+  const openStations = (open: boolean) => {
+    setStationsOpen(open);
+    try {
+      if (open) localStorage.setItem('gym:stations:open', date);
+      else localStorage.removeItem('gym:stations:open');
+    } catch { /* a private window */ }
+  };
+  useEffect(() => {
+    let wanted = false;
+    try { wanted = localStorage.getItem('gym:stations:open') === date; } catch { /* a private window */ }
+    if (wanted) queueMicrotask(() => setStationsOpen(true));
+  }, [date]);
   const selectDay = (k: DayKey) => {
     setFree(false);
+    openStations(false);
     if (k === activeDay) return;
     setSessionRead('loading');
     setActiveDay(k);
@@ -1008,6 +1028,19 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     setFreeIn((prev) => ({ ...prev, [card.id]: { weight: '', reps: '' } }));
   }
 
+  /** One set from a station. Reps only, with the gear in the name: see the top of lib/gym/stations.ts
+   *  for why no weight is written. */
+  function logStation(ex: StationExercise, station: Station, reps: string) {
+    const id = logId(ex);
+    const name = logName(ex, station);
+    void write(`extra:${date}:${id}:${Date.now()}`, '/gym/api/set', {
+      date, day: FREE_DAY, dayTitle: 'Stations',
+      exerciseId: id, exerciseName: name, offPlan: true,
+      weight: null, reps: Number(reps),
+    });
+    setExtraLog((prev) => [...prev, { id, name, weight: '', reps }]);
+  }
+
   /** Sends the note, and clears the box only if it actually landed. A queued note stays on screen
    *  AND in the retry queue, so the flush after unlocking can double-post it; that is the trade
    *  taken deliberately, because a duplicate note is a nuisance and a lost one is not recoverable. */
@@ -1269,14 +1302,24 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
           it before typing, because the inputs are disabled until it is 'ready' or 'failed'. */}
       <div className="tabs" data-session={sessionRead}>
         {DAY_ORDER.map((k) => (
-          <button key={k} className={`tab${k === activeDay && !free ? ' on' : ''}`} onClick={() => selectDay(k)}>
+          <button key={k} className={`tab${k === activeDay && !free && !stations ? ' on' : ''}`} onClick={() => selectDay(k)}>
             {splitName(program.days[k])}
           </button>
         ))}
-        <button className={`tab${free ? ' on' : ''}`} onClick={() => setFree(true)}>Free</button>
+        <button className={`tab${free && !stations ? ' on' : ''}`} onClick={() => { openStations(false); setFree(true); }}>Free</button>
+        <button className={`tab${stations ? ' on' : ''}`} onClick={() => { setFree(false); openStations(true); }}>Stations</button>
       </div>
 
-      {free && (
+      {stations && (
+        <StationsTab
+          date={date}
+          nextName={splitName(program.days[nextUp.nextDay])}
+          logged={extraLog}
+          onLog={logStation}
+        />
+      )}
+
+      {free && !stations && (
         <div className="free">
           <div className="count" style={{ marginTop: 22 }}>Free</div>
           {/* THE ONE LINE THAT ANSWERS HIS WORRY, a fact and not a lecture: the programmed session is
@@ -1339,7 +1382,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         </div>
       )}
 
-      {!free && (<>
+      {!free && !stations && (<>
       <div className="count" style={{ marginTop: 22 }}>{day.title}</div>
 
       {/* WHAT HE DID LAST TIME, one line, under the title, since 2026-09-06. His words: "I don't
@@ -2003,7 +2046,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         * The text is NOT cleared unless the write actually landed. Sets are different: the input
         * itself holds the value and a queued set can be re-read off the screen. A note that failed
         * to send and got wiped out of the box is gone from the world. */}
-      {!free && <div className="extra-box">
+      {!free && !stations && <div className="extra-box">
         <div className="section-label">Did something else? Log it</div>
         <input
           className="extra-name"
@@ -2067,7 +2110,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         </div>
       </div>
 
-      {!free && <div style={{ marginTop: 30, marginBottom: 30 }}>
+      {!free && !stations && <div style={{ marginTop: 30, marginBottom: 30 }}>
         {finished ? (
           <p className="lede">
             Session saved. {totals.done}/{totals.total} sets logged.

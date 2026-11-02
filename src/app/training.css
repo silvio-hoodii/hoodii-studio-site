@@ -729,6 +729,45 @@
 .training .free-card { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }
 .training .free-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
 .training .extra-num.free-ghost::placeholder { color: var(--muted-foreground); font-style: italic; opacity: 1; }
+/* Stations, 2026-11-02 (StationsTab.tsx). The clock sticks to the top because it is read from across
+ * a room, and work is the one state in --signal: a value that is true right now. */
+.training .st-setup { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.training .st-choice { display: flex; align-items: center; gap: 6px; }
+.training .st-choice .quiet { width: 60px; }
+.training .st-chip {
+  min-width: 52px; min-height: 44px; padding: 8px 12px; font: inherit; font-size: 15px; cursor: pointer;
+  color: var(--foreground); background: var(--background);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.training .st-chip.on { border-color: var(--foreground); font-weight: 600; }
+.training .st-warm { margin-top: 14px; font-size: 14px; }
+.training .st-warm summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+.training .st-warm ul { margin: 0 0 4px; padding-left: 18px; color: var(--muted-foreground); }
+.training .st-go { width: 100%; margin-top: 12px; min-height: 48px; }
+.training .st-clock {
+  position: sticky; top: 0; z-index: 5; margin-top: 16px; padding: 12px 0 14px;
+  background: var(--background); border-bottom: 1px solid var(--border);
+}
+.training .st-clock-label { font-weight: 600; font-size: 17px; display: flex; justify-content: space-between; gap: 10px; }
+.training .st-clock-label .quiet { font-weight: 400; font-size: 13px; }
+.training .st-clock-time { font-size: 64px; line-height: 1.1; font-weight: 600; }
+.training .st-clock.work .st-clock-time { color: var(--signal); }
+.training .st-clock-next { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.training .st-clock-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.training .st-clock-actions button { min-height: 44px; flex: 1 1 0; white-space: nowrap; }
+.training .st-card { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }
+.training .st-card.on { border-top: 2px solid var(--foreground); }
+.training .st-clock + .st-card { border-top: 0; padding-top: 0; }
+.training .st-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.training .st-row { margin-top: 12px; }
+.training .st-label { display: flex; flex-direction: column; gap: 3px; }
+.training .st-label .quiet { font-size: 12px; }
+.training .st-pick {
+  width: 100%; min-height: 44px; padding: 8px 10px; font: inherit; font-size: 15px; font-weight: 600;
+  color: var(--foreground); background: var(--background);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.training .st-cue { margin-top: 4px; font-size: 13px; line-height: 1.4; color: var(--muted-foreground); }
 
 /* ---- what happened at this exercise, /gym, added 2026-08-31 ----------------------------------
  *
