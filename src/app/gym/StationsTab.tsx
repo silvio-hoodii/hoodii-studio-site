@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  DEFAULT_ROUNDS, DEFAULT_WORK, ROUND_OPTIONS, STATIONS, WARMUP, WORK_OPTIONS,
-  assignment, holdWord, logId, phaseAt, picked, totalSeconds,
+  DEFAULT_ROUNDS, DEFAULT_WORK, MOVE_SEC, ROUND_OPTIONS, ROUND_REST_SEC, STATIONS, SWITCH_SEC, WARMUP, WORK_OPTIONS,
+  assignment, holdWord, logId, phaseAt, picked, stationAt, totalSeconds,
   type Assignment, type Mode, type PhaseKind, type Picks, type SlotKey, type Station, type StationExercise,
 } from '@/lib/gym/stations';
 
@@ -347,6 +347,34 @@ export default function StationsTab({ date, nextName, logged, onLog }: Props) {
     <div className="st">
       <div className="count" style={{ marginTop: 22 }}>Stations</div>
       <p className="lede" style={{ marginTop: 6 }}>Next on the programme: {nextName}.</p>
+
+      {/* HOW IT WORKS, first thing on the tab, on his words after two builds: "I dont understan how it
+          works its not clear each one in one station?" Every number comes from the same constants the
+          clock runs on, and the table from the same function that places people, so neither can
+          disagree with what the session then does. */}
+      <h2 className="st-step">How it works</h2>
+      <ol className="st-how">
+        <li>{count === 1 ? 'You are' : 'Each person is'} at one station at a time, using that station&apos;s weights.</li>
+        <li>At each station, 2 exercises: {workSec} seconds, {SWITCH_SEC} seconds to switch, {workSec} seconds.</li>
+        <li>Then {count === 1 ? 'you move' : 'everyone moves at the same time'} to the next station. {MOVE_SEC} seconds to move.</li>
+        <li>After all {STATIONS.length} stations, rest {ROUND_REST_SEC} seconds and go again. {rounds} rounds.</li>
+      </ol>
+      <table className="st-where">
+        <thead>
+          <tr>
+            <th>Turn</th>
+            {PEOPLE.slice(0, count).map((_, i) => <th key={i}>{nameOf(i)}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {STATIONS.map((_, step) => (
+            <tr key={step}>
+              <td className="tnum">{step + 1}</td>
+              {PEOPLE.slice(0, count).map((_, i) => <td key={i}>{STATIONS[stationAt(i, step)]!.name}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <h2 className="st-step">1. Who is training</h2>
       <div className="st-choice">
