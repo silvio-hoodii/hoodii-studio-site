@@ -186,13 +186,6 @@
    cap is the safety net for a tile narrower than the drawing; Tailwind's reset caps img and video
    but not svg. */
 .idx .viz .spark-l { display: none; max-width: 100%; height: auto; }
-.idx .vcover {
-  width: 40px;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-}
 .idx .vcovers { display: flex; gap: 4px; }
 .idx .vcovers img {
   width: 34px;
@@ -227,8 +220,7 @@
   .idx .viz { margin-top: 14px; }
   .idx .viz .spark-s { display: none; }
   .idx .viz .spark-l { display: block; }
-  .idx .vcover { width: 64px; }
-  .idx .vcovers { gap: 6px; }
+    .idx .vcovers { gap: 6px; }
   .idx .vcovers img { width: 46px; height: 46px; }
 }
 @media (min-width: 1024px) {

@@ -35,7 +35,6 @@ const NAV: { href: string; label: string; key: string }[] = [
   { href: '/gym', label: 'Training', key: 'training' },
   { href: '/curio', label: 'Curio', key: 'curio' },
   { href: '/music', label: 'Music', key: 'music' },
-  { href: '/reading', label: 'Reading', key: 'reading' },
 ];
 
 /* ONE "TRAINING" ENTRY, NOT THREE. The first version of this row listed Gym, Health and Swim, and on

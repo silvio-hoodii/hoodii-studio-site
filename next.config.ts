@@ -95,28 +95,10 @@ const nextConfig: NextConfig = {
       { source: '/work', destination: '/', permanent: false },
       { source: '/work/:path*', destination: '/', permanent: false },
 
-      /* /reading/about IS DELETED, 2026-09-15. It explained how the score works and listed every
-       * source list behind it; nothing on it was a fact about him or something to do. AGENTS.md,
-       * "Page text". */
-      { source: '/reading/about', destination: '/reading', permanent: false },
-
-      /* /reading/all is retired into /reading/shelf, 2026-08-21. Both browsed the same pool and
-       * the shelf page now does everything /reading/all did (search, filters, the full catalogue)
-       * plus covers, descriptions, six sorts, tiers, a want list and pagination. The last two
-       * things only /reading/all had, Spanish books and paging, moved across first.
-       *
-       * Two surfaces answering the same question is one of them going stale, which is a rule this
-       * project wrote down after finding a standalone spine-check page duplicating this one. A
-       * 307 rather than a 308: this is a product decision that could be reversed, not a permanent
-       * URL move, and a permanent redirect is cached by browsers forever. */
-      { source: '/reading/all', destination: '/reading', permanent: false },
-
-      /* THE USAGE AUDIT, 2026-09-27. Each of these had zero writes ever, or a data mirror a month
-       * stale, and he approved removing them. /reading is Goodreads now (src/lib/reading/goodreads.ts);
-       * French stays on the laptop in LanguageOS. 307s, because each is a decision that could be
-       * reversed, and every bookmark and crawler link lands somewhere real instead of a 404. */
-      { source: '/reading/shelf', destination: '/reading', permanent: false },
-      { source: '/reading/want', destination: '/reading', permanent: false },
+      /* /reading IS GONE, 2026-11-02, on his ruling (Goodreads left the site). Every URL under it, including the
+       * old /reading/about, /all, /shelf and /want, lands on the front door. 307: a decision that could be reversed. */
+      { source: '/reading', destination: '/', permanent: false },
+      { source: '/reading/:path*', destination: '/', permanent: false },
       { source: '/kitchen/shop', destination: '/kitchen', permanent: false },
       { source: '/french', destination: '/', permanent: false },
       { source: '/french/:path*', destination: '/', permanent: false },

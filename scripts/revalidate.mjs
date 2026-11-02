@@ -4,7 +4,7 @@
  * ReadLaterOS/run-readlater.ps1; see src/app/api/revalidate/route.ts for why.
  *
  *   node scripts/revalidate.mjs                  # the index
- *   node scripts/revalidate.mjs index curio      # by name: index, music, curio, archive, reading
+ *   node scripts/revalidate.mjs index curio      # by name: index, music, curio, archive
  *
  * NAMES, NOT PATHS. Git Bash rewrites a bare `/` argument into `C:/Program Files/Git/`, so the
  * first live call revalidated nothing while printing ok. A name cannot be mangled by any shell.
@@ -34,7 +34,7 @@ if (!token) {
   console.log('revalidate: no CRON_SECRET here, nothing sent');
   process.exit(0);
 }
-const NAMES = { index: '/', music: '/music', curio: '/curio', archive: '/curio/archive', reading: '/reading' };
+const NAMES = { index: '/', music: '/music', curio: '/curio', archive: '/curio/archive' };
 const args = process.argv.slice(2);
 const unknown = args.filter((a) => !(a in NAMES));
 if (unknown.length) {

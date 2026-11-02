@@ -9,7 +9,6 @@ import { getBodyCompSeries, getBodyCompSummary, getLiftingAdherence, getSyncLive
 import { getSummary as getCurioSummary } from '@/lib/curio/db';
 import { getRecentPlays, getSummary as getMusicSummary, spotifyImage } from '@/lib/music/db';
 import { getSwimFrontRow, getSwimHistory } from '@/lib/swim/db';
-import { getShelves } from '@/lib/reading/goodreads';
 import { BarSpark, DayStrip, LineSpark } from '@/components/Spark';
 import Track from '@/components/Track';
 import Readout from '@/components/Readout';
@@ -228,32 +227,6 @@ async function healthRow(): Promise<Row> {
   }
 }
 
-/* READING IS GOODREADS SINCE 2026-09-27. The row it replaces counted a ReadingOS queue that had not
- * been synced in a month and hid itself for being stale. This one shows the cover of what he is
- * reading, off the same cached feed /reading uses, so it costs no database call at all. */
-async function readingRow(): Promise<Row | null> {
-  try {
-    const { current, read, ok } = await getShelves();
-    if (!ok) return { label: 'Reading', line: <span className="quiet">Goodreads did not answer</span>, href: '/reading' };
-    const now = current[0];
-    if (!now && !read.length) return null;
-    return {
-      label: 'Reading',
-      line: now ? <>Reading <b>{now.title}</b></> : <><span className="tnum">{read.length}</span> read</>,
-      sub: now ? now.author : read[0]?.title,
-      href: '/reading',
-      viz: now ? (
-        // eslint-disable-next-line @next/next/no-img-element -- a 40px Goodreads cover, not worth an optimiser call
-        <img className="vcover" src={now.cover} alt="" loading="lazy" />
-      ) : undefined,
-    };
-  } catch (e) {
-    /* Rethrown, not rendered: this page is cached, so a "did not load" here would be served for
-       six hours. A failed regeneration keeps the last good copy on screen instead. */
-    throw new Error(`Reading row: ${e instanceof Error ? e.message : String(e)}`);
-  }
-}
-
 async function swimRow(): Promise<Row> {
   try {
     const [s, hist] = await Promise.all([getSwimFrontRow(), getSwimHistory(120)]);
@@ -401,12 +374,10 @@ function RowView({ r }: { r: Row }) {
 export default async function Home() {
   /* Kitchen and French left this list on 2026-09-27, on the usage audit and his call. The order is
      the order he uses things, and it matches the app row in the header. */
-  const [gym, health, swim, curio, music, reading] = await Promise.all([
-    gymRow(), healthRow(), swimRow(), curioRow(), musicRow(), readingRow(),
+  const [gym, health, swim, curio, music] = await Promise.all([
+    gymRow(), healthRow(), swimRow(), curioRow(), musicRow(),
   ]);
-  const rows = [gym, health, swim, curio, music, reading].filter(
-    (r): r is Row => r !== null,
-  );
+  const rows = [gym, health, swim, curio, music];
 
   /* Who this is, in the form a search engine reads rather than infers. Both links are already
    * printed in the footer below, so nothing here is newly public. `sameAs` is the whole point: it

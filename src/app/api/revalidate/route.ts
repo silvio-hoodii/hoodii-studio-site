@@ -14,7 +14,7 @@ import { revalidatePath } from 'next/cache';
  *
  * Bearer CRON_SECRET, the same token the crons use. Anything without it is refused; a refused call
  * costs one function invocation and no database time. */
-const ALLOWED = new Set(['/', '/music', '/curio', '/curio/archive', '/reading']);
+const ALLOWED = new Set(['/', '/music', '/curio', '/curio/archive']);
 
 export async function POST(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
