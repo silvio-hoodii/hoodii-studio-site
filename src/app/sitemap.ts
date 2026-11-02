@@ -1,37 +1,13 @@
 import type { MetadataRoute } from 'next';
 
-/* Only what is meant to be found. Kitchen, gym, health and french are deliberately noindex, so
- * listing them here would be asking for exactly what their own metadata refuses.
- *
- * No lastModified. It would be stamped at build time, which says "changed whenever I last deployed"
- * rather than "changed when the content changed", and a date that is confidently wrong is worse
- * than no date.
- */
+/* The front page and nothing else. Every other route is noindex, a write API, or gone (see
+ * docs/agents/retired-routes.md). No lastModified: it would be stamped at build time, which says
+ * "changed whenever I last deployed", and a date that is confidently wrong is worse than none. */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     /* No trailing slash: the canonical this site emits for the front page is
      * `https://hoodii.studio`, and a sitemap that names a different string for the same page is
      * two answers to one question. */
-    { url: 'https://hoodii.studio', changeFrequency: 'weekly', priority: 1 },
-    { url: 'https://hoodii.studio/curio', changeFrequency: 'daily', priority: 0.7 },
-    /* The mornings and the ledger, off /curio since 2026-09-27: this is where the answers live now. */
-    { url: 'https://hoodii.studio/curio/archive', changeFrequency: 'weekly', priority: 0.6 },
-    { url: 'https://hoodii.studio/music', changeFrequency: 'daily', priority: 0.5 },
-
-    /* Two apps that used to be someone else's subdomain, moved here 2026-08-16. The individual
-     * /reading/[slug] pages are deliberately NOT listed: they are linked from /reading, which is
-     * enough for a crawler, and a sitemap that has to be hand-extended every time a book is added
-     * is the same hand-maintained list this whole migration exists to get rid of.
-     *
-     * /swim was `daily` until 2026-08-26, which was true of a timetable scraped every morning and
-     * is not true of a training log. The schedule was deleted that day and the page became his own
-     * swimming: a tier ladder, a ten-week plan and two coaching handbooks, all of which change when
-     * he changes them. `weekly` is the honest answer now. */
-    /* /swim left this list on 2026-09-27: it renders on every request (its tabs are a query string),
-       so a crawler working through the sitemap woke the database for it. It is still linked from
-       the index and from the training chips on every training page. */
-
-    /* The /work case studies were listed here until 2026-09-15, when they were deleted along with
-     * the portfolio sections on the front page. Their URLs redirect to / from next.config.ts. */
+    { url: 'https://hoodii.studio', changeFrequency: 'monthly', priority: 1 },
   ];
 }

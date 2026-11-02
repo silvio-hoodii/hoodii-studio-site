@@ -2,6 +2,8 @@
 moved: 2026-10-18, verbatim from AGENTS.md, which now points here. Not re-audited beyond the dead paths fixed that day.
 ---
 
+**2026-11-02: the default list is five paths** (`/`, `/gym`, `/login`, `/login?to=/gym`, `/callback`) after the strip. Counts and routes named below are from before it.
+
 # The tap probe
 
 - **THE 44px TAP FLOOR IS MEASURED NOW: `node scripts/probe-taps.mjs <base-url>`.** 36 surfaces at

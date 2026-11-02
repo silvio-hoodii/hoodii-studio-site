@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { revalidatePath } from 'next/cache';
 import { syncMusic } from '@/lib/music/sync';
 
 export const dynamic = 'force-dynamic';
@@ -7,8 +6,7 @@ export const runtime = 'nodejs';
 
 /* The cron target. vercel.json points 24 daily schedules at this path, one an hour (docs/agents/music.md says why).
  *
- * Note this route is NOT covered by src/proxy.ts, whose matcher only spans /kitchen, /gym, /health
- * and /french. So it carries its own authorisation and cannot lean on the `kos` cookie.
+ * Note this route is NOT covered by src/proxy.ts, whose matcher only spans the gym, swim and unlock APIs. So it carries its own authorisation and cannot lean on the `kos` cookie.
  *
  * Vercel attaches `Authorization: Bearer $CRON_SECRET` to cron invocations whenever that env var is
  * set. We REQUIRE it rather than treating it as optional hardening: without it this is a public URL
@@ -29,14 +27,6 @@ export async function GET(req: NextRequest) {
   }
 
   const result = await syncMusic();
-
-  /* /music is ISR at 3600 and the hub row reads the same tables, so a good run regenerates both
-   * rather than waiting out the hour. Neon bills awake time with a 5-minute floor, which is why
-   * the pages are not on a short window instead. */
-  if (result.ok) {
-    revalidatePath('/music');
-    revalidatePath('/');
-  }
 
   /* A failed sync returns 500 on purpose. Vercel surfaces failing crons, and the entire point of
    * this build is that a dead Spotify token must not look like silence. */

@@ -26,7 +26,6 @@ import { join, relative, sep } from 'node:path';
 
 const API_ROOTS = [
   { dir: join(process.cwd(), 'src', 'app', 'gym', 'api'), url: '/gym/api' },
-  { dir: join(process.cwd(), 'src', 'app', 'swim', 'api'), url: '/swim/api' },
   /* /bike/api was here from 2026-08-27 until 2026-09-27, when POST /bike/api/ride was deleted
      unused (0 rides ever, per the usage audit). */
 ];

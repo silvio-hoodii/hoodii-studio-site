@@ -2,6 +2,8 @@
 moved: 2026-10-18, verbatim from AGENTS.md, which now points here. Not re-audited beyond the dead paths fixed that day.
 ---
 
+**RETIRED 2026-11-02.** The desktop grid, the picture rows, `Readout` and `Ago` went with the pages that used them when the site was stripped (see `docs/agents/removed.md`). What is below describes code that is only in git, at the tag `before-strip-2026-11-02`. `/gym` stays one column.
+
 # Layout: desktop grid, pictures, relative days, two columns
 
 **DESKTOP IS A GRID, THE PHONE IS A COLUMN, since 2026-09-27.** His words: *"the website looks like

@@ -2,6 +2,8 @@
 moved: 2026-10-18, verbatim from AGENTS.md, which now points here. Not re-audited beyond the dead paths fixed that day.
 ---
 
+**2026-11-02: the `/health`, `/swim` and `/bike` PAGES ARE GONE** (`docs/agents/removed.md`). What is still live here is the pipeline: `content/health/sync.mjs`, `scripts/check-ladder.mjs` and the `health_*` and `gym_*` tables, which HealthOS and silvioneyra-com read. Sections below that describe a page describe the page at the tag `before-strip-2026-11-02`.
+
 # The gym data pipeline (Samsung Health export to Neon)
 
 ## THE GYM DATA PIPELINE, and what each activity actually holds

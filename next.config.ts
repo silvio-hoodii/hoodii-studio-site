@@ -88,93 +88,31 @@ const nextConfig: NextConfig = {
       { source: '/es/:path*', destination: '/', permanent: true },
       { source: '/studio', destination: '/', permanent: true },
 
-      /* THE /work CASE STUDIES ARE DELETED, 2026-09-15, with the portfolio sections on the front
-       * page, on his call that the content read as AI slop and the site should be the apps. Any
-       * link already sent out lands on the front door instead of a 404. 307 rather than 308 for the
-       * reason given under /reading/all below: a product decision, not a permanent URL move. */
-      { source: '/work', destination: '/', permanent: false },
-      { source: '/work/:path*', destination: '/', permanent: false },
-
-      /* /reading IS GONE, 2026-11-02, on his ruling (Goodreads left the site). Every URL under it, including the
-       * old /reading/about, /all, /shelf and /want, lands on the front door. 307: a decision that could be reversed. */
-      { source: '/reading', destination: '/', permanent: false },
-      { source: '/reading/:path*', destination: '/', permanent: false },
-      /* /kitchen IS OFF, 2026-11-02, on his ruling. The routes are deleted and the tables are kept.
-       * The inline unlock moved to /api/unlock because /gym still needs it; a phone holding an old
-       * gym bundle still posts to the old path, and a 307 keeps the method and the body. */
+      /* The inline unlock moved from /kitchen/api/unlock to /api/unlock on 2026-11-02 because /gym
+       * still needs it. A phone holding an old gym bundle still posts to the old path, and a 307
+       * keeps the method and the body. */
       { source: '/kitchen/api/unlock', destination: '/api/unlock', permanent: false },
-      { source: '/kitchen/login', destination: '/login', permanent: false },
-      { source: '/kitchen', destination: '/', permanent: false },
-      { source: '/kitchen/:path*', destination: '/', permanent: false },
-      { source: '/french', destination: '/', permanent: false },
-      { source: '/french/:path*', destination: '/', permanent: false },
 
-      /* /gym/conditioning IS DELETED, 2026-08-27, and every URL it ever had lands somewhere real.
-       *
-       * It held the whole week behind two levels of query parameters: ?p=run, ?p=bike, ?p=swim and
-       * ?p=week, each with a ?s=now|plan|how under it. Swim escaped on 2026-08-26 and its redirect
-       * was written inside the page component, because the page still existed. It does not now, so
-       * all four live here where a deleted route can still answer for itself.
-       *
-       * ORDER MATTERS: first match wins, so the three discipline rules come before the bare one.
-       * THE PAIRED RULES ARE NOT REDUNDANT. `has` only matches when the key is PRESENT, so the
-       * s-carrying rule cannot serve a bare ?p=run, and a single rule with `s` optional does not
-       * exist. He was told to bookmark these at the poolside and at the treadmill; a sub-tab
-       * dropped in the move is a bookmark that lands on the wrong half of a page.
-       *
-       * 307, not 308, matching /reading/all above and for the same reason: a permanent redirect is
-       * cached by browsers forever, and this is an architecture decision rather than a law. */
-      /* /run IS DELETED, 2026-10-10: running left the week on his ruling. Its URLs and the old
-       * ?p=run bookmarks land on /health, the training index. Before the discipline rules below. */
-      { source: '/run', destination: '/health', permanent: false },
-      { source: '/run/:path*', destination: '/health', permanent: false },
-      { source: '/gym/conditioning', has: [{ type: 'query' as const, key: 'p', value: 'run' }], destination: '/health', permanent: false },
-      ...(['bike', 'swim'].flatMap((d) => [
-        {
-          source: '/gym/conditioning',
-          has: [
-            { type: 'query' as const, key: 'p', value: d },
-            { type: 'query' as const, key: 's', value: '(?<s>.*)' },
-          ],
-          destination: `/${d}?s=:s`,
-          permanent: false,
-        },
-        {
-          source: '/gym/conditioning',
-          has: [{ type: 'query' as const, key: 'p', value: d }],
-          destination: `/${d}`,
-          permanent: false,
-        },
-      ])),
-      /* Everything else that page was: the Overview tab, and a bare /gym/conditioning. Overview
-       * became /health, which is the index now. */
-      { source: '/gym/conditioning', destination: '/health', permanent: false },
-
-      /* THE FOUR LOGIN PAGES ARE ONE, 2026-09-04, and these keep every old URL working.
-       *
-       * /kitchen/login, /gym/login, /health/login and /french/login were four near-identical forms
-       * for one cookie and one password. Section F of that day's audit put them under "what is not
-       * worth it", and their per-app redirect guards were A3: signing in from /reading/shelf landed
-       * in the kitchen because the shelf path does not start with /kitchen.
-       *
-       * They are redirected rather than deleted outright because they are reachable from outside
-       * the repo. AGENTS.md tells anyone unlocking a device by hand to visit /kitchen/login, three
-       * in-page links pointed at it for a year, and a login page is exactly the kind of URL that
-       * ends up bookmarked on a phone.
-       *
-       * `:path*` is not used and must not be: these were leaf pages, and a wildcard would swallow
-       * a future /kitchen/login-something. The `to` query survives on its own, because Next carries
-       * unmatched query parameters through a redirect.
-       *
-       * 307 rather than 308, matching the two above and for the same reason: a permanent redirect
-       * is cached by the browser forever, and consolidating four forms into one is an architecture
-       * decision rather than a URL law. */
-      ...['gym', 'health', 'french'].map((app) => ({
+      /* The old per-app login pages are one route, /login (2026-09-04). Before the prefix rule
+       * below, or /kitchen/login and /health/login would land on the front page instead. `:path*`
+       * is not used: these were leaf pages. The `to` query survives on its own. */
+      ...['kitchen', 'gym', 'health', 'french'].map((app) => ({
         source: `/${app}/login`,
         destination: '/login',
         permanent: false,
       })),
 
+      /* EVERY ROUTE THAT LEFT THE SITE lands on the front door instead of a 404. The strip of
+       * 2026-11-02 (his ruling: "hoodii studio as a whole has not been used") removed kitchen,
+       * reading, curio, music, health, swim, bike and me; /work, /french and /run went earlier
+       * (docs/agents/retired-routes.md has each date and reason). 307, not 308: a permanent
+       * redirect is cached by the browser forever, and these are decisions that could be reversed.
+       * `/gym/conditioning` is the page that became those routes on 2026-08-27. */
+      ...['work', 'french', 'run', 'reading', 'kitchen', 'curio', 'music', 'health', 'swim', 'bike', 'me'].flatMap((app) => [
+        { source: `/${app}`, destination: '/', permanent: false },
+        { source: `/${app}/:path*`, destination: '/', permanent: false },
+      ]),
+      { source: '/gym/conditioning', destination: '/gym', permanent: false },
       /* The vercel.app copy of the whole site, sent home.
        *
        * Silvio, 2026-08-14: "why do we need the Hoodii Studio site, Vercel app? We can erase that."

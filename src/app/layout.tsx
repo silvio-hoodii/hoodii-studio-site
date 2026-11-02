@@ -47,8 +47,6 @@ export const metadata: Metadata = {
   /* Order matters more than wording here: Google shows roughly the first 155 characters. From
    * 2026-08-14 this led with "Twelve years bridging business and technology" for recruiters. That
    * went on 2026-09-15 with the portfolio sections of the front page, and the apps lead now. */
-  description:
-    'Small software for an audience of one. My lifting log, my swimming, the questions I looked up, what I listen to and what I read.',
   /* The image is not named here on purpose: `src/app/opengraph-image.tsx` is picked up by file
    * convention and Next fills in the url, width, height and type, which is four fewer strings to
    * keep in sync with a file. */
@@ -57,8 +55,6 @@ export const metadata: Metadata = {
     siteName: 'Silvio Neyra',
     url: 'https://hoodii.studio',
     title: 'Silvio Neyra',
-    description:
-      'Small software for an audience of one. My lifting log, my swimming, the questions I looked up, what I listen to and what I read.',
   },
   twitter: { card: 'summary_large_image' },
 }

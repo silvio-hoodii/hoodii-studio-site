@@ -95,19 +95,6 @@ const GATES = [
    * for weeks. An open session past the live window reads as ended at its last set, never at now().
    * The JS half here; `--sql` on the same file checks the Postgres fragments, which needs a database. */
   ['session-end-tests', process.execPath, ['--experimental-strip-types', 'src/lib/gym/session-end.test.ts']],
-  /* THE BODY-COMPOSITION SPLIT'S SUITE. Added 2026-08-28, the day the rule it guards was fixed.
-   *
-   * Two defects, both live on /health until that day. The fat share was `(dFat / dKg) * 100` through
-   * `Math.abs()`, which printed 233% over one 2025 window and 119% over the 34-day trend the same
-   * tab displays, because a ratio of two deltas stops being a share the moment lean mass moves the
-   * other way. And the two endpoints could come off two different machines, which disagree about fat
-   * mass by up to 2.45 kg on the same day.
-   *
-   * Four of the twelve cases assert the rules PERMIT: the ordinary cut must still print 75%, and an
-   * all-Watch series must keep its full window. A gate watched refusing and never watched permitting
-   * is a gate that might refuse everything, which is how the bare-colour-endpoint check shipped with
-   * four false findings out of four on the same day. */
-  ['health-split-tests', process.execPath, ['--experimental-strip-types', 'src/lib/health/split.test.ts']],
   /* THE DATE HELPERS BEHIND THE /health HEADLINE. Added 2026-08-28.
    *
    * `spanInMonths` does calendar arithmetic, and its month-end clamp CANNOT FIRE on today's data:
@@ -122,13 +109,6 @@ const GATES = [
      timezone test written from the same arithmetic as the code passes while the code is
      self-consistently wrong, and that is what shipped on 2026-09-08. */
   ['day-clock-tests', process.execPath, ['--experimental-strip-types', 'src/lib/day.test.ts']],
-  /* NO FIGURE TYPED INTO PROSE, on the pages that claim their figures are derived. /health/day
-     shipped with a header reading "NOTHING BELOW IS TYPED" over seven typed figures, one of which
-     was already two years stale, and every gate above this line passed on it. The script's own 13
-     self-test cases run before it checks anything; three of its first four live findings were real
-     and two of them were couplings nobody had noticed (a column heading and its query threshold
-     written as two independent 30s, and "worst 1 in 10" beside a percentile in the SQL). */
-  ['typed-figures', process.execPath, ['scripts/lint-typed-figures.mjs']],
   /* THE LOGIN RETURN PATH. Added 2026-09-04 with the consolidation of four login pages into one.
    *
    * This one is here because the change it covers LOOSENED a redirect guard. The bug (A3) was that
@@ -139,26 +119,6 @@ const GATES = [
    * `//host`, `/` plus backslash, and the whitespace-smuggled variants that get past a naive check
    * and are then normalised by something downstream. */
   ['return-to-tests', process.execPath, ['--experimental-strip-types', 'src/lib/return-to.test.ts']],
-  /* THE ONE SHOPPING LIST. Added 2026-09-12 with /kitchen/shop, which unions every dish's list.
-   *
-   * Every way of getting this wrong is invisible on the page: a merge that should have happened
-   * leaves two rows for one bag of cheese, a merge that should not have happened leaves one row for
-   * two products, and a misclassified row either sends him to the shop for something in his cupboard
-   * or drops a blocking ingredient off the trip. None of those look like a bug; they look like a
-   * shopping list, and the oracle is him standing in an aisle.
-   *
-   * Two of its cases give a row a note that says the OPPOSITE of its `need` field, in both
-   * directions. The obvious way to build the page was to grep the note for "ESSENTIAL" and "DO NOT
-   * BUY", which is where that state lived until this shipped, and it would have passed every eyeball
-   * check on today's rows. Those two cases fail it instead.
-   *
-   * It earned its place on its first run: the merge picked the longest label and was comparing raw
-   * strings, so "salted   BUTTER" beat "Salted butter" and the row rendered under the sloppier of
-   * the two names. */
-  ['curio-spacing-tests', process.execPath, ['--experimental-strip-types', 'src/lib/curio/spacing.test.ts']],
-  /* THE SWIM LADDER MOVES ON HIS LAPS, NOT THE CALENDAR. Added 2026-10-04: the calendar version kept
-   * climbing while he met the asked piece in 1 of 18 swims. Cases are his real Oct 4 and Sep 26 swims. */
-  ['swim-ladder-tests', process.execPath, ['--experimental-strip-types', 'src/lib/swim/ladder.test.ts']],
   /* THE TWO GYM GATES THAT NOBODY WAS TYPING. Added 2026-08-27.
    *
    * Both existed and both were documented in AGENTS.md as things to run before touching /gym, which

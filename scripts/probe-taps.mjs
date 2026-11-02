@@ -101,50 +101,11 @@ if (!BASE) {
   process.exit(2);
 }
 
-/* THE DEFAULT PATH LIST IS EVERY SUB-TAB, not every route. A route's sub-tabs render different
- * controls, and measuring only the default tab is how six of eight surfaces go unmeasured. */
-const DEFAULT_PATHS = [
-  '/',
-  /* `?s=now` is listed even though bare `/health` now resolves to it no longer: the default moved
-     from Now to Weight on 2026-08-28 and the bare path stopped covering the streak tab, so a tab
-     with three blocks in it would have gone unmeasured on the strength of a list written when the
-     default was something else. Measure the tab, not the default. */
-  '/health', '/health?s=weight', '/health?s=now', '/health?s=plan', '/health?s=volume',
-  '/health/deep',
-  '/gym',
-  /* `coachme` AND `coachthem` WERE BOTH WRONG UNTIL 2026-09-03 and neither is a sub-tab id. The
-     real ones are `me` and `teach` (SUB_TABS in src/app/swim/page.tsx). An unrecognised `?s=` value
-     falls back to the Now tab rather than erroring, so this list measured Now three times and
-     reported coverage of two coaching tabs it had never loaded. Same shape as `/work`, which was in
-     this list for weeks and is not a route: a path that silently resolves to something else passes
-     every geometric check, because the thing it measured really is a clean page.
-     `assertSubTabsExist` below is the gate now. */
-  '/swim', '/swim?s=plan', '/swim?s=how', '/swim?s=me', '/swim?s=teach',
-  '/swim/deep', '/swim/records',
-  '/bike', '/bike?s=plan', '/bike?s=how',
-  /* THREE OF THE FOUR KITCHEN PATHS HERE WERE 404s FOR A WEEK, which is the `/work` failure this
-     list already records twice, still live. `/kitchen/find` and `/kitchen/want` were deleted in the
-     2026-09-05 cookbook rebuild and stayed in this list, so every run since measured the 404 page
-     three times and reported covering three surfaces. `/kitchen/shop` was deleted with them and is
-     a real page again as of 2026-09-12, which is the only reason its entry is not a fourth.
-     A dish page is added because it is where the recipe link and the note box live, and no
-     `[id]` route on this site had ever been measured. */
-  '/curio', '/music',
-  /* THE FOUR CASE STUDIES WERE HERE until 2026-09-15, when /work was deleted. Worth keeping the
-     history: this list said `/work` until 2026-08-28 and THERE WAS NO `/work` ROUTE, so it measured
-     the 404 page and the old readiness gate passed it as a surface for as long as the list existed. */
-  /* THE GATE ITSELF WAS NEVER IN THIS LIST. Four login pages existed for a year, each with a
-     password field and a submit button, which is exactly the shape the 44px floor exists for, and
-     none of them was ever measured here. The 2026-09-04 audit measured them only because its own
-     scratch driver added them by hand, which is the same "the measured set is not the real set"
-     failure this list already records twice above (`/work`, and the two wrong swim sub-tabs).
-     They are one route as of 2026-09-04. `?to=` is carried because the eyebrow and the exit link
-     are both derived from it, so the bare path renders a page with one fewer control on it. */
-  '/login', '/login?to=/gym',
-  /* Not a route anyone navigates to on purpose, and it renders a code plus a copy control on a
-     phone, which is the only reason it is here rather than left out. */
-  '/callback',
-];
+/* THE DEFAULT PATH LIST IS EVERY ROUTE THAT RENDERS A PAGE. Stripped on 2026-11-02 to the front page,
+ * the gym, the login (with ?to= carried, because its exit link is derived from it) and the Spotify
+ * redirect page. The sub-tab routes are gone; SUBTAB_SOURCES below stays as the mechanism that
+ * refuses a ?s= path with no known tab list, so a tabbed page added later cannot be mis-measured. */
+const DEFAULT_PATHS = ['/', '/gym', '/login', '/login?to=/gym', '/callback'];
 const PATHS = process.argv.length > 3 ? process.argv.slice(3) : DEFAULT_PATHS;
 
 /* A PATH THAT IS NOT A PATH IS A FALSE PASS, and this cost a run on 2026-08-28.
@@ -178,11 +139,7 @@ if (mangled.length) {
  * is the thing that drifted in the first place. Regex over the source and not an import: this script
  * runs on plain node with no build step, which is why it has no dependencies. If a page's array is
  * renamed the parse returns nothing and this refuses, which is the right direction to fail. */
-const SUBTAB_SOURCES = [
-  ['/health', 'src/app/health/page.tsx', 'TABS'],
-  ['/swim', 'src/app/swim/page.tsx', 'SUB_TABS'],
-  ['/bike', 'src/app/bike/page.tsx', 'SUB_TABS'],
-];
+const SUBTAB_SOURCES = [];
 {
   const problems = [];
   const known = new Map();
@@ -514,7 +471,9 @@ for (const path of PATHS) {
    * page-text rule and painted 29 characters against a floor of 40, so the probe printed a FAIL
    * about a page that had rendered completely. Twenty now. Zero is still the only thing an
    * unpainted document produces. */
-  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 20 && (x?.skeleton ?? 0) === 0;
+  /* 10 chars, not 20, since 2026-11-02: the front page is a name and one link (16 chars). Whether a path is a real
+     route is the HTTP status check above; this only asks whether anything painted. */
+  const arrived = (x) => (x?.controls ?? 0) >= 1 && (x?.chars ?? 0) >= 10 && (x?.skeleton ?? 0) === 0;
   let m = null;
   let prev = null;
   let stable = false;

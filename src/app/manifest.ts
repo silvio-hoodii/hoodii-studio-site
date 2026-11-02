@@ -1,39 +1,13 @@
 import type { MetadataRoute } from 'next';
 import { LIGHT } from '@/lib/tokens.generated';
 
-/* THE WEB MANIFEST. There was none, which is B3 of the 2026-09-04 audit.
- *
- * What it changes on a phone: the site can be added to a home screen and opens in `standalone`,
- * without Safari's address bar. That bar is the exact strip of screen the kitchen's timer rail
- * fights for room against, so this is not a badge, it is 60 vertical pixels back on the surface he
- * uses at the stove.
- *
- * NO CACHING SERVICE WORKER, deliberately. There IS a worker, `/sw.js` (src/app/sw.js/route.ts),
- * but it only shows and opens Curio notifications and caches nothing. Every page here is a live
- * mirror of a store that changes during the day. A cached `/kitchen` served from a worker is Law 2
- * in a new shape ("never deploy over someone who is following the instructions right now"), except
- * worse, because a stale cook screen has no version to pin and no way to tell him it is stale. The
- * manifest gets the icon and the standalone window, which is what was missing. Offline was not.
- *
- * `start_url` is '/' rather than '/kitchen'. The hub is the front door and the shortcuts below are
- * how the four daily apps get reached in one tap, which keeps a single installed icon rather than
- * asking him to install four.
- *
- * THE SHORTCUTS ARE THE ONE HAND-MAINTAINED LIST IN THIS FILE, and that is a decision rather than
- * an oversight. Everything else on this site derives its lists (the route table, the source counts,
- * the `*` markers in the gym catalogue) because a hand-kept list of what exists always loses to the
- * thing that exists. A long-press menu can hold about four items before iOS and Android start
- * truncating it, so this list is not "every app", it is "the four worth a long press". A derived
- * list would put nine here and show a truncated arbitrary four. Reviewed when an app is added.
- */
+/* THE WEB MANIFEST. Adds the icon and the standalone window on a phone's home screen; no service worker,\n * nothing cached. Stripped on 2026-11-02: the only shortcut left is the gym. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Silvio Neyra',
     /* What appears under the icon on a home screen. Kept to one word: iOS truncates at roughly
        twelve characters and "Silvio Neyra" already clips on a narrow phone. */
     short_name: 'Silvio',
-    description:
-      'Small software for an audience of one: my lifting log, my swimming, the questions I looked up, what I listen to and what I read.',
     start_url: '/',
     display: 'standalone',
     /* Derived from the tokens like the root layout's themeColor, but LIGHT unconditionally, and
@@ -52,8 +26,6 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       { name: 'Gym', short_name: 'Gym', url: '/gym' },
-      { name: 'Swim', short_name: 'Swim', url: '/swim' },
-      { name: 'Health', short_name: 'Health', url: '/health' },
     ],
   };
 }

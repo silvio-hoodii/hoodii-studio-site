@@ -2103,18 +2103,6 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         )}
       </div>}
 
-      {/* THE ONE POINTER OFF THIS PAGE, and it exists because REACH is what fails here, not
-        * reasoning. He asked how the four days add up three times over nine days and got a document
-        * three times. The answer is a page now, /health?s=volume, two taps away through the Body
-        * chip at the top, and two taps is exactly how the block `why` stayed unread for nine days
-        * while sitting on the screen he was already looking at.
-        *
-        * One line, under the finish buttons, where a session ends rather than in front of the work.
-        * Not a card, not a section: note #12 is "walls of text again why do I need all this". */}
-      {!free && <p className="ex-cue" style={{ marginTop: -14 }}>
-        <a href="/health?s=volume">How the week adds up, muscle by muscle</a>
-      </p>}
-
       {/* NO CURIO LINK, 2026-09-27. It was added the same day as a second pointer off the lifting
         * form; the header already links Curio, and a link to another app is not one of the four
         * kinds of text this page keeps. */}

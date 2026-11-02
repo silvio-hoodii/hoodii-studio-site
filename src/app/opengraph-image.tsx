@@ -67,18 +67,10 @@ export default function Image() {
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontSize: 86, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05 }}>Silvio Neyra</div>
-          <div style={{ fontSize: 33, color: MUTED, marginTop: 22, lineHeight: 1.4, maxWidth: 900 }}>
-            Small software for an audience of one.
-          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ height: 1, background: FOREGROUND, opacity: 0.85, marginBottom: 18 }} />
-          {/* Kept under about 88 characters so it holds one line at this size. It wrapped to a
-            * two-word orphan at 100, which is the sort of thing only rendering it shows. */}
-          <div style={{ display: 'flex', fontSize: 24, color: MUTED, letterSpacing: 1 }}>
-            A lifting log, my swimming, the questions I looked up, what I listen to and read
-          </div>
         </div>
       </div>
     ),

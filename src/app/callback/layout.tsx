@@ -5,7 +5,7 @@ import SiteHeader from '@/components/SiteHeader';
 export default function CallbackLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <SiteHeader app="Callback" />
+      <SiteHeader />
       {children}
     </>
   );

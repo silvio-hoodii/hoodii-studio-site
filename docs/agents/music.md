@@ -2,6 +2,8 @@
 moved: 2026-10-18, verbatim from AGENTS.md, which now points here. Not re-audited beyond the dead paths fixed that day.
 ---
 
+**2026-11-02: THE `/music` PAGE, `/api/spotify` AND THE HOME-PAGE MUSIC ROW ARE GONE. The hourly sync is not, and it must not stop:** `/api/music/sync` still writes `music_play`, `music_top` and `music_sync`, silvioneyra.com's Songs reads `music_play`, and a play the cron misses is unrecoverable. The sync no longer revalidates any page. The row that used to say "the collector has stopped" went with the home page, so a dead Spotify token now shows only as a failing cron in Vercel and a stale `music_sync` row. `/callback` stays because it is the redirect URI registered in the Spotify app.
+
 # Music and live data
 
 **`/music` has a failure mode none of the others have.** Its history is unrecoverable: Spotify

@@ -154,7 +154,6 @@
 
 /* Per-surface column widths. Date first, then the columns each surface actually has. */
 .training .log-gym .log-row { grid-template-columns: 52px 1fr 46px 62px; }
-.training .log-watch .log-row { grid-template-columns: 52px 1fr 46px 52px; }
 /* A list spanning years prints "Aug 12 '24", which does not fit 52px at 12px mono. SessionLog adds
  * `log-years` when it decides to show the year, so the column widens with the format rather than
  * being sized by hand for the widest case a list might one day reach. */
@@ -470,49 +469,6 @@
  * Tables scroll INSIDE their own container. The run and swim ladders are the only wide things on
  * this site, and a page body that scrolls sideways on a phone is worse than a table that does. */
 
-/* THE SIDEWAYS SCROLL, WITH SOMETHING SAYING SO. B8 of the 2026-09-04 audit.
- *
- * The muscle table is seven columns on a 390px phone and `overflow-x: auto` is the right answer to
- * that, on his instruction of 2026-08-29: "I don't care if it doesn't fit or anything. I want to
- * see one table." That instruction is why the exercises moved INTO each day cell in the first
- * place, replacing two tables he had to join by eye across two scroll positions, and it stands.
- *
- * WHAT WAS ACTUALLY WRONG was not the scroll, it was that nothing said there was one. At 390px the
- * third column showed "BB / Bul" and "BB / hal / 1.5" cut off at a hard edge, with no shadow, no
- * fade and no handle, and a horizontal scroll inside a vertical page is the gesture a phone fights
- * hardest. The caption explaining it sits BELOW the table, which is no use to someone looking at
- * the clipped edge.
- *
- * A stacked layout was offered and rejected for the reason above: it would undo the one thing he
- * asked for three times.
- *
- * THE FADE IS ALWAYS ON, and that is a known imperfection rather than an oversight. Making it
- * disappear at the end of the scroll needs `animation-timeline: scroll()`, which Safari does not
- * ship, so the honest choice was a fade that slightly overstates at the far right or no fade at
- * all. Overstating "there is more that way" by one screen is a smaller cost than a table that
- * looks truncated, which is what it looked like before. */
-.training .table-scroll {
-  overflow-x: auto;
-  margin: 14px 0 4px;
-  /* Transparent for the last 28px of the box, so the clipped column visibly runs off rather than
-     stopping at a wall. Both properties: -webkit- for Safari, which still needs it for masks.
-     `currentColor` rather than a colour, and that is correct rather than a way around
-     lint-tokens.mjs, which refused `black` here and was right to: a mask reads only the ALPHA
-     channel, so the opaque end of this gradient carries no palette decision at all. Naming a paint
-     colour would have implied one. */
-  -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - 28px), transparent 100%);
-  mask-image: linear-gradient(to right, currentColor calc(100% - 28px), transparent 100%);
-}
-
-/* No fade where there is nothing to scroll to. A tablet or a laptop shows the whole table, and a
-   fade over a complete table is an affordance for a gesture that does nothing. */
-@media (min-width: 720px) {
-  .training .table-scroll {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-}
-
 /* NO FADE WHERE NOTHING SCROLLS, at any width, since 2026-09-11. The rule above faded every table
    box under 720px whether or not its table overflowed, so the level table on /swim, which fits
    390px exactly, lost the last digits of its 1,500 m column and he read it as cut off: "I can't
@@ -529,58 +485,6 @@
   from { --table-fade: 28px; }
   to { --table-fade: 0px; }
 }
-@supports (animation-timeline: scroll()) {
-  .training .table-scroll {
-    -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - var(--table-fade)), transparent 100%);
-    mask-image: linear-gradient(to right, currentColor calc(100% - var(--table-fade)), transparent 100%);
-    animation: table-fade linear both;
-    animation-timeline: scroll(self inline);
-  }
-}
-
-/* The hint, ABOVE the table, because that is where the person who cannot see the last column is
-   looking. The full explanation stays in the caption below; this is the one clause needed to know
-   the edge is not the end. */
-.training .scrollnote {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--muted-foreground);
-  margin: 0 0 6px;
-}
-
-@media (min-width: 720px) {
-  .training .scrollnote { display: none; }
-}
-
-.training .plan-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 13.5px;
-}
-.training .plan-table th {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  text-align: left;
-  padding: 0 12px 8px 0;
-  border-bottom: 1px solid var(--foreground);
-  white-space: nowrap;
-}
-.training .plan-table td {
-  padding: 10px 12px 10px 0;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-/* The numeric columns never wrap: "1.45 km" breaking across two lines in a 3-column table on a
-   390px phone reads as two separate values. The wide middle column absorbs the wrapping instead. */
-.training .plan-table td:last-child, .training .plan-table th:last-child { padding-right: 0; }
-.training .plan-table td.tnum, .training .plan-table th.tnum { white-space: nowrap; }
-.training .plan-table .quiet { font-size: 12.5px; margin-top: 3px; }
 
 .training ul.rules { margin: 12px 0 0; padding-left: 18px; }
 .training ul.rules li {
@@ -589,11 +493,6 @@
   color: var(--muted-foreground);
   margin-top: 6px;
 }
-
-/* The ladder's middle column carries both the piece ("600 m · 400 m") and a note under it. The
-   piece must not break mid-distance; the note is free to wrap. */
-.training .plan-table .wide { width: 55%; }
-.training .plan-table .nowrap { white-space: nowrap; }
 
 /* ---- note from the floor ---- */
 .training .note-box {
@@ -615,29 +514,6 @@
 .training .note-actions .btn { min-height: 44px; }
 .training .note-actions .btn:disabled { opacity: 0.45; cursor: default; }
 
-/* ---- surface nav: five routes, one row ----
- *
- * Reuses .tab so it reads as the same kind of control as the day tabs, but sits above the h1 so the
- * hierarchy is page -> title -> day rather than two identical rows meaning different things.
- * Constrained to --measure like everything else so it lines up with the column below it.
- *
- * WAS TWO CHIPS, Workout and The week, when the gym was two pages. Five since 2026-08-27:
- * Lift, Swim, Run, Bike, Body. Measured at 390 px rather than eyeballed, because five mono chips at
- * a 44 px tap floor is exactly the width where a row stops fitting and nobody notices on a laptop.
- *
- * `flex-wrap` is the safety net and not the plan. If a sixth discipline ever lands, the row breaks
- * onto two lines instead of overflowing the page sideways, which is the failure the /swim rebuild
- * had to check for on every tab. */
-.training .surface-nav {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 14px var(--pad) 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.training .surface-nav .surf-tab { text-decoration: none; }
-
 /* ---- inline links inside prose ----
  *
  * The systemic half of the 2026-08-16 report. /gym/conditioning shipped with its only entrance
@@ -649,8 +525,7 @@
  * links that already announce themselves by shape. */
 .training .lede a,
 .training .ex-cue a,
-.training ul.rules a,
-.training .plan-table a {
+.training ul.rules a {
   color: var(--foreground);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -681,15 +556,6 @@
 .training a.ex { display: block; text-decoration: none; color: inherit; }
 .training a.ex:hover .ex-name { text-decoration: underline; }
 .training a.ex:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-
-/* The test is the operative half of a cue, so it gets a rule down its side rather than being a
-   third paragraph of grey. */
-.training .cue-test {
-  border-left: 2px solid var(--border-strong);
-  padding-left: 10px;
-  margin-top: 8px;
-  color: var(--foreground);
-}
 
 .training details.src { margin-top: 8px; }
 .training details.src > summary {
@@ -725,9 +591,6 @@
   padding: 4px 0 6px;
 }
 .training .src-body a { color: var(--foreground); }
-
-/* Collapsed cue rows. A rule between siblings, no cards, matching everything else here. */
-.training .cuelist { border-top: 1px solid var(--border); }
 .training details.cue { border-bottom: 1px solid var(--border); }
 .training details.cue > summary {
   cursor: pointer;
@@ -741,8 +604,6 @@
 }
 .training details.cue > summary:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 .training details.cue[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-.training .cue-name { flex: 1; min-width: 0; }
-.training .cue-body { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; max-width: 62ch; }
 
 /* ---- the integrated week ----
  *
@@ -766,96 +627,9 @@
   border-left: 3px solid var(--destructive);
   padding-left: 12px;
 }
-.training .standing-n {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 54px;
-}
-.training .standing-n .big {
-  font-size: 34px;
-  line-height: 1;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.training .standing.over .standing-n .big { color: var(--destructive); }
-.training .standing-unit {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted-foreground);
-  text-align: center;
-  margin-top: 4px;
-  line-height: 1.25;
-}
-.training .standing-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.training .standing-rule { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
-
-/* The planned week. Seven columns on a phone would be 40px each and unreadable, so it is a list of
-   rows with the day as a fixed-width gutter: the same shape the actual-days list uses below, which
-   is deliberate. Two different pictures of one week is how the old page became four surfaces. */
-.training .planweek { border-top: 1px solid var(--border); }
-.training .pw-day {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  border-bottom: 1px solid var(--border);
-  padding: 9px 0;
-}
-.training .pw-name {
-  flex: 0 0 42px;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--muted-foreground);
-  text-transform: uppercase;
-}
-.training .pw-day.off .pw-name { opacity: 0.5; }
-.training .pw-work { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.training .pw-lift { font-size: 15px; font-weight: 600; }
-.training .pw-slot { font-size: 13.5px; color: var(--muted-foreground); }
-.training .pw-rest {
-  font-size: 13.5px;
-  color: var(--muted-foreground);
-  font-style: italic;
-  opacity: 0.75;
-}
 
 /* What actually happened. One row per day, newest last, because a week is read forwards. */
 .training .actual { border-top: 1px solid var(--border); }
-.training .ad-row {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  border-bottom: 1px solid var(--border);
-  padding: 8px 0;
-  font-size: 14px;
-}
-.training .ad-day {
-  flex: 0 0 86px;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--muted-foreground);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.training .ad-date { opacity: 0.7; }
-.training .ad-row.on .ad-day { color: var(--foreground); }
-.training .ad-what { flex: 1; min-width: 0; }
-.training .ad-row:not(.on) .ad-what { color: var(--muted-foreground); }
-/* A day the mirror has not reached must not look like a rest day. Same distinction /health's strip
-   had to learn: an empty row read as claimed rest for a month of a stalled sync. */
-.training .ad-row.unknown { opacity: 0.55; }
-.training .ad-run {
-  flex: 0 0 34px;
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-}
-.training .ad-row.over .ad-run { color: var(--destructive); font-weight: 600; }
-.training .ad-flag { margin-left: 3px; }
-.training .ad-legend { margin-top: 10px; }
 
 /* The recovery notice. Copied in shape from .health .stale rather than shared, because the two
    surfaces load different stylesheets and lifting the rule into globals.css to serve two callers
@@ -880,25 +654,6 @@
   color: var(--destructive);
   margin-bottom: 4px;
 }
-
-/* A .src summary that is a primary control rather than a citation. 32px is deliberate for the
-   "where this comes from" rows under a cue: they are tertiary and there are seven of them per tab.
-   The rest rule's reasoning is not tertiary, and 32px is under the 44px floor this repo enforces
-   after eight controls were found too small to hit on 2026-08-15. */
-.training details.src.wk > summary {
-  min-height: 44px;
-  font-size: 11.5px;
-  color: var(--foreground);
-}
-
-/* ---- swim levels ----
- *
- * The tier ladder on /gym/conditioning?p=swim. Same posture as everything else here: rules between
- * rows, no cards, monochrome. The one thing that gets emphasis is PROVENANCE, because the whole
- * table is a mix of published standards and numbers we picked, and the reader has to be able to
- * tell them apart at a glance rather than by reading a paragraph. */
-
-.training .tierlist { border-top: 1px solid var(--border); }
 .training .tier {
   border-bottom: 1px solid var(--border);
   padding: 10px 0;
@@ -906,63 +661,6 @@
   flex-direction: column;
   gap: 4px;
 }
-.training .tier-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.training .tier-name { font-size: 15.5px; font-weight: 600; }
-.training .tier-time {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The level ladder: one column per distance, sized to fit 390px without scrolling sideways. */
-.training .level-table { font-size: 12px; }
-.training .level-table th, .training .level-table td { padding-right: 8px; }
-.training .level-table td { color: var(--muted-foreground); }
-.training .level-table td:first-child { color: var(--foreground); }
-.training .level-table td.met { color: var(--foreground); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.training .level-table tr.you td { color: var(--foreground); font-weight: 600; border-top: 1px solid var(--foreground); }
-/* The ladder row he is on this week. */
-.training .plan-table tr.now td { font-weight: 600; color: var(--foreground); }
-
-/* ---- sub-tabs ----
- *
- * A second level under the discipline tabs, added 2026-08-22 after the swim tab reached 7.9 phone
- * screens and he said the app was "infinite scroll" twice.
- *
- * Deliberately QUIETER than the tabs above them, because they are subordinate and two rows of
- * identically-weighted chips is the inverted hierarchy that made these blocks unreadable in August.
- * Underline for the active one instead of a filled chip: the filled chip is the parent tab's
- * signal and it should mean one thing on this page. Still a 44px row: this is a control. */
-.training .subtabs {
-  display: flex;
-  gap: 18px;
-  border-bottom: 1px solid var(--border);
-  margin: 14px 0 4px;
-}
-.training .subtab {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted-foreground);
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-}
-.training .subtab.on {
-  color: var(--foreground);
-  border-bottom-color: var(--foreground);
-}
-.training .subtab:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
 
 /* The full ladder, collapsed. Its summary has to look like the section headings around it, because
    it IS one: a heading that happens to open. */
@@ -983,74 +681,7 @@
  * Every number sits in HTML beside the drawing at a real size. */
 
 .training .trace { margin-top: 14px; }
-.training .trace-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-.training .trace-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted-foreground);
-}
-.training .trace-range {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--muted-foreground);
-  font-variant-numeric: tabular-nums;
-}
 .training .trace svg { display: block; overflow: visible; }
-.training .trace-area { fill: var(--muted-foreground); opacity: 0.12; stroke: none; }
-/* vector-effect keeps the stroke 1px wide despite preserveAspectRatio="none" stretching the box. */
-.training .trace-line {
-  fill: none;
-  stroke: var(--foreground);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-/* The one threshold that means something: 110 bpm on a lifting session, 170 spm on a run. */
-.training .trace-floor {
-  stroke: var(--muted-foreground);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
-  vector-effect: non-scaling-stroke;
-}
-/* --signal, once, on the value that is true right now: where the session ended. */
-.training .trace-now { fill: var(--signal); }
-.training .trace-foot {
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--muted-foreground);
-  margin-top: 5px;
-}
-
-.training .len-bar { fill: var(--muted-foreground); opacity: 0.55; }
-.training .len-bar.fastest { fill: var(--foreground); opacity: 1; }
-/* A length he stopped after. Drawn as a notch rather than a colour so it survives being read in
-   greyscale and does not spend the accent on something that is not true right now. */
-.training .len-bar.before-rest { opacity: 0.28; }
-
-.training .sstats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
-  gap: 2px 14px;
-  border-top: 1px solid var(--border);
-  padding-top: 10px;
-}
-.training .sstat { display: flex; flex-direction: column; padding: 5px 0; }
-.training .sstat-k {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted-foreground);
-}
-.training .sstat-v { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
 
 /* ---- OFF-PLAN CAPTURE, added 2026-08-27 ------------------------------------------------------
@@ -1098,119 +729,6 @@
 .training .free-card { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }
 .training .free-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
 .training .extra-num.free-ghost::placeholder { color: var(--muted-foreground); font-style: italic; opacity: 1; }
-
-/* ---- weekly volume, /health?s=volume ----
- *
- * The muscle table is six or seven columns on a 390px phone, which is exactly what .table-scroll
- * exists for: the table scrolls inside its own box and the page body never does.
- *
- * .vol-state is a WORD, not a colour, and only the two ends of the scale get any emphasis at all.
- * --signal is reserved on this site for a value that is true right now, and "under the minimum
- * dose" qualifies: it is the one state in this table that is a problem rather than a reading. Past
- * the efficient zone is diminishing returns, not harm, so it is quiet grey and not a warning. */
-.training .vol-table td { padding-top: 9px; padding-bottom: 9px; }
-.training .vol-table td.tnum,
-.training .vol-table th.tnum { text-align: right; font-variant-numeric: tabular-nums; }
-.training .vol-state {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-}
-.training .vol-state.under { color: var(--signal); }
-/* THE TWO NUMBERS SWAPPED PLACES ON 2026-09-02 and this comment described the old arrangement, which
-   is a comment that had become a lie about the line under it. The headline is now the LOADED count,
-   because it is the only one the dose-response curve is denominated in and the only one any gate on
-   this site reads. This line carries the total including jumps, carries and holds, which is the
-   larger and less meaningful figure. Quieter than the number above it because it is a qualifier, not
-   a second headline. `nowrap` is deliberate: breaking the phrase after the digits would read as two
-   separate figures, which is the fault it exists to fix. */
-.training .vol-loaded {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted-foreground);
-  white-space: nowrap;
-  font-weight: 400;
-}
-/* The day headers wrap to two lines instead of forcing a 55px nowrap column each. 'Lower A' over
-   two lines is still the tab label he knows; 'LA' would be a second vocabulary for the same four
-   days. Overrides .plan-table th's nowrap, which is right for a distance and wrong for a name. */
-.training .vol-table th.vol-day { white-space: normal; min-width: 3.4rem; }
-
-/* ---- the day cell, once it started carrying its own exercises ----
- *
- * His third ask, and each time it was the same one: "you're saying glute, lower A, 13.5. Now I have
- * to go up and somehow figure out glutes from lower A from the week, block by block." The number and
- * the exercises behind it were in two different tables and joining them was work he did by eye.
- *
- * IT IS WIDE ON PURPOSE, on his instruction: "I don't care if it doesn't fit or anything. I want to
- * see one table." Four day columns each holding exercise names will not fit 390px and are not meant
- * to. `.table-scroll` already sends it sideways inside its own box, so the page body still does not
- * scroll, which is the invariant that matters. */
-.training .vol-table td.daycell { vertical-align: top; min-width: 8.5rem; }
-.training .vol-table td.daycell .daysum { font-weight: 600; text-align: right; }
-.training .vol-table td.daycell .whichlifts { margin-top: 4px; font-size: 11.5px; line-height: 1.45; }
-/* A synergist counted half, so it reads at half weight and prints its HALF-SET value. Printing the
-   full set count in both cells would make the column stop adding up to the total beside it. */
-.training .vol-table td.daycell .lift.half { color: var(--muted-foreground); }
-/* "half of 2" beside a halved contribution. Smaller and mono, because it is the unit rather than
-   the value: the number is the fact, this says how the number was arrived at. */
-.training .vol-table td.daycell .halfnote { font-family: var(--font-mono); font-size: 10px; }
-/* The source line under the tables. Smaller than a cue and it WRAPS: the first version reused
-   .quiet-inline, whose nowrap is right for a date beside a number and ran the journal name off the
-   right edge of a 390px screen. */
-.training .vol-cite { font-size: 11.5px; line-height: 1.55; }
-
-/* ---- the week, block by block ----
- *
- * Six columns and the last one is a list, so this is the widest thing on the site. It scrolls inside
- * .table-scroll like the muscle table above it, and the two left columns are the ones a thumb needs
- * while reading the right-hand ones, so they get a minimum width rather than collapsing to nothing.
- *
- * THE BLOCK BOUNDARY IS A RULE ACROSS THE ROW, because a `rowSpan` alone does not read as a group
- * once the rows scroll sideways: the merged cell leaves the viewport and the remaining rows look
- * like a flat list. The line is what survives the scroll. */
-.training .weekgrid td { vertical-align: top; }
-.training .weekgrid tr.blockstart > td { border-top: 1px solid var(--foreground); }
-.training .weekgrid tbody tr:not(.blockstart) > td { border-top: none; }
-/* The block column is a fixed proportion rather than a min-width in rem: at 390px a 7rem minimum on
-   two columns leaves the exercise column too narrow to hold a muscle list without wrapping every
-   two words. Percentages let the middle column take what is left. */
-.training .weekgrid td:first-child, .training .weekgrid th:first-child { width: 30%; }
-.training .weekgrid td:last-child, .training .weekgrid th:last-child { width: 3rem; }
-.training .weekgrid .blocklabel { font-weight: 600; margin-top: 2px; }
-/* THE HEADERS WRAP HERE, overriding .plan-table th's nowrap. That nowrap is right for "1.45 km" in
-   a run table and wrong for a three-word column name: at 390px it held the whole table wider than
-   the screen on its own, so every row overflowed to satisfy one header. */
-.training .weekgrid th { white-space: normal; }
-
-/* AN EMPTY REST IS SET IN THE PROSE FACE, not mono, and not grey enough to skim past. It is the one
-   cell in this table that is an absence rather than a measurement, and nine of them are the whole
-   reason the table exists. */
-.training .weekgrid .emptyrest {
-  font-style: italic;
-  color: var(--muted-foreground);
-}
-/* The muscle list sits under its exercise rather than in a column of its own, because as a sixth
-   column it was off the right edge of a 390px screen. Smaller than the exercise name: it is the
-   evidence for the row, not the row. */
-/* FLEX-WRAP, not a wrapping line of inline spans, and the difference is that flex CANNOT overflow
-   here: an inline run of nowrap items will happily push a table cell wider than its column, which is
-   exactly what it did. Each muscle stays on one line, the list breaks between them. */
-.training .weekgrid .feeds {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 5px;
-  row-gap: 1px;
-  font-size: 12.5px;
-  line-height: 1.5;
-  margin-top: 3px;
-}
-/* A synergist counts half, so it reads at half weight. The number beside it is the same number the
-   muscle table prints; `over` is the same threshold `.vol-state` uses, said in the same word. */
-.training .weekgrid .feed { white-space: nowrap; }
-.training .weekgrid .feed.half { color: var(--muted-foreground); }
-.training .weekgrid .over { font-family: var(--font-mono); font-size: 10.5px; color: var(--muted-foreground); }
 
 /* ---- what happened at this exercise, /gym, added 2026-08-31 ----------------------------------
  *
@@ -1389,59 +907,6 @@
   text-underline-offset: 3px;
 }
 .training .alt-chip:hover { color: var(--foreground); }
-
-/* ---- a bar per session (2026-09-27) ---- */
-.training .sbars { margin: 14px 0 6px; color: var(--foreground); }
-.training .sbars svg { display: block; width: 100%; max-width: 520px; height: auto; }
-.training .sbars .sv { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
-.training .sbars .sd { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
-.training .sbars figcaption {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin-top: 2px;
-}
-
-/* ---- the swim ladder as a staircase (2026-09-27) ---- */
-.training .ladder-track { margin: 14px 0 8px; color: var(--foreground); }
-.training .ladder-track svg { display: block; width: 100%; max-width: 520px; height: auto; }
-.training .ladder-track rect.off { fill: currentColor; opacity: 0.22; }
-.training .ladder-track rect.on { fill: var(--signal); }
-.training .ladder-track .lv,
-.training .ladder-track .lw { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
-.training .ladder-track line.goal { stroke: currentColor; stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.7; }
-.training .ladder-track line.you { stroke: currentColor; stroke-width: 1.5; }
-.training .ladder-track figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
-.training .ladder-track figcaption i { display: inline-block; width: 16px; height: 0; margin-right: 6px; vertical-align: 3px; border-top: 1.5px solid var(--foreground); }
-.training .ladder-track figcaption i.k-goal { border-top-style: dashed; opacity: 0.7; }
-.training .ladder-track .lwk { margin-left: auto; }
-
-/* ---- the year of weight with lifting days (2026-09-27) ---- */
-.training .yearlifts { margin: 12px 0 10px; color: var(--foreground); }
-.training .yearlifts svg { display: block; width: 100%; max-width: 560px; height: auto; }
-.training .yearlifts .mgrid { stroke: currentColor; stroke-width: 0.5; opacity: 0.12; }
-.training .yearlifts .mlab { font-family: var(--font-mono), ui-monospace, monospace; font-size: 8px; fill: var(--muted-foreground); }
-.training .yearlifts figcaption { display: flex; gap: 16px; margin-top: 4px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
-.training .yearlifts figcaption i { display: inline-block; margin-right: 6px; background: var(--foreground); vertical-align: 2px; }
-.training .yearlifts .k-line { width: 14px; height: 1.6px; }
-.training .yearlifts .k-tick { width: 1.5px; height: 9px; vertical-align: -1px !important; opacity: 0.7; }
-
-/* The last ten swims (SwimBars on /swim): the swim as a faint bar, its longest unbroken piece inside
-   it in full ink, the newest piece in --signal because it is the number the ladder is measured from
-   right now. */
-.training .swimbars { margin: 10px 0 6px; color: var(--foreground); }
-.training .swimbars svg { display: block; width: 100%; max-width: 520px; height: auto; }
-.training .swimbars rect.swum { fill: currentColor; opacity: 0.18; }
-.training .swimbars rect.piece { fill: currentColor; opacity: 0.85; }
-.training .swimbars rect.piece.now { fill: var(--signal); opacity: 1; }
-.training .swimbars .sv,
-.training .swimbars .sd { font-family: var(--font-mono), ui-monospace, monospace; font-size: 9px; fill: var(--muted-foreground); }
-.training .swimbars figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 4px; font-family: var(--font-mono), ui-monospace, monospace; font-size: 11px; color: var(--muted-foreground); }
-.training .swimbars figcaption i { display: inline-block; width: 12px; height: 10px; margin-right: 6px; vertical-align: -1px; background: var(--foreground); border-radius: 1.5px; }
-.training .swimbars figcaption i.k-swum { opacity: 0.18; }
-.training .swimbars figcaption i.k-piece { opacity: 0.85; }
 
 /* Two blocks side by side on the wide column (1120 above 1024), for the training pages that opted
    into it. The charts with text inside the viewBox keep their max-width: scaled to 1120 their 9px

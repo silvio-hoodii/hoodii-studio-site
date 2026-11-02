@@ -25,7 +25,7 @@
  *   node scripts/lint-page-text.mjs             # exits 1 on any finding
  *   node scripts/lint-page-text.mjs --selftest  # runs first on every invocation anyway
  */
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
@@ -57,7 +57,6 @@ const CONTENT = [
   ['content/swim/plan.json', /^\.(?:pullBuoyRule|structure\.note|theGoal\.(?:target|whatThatActuallyIs)|theOneTechniqueChange\.what|cues\[\d+\]\.(?:cue|test|name)|structure\.calibration\.(?:what|test)|structure\.ladder\[\d+\]\.(?:piece|rest|note))$/],
   ['content/swim/coaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:do|check|name)$/],
   ['content/swim/teaching.json', /^\.groups\[\d+\]\.items\[\d+\]\.(?:say|show|watch|see)$|^\.beforeYouStart\.body$/],
-  ['content/curio/games.json', /^\.groups\[\d+\]\.(?:name|items\[\d+\]\.(?:name|learn|do))$/],
 ];
 
 function jsonStrings(obj, path = '', out = []) {

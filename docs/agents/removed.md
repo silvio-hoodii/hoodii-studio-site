@@ -4,6 +4,10 @@ moved: 2026-10-18, verbatim from AGENTS.md, which now points here. Not re-audite
 
 # Removed layers: the portfolio and the 3D world
 
+## The site was stripped on 2026-11-02
+
+His ruling, 2026-11-02: *"lets turn off kitchen os then, get rid of goodreads, gym might come back but not sure ... hoodii studio as a whole has not been used ... lets strip it down"*. Kitchen, Reading, Curio, Music (the page), Health, Swim, Bike, the usage beacon and the service worker are gone, and `/` is a static page: his name, a link to the gym, no database and no network at render. **It must never again regenerate from data**, and no new copy about him goes on it. Kept on purpose: `/gym` and its write API (parked, unchanged), `/login`, `/api/unlock`, `/callback`, and `/api/music/sync` with its hourly cron. Every table is kept. The tag `before-strip-2026-11-02` (and the commit it names) recovers everything.
+
 ## The portfolio layer was removed on 2026-09-15
 
 From 2026-08-11 the front page carried a second job as a portfolio: a résumé paragraph ("twelve

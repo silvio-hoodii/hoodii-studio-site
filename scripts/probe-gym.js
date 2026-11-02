@@ -55,22 +55,17 @@
  * from localStorage before you close the tab.
  */
 (() => {
-  /* EVERY write route under /gym/api, /swim/api AND /bike/api must be listed here. A route missing from this
+  /* EVERY write route under /gym/api must be listed here. A route missing from this
      list is not stubbed, so the probe posts it to the real Neon store for real.
      /gym/api/note was added to the app on 2026-08-16 and not to this list, and the first probe of
      the note box went out over the network. It was refused, but only because the browser had no
      unlock cookie: with one, a test would have written a fake note into his actual log. Adding a
      write route means adding it here in the same change.
-     /swim/api/baseline is the same route /gym/api/swim-baseline was: it moved on 2026-08-26 when
-     swim left /gym, and scripts/lint-probe-routes.mjs was widened to keep watching it there.
-     /bike/api/ride was added on 2026-08-27, BEFORE anything calls it: /bike is Phase C and has no
-     page. A route listed here that no test exercises costs nothing; a route this list is missing on
-     the day somebody builds the form costs a fake ride in the real store. */
+     (The swim and bike write routes left with those pages on 2026-11-02.) */
   const WRITE_ROUTES = [
     '/gym/api/set',
     '/gym/api/finish',
     '/gym/api/note',
-    '/swim/api/baseline',
   ];
   /* Stubbed too, so the unlock-and-flush path can be exercised without a password and without
      setting a real cookie. What is under test here is what the CLIENT does once the server has
@@ -351,44 +346,6 @@
       return { pass: before !== after && onNow === wanted, detail: { before, after, tabClicked: wanted, tabOnNow: onNow } };
     },
 
-    /* All five training routes are reachable from here, and the nav does NOT answer to `.tab`.
-       Both halves are real defects that happened. Silvio, 2026-08-16: "There is no way for me to go
-       to conditioning other than actually type in the URL... it's not evident that it's a clickable
-       piece of text." The fix put chips at the top of both pages. The first version of those chips
-       carried className="tab", which is what dayTabsSwitch selects, so the harness clicked through,
-       navigated off /gym, and SEVENTEEN tests failed with "no set row" and "no note box". A cascade
-       like that says something is broken but not what. This says what.
-
-       WAS TWO CHIPS UNTIL 2026-08-27: Workout and The week, pointing at /gym and
-       /gym/conditioning. That second route is deleted and its contents are four routes now, so this
-       asserts the five that exist. Asserting a COUNT and the exact set, not just "contains /gym",
-       because a nav that quietly loses a route is the failure this test is for, and a nav that
-       still lists a deleted one is the other half of it.
-       Does not navigate, so it stays in the normal run. */
-    async surfaceNavIsPresentAndDistinct() {
-      const nav = $('.surface-nav');
-      if (!nav) return { pass: false, detail: 'no .surface-nav on the page' };
-      const want = ['/gym', '/swim', '/bike', '/health'];
-      const links = $$('.surf-tab', nav);
-      const hrefs = links.map((a) => new URL(a.href).pathname);
-      const missing = want.filter((w) => !hrefs.includes(w));
-      const extra = hrefs.filter((h) => !want.includes(h));
-      const dayTabTexts = $$('.tab').map((t) => text(t));
-      /* "conditioning" stays in this regex on purpose. It is the word that leaked last time, and a
-         test that stops looking for the specific string that broke it is a test that has forgotten
-         why it exists. */
-      const leaked = dayTabTexts.filter((t) => /workout|conditioning|swim|run|bike|body/i.test(t || ''));
-      return {
-        pass:
-          links.length === want.length &&
-          missing.length === 0 &&
-          extra.length === 0 &&
-          leaked.length === 0 &&
-          links.filter((a) => a.classList.contains('on')).length === 1,
-        detail: { hrefs, missing, extra, dayTabTexts, leakedIntoDayTabs: leaked, activeCount: links.filter((a) => a.classList.contains('on')).length },
-      };
-    },
-
     /* THE WHOLE DAY IS ALWAYS SHOWN. Replaced budgetFilters on 2026-08-22.
      *
      * The old test drove the 25/45/60 chips and asserted that a short budget HID exercises. That
@@ -522,7 +479,7 @@
        count against itself and saw no change, and the harness was counting his notes as exercises.
 
        The discriminator is data-slot, which GymClient puts on every real card and nothing else has.
-       Same family as surfaceNavIsPresentAndDistinct: on this surface a class name is an API, and
+       On this surface a class name is an API, and
        this is the third time it has been borrowed (`.tab` cost 17 failing tests, then swap-revert).
        Does not navigate and writes nothing. */
     async exSelectorMeansExercise() {
