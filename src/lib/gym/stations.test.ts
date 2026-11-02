@@ -1,7 +1,7 @@
 /* Run: node --experimental-strip-types src/lib/gym/stations.test.ts
  * In scripts/verify.mjs. */
 import {
-  STATIONS, GET_READY_SEC, MOVE_SEC, ROUND_REST_SEC, SWITCH_SEC,
+  STATIONS, GET_READY_SEC, assignment, picked, MOVE_SEC, ROUND_REST_SEC, SWITCH_SEC,
   logId, phaseAt, stationAt, timeline, totalSeconds,
 } from './stations.ts';
 
@@ -69,6 +69,29 @@ for (let a = 0; a < 4; a++) for (let b = 0; b < 4; b++) for (let c = 0; c < 4; c
   }
 }
 check('wraps round', stationAt(3, 1) === 0 && stationAt(2, 5) === 3);
+
+/* ---- what the screen tells each person ---- */
+const noPicks = {};
+const a0 = assignment('first', 0, 12, 1, 'full', noPicks);
+check('person starting at 2 is on station 2', a0.station.id === STATIONS[1]!.id);
+check('exercise 1 is the legs row', a0.now?.id === STATIONS[1]!.legs[0]!.id);
+const full = assignment('second', 0, 12, 0, 'full', noPicks);
+const legs = assignment('second', 0, 12, 0, 'legs', noPicks);
+check('full body gets the upper row', full.now?.id === STATIONS[0]!.upper[0]!.id);
+check('legs only gets the second legs row', legs.now?.id === STATIONS[0]!.legs2[0]!.id);
+check('after exercise 2 the next station is named', full.nextStation?.id === STATIONS[1]!.id && full.next?.id === STATIONS[1]!.legs[0]!.id);
+const sw = assignment('switch', 0, 12, 0, 'full', noPicks);
+check('switch asks for the exercise just done', sw.justDid?.id === STATIONS[0]!.legs[0]!.id && sw.now === null);
+const mv = assignment('move', 0, 12, 0, 'legs', noPicks);
+check('move asks for exercise 2', mv.justDid?.id === STATIONS[0]!.legs2[0]!.id);
+const last = assignment('second', 11, 12, 0, 'full', noPicks);
+check('the very last exercise has nothing after it', last.next === null && last.nextStation === null);
+const done = assignment('done', 11, 12, 0, 'full', noPicks);
+check('done still asks for the last reps', done.justDid != null && done.now === null);
+const chosen = { 'bands:legs2': 'monster-walk' };
+check('a pick is honoured', picked(STATIONS[2]!, 'legs2', chosen).id === 'monster-walk');
+check('band walks are offered', ['band-side-walk', 'monster-walk'].every((id) => STATIONS[2]!.legs2.some((e) => e.id === id)));
+check('raises are offered', ['lateral-raise', 'rear-raise', 'front-raise'].every((id) => STATIONS[3]!.upper.some((e) => e.id === id)));
 
 if (failed) {
   console.error(`${failed} failed`);

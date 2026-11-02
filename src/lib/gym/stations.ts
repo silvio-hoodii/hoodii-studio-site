@@ -96,7 +96,8 @@ export const STATIONS: Station[] = [
       { id: 'band-pull-apart', name: 'Band pull-apart', gear: ['bands'], cue: 'Arms straight at chest height, pull the band wide, shoulder blades together.' },
     ],
     legs2: [
-      { id: 'band-side-walk', name: 'Band side walk', gear: ['bands'], cue: 'Half squat, band above the knees. Small steps, knees pushing out, change direction halfway.' },
+      { id: 'band-side-walk', name: 'Banded side walk', gear: ['bands'], cue: 'Half squat, band above the knees. Small steps, knees pushing out, change direction halfway.' },
+      { id: 'monster-walk', name: 'Monster walk', gear: ['bands'], cue: 'Half squat, band above the knees. Big diagonal steps forward, then backward, knees pushing out.' },
       { id: 'band-clamshell', name: 'Banded clamshell', gear: ['bands'], sided: true, cue: 'On your side, heels together, open the knee without rolling back.' },
       { id: 'band-squat-pulse', name: 'Banded squat', gear: ['bands'], cue: 'Band above the knees, push them out the whole way down and up.' },
     ],
@@ -111,10 +112,12 @@ export const STATIONS: Station[] = [
       { id: 'step-up', name: 'Step-up', gear: [], sided: true, cue: 'Needs a solid step. Whole foot on it, push through that heel, no bounce off the back foot.' },
     ],
     upper: [
-      { id: 'lateral-raise', name: 'Lateral raise', gear: ['twos'], cue: 'The 2s. Slight bend in the elbows, up to shoulder height, slow down.' },
-      { id: 'curl', name: 'Curl', gear: ['twos'], cue: 'The 2s. Elbows pinned to the ribs, three seconds down.' },
-      { id: 'triceps-ext', name: 'Overhead triceps extension', gear: ['twos'], cue: 'The 2s. Elbows point up and stay close to the head.' },
-      { id: 'front-raise', name: 'Front raise', gear: ['ones'], cue: 'The 1s. Up to shoulder height, no swing.' },
+      { id: 'lateral-raise', name: 'Lateral raise', gear: ['twos'], cue: 'Slight bend in the elbows, up to shoulder height, slow down.' },
+      { id: 'rear-raise', name: 'Rear raise', gear: ['twos'], cue: 'Hinge forward, flat back. Arms out wide, shoulder blades together.' },
+      { id: 'front-raise', name: 'Front raise', gear: ['twos'], cue: 'Up to shoulder height, no swing.' },
+      { id: 'curl', name: 'Curl', gear: ['twos'], cue: 'Elbows pinned to the ribs, three seconds down.' },
+      { id: 'triceps-ext', name: 'Overhead triceps extension', gear: ['twos'], cue: 'Elbows point up and stay close to the head.' },
+      { id: 'light-lateral', name: 'High-rep lateral raise', gear: ['ones'], cue: 'Nonstop for the whole time, up to shoulder height.' },
     ],
     legs2: [
       { id: 'frog-pump', name: 'Frog pump', gear: [], cue: 'On your back, soles together, knees wide. Fast squeeze at the top.' },
@@ -123,6 +126,58 @@ export const STATIONS: Station[] = [
     ],
   },
 ];
+
+export type Mode = 'legs' | 'full';
+
+/** What the hands hold, in the words on the gear. */
+export function holdWord(ex: StationExercise): string {
+  const g = ex.gear[0];
+  if (!g) return 'Bodyweight';
+  return { tens: 'Pair of 10s', twelve: 'The 12', bands: 'Band', ones: 'The 1s', twos: 'The 2s' }[g];
+}
+
+export type Picks = Record<string, string>;
+export type SlotKey = 'legs' | 'upper' | 'legs2';
+
+export function picked(station: Station, slot: SlotKey, picks: Picks): StationExercise {
+  const list = station[slot];
+  return list.find((e) => e.id === picks[`${station.id}:${slot}`]) ?? list[0]!;
+}
+
+export interface Assignment {
+  station: Station;
+  /** Being done right now. */
+  now: StationExercise | null;
+  /** What comes after now. */
+  next: StationExercise | null;
+  /** Where next happens, when that is a different station. */
+  nextStation: Station | null;
+  /** Just finished, so its reps can be written down. */
+  justDid: StationExercise | null;
+  /** The station justDid was at. */
+  justDidAt: Station | null;
+}
+
+/** Exactly what one person is doing at one moment. Person N starts at station N, which is what makes
+ *  a collision impossible; the screen reads every line from here. */
+export function assignment(kind: PhaseKind, step: number, totalSteps: number, startAt: number, mode: Mode, picks: Picks): Assignment {
+  const station = STATIONS[stationAt(startAt, step)]!;
+  const ex1 = picked(station, 'legs', picks);
+  const ex2 = picked(station, mode === 'full' ? 'upper' : 'legs2', picks);
+  const hasNext = step + 1 < totalSteps;
+  const nextStation = hasNext ? STATIONS[stationAt(startAt, step + 1)]! : null;
+  const nextEx1 = nextStation ? picked(nextStation, 'legs', picks) : null;
+  const base = { station, now: null, next: null, nextStation: null, justDid: null, justDidAt: null };
+  switch (kind) {
+    case 'ready': return { ...base, next: ex1 };
+    case 'first': return { ...base, now: ex1, next: ex2 };
+    case 'switch': return { ...base, next: ex2, justDid: ex1, justDidAt: station };
+    case 'second': return { ...base, now: ex2, next: nextEx1, nextStation };
+    case 'move':
+    case 'rest': return { ...base, next: nextEx1, nextStation, justDid: ex2, justDidAt: station };
+    case 'done': return { ...base, justDid: ex2, justDidAt: station };
+  }
+}
 
 export const WARMUP = ['Squat ×10', 'Glute bridge ×10', 'Reverse lunge ×5 each leg', 'Arm circles ×10 each way'];
 

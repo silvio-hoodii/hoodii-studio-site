@@ -3,32 +3,49 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   DEFAULT_ROUNDS, DEFAULT_WORK, ROUND_OPTIONS, STATIONS, WARMUP, WORK_OPTIONS,
-  logId, phaseAt, stationAt, totalSeconds,
-  type PhaseKind, type Station, type StationExercise,
+  assignment, holdWord, logId, phaseAt, picked, totalSeconds,
+  type Assignment, type Mode, type PhaseKind, type Picks, type SlotKey, type Station, type StationExercise,
 } from '@/lib/gym/stations';
 
 /* THE STATIONS TAB. The reasoning for the structure is at the top of src/lib/gym/stations.ts.
+ *
+ * REBUILT THE SAME DAY IT SHIPPED, on his words: "I think we can do banded walks ... Why isn't it
+ * there?" and "exercise missing for upper body, like [raises]", "not explicit enough". Both were
+ * already there, inside dropdowns and under the label "2 Legs". So: every option is on the screen,
+ * each person is named with what they are doing, and during the session the screen says NOW and NEXT
+ * for each of them instead of showing a form. Do not put a dropdown back.
  *
  * Rendered only after a tap (or the restore effect in GymClient), so it never runs on the server and
  * can read localStorage in its initial state. Nothing here writes except `onLog`, which is GymClient's
  * `write` and so inherits the offline queue, the 401 handling and FREE_DAY. */
 
-const PICKS_KEY = 'gym:stations:picks';
+const SETUP_KEY = 'gym:stations:setup';
 const CLOCK_KEY = 'gym:stations:clock';
 
-type SlotKey = 'legs' | 'upper' | 'legs2';
-const SLOTS: { key: SlotKey; label: string }[] = [
-  { key: 'legs', label: '1 Legs' },
-  { key: 'upper', label: '2 Upper' },
-  { key: 'legs2', label: '2 Legs' },
+const SLOTS: { key: SlotKey; label: string; who: string }[] = [
+  { key: 'legs', label: 'Exercise 1: legs', who: 'Everyone' },
+  { key: 'upper', label: 'Exercise 2: upper body', who: 'Full body people' },
+  { key: 'legs2', label: 'Exercise 2: legs', who: 'Legs only people' },
 ];
+
+const PEOPLE = ['Me', 'Friend 1', 'Friend 2'];
+
+interface Setup {
+  picks: Picks;
+  count: number;
+  /** Friend names, typed once. Stays on this phone. */
+  names: string[];
+  modes: Mode[];
+  rounds: number;
+  workSec: number;
+}
+const DEFAULT_SETUP: Setup = {
+  picks: {}, count: 3, names: ['', '', ''], modes: ['full', 'full', 'full'], rounds: DEFAULT_ROUNDS, workSec: DEFAULT_WORK,
+};
 
 interface Clock {
   /** The session date it was started on. A clock from another day is thrown away on load. */
   date: string;
-  rounds: number;
-  workSec: number;
-  start: number;
   /** Wall-clock ms when elapsed was 0. Null while paused. */
   startedAt: number | null;
   /** Seconds elapsed at the moment of pausing. */
@@ -44,22 +61,49 @@ function readJson<T>(key: string, fallback: T): T {
   }
 }
 
-const PHASE_LABEL: Record<PhaseKind, string> = {
+const PHASE: Record<PhaseKind, string> = {
   ready: 'Get to your station',
-  first: 'Exercise 1',
-  switch: 'Switch',
-  second: 'Exercise 2',
-  move: 'Move',
-  rest: 'Rest',
-  done: 'Done',
+  first: 'Go: exercise 1',
+  switch: 'Stop. Get ready for exercise 2',
+  second: 'Go: exercise 2',
+  move: 'Stop. Move to the next station',
+  rest: 'Rest. Round finished',
+  done: 'Finished',
 };
 
 function mmss(sec: number): string {
   return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 }
 
-function pickFrom(list: StationExercise[], id: string | undefined): StationExercise {
-  return list.find((e) => e.id === id) ?? list[0]!;
+function PersonCard({ name, a, mine }: { name: string; a: Assignment; mine: boolean }) {
+  const main = a.now;
+  const moving = !a.now && a.nextStation;
+  const shown = main ?? a.next;
+  return (
+    <div className={`st-person${mine ? ' mine' : ''}`}>
+      <div className="st-person-head">
+        <span className="st-person-name">{name}</span>
+        <span className="quiet">{moving ? `Go to ${a.nextStation!.name}` : `At ${a.station.name}`}</span>
+      </div>
+      {shown ? (
+        <>
+          <div className="st-tag">{main ? 'Now' : 'Next'}</div>
+          <div className="st-now">{shown.name}</div>
+          <div className="st-hold">Use: {holdWord(shown)}{shown.sided ? '. Change sides at the halfway beep' : ''}</div>
+          {mine && <div className="st-cue">{shown.cue}</div>}
+        </>
+      ) : (
+        <div className="st-now">Done</div>
+      )}
+      {main && (
+        <div className="st-then">
+          {a.next
+            ? <>Next: {a.next.name}{a.nextStation ? `, move to ${a.nextStation.name}` : ', same station'}</>
+            : 'Last one'}
+        </div>
+      )}
+    </div>
+  );
 }
 
 interface Logged { id: string; reps: string }
@@ -72,25 +116,25 @@ interface Props {
 }
 
 export default function StationsTab({ date, nextName, logged, onLog }: Props) {
-  const [picks, setPicks] = useState<Record<string, string>>(() => readJson(PICKS_KEY, {}));
+  const [setup, setSetup] = useState<Setup>(() => ({ ...DEFAULT_SETUP, ...readJson<Partial<Setup>>(SETUP_KEY, {}) }));
   const [clock, setClock] = useState<Clock | null>(() => {
     const saved = readJson<Clock | null>(CLOCK_KEY, null);
     return saved?.date === date ? saved : null;
   });
-  const [rounds, setRounds] = useState<number>(() => clock?.rounds ?? DEFAULT_ROUNDS);
-  const [workSec, setWorkSec] = useState<number>(() => clock?.workSec ?? DEFAULT_WORK);
-  const [start, setStart] = useState<number>(() => clock?.start ?? 0);
   const [now, setNow] = useState(() => Date.now());
   const [reps, setReps] = useState<Record<string, string>>({});
+  const { picks, count, modes, names, rounds, workSec } = setup;
+  const nameOf = (i: number) => (i > 0 && names[i]?.trim()) || PEOPLE[i]!;
 
   const config = useMemo(() => ({ rounds, workSec }), [rounds, workSec]);
   const elapsed = clock ? (clock.startedAt != null ? (now - clock.startedAt) / 1000 : clock.pausedAt) : 0;
-  const reading = clock ? phaseAt(elapsed, { rounds: clock.rounds, workSec: clock.workSec }) : null;
+  const reading = clock ? phaseAt(elapsed, config) : null;
   const running = clock?.startedAt != null && !reading?.done;
+  const totalSteps = rounds * STATIONS.length;
 
   useEffect(() => {
-    try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch { /* a private window */ }
-  }, [picks]);
+    try { localStorage.setItem(SETUP_KEY, JSON.stringify(setup)); } catch { /* a private window */ }
+  }, [setup]);
   useEffect(() => {
     try {
       if (clock) localStorage.setItem(CLOCK_KEY, JSON.stringify(clock));
@@ -127,12 +171,12 @@ export default function StationsTab({ date, nextName, logged, onLog }: Props) {
     };
   }, [running]);
 
-  /* THE BEEPS ARE THE ONLY THING THE OTHER TWO GET. Three short counting into any change, a long one
-     on the change, and one at the halfway point of work for the exercises done one side at a time.
-     The context is made inside the Start tap, because a browser refuses sound without a gesture. */
+  /* Three short counting into any change, a long one on the change, one at the halfway point of work
+     for the exercises done one side at a time. The context is made inside the Start tap, because a
+     browser refuses sound without a gesture. */
   const audio = useRef<AudioContext | null>(null);
   /* A RELOAD MID-SESSION KEEPS THE CLOCK AND LOSES THE SOUND, because the new page has had no tap yet.
-     The other two only have the beeps, so that state gets a button instead of silence. */
+     That state gets a button instead of silence. */
   const [soundOn, setSoundOn] = useState(false);
   function beep(ms: number, hz: number, afterMs = 0) {
     const ctx = audio.current;
@@ -197,7 +241,8 @@ export default function StationsTab({ date, nextName, logged, onLog }: Props) {
     const t = Date.now();
     lastSound.current = '';
     setNow(t);
-    setClock({ date, rounds, workSec, start, startedAt: t, pausedAt: 0 });
+    setClock({ date, startedAt: t, pausedAt: 0 });
+    window.scrollTo(0, 0);
   }
   function pause() {
     if (!clock || clock.startedAt == null) return;
@@ -225,127 +270,172 @@ export default function StationsTab({ date, nextName, logged, onLog }: Props) {
     setClock(null);
   }
 
-  function logRow(ex: StationExercise, station: Station, ghost: string) {
-    const typed = reps[ex.id] ?? '';
-    const value = typed !== '' ? typed : ghost;
-    if (value === '') return;
-    onLog(ex, station, value);
-    setReps((p) => ({ ...p, [ex.id]: '' }));
+  const setMode = (i: number, m: Mode) =>
+    setSetup((s) => ({ ...s, modes: s.modes.map((x, j) => (j === i ? m : x)) }));
+
+  /* ---- during the session ---- */
+  if (clock && reading) {
+    const { kind, step } = reading.phase;
+    const views = PEOPLE.slice(0, count).map((_, i) => ({
+      name: nameOf(i),
+      a: assignment(kind, step, totalSteps, i, modes[i] ?? 'full', picks),
+    }));
+    const mine = views[0]!.a;
+    const toLog = mine.justDid;
+    const done = toLog ? logged.filter((l) => l.id === logId(toLog)) : [];
+    const ghost = done.length ? done[done.length - 1]!.reps : '';
+    const unit = toLog ? (toLog.unit ?? (toLog.sided ? 'reps each side' : 'reps')) : '';
+    const save = () => {
+      if (!toLog || !mine.justDidAt) return;
+      const value = (reps[toLog.id] ?? '') !== '' ? reps[toLog.id]! : ghost;
+      if (value === '') return;
+      onLog(toLog, mine.justDidAt, value);
+      setReps((p) => ({ ...p, [toLog.id]: '' }));
+    };
+    const stationNo = (step % STATIONS.length) + 1;
+    const work = kind === 'first' || kind === 'second';
+    return (
+      <div className="st">
+        <div className={`st-clock${work ? ' work' : ''}`}>
+          <div className="st-phase">{PHASE[kind]}</div>
+          {!reading.done && <div className="st-clock-time tnum">{mmss(reading.remaining)}</div>}
+          {!reading.done && (
+            <div className="quiet">
+              Round {reading.phase.round} of {rounds}, turn {stationNo} of {STATIONS.length}
+            </div>
+          )}
+          {running && !soundOn && <button className="btn st-sound" onClick={ensureAudio}>Turn sound on</button>}
+        </div>
+
+        {toLog && (
+          <div className="st-log">
+            <div className="st-log-q">{toLog.name}: how many did you do?</div>
+            <div className="extra-row">
+              <input
+                className={`extra-num${ghost ? ' free-ghost' : ''}`}
+                inputMode="numeric"
+                value={reps[toLog.id] ?? ''}
+                placeholder={ghost ? `${ghost} ${unit}` : unit}
+                aria-label={`${toLog.name} ${unit}`}
+                onChange={(e) => {
+                  /* Digits only: "12 each" would reach the log as a set with no number. */
+                  const digits = e.target.value.replace(/\D/g, '');
+                  setReps((p) => ({ ...p, [toLog.id]: digits }));
+                }}
+              />
+              <button className="btn" onClick={save} disabled={!(reps[toLog.id] || ghost)}>Save</button>
+            </div>
+            {done.length > 0 && <div className="extra-item tnum">Saved: {done.map((d) => d.reps).join(' · ')}</div>}
+          </div>
+        )}
+
+        {!reading.done && views.map((v, i) => <PersonCard key={v.name} name={v.name} a={v.a} mine={i === 0} />)}
+
+        <div className="st-actions">
+          {!reading.done && (clock.startedAt != null
+            ? <button className="ghost" onClick={pause}>Pause</button>
+            : <button className="ghost" onClick={resume}>Resume</button>)}
+          {!reading.done && <button className="ghost" onClick={skip}>Skip</button>}
+          <button className="ghost" onClick={stop}>{reading.done ? 'Close' : 'End session'}</button>
+        </div>
+      </div>
+    );
   }
 
-  const liveAt = clock && reading ? stationAt(clock.start, reading.phase.step) : null;
-  const shown = clock && reading && !reading.done && liveAt != null ? [STATIONS[liveAt]!] : STATIONS;
-  const nextStation = clock && reading && !reading.done
-    ? STATIONS[stationAt(clock.start, reading.phase.step + 1)]!
-    : null;
-
+  /* ---- before it ---- */
   return (
     <div className="st">
       <div className="count" style={{ marginTop: 22 }}>Stations</div>
       <p className="lede" style={{ marginTop: 6 }}>Next on the programme: {nextName}.</p>
 
-      {!clock && (
-        <>
-          <div className="st-setup">
-            <div className="st-choice">
-              <span className="quiet">Rounds</span>
-              {ROUND_OPTIONS.map((n) => (
-                <button key={n} className={`st-chip${rounds === n ? ' on' : ''}`} onClick={() => setRounds(n)}>{n}</button>
-              ))}
-            </div>
-            <div className="st-choice">
-              <span className="quiet">Work</span>
-              {WORK_OPTIONS.map((n) => (
-                <button key={n} className={`st-chip${workSec === n ? ' on' : ''}`} onClick={() => setWorkSec(n)}>{n}s</button>
-              ))}
-            </div>
-          </div>
-          <details className="st-warm">
-            <summary>Warm-up</summary>
-            <ul>{WARMUP.map((w) => <li key={w}>{w}</li>)}</ul>
-          </details>
-          <button className="btn st-go" onClick={begin}>
-            Start at {STATIONS[start]!.name}, {Math.round(totalSeconds(config) / 60)} min
+      <h2 className="st-step">1. Who is training</h2>
+      <div className="st-choice">
+        {[1, 2, 3].map((n) => (
+          <button
+            key={n}
+            className={`st-opt${count === n ? ' on' : ''}`}
+            onClick={() => setSetup((s) => ({ ...s, count: n }))}
+          >
+            {n === 1 ? 'Just me' : `${n} people`}
           </button>
-        </>
-      )}
-
-      {clock && reading && (
-        <div className={`st-clock${reading.phase.kind === 'first' || reading.phase.kind === 'second' ? ' work' : ''}`}>
-          <div className="st-clock-label">
-            {PHASE_LABEL[reading.phase.kind]}
-            {!reading.done && <span className="quiet"> Round {reading.phase.round} of {clock.rounds}</span>}
+        ))}
+      </div>
+      {PEOPLE.slice(0, count).map((name, i) => (
+        <div className="st-who" key={name}>
+          <div className="st-person-head">
+            {i === 0
+              ? <span className="st-person-name">{name}</span>
+              : (
+                <input
+                  className="st-name"
+                  value={names[i] ?? ''}
+                  placeholder={name}
+                  aria-label={`${name} name`}
+                  autoCapitalize="words"
+                  onChange={(e) => setSetup((s) => ({ ...s, names: s.names.map((x, j) => (j === i ? e.target.value : x)) }))}
+                />
+              )}
+            <span className="quiet">Starts at {STATIONS[i]!.name}</span>
           </div>
-          {!reading.done && <div className="st-clock-time tnum">{mmss(reading.remaining)}</div>}
-          {!reading.done && nextStation && (reading.phase.kind === 'move' || reading.phase.kind === 'rest') && (
-            <div className="st-clock-next">Next: {nextStation.name}</div>
-          )}
-          <div className="st-clock-actions">
-            {running && !soundOn && <button className="btn" onClick={ensureAudio}>Turn sound on</button>}
-            {!reading.done && (clock.startedAt != null
-              ? <button className="ghost" onClick={pause}>Pause</button>
-              : <button className="ghost" onClick={resume}>Resume</button>)}
-            {!reading.done && <button className="ghost" onClick={skip}>Skip</button>}
-            <button className="ghost" onClick={stop}>{reading.done ? 'Close' : 'End'}</button>
+          <div className="st-choice">
+            <button className={`st-opt${modes[i] === 'legs' ? ' on' : ''}`} onClick={() => setMode(i, 'legs')}>Legs only</button>
+            <button className={`st-opt${modes[i] === 'full' ? ' on' : ''}`} onClick={() => setMode(i, 'full')}>Full body</button>
           </div>
         </div>
-      )}
+      ))}
 
-      {shown.map((station) => {
-        const at = STATIONS.indexOf(station);
-        return (
-          <div className={`st-card${!clock && start === at ? ' on' : ''}`} key={station.id}>
-            <div className="st-head">
-              <span className="fill-name">{station.name}</span>
-              {!clock && (
-                <button className="swap-toggle" onClick={() => setStart(at)} aria-pressed={start === at}>
-                  {start === at ? 'You start here' : 'Start here'}
-                </button>
-              )}
-            </div>
-            {SLOTS.map(({ key, label }) => {
-              const list = station[key];
-              const ex = pickFrom(list, picks[`${station.id}:${key}`]);
-              const done = logged.filter((l) => l.id === logId(ex));
-              const ghost = done.length ? done[done.length - 1]!.reps : '';
-              const unit = ex.unit ?? (ex.sided ? 'reps each side' : 'reps');
-              return (
-                <div className="st-row" key={key}>
-                  <label className="st-label">
-                    <span className="quiet">{label}</span>
-                    <select
-                      className="st-pick"
-                      value={ex.id}
-                      onChange={(e) => setPicks((p) => ({ ...p, [`${station.id}:${key}`]: e.target.value }))}
-                    >
-                      {list.map((o) => <option key={o.id} value={o.id}>{o.name}{o.sided ? ', each side' : ''}</option>)}
-                    </select>
-                  </label>
-                  <div className="st-cue">{ex.cue}</div>
-                  <div className="extra-row">
-                    <input
-                      className={`extra-num${ghost ? ' free-ghost' : ''}`}
-                      inputMode="numeric"
-                      value={reps[ex.id] ?? ''}
-                      placeholder={ghost ? `${ghost} ${unit}` : unit}
-                      aria-label={`${ex.name} ${unit}`}
-                      onChange={(e) => {
-                        /* Digits only: "12 each" would reach the log as a set with no number. */
-                        const digits = e.target.value.replace(/\D/g, '');
-                        setReps((p) => ({ ...p, [ex.id]: digits }));
-                      }}
-                    />
-                    <button className="btn" onClick={() => logRow(ex, station, ghost)} disabled={!(reps[ex.id] || ghost)}>
-                      Set {done.length + 1}
-                    </button>
-                  </div>
-                  {done.length > 0 && <div className="extra-item tnum">{done.map((d) => d.reps).join(' · ')}</div>}
+      <h2 className="st-step">2. Choose the exercises</h2>
+      {STATIONS.map((station, si) => (
+        <div className="st-card" key={station.id}>
+          <div className="st-card-title">Station {si + 1}: {station.name}</div>
+          {SLOTS.map(({ key, label, who }) => {
+            const chosen = picked(station, key, picks);
+            return (
+              <div className="st-slot" key={key}>
+                <div className="st-slot-head">
+                  <span className="st-slot-label">{label}</span>
+                  <span className="quiet">{who}</span>
                 </div>
-              );
-            })}
-          </div>
-        );
-      })}
+                <div className="st-choice">
+                  {station[key].map((o) => (
+                    <button
+                      key={o.id}
+                      className={`st-opt${chosen.id === o.id ? ' on' : ''}`}
+                      aria-pressed={chosen.id === o.id}
+                      onClick={() => setSetup((s) => ({ ...s, picks: { ...s.picks, [`${station.id}:${key}`]: o.id } }))}
+                    >
+                      {o.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="st-cue">
+                  Use: {holdWord(chosen)}{chosen.sided ? ', each side' : ''}. {chosen.cue}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+
+      <h2 className="st-step">3. How long</h2>
+      <div className="st-slot-label">Rounds</div>
+      <div className="st-choice">
+        {ROUND_OPTIONS.map((n) => (
+          <button key={n} className={`st-opt${rounds === n ? ' on' : ''}`} onClick={() => setSetup((s) => ({ ...s, rounds: n }))}>{n} rounds</button>
+        ))}
+      </div>
+      <div className="st-slot-label" style={{ marginTop: 12 }}>Time on each exercise</div>
+      <div className="st-choice">
+        {WORK_OPTIONS.map((n) => (
+          <button key={n} className={`st-opt${workSec === n ? ' on' : ''}`} onClick={() => setSetup((s) => ({ ...s, workSec: n }))}>{n} seconds</button>
+        ))}
+      </div>
+
+      <h2 className="st-step">4. Warm up, then start</h2>
+      <ul className="st-warm">{WARMUP.map((w) => <li key={w}>{w}</li>)}</ul>
+      <button className="btn st-go" onClick={begin}>
+        Start, {Math.round(totalSeconds(config) / 60)} minutes
+      </button>
     </div>
   );
 }
