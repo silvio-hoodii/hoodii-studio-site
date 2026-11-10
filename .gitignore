@@ -49,3 +49,10 @@ OVERNIGHT-LOG.md
 
 # session scratch, never repo material
 .cache/
+
+# third-party screenshots for the 2026-10 redesign review, not ours to publish
+docs/redesign/refs/
+docs/redesign/step-back/refs/
+docs/redesign/prototypes/data/
+# agent research reports: they map every private dataset he holds, and this repo is public
+docs/redesign/research-2026-10-21/
