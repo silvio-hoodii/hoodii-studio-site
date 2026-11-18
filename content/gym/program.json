@@ -332,9 +332,7 @@
       ],
       "name": "Lower 1",
       "title": "Lower 1: squat",
-      "warmup": [
-        "lower"
-      ],
+      "warmup": [],
       "cooldown": [
         "hip90"
       ],
@@ -668,9 +666,7 @@
       ],
       "name": "Upper 1",
       "title": "Upper 1: chest first",
-      "warmup": [
-        "upper"
-      ],
+      "warmup": [],
       "cooldown": [
         "thoracic"
       ],
@@ -965,9 +961,7 @@
       ],
       "name": "Lower 2",
       "title": "Lower 2: hinge and glutes",
-      "warmup": [
-        "lower"
-      ],
+      "warmup": [],
       "cooldown": [
         "hip90",
         "pigeon"
@@ -1099,7 +1093,7 @@
               "needsFloor": true,
               "firstWeight": {
                 "weight": 30,
-                "say": "First try: start at 30 kg of plates (not counting the Smith bar) and work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
+                "say": "First try: start with a weight you could lift 15 times, then work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
               }
             }
           ]
@@ -1294,9 +1288,7 @@
       ],
       "name": "Upper 2",
       "title": "Upper 2: chest and pull",
-      "warmup": [
-        "upper"
-      ],
+      "warmup": [],
       "cooldown": [
         "thoracic"
       ],
@@ -1591,9 +1583,7 @@
       ],
       "name": "Lower 3",
       "title": "Lower 3: full range",
-      "warmup": [
-        "lower"
-      ],
+      "warmup": [],
       "cooldown": [
         "hip90"
       ],
@@ -1784,7 +1774,7 @@
           "role": "main",
           "pairing": "sequence",
           "label": "Glutes",
-          "why": "The glutes alone, heavy, on the Smith machine: the second hip thrust of the week.",
+          "why": "The glutes alone, heavy: the second hip thrust of the week, on the Smith machine or a loaded bar on the bench.",
           "exercises": [
             {
               "id": "smith-hip-thrust",
@@ -1833,7 +1823,7 @@
               "needsFloor": true,
               "firstWeight": {
                 "weight": 30,
-                "say": "First try: start at 30 kg of plates (not counting the Smith bar) and work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
+                "say": "First try: start with a weight you could lift 15 times, then work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
               }
             }
           ]

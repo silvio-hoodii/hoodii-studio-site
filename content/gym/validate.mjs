@@ -739,7 +739,10 @@ for (const [dayKey, day] of Object.entries(program.days)) {
     ?? (day.blocks || []).find((b) => (b.exercises || []).length);
   const leadId = firstWorking?.exercises?.[0]?.id;
   const leadInfo = leadId && MOVEMENTS ? MOVEMENTS[leadId] : null;
-  if (leadInfo && !WARMUP_REGION[regionKey]) {
+  /* NO WARM-UP LIST IS ALLOWED since 2026-11-18, on his ruling that day: no separate warm-up, the
+     ramp-up sets on the first lift are the warm-up (studies adding a general warm-up mostly found no
+     difference). An empty list renders nothing; a non-empty one still has to start with the region. */
+  if (leadInfo && warmupKeys.length && !WARMUP_REGION[regionKey]) {
     fail(dayKey, `the first warmup entry must be a region, "lower" or "upper", got "${regionKey}". The posture list goes second.`);
   }
   if (leadInfo && WARMUP_REGION[regionKey]) {

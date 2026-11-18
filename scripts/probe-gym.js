@@ -337,7 +337,10 @@
       const warm = seen.find((s) => /warmup/i.test(s.summary || ''));
       const cool = seen.find((s) => /cooldown/i.test(s.summary || ''));
       return {
-        pass: bad.length === 0 && !!warm?.open && !!cool?.open,
+        /* NO WARM-UP LIST since 2026-11-18, his ruling: the ramp-up sets on the first lift are the
+           warm-up. So a missing warm-up fold is the programme, and one that IS there still has to be
+           visible and open; the cooldown (the 90/90s) is still required. */
+        pass: bad.length === 0 && (warm ? warm.open : true) && !!cool?.open,
         detail: { seen, invisible: bad },
       };
     },
