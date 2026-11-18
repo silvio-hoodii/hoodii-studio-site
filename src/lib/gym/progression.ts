@@ -44,7 +44,7 @@ export interface PlanInput {
   assistance?: boolean;
   /** THE WEIGHTS THAT EXIST for this lift, ascending, when the implement has a fixed set of them.
    *
-   *  Supplied for dumbbell lifts, out of `portable.dumbbells.ladderLb` in equipment.json. His rack
+   *  Supplied for dumbbell lifts, out of `portable.dumbbells.ladder` in equipment.json. His rack
    *  steps by 2.5 lb up to 20 and by 5 lb after, which one `increment` plus a round-to-nearest-5
    *  cannot express: from 12.5 the old arithmetic returned 20, skipping two dumbbells that are on
    *  the rack. When this is present the engine reads the next entry instead of computing one.
@@ -54,6 +54,11 @@ export interface PlanInput {
    *  positions a single `increment` describes; the plan route derives that 2.5 from the implement
    *  (`incrementFor` in ladder.ts), because no slot in program.json sets one. */
   ladder?: number[] | null;
+  /** The smallest jump the barbell plates make in the gym's unit (2.5 kg at Pizarro, 5 lb in Calgary).
+   *  Rounding and the default increment use it. Default 5, which is what every test was written in. */
+  loadStep?: number;
+  /** The gym's unit, for the sentences on the card. 'lb' when absent (every test was written in it). */
+  unit?: string;
   /** The rep count is a CEILING SET BY A PERSON and the engine may not move it, in either
    *  direction. True for the two plyometric primers.
    *
@@ -119,9 +124,13 @@ const r1 = (n: number) => Math.round(n * 10) / 10;
 
 /** Round a barbell/dumbbell load to something loadable (nearest 5 lb), but keep sub-5 increments
  *  (cable stacks etc.) intact when increment < 5. */
+/* THE PLATE STEP OF THE GYM, set at the top of each `suggest` call from `plan.loadStep`. It was a
+ * literal 5 (lb) until 2026-11-18, when the gym became Smart Fit Pizarro and the plates kg: a 2.5 kg
+ * jump is a pair of 1.25s. `suggest` is synchronous and sets this before any helper reads it. */
+let LOAD_STEP = 5;
 function roundLoad(w: number, increment: number): number {
-  if (increment && increment < 5) return r1(w);
-  return Math.round(w / 5) * 5;
+  if (increment && increment < LOAD_STEP) return r1(w);
+  return r1(Math.round(w / LOAD_STEP) * LOAD_STEP);
 }
 
 /* A RACK IS A LIST OF WEIGHTS THAT EXIST, NOT A STEP SIZE, and the engine had no way to say so.
@@ -286,10 +295,22 @@ function provenTarget(
   return best;
 }
 
+/** THE EASY-RETURN START, his ruling 2026-11-18: about 10% under the old working weight, rounded DOWN
+ *  to a weight that exists, and always at least one step under it so a converted or odd number (185 lb
+ *  read as 83.9 kg) never rounds back up to where he was. */
+/** "12%", the real drop, so the sentence never says 10% where the rack forced 33%. */
+const under = (start: number, from: number): string => `${Math.round((1 - start / from) * 100)}%`;
+
+function easyReturn(w: number, increment: number, ladder?: number[] | null): number {
+  const target = floorLoad(w * 0.9, increment, ladder);
+  const oneDown = ladder && ladder.length ? stepDown(w, increment, ladder) : floorLoad(w - increment, increment, ladder);
+  return Math.max(0, Math.min(target, oneDown));
+}
+
 /** Round DOWN to a weight that exists: the rack rung at or below, or a whole number of increments. */
 function floorLoad(target: number, increment: number, ladder?: number[] | null): number {
   if (ladder && ladder.length) return stepTo(target, increment, ladder);
-  const inc = increment > 0 ? increment : 5;
+  const inc = increment > 0 ? increment : LOAD_STEP;
   return r1(Math.floor(target / inc + 1e-9) * inc);
 }
 
@@ -297,7 +318,8 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   const type = plan.type || 'weighted';
   const bottom = Number(plan.targetReps) || (type === 'bodyweight' ? 8 : 6);
   const top = bottom + (plan.rangeWidth != null ? Number(plan.rangeWidth) : RANGE_WIDTH);
-  const increment = plan.increment != null ? Number(plan.increment) : 5;
+  LOAD_STEP = plan.loadStep != null && plan.loadStep > 0 ? Number(plan.loadStep) : 5;
+  const increment = plan.increment != null ? Number(plan.increment) : LOAD_STEP;
   /* Sorted and de-duplicated here rather than trusted from the caller: every function above reads
    * it positionally (`find` for the first entry above, `filter().at(-1)` for the last below), so an
    * unsorted array returns a silently wrong weight rather than throwing. `validate.mjs` gates the
@@ -354,15 +376,24 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
   if (plan.today && last?.date) {
     const gap = Math.round((Date.parse(plan.today) - Date.parse(last.date)) / 86400000);
     if (gap > GAP_DAYS) {
+      /* AN EASY RETURN, NOT A PROBE, since 2026-11-18. His ruling that day, five weeks off and a new
+       * gym: "Easy return, 2 weeks". A hold or a bodyweight lift aims at his old best, no more. A
+       * weighted lift starts about 10% under where he was (below), and the normal progression takes
+       * it back up from the first session he logs, which is the two weeks. */
       if (type === 'timed') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
-        return { weight: null, reps: best + TIMED_STEP, reason: `Last log ${gap}d ago, probe: old best +${TIMED_STEP} s, see where you are.` };
+        return { weight: null, reps: best, reason: `Back after ${gap} days: aim for your last best, ${best} s.` };
       }
       if (type === 'bodyweight') {
         const best = Math.max(...sets.map((s) => s.reps ?? 0));
-        return { weight: null, reps: best + 1, reason: `Last log ${gap}d ago, probe: old best +1 rep, see where you are.` };
+        return { weight: null, reps: Math.min(best, top), reason: `Back after ${gap} days: aim for your last best, ${Math.min(best, top)}.` };
       }
       const ww = workingWeight(sets, bottom) ?? 0;
+      if (plan.assistance) {
+        /* A counterweight: easier is MORE assistance. About 10% more, rounded to a step that exists. */
+        const start = r1(Math.ceil((ww * 1.1) / LOAD_STEP - 1e-9) * LOAD_STEP);
+        return { weight: start, reps: bottom, reason: `Back after ${gap} days: start with ${start} of help (you were at ${ww}), adjust live.` };
+      }
       /* NO UPWARD PROBE FROM A WEIGHT HE COULD NOT HIT THE RANGE AT. Added 2026-09-06, found on his
        * real bench: last logged 2026-08-04 as 185x3, 185x3, 165x8 against a range of 6 to 10. The
        * working weight is 185 (two sets), so this branch printed "probe: 185 up one step to 190" on
@@ -377,10 +408,11 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       if (!madeRangeAtWw) {
         const inRange = sets.filter((s) => (s.reps ?? 0) >= bottom && s.weight != null).map((s) => s.weight as number);
         const hold = inRange.length ? Math.max(...inRange) : ww;
+        const start = easyReturn(hold, increment, ladder);
         return {
-          weight: hold,
+          weight: start,
           reps: bottom,
-          reason: `Last log ${gap}d ago, and ${ww} was below the range then (${repsAtWw.join('/')}). Start at ${hold}, where you last made ${bottom}+, adjust live.`,
+          reason: `Back after ${gap} days: start at ${start}, ${under(start, hold)} under ${hold}, where you last made ${bottom}+. Adjust live.`,
         };
       }
       /* NO UPWARD PROBE AT ALL, since 2026-10-04. After a gap he starts where he was. His ruling,
@@ -388,7 +420,8 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
        * heavier." The standing dumbbell press is the case that found it: 32 days since its last
        * standing set at 60, the card offered 65, while his last press of any kind (seated, 2026-09-28)
        * was 60 for 6 and 7. This engine cannot see another id's sets, so it may not climb past this one. */
-      return { weight: ww, reps: bottom, reason: `Last log ${gap}d ago: start at ${ww}, where you were, adjust live.` };
+      const start = easyReturn(ww, increment, ladder);
+      return { weight: start, reps: bottom, reason: `Back after ${gap} days: start at ${start}, ${under(start, ww)} under ${ww}, where you were. Adjust live.` };
     }
   }
 
@@ -598,8 +631,8 @@ export function suggest(last: LastSession | null, plan: PlanInput = {}): Suggest
       };
     }
     const reason = assisted
-      ? `Hit ${wd} at ${ww}: take ${r1(ww - next)} lb of assistance off, down to ${next}.`
-      : `Hit ${wd} at ${ww}: up to ${next}, +${r1(next - ww)} lb.`;
+      ? `Hit ${wd} at ${ww}: take ${r1(ww - next)} ${plan.unit ?? 'lb'} of assistance off, down to ${next}.`
+      : `Hit ${wd} at ${ww}: up to ${next}, +${r1(next - ww)} ${plan.unit ?? 'lb'}.`;
     return { weight: next, reps: bottom, reason };
   }
   /* FELL SHORT: BACK TO A WEIGHT HE HAS DONE FOR EVERY SET, since 2026-10-04 (coach review). Two

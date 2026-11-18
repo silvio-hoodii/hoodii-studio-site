@@ -23,6 +23,22 @@
 import equipment from '../../../content/gym/equipment.json';
 import movements from '../../../content/gym/movements.json';
 import program from '../../../content/gym/program.json';
+import type { Gear } from './program-shared';
+
+/* THE GYM'S UNIT, BAR AND PLATES, since 2026-11-18, when he moved to Smart Fit Pizarro (kg). Read once
+ * off equipment.json and handed to the page as data. Every weight in gym_set is in this unit: the lb
+ * history was converted in place the same day (content/gym/migrate-to-kg.mjs, originals kept in
+ * weight_lb), so no reader ever has to know which rows are which. */
+const EQ = equipment as { weightUnit?: string; barbell?: { bar?: number; plates?: number[] } };
+export const UNIT: 'kg' | 'lb' = EQ.weightUnit === 'kg' ? 'kg' : 'lb';
+const GEAR: Gear = {
+  unit: UNIT,
+  bar: EQ.barbell?.bar ?? (UNIT === 'kg' ? 20 : 45),
+  plates: EQ.barbell?.plates?.length ? EQ.barbell.plates : UNIT === 'kg' ? [20, 15, 10, 5, 2.5, 1.25] : [45, 35, 25, 10, 5, 2.5],
+};
+export const gear = (): Gear => GEAR;
+/** The date the current gym starts. Machine and cable sets from before it were on other machines. */
+export const GYM_SINCE: string = (equipment as { since?: string }).since ?? '1970-01-01';
 
 interface Variant {
   id: string; implement?: string; aliases?: string[];
@@ -60,8 +76,8 @@ const IMPLEMENT_BY_ID: Map<string, string> = (() => {
 /** Ascending, de-duplicated, positive. Sorted here as well as in `suggest` because a caller that
  *  skips the engine (check-ladder does its own arithmetic) would otherwise read it positionally. */
 const DUMBBELLS: number[] = (() => {
-  const raw = (equipment as { portable?: { dumbbells?: { ladderLb?: unknown } } })
-    .portable?.dumbbells?.ladderLb;
+  const raw = (equipment as { portable?: { dumbbells?: { ladder?: unknown } } })
+    .portable?.dumbbells?.ladder;
   if (!Array.isArray(raw)) return [];
   return [...new Set(raw.filter((n): n is number => typeof n === 'number' && n > 0))]
     .sort((a, b) => a - b);
@@ -69,6 +85,14 @@ const DUMBBELLS: number[] = (() => {
 
 /** The rack for one exercise id, or null when the implement has no fixed set of weights. Null and
  *  an empty array mean the same thing to `suggest`, which falls back to `increment` arithmetic. */
+/* A MACHINE'S NUMBERS DO NOT TRAVEL BETWEEN GYMS, since 2026-11-18. A pin on a Calgary stack and a
+ * pin on a Matrix stack at Pizarro are different loads even after the unit is converted, and the
+ * Smith bars weigh what each maker built them to. Barbell plates and dumbbells do travel: a kilo is
+ * a kilo. So the plan route drops sets from before `GYM_SINCE` for these implements and the card
+ * starts fresh ("find a weight for clean reps"), while free weights keep their history. */
+const GYM_BOUND = new Set(['machine', 'cable', 'smith']);
+export const historyTravels = (id: string): boolean => !GYM_BOUND.has(IMPLEMENT_BY_ID.get(id) ?? '');
+
 export function ladderFor(id: string): number[] | null {
   return IMPLEMENT_BY_ID.get(id) === 'dumbbell' && DUMBBELLS.length ? DUMBBELLS : null;
 }
@@ -131,7 +155,11 @@ export const firstWeightFor = (id: string): { weight: number; say: string } | nu
  * A `counterweight: true` field on the variant in movements.json would be the better home, and this
  * table should then read it instead. The program.json flag still counts too, for a slot that ever
  * declares it. */
-const COUNTERWEIGHT_STATIONS: Record<string, number | null> = { 'assisted-pullup': 10, 'assisted-dip': null };
+/* In kg since 2026-11-18 (Pizarro): the Calgary pull-up machine moved in 10 lb steps; a kg machine is
+ * assumed to move in 5 kg, unmeasured until he logs on it. */
+const COUNTERWEIGHT_STATIONS: Record<string, number | null> = UNIT === 'kg'
+  ? { 'assisted-pullup': 5, 'assisted-dip': null }
+  : { 'assisted-pullup': 10, 'assisted-dip': null };
 
 const ASSISTED_IN_PROGRAM: Set<string> = (() => {
   const out = new Set<string>();

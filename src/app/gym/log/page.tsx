@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getCombinedLog, countCombinedLog, getSetsForDates } from '@/lib/gym/log';
 import { loadProgram } from '@/lib/gym/program';
+import { UNIT } from '@/lib/gym/ladder';
 import { shortDate, logDate } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -104,7 +105,7 @@ export default async function GymLogPage() {
     <div className="wrap">
       <h1>Lifting, the whole record</h1>
       <p className="lede">
-        <Link href="/gym">Back to the workout</Link>
+        <Link href="/gym">Back to the workout</Link> · weights in {UNIT}
       </p>
 
       <div className={`log log-gymlog${spansYears ? ' log-years' : ''}`}>

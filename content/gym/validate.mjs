@@ -179,28 +179,28 @@ const TAG_PROSE = new Set([
 // ---------------------------------------------------------------------------------------------
 /* ------ A LADDER IS READ POSITIONALLY, SO ITS ORDER IS LOAD-BEARING. Added 2026-08-29.
  *
- * `portable.<thing>.ladderLb` is the list of weights that exist for an implement, and both readers
+ * `portable.<thing>.ladder` is the list of weights that exist for an implement, and both readers
  * take the FIRST entry above the working weight and the LAST entry below it. An unsorted array, a
  * duplicate or a zero does not throw anywhere: it returns a weight that is silently wrong, on a
  * card, at the rack. `suggest()` and `ladder.ts` both sort defensively at the seam, and this is why
  * neither of those sorts is the real protection: a stored file nobody can read in order is a file
  * whose next editor inserts a rung in the wrong place and sees every gate stay green. */
 for (const [key, item] of Object.entries(equipment.portable ?? {})) {
-  if (!item || item.ladderLb === undefined) continue;
+  if (!item || item.ladder === undefined) continue;
   const at = `portable "${key}"`;
-  const l = item.ladderLb;
+  const l = item.ladder;
   if (!Array.isArray(l) || l.length < 2) {
-    fail('equipment.json', `${at}: "ladderLb" must be an array of at least two weights, got ${JSON.stringify(l)}`);
+    fail('equipment.json', `${at}: "ladder" must be an array of at least two weights, got ${JSON.stringify(l)}`);
     continue;
   }
   if (!l.every((n) => typeof n === 'number' && Number.isFinite(n) && n > 0)) {
-    fail('equipment.json', `${at}: every entry in "ladderLb" must be a positive number, got ${JSON.stringify(l)}`);
+    fail('equipment.json', `${at}: every entry in "ladder" must be a positive number, got ${JSON.stringify(l)}`);
   }
   if (!l.every((n, i) => i === 0 || n > l[i - 1])) {
-    fail('equipment.json', `${at}: "ladderLb" must be strictly ascending, and it is read positionally in two places. Got ${JSON.stringify(l)}`);
+    fail('equipment.json', `${at}: "ladder" must be strictly ascending, and it is read positionally in two places. Got ${JSON.stringify(l)}`);
   }
-  if (item.range?.maxLb != null && l[l.length - 1] > item.range.maxLb) {
-    fail('equipment.json', `${at}: "ladderLb" tops out at ${l[l.length - 1]} but "range.maxLb" says ${item.range.maxLb}. One of the two is wrong and the safe direction is the lower: a rung that is not on the rack sends him looking for it.`);
+  if (item.range?.max != null && l[l.length - 1] > item.range.max) {
+    fail('equipment.json', `${at}: "ladder" tops out at ${l[l.length - 1]} but "range.max" says ${item.range.max}. One of the two is wrong and the safe direction is the lower: a rung that is not on the rack sends him looking for it.`);
   }
   if (!item.ladderConfidence || !Object.keys(equipment.confidenceLevels || {}).includes(item.ladderConfidence)) {
     fail('equipment.json', `${at}: "ladderConfidence" must be one of ${Object.keys(equipment.confidenceLevels || {}).join(', ')}, got ${JSON.stringify(item.ladderConfidence ?? null)}. A list of weights with no provenance is exactly the kind of "you have this" the safe-defaults rule in this file's own header refuses.`);
@@ -1271,7 +1271,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       // Guessing the answer is not available either: farmer-carry is timed AND loaded, so the author
       // has to say. Making it unrepresentable is the fix; being vigilant about it is not.
       if (ex.timed && typeof ex.bodyweight !== 'boolean') {
-        fail(where, `timed exercise "${ex.id}" must declare bodyweight: true or false. Without it the weight box is enabled and asks for lb.`);
+        fail(where, `timed exercise "${ex.id}" must declare bodyweight: true or false. Without it the weight box is enabled and asks for a weight.`);
       }
 
       for (const alt of ex.alts || []) {

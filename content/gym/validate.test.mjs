@@ -615,7 +615,7 @@ const CASES = [
     name: 'an out-of-order dumbbell ladder is refused',
     file: 'equipment.json',
     mutate: (e) => {
-      const l = e.portable.dumbbells.ladderLb;
+      const l = e.portable.dumbbells.ladder;
       if (!Array.isArray(l) || l.length < 3) throw new Error('no dumbbell ladder to mutate; repoint this case');
       [l[1], l[2]] = [l[2], l[1]];
     },
@@ -625,7 +625,7 @@ const CASES = [
     name: 'a duplicated rung is refused, because ascending means strictly',
     file: 'equipment.json',
     mutate: (e) => {
-      const l = e.portable.dumbbells.ladderLb;
+      const l = e.portable.dumbbells.ladder;
       l[2] = l[1];
     },
     expect: 'strictly ascending',
@@ -635,7 +635,7 @@ const CASES = [
     file: 'equipment.json',
     mutate: (e) => {
       const d = e.portable.dumbbells;
-      d.ladderLb = [...d.ladderLb, Number(d.range.maxLb) + 5];
+      d.ladder = [...d.ladder, Number(d.range.max) + 5];
     },
     expect: 'tops out at',
   },

@@ -15,6 +15,7 @@ import {
   DAY_ORDER, FREE_DAY, exType, findExercise, repSuffix,
   parseTargetReps, restSeconds, effectiveExercise, plateMath, warmupRamp, splitName,
 } from '@/lib/gym/program-shared';
+import type { Gear } from '@/lib/gym/program-shared';
 import { NOTE_KINDS, NOTE_KIND_LABELS, type NoteKind } from '@/lib/gym/note-kinds';
 
 /* WHICH BLOCK A FILLED REST BELONGS TO, found by the LEAD LIFT'S ID rather than by a stored index.
@@ -47,6 +48,8 @@ interface Props {
   sessionDate: string;
   /** Ids whose implement is a barbell, from the catalogue: where plate math and the ramp apply. */
   barbellIds: string[];
+  /** The gym's unit, bar and plates (kg at Smart Fit Pizarro since 2026-11-18), from equipment.json. */
+  gear: Gear;
   /** The most recent session with logged work and the heaviest set of each lift in it. Rendered
    *  under the day title. His words, 2026-09-06: "I don't even know what I did last session." */
   lastSession: { date: string; day: string | null; title: string | null; lifts: { id: string; name: string; weight: number | null; reps: number | null }[] } | null;
@@ -152,10 +155,10 @@ const estMax = (w: number, reps: number | null): number => Math.round(w * (1 + (
  *
  * It only appears from three sessions on. Two points is a line between two points, not a trend, and
  * a chart on an exercise he has done once is decoration on a screen he already found cluttered. */
-function Trend({ recent, countUnit, assisted }: { recent: LastSession[]; countUnit: string; assisted?: boolean }) {
+function Trend({ recent, countUnit, assisted, unit: weightUnit }: { recent: LastSession[]; countUnit: string; assisted?: boolean; unit: string }) {
   const weighted = recent.some((s) => hasWeight(s.sets));
   const byMax = weighted && !assisted;
-  const unit = weighted ? 'lb' : countUnit;
+  const unit = weighted ? weightUnit : countUnit;
   const pre = byMax ? 'est. max ' : '';
   const points = [...recent]
     .reverse()
@@ -216,7 +219,8 @@ const swapKey = (date: string) => `gym:swaps:${date}`;
 /** Where a running rest timer's end time is kept, so a discarded tab comes back with it. */
 const TIMER_KEY = 'gym:timer';
 
-export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession, sessionDate, barbellIds }: Props) {
+export default function GymClient({ program, warmups, cooldowns, extraSuggestions, nextUp, fillOptions, lastSession, sessionDate, barbellIds, gear }: Props) {
+  const U = gear.unit;
   /* `todayDay` first. `nextDay` is what to train NEXT, and once today's first set lands the cycle
    * has already advanced past today, so opening on it showed a different workout with every box
    * empty. See the comment on NextUp.todayDay. */
@@ -1003,12 +1007,12 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
     return v != null ? String(v) : '';
   }
 
-  /** "70 lb × 8", the heaviest set of a past session, for the card's heading line. */
+  /** "32 kg × 8", the heaviest set of a past session, for the card's heading line. */
   function freeGhostFromLast(last: LastSession): string | null {
     const sets = last.sets.filter((s) => (s.reps ?? 0) > 0);
     if (!sets.length) return null;
     const top = sets.reduce((a, b) => ((b.weight ?? 0) > (a.weight ?? 0) ? b : a));
-    return top.weight != null && top.weight > 0 ? `${top.weight} lb × ${top.reps}` : `${top.reps}`;
+    return top.weight != null && top.weight > 0 ? `${top.weight} ${U} × ${top.reps}` : `${top.reps}`;
   }
 
   /** One set on a free card, appended like any off-plan set and filed under FREE_DAY, so it never
@@ -1358,13 +1362,13 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                 </div>
                 {done.map((s, i) => (
                   <div className="extra-item tnum" key={i}>
-                    {i + 1}{'  '}{s.weight ? `${s.weight} lb` : ''}{s.weight && s.reps ? ' × ' : ''}{s.reps ? `${s.reps}` : ''}
+                    {i + 1}{'  '}{s.weight ? `${s.weight} ${U}` : ''}{s.weight && s.reps ? ' × ' : ''}{s.reps ? `${s.reps}` : ''}
                   </div>
                 ))}
                 <div className="extra-row">
                   <input
                     className={`extra-num${gw ? ' free-ghost' : ''}`} inputMode="decimal" value={typed.weight}
-                    placeholder={gw ? `${gw} lb` : 'lb'}
+                    placeholder={gw ? `${gw} ${U}` : U}
                     onChange={(e) => setFreeIn((p) => ({ ...p, [card.id]: { ...typed, weight: e.target.value } }))}
                   />
                   <input
@@ -1600,7 +1604,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             const targetW = p?.suggestion.weight ?? null;
             /* A barbell lift only: "bar x10" on a cable row or a machine press is an instruction he
                cannot follow. */
-            const ramp = block.role === 'main' && isBarbell && targetW != null ? warmupRamp(targetW) : null;
+            const ramp = block.role === 'main' && isBarbell && targetW != null ? warmupRamp(targetW, gear) : null;
             return (
               /* The slot in the program and the exercise actually filling it. They differ only
                  after a swap, which is exactly when everything here has gone wrong before, and the
@@ -1679,7 +1683,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                 {swap && <div className="swapped-note">Swapped from {ex.name} · <button className="swap-revert" onClick={() => revertSwap(ex.id)}>revert</button></div>}
 
                 {showPlate && targetW != null && (
-                  <div className="ex-sub">{plateMath(targetW)}</div>
+                  <div className="ex-sub">{plateMath(targetW, gear)}</div>
                 )}
                 {ramp && <div className="ex-sub">Ramp: {ramp}</div>}
 
@@ -1697,10 +1701,10 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                         it, which is the only version that cannot print a unit from one prescription
                         against a number from another. */}
                     {p.suggestion.weight != null
-                      ? `${p.suggestion.weight} lb × ${p.suggestion.reps}${repSuffix(eff.reps)}`
+                      ? `${p.suggestion.weight} ${U} × ${p.suggestion.reps}${repSuffix(eff.reps)}`
                       : `× ${p.suggestion.reps}${repSuffix(eff.reps)}`}
                     <span className="ex-suggest-why">{p.suggestion.reason}</span>
-                    {p.recent && <Trend recent={p.recent} countUnit={eff.timed ? 's' : 'reps'} assisted={p.assisted} />}
+                    {p.recent && <Trend recent={p.recent} countUnit={eff.timed ? 's' : 'reps'} assisted={p.assisted} unit={U} />}
                   </div>
                 )}
 
@@ -1718,7 +1722,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                           <span className="n">{i + 1}</span>
                           <input
                             type="number" inputMode="decimal"
-                            placeholder={eff.bodyweight ? 'BW' : gw ? `${gw} lb` : 'lb'}
+                            placeholder={eff.bodyweight ? 'BW' : gw ? `${gw} ${U}` : U}
                             className={gw ? 'ghost' : undefined} data-ghost={gw || undefined}
                             value={entry.weight}
                             disabled={!!eff.bodyweight || sessionRead === 'loading'}
@@ -1913,7 +1917,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                                 orders this list is that the card can then say a number instead of
                                 asking him to remember one standing up. */}
                             {c.logged > 0
-                              ? ` · you have done ${c.logged} set${c.logged === 1 ? '' : 's'}${c.lastWeight != null ? ` at ${c.lastWeight} lb` : ''}`
+                              ? ` · you have done ${c.logged} set${c.logged === 1 ? '' : 's'}${c.lastWeight != null ? ` at ${c.lastWeight} ${U}` : ''}`
                               : ' · new to you'}
                             {` · ${c.where}`}
                           </div>
@@ -1946,7 +1950,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
                       <div className="set-row" key={i}>
                         <span className="n">{i + 1}</span>
                         <input
-                          type="number" inputMode="decimal" placeholder={gw ? `${gw} lb` : 'lb'}
+                          type="number" inputMode="decimal" placeholder={gw ? `${gw} ${U}` : U}
                           className={gw ? 'ghost' : undefined} data-ghost={gw || undefined}
                           value={entry.weight}
                           disabled={sessionRead === 'loading'}
@@ -2058,7 +2062,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
         />
         <div className="extra-row">
           <input className="extra-num" inputMode="decimal" value={extraWeight}
-                 onChange={(e) => setExtraWeight(e.target.value)} placeholder="lb" />
+                 onChange={(e) => setExtraWeight(e.target.value)} placeholder={U} />
           <input className="extra-num" inputMode="numeric" value={extraReps}
                  onChange={(e) => setExtraReps(e.target.value)} placeholder="reps" />
           <button className="btn" onClick={logExtra} disabled={!extraName.trim()}>Add set</button>
@@ -2068,7 +2072,7 @@ export default function GymClient({ program, warmups, cooldowns, extraSuggestion
             {extraLog.map((e, i) => (
               <div className="extra-item" key={`${e.id}-${i}`}>
                 {e.name}
-                {e.weight ? ` ${e.weight} lb` : ''}
+                {e.weight ? ` ${e.weight} ${U}` : ''}
                 {e.reps ? ` x ${e.reps}` : ''}
               </div>
             ))}

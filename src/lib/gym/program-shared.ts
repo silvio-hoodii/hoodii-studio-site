@@ -116,15 +116,22 @@ export function restSeconds(rest: string | undefined): number {
  * `bb-ohp` while the week's ids are `bb-bench-press` and `bb-overhead-press`, so plate math never
  * showed on either. Which lifts are barbell lifts is in the catalogue (`implement`); `barbellIds` in
  * ladder.ts reads it on the server and the page passes the list in. */
-const BAR = 45;
-const PLATES = [45, 35, 25, 10, 5, 2.5];
+/* THE BAR AND THE PLATES ARE THE GYM'S, since 2026-11-18. They were constants here (a 45 lb bar,
+ * 45/35/25/10/5/2.5 plates) and the gym moved to Smart Fit Pizarro, where the plates say 20 and 10
+ * and the bar is 20 kg. They are read from `barbell` in content/gym/equipment.json on the server
+ * (`gear()` in ladder.ts) and passed in, so the page's bundle carries three numbers and not the file. */
+export interface Gear { unit: 'kg' | 'lb'; bar: number; plates: number[] }
 
-export function plateMath(w: number | string | null | undefined): string | null {
+/** The smallest jump the plates make: a pair of the smallest plate. 2.5 kg, or 5 lb in Calgary. */
+export const loadStep = (g: Gear): number => 2 * Math.min(...g.plates);
+
+export function plateMath(w: number | string | null | undefined, g: Gear): string | null {
   const weight = typeof w === 'string' ? parseFloat(w) : w;
+  const BAR = g.bar;
   if (weight == null || isNaN(weight) || weight < BAR) return null;
   let per = (weight - BAR) / 2;
   const out: number[] = [];
-  for (const p of PLATES) {
+  for (const p of [...g.plates].sort((a, b) => b - a)) {
     while (per >= p - 0.01) {
       out.push(p);
       per -= p;
@@ -133,15 +140,17 @@ export function plateMath(w: number | string | null | undefined): string | null 
   return out.length ? `${out.join(' + ')} per side` : 'empty bar';
 }
 
-/** bar x10, 50% x5, 70% x3, and (>=185 lb target) 85% x1. For barbell main lifts loaded heavy
- *  enough (>=95 lb target) that a ramp is worth the time. This function does not know the implement:
- *  the CALLER checks it is a barbell lift, or a cable row gets "bar x10". Ported from gym.html's
- *  inline ramp block in render(). */
-export function warmupRamp(targetWeight: number | null): string | null {
-  if (targetWeight == null || targetWeight < 95) return null;
-  const r5 = (w: number) => Math.max(BAR, Math.round(w / 5) * 5);
-  let ramp = `bar×10 · ${r5(targetWeight * 0.5)}×5 · ${r5(targetWeight * 0.7)}×3`;
-  if (targetWeight >= 185) ramp += ` · ${r5(targetWeight * 0.85)}×1`;
+/** bar x10, 50% x5, 70% x3, and (a target past about four bars) 85% x1. For barbell main lifts
+ *  loaded heavy enough (about two bars) that a ramp is worth the time. The thresholds were 95 and
+ *  185 lb on a 45 lb bar, so they are kept as the same multiples of whatever bar the gym has.
+ *  This function does not know the implement: the CALLER checks it is a barbell lift. */
+export function warmupRamp(targetWeight: number | null, g: Gear): string | null {
+  const BAR = g.bar;
+  if (targetWeight == null || targetWeight < BAR * (95 / 45)) return null;
+  const step = loadStep(g);
+  const r = (w: number) => Math.max(BAR, Math.round(w / step) * step);
+  let ramp = `bar×10 · ${r(targetWeight * 0.5)}×5 · ${r(targetWeight * 0.7)}×3`;
+  if (targetWeight >= BAR * (185 / 45)) ramp += ` · ${r(targetWeight * 0.85)}×1`;
   return ramp;
 }
 

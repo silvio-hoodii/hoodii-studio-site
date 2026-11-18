@@ -56,6 +56,11 @@ create table if not exists gym_set (
   unique (date, exercise_id, set_idx)
 );
 alter table gym_set add column if not exists off_plan boolean not null default false;
+-- kg since 2026-11-18 (Smart Fit Pizarro). content/gym/migrate-to-kg.mjs converted the lb history once,
+-- kept the typed numbers in weight_lb / suggested_weight_lb, and constrained unit to 'kg'.
+alter table gym_set add column if not exists weight_lb real;
+alter table gym_set add column if not exists suggested_weight_lb real;
+alter table gym_set add column if not exists unit text not null default 'kg';
 create index if not exists gym_set_ex_date on gym_set (exercise_id, date);
 create index if not exists gym_set_date    on gym_set (date);
 

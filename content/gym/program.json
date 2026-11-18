@@ -73,15 +73,20 @@
       {
         "on": "2026-10-10",
         "said": "I don't feel comfortable loading the barbell with like 180 uh, because again, I don't know if my form is perfect because sometimes I've said that ... my shoulder hurts. Um, so I kind of rather do um, dumbbells."
+      },
+      {
+        "on": "2026-11-18",
+        "said": "ive moved and now have acces to a regular commercial gym, but also havent workedt out in a while so lets recheck the program, i think the spli its fine, but maybne now theres more options available for exercises"
       }
     ],
-    "decided": "Rewritten 2026-10-04 from his words that night: legs and glutes first, 80 minutes a session at most, four lifting days, pairs to save time, chest in the week, no calf raises, swim after the lift, form over heavier, posture work, stay athletic (jumps, sideways, a carry), step-ups wanted.",
+    "decided": "Rewritten 2026-10-04 from his words that night: legs and glutes first, 80 minutes a session at most, four lifting days, pairs to save time, chest in the week, no calf raises, swim after the lift, form over heavier, posture work, stay athletic (jumps, sideways, a carry), step-ups wanted. Rechecked 2026-11-18 for Smart Fit Pizarro (Trujillo) on his picks: the split stays, the leg curl joins Session A, the abductor and the face pull join Session B (the face pull in place of the dumbbell reverse fly), the hip thrust machine replaces the Smith if the gym has one, weights in kg, and an easy return for the first two weeks after five weeks off.",
     "assumptions": [
       "Two full-body sessions, A on Mon and Thu, B on Tue and Fri. The rotation follows what he did, not the calendar: after A comes B, whatever the day, and a missed day is simply the other session.",
-      "Three sets at least on every exercise, his ruling 2026-10-11 (\"why are there exercise of 2 sets thats a waste of time make ot 3 at leats\"), and about 90 minutes a session by the per-set fit (A 24 sets, B 23), his call the same day: \"dont care about 80 or 90 if its a good enough program and reliable\".",
+      "Three sets at least on every exercise, his ruling 2026-10-11. With the leg curl and the abductor (his picks 2026-11-18, offered at about 7 minutes each) the per-set fit is about 100 minutes for A (27 sets) and 97 for B (26 sets).",
       "Session A uses one bench three ways, changed only between blocks: flat for the step-up (the triceps extension seated on its end), low incline for the press, flat again for the one-arm row.",
-      "Assisted pull-up machine in Session B: his log has 40 lb of assistance for 6, 5 and 5 (2026-08-25). It sits on its own after the hip thrust so the grip is fresh; the card offers a partner for its rest. The band on the rack bar and the pulldown are one tap away.",
-      "Swim in the evening after the lift, his choice 2026-09-04. No running since 2026-10-10, his ruling (\"if there's anything that refers to running, let's take it out\")."
+      "Assisted pull-up machine in Session B, if Pizarro has one (open question on the machine); the lat pulldown is one tap away. Its Calgary numbers do not carry to a new machine, so the card starts fresh.",
+      "Swim after the lift at another pool on the same days, his ruling 2026-11-18 (Smart Fit Pizarro has no pool). No running since 2026-10-10, his ruling.",
+      "Easy return, his ruling 2026-11-18 after five weeks off (last session 2026-10-12): free weights start about 10% under his last weights, converted to kg; machines start fresh. The normal progression takes over from the first session he logs."
     ],
     "keep": [
       {
@@ -123,7 +128,8 @@
           "smith-hip-thrust",
           "bb-hip-thrust",
           "db-step-up",
-          "bulgarian-split-squat"
+          "bulgarian-split-squat",
+          "machine-hip-thrust"
         ],
         "said": "I do think that more glute work might be needed",
         "on": "2026-10-04"
@@ -187,6 +193,24 @@
         ],
         "said": "now there's no bicep or tricep stuff",
         "on": "2026-10-11"
+      },
+      {
+        "what": "a leg curl",
+        "anyOf": [
+          "leg-curl",
+          "stability-ball-ham-curl"
+        ],
+        "said": "picked 'Leg curl machine' when asked which new options to bring in",
+        "on": "2026-11-18"
+      },
+      {
+        "what": "the abductor",
+        "anyOf": [
+          "machine-hip-abduction",
+          "cable-hip-abduction"
+        ],
+        "said": "picked 'Abductor machine (sideways)' when asked which new options to bring in",
+        "on": "2026-11-18"
       }
     ],
     "$keepWhy": "goal.keep: the things he asked for, each in his words. validate.mjs refuses a week where none of an entry's slot ids is prescribed (2026-10-11, after the arms vanished in the move to two sessions). Removing an entry needs his words."
@@ -196,8 +220,8 @@
     "abs": "Direct trunk work is bodyweight: the hanging leg raise (Session A; he progressed from the knee raise, note #58) and the farmer carry (Session B), progressed by reps, height and the carry weight. The squat and the RDL load the trunk as well. The Pallof press and the side plank are one tap away. Loaded abs are 0 by the coverage count; accepted."
   },
   "frozen": {
-    "until": "2026-11-08",
-    "daysHash": "48d832c18cc708af",
+    "until": "2026-12-16",
+    "daysHash": "ece465b47ec2376e",
     "changes": [
       {
         "on": "2026-09-06",
@@ -270,6 +294,12 @@
         "hisWords": "Keep working, keep fixing things until everything is set. Keep checking. I'll be uh, keeping the session alive in remote control so I can still uh, check in with you.",
         "hash": "48d832c18cc708af",
         "what": "Fixes from the third adversary review under his standing instruction above, not a new ruling: the press and row no longer share one bench angle in turns, the pull-up comes before the carry so the grip is fresh, the chest press and pull-up no longer depend on the machines being side by side. Version 5 the same day, after three adversary reviews and his rulings that afternoon: legs first, three sets minimum, about 90 minutes. A: back squat + hanging leg raise; step-up + seated overhead triceps extension; incline press + lateral raise; one-arm row + single-leg RDL (the bench changes only between blocks). B: lateral bound; RDL + curl; Smith hip thrust + reverse fly; assisted pull-up on its own while the grip is fresh; machine chest press + farmer carry, last. goal.keep lists the things he asked for and validate.mjs refuses a week missing any."
+      },
+      {
+        "on": "2026-11-18",
+        "hisWords": "ive moved and now have acces to a regular commercial gym, but also havent workedt out in a while so lets recheck the program, i think the spli its fine, but maybne now theres more options available for exercises",
+        "hash": "ece465b47ec2376e",
+        "what": "Smart Fit Pizarro, Trujillo. Same two sessions. A: back squat + hanging leg raise; step-up + overhead triceps extension; incline press + lateral raise; one-arm row + single-leg RDL; NEW leg curl. B: lateral bound; RDL + curl; hip thrust (Smith, or the hip thrust machine if there is one); NEW abductor machine; assisted pull-up then NEW face pull (the dumbbell reverse fly left for it); machine chest press + farmer carry. His picks from four offered options, each costed at about 7 minutes: A 27 sets (about 100 min by the per-set fit), B 26 (about 97). Weights in kg; easy return after five weeks off."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -290,9 +320,9 @@
         "couch"
       ],
       "$time": {
-        "sets": 24,
-        "fitMin": 92,
-        "fitPlus75thMin": 98.9,
+        "sets": 27,
+        "fitMin": 100,
+        "fitPlus75thMin": 106.5,
         "how": "minutes = 31.8 + 2.51 x sets, his 17 sessions 2026-08-27 to 2026-10-03 (Theil-Sen), every set counted the same, jump sets included; 75th-percentile residual +6.9."
       },
       "blocks": [
@@ -427,8 +457,8 @@
               "progression": "weight",
               "rangeWidth": 7,
               "firstWeight": {
-                "weight": 30,
-                "say": "First try: start with 30 lb dumbbells and work up until 8 a leg feels hard, about 2 left in the tank. Log that weight."
+                "weight": 14,
+                "say": "First try: start with 14 kg dumbbells and work up until 8 a leg feels hard, about 2 left in the tank. Log that weight."
               },
               "alts": [
                 {
@@ -545,7 +575,7 @@
           "role": "main",
           "pairing": "fill",
           "label": "One-arm row, single-leg RDL in the rest",
-          "why": "The one-arm row with the bench set flat again: a pull to match the press, one arm then the other. The single-leg RDL rides in its rest, the back of each leg on its own with one dumbbell and the only hamstring work in this session.",
+          "why": "The one-arm row with the bench set flat again: a pull to match the press, one arm then the other. The single-leg RDL rides in its rest, the back of each leg on its own with one dumbbell.",
           "exercises": [
             {
               "id": "db-single-arm-row",
@@ -560,8 +590,8 @@
               "progression": "weight",
               "rangeWidth": 4,
               "firstWeight": {
-                "weight": 50,
-                "say": "First try: start with a 50 lb dumbbell and work up until 8 an arm feels hard, about 2 left in the tank. Log that weight."
+                "weight": 22,
+                "say": "First try: start with a 22 kg dumbbell and work up until 8 an arm feels hard, about 2 left in the tank. Log that weight."
               },
               "alts": [
                 {
@@ -614,6 +644,36 @@
               "whyHere": "The single-leg RDL rides in its rest"
             }
           ]
+        },
+        {
+          "role": "main",
+          "pairing": "sequence",
+          "label": "Leg curl",
+          "why": "The leg curl bends the knee against a load, the one job for the back of the thigh that the squat and the hinges leave out. Last, so it never crowds the main lifts.",
+          "exercises": [
+            {
+              "id": "leg-curl",
+              "name": "Leg Curl Machine",
+              "sets": 3,
+              "reps": "10",
+              "rest": "90s",
+              "zone": "machines",
+              "station": "leg-curl",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 4,
+              "cue": "DRAFT, tell the note box what is wrong with it. Seated or lying, whichever the gym has. Line your knee up with the round pivot on the side of the machine, the pad just above your heels. Curl your heels toward your bum, hold one second, then let it back over three seconds until your legs are nearly straight. Hips stay down on the seat. First time: pick a weight you could lift 15 times and stop at 10.",
+              "alts": [
+                {
+                  "id": "stability-ball-ham-curl",
+                  "name": "Stability Ball Hamstring Curl",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "On the floor, heels on a ball, hips up. Roll the ball in toward your bum by bending the knees, keep the hips up, roll it out slowly. 3x10."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -632,9 +692,9 @@
         "ankle"
       ],
       "$time": {
-        "sets": 23,
-        "fitMin": 90,
-        "fitPlus75thMin": 96.4,
+        "sets": 26,
+        "fitMin": 97,
+        "fitPlus75thMin": 104,
         "how": "minutes = 31.8 + 2.51 x sets, his 17 sessions 2026-08-27 to 2026-10-03 (Theil-Sen), every set counted the same, jump sets included; 75th-percentile residual +6.9."
       },
       "blocks": [
@@ -754,7 +814,7 @@
                   "name": "KB Swing",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Same hip snap, done fast. Hike the bell back between your legs, then SNAP the hips forward so the bell floats to chest height. Arms do nothing. Start at 35 lb. 2x12.",
+                  "cue": "Same hip snap, done fast. Hike the bell back between your legs, then SNAP the hips forward so the bell floats to chest height. Arms do nothing. Start at 16 kg. 2x12.",
                   "sets": 2,
                   "reps": "12"
                 },
@@ -822,8 +882,8 @@
         {
           "role": "main",
           "pairing": "fill",
-          "label": "Hip thrust, reverse fly in the rest",
-          "why": "The glute lift, on the Smith so the bar runs on rails while you learn the position. The reverse fly rides in its rest, for the backs of the shoulders that hold your posture.",
+          "label": "Hip thrust",
+          "why": "The glute lift, on the Smith so the bar runs on rails while you learn the position, or on the hip thrust machine if the gym has one.",
           "exercises": [
             {
               "id": "smith-hip-thrust",
@@ -838,6 +898,13 @@
               "progression": "weight",
               "rangeWidth": 4,
               "alts": [
+                {
+                  "id": "machine-hip-thrust",
+                  "name": "Hip Thrust Machine",
+                  "zone": "machines",
+                  "station": "hip-thrust-machine",
+                  "cue": "If the gym has one, use it instead of the Smith: back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard."
+                },
                 {
                   "id": "back-extension",
                   "name": "45-Degree Back Extension",
@@ -864,47 +931,54 @@
               ],
               "needsFloor": true,
               "firstWeight": {
-                "weight": 70,
-                "say": "First try: start at 70 lb of plates (not counting the Smith bar) and work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
+                "weight": 30,
+                "say": "First try: start at 30 kg of plates (not counting the Smith bar) and work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
               }
-            },
-            {
-              "id": "db-reverse-fly",
-              "name": "DB Reverse Fly",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "zone": "smith",
-              "station": null,
-              "log": true,
-              "cue": "Standing, a dumbbell in each hand. Push your hips back and lean your chest forward to about 45 degrees, back flat, eyes down. Let the dumbbells hang below your chest with a small bend in the elbows. Open your arms out to the SIDES like opening curtains until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Your torso does not rise. Go light, this is a small muscle.",
-              "progression": "weight",
-              "rangeWidth": 8,
-              "alts": [
-                {
-                  "id": "cable-reverse-fly",
-                  "name": "Cable Reverse Fly",
-                  "zone": "cable",
-                  "station": "cable-adjustable",
-                  "cue": "Standing, in the rest between sets of the lift above. At the adjustable cable column, standing tall, a handle in each hand and a small bend in the elbows. Now open your arms out to the SIDES like opening a pair of curtains, until your hands are level with your shoulders. Squeeze the shoulder blades together at the top, then lower slowly. Success looks like: your torso does not rise as you lift, and you feel it between the shoulder blades rather than in your lower back. Go light, this is a small muscle. First time out, pick a weight you are sure you could lift 15 times and stop at 12."
-                },
-                {
-                  "id": "chest-supported-reverse-fly",
-                  "name": "Chest-Supported Reverse Fly",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "Same movement lying face down on an incline bench, which removes the lower back entirely. Use this if the standing version makes your back ache."
-                }
-              ],
-              "whyHere": "The reverse fly rides in its rest"
             }
           ]
         },
         {
           "role": "main",
           "pairing": "sequence",
-          "label": "Vertical pull",
-          "why": "The pull for this session, placed before any carrying so your hands can still hold on.",
+          "label": "Abductor",
+          "why": "The abductor machine for the side of the hip: the sideways work you asked for, done with a load. On its own, because the lift before it works the same muscle and a pair would cost that lift its sets.",
+          "exercises": [
+            {
+              "id": "machine-hip-abduction",
+              "name": "Hip Abduction Machine",
+              "sets": 3,
+              "reps": "12",
+              "rest": "60s",
+              "zone": "machines",
+              "station": "hip-abduction",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "cue": "DRAFT, tell the note box what is wrong with it. The machine where you sit with pads on the OUTSIDE of your knees and push your legs apart. Sit tall, hands on the handles, push out wide, hold one second, then let the legs come back slowly without the weights touching. Leaning a little forward puts more of it into the side of your bum.",
+              "alts": [
+                {
+                  "id": "cable-hip-abduction",
+                  "name": "Cable Hip Abduction",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "Ankle strap on the low pulley, stand side-on and sweep the far leg out to the side and back slowly. 12 a side."
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Band above the knees, sitting on the end of a bench, push the knees apart and back slowly. 20."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "sequence",
+          "label": "Pull-up, then face pull",
+          "why": "The pull for this session, placed before any carrying so your hands can still hold on. Then the face pull at the cable column, for the backs of the shoulders that hold your posture.",
           "exercises": [
             {
               "id": "assisted-pullup",
@@ -915,7 +989,7 @@
               "zone": "machines",
               "station": "assisted-pullup",
               "log": true,
-              "cue": "Set the counterweight so you get 6 clean reps: full hang with straight arms at the bottom, chin over the bar at the top. Log the COUNTERWEIGHT, and remember it is the one number here that should go DOWN over time. When 6 feels easy, take 10 lb of assistance off.",
+              "cue": "Set the counterweight so you get 6 clean reps: full hang with straight arms at the bottom, chin over the bar at the top. Log the COUNTERWEIGHT, and remember it is the one number here that should go DOWN over time. When 6 feels easy, take 5 kg of assistance off.",
               "progression": "weight",
               "rangeWidth": 5,
               "alts": [
@@ -934,6 +1008,36 @@
                   "cue": "Sit tall with your thighs locked under the pad. Start with your arms fully straight so you feel the stretch down your sides. Pull your ELBOWS down toward your ribs rather than thinking about your hands, and bring the bar to your upper chest. Let it back up slowly and all the way straight."
                 }
               ]
+            },
+            {
+              "id": "face-pull",
+              "name": "Face Pull",
+              "sets": 3,
+              "reps": "12",
+              "rest": "60s",
+              "zone": "cable",
+              "station": "cable-adjustable",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "cue": "DRAFT, tell the note box what is wrong with it. Rope on the cable column at forehead height. Hold the rope ends with thumbs toward you, step back until the arms are straight. Pull the rope to your face, splitting the ends past your ears, elbows high and wide, and squeeze the shoulder blades together for one second. Back slowly. Light: if your lower back leans back, it is too heavy.",
+              "alts": [
+                {
+                  "id": "db-reverse-fly",
+                  "name": "DB Reverse Fly",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Standing, a dumbbell in each hand, chest forward to about 45 degrees, back flat. Open your arms out to the sides until your hands are level with your shoulders, squeeze, lower slowly. Light."
+                },
+                {
+                  "id": "cable-reverse-fly",
+                  "name": "Cable Reverse Fly",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "At the cable column, a handle in each hand, arms crossed in front. Open the arms out to the sides until the hands are level with the shoulders, squeeze, back slowly. Light."
+                }
+              ],
+              "whyHere": "Then the face pull at the cable column"
             }
           ]
         },
@@ -977,7 +1081,7 @@
               "zone": "machines",
               "station": null,
               "log": true,
-              "cue": "A heavy dumbbell in each hand, gripped dead centre and squeezed hard so it cannot swing. Hold them a hand's width off your thighs so they do not bump. Stand tall, shoulders down, stomach tight, short quick steps. Start the watch before you pick them up; type the seconds. Reach the top of the time range first, then add 5 lb. Put them down before your form goes.",
+              "cue": "A heavy dumbbell in each hand, gripped dead centre and squeezed hard so it cannot swing. Hold them a hand's width off your thighs so they do not bump. Stand tall, shoulders down, stomach tight, short quick steps. Start the watch before you pick them up; type the seconds. Reach the top of the time range first, then take the next dumbbell up. Put them down before your form goes.",
               "progression": "time",
               "timed": true,
               "bodyweight": false,
@@ -996,7 +1100,7 @@
                   "name": "KB Farmer Carry",
                   "zone": "benchDb",
                   "station": null,
-                  "cue": "Kettlebells instead, and THE RACK STOPS AT 50 LB EACH: that is the whole set, 20 up to 50, two of each. Use this one when the dumbbells are taken, not when you want it heavier. They hang differently and swing a little, so the grip works harder at the same weight."
+                  "cue": "Kettlebells instead, if the gym has them. Use this one when the dumbbells are taken, not when you want it heavier. They hang differently and swing a little, so the grip works harder at the same weight."
                 },
                 {
                   "id": "kb-suitcase-hold",

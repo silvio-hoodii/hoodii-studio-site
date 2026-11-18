@@ -2,7 +2,8 @@ import { today } from '@/lib/day';
 import { NextResponse } from 'next/server';
 import { getExerciseHistories } from '@/lib/gym/db';
 import { suggest, type ExerciseType } from '@/lib/gym/progression';
-import { ladderFor, hasFixedReps, isAssisted, incrementFor, firstWeightFor } from '@/lib/gym/ladder';
+import { ladderFor, hasFixedReps, isAssisted, incrementFor, firstWeightFor, gear, GYM_SINCE, historyTravels } from '@/lib/gym/ladder';
+import { loadStep } from '@/lib/gym/program-shared';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,7 +59,10 @@ export async function POST(req: Request) {
     const histories = await getExerciseHistories(exercises.map((ex) => ex.id), date, 8);
 
     const out = exercises.map((ex) => {
-      const recent = histories.get(ex.id) ?? [];
+      /* A machine at the old gym is not this machine: its sets are history, not a starting weight.
+         See `historyTravels` in ladder.ts. */
+      const all = histories.get(ex.id) ?? [];
+      const recent = historyTravels(ex.id) ? all : all.filter((s) => s.date >= GYM_SINCE);
       const last = recent[0] ?? null;
       const suggestion = suggest(last, {
         type: ex.type || 'weighted',
@@ -76,6 +80,8 @@ export async function POST(req: Request) {
            `movements.json` already knows which lifts are dumbbells. So the seam that keeps
            failing is removed rather than widened: nothing about the ladder crosses the wire. */
         ladder: ladderFor(ex.id),
+        loadStep: loadStep(gear()),
+        unit: gear().unit,
         fixedReps: hasFixedReps(ex.id),
         firstWeight: firstWeightFor(ex.id),
         repSuffix: ex.repSuffix,
@@ -84,6 +90,10 @@ export async function POST(req: Request) {
         /* All eight, for the "weight he has done for every set" lookup in progression.ts. */
         history: recent,
       });
+      /* "First time" is false on a machine he has used for months in Calgary. Say what is true. */
+      if (all.length && !recent.length && suggestion.weight == null) {
+        suggestion.reason = `New gym, new machine: find a weight you can do ${suggestion.reps} clean reps with, then log it.`;
+      }
       return { id: ex.id, last, suggestion, recent, assisted: isAssisted(ex.id) };
     });
 

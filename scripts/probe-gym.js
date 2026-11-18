@@ -252,6 +252,14 @@
   const cardBySlot = (slot) => $$('.ex[data-slot]').find((e) => e.dataset.slot === slot) || null;
   const firstInputs = (c) => $$('input', $('.set-row', c));
 
+  /* THE GHOST TESTS NEED THREE PRE-FILLED CARDS, and since 2026-11-18 Session B has only three on a
+     first visit to a new gym (its machines start fresh, see historyTravels in src/lib/gym/ladder.ts)
+     while Session A has seven free-weight cards. So they run on Session A, whatever an earlier test left on. */
+  async function toSessionA() {
+    const a = $$('.tab').find((t) => /^session a$/i.test(text(t)));
+    if (a && !a.classList.contains('on')) { a.click(); await settled(); await waitFor(() => untouchedGhostCard(), 5000); }
+  }
+
   /* A weighted card no test has touched: every row empty and not done, and a ghost in both boxes of
      set 1, which means the plan read gave it a suggestion. Searched from the bottom of the day. */
   function untouchedGhostCard() {
@@ -581,6 +589,7 @@
     async ghostTickCommitsTheSuggestion() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
       await drain();
+      await toSessionA();
       const c = untouchedGhostCard();
       if (!c) return { pass: false, detail: 'no untouched weighted card with a ghost on set 1 (no suggestion came back from the plan read?)' };
       const name = text($('.ex-name', c));
@@ -588,8 +597,8 @@
       const [w, r] = $$('input', row);
       const gw = w.dataset.ghost;
       const gr = r.dataset.ghost;
-      /* Set 1's ghost IS the suggestion printed on the card, "135 lb × 8". */
-      const m = /^([\d.]+) lb × (\d+)/.exec(text($('.ex-suggest', c)) || '');
+      /* Set 1's ghost IS the suggestion printed on the card, "60 kg × 8" (lb before 2026-11-18). */
+      const m = /^([\d.]+) (?:kg|lb) × (\d+)/.exec(text($('.ex-suggest', c)) || '');
       const looksLikeASuggestion =
         getComputedStyle(w, '::placeholder').fontStyle === 'italic' && w.value === '' && w.placeholder.startsWith(gw);
       const hints = $$('.set-hint').length;
@@ -616,6 +625,7 @@
     async typedWeightOverridesOnlyTheWeight() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
       await drain();
+      await toSessionA();
       const c = untouchedGhostCard();
       if (!c) return { pass: false, detail: 'no second untouched weighted card with a ghost' };
       const slot = c.dataset.slot;
@@ -644,6 +654,7 @@
     async setTwoGhostIsSetOnesCommit() {
       if (!state.patched) return { pass: false, detail: 'fetch not patched' };
       await drain();
+      await toSessionA();
       const c = untouchedGhostCard();
       if (!c) return { pass: false, detail: 'no third untouched weighted card with a ghost' };
       const slot = c.dataset.slot;

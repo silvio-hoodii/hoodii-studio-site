@@ -509,6 +509,15 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false
+        },
+        {
+          "id": "machine-hip-thrust",
+          "name": "Hip Thrust Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "hip-thrust-machine",
+          "loadable": true,
+          "note": "Added 2026-11-18 on his pick: replaces the Smith hip thrust if Pizarro has one. Not confirmed there yet (open question on the station)."
         }
       ],
       "jointAction": "Hip extension with the knee flexed and the spine held still.",
@@ -1532,6 +1541,15 @@
           "station": "cable-adjustable",
           "loadable": true,
           "note": "The only LOADABLE abduction option in the gym. The band versions cannot progress."
+        },
+        {
+          "id": "machine-hip-abduction",
+          "name": "Hip Abduction Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "hip-abduction",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro, on his pick of the abductor machine. The loadable sideways option that the cable version needed a column for."
         }
       ],
       "jointAction": "Hip abduction.",

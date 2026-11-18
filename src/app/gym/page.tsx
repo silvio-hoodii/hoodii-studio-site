@@ -3,7 +3,7 @@ import { computeFillOptions } from '@/lib/gym/fill';
 import { computeNextUp } from '@/lib/gym/cycle';
 import { getNotes, countNotes, getLoggedHistory, getLastSessionSummary, getCarriedSession } from '@/lib/gym/db';
 import { splitName } from '@/lib/gym/program-shared';
-import { barbellIds, variantType } from '@/lib/gym/ladder';
+import { barbellIds, variantType, gear, historyTravels, GYM_SINCE } from '@/lib/gym/ladder';
 import type { DayKey, Program } from '@/lib/gym/types';
 import { getGymLog, countGymLog } from '@/lib/gym/log';
 import SessionLog from '@/components/training/SessionLog';
@@ -43,7 +43,7 @@ export default async function GymHome() {
     getGymLog(5),
     countGymLog(),
     countNotes(),
-    getLoggedHistory(),
+    getLoggedHistory((id) => !historyTravels(id), GYM_SINCE),
     getLastSessionSummary(),
     getCarriedSession(now),
   ]);
@@ -123,7 +123,7 @@ export default async function GymHome() {
       <GymClient
         program={programForPage} warmups={warmups} cooldowns={cooldowns} extraSuggestions={extraSuggestions}
         nextUp={nextUpForPage} fillOptions={fillOptions} lastSession={lastSession}
-        sessionDate={sessionDate} barbellIds={barbellIds()}
+        sessionDate={sessionDate} barbellIds={barbellIds()} gear={gear()}
       />
 
       {/* THE LAST FIVE SESSIONS. Below the workout and above the note box, which is the order he

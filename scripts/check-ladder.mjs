@@ -95,7 +95,7 @@ const equipment = JSON.parse(readFileSync(join(ROOT, 'content/gym/equipment.json
    graph into a script that is offline by design. Neither copy holds a fact the other could
    contradict, only the same lookup. */
 const DUMBBELL_LADDER = [...new Set(
-  (equipment.portable?.dumbbells?.ladderLb ?? []).filter((n) => typeof n === 'number' && n > 0),
+  (equipment.portable?.dumbbells?.ladder ?? []).filter((n) => typeof n === 'number' && n > 0),
 )].sort((a, b) => a - b);
 const IMPLEMENT = new Map();
 for (const movement of Object.values(movements.movements)) {
@@ -110,6 +110,15 @@ const nextWeight = (id, w, increment) => {
   return DUMBBELL_LADDER.find((x) => x > w) ?? w;
 };
 const DEFAULT_WIDTH = 2;
+/* THE GYM'S UNIT AND STEP, since 2026-11-18 (Smart Fit Pizarro, kg). gym_set is kg from that day
+   (content/gym/migrate-to-kg.mjs). The default step is the pair of smallest plates, 2.5 kg, where it was
+   5 lb; machines, cables and the Smith only count sets from equipment.since, because a Calgary pin is
+   not a Pizarro pin. Same rules as src/lib/gym/ladder.ts, read here from the same file. */
+const UNIT = equipment.weightUnit === 'kg' ? 'kg' : 'lb';
+const PLATES = equipment.barbell?.plates ?? [];
+const DEFAULT_STEP = PLATES.length ? 2 * Math.min(...PLATES) : 5;
+const SINCE = equipment.since ?? '1970-01-01';
+const GYM_BOUND = new Set(['machine', 'cable', 'smith']);
 const LOOKBACK_DAYS = 90;
 /** Above this many prescribed reps the Epley estimate is not trustworthy. See the note at its use. */
 const EPLEY_LIMIT = 15;
@@ -126,6 +135,9 @@ const { rows } = await client.query(
   [String(LOOKBACK_DAYS)],
 );
 await client.end();
+for (let i = rows.length - 1; i >= 0; i--) {
+  if (GYM_BOUND.has(IMPLEMENT.get(rows[i].exercise_id) ?? '') && String(rows[i].last_date) < SINCE) rows.splice(i, 1);
+}
 
 /* The weight he actually WORKS at, not his best single: the most-used load, ties going to the
    lighter one. Same rule as workingWeight() in src/lib/gym/progression.ts, deliberately, because a
@@ -206,7 +218,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       if (bottom > EPLEY_LIMIT) { outOfScope.push(`${dayKey}/${ex.id} (${bottom} reps, above the Epley limit)`); continue; }
       const width = ex.rangeWidth != null ? Number(ex.rangeWidth) : DEFAULT_WIDTH;
       const top = bottom + width;
-      const increment = ex.increment != null ? Number(ex.increment) : 5;
+      const increment = ex.increment != null ? Number(ex.increment) : DEFAULT_STEP;
       /* AN ASSISTANCE LIFT IS OUT OF SCOPE FOR THIS CHECK, added 2026-08-28.
          The assisted pull-up logs COUNTERWEIGHT: less of it is harder, so the next rung is
          `w - increment`, not `w + increment`, and every quantity below has its sign inverted. This
@@ -305,7 +317,7 @@ if (!QUIET) {
         for (const f of ex.formerIds ?? []) {
           declaredFormer.add(f);
           const w = working.get(f);
-          if (w) orphanLines.push(`  ${dayKey}/${ex.id} has no rows of its own; its predecessor ${f} works at ${w.w} lb over ${w.n} set(s). Declared, so this is known.`);
+          if (w) orphanLines.push(`  ${dayKey}/${ex.id} has no rows of its own; its predecessor ${f} works at ${w.w} ${UNIT} over ${w.n} set(s). Declared, so this is known.`);
         }
         /* The whole alias family, not just the two ids written here. `machine-calf-raise` is an
            alias of `standing-calf-raise`, so `equivalent-ids.ts` already merges their histories on
@@ -335,7 +347,7 @@ if (!QUIET) {
     console.log(`\nIDS LIFTED IN THE LAST ${ORPHAN_WINDOW_DAYS} DAYS THAT program.json NO LONGER KNOWS, and no slot claims as a formerId:`);
     for (const [id, when] of undeclared) {
       const w = working.get(id);
-      console.log(`  ${id}  last ${when}${w ? `, works at ${w.w} lb over ${w.n} set(s)` : ''}`);
+      console.log(`  ${id}  last ${when}${w ? `, works at ${w.w} ${UNIT} over ${w.n} set(s)` : ''}`);
     }
     console.log('  Either a slot was renamed and nothing recorded it, which is 10-gym P1-2 happening again,');
     console.log('  or it is an off-plan exercise he typed into the capture box, which is fine and needs nothing.');
@@ -360,8 +372,8 @@ if (gaps.length) {
         + `second session before taking a rung the range does not bank. Nothing to change in program.json. Edit the data only `
         + `if a smaller step exists on this equipment that he has actually used.`;
     console.error(
-      `  ${r.dayKey}/${r.id} at ${r.w} lb: ${r.bottom}-${r.top} banks ${r.banked.toFixed(1)} but the next rung, `
-      + `${r.next} lb (+${r.step}), demands ${r.demanded.toFixed(1)}. ${r.fix}`,
+      `  ${r.dayKey}/${r.id} at ${r.w} ${UNIT}: ${r.bottom}-${r.top} banks ${r.banked.toFixed(1)} but the next rung, `
+      + `${r.next} ${UNIT} (+${r.step}), demands ${r.demanded.toFixed(1)}. ${r.fix}`,
     );
   }
   /* EXIT 0 WHERE THE ENGINE ALREADY ANSWERS IT. This exited 1 on the lateral raise for six of the

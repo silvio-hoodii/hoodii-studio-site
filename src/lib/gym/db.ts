@@ -465,18 +465,32 @@ export async function getSessionForHydrate(date: string) {
  *  of the whole table, including the tie-break: `mode()` returns the first value in its sort order,
  *  so `order by weight desc` breaks a tie toward the heavier weight, as workingWeight does. Counting
  *  round trips rather than work is the billing rule in AGENTS.md. */
-export async function getLoggedHistory(): Promise<Map<string, { sets: number; weight: number | null }>> {
+/** `bound` names the lifts whose numbers belong to one gym (machines, cables, Smith; see
+ *  historyTravels in ladder.ts): for those only sets from `since` on count, so the swap list never
+ *  says "you have done 12 sets at 45 kg" about a Calgary machine. Same rule as the plan route. */
+export async function getLoggedHistory(bound: (id: string) => boolean = () => false, since = '1970-01-01'): Promise<Map<string, { sets: number; weight: number | null }>> {
   const rows = await sql`
-    select exercise_id,
+    select exercise_id, here,
            count(*)::int as sets,
            mode() within group (order by weight desc) filter (where weight is not null) as weight
-      from gym_set
-     where ${PERFORMED} and reps is not null and reps > 0
-     group by exercise_id
+      from (select exercise_id, weight, date >= ${since} as here
+              from gym_set
+             where ${PERFORMED} and reps is not null and reps > 0) g
+     group by exercise_id, here
   `;
   const out = new Map<string, { sets: number; weight: number | null }>();
-  for (const r of rows as unknown as { exercise_id: string; sets: number; weight: number | null }[]) {
-    out.set(r.exercise_id, { sets: r.sets, weight: r.weight == null ? null : Number(r.weight) });
+  const all = new Map<string, { sets: number; weight: number | null; hereSets: number; hereWeight: number | null; anyWeight: number | null }>();
+  for (const r of rows as unknown as { exercise_id: string; here: boolean; sets: number; weight: number | null }[]) {
+    const cur = all.get(r.exercise_id) ?? { sets: 0, weight: null, hereSets: 0, hereWeight: null, anyWeight: null };
+    const w = r.weight == null ? null : Number(r.weight);
+    cur.sets += r.sets;
+    if (r.here) { cur.hereSets += r.sets; cur.hereWeight = w; } else if (cur.anyWeight == null) cur.anyWeight = w;
+    all.set(r.exercise_id, cur);
+  }
+  for (const [id, c] of all) {
+    if (bound(id)) { if (c.hereSets) out.set(id, { sets: c.hereSets, weight: c.hereWeight }); continue; }
+    /* Travelling lifts: all sets count; the weight is the newer period's when there is one. */
+    out.set(id, { sets: c.sets, weight: c.hereWeight ?? c.anyWeight });
   }
   return out;
 }

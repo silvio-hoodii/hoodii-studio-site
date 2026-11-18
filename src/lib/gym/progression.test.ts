@@ -339,25 +339,75 @@ check(
   'bench after 33 days, working weight below the range: start where he last made the range, not a step above',
   suggest({ date: '2026-08-04', sets: [{ weight: 185, reps: 3 }, { weight: 185, reps: 3 }, { weight: 165, reps: 8 }] },
     plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-09-06' })),
-  (s) => s.weight === 165 && s.reps === 6,
-  '165 x 6: the heaviest weight he hit six or more at. The card said 190 x 6 above a 185 x 3',
+  (s) => s.weight === 145 && s.reps === 6,
+  '145 x 6: about 10% under 165, the heaviest weight he hit six or more at (easy return, 2026-11-18). The card once said 190 x 6 above a 185 x 3',
 );
 
 /* THE UPWARD PROBE WAS REMOVED ON 2026-10-04, on his 2026-09-01 ruling (form over heavier). This case
    used to assert the step up; it now asserts the hold, and the next one is his real press. */
+/* EASY RETURN since 2026-11-18, his ruling after five weeks off ("Easy return, 2 weeks"): about 10%
+   under where he was, rounded DOWN to a weight that exists, and at least one step under it. */
 check(
-  'a long gap after a session inside the range starts where he was, no step up',
+  'a long gap after a session inside the range starts about 10% under where he was, never above',
   suggest(session('2026-08-04', 3, 165, 8), plan({ type: 'weighted', targetReps: 6, rangeWidth: 4, increment: 5, today: '2026-09-06' })),
-  (s) => s.weight === 165 && s.reps === 6,
-  '165 x 6: the weight he left at',
+  (s) => s.weight === 145 && s.reps === 6,
+  '145 x 6: 165 x 0.9 = 148.5, floored to the 5 lb step',
 );
 
 check(
-  'standing DB press, 32 days after 60x9/9: the card offers 60, not 65',
+  'standing DB press, 32 days after 60x9/9: the card offers a rung under 60, never 65',
   suggest({ date: '2026-09-03', sets: [{ weight: 60, reps: 9 }, { weight: 60, reps: 9 }] },
     plan({ type: 'weighted', targetReps: 8, rangeWidth: 4, today: '2026-10-05', ladder: [10, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90] })),
-  (s) => s.weight === 60,
-  '60 (it printed "probe: 60 up one step to 65", above his seated 60x6/7/6 of 2026-09-28)',
+  (s) => s.weight === 50,
+  '50: 60 x 0.9 = 54, the rack rung at or below is 50',
+);
+
+/* ---- kg, Smart Fit Pizarro, 2026-11-18 ----------------------------------------------------------- */
+/* His real RDL: 185 lb on 2026-10-12, stored as 83.9 kg after the conversion. With 2.5 kg plates the
+   easy return is 75, and a converted odd number must never round back UP to where he was. */
+check(
+  'kg barbell after 37 days: 83.9 (his 185 lb) starts at 75 on 2.5 kg plates',
+  suggest(session('2026-10-12', 3, 83.9, 6), plan({ type: 'weighted', targetReps: 6, rangeWidth: 2, loadStep: 2.5, today: '2026-11-18' })),
+  (s) => s.weight === 75 && s.reps === 6,
+  '75 x 6',
+);
+check(
+  'kg dumbbell after 37 days: 15.9 (his 35 lb curl) starts at 14 on a 2 kg rack',
+  suggest(session('2026-10-12', 3, 15.9, 8), plan({ type: 'weighted', targetReps: 8, rangeWidth: 4, loadStep: 2.5, today: '2026-11-18', ladder: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20] })),
+  (s) => s.weight === 14,
+  '14',
+);
+check(
+  'kg barbell progression steps by 2.5, not 5',
+  suggest(session('2026-11-20', 3, 60, 8), plan({ type: 'weighted', targetReps: 6, rangeWidth: 2, loadStep: 2.5, today: '2026-11-23' })),
+  (s) => s.weight === 62.5,
+  '62.5 after 60 x 8/8/8 in a 6 to 8 range',
+);
+/* THE SENTENCE, not just the number: the adversary review of 2026-11-18 found "+2.5 lb" on a kg card
+   and "about 10% under 6" on a drop the 2 kg rack made 33%. Both passed every number-only check. */
+check(
+  'a kg step-up card says kg, never lb',
+  suggest(session('2026-11-20', 3, 60, 8), plan({ type: 'weighted', targetReps: 6, rangeWidth: 2, loadStep: 2.5, unit: 'kg', today: '2026-11-23' })),
+  (s) => /\+2\.5 kg\./.test(s.reason) && !/\blb\b/.test(s.reason),
+  '"up to 62.5, +2.5 kg."',
+);
+check(
+  'the easy-return sentence states the real drop',
+  suggest(session('2026-10-12', 3, 6, 12), plan({ type: 'weighted', targetReps: 12, rangeWidth: 6, loadStep: 2.5, unit: 'kg', today: '2026-11-18', ladder: [2, 4, 6, 8, 10] })),
+  (s) => s.weight === 4 && /33% under 6/.test(s.reason),
+  '4, "33% under 6"',
+);
+check(
+  'bodyweight after a long gap aims at the old best, no +1 probe',
+  suggest(session('2026-10-12', 3, null, 10), plan({ type: 'bodyweight', targetReps: 10, rangeWidth: 2, today: '2026-11-18' })),
+  (s) => s.reps === 10,
+  '10',
+);
+check(
+  'a counterweight after a long gap gets MORE help, about 10%',
+  suggest(session('2026-10-12', 3, 18.1, 6), plan({ type: 'weighted', targetReps: 6, rangeWidth: 2, loadStep: 2.5, assistance: true, today: '2026-11-18' })),
+  (s) => s.weight === 20,
+  '20 (18.1 x 1.1 = 19.9, up to the next 2.5)',
 );
 
 /* ---- the working weight of a ramp ---------------------------------------------------------------- */
