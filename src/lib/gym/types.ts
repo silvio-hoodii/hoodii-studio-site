@@ -227,7 +227,10 @@ export interface Day {
  *  'fb', alternating (ROTATION in program-shared.ts). The retired 'a', 'b' and 'l1' 'u1' 'l2' 'u2'
  *  keys live on only in old rows of his log. Which weekday a session is SCHEDULED on is `Day.scheduledOn`, a
  *  different fact that only the plan view and the rest-rule gate need. */
-export type DayKey = 'fa' | 'fb';
+/*  FIVE SINCE 2026-11-18 ('lo1' 'up1' 'lo2' 'up2' 'lo3'), weekday mornings at Smart Fit Pizarro, on
+ *  his words: "the perfect timing for me is between 6 and 8 a.m. on weekdays". 'fa' and 'fb' stay in
+ *  old rows only. */
+export type DayKey = 'lo1' | 'up1' | 'lo2' | 'up2' | 'lo3';
 
 /** WHAT THE LIFTING IS FOR, in his words. Required; validate.mjs fails the build without it. It was
  *  stated five times between May and September 2026 and written nowhere, and every rebuild in that

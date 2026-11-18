@@ -12,13 +12,16 @@ import type { Day, DayKey, Exercise, Alt, ExerciseType } from './types';
  *  (keys 'a', 'b') ran 2026-09-06 to 2026-10-04; keys a to d
  *  before 2026-09-03, weekday names before that. Old rows keep their keys and render by their stored
  *  title, so no key is ever reused for a different session. */
-export const DAY_ORDER: DayKey[] = ['fa', 'fb'];
+/*  FIVE SESSIONS SINCE 2026-11-18, Smart Fit Pizarro, weekday mornings: lower, upper, lower, upper,
+ *  lower. New keys, so no old row is read as one of these. A missed morning does not skip a session:
+ *  the next one is the one after the last one done, as before. */
+export const DAY_ORDER: DayKey[] = ['lo1', 'up1', 'lo2', 'up2', 'lo3'];
 /** THE ROTATION: the next lifting session is the one after the last one done, in this order, and
  *  any length works. cycle.ts reads only this list. */
-export const ROTATION: DayKey[] = ['fa', 'fb'];
+export const ROTATION: DayKey[] = ['lo1', 'up1', 'lo2', 'up2', 'lo3'];
 /** The first day of the current rotation. Watch lifts before it are not steps of it: without this,
  *  a rotation with nothing logged under its keys yet counted every watch lift ever recorded. */
-export const ROTATION_SINCE = '2026-10-11';
+export const ROTATION_SINCE = '2026-11-19';
 /** THE FREE DAY's key in gym_set and gym_session, since 2026-10-10. Not a programme day and not in
  *  ROTATION, so nothing logged under it moves the rotation: the next session waits for him. */
 export const FREE_DAY = 'free';

@@ -221,7 +221,7 @@ export function tierFor(tiers: Tier[], n: number): Tier {
  *  (`scheduledOn` carries the two weekdays). Per-session columns read A then B; WEEKLY totals in this
  *  file multiply each session's contribution by how many times a week it is scheduled, so a set in
  *  Session A counts twice in the weekly number and once in the A column. */
-export const COVERAGE_DAY_ORDER = ['fa', 'fb'];
+export const COVERAGE_DAY_ORDER = ['lo1', 'up1', 'lo2', 'up2', 'lo3'];
 
 /** One exercise's contribution to ONE muscle on ONE day. */
 export interface Contribution {

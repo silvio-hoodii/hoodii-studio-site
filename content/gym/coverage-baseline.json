@@ -25,29 +25,26 @@
     "present unless `--accept-regression` is also passed, so silencing a new below-minimum muscle",
     "cannot happen by reflex. The git diff of this file is the whole record of what was accepted."
   ],
-  "accepted": "2026-10-11",
-  "acceptedBecause": "Version 5 of the two full-body sessions, 2026-10-11, on his rulings that afternoon: three sets minimum on every exercise (\"why are there exercise of 2 sets thats a waste of time make ot 3 at leats\") and about 90 minutes (\"dont care about 80 or 90 if its a good enough program and reliable\"). Every big muscle has direct loaded work: chest 12 (both sessions), lats 12, biceps 12, triceps 12, hamstrings 15, glutes 30, quads 12, side delts 6, rear delts 9. CALVES BELOW THE FLOOR: his ruling, no calf raises. ABS 0 loaded: the hanging leg raise and the farmer carry, accepted in program.json acceptedGaps.abs. No strict Zhang pairing, no unsourced exercise.",
-  "belowMinimum": [
-    "calves"
-  ],
+  "accepted": "2026-11-18",
+  "acceptedBecause": "The five weekday sessions at Smart Fit Pizarro, 2026-11-18, on his rulings that day (Monday to Friday, about 75 minutes, chest first on both upper days, hips through full range, no jumps). Direct sets per week: glutes 36, quads 18, hamstrings 12, chest 12, lats 12, rear delts 9, biceps 6, triceps 6, side delts 6, inner thigh 6, abs 9 (leg raises and Pallof press; loaded abs 3, accepted in program.json acceptedGaps.abs). Lower back and front delts have no direct exercise by design: the RDLs and squats and every press load them. CALVES 0: his ruling, no calf raises.",
+  "belowMinimum": [],
   "strictPairs": [],
   "unsourced": [],
   "perMuscle": {
-    "glutes": 34,
+    "glutes": 39,
     "grip": 24,
-    "quads": 16,
+    "quads": 21,
+    "upper-back": 18,
+    "hamstrings": 16.5,
     "erectors": 15,
-    "upper-back": 15,
-    "hamstrings": 15,
-    "triceps": 12,
+    "adductors": 13.5,
+    "abs": 13.5,
     "chest": 12,
-    "lats": 12,
     "biceps": 12,
-    "abs": 9,
-    "rear-delts": 9,
-    "adductors": 8,
-    "front-delts": 6,
+    "lats": 12,
+    "rear-delts": 12,
+    "triceps": 10.5,
     "side-delts": 6,
-    "calves": 2
+    "front-delts": 4.5
   }
 }

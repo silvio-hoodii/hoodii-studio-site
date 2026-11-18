@@ -55,23 +55,15 @@
       "stations": {
         "rack": {
           "name": "Squat rack",
-          "count": "unknown",
-          "confidence": "carried",
-          "evidence": "Tall black frames along the mirror wall of the free-weight area (photos 23248, 23251). From the photos they could be squat racks or Smith machines.",
+          "count": 1,
+          "confidence": "stated",
+          "evidence": "He said on 2026-11-18, after his first visit: \"theres only one proper squat rack\". Free at 6:30.",
           "sharedInOneWindow": true,
           "sharedBecause": "His pairing rule, case (a), is 'same equipment': two barbell lifts in one rack.",
           "adjacentTo": [
             "rack-pullup-bar"
           ],
-          "adjacentBecause": "See rack-pullup-bar.",
-          "open": [
-            {
-              "q": "If there are no squat racks here, the squat and the Romanian deadlift move to the Smith machine or to dumbbells. Along the free-weight wall, are the tall frames squat racks (bar on hooks) or Smith machines (bar on rails)?",
-              "asked": "2026-11-18",
-              "due": "2026-11-25",
-              "topic": "equipment"
-            }
-          ]
+          "adjacentBecause": "See rack-pullup-bar."
         },
         "rack-pullup-bar": {
           "name": "Pull-up bar on top of the rack",
@@ -173,19 +165,19 @@
         "leg-extension": {
           "name": "Leg extension",
           "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo.",
+          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "leg-curl": {
           "name": "Leg curl",
           "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo. Seated or lying, either works for the card.",
+          "evidence": "Standard in a Matrix row; not identified in a photo. Seated or lying, either works for the card. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "hip-abduction": {
           "name": "Hip abduction machine (legs push out)",
           "confidence": "carried",
-          "evidence": "Standard in a Smart Fit machine row; not identified in a photo. Usually one machine that does abduction and adduction.",
+          "evidence": "Standard in a Smart Fit machine row; not identified in a photo. Usually one machine that does abduction and adduction. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "hip-thrust-machine": {
@@ -205,25 +197,25 @@
         "chest-press": {
           "name": "Chest press machine",
           "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo.",
+          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "shoulder-press": {
           "name": "Shoulder press machine",
           "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo.",
+          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "pec-deck": {
           "name": "Chest fly / rear delt fly machine",
           "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo.",
+          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "assisted-pullup": {
           "name": "Assisted pull-up",
-          "confidence": "unknown",
-          "evidence": "Not seen in a Pizarro photo. The lat pulldown is the swap.",
+          "confidence": "carried",
+          "evidence": "On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch: machine 61, \"Assisted Dip/Chin\". Not yet seen at Pizarro.",
           "sharedInOneWindow": false,
           "open": [
             {
@@ -243,13 +235,37 @@
         "back-extension": {
           "name": "45-degree back extension",
           "confidence": "carried",
-          "evidence": "Usual in a Smart Fit; not identified in a photo.",
+          "evidence": "Usual in a Smart Fit; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false
         },
         "calf-raise": {
           "name": "Standing calf raise",
           "confidence": "unknown",
           "evidence": "Not seen. Not in the week (his ruling 2026-09-06).",
+          "sharedInOneWindow": false
+        },
+        "hack-squat": {
+          "name": "Hack squat",
+          "confidence": "carried",
+          "evidence": "On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch: machine 10, \"Linear hack\".",
+          "sharedInOneWindow": false
+        },
+        "hip-adductor": {
+          "name": "Hip adduction machine (legs squeeze in)",
+          "confidence": "carried",
+          "evidence": "On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch: machine 06.",
+          "sharedInOneWindow": false
+        },
+        "high-row": {
+          "name": "High row, plate-loaded",
+          "confidence": "stated",
+          "evidence": "He used it on 2026-11-18: 30 kg a side, 3x10.",
+          "sharedInOneWindow": false
+        },
+        "low-row": {
+          "name": "Incline low row, plate-loaded",
+          "confidence": "stated",
+          "evidence": "He used it on 2026-11-18: 40 kg a side, 3x6.",
           "sharedInOneWindow": false
         }
       }
@@ -351,7 +367,7 @@
     "dumbbells": {
       "name": "Dumbbells",
       "needsFloor": false,
-      "confidence": "photo",
+      "confidence": "stated",
       "range": {
         "max": 40
       },
@@ -385,7 +401,7 @@
         "first visit; every card moves with it. Same reason as the Calgary note: the list IS the rack, and",
         "progression.ts picks the next entry above the working weight without knowing the step."
       ],
-      "evidence": "Photos 23248 and 23251 (dumbbell racks); kg, because every plate in the photos is marked 20 or 10 and Peru is metric.",
+      "evidence": "He used 6, 16 and 24 kg dumbbells on 2026-11-18. Racks also in photos 23248 and 23251.",
       "open": [
         {
           "q": "What are the dumbbells at Pizarro: do they go up by 2 kg (10, 12, 14) or by 2.5 kg (10, 12.5, 15), and what is the heaviest pair?",
@@ -398,8 +414,11 @@
     "kettlebells": {
       "name": "Kettlebells",
       "needsFloor": false,
-      "confidence": "unknown",
-      "evidence": "Not seen at Pizarro."
+      "confidence": "stated",
+      "evidence": "He said on 2026-11-18: \"kb only goes to 16 kg\".",
+      "range": {
+        "max": 16
+      }
     },
     "floor-mat": {
       "name": "Mat",

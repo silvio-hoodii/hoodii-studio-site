@@ -105,13 +105,18 @@ rule('=');
  *
  * THE REAL CONSTRAINT IS HIS TIME, and this report cannot see it, so it stops pretending to. */
 console.log(`\nPER MUSCLE, for SIZE  (Table 3: minimum ${MIN_EFFECTIVE_DOSE}; 5 to ${EFFICIENT_ZONE_TOP} is the CHEAPEST band, not a cap)\n`);
-console.log(pad('muscle', 22) + padL('all', 6) + padL('loaded', 8) + '  ' + pad('tier (on loaded)', 17) + `per day (${coverage.dayOrder.map((k) => program.days?.[k]?.name ?? k).join(' / ')})`);
+/* DIRECT IS PRINTED BESIDE THE HALF-COUNT, since 2026-11-18, on his ruling after the count had
+ * flipped twice (direct-only gate 2026-09-01, back to fractional 2026-09-03): "we keep going back and
+ * forth on direct, indirect". The week is judged on the fractional count, which Pelland found fits
+ * best for both size and strength; `direct` sits beside it so a muscle trained only by other lifts'
+ * help is visible at a glance. Neither number is shown alone. */
+console.log(pad('muscle', 22) + padL('direct', 7) + padL('all', 6) + padL('loaded', 8) + '  ' + pad('tier (on loaded)', 17) + `per day (${coverage.dayOrder.map((k) => program.days?.[k]?.name ?? k).join(' / ')})`);
 rule();
 for (const m of coverage.perMuscle) {
   const byDay = m.byDay.map((v) => (v ? String(v) : '.')).join(' / ');
   const flag = m.belowMinimum ? ' <<' : '';
   const gap = m.sets !== m.loadedSets ? '*' : ' ';
-  console.log(pad(m.label, 22) + padL(m.sets, 6) + padL(m.loadedSets, 7) + gap + '  ' + pad(m.loadedTier.tier, 17) + byDay + flag);
+  console.log(pad(m.label, 22) + padL(m.directSets, 7) + padL(m.sets, 6) + padL(m.loadedSets, 7) + gap + '  ' + pad(m.loadedTier.tier, 17) + byDay + flag);
 }
 console.log(`\n  <<  below the minimum effective dose of ${MIN_EFFECTIVE_DOSE} fractional sets. This is the only line here that is a problem.`);
 console.log('   *  "all" includes jumps, carries and holds; "loaded" does not. A three-rep box jump is');

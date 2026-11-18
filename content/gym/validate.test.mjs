@@ -283,6 +283,20 @@ const rebuildBlockAs = (p, leadId, partnerId) => {
     const LOWER = ['quads', 'hamstrings', 'glutes', 'adductors', 'calves'];
     owner.warmup = leadPrimary.some((m) => LOWER.includes(m)) ? 'lower' : 'upper';
   }
+  /* AND SO DOES ITS PLACE IN THE ROUTE, added 2026-11-18 with the five-session week. A rebuilt block
+     can lead from a zone its day already visited elsewhere, and the route gate then refuses the day
+     for walking back, which is a correct refusal of something this case is not about. So the block
+     moves next to the other blocks of its lead's zone, or to the end of the day if there are none,
+     which is where a real author would put it. Fourth time: replacing a block's contents means
+     replacing everything that describes them, its position included. */
+  if (owner) {
+    const zone = block.exercises[0].zone;
+    const rest = owner.blocks.filter((b) => b !== block);
+    let at = -1;
+    rest.forEach((b, i) => { if (b.exercises?.[0]?.zone === zone) at = i; });
+    rest.splice(at === -1 ? rest.length : at + 1, 0, block);
+    owner.blocks = rest;
+  }
   return block;
 };
 
@@ -1263,7 +1277,16 @@ const CASES = [
      sessions became two and no gate noticed. These hold goal.keep to its job. */
   {
     name: 'a week with the curl taken out is refused (biceps is on his keep list)',
-    mutate: (p) => { for (const d of Object.values(p.days)) d.blocks = d.blocks.filter((b) => !b.exercises.some((e) => e.id === 'bicep-curl')); },
+    /* EVERY biceps option on his keep list, since 2026-11-18: the five-session week has the curl AND
+       the hammer curl, so taking out the curl alone leaves biceps in the week and the gate rightly
+       stays quiet. The case is "no biceps work at all", which is what the keep list guards. */
+    mutate: (p) => {
+      const ids = new Set(p.goal.keep.find((k) => k.what === 'biceps').anyOf);
+      for (const d of Object.values(p.days)) {
+        for (const b of d.blocks) b.exercises = b.exercises.filter((e) => !ids.has(e.id));
+        d.blocks = d.blocks.filter((b) => b.exercises.length);
+      }
+    },
     expect: '"biceps" is no longer in the week',
   },
   {

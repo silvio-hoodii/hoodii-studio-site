@@ -844,7 +844,7 @@ for (const [dayKey, day] of Object.entries(program.days)) {
        * Word boundaries, and an explicit refusal of the two body words that follow. A gate whose
        * escape hatch can be opened by an anatomical noun is a gate that checks less than it claims,
        * which is theme T6 of the 2026-08-28 audit and is now three for three on this file. */
-      const DAY_WORD = /\b(session [abcd]|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab12])\b(?!\s*(?:back|body))/i;
+      const DAY_WORD = /\b(session [abcd]|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:lower|upper) [ab123])\b(?!\s*(?:back|body))/i;
 
       /* AND NAMING A DAY IS NO LONGER A BLANK CHEQUE. 10-gym P1-9 proposed this and it was never
        * built: a `why` that names a weekday must name something ACTUALLY ON THAT DAY. Thursday's
@@ -867,6 +867,9 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       /* BACK TO TWO, 2026-10-11 (keys fa, fb): Session A and B name the new keys; the four-session
          names above now resolve to keys that no longer exist and are refused. */
       DAY_OF['session a'] = 'fa'; DAY_OF['session b'] = 'fb';
+      /* FIVE SESSIONS, 2026-11-18 (keys lo1 up1 lo2 up2 lo3). Session A and B now resolve to keys that
+         no longer exist and are refused. */
+      Object.assign(DAY_OF, { 'lower 1': 'lo1', 'upper 1': 'up1', 'lower 2': 'lo2', 'upper 2': 'up2', 'lower 3': 'lo3' });
       /* 'session c' resolves to the real Saturday session since 2026-09-04; 'session d' resolves to
          nothing that exists and is therefore refused, which is the point of keeping it in the map. */
       const namesOn = (dayKey) => {

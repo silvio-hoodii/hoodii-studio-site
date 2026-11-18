@@ -252,11 +252,12 @@
   const cardBySlot = (slot) => $$('.ex[data-slot]').find((e) => e.dataset.slot === slot) || null;
   const firstInputs = (c) => $$('input', $('.set-row', c));
 
-  /* THE GHOST TESTS NEED THREE PRE-FILLED CARDS, and since 2026-11-18 Session B has only three on a
-     first visit to a new gym (its machines start fresh, see historyTravels in src/lib/gym/ladder.ts)
-     while Session A has seven free-weight cards. So they run on Session A, whatever an earlier test left on. */
+  /* THE GHOST TESTS NEED THREE PRE-FILLED CARDS, and at a new gym machines start fresh (see
+     historyTravels in src/lib/gym/ladder.ts). Since the five-session week (2026-11-18) Upper 1 has the
+     most free-weight cards with history (incline press, lateral raise, triceps extension, curl), so
+     they run there, whatever an earlier test left on. */
   async function toSessionA() {
-    const a = $$('.tab').find((t) => /^session a$/i.test(text(t)));
+    const a = $$('.tab').find((t) => /^upper 1$/i.test(text(t)));
     if (a && !a.classList.contains('on')) { a.click(); await settled(); await waitFor(() => untouchedGhostCard(), 5000); }
   }
 
@@ -1010,8 +1011,15 @@
     async fillOnABlockThatBecamePairedStillShows() {
       /* The lead is the FIRST exercise of a two-exercise block: the RDL after knee raises joined it.
          A fill logged there before the pairing must still render its sets, not vanish. */
-      const paired = $$('.exgroup').find((g) => $$('.ex[data-slot]', g).length === 2);
-      if (!paired) return { pass: false, detail: 'no paired block on this tab to test against' };
+      /* Since the five-session week (2026-11-18) only Lower 1 and Upper 2 hold a pair, so the case
+         walks the tabs to one instead of failing on whichever tab an earlier test left open. */
+      const pairedHere = () => $$('.exgroup').find((g) => $$('.ex[data-slot]', g).length === 2);
+      for (const t of $$('.tab')) {
+        if (pairedHere()) break;
+        t.click(); await settled();
+      }
+      const paired = pairedHere();
+      if (!paired) return { pass: false, detail: 'no paired block on any tab to test against' };
       const lead = $('.ex[data-slot]', paired).dataset.slot;
       state.sessionRows = [
         { exercise_id: 'probe-fill-y', exercise_name: 'Probe Fill Y', set_idx: 1, weight: 20, reps: 9, done: true, swapped_from: null, off_plan: true, fill_for: lead },

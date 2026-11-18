@@ -181,6 +181,15 @@
           "station": "leg-press",
           "loadable": true,
           "note": "In the gym, never prescribed, never logged. No erector or trunk demand, which makes it the one bilateral squat option that pairs freely."
+        },
+        {
+          "id": "hack-squat",
+          "name": "Hack Squat",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "hack-squat",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro. Deep and back-supported; the swap for the leg press."
         }
       ],
       "jointAction": "Knee extension and hip extension, simultaneously, under an axial load.",
@@ -571,6 +580,24 @@
           "zone": "benchDb",
           "station": null,
           "loadable": false
+        },
+        {
+          "id": "cossack-squat",
+          "name": "Cossack Squat",
+          "implement": "dumbbell",
+          "zone": "benchDb",
+          "station": null,
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro. A deep side-to-side squat: the sideways work and the hip range in one loaded lift."
+        },
+        {
+          "id": "machine-hip-adduction",
+          "name": "Hip Adduction Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "hip-adductor",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro."
         }
       ],
       "jointAction": "Hip adduction. In the lunge variants, also knee extension and hip extension on the loaded leg.",
@@ -736,6 +763,15 @@
           "zone": "cable",
           "station": "cable-adjustable",
           "loadable": true
+        },
+        {
+          "id": "pec-deck-fly",
+          "name": "Pec Fly Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "pec-deck",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro."
         }
       ],
       "jointAction": "Shoulder horizontal adduction, elbow held static.",
@@ -879,6 +915,24 @@
           "zone": "rack",
           "station": "trx",
           "loadable": false
+        },
+        {
+          "id": "high-row",
+          "name": "High Row (plate-loaded, kg a side)",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "high-row",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro. He logs the plates on ONE side, as he wrote it."
+        },
+        {
+          "id": "low-row",
+          "name": "Incline Low Row (plate-loaded, kg a side)",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "low-row",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro. He logs the plates on ONE side, as he wrote it."
         }
       ],
       "jointAction": "Scapular retraction, shoulder extension and horizontal abduction, elbow flexion. Bent-over variants add trunk anti-flexion.",
@@ -1070,6 +1124,15 @@
           "zone": "benchDb",
           "station": "bench",
           "loadable": true
+        },
+        {
+          "id": "pec-deck-rear-delt",
+          "name": "Rear Delt Machine",
+          "implement": "machine",
+          "zone": "machines",
+          "station": "pec-deck",
+          "loadable": true,
+          "note": "Added 2026-11-18 for Smart Fit Pizarro. The pec fly machine, sitting the other way round."
         }
       ],
       "jointAction": "Shoulder horizontal abduction and external rotation.",
