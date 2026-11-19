@@ -331,6 +331,11 @@
         "on": "2026-11-19",
         "hisWords": "hanging knee raises cant be done with squat rack when doing squats",
         "hash": "4a375741cc892be4"
+      },
+      {
+        "on": "2026-11-19",
+        "hisWords": "apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl",
+        "hash": "f110f21585cfd948"
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -476,9 +481,9 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
-          "label": "Back of the thigh, Cossack in the rest",
-          "why": "The hamstrings directly, on the machine. Take the seated one if there are both. And the Cossack squat rides in its rest, one dumbbell carried to the machine: hip range and the inner thighs.",
+          "pairing": "sequence",
+          "label": "Back of the thigh",
+          "why": "The hamstrings directly, on the machine. Take the seated one if there are both. Alone because dumbbells are not allowed in the machine area.",
           "exercises": [
             {
               "id": "leg-curl",
@@ -501,7 +506,74 @@
                   "cue": "On the floor, heels on a ball, hips up. Roll the ball in toward your bum by bending the knees, keep the hips up, roll it out slowly. 3x10."
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "sequence",
+          "label": "Sideways",
+          "why": "The glute muscles that move the leg out to the side, which a squat barely touches. Alone because dumbbells are not allowed in the machine area.",
+          "exercises": [
+            {
+              "id": "machine-hip-abduction",
+              "name": "Hip Abduction Machine",
+              "sets": 3,
+              "reps": "12",
+              "rest": "60s",
+              "zone": "machines",
+              "station": "hip-abduction",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "cue": "DRAFT, tell the note box what is wrong with it. The machine where you sit with pads on the OUTSIDE of your knees and push your legs apart. Set the start lever so your knees begin together. Sit tall, push out as far as your hips open, hold one second, come back slowly. A short range is normal here; the Cossack and 90/90 work on opening. Add weight only if the range stays the same.",
+              "alts": [
+                {
+                  "id": "cable-hip-abduction",
+                  "name": "Cable Hip Abduction",
+                  "zone": "cable",
+                  "station": "cable-adjustable",
+                  "cue": "Ankle strap on the low pulley, stand side-on and sweep the far leg out to the side and back slowly. 12 a side."
+                },
+                {
+                  "id": "banded-hip-abduction",
+                  "name": "Banded Hip Abduction",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Band above the knees, sitting on the end of a bench, push the knees apart and back slowly. 20."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "sequence",
+          "label": "Front of the thigh",
+          "why": "The quads alone, a short finish on the same row of machines. Alone because dumbbells are not allowed in the machine area.",
+          "exercises": [
+            {
+              "log": true,
+              "id": "leg-extension",
+              "name": "Leg Extension",
+              "sets": 3,
+              "reps": "10",
+              "rest": "60s",
+              "zone": "machines",
+              "station": "leg-extension",
+              "progression": "weight",
+              "rangeWidth": 4,
+              "cue": "DRAFT, tell the note box what is wrong with it. Knees lined up with the machine's pivot, pad just above the ankles. Straighten your legs fully and hold one second, then lower slowly.",
+              "alts": []
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Hips, curl in the rest",
+          "why": "A deep side-to-side squat with a dumbbell: hip range and the inner thighs, loaded so it keeps improving. And the curl rides in its rest, both in the dumbbell area.",
+          "exercises": [
             {
               "log": true,
               "id": "cossack-squat",
@@ -522,44 +594,6 @@
                   "station": null,
                   "cue": "Step wide to one side, sit back over that leg with the other straight, push back to standing. Less depth than the Cossack."
                 }
-              ],
-              "whyHere": "the Cossack squat rides in its rest, one dumbbell carried to the machine"
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "fill",
-          "label": "Sideways, curl in the rest",
-          "why": "The glute muscles that move the leg out to the side, which a squat barely touches. And the curl rides in its rest, with a pair of dumbbells carried to the machine.",
-          "exercises": [
-            {
-              "id": "machine-hip-abduction",
-              "name": "Hip Abduction Machine",
-              "sets": 3,
-              "reps": "12",
-              "rest": "60s",
-              "zone": "machines",
-              "station": "hip-abduction",
-              "log": true,
-              "progression": "weight",
-              "rangeWidth": 6,
-              "cue": "DRAFT, tell the note box what is wrong with it. The machine where you sit with pads on the OUTSIDE of your knees and push your legs apart. Sit tall, hands on the handles, push out wide, hold one second, then let the legs come back slowly without the weights touching. Leaning a little forward puts more of it into the side of your bum.",
-              "alts": [
-                {
-                  "id": "cable-hip-abduction",
-                  "name": "Cable Hip Abduction",
-                  "zone": "cable",
-                  "station": "cable-adjustable",
-                  "cue": "Ankle strap on the low pulley, stand side-on and sweep the far leg out to the side and back slowly. 12 a side."
-                },
-                {
-                  "id": "banded-hip-abduction",
-                  "name": "Banded Hip Abduction",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Band above the knees, sitting on the end of a bench, push the knees apart and back slowly. 20."
-                }
               ]
             },
             {
@@ -570,7 +604,7 @@
               "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
               "sets": 3,
               "reps": "8",
-              "rest": "60s",
+              "rest": "90s",
               "log": true,
               "progression": "weight",
               "rangeWidth": 6,
@@ -596,30 +630,16 @@
                   "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
                 }
               ],
-              "whyHere": "the curl rides in its rest, with a pair of dumbbells carried to the machine"
+              "whyHere": "the curl rides in its rest, both in the dumbbell area"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "fill",
-          "label": "Front of the thigh, carry in the rest",
-          "why": "The quads alone, a short finish on the same row of machines. And the farmer carry rides in its rest, heavy and last, so your grip is still free for every lift before it.",
+          "pairing": "sequence",
+          "label": "Grip and carry",
+          "why": "Heavy and last, so your grip is still free for every lift before it.",
           "exercises": [
-            {
-              "log": true,
-              "id": "leg-extension",
-              "name": "Leg Extension",
-              "sets": 3,
-              "reps": "10",
-              "rest": "60s",
-              "zone": "machines",
-              "station": "leg-extension",
-              "progression": "weight",
-              "rangeWidth": 4,
-              "cue": "DRAFT, tell the note box what is wrong with it. Knees lined up with the machine's pivot, pad just above the ankles. Straighten your legs fully and hold one second, then lower slowly.",
-              "alts": []
-            },
             {
               "id": "farmer-carry",
               "name": "Farmer Carry",
@@ -664,8 +684,7 @@
                   "station": null,
                   "cue": "One dumbbell only. Much harder on the side you are NOT carrying, because it has to stop you leaning. Swap hands each set."
                 }
-              ],
-              "whyHere": "the farmer carry rides in its rest, heavy and last, so your grip is still free for every lift before it"
+              ]
             }
           ]
         }
@@ -1148,7 +1167,7 @@
               "log": true,
               "progression": "weight",
               "rangeWidth": 6,
-              "cue": "DRAFT, tell the note box what is wrong with it. The machine where you sit with pads on the OUTSIDE of your knees and push your legs apart. Sit tall, hands on the handles, push out wide, hold one second, then let the legs come back slowly without the weights touching. Leaning a little forward puts more of it into the side of your bum.",
+              "cue": "DRAFT, tell the note box what is wrong with it. The machine where you sit with pads on the OUTSIDE of your knees and push your legs apart. Set the start lever so your knees begin together. Sit tall, push out as far as your hips open, hold one second, come back slowly. A short range is normal here; the Cossack and 90/90 work on opening. Add weight only if the range stays the same.",
               "alts": [
                 {
                   "id": "cable-hip-abduction",
@@ -1382,9 +1401,9 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
-          "label": "Posture, hammer curl in the rest",
-          "why": "The backs of the shoulders, on the same machine as the pec fly turned round. And the hammer curl rides in its rest, with a pair of dumbbells carried to the machine.",
+          "pairing": "sequence",
+          "label": "Posture",
+          "why": "The backs of the shoulders, on the same machine as the pec fly turned round. Alone because dumbbells are not allowed in the machine area.",
           "exercises": [
             {
               "log": true,
@@ -1407,29 +1426,14 @@
                   "cue": "A handle in each hand, arms crossed in front, open out to the sides, squeeze, back slowly. Light."
                 }
               ]
-            },
-            {
-              "log": true,
-              "id": "db-hammer-curl",
-              "name": "DB Hammer Curl",
-              "sets": 3,
-              "reps": "10",
-              "rest": "60s",
-              "zone": "benchDb",
-              "station": null,
-              "progression": "weight",
-              "rangeWidth": 4,
-              "cue": "DRAFT, tell the note box what is wrong with it. Palms facing each other, elbows at your sides, curl up without swinging, lower slowly.",
-              "alts": [],
-              "whyHere": "the hammer curl rides in its rest, with a pair of dumbbells carried to the machine"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Row",
-          "why": "A row one arm at a time, with the dumbbells, for the middle of the back.",
+          "pairing": "fill",
+          "label": "Row, hammer curl in the rest",
+          "why": "A row one arm at a time, with the dumbbells, for the middle of the back. And the hammer curl rides in its rest, at the same bench.",
           "exercises": [
             {
               "id": "db-single-arm-row",
@@ -1473,6 +1477,21 @@
                   "rest": "90s"
                 }
               ]
+            },
+            {
+              "log": true,
+              "id": "db-hammer-curl",
+              "name": "DB Hammer Curl",
+              "sets": 3,
+              "reps": "10",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": null,
+              "progression": "weight",
+              "rangeWidth": 4,
+              "cue": "DRAFT, tell the note box what is wrong with it. Palms facing each other, elbows at your sides, curl up without swinging, lower slowly.",
+              "alts": [],
+              "whyHere": "the hammer curl rides in its rest, at the same bench"
             }
           ]
         },

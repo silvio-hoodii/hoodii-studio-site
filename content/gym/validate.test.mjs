@@ -1006,19 +1006,19 @@ const CASES = [
        every two-station block rather than only the adjacent ones. No station in the machines zone
        declares adjacentTo, which is the honest state of that gym: the bank is a row of machines you
        walk between. */
-    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise'); },
+    mutate: (p) => { rebuildBlockAs(p, 'hack-squat', 'standing-calf-raise'); },
     expect: 'occupies 2 stations',
   },
   {
     /* 2026-10-04: his ruling on one block (`walkAccepted`, at least eight words) lets that pair span
        two stations. A short or empty one does not. */
     name: 'a block carrying his walk ruling may span two stations',
-    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise').walkAccepted = 'His ruling: the walk between these two machines is fine for this pair.'; },
+    mutate: (p) => { rebuildBlockAs(p, 'hack-squat', 'standing-calf-raise').walkAccepted = 'His ruling: the walk between these two machines is fine for this pair.'; },
     expect: null,
   },
   {
     name: 'a walk ruling under eight words does not count',
-    mutate: (p) => { rebuildBlockAs(p, 'leg-curl', 'standing-calf-raise').walkAccepted = 'fine'; },
+    mutate: (p) => { rebuildBlockAs(p, 'hack-squat', 'standing-calf-raise').walkAccepted = 'fine'; },
     expect: 'occupies 2 stations',
   },
   {
@@ -1099,9 +1099,9 @@ const CASES = [
          would have read as this rule rejecting a correct clause. If this case ever fails, the rule is
          refusing clauses that are true. */
       /* 2026-11-19: was lat pulldown + cable Pallof on two cable columns, whose adjacency is only
-         carried from Calgary now. A machine and a carried dumbbell is the same claim with no fixture
-         question: hamstrings against side delts. */
-      const target = rebuildBlockAs(p, 'leg-curl', 'db-lateral-raise');
+         carried from Calgary now. A plate-loaded machine and a carried dumbbell is the same claim with
+         no fixture question: quads against biceps. */
+      const target = rebuildBlockAs(p, 'hack-squat', 'db-hammer-curl');
       const partner = target.exercises[1];
       const clause = `${partner.name} goes in the rest because the ${target.exercises[0].name} does not use it.`;
       partner.whyHere = clause;
@@ -1513,7 +1513,10 @@ function agree(name, ok, detail) {
   }
 
   const cases = [
-    ['a carried partner rides free at any lead', carried, rack, true],
+    ['a carried partner rides free at a lead where dumbbells are allowed', carried, rack, true],
+    /* His note #61, 2026-11-19: no dumbbells in Pizarro's pin-loaded machine area; plate-loaded is fine. */
+    ['a carried partner at a pin-loaded machine is refused', carried, legCurl, false],
+    ['a carried partner at the plate-loaded leg press is legal', carried, { zone: 'machines', station: 'leg-press' }, true],
     /* FLIPPED 2026-11-19: the rack's pull-up bar is Calgary's, carried, and out of reach while squatting. */
     ['the rack and a pull-up bar never seen at Pizarro are refused', bar, rack, false],
     ['two cable columns whose adjacency is only carried from Calgary are refused', pulldown, cableAdj, false],

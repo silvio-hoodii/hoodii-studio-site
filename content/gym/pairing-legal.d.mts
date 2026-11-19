@@ -21,6 +21,8 @@ export interface PairingStation {
   confidence?: string;
   /** False on a bar a loaded rack puts out of reach. */
   usableWhileRackLoaded?: boolean;
+  /** False where the gym forbids bringing dumbbells (Pizarro's pin-loaded machine area). */
+  carriedPartnersAllowed?: boolean;
 }
 
 export interface PairingSide {
@@ -33,6 +35,7 @@ export type PairingRefusal =
   | { code: 'adjacent-crosszone'; stations: string[] }
   | { code: 'adjacent-unconfirmed'; stations: string[] }
   | { code: 'adjacent-blocked'; stations: string[] }
+  | { code: 'no-carry-here'; station: string }
   | { code: 'station-not-shared'; station: string };
 
 export type StationLookup = (zone: string, station: string | null) => PairingStation | undefined;

@@ -1370,6 +1370,9 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       if (refusal?.code === 'adjacent-unconfirmed') {
         fail(where, `${block.pairing} block relies on "${a.station}" and "${b.station}" being adjacent, but one of them is not confirmed at ${equipment.gym ?? 'this gym'} (confidence must be "stated" or "photo"; "carried" means it was only true at the old gym). His words 2026-11-19: "hanging knee raises cant be done with squat rack when doing squats".`);
       }
+      if (refusal?.code === 'no-carry-here') {
+        fail(where, `${block.pairing} block carries a partner with no fixture to "${refusal.station}", which is in an area where the gym forbids bringing dumbbells (carriedPartnersAllowed: false in equipment.json). His note #61, 2026-11-19: "apparently here you are not allowed to being db to machine area".`);
+      }
       if (refusal?.code === 'adjacent-blocked') {
         fail(where, `${block.pairing} block pairs "${a.station}" with "${b.station}", and one of them is marked usableWhileRackLoaded: false, so it cannot be reached while the other lift is in the rack.`);
       }

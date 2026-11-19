@@ -92,6 +92,18 @@ export function pairingRefusal(a, b, stationOf) {
     return null;
   }
 
+  /* NOTHING CARRIED INTO A NO-DUMBBELL AREA, since 2026-11-19. His note #61 at Smart Fit Pizarro:
+   * "apparently here you are not allowed to being db to machine area so abd add anything thats
+   * actual machine, lat pull etc leg ext leg curl ... the plate loaded ones are fine". A station
+   * marked `carriedPartnersAllowed: false` takes no partner that holds no fixture of its own. */
+  if (stations.length === 1) {
+    const fixed = a.station != null ? a : b;
+    const loose = a.station != null ? b : a;
+    if (loose.station == null && stationOf(fixed.zone, fixed.station)?.carriedPartnersAllowed === false) {
+      return { code: 'no-carry-here', station: fixed.station };
+    }
+  }
+
   /* Zero or one fixture between them: cases (a) and (b). A partner holding nothing is CARRIED to the
    * lead lift, which is the old unmodelled travelling-dumbbell convention. Read the SLOT's zone for
    * it, never the catalogue's: movements.json files every dumbbell under `benchDb` because that is

@@ -129,7 +129,9 @@
             "cable-adjustable"
           ],
           "adjacentConfidence": "carried",
-          "adjacentNote": "His Calgary ruling 2026-08-30: changing an attachment or a pulley height between sets is not a cost he minds, and the cable fixtures stand within reach of each other. Kept until he says otherwise about Pizarro."
+          "adjacentNote": "His Calgary ruling 2026-08-30: changing an attachment or a pulley height between sets is not a cost he minds, and the cable fixtures stand within reach of each other. Kept until he says otherwise about Pizarro.",
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
         },
         "cable-row": {
           "name": "Seated cable row / low pulley",
@@ -140,7 +142,9 @@
             "cable-pulldown",
             "cable-adjustable"
           ],
-          "adjacentConfidence": "carried"
+          "adjacentConfidence": "carried",
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "cable-adjustable": {
           "name": "Adjustable-height cable column",
@@ -152,7 +156,9 @@
             "cable-pulldown",
             "cable-row"
           ],
-          "adjacentConfidence": "carried"
+          "adjacentConfidence": "carried",
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         }
       }
     },
@@ -172,21 +178,35 @@
         },
         "leg-extension": {
           "name": "Leg extension",
-          "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "confidence": "stated",
+          "evidence": "He used it on 2026-11-19 (Lower 1). Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\".",
+          "open": [
+            {
+              "q": "Dumbbells are not allowed in the pin-loaded machine area. Is the adjustable cable column in that area too, and which machines there stand close enough to go back and forth between (for example leg extension and leg curl)?",
+              "asked": "2026-11-19",
+              "due": "2026-11-26",
+              "topic": "equipment"
+            }
+          ]
         },
         "leg-curl": {
           "name": "Leg curl",
-          "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo. Seated or lying, either works for the card. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "confidence": "stated",
+          "evidence": "He used it on 2026-11-19 (Lower 1). Standard in a Matrix row; not identified in a photo. Seated or lying, either works for the card. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
         },
         "hip-abduction": {
           "name": "Hip abduction machine (legs push out)",
-          "confidence": "carried",
-          "evidence": "Standard in a Smart Fit machine row; not identified in a photo. Usually one machine that does abduction and adduction. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "confidence": "stated",
+          "evidence": "He used it on 2026-11-19. His note #62 the same day: \"Same machine does abd and adductor\".",
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
         },
         "hip-thrust-machine": {
           "name": "Hip thrust machine",
@@ -206,19 +226,25 @@
           "name": "Chest press machine",
           "confidence": "carried",
           "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "shoulder-press": {
           "name": "Shoulder press machine",
           "confidence": "carried",
           "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "pec-deck": {
           "name": "Chest fly / rear delt fly machine",
           "confidence": "carried",
           "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "assisted-pullup": {
           "name": "Assisted pull-up",
@@ -232,25 +258,33 @@
               "due": "2026-11-25",
               "topic": "equipment"
             }
-          ]
+          ],
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "assisted-dip": {
           "name": "Assisted dip",
           "confidence": "unknown",
           "evidence": "Not seen.",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "back-extension": {
           "name": "45-degree back extension",
           "confidence": "carried",
           "evidence": "Usual in a Smart Fit; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "calf-raise": {
           "name": "Standing calf raise",
           "confidence": "unknown",
           "evidence": "Not seen. Not in the week (his ruling 2026-09-06).",
-          "sharedInOneWindow": false
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
         },
         "hack-squat": {
           "name": "Hack squat",
@@ -260,9 +294,11 @@
         },
         "hip-adductor": {
           "name": "Hip adduction machine (legs squeeze in)",
-          "confidence": "carried",
-          "evidence": "On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch: machine 06.",
-          "sharedInOneWindow": false
+          "confidence": "stated",
+          "evidence": "His note #62, 2026-11-19: \"Same machine does abd and adductor\". The adductor is the hip-abduction machine set the other way.",
+          "sharedInOneWindow": false,
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
         },
         "high-row": {
           "name": "High row, plate-loaded",
