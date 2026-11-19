@@ -67,15 +67,23 @@
         },
         "rack-pullup-bar": {
           "name": "Pull-up bar on top of the rack",
-          "confidence": "carried",
-          "evidence": "His Calgary racks had one and the hanging leg raise rides on it. Not visible in a Pizarro photo.",
+          "confidence": "stated",
+          "evidence": "HIS WORDS 2026-11-19, at Pizarro: \"Yes there just not when doing squats because the bar block.the bath to.hang from.the bar there also.other spots to hang but not squat racks\". The rack has a pull-up bar; a loaded bar in the rack blocks it.",
           "sharedInOneWindow": false,
           "adjacentTo": [
             "rack"
           ],
           "adjacentBecause": "HIS WORDS, 2026-09-01, Calgary: 'if im doing bb rows I rather do hanging knee raises than deadbugs'. Kept for Pizarro because the bar, where there is one, is on the rack he is already in. If there is no bar the swap list on the leg raise holds floor and standing options.",
           "usableWhileRackLoaded": false,
-          "usableNote": "His ruling 2026-09-03 (Calgary): with a loaded bar in the rack, another member cannot reach the bar above him."
+          "usableNote": "His words 2026-11-19 (Pizarro), same as his 2026-09-03 Calgary ruling: the loaded bar in the rack blocks the bar above it. So nothing hangs from it in a rack lift's rest.",
+          "open": [
+            {
+              "q": "You said there are other spots to hang from besides the squat rack. Where is the nearest one: next to the machine row, the cables, or by the dumbbells?",
+              "asked": "2026-11-19",
+              "due": "2026-11-26",
+              "topic": "equipment"
+            }
+          ]
         }
       }
     },
