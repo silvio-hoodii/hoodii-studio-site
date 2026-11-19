@@ -1367,6 +1367,12 @@ for (const [dayKey, day] of Object.entries(program.days)) {
       if (refusal?.code === 'two-stations') {
         fail(where, `${block.pairing} block occupies ${stations.length} stations (${stations.join(' + ')}). Two exercises done in one window may occupy at most one, unless the two fixtures are declared adjacent in equipment.json, which is case (c) of the rule that file quotes. Either give the partner no fixture, or declare the two adjacent WITH his words for it.`);
       }
+      if (refusal?.code === 'adjacent-unconfirmed') {
+        fail(where, `${block.pairing} block relies on "${a.station}" and "${b.station}" being adjacent, but one of them is not confirmed at ${equipment.gym ?? 'this gym'} (confidence must be "stated" or "photo"; "carried" means it was only true at the old gym). His words 2026-11-19: "hanging knee raises cant be done with squat rack when doing squats".`);
+      }
+      if (refusal?.code === 'adjacent-blocked') {
+        fail(where, `${block.pairing} block pairs "${a.station}" with "${b.station}", and one of them is marked usableWhileRackLoaded: false, so it cannot be reached while the other lift is in the rack.`);
+      }
       if (refusal?.code === 'adjacent-crosszone') {
         fail(where, `${block.pairing} block claims adjacent stations "${a.station}" and "${b.station}" but they are in different zones ("${a.zone}" and "${b.zone}"). Adjacency is arm's reach, which is a fact about one place.`);
       }

@@ -58,6 +58,19 @@ export function pairingRefusal(a, b, stationOf) {
     if (!mutual) return { code: 'two-stations', stations };
     /* Arm's reach is a fact about ONE place. */
     if (a.zone !== b.zone) return { code: 'adjacent-crosszone', stations };
+    /* ADJACENCY IS A FACT ABOUT THIS GYM, since 2026-11-19. The week moved to Smart Fit Pizarro and
+     * equipment.json kept the Calgary rack's pull-up bar as `confidence: "carried"`, its adjacency
+     * with it, so the gate passed hanging leg raises in the squat's rest. His words, at the rack:
+     * "hanging knee raises cant be done with squat rack when doing squats". A station only carried
+     * over from another gym, or never seen, cannot make two fixtures one place. */
+    const SEEN = ['stated', 'photo'];
+    if (!SEEN.includes(sx?.confidence) || !SEEN.includes(sy?.confidence)) {
+      return { code: 'adjacent-unconfirmed', stations };
+    }
+    /* A bar on a rack holding a loaded barbell is out of reach (his ruling 2026-09-03). */
+    if (sx?.usableWhileRackLoaded === false || sy?.usableWhileRackLoaded === false) {
+      return { code: 'adjacent-blocked', stations };
+    }
     return null;
   }
 

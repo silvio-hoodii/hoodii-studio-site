@@ -989,13 +989,16 @@ const CASES = [
     /* CASE (c) OF HIS OWN RULE, which validate.mjs did not implement until 2026-08-30. Two fixtures
      * in arm's reach may hold one rest window. Built from the real cable block, whose two stations
      * are declared adjacent on his ruling. */
-    name: 'a pair across two ADJACENT stations is allowed',
+    /* FLIPPED 2026-11-19. The cable columns' adjacency was ruled in Calgary and is only "carried" at
+       Smart Fit Pizarro, so the same pair is now refused until he confirms it there. The permitting
+       direction of case (c) lives in the synthetic-gym cases in the agreement section. */
+    name: 'a pair across two stations adjacent only at the OLD gym is refused',
     /* CASE (c) OF HIS OWN RULE, which validate.mjs did not implement until 2026-08-30: two fixtures
        in arm's reach may hold one rest window. equipment.json declares cable-pulldown, cable-row and
        cable-adjustable mutually adjacent, on his ruling, and the catalogue already puts real
        exercises at two of them, so no file but program.json needs to move. See rebuildBlockAs. */
     mutate: (p) => { rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly'); },
-    expect: null,
+    expect: 'not confirmed at',
   },
   {
     name: 'a pair across two stations that are NOT adjacent is still refused',
@@ -1095,7 +1098,10 @@ const CASES = [
          The first attempt paired it with a dumbbell calf raise and the zone rule refused it, which
          would have read as this rule rejecting a correct clause. If this case ever fails, the rule is
          refusing clauses that are true. */
-      const target = rebuildBlockAs(p, 'lat-pulldown', 'cable-pallof');
+      /* 2026-11-19: was lat pulldown + cable Pallof on two cable columns, whose adjacency is only
+         carried from Calgary now. A machine and a carried dumbbell is the same claim with no fixture
+         question: hamstrings against side delts. */
+      const target = rebuildBlockAs(p, 'leg-curl', 'db-lateral-raise');
       const partner = target.exercises[1];
       const clause = `${partner.name} goes in the rest because the ${target.exercises[0].name} does not use it.`;
       partner.whyHere = clause;
@@ -1487,10 +1493,30 @@ function agree(name, ok, detail) {
   const legCurl = { zone: 'machines', station: 'leg-curl' };
   const bench = { zone: 'benchDb', station: 'bench' };
 
+  /* A SYNTHETIC GYM for case (c), since 2026-11-19: Pizarro has no adjacency confirmed by sight yet,
+     so the real file can no longer show the gate PERMITTING one. */
+  const fake = {
+    p: { confidence: 'stated', sharedInOneWindow: false, adjacentTo: ['q'] },
+    q: { confidence: 'photo', sharedInOneWindow: false, adjacentTo: ['p'] },
+    c: { confidence: 'carried', sharedInOneWindow: false, adjacentTo: ['p'] },
+    b: { confidence: 'stated', sharedInOneWindow: false, adjacentTo: ['p'], usableWhileRackLoaded: false },
+  };
+  const fakeLookup = (zone, station) => (zone === 'z' ? { ...fake, p: { ...fake.p, adjacentTo: ['q', 'c', 'b'] } }[station] : undefined);
+  const fakeCases = [
+    ['case (c): two stations seen adjacent in this gym pair', { zone: 'z', station: 'p' }, { zone: 'z', station: 'q' }, true],
+    ['case (c): a station carried from the old gym cannot make adjacency', { zone: 'z', station: 'p' }, { zone: 'z', station: 'c' }, false],
+    ['case (c): a bar out of reach while the rack is loaded is refused', { zone: 'z', station: 'p' }, { zone: 'z', station: 'b' }, false],
+  ];
+  for (const [name, a, b, want] of fakeCases) {
+    const got = pairingLegal(a, b, fakeLookup);
+    agree(`pairing: ${name}`, got === want, `expected ${want ? 'legal' : 'refused'}, got ${got ? 'legal' : 'refused'} (${JSON.stringify(pairingRefusal(a, b, fakeLookup))})`);
+  }
+
   const cases = [
     ['a carried partner rides free at any lead', carried, rack, true],
-    ['case (c): the rack and its own pull-up bar are adjacent', bar, rack, true],
-    ['case (c): two cable columns are adjacent', pulldown, cableAdj, true],
+    /* FLIPPED 2026-11-19: the rack's pull-up bar is Calgary's, carried, and out of reach while squatting. */
+    ['the rack and a pull-up bar never seen at Pizarro are refused', bar, rack, false],
+    ['two cable columns whose adjacency is only carried from Calgary are refused', pulldown, cableAdj, false],
     ['case (a): two exercises on the bench, which is declared shareable', bench, bench, true],
     ['nothing against nothing is free', carried, { zone: 'rack', station: null }, true],
     ['two machines that are not adjacent are refused', calf, legCurl, false],
@@ -1507,11 +1533,14 @@ function agree(name, ok, detail) {
 
   /* 3. THE ONE THAT COST TWELVE DAYS, named on its own. His pairing, three times: hanging knee
         raises (the rack's pull-up bar) in the RDL's rest (the rack). It is legal, the build gate has
-        always said so, and the tool built to suggest partners could not see it. */
+        always said so, and the tool built to suggest partners could not see it.
+        That was Calgary. At Pizarro the bar is not confirmed and a loaded rack blocks it, so the
+        same pairing is refused there (2026-11-19); the SHAPE of the rule is kept by the synthetic
+        case above, which permits a seen adjacency. */
   agree(
-    'his own pairing (knee raises in the RDL rest) is legal, and every caller agrees',
-    pairingLegal(bar, rack, lookup),
-    'the rule that made --fill blind to what he asked for three times has come back',
+    'knee raises on the rack bar in a rack lift are refused at Pizarro',
+    !pairingLegal(bar, rack, lookup),
+    'the Calgary rack bar is pairing with a loaded rack again',
   );
 }
 

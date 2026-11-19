@@ -326,6 +326,11 @@
         "on": "2026-11-19",
         "hisWords": "Why is only one superset in the gym app im doing lower one idc that im.working out go check and fix",
         "hash": "56b0afcd648845b5"
+      },
+      {
+        "on": "2026-11-19",
+        "hisWords": "hanging knee raises cant be done with squat rack when doing squats",
+        "hash": "4a375741cc892be4"
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -350,9 +355,9 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "fill",
-          "label": "Lead lift, leg raises in the rest",
-          "why": "First, while the one rack is free: heels raised, as deep as your back stays flat. Two or three lighter sets build up to the working weight, and that is the warm-up. And the leg raises ride in its rest on the bar above the rack.",
+          "pairing": "sequence",
+          "label": "Lead lift",
+          "why": "First, while the one rack is free: heels raised, as deep as your back stays flat. Two or three lighter sets build up to the working weight, and that is the warm-up. The one lift on its own: nothing on the rack bar can be reached while the bar is loaded.",
           "exercises": [
             {
               "id": "bb-back-squat",
@@ -406,57 +411,6 @@
                   "cue": "Same upright effect with a dumbbell held at the chest, and no wrist or elbow demand at all. The easiest way to feel a deep upright squat."
                 }
               ]
-            },
-            {
-              "id": "hanging-leg-raise",
-              "name": "Hanging Leg Raise",
-              "sets": 3,
-              "reps": "10",
-              "rest": "45s",
-              "zone": "rack",
-              "station": "rack-pullup-bar",
-              "log": true,
-              "cue": "DRAFT, tell the note box what is wrong with it. Hang from the bar, hands shoulder width, shoulders pulled down away from your ears. Brace your stomach, then lift your legs nearly straight until your feet reach hip height, curling your hips up at the top. Lower over two seconds without swinging. When ten clean reps are easy, lift higher.",
-              "progression": "reps",
-              "bodyweight": true,
-              "alts": [
-                {
-                  "id": "plank-shoulder-taps",
-                  "name": "Plank w/ Shoulder Taps",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On the floor. High plank on your hands, feet wide apart for balance. Tap one hand to the opposite shoulder, put it back, tap with the other. Success looks like: your hips do not rock side to side as the hand leaves the floor. If they rock, put your feet wider. 3x10 each side.",
-                  "sets": 3,
-                  "reps": "10/side"
-                },
-                {
-                  "id": "band-pallof",
-                  "name": "Band Pallof Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Band anchored at chest height on a rack post, stand sideways, both hands on the band at your chest. Press straight out and resist the twist, hold 2 seconds. Only if every cable column is taken: there is no way to record which band you used, so the number cannot move."
-                },
-                {
-                  "id": "hollow-hold",
-                  "name": "Hollow Hold",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Lower back pressed flat into the floor, arms overhead and legs straight and lifted, so your body makes a shallow banana. Bend the knees or keep arms at your sides if the back lifts. 3x20s.",
-                  "sets": 3,
-                  "reps": "20s"
-                },
-                {
-                  "id": "side-plank",
-                  "name": "Side Plank",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "On one forearm, body in a straight line from head to heels, hips lifted and held up. Drop to the knees if the hips sag. 3x30s per side.",
-                  "sets": 3,
-                  "reps": "30s/side"
-                }
-              ],
-              "rangeWidth": 5,
-              "whyHere": "the leg raises ride in its rest on the bar above the rack"
             }
           ]
         },
