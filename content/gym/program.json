@@ -321,6 +321,11 @@
         "hisWords": "whatever the new program is, igonore whats in the past those rules where by agents and only because there was limited equipment. I'd rather work out throughout the weekdays and rest those 2 weekends",
         "hash": "25e6aafc97e04226",
         "what": "Five weekday sessions at Smart Fit Pizarro: Lower 1, Upper 1, Lower 2, Upper 2, Lower 3, about 24 sets each, chest first on both upper days, hips trained through full range."
+      },
+      {
+        "on": "2026-11-19",
+        "hisWords": "Why is only one superset in the gym app im doing lower one idc that im.working out go check and fix",
+        "hash": "56b0afcd648845b5"
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -457,9 +462,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "More quads",
-          "why": "More work for the fronts of the thighs after the squat, on a machine that needs no balance.",
+          "pairing": "fill",
+          "label": "More quads, lateral raise in the rest",
+          "why": "More work for the fronts of the thighs after the squat, on a machine that needs no balance. And the lateral raise rides in its rest, with a pair of dumbbells carried to the machine.",
           "exercises": [
             {
               "log": true,
@@ -482,14 +487,44 @@
                   "cue": "Back flat on the pad, feet shoulder width. As deep as your back stays on the pad, then press."
                 }
               ]
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "2 min",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "Standing, a dumbbell in each hand at your sides, a small bend kept in the elbows. Lift both arms out SIDEWAYS, not forward, until your hands are level with your shoulders and no higher. Lead with the elbows, as if pouring from two jugs. Lower about twice as slowly as you lifted. Success: your shoulders do not rise toward your ears, and you can stop the weight dead at the top. If either fails, go lighter.",
+              "progression": "weight",
+              "rangeWidth": 8,
+              "alts": [
+                {
+                  "id": "kb-lateral-raise",
+                  "name": "KB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Same movement with the lightest kettlebells, held by the handle. Use them if the light dumbbells are gone."
+                },
+                {
+                  "id": "db-lateral-raise-seated",
+                  "name": "Seated DB Lateral Raise",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave."
+                }
+              ],
+              "whyHere": "the lateral raise rides in its rest, with a pair of dumbbells carried to the machine"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Back of the thigh",
-          "why": "The hamstrings directly, on the machine. Take the seated one if there are both.",
+          "pairing": "fill",
+          "label": "Back of the thigh, Cossack in the rest",
+          "why": "The hamstrings directly, on the machine. Take the seated one if there are both. And the Cossack squat rides in its rest, one dumbbell carried to the machine: hip range and the inner thighs.",
           "exercises": [
             {
               "id": "leg-curl",
@@ -512,36 +547,37 @@
                   "cue": "On the floor, heels on a ball, hips up. Roll the ball in toward your bum by bending the knees, keep the hips up, roll it out slowly. 3x10."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Front of the thigh",
-          "why": "The quads alone, a short finish on the same row of machines.",
-          "exercises": [
+            },
             {
               "log": true,
-              "id": "leg-extension",
-              "name": "Leg Extension",
+              "id": "cossack-squat",
+              "name": "Cossack Squat",
               "sets": 3,
-              "reps": "10",
-              "rest": "60s",
-              "zone": "machines",
-              "station": "leg-extension",
+              "reps": "6/side",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": null,
               "progression": "weight",
-              "rangeWidth": 4,
-              "cue": "DRAFT, tell the note box what is wrong with it. Knees lined up with the machine's pivot, pad just above the ankles. Straighten your legs fully and hold one second, then lower slowly.",
-              "alts": []
+              "rangeWidth": 2,
+              "cue": "DRAFT, tell the note box what is wrong with it. Feet very wide, toes slightly out, a dumbbell held at your chest. Sit down over ONE leg until that thigh is deep, the other leg straight with its toes pointing up. Heel of the bent leg stays down. Stand back up through the middle and go to the other side. Start with no weight or a light dumbbell; depth first.",
+              "alts": [
+                {
+                  "id": "db-lateral-lunge",
+                  "name": "DB Lateral Lunge",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Step wide to one side, sit back over that leg with the other straight, push back to standing. Less depth than the Cossack."
+                }
+              ],
+              "whyHere": "the Cossack squat rides in its rest, one dumbbell carried to the machine"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Sideways",
-          "why": "The glute muscles that move the leg out to the side, which a squat barely touches.",
+          "pairing": "fill",
+          "label": "Sideways, curl in the rest",
+          "why": "The glute muscles that move the leg out to the side, which a squat barely touches. And the curl rides in its rest, with a pair of dumbbells carried to the machine.",
           "exercises": [
             {
               "id": "machine-hip-abduction",
@@ -571,51 +607,71 @@
                   "cue": "Band above the knees, sitting on the end of a bench, push the knees apart and back slowly. 20."
                 }
               ]
+            },
+            {
+              "id": "bicep-curl",
+              "name": "DB Biceps Curl",
+              "zone": "rack",
+              "station": null,
+              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
+              "sets": 3,
+              "reps": "8",
+              "rest": "60s",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "alts": [
+                {
+                  "id": "db-hammer-curl",
+                  "name": "DB Hammer Curl",
+                  "sets": 3,
+                  "reps": "10",
+                  "rest": "45s",
+                  "zone": "benchDb",
+                  "station": null,
+                  "log": true,
+                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
+                  "progression": "weight",
+                  "rangeWidth": 5
+                },
+                {
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                }
+              ],
+              "whyHere": "the curl rides in its rest, with a pair of dumbbells carried to the machine"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Hips",
-          "why": "A deep side-to-side squat with a dumbbell: hip range and the inner thighs, loaded so it keeps improving.",
+          "pairing": "fill",
+          "label": "Front of the thigh, carry in the rest",
+          "why": "The quads alone, a short finish on the same row of machines. And the farmer carry rides in its rest, heavy and last, so your grip is still free for every lift before it.",
           "exercises": [
             {
               "log": true,
-              "id": "cossack-squat",
-              "name": "Cossack Squat",
+              "id": "leg-extension",
+              "name": "Leg Extension",
               "sets": 3,
-              "reps": "6/side",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": null,
+              "reps": "10",
+              "rest": "60s",
+              "zone": "machines",
+              "station": "leg-extension",
               "progression": "weight",
-              "rangeWidth": 2,
-              "cue": "DRAFT, tell the note box what is wrong with it. Feet very wide, toes slightly out, a dumbbell held at your chest. Sit down over ONE leg until that thigh is deep, the other leg straight with its toes pointing up. Heel of the bent leg stays down. Stand back up through the middle and go to the other side. Start with no weight or a light dumbbell; depth first.",
-              "alts": [
-                {
-                  "id": "db-lateral-lunge",
-                  "name": "DB Lateral Lunge",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Step wide to one side, sit back over that leg with the other straight, push back to standing. Less depth than the Cossack."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Grip and carry",
-          "why": "Heavy and last, so your grip is still free for every lift before it.",
-          "exercises": [
+              "rangeWidth": 4,
+              "cue": "DRAFT, tell the note box what is wrong with it. Knees lined up with the machine's pivot, pad just above the ankles. Straighten your legs fully and hold one second, then lower slowly.",
+              "alts": []
+            },
             {
               "id": "farmer-carry",
               "name": "Farmer Carry",
               "sets": 3,
               "reps": "40s",
-              "rest": "45s",
+              "rest": "60s",
               "zone": "benchDb",
               "station": null,
               "log": true,
@@ -654,7 +710,8 @@
                   "station": null,
                   "cue": "One dumbbell only. Much harder on the side you are NOT carrying, because it has to stop you leaning. Swap hands each set."
                 }
-              ]
+              ],
+              "whyHere": "the farmer carry rides in its rest, heavy and last, so your grip is still free for every lift before it"
             }
           ]
         }
