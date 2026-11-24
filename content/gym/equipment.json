@@ -211,20 +211,12 @@
           "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
         },
         "hip-thrust-machine": {
-          "name": "Hip thrust machine",
+          "name": "Hip thrust machine, plate-loaded",
           "confidence": "stated",
-          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"there is a hip trust maxhine, yes pull up machine and also lat pull down\".",
+          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"there is a hip trust maxhine\", then \"One with plates one with pun\". There are two; this station is the plate-loaded one. The pin-loaded one is on the machine floor and the week does not use it.",
           "sharedInOneWindow": false,
-          "open": [
-            {
-              "q": "If it takes plates, the suitcase carry can stay in its rest. Do you load the hip thrust machine with plates, or is it a stack with a pin?",
-              "asked": "2026-11-24",
-              "due": "2026-11-27",
-              "topic": "equipment"
-            }
-          ],
-          "carriedPartnersAllowed": false,
-          "carriedBecause": "Fail-closed until he says whether it is plate-loaded: HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\"."
+          "carriedPartnersAllowed": true,
+          "carriedBecause": "Plate-loaded, so dumbbells are allowed beside it: HIS WORDS 2026-11-24, at Pizarro (chat): \"One with plates one with pun\"; note #61 \"the plate loaded ones are fine\"."
         },
         "chest-press": {
           "name": "Incline chest press, plate-loaded",
@@ -408,7 +400,7 @@
       "needsFloor": false,
       "confidence": "stated",
       "range": {
-        "max": 40
+        "max": 36
       },
       "ladder": [
         1,
@@ -433,24 +425,14 @@
         30,
         32,
         34,
-        36,
-        38,
-        40
+        36
       ],
       "ladderConfidence": "stated",
       "ladderNote": [
-        "IN KG. HIS WORDS 2026-11-24, at Pizarro (chat): \"db go up by 1 kg until 10 then by 2\". The top of the rack is not known yet: 40 is an assumption, see `open`.",
+        "IN KG. HIS WORDS 2026-11-24, at Pizarro (chat): \"db go up by 1 kg until 10 then by 2\", and the heaviest pair: \"db goes up to 36\".",
         "progression.ts picks the next entry above the working weight without knowing the step, so this list IS the rack."
       ],
-      "evidence": "He used 6, 16 and 24 kg dumbbells on 2026-11-18. Racks also in photos 23248 and 23251.",
-      "open": [
-        {
-          "q": "What is the heaviest pair of dumbbells at Pizarro?",
-          "asked": "2026-11-24",
-          "due": "2026-12-01",
-          "topic": "equipment"
-        }
-      ]
+      "evidence": "He used 6, 16 and 24 kg dumbbells on 2026-11-18. Racks also in photos 23248 and 23251. Heaviest pair 36 kg (his words 2026-11-24)."
     },
     "kettlebells": {
       "name": "Kettlebells",

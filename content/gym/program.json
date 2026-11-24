@@ -348,6 +348,12 @@
         "hisWords": "Incline plate loaded so can be superset with db, I did with db lat raises",
         "hash": "f7f3c0e6d55062df",
         "what": "Note #74, and in chat the same day: \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\", \"cable zone has hanging part\", \"there is a hip trust maxhine\". Upper 2: plate-loaded incline chest press + DB lateral raise (replaces the cable lateral raise), tricep pushdown + hanging leg raise at the cable zone hang. Upper 1: high row + overhead triceps, face pull + curl. Lower 3: hip thrust machine replaces the Smith hip thrust. Lower 2 keeps the Smith until he says whether the machine takes plates."
+      },
+      {
+        "on": "2026-11-24",
+        "hisWords": "One with plates one with pun db goes up to 36",
+        "hash": "c964483909cf1a92",
+        "what": "Pizarro has two hip thrust machines, one plate-loaded and one pin-loaded. The week uses the plate-loaded one on Lower 2 (replacing the Smith hip thrust, suitcase carry kept in its rest) and Lower 3. Dumbbells top out at 36 kg."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -1065,27 +1071,27 @@
           "role": "main",
           "pairing": "fill",
           "label": "Glutes, heavy, suitcase carry in the rest",
-          "why": "The glutes alone. Squats and hip thrusts built about the same glute in a head-to-head study, so the week has both. And the suitcase carry rides in its rest, one dumbbell carried to the Smith machine.",
+          "why": "The glutes alone. Squats and hip thrusts built about the same glute in a head-to-head study, so the week has both. And the suitcase carry rides in its rest, one dumbbell carried to the plate-loaded hip thrust machine.",
           "exercises": [
             {
-              "id": "smith-hip-thrust",
-              "name": "Smith Hip Thrust",
+              "id": "machine-hip-thrust",
+              "name": "Hip Thrust Machine",
               "sets": 3,
               "reps": "10",
               "rest": "2 min",
-              "zone": "smith",
-              "station": "smith",
+              "zone": "machines",
+              "station": "hip-thrust-machine",
               "log": true,
-              "cue": "DRAFT, tell the note box what is wrong with it. Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps.",
+              "cue": "DRAFT, tell the note box what is wrong with it. The plate-loaded one, not the pin stack. Back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard.",
               "progression": "weight",
               "rangeWidth": 4,
               "alts": [
                 {
-                  "id": "machine-hip-thrust",
-                  "name": "Hip Thrust Machine",
-                  "zone": "machines",
-                  "station": "hip-thrust-machine",
-                  "cue": "If the gym has one, use it instead of the Smith: back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard."
+                  "id": "smith-hip-thrust",
+                  "name": "Smith Hip Thrust",
+                  "zone": "smith",
+                  "station": "smith",
+                  "cue": "Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps."
                 },
                 {
                   "id": "back-extension",
@@ -1110,12 +1116,7 @@
                   "sets": 3,
                   "reps": "12/side"
                 }
-              ],
-              "needsFloor": true,
-              "firstWeight": {
-                "weight": 30,
-                "say": "First try: start with a weight you could lift 15 times, then work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
-              }
+              ]
             },
             {
               "log": true,
@@ -1124,14 +1125,14 @@
               "sets": 3,
               "reps": "40s",
               "rest": "2 min",
-              "zone": "benchDb",
+              "zone": "machines",
               "station": null,
               "progression": "weight",
               "rangeWidth": 4,
               "bodyweight": false,
               "cue": "DRAFT, tell the note box what is wrong with it. One heavy dumbbell in one hand, walk tall without leaning toward it, 20 seconds a side. The free side of your body does the work.",
               "alts": [],
-              "whyHere": "the suitcase carry rides in its rest, one dumbbell carried to the Smith machine"
+              "whyHere": "the suitcase carry rides in its rest, one dumbbell carried to the plate-loaded hip thrust machine"
             }
           ]
         },
@@ -1763,7 +1764,7 @@
               "zone": "machines",
               "station": "hip-thrust-machine",
               "log": true,
-              "cue": "DRAFT, tell the note box what is wrong with it. Back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard.",
+              "cue": "DRAFT, tell the note box what is wrong with it. The plate-loaded one, not the pin stack. Back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard.",
               "progression": "weight",
               "rangeWidth": 4,
               "alts": [
@@ -1797,12 +1798,7 @@
                   "sets": 3,
                   "reps": "12/side"
                 }
-              ],
-              "needsFloor": true,
-              "firstWeight": {
-                "weight": 30,
-                "say": "First try: start with a weight you could lift 15 times, then work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
-              }
+              ]
             }
           ]
         },
