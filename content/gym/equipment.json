@@ -35,7 +35,7 @@
   ],
   "gym": "Smart Fit Pizarro, Trujillo",
   "since": "2026-11-18",
-  "lastConfirmed": "2026-11-18",
+  "lastConfirmed": "2026-11-24",
   "weightUnit": "kg",
   "confidenceLevels": {
     "logged": "He has recorded working sets on it in gym_set at this gym. Cannot be wrong.",
@@ -76,14 +76,7 @@
           "adjacentBecause": "HIS WORDS, 2026-09-01, Calgary: 'if im doing bb rows I rather do hanging knee raises than deadbugs'. Kept for Pizarro because the bar, where there is one, is on the rack he is already in. If there is no bar the swap list on the leg raise holds floor and standing options.",
           "usableWhileRackLoaded": false,
           "usableNote": "His words 2026-11-19 (Pizarro), same as his 2026-09-03 Calgary ruling: the loaded bar in the rack blocks the bar above it. So nothing hangs from it in a rack lift's rest.",
-          "open": [
-            {
-              "q": "You said there are other spots to hang from besides the squat rack. Where is the nearest one: next to the machine row, the cables, or by the dumbbells?",
-              "asked": "2026-11-19",
-              "due": "2026-11-26",
-              "topic": "equipment"
-            }
-          ]
+          "otherHangSpots": "HIS WORDS 2026-11-24, at Pizarro (chat): \"tyer3s a stretch area to hang and also cable zone has hanging part\". The cable zone one is modelled as `cable-hang`; the stretch area one is not used by the week."
         }
       }
     },
@@ -121,17 +114,16 @@
       "stations": {
         "cable-pulldown": {
           "name": "Lat pulldown / high pulley",
-          "confidence": "carried",
-          "evidence": "A Matrix selectorised row is in photos 23249 and the Maps machine photo; a lat pulldown is standard in it but not identified in a photo.",
+          "confidence": "stated",
+          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"there is a hip trust maxhine, yes pull up machine and also lat pull down\".",
           "sharedInOneWindow": false,
           "adjacentTo": [
-            "cable-row",
-            "cable-adjustable"
+            "cable-row"
           ],
           "adjacentConfidence": "carried",
-          "adjacentNote": "His Calgary ruling 2026-08-30: changing an attachment or a pulley height between sets is not a cost he minds, and the cable fixtures stand within reach of each other. Kept until he says otherwise about Pizarro.",
+          "adjacentNote": "Not adjacent to the adjustable column since 2026-11-24: HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\". Pin-loaded stacks are on the machine floor, the column on the free-weight floor.",
           "carriedPartnersAllowed": false,
-          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\"."
+          "carriedBecause": "HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\"."
         },
         "cable-row": {
           "name": "Seated cable row / low pulley",
@@ -139,26 +131,36 @@
           "evidence": "Standard in a Matrix row; not identified in a photo.",
           "sharedInOneWindow": false,
           "adjacentTo": [
-            "cable-pulldown",
-            "cable-adjustable"
+            "cable-pulldown"
           ],
           "adjacentConfidence": "carried",
           "carriedPartnersAllowed": false,
-          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
+          "carriedBecause": "HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\".",
+          "adjacentNote": "Not adjacent to the adjustable column since 2026-11-24: HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\". Pin-loaded stacks are on the machine floor, the column on the free-weight floor."
         },
         "cable-adjustable": {
           "name": "Adjustable-height cable column",
-          "confidence": "photo",
-          "evidence": "Dual adjustable cable columns on the left of photo 23248.",
+          "confidence": "stated",
+          "evidence": "Dual adjustable cable columns on the left of photo 23248. HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\".",
           "sharedInOneWindow": false,
           "sharedNote": "The height is the point of the column, so two exercises at different heights reconfigure it.",
           "adjacentTo": [
-            "cable-pulldown",
-            "cable-row"
+            "cable-hang"
           ],
-          "adjacentConfidence": "carried",
-          "carriedPartnersAllowed": false,
-          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
+          "carriedPartnersAllowed": true,
+          "carriedBecause": "HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\". The column stands on the free-weight floor, so dumbbells may be carried to it.",
+          "adjacentNote": "HIS WORDS 2026-11-24, at Pizarro (chat): \"tyer3s a stretch area to hang and also cable zone has hanging part\". The hanging part is in the cable zone, beside the column.",
+          "adjacentConfidence": "stated"
+        },
+        "cable-hang": {
+          "name": "Hanging spot in the cable zone",
+          "confidence": "stated",
+          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"tyer3s a stretch area to hang and also cable zone has hanging part\".",
+          "sharedInOneWindow": false,
+          "adjacentTo": [
+            "cable-adjustable"
+          ],
+          "adjacentBecause": "Same zone as the adjustable column, on the free-weight floor (his words above)."
         }
       }
     },
@@ -182,15 +184,15 @@
           "evidence": "He used it on 2026-11-19 (Lower 1). Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
           "sharedInOneWindow": false,
           "carriedPartnersAllowed": false,
-          "carriedBecause": "Named in His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\".",
           "open": [
             {
-              "q": "Dumbbells are not allowed in the pin-loaded machine area. Is the adjustable cable column in that area too, and which machines there stand close enough to go back and forth between (for example leg extension and leg curl)?",
-              "asked": "2026-11-19",
-              "due": "2026-11-26",
+              "q": "Which pin-loaded machines stand close enough to go back and forth between, for example leg extension and leg curl, or pec deck and lat pulldown?",
+              "asked": "2026-11-24",
+              "due": "2026-12-01",
               "topic": "equipment"
             }
-          ]
+          ],
+          "carriedBecause": "HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\"."
         },
         "leg-curl": {
           "name": "Leg curl",
@@ -210,25 +212,26 @@
         },
         "hip-thrust-machine": {
           "name": "Hip thrust machine",
-          "confidence": "unknown",
-          "evidence": "Not seen. Some Smart Fit gyms have a plate-loaded glute machine; Pizarro's photos do not show one.",
+          "confidence": "stated",
+          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"there is a hip trust maxhine, yes pull up machine and also lat pull down\".",
           "sharedInOneWindow": false,
           "open": [
             {
-              "q": "If there is one it replaces the Smith hip thrust. Is there a hip thrust machine (back on a pad, you push a padded bar up with your hips)?",
-              "asked": "2026-11-18",
-              "due": "2026-11-25",
+              "q": "If it takes plates, the suitcase carry can stay in its rest. Do you load the hip thrust machine with plates, or is it a stack with a pin?",
+              "asked": "2026-11-24",
+              "due": "2026-11-27",
               "topic": "equipment"
             }
-          ]
+          ],
+          "carriedPartnersAllowed": false,
+          "carriedBecause": "Fail-closed until he says whether it is plate-loaded: HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\"."
         },
         "chest-press": {
-          "name": "Chest press machine",
-          "confidence": "carried",
-          "evidence": "Standard in a Matrix row; not identified in a photo. On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch.",
+          "name": "Incline chest press, plate-loaded",
+          "confidence": "stated",
+          "evidence": "His note #74, 2026-11-24 (Upper 2): \"Incline plate loaded so can be superset with db, I did with db lat raises\". Note #75: \"25 per side\".",
           "sharedInOneWindow": false,
-          "carriedPartnersAllowed": false,
-          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
+          "carriedNote": "Plate-loaded, so dumbbells are allowed beside it (note #74; note #61 \"the plate loaded ones are fine\")."
         },
         "shoulder-press": {
           "name": "Shoulder press machine",
@@ -248,19 +251,11 @@
         },
         "assisted-pullup": {
           "name": "Assisted pull-up",
-          "confidence": "carried",
-          "evidence": "On Smart Fit's own numbered machine list (smartfit.com.mx, \"Descubre el área de peso integrado\", 2023), the same at every branch: machine 61, \"Assisted Dip/Chin\". Not yet seen at Pizarro.",
+          "confidence": "stated",
+          "evidence": "HIS WORDS 2026-11-24, at Pizarro (chat): \"there is a hip trust maxhine, yes pull up machine and also lat pull down\".",
           "sharedInOneWindow": false,
-          "open": [
-            {
-              "q": "If there is none, Session B uses the lat pulldown instead. Is there an assisted pull-up machine (you kneel on a pad that pushes you up)?",
-              "asked": "2026-11-18",
-              "due": "2026-11-25",
-              "topic": "equipment"
-            }
-          ],
           "carriedPartnersAllowed": false,
-          "carriedBecause": "Fail-closed reading of \"anything thats actual machine\" (pin-loaded, not plate-loaded): His note #61, 2026-11-19: \"apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl I dont lnwo how to clarify, the plate loaded ones are fine beacuse they are all.in the same zone\". Not yet confirmed for this one station; the open question on the leg extension asks."
+          "carriedBecause": "HIS WORDS 2026-11-24, at Pizarro (chat): \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\". A stack with a pin, so on the machine floor."
         },
         "assisted-dip": {
           "name": "Assisted dip",
@@ -416,10 +411,15 @@
         "max": 40
       },
       "ladder": [
+        1,
         2,
+        3,
         4,
+        5,
         6,
+        7,
         8,
+        9,
         10,
         12,
         14,
@@ -437,20 +437,17 @@
         38,
         40
       ],
-      "ladderConfidence": "carried",
+      "ladderConfidence": "stated",
       "ladderNote": [
-        "IN KG. Round dumbbells on several racks are in photos 23248 and 23251, but the numbers on them cannot be",
-        "read. This list is the common commercial kg rack (2 kg steps) and it is an ASSUMPTION: the card rounds to",
-        "these, so a wrong rung means one look at the rack. Replace the list with what is really there after the",
-        "first visit; every card moves with it. Same reason as the Calgary note: the list IS the rack, and",
-        "progression.ts picks the next entry above the working weight without knowing the step."
+        "IN KG. HIS WORDS 2026-11-24, at Pizarro (chat): \"db go up by 1 kg until 10 then by 2\". The top of the rack is not known yet: 40 is an assumption, see `open`.",
+        "progression.ts picks the next entry above the working weight without knowing the step, so this list IS the rack."
       ],
       "evidence": "He used 6, 16 and 24 kg dumbbells on 2026-11-18. Racks also in photos 23248 and 23251.",
       "open": [
         {
-          "q": "What are the dumbbells at Pizarro: do they go up by 2 kg (10, 12, 14) or by 2.5 kg (10, 12.5, 15), and what is the heaviest pair?",
-          "asked": "2026-11-18",
-          "due": "2026-11-25",
+          "q": "What is the heaviest pair of dumbbells at Pizarro?",
+          "asked": "2026-11-24",
+          "due": "2026-12-01",
           "topic": "equipment"
         }
       ]

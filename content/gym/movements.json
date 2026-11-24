@@ -682,7 +682,8 @@
         },
         {
           "id": "machine-chest-press",
-          "name": "Machine Chest Press",
+          "name": "Incline Chest Press (plate-loaded, kg a side)",
+          "note": "At Pizarro it is a plate-loaded incline press, logged one side: his notes #74 and #75, 2026-11-24 (\"Incline plate loaded so can be superset with db\", \"25 per side\").",
           "implement": "machine",
           "zone": "machines",
           "station": "chest-press",
@@ -1664,8 +1665,9 @@
           "id": "hanging-leg-raise",
           "name": "Hanging Leg Raise",
           "implement": "bodyweight",
-          "zone": "rack",
-          "station": "rack-pullup-bar",
+          "zone": "cable",
+          "station": "cable-hang",
+          "$station": "MOVED 2026-11-24 on his words: \"cable zone has hanging part\". The rack bar is blocked whenever the rack is loaded, so the cable zone hang is where it is done.",
           "loadable": false,
           "secondary": [
             "grip"

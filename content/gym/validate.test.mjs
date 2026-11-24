@@ -997,7 +997,9 @@ const CASES = [
        in arm's reach may hold one rest window. equipment.json declares cable-pulldown, cable-row and
        cable-adjustable mutually adjacent, on his ruling, and the catalogue already puts real
        exercises at two of them, so no file but program.json needs to move. See rebuildBlockAs. */
-    mutate: (p) => { rebuildBlockAs(p, 'lat-pulldown', 'cable-reverse-fly'); },
+    mutate: (p) => { rebuildBlockAs(p, 'lat-pulldown', 'seated-cable-row'); },
+    /* 2026-11-24: the adjustable column is on the free-weight floor (his words), so it is no longer
+       adjacent to the pulldown at all. The pulldown and the seated row still carry Calgary's adjacency. */
     expect: 'not confirmed at',
   },
   {

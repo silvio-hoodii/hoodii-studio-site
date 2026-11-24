@@ -342,6 +342,12 @@
         "hisWords": "theres also basically no supersets at least on the latest session",
         "hash": "c1a6423d1d899196",
         "what": "Every dumbbell lift on Upper 1, Lower 2 and Lower 3 now rides in another lift's rest, moved within the same day (no exercise added): incline press + lateral raise and overhead triceps + curl (Upper 1), Smith hip thrust + suitcase carry (Lower 2), incline press + single-leg RDL and Cossack + farmer carry (Lower 3). Machines and cables stay solo until he says which stand close together."
+      },
+      {
+        "on": "2026-11-24",
+        "hisWords": "Incline plate loaded so can be superset with db, I did with db lat raises",
+        "hash": "f7f3c0e6d55062df",
+        "what": "Note #74, and in chat the same day: \"adjustable cables are in the freeweogjt area everything thats machine and not plaete loaded is in a different type of flor thats why they don let db yhere\", \"cable zone has hanging part\", \"there is a hip trust maxhine\". Upper 2: plate-loaded incline chest press + DB lateral raise (replaces the cable lateral raise), tricep pushdown + hanging leg raise at the cable zone hang. Upper 1: high row + overhead triceps, face pull + curl. Lower 3: hip thrust machine replaces the Smith hip thrust. Lower 2 keeps the Smith until he says whether the machine takes plates."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -785,64 +791,6 @@
         },
         {
           "role": "main",
-          "pairing": "fill",
-          "label": "Triceps, curl in the rest",
-          "why": "The backs of the arms, the push at the end of every swim stroke. And the curl rides in its rest, at the same dumbbell rack.",
-          "exercises": [
-            {
-              "id": "db-overhead-tricep-extension",
-              "name": "DB Overhead Tricep Extension",
-              "zone": "benchDb",
-              "station": null,
-              "cue": "Sit on the end of the bench, back tall, one dumbbell held in both hands above your head, arms straight. Bend only at the elbows to lower it behind your head until you feel the stretch in the back of your arms, elbows pointing up and staying close. Straighten back up. Upper arms stay still the whole set.",
-              "sets": 3,
-              "reps": "8",
-              "rest": "45s",
-              "log": true,
-              "progression": "weight",
-              "rangeWidth": 4,
-              "alts": []
-            },
-            {
-              "id": "bicep-curl",
-              "name": "DB Biceps Curl",
-              "zone": "rack",
-              "station": null,
-              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
-              "sets": 3,
-              "reps": "8",
-              "rest": "45s",
-              "log": true,
-              "progression": "weight",
-              "rangeWidth": 6,
-              "alts": [
-                {
-                  "id": "db-hammer-curl",
-                  "name": "DB Hammer Curl",
-                  "sets": 3,
-                  "reps": "10",
-                  "rest": "45s",
-                  "zone": "benchDb",
-                  "station": null,
-                  "log": true,
-                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
-                  "progression": "weight",
-                  "rangeWidth": 5
-                },
-                {
-                  "id": "incline-db-curl",
-                  "name": "Incline DB Curl",
-                  "zone": "benchDb",
-                  "station": "bench",
-                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
-                }
-              ],
-              "whyHere": "the curl rides in its rest, at the same dumbbell rack"
-            }
-          ]
-        },
-        {
-          "role": "main",
           "pairing": "sequence",
           "label": "More chest",
           "why": "A second chest exercise, on the machine, to bring chest to twelve sets a week.",
@@ -873,9 +821,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Row",
-          "why": "The back, on the plate-loaded high row you used on your first day. Log one side.",
+          "pairing": "fill",
+          "label": "Row, triceps in the rest",
+          "why": "The back, on the plate-loaded high row you used on your first day. Log one side. The overhead triceps ride in its rest, because dumbbells are allowed beside a plate-loaded machine: the push at the end of every swim stroke.",
           "exercises": [
             {
               "log": true,
@@ -905,6 +853,21 @@
                   "cue": "Sit tall, pull the handle to your stomach, squeeze the shoulder blades, arms straight on the way back."
                 }
               ]
+            },
+            {
+              "id": "db-overhead-tricep-extension",
+              "name": "DB Overhead Tricep Extension",
+              "zone": "machines",
+              "station": null,
+              "cue": "Sit on the end of the bench, back tall, one dumbbell held in both hands above your head, arms straight. Bend only at the elbows to lower it behind your head until you feel the stretch in the back of your arms, elbows pointing up and staying close. Straighten back up. Upper arms stay still the whole set.",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 4,
+              "alts": [],
+              "whyHere": "The overhead triceps ride in its rest"
             }
           ]
         },
@@ -940,9 +903,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Posture",
-          "why": "The backs of the shoulders that hold your posture, light and slow.",
+          "pairing": "fill",
+          "label": "Posture, curl in the rest",
+          "why": "The backs of the shoulders that hold your posture, light and slow. The curl rides in its rest: the adjustable cable stands on the free-weight floor, so dumbbells are allowed there.",
           "exercises": [
             {
               "id": "face-pull",
@@ -972,6 +935,42 @@
                   "cue": "At the cable column, a handle in each hand, arms crossed in front. Open the arms out to the sides until the hands are level with the shoulders, squeeze, back slowly. Light."
                 }
               ]
+            },
+            {
+              "id": "bicep-curl",
+              "name": "DB Biceps Curl",
+              "zone": "cable",
+              "station": null,
+              "cue": "Standing, a dumbbell in each hand, elbows still at your sides, no swinging. Curl up, squeeze at the top, lower slowly all the way.",
+              "sets": 3,
+              "reps": "8",
+              "rest": "60s",
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "alts": [
+                {
+                  "id": "db-hammer-curl",
+                  "name": "DB Hammer Curl",
+                  "sets": 3,
+                  "reps": "10",
+                  "rest": "45s",
+                  "zone": "benchDb",
+                  "station": null,
+                  "log": true,
+                  "cue": "Standing, a dumbbell in each hand, palms facing your thighs the whole way, like holding two hammers. Curl both up together until the dumbbells reach shoulder height, elbows staying at your sides, then lower slowly. Your torso does not rock. If your elbows drift forward or your back leans, go lighter.",
+                  "progression": "weight",
+                  "rangeWidth": 5
+                },
+                {
+                  "id": "incline-db-curl",
+                  "name": "Incline DB Curl",
+                  "zone": "benchDb",
+                  "station": "bench",
+                  "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
+                }
+              ],
+              "whyHere": "The curl rides in its rest"
             }
           ]
         }
@@ -1316,13 +1315,13 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Lead lift",
-          "why": "Chest first again, on the machine, where the shoulder is held steady. Two or three lighter sets build up to the working weight, and that is the warm-up.",
+          "pairing": "fill",
+          "label": "Lead lift, lateral raise in the rest",
+          "why": "Chest first again, on the plate-loaded incline machine, where the shoulder is held steady. Two or three lighter sets build up to the working weight, and that is the warm-up. The lateral raise rides in its rest, because dumbbells are allowed beside a plate-loaded machine.",
           "exercises": [
             {
               "id": "machine-chest-press",
-              "name": "Machine Chest Press",
+              "name": "Incline Chest Press (plate-loaded, kg a side)",
               "sets": 3,
               "reps": "8",
               "rest": "90s",
@@ -1331,7 +1330,7 @@
               "log": true,
               "progression": "weight",
               "rangeWidth": 2,
-              "cue": "Set the seat so the handles sit level with the middle of your chest. Back flat on the pad, feet flat. Press the handles forward until your arms are straight but not locked, then let them come back under control until you feel the stretch across your chest. Shoulders stay down and back against the pad the whole set.",
+              "cue": "DRAFT, tell the note box what is wrong with it. Log the plates on ONE side, as you wrote it. Set the seat so the handles start level with the top of your chest. Back flat on the pad, feet flat. Press up and forward until your arms are straight but not locked, then let the handles come back under control until you feel the stretch across your chest. Shoulders stay down and back against the pad the whole set.",
               "alts": [
                 {
                   "id": "db-incline-press",
@@ -1344,6 +1343,21 @@
                   "rest": "90s"
                 }
               ]
+            },
+            {
+              "id": "db-lateral-raise",
+              "name": "DB Lateral Raise",
+              "sets": 3,
+              "reps": "12",
+              "rest": "90s",
+              "zone": "machines",
+              "station": null,
+              "log": true,
+              "progression": "weight",
+              "rangeWidth": 6,
+              "cue": "Dumbbells at your sides, raise out to shoulder height, lower slowly.",
+              "whyHere": "The lateral raise rides in its rest",
+              "alts": []
             }
           ]
         },
@@ -1482,39 +1496,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Shoulders",
-          "why": "The sides of the shoulders on the cable, which keeps the pull on all the way up.",
-          "exercises": [
-            {
-              "log": true,
-              "id": "cable-lateral-raise",
-              "name": "Cable Lateral Raise",
-              "sets": 3,
-              "reps": "12",
-              "rest": "45s",
-              "zone": "cable",
-              "station": "cable-adjustable",
-              "progression": "weight",
-              "rangeWidth": 6,
-              "cue": "DRAFT, tell the note box what is wrong with it. Cable at its lowest, stand side-on, handle in the far hand. Raise the arm out to the side to shoulder height, slightly in front of you, lower slowly. Both sides.",
-              "alts": [
-                {
-                  "id": "db-lateral-raise",
-                  "name": "DB Lateral Raise",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Dumbbells at your sides, raise out to shoulder height, lower slowly."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Triceps",
-          "why": "The backs of the arms at the cable, the push at the end of a swim stroke.",
+          "pairing": "fill",
+          "label": "Triceps, leg raise in the rest",
+          "why": "The backs of the arms at the cable, the push at the end of a swim stroke. The hanging leg raise rides in its rest, from the hanging spot in the cable zone: legs lifted straight without swinging.",
           "exercises": [
             {
               "log": true,
@@ -1529,23 +1513,15 @@
               "rangeWidth": 4,
               "cue": "DRAFT, tell the note box what is wrong with it. Rope or bar at the top of the cable. Elbows pinned to your sides, push down until your arms are straight, squeeze, back up slowly only to where the elbows stay still.",
               "alts": []
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Abs",
-          "why": "At the bar, last: the stomach muscles, legs lifted straight without swinging.",
-          "exercises": [
+            },
             {
               "id": "hanging-leg-raise",
               "name": "Hanging Leg Raise",
               "sets": 3,
               "reps": "10",
-              "rest": "45s",
-              "zone": "rack",
-              "station": "rack-pullup-bar",
+              "rest": "60s",
+              "zone": "cable",
+              "station": "cable-hang",
               "log": true,
               "cue": "DRAFT, tell the note box what is wrong with it. Hang from the bar, hands shoulder width, shoulders pulled down away from your ears. Brace your stomach, then lift your legs nearly straight until your feet reach hip height, curling your hips up at the top. Lower over two seconds without swinging. When ten clean reps are easy, lift higher.",
               "progression": "reps",
@@ -1586,7 +1562,8 @@
                   "reps": "30s/side"
                 }
               ],
-              "rangeWidth": 5
+              "rangeWidth": 5,
+              "whyHere": "The hanging leg raise rides in its rest"
             }
           ]
         }
@@ -1775,27 +1752,27 @@
           "role": "main",
           "pairing": "sequence",
           "label": "Glutes",
-          "why": "The glutes alone, heavy: the second hip thrust of the week, on the Smith machine or a loaded bar on the bench.",
+          "why": "The glutes alone, heavy: the second hip thrust of the week, on the hip thrust machine.",
           "exercises": [
             {
-              "id": "smith-hip-thrust",
-              "name": "Smith Hip Thrust",
+              "id": "machine-hip-thrust",
+              "name": "Hip Thrust Machine",
               "sets": 3,
               "reps": "10",
               "rest": "2 min",
-              "zone": "smith",
-              "station": "smith",
+              "zone": "machines",
+              "station": "hip-thrust-machine",
               "log": true,
-              "cue": "DRAFT, tell the note box what is wrong with it. Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps.",
+              "cue": "DRAFT, tell the note box what is wrong with it. Back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard.",
               "progression": "weight",
               "rangeWidth": 4,
               "alts": [
                 {
-                  "id": "machine-hip-thrust",
-                  "name": "Hip Thrust Machine",
-                  "zone": "machines",
-                  "station": "hip-thrust-machine",
-                  "cue": "If the gym has one, use it instead of the Smith: back on the pad, belt or pad across the hip crease, feet flat. Drive the hips up until your thighs are level, ribs down, one second up and two down. First time: start light and work up until 10 feels hard."
+                  "id": "smith-hip-thrust",
+                  "name": "Smith Hip Thrust",
+                  "zone": "smith",
+                  "station": "smith",
+                  "cue": "Bar low on the rails, a pad on your hip crease, upper back on a bench, feet flat about one and a half shoulder widths apart. Drive your hips up until your shins are vertical and your thighs level with the floor, no higher: ribs stay down. One second up, two seconds down, hips brush the floor between reps."
                 },
                 {
                   "id": "back-extension",
