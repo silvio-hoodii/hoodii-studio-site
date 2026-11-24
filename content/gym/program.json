@@ -336,6 +336,12 @@
         "on": "2026-11-19",
         "hisWords": "apparently here you are not allowed to being db to machine area so abd add anything thats actual machine, lat pull etc leg ext leg curl",
         "hash": "f110f21585cfd948"
+      },
+      {
+        "on": "2026-11-24",
+        "hisWords": "theres also basically no supersets at least on the latest session",
+        "hash": "c1a6423d1d899196",
+        "what": "Every dumbbell lift on Upper 1, Lower 2 and Lower 3 now rides in another lift's rest, moved within the same day (no exercise added): incline press + lateral raise and overhead triceps + curl (Upper 1), Smith hip thrust + suitcase carry (Lower 2), incline press + single-leg RDL and Cossack + farmer carry (Lower 3). Machines and cables stay solo until he says which stand close together."
       }
     ],
     "$why": "Fifty-three commits to this file in twenty-four days and twenty-two reversals. Every one was individually defensible and the week never landed. The gate makes \"an agent redesigns the week\" unrepresentable until the review date. To change the week before then, add {on, hisWords, hash} to `changes` with his quoted sentence of at least eight words and the new hash from --print-hash. The commit message should carry the same words."
@@ -709,9 +715,9 @@
       "blocks": [
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Lead lift",
-          "why": "Chest first, because the lift done first gains the most strength. The marker: from 27 kg dumbbells for 9 to the 32 kg pair for 8. Two or three lighter sets build up to the working weight, and that is the warm-up.",
+          "pairing": "fill",
+          "label": "Lead lift, lateral raise in the rest",
+          "why": "Chest first, because the lift done first gains the most strength. The marker: from 27 kg dumbbells for 9 to the 32 kg pair for 8. Two or three lighter sets build up to the working weight, and that is the warm-up. And the lateral raise rides in its rest, with the dumbbells you are already standing at.",
           "exercises": [
             {
               "id": "db-incline-press",
@@ -744,21 +750,13 @@
                   "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Shoulders",
-          "why": "The sides of the shoulders, with the dumbbells you are already standing at.",
-          "exercises": [
+            },
             {
               "id": "db-lateral-raise",
               "name": "DB Lateral Raise",
               "sets": 3,
               "reps": "12",
-              "rest": "45s",
+              "rest": "90s",
               "zone": "benchDb",
               "station": null,
               "log": true,
@@ -780,15 +778,16 @@
                   "station": "bench",
                   "cue": "Same raise, sitting on the end of a bench. Sitting stops you swinging, so use it if the standing version keeps turning into a heave."
                 }
-              ]
+              ],
+              "whyHere": "the lateral raise rides in its rest, with the dumbbells you are already standing at"
             }
           ]
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Triceps",
-          "why": "The backs of the arms, the push at the end of every swim stroke.",
+          "pairing": "fill",
+          "label": "Triceps, curl in the rest",
+          "why": "The backs of the arms, the push at the end of every swim stroke. And the curl rides in its rest, at the same dumbbell rack.",
           "exercises": [
             {
               "id": "db-overhead-tricep-extension",
@@ -803,15 +802,7 @@
               "progression": "weight",
               "rangeWidth": 4,
               "alts": []
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Biceps",
-          "why": "The fronts of the arms, still at the dumbbell rack before you move.",
-          "exercises": [
+            },
             {
               "id": "bicep-curl",
               "name": "DB Biceps Curl",
@@ -845,7 +836,8 @@
                   "station": "bench",
                   "cue": "A dumbbell in each hand on the incline bench. Sit with the backs of your upper arms flat on the slanted pad and keep them there. Curl up until your forearms are vertical, squeeze, then lower ALL THE WAY until the arms are straight. The pad is the point: it makes swinging impossible, so the weight will feel heavier than a standing curl. Start lighter than you think."
                 }
-              ]
+              ],
+              "whyHere": "the curl rides in its rest, at the same dumbbell rack"
             }
           ]
         },
@@ -1072,9 +1064,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Glutes, heavy",
-          "why": "The glutes alone. Squats and hip thrusts built about the same glute in a head-to-head study, so the week has both.",
+          "pairing": "fill",
+          "label": "Glutes, heavy, suitcase carry in the rest",
+          "why": "The glutes alone. Squats and hip thrusts built about the same glute in a head-to-head study, so the week has both. And the suitcase carry rides in its rest, one dumbbell carried to the Smith machine.",
           "exercises": [
             {
               "id": "smith-hip-thrust",
@@ -1125,6 +1117,22 @@
                 "weight": 30,
                 "say": "First try: start with a weight you could lift 15 times, then work up until 10 reps feels hard, about 2 left in the tank. Log that weight."
               }
+            },
+            {
+              "log": true,
+              "id": "suitcase-carry",
+              "name": "Suitcase Carry",
+              "sets": 3,
+              "reps": "40s",
+              "rest": "2 min",
+              "zone": "benchDb",
+              "station": null,
+              "progression": "weight",
+              "rangeWidth": 4,
+              "bodyweight": false,
+              "cue": "DRAFT, tell the note box what is wrong with it. One heavy dumbbell in one hand, walk tall without leaning toward it, 20 seconds a side. The free side of your body does the work.",
+              "alts": [],
+              "whyHere": "the suitcase carry rides in its rest, one dumbbell carried to the Smith machine"
             }
           ]
         },
@@ -1284,29 +1292,6 @@
                   "cue": "Step forward into each lunge and keep travelling. Harder on balance and on the front knee. 8/leg."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Carry",
-          "why": "A carry with one dumbbell: the side of your trunk works to keep you upright.",
-          "exercises": [
-            {
-              "log": true,
-              "id": "suitcase-carry",
-              "name": "Suitcase Carry",
-              "sets": 3,
-              "reps": "40s",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "progression": "weight",
-              "rangeWidth": 4,
-              "bodyweight": false,
-              "cue": "DRAFT, tell the note box what is wrong with it. One heavy dumbbell in one hand, walk tall without leaning toward it, 20 seconds a side. The free side of your body does the work.",
-              "alts": []
             }
           ]
         }
@@ -1648,39 +1633,9 @@
         },
         {
           "role": "main",
-          "pairing": "sequence",
-          "label": "Hinge on one leg",
-          "why": "Your single-leg RDL, kept on your words: balance and the hamstrings, one side at a time.",
-          "exercises": [
-            {
-              "id": "single-leg-rdl",
-              "name": "Single-Leg RDL",
-              "sets": 3,
-              "reps": "8/leg",
-              "rest": "45s",
-              "zone": "benchDb",
-              "station": null,
-              "log": true,
-              "cue": "One dumbbell, in the hand OPPOSITE the standing leg, the other hand on a bench or rack. Soft standing knee, push the hips back and let the free leg travel straight back as the dumbbell lowers down the standing shin. Stop when that hamstring pulls; do not chase the floor. Hips stay level. Holding on is the point: your hamstring decides the weight, not your balance.",
-              "progression": "weight",
-              "rangeWidth": 5,
-              "alts": [
-                {
-                  "id": "db-rdl",
-                  "name": "DB RDL",
-                  "zone": "benchDb",
-                  "station": null,
-                  "cue": "Both feet down, a dumbbell in each hand: the same hinge without the balance. Use it on a day one leg feels off."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Hips",
-          "why": "The deep side-to-side squat again, for hip range and the inner thighs.",
+          "pairing": "fill",
+          "label": "Hips, farmer carry in the rest",
+          "why": "The deep side-to-side squat again, for hip range and the inner thighs. And the farmer carry rides in its rest, in the dumbbell area.",
           "exercises": [
             {
               "log": true,
@@ -1703,61 +1658,13 @@
                   "cue": "Step wide to one side, sit back over that leg with the other straight, push back to standing. Less depth than the Cossack."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Chest",
-          "why": "A third chest session, short, with the dumbbells before you leave the rack.",
-          "exercises": [
-            {
-              "id": "db-incline-press",
-              "name": "DB Incline Press",
-              "sets": 3,
-              "reps": "8",
-              "rest": "90s",
-              "zone": "benchDb",
-              "station": "bench",
-              "log": true,
-              "cue": "Bench one or two notches up from flat. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Success: a stretch across the chest at the bottom, not a pinch at the front of the shoulder.",
-              "progression": "weight",
-              "rangeWidth": 2,
-              "formerIds": [
-                "db-bench-press"
-              ],
-              "alts": [
-                {
-                  "id": "bb-bench-press",
-                  "name": "BB Bench Press",
-                  "zone": "rack",
-                  "station": "rack",
-                  "cue": "Flat bench inside the rack. Set the safety pins at chest height BEFORE you load the bar, every time, because you train alone. Feet flat, grip a little wider than your shoulders, shoulder blades pulled back and down into the bench and kept there. Lower to your lower chest until it touches lightly, press up, same spot every rep. If you have to bounce it, it is too heavy."
-                },
-                {
-                  "id": "machine-chest-press",
-                  "name": "Machine Chest Press",
-                  "zone": "machines",
-                  "station": "chest-press",
-                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "role": "main",
-          "pairing": "sequence",
-          "label": "Grip and carry",
-          "why": "Heavy, before the machines, so the last lifts do not need your grip.",
-          "exercises": [
+            },
             {
               "id": "farmer-carry",
               "name": "Farmer Carry",
               "sets": 3,
               "reps": "40s",
-              "rest": "45s",
+              "rest": "90s",
               "zone": "benchDb",
               "station": null,
               "log": true,
@@ -1796,7 +1703,71 @@
                   "station": null,
                   "cue": "One dumbbell only. Much harder on the side you are NOT carrying, because it has to stop you leaning. Swap hands each set."
                 }
+              ],
+              "whyHere": "the farmer carry rides in its rest, in the dumbbell area"
+            }
+          ]
+        },
+        {
+          "role": "main",
+          "pairing": "fill",
+          "label": "Chest, single-leg RDL in the rest",
+          "why": "A third chest session, short, with the dumbbells before you leave the rack. And the single-leg RDL rides in its rest, one dumbbell beside the bench.",
+          "exercises": [
+            {
+              "id": "db-incline-press",
+              "name": "DB Incline Press",
+              "sets": 3,
+              "reps": "8",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": "bench",
+              "log": true,
+              "cue": "Bench one or two notches up from flat. Shoulder blades pulled back and down into the bench and kept there. Lower until you feel a stretch across the chest, pause one second, press up over your lower chest. Success: a stretch across the chest at the bottom, not a pinch at the front of the shoulder.",
+              "progression": "weight",
+              "rangeWidth": 2,
+              "formerIds": [
+                "db-bench-press"
+              ],
+              "alts": [
+                {
+                  "id": "bb-bench-press",
+                  "name": "BB Bench Press",
+                  "zone": "rack",
+                  "station": "rack",
+                  "cue": "Flat bench inside the rack. Set the safety pins at chest height BEFORE you load the bar, every time, because you train alone. Feet flat, grip a little wider than your shoulders, shoulder blades pulled back and down into the bench and kept there. Lower to your lower chest until it touches lightly, press up, same spot every rep. If you have to bounce it, it is too heavy."
+                },
+                {
+                  "id": "machine-chest-press",
+                  "name": "Machine Chest Press",
+                  "zone": "machines",
+                  "station": "chest-press",
+                  "cue": "A press on a machine, moderate rather than heavy: the barbell bench is where the press gets pushed. Set the seat so the handles line up with the MIDDLE of your chest. Press out until the arms are straight without locking hard, then come back slowly until you feel the stretch. Shoulder blades stay pinned back against the pad."
+                }
               ]
+            },
+            {
+              "id": "single-leg-rdl",
+              "name": "Single-Leg RDL",
+              "sets": 3,
+              "reps": "8/leg",
+              "rest": "90s",
+              "zone": "benchDb",
+              "station": null,
+              "log": true,
+              "cue": "One dumbbell, in the hand OPPOSITE the standing leg, the other hand on a bench or rack. Soft standing knee, push the hips back and let the free leg travel straight back as the dumbbell lowers down the standing shin. Stop when that hamstring pulls; do not chase the floor. Hips stay level. Holding on is the point: your hamstring decides the weight, not your balance.",
+              "progression": "weight",
+              "rangeWidth": 5,
+              "alts": [
+                {
+                  "id": "db-rdl",
+                  "name": "DB RDL",
+                  "zone": "benchDb",
+                  "station": null,
+                  "cue": "Both feet down, a dumbbell in each hand: the same hinge without the balance. Use it on a day one leg feels off."
+                }
+              ],
+              "whyHere": "the single-leg RDL rides in its rest, one dumbbell beside the bench"
             }
           ]
         },
