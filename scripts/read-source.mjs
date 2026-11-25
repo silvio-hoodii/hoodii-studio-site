@@ -63,17 +63,36 @@ function cdp(path) {
 // research run that read forty pages popped a tab in front of him forty times. His words:
 // "can you make it so it doesnt pop up each time you open something". Target.createTarget with
 // `background: true` opens it in the tab strip without switching to it.
+// 2026-11-25: a tab in his tab strip still shows up on his screen ("why are you openn the chorme
+// tabs fulls cre con you do them hidden"). So the page now gets its OWN window, created in the
+// background, off-screen, and minimized at once (the recipe of HOODII/.claude/tools/cdp-offscreen.mjs).
+// If the window does not minimize, it is closed and the script refuses to read.
 let target;
 try {
   const browser = await cdp('/json/version');
   const bws = new globalThis.WebSocket(browser.webSocketDebuggerUrl);
   await new Promise((r, j) => { bws.addEventListener('open', r); bws.addEventListener('error', j); });
-  const created = await new Promise((res) => {
-    bws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.id === 1) res(m.result); });
-    bws.send(JSON.stringify({ id: 1, method: 'Target.createTarget', params: { url: 'about:blank', background: true } }));
+  let bid = 0;
+  const bwait = new Map();
+  bws.addEventListener('message', (e) => { const m = JSON.parse(e.data); if (m.id && bwait.has(m.id)) { bwait.get(m.id)(m); bwait.delete(m.id); } });
+  const bsend = (method, params = {}) => new Promise((res, rej) => {
+    const i = ++bid;
+    bwait.set(i, (m) => (m.error ? rej(new Error(`${method}: ${m.error.message}`)) : res(m.result)));
+    bws.send(JSON.stringify({ id: i, method, params }));
   });
+  const created = await bsend('Target.createTarget', {
+    url: 'about:blank', newWindow: true, background: true, left: -32000, top: -32000, width: 1400, height: 1200,
+  });
+  const { windowId } = await bsend('Browser.getWindowForTarget', { targetId: created.targetId });
+  await bsend('Browser.setWindowBounds', { windowId, bounds: { windowState: 'minimized' } });
+  const wb = await bsend('Browser.getWindowBounds', { windowId });
+  if (wb.bounds.windowState !== 'minimized') {
+    await bsend('Target.closeTarget', { targetId: created.targetId });
+    bws.close();
+    throw new Error('the reading window did not minimize; closed it rather than cover the screen');
+  }
   bws.close();
-  target = { webSocketDebuggerUrl: `ws://127.0.0.1:${CDP_PORT}/devtools/page/${created.targetId}` };
+  target = { id: created.targetId, webSocketDebuggerUrl: `ws://127.0.0.1:${CDP_PORT}/devtools/page/${created.targetId}` };
 } catch (e) {
   console.error(String(e.message || e));
   process.exit(2);
